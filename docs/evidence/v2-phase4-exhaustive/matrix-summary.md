@@ -2,12 +2,12 @@
 
 Generated from `progress-ledger.json` by `nmas_capabilities verify-matrix` / `report-matrix`; do not edit by hand.
 
-**COMPLETE** — total 396, assessed 396, unassessed 0, supported 62, unsupported 334 (unassessed cells are fail-closed unsupported).
+**COMPLETE** — total 396, assessed 396, unassessed 0, supported 63, unsupported 333 (unassessed cells are fail-closed unsupported).
 
 | Platform | Total | Assessed | Unassessed | Supported | Runtime-investigated | Prerequisite-gated |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
 | arista_ceos | 66 | 66 | 0 | 25 | 28 | 38 |
-| ubuntu_frr | 66 | 66 | 0 | 15 | 15 | 51 |
+| ubuntu_frr | 66 | 66 | 0 | 16 | 16 | 50 |
 | nokia_srlinux | 66 | 66 | 0 | 17 | 18 | 48 |
 | cisco_c8000v_iosxe | 66 | 66 | 0 | 5 | 6 | 60 |
 | cisco_iosxr | 66 | 66 | 0 | 0 | 66 | 0 |
@@ -19,8 +19,8 @@ Derived from the binary ledger: SUPPORTED is unchanged; UNSUPPORTED means a demo
 
 | Status | Cells |
 | --- | ---: |
-| SUPPORTED | 62 |
-| NOT_IMPLEMENTED | 331 |
+| SUPPORTED | 63 |
+| NOT_IMPLEMENTED | 330 |
 | UNSUPPORTED | 3 |
 | OUT_OF_SCOPE | 0 |
 
@@ -80,6 +80,7 @@ Derived from the binary ledger: SUPPORTED is unchanged; UNSUPPORTED means a demo
 - `ubuntu_frr` `interface.SVI`
 - `ubuntu_frr` `routing.BGP_IPV4`
 - `ubuntu_frr` `routing.BGP_IPV6`
+- `ubuntu_frr` `routing.ISIS`
 - `ubuntu_frr` `routing.OSPFV2`
 - `ubuntu_frr` `routing.OSPFV3`
 - `ubuntu_frr` `routing.RIPNG`
@@ -142,13 +143,13 @@ A cell is listed under every reason one of its probes recorded.
 | sonic | POSTCHECK_ABSENT | 1 |
 | sonic | RENDERER_ABSENT | 51 |
 | sonic | UI_ABSENT | 49 |
-| ubuntu_frr | CONFIG_VALIDATION_FAILED | 51 |
-| ubuntu_frr | EXECUTOR_REFUSED | 51 |
+| ubuntu_frr | CONFIG_VALIDATION_FAILED | 50 |
+| ubuntu_frr | EXECUTOR_REFUSED | 50 |
 | ubuntu_frr | FIELD_VALIDATION_FAILED | 11 |
 | ubuntu_frr | FUNCTIONAL_TEST_FAILED | 11 |
-| ubuntu_frr | PARSER_ABSENT | 49 |
-| ubuntu_frr | RENDERER_ABSENT | 51 |
-| ubuntu_frr | UI_ABSENT | 51 |
+| ubuntu_frr | PARSER_ABSENT | 48 |
+| ubuntu_frr | RENDERER_ABSENT | 50 |
+| ubuntu_frr | UI_ABSENT | 50 |
 
 ## Live-stage blocker of prerequisite-gated cells
 
@@ -160,7 +161,7 @@ A cell is listed under every reason one of its probes recorded.
 | nokia_srlinux | RENDERER_ABSENT | 48 |
 | sonic | EXECUTOR_ABSENT | 14 |
 | sonic | RENDERER_ABSENT | 51 |
-| ubuntu_frr | RENDERER_ABSENT | 51 |
+| ubuntu_frr | RENDERER_ABSENT | 50 |
 
 ## Unassessed cells
 

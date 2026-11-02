@@ -442,7 +442,7 @@ ROUTING_CAPABILITIES: dict[str, dict[str, PlatformCapability]] = {
         RoutingProtocol.RIPNG: (CapabilityStatus.SUPPORTED, _FRR_RIP),
         RoutingProtocol.OSPFV2: (CapabilityStatus.SUPPORTED, _FRR_OSPF),
         RoutingProtocol.OSPFV3: (CapabilityStatus.SUPPORTED, _FRR_OSPF),
-        RoutingProtocol.ISIS: (CapabilityStatus.NOT_IMPLEMENTED, _FRR_NO_EVIDENCE),
+        RoutingProtocol.ISIS: (CapabilityStatus.SUPPORTED, "FRR 8.4.4 isisd: bounded NMAS44 process and per-interface IPv4/IPv6 activation; isolated live closure in progress."),
         RoutingProtocol.EIGRP_IPV4: (CapabilityStatus.NOT_IMPLEMENTED, "FRR 8.4.4 (this project's tracked version) ships no supported eigrpd in this project's evidence; not implemented."),
         RoutingProtocol.EIGRP_IPV6: (CapabilityStatus.NOT_IMPLEMENTED, "FRR 8.4.4 (this project's tracked version) ships no supported eigrpd in this project's evidence; not implemented."),
         RoutingProtocol.BGP_IPV4: (CapabilityStatus.SUPPORTED, _FRR_BGP),
@@ -1021,6 +1021,40 @@ def _ceos_isis_interface_contributions(interface: dict, *, platform: str = "aris
         if binding.get("passive"):
             result.append({"kind": "static", "text": "   isis passive"})
     return result
+
+
+FRR_ISIS_TAG = "NMAS44"
+_FRR_ISIS_LEVELS = {"LEVEL_1": "level-1", "LEVEL_2": "level-2-only", "LEVEL_1_2": "level-1-2"}
+
+
+def _frr_isis_descriptors(instance: dict, interfaces_by_id: dict) -> list[dict]:
+    """FRR's named IS-IS process; address-family enablement lives on interfaces."""
+    return feature_template_renderer.render_descriptors(
+        template_name="ubuntu_frr/routing_isis.j2",
+        fields={"net": {"path": f"routing.isis.{instance['id']}.net", "value": instance.get("net") or "", "omit_if_empty": True}},
+        flags={"tag": FRR_ISIS_TAG, "level": _FRR_ISIS_LEVELS.get(instance.get("level") or "LEVEL_2", "level-2-only")},
+    )
+
+
+def _frr_isis_interface_contributions(interface: dict) -> list[dict]:
+    if not is_routing_protocol_selectable("ubuntu_frr", RoutingProtocol.ISIS):
+        return []
+    lines: list[dict] = []
+    for binding in (interface.get("_scope") or {}).get("isis", []):
+        path = binding.get("path") or "routing.isis"
+        if binding.get("address_family_ipv4"):
+            lines.append({"kind": "static", "text": f"   ip router isis {FRR_ISIS_TAG}"})
+        if binding.get("address_family_ipv6"):
+            lines.append({"kind": "static", "text": f"   ipv6 router isis {FRR_ISIS_TAG}"})
+        if not (binding.get("address_family_ipv4") or binding.get("address_family_ipv6")):
+            continue
+        lines.append({"kind": "static", "text": "   isis network point-to-point"})
+        lines.append({"kind": "static", "text": f"   isis circuit-type {_FRR_ISIS_LEVELS.get(binding.get('level') or 'LEVEL_2', 'level-2-only')}"})
+        if binding.get("metric") is not None:
+            lines.append({"kind": "field", "path": f"{path}.metric", "template": "   isis metric {value}", "value": binding["metric"]})
+        if binding.get("passive"):
+            lines.append({"kind": "static", "text": "   isis passive"})
+    return lines
 
 
 def _frr_rip_descriptors(instance: dict, interfaces_by_id: dict) -> list[dict]:
@@ -2582,6 +2616,7 @@ class UbuntuFrrDriver(PlatformDriver):
             static_renderer=lambda route, ifs: _static_route_descriptors(route, ifs, template_platform=self.template_platform),
             rip_renderer=_frr_rip_descriptors,
             ospf_renderer=_frr_ospf_descriptors,
+            isis_renderer=_frr_isis_descriptors,
             bgp_renderer=_frr_bgp_descriptors,
         )
 
@@ -2590,6 +2625,7 @@ class UbuntuFrrDriver(PlatformDriver):
 
     def interface_contribution_descriptors(self, interface):
         lines = _ospf_interface_contributions(interface, ceos=False, platform=self.name)
+        lines.extend(_frr_isis_interface_contributions(interface))
         if not lines:
             return []
         return [

@@ -102,6 +102,15 @@ class StateDigestTests(SimpleTestCase):
         b = "router ospf\n  ospf router-id 1.1.1.1  \n"
         self.assertEqual(linux.frr_config_digest(a), linux.frr_config_digest(b))
 
+    def test_frr_config_digest_ignores_only_an_empty_active_interface_context(self):
+        before = "frr version 8.4.4\nrouter isis LEGACY\n net 49.0001.0000.0000.0001.00\nexit\n"
+        empty = "frr version 8.4.4\ninterface eth1\nexit\nrouter isis LEGACY\n net 49.0001.0000.0000.0001.00\nexit\n"
+        configured = empty.replace("interface eth1\nexit", "interface eth1\n ip router isis LEGACY\nexit")
+        unrelated = empty.replace("interface eth1\nexit", "interface eth1\n description operator-owned\nexit")
+        self.assertEqual(linux.frr_config_digest(before), linux.frr_config_digest(empty))
+        self.assertNotEqual(linux.frr_config_digest(before), linux.frr_config_digest(configured))
+        self.assertNotEqual(linux.frr_config_digest(before), linux.frr_config_digest(unrelated))
+
     def test_frr_config_digest_mismatch_for_a_different_configuration(self):
         self.assertNotEqual(linux.frr_config_digest("router ospf\n"), linux.frr_config_digest("router rip\n"))
 

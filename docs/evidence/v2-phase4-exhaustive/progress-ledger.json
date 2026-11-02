@@ -1,9 +1,9 @@
 {
   "assessed": 396,
   "capability_counts": {
-    "NOT_IMPLEMENTED": 331,
+    "NOT_IMPLEMENTED": 330,
     "OUT_OF_SCOPE": 0,
-    "SUPPORTED": 62,
+    "SUPPORTED": 63,
     "UNSUPPORTED": 3
   },
   "cells": [
@@ -52206,38 +52206,28 @@
       "validator": "FAIL"
     },
     {
-      "assessment_basis": "PREREQUISITE_GATE",
+      "assessment_basis": "RUNTIME_INVESTIGATION",
       "assessment_complete": true,
-      "assessment_id": 945,
+      "assessment_id": null,
       "automated_tests": "PASS",
-      "candidate": "FAIL",
-      "compensation": "BLOCKED",
-      "device_builder": "FAIL",
-      "evidence_ids": [
-        6425,
-        6426,
-        6427,
-        6428,
-        6429,
-        6430,
-        6431,
-        6432,
-        6433,
-        6434,
-        6435
-      ],
+      "candidate": "PASS",
+      "capability_status": "SUPPORTED",
+      "compensation": "PASS",
+      "device_builder": "PASS",
+      "evidence_ids": [],
       "evidence_references": [
-        "gate:ubuntu_frr/routing.ISIS@d879b511a42d#30fa1af1bce931c8"
+        "live:nmas-cap-validation/frr-isis/2026-10-30T01:56:59.870668+00:00"
       ],
-      "executor": "FAIL",
+      "executor": "PASS",
+      "feasibility": "PROVEN",
       "feature": "routing.ISIS",
       "field_validation": "PASS",
-      "final_status": "UNSUPPORTED",
-      "live_read": "BLOCKED",
-      "live_write": "BLOCKED",
-      "parser": "FAIL",
+      "final_status": "SUPPORTED",
+      "live_read": "PASS",
+      "live_write": "PASS",
+      "parser": "PASS",
       "platform": "ubuntu_frr",
-      "postcheck": "BLOCKED",
+      "postcheck": "PASS",
       "probes": {
         "automated_tests": {
           "detail": "Repeated renderer determinism=True; feature-specific valid/invalid field regression=PASS.",
@@ -52247,37 +52237,37 @@
           "test_type": "FIXTURE"
         },
         "candidate_generation": {
-          "detail": "Real candidate_renderer.render ran; 848 chars; target-rendered=FAIL.",
-          "outcome": "FAIL",
-          "reason": "RENDERER_ABSENT",
+          "detail": "Real candidate_renderer.render ran; 950 chars; target-rendered=PASS.",
+          "outcome": "PASS",
+          "reason": "",
           "reference": "",
           "test_type": "FIXTURE"
         },
         "compensation": {
-          "detail": "Not attempted: NMAS prerequisite layer(s) failed their deliberate probe (renderer=RENDERER_ABSENT, candidate_generation=RENDERER_ABSENT, executor=EXECUTOR_REFUSED). First blocker renderer: Authoritative renderer differential: 0 target line(s), 1 refusal marker(s); sha256=a5f89430a49ea3fcf775e9c998b2227e947f9cbb5f535e9cfd1dd3965fae0834. No device was contacted for this stage.",
-          "outcome": "BLOCKED",
-          "reason": "RENDERER_ABSENT",
-          "reference": "gate:ubuntu_frr/routing.ISIS@d879b511a42d#30fa1af1bce931c8",
-          "test_type": "STATIC"
+          "detail": "pristine: {'actions': ['routing_isis=APPLY/True/-', 'routing_binding=APPLY/True/-'], 'statuses': ['COMPENSATED', 'COMPENSATED'], 'failure': '', 'imported': True, 'control': True, 'after': True, 'preserved': True, 'read_ok': True, 'post_ok': True, 'runtime_ok': True, 'applied': True, 'verified': True, 'detail': 'operator postcheck=True []; parser import=True; IS-IS neighbor and route=True; peer adjacency=True', 'compensation_codes': ['-', '-'], 'compensated': True, 'config_restored': True, 'restored': True} || configured: {'actions': ['routing_isis=APPLY/True/-', 'routing_binding=APPLY/True/-'], 'statuses': ['COMPENSATED', 'COMPENSATED'], 'failure': '', 'imported': True, 'control': True, 'after': True, 'preserved': True, 'read_ok': True, 'post_ok': True, 'runtime_ok': True, 'applied': True, 'verified': True, 'detail': 'operator postcheck=True []; parser import=True; IS-IS neighbor and route=True; peer adjacency=True', 'compensation_codes': ['-', '-'], 'compensated': True, 'config_restored': True, 'restored': True}",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-validation/frr-isis/2026-10-30T01:56:59.870668+00:00",
+          "test_type": "LIVE"
         },
         "config_validation": {
-          "detail": "Actual network-config validation=BLOCKED; failing checks=['PLATFORM_CAPABILITY']; external inputs are OFFLINE_FIXTURE only.",
-          "outcome": "FAIL",
-          "reason": "CONFIG_VALIDATION_FAILED",
+          "detail": "Actual network-config validation=PASS; failing checks=[]; external inputs are OFFLINE_FIXTURE only.",
+          "outcome": "PASS",
+          "reason": "",
           "reference": "",
           "test_type": "FIXTURE"
         },
         "device_builder_ui": {
-          "detail": "Real authoring API refused the feature (CollectionMutationError).",
-          "outcome": "FAIL",
-          "reason": "UI_ABSENT",
+          "detail": "Real Device Builder mutation API accepted the feature.",
+          "outcome": "PASS",
+          "reason": "",
           "reference": "",
           "test_type": "FIXTURE"
         },
         "executor": {
-          "detail": "Real executor.assess on fixture: action=APPLY; exact inverse present=False; restorable=False; no connection/apply invoked.",
-          "outcome": "FAIL",
-          "reason": "EXECUTOR_REFUSED",
+          "detail": "Real executor.assess on fixture: action=APPLY; exact inverse present=True; restorable=True; no connection/apply invoked.",
+          "outcome": "PASS",
+          "reason": "",
           "reference": "",
           "test_type": "FIXTURE"
         },
@@ -52289,46 +52279,46 @@
           "test_type": "FIXTURE"
         },
         "live_post_write_validation": {
-          "detail": "Not attempted: NMAS prerequisite layer(s) failed their deliberate probe (renderer=RENDERER_ABSENT, candidate_generation=RENDERER_ABSENT, executor=EXECUTOR_REFUSED). First blocker renderer: Authoritative renderer differential: 0 target line(s), 1 refusal marker(s); sha256=a5f89430a49ea3fcf775e9c998b2227e947f9cbb5f535e9cfd1dd3965fae0834. No device was contacted for this stage.",
-          "outcome": "BLOCKED",
-          "reason": "RENDERER_ABSENT",
-          "reference": "gate:ubuntu_frr/routing.ISIS@d879b511a42d#30fa1af1bce931c8",
-          "test_type": "STATIC"
+          "detail": "pristine: {'actions': ['routing_isis=APPLY/True/-', 'routing_binding=APPLY/True/-'], 'statuses': ['COMPENSATED', 'COMPENSATED'], 'failure': '', 'imported': True, 'control': True, 'after': True, 'preserved': True, 'read_ok': True, 'post_ok': True, 'runtime_ok': True, 'applied': True, 'verified': True, 'detail': 'operator postcheck=True []; parser import=True; IS-IS neighbor and route=True; peer adjacency=True', 'compensation_codes': ['-', '-'], 'compensated': True, 'config_restored': True, 'restored': True} || configured: {'actions': ['routing_isis=APPLY/True/-', 'routing_binding=APPLY/True/-'], 'statuses': ['COMPENSATED', 'COMPENSATED'], 'failure': '', 'imported': True, 'control': True, 'after': True, 'preserved': True, 'read_ok': True, 'post_ok': True, 'runtime_ok': True, 'applied': True, 'verified': True, 'detail': 'operator postcheck=True []; parser import=True; IS-IS neighbor and route=True; peer adjacency=True', 'compensation_codes': ['-', '-'], 'compensated': True, 'config_restored': True, 'restored': True}",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-validation/frr-isis/2026-10-30T01:56:59.870668+00:00",
+          "test_type": "LIVE"
         },
         "live_read": {
-          "detail": "Not attempted: NMAS prerequisite layer(s) failed their deliberate probe (renderer=RENDERER_ABSENT, candidate_generation=RENDERER_ABSENT, executor=EXECUTOR_REFUSED). First blocker renderer: Authoritative renderer differential: 0 target line(s), 1 refusal marker(s); sha256=a5f89430a49ea3fcf775e9c998b2227e947f9cbb5f535e9cfd1dd3965fae0834. No device was contacted for this stage.",
-          "outcome": "BLOCKED",
-          "reason": "RENDERER_ABSENT",
-          "reference": "gate:ubuntu_frr/routing.ISIS@d879b511a42d#30fa1af1bce931c8",
-          "test_type": "STATIC"
+          "detail": "pristine: {'actions': ['routing_isis=APPLY/True/-', 'routing_binding=APPLY/True/-'], 'statuses': ['COMPENSATED', 'COMPENSATED'], 'failure': '', 'imported': True, 'control': True, 'after': True, 'preserved': True, 'read_ok': True, 'post_ok': True, 'runtime_ok': True, 'applied': True, 'verified': True, 'detail': 'operator postcheck=True []; parser import=True; IS-IS neighbor and route=True; peer adjacency=True', 'compensation_codes': ['-', '-'], 'compensated': True, 'config_restored': True, 'restored': True} || configured: {'actions': ['routing_isis=APPLY/True/-', 'routing_binding=APPLY/True/-'], 'statuses': ['COMPENSATED', 'COMPENSATED'], 'failure': '', 'imported': True, 'control': True, 'after': True, 'preserved': True, 'read_ok': True, 'post_ok': True, 'runtime_ok': True, 'applied': True, 'verified': True, 'detail': 'operator postcheck=True []; parser import=True; IS-IS neighbor and route=True; peer adjacency=True', 'compensation_codes': ['-', '-'], 'compensated': True, 'config_restored': True, 'restored': True}",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-validation/frr-isis/2026-10-30T01:56:59.870668+00:00",
+          "test_type": "LIVE"
         },
         "live_write": {
-          "detail": "Not attempted: NMAS prerequisite layer(s) failed their deliberate probe (renderer=RENDERER_ABSENT, candidate_generation=RENDERER_ABSENT, executor=EXECUTOR_REFUSED). First blocker renderer: Authoritative renderer differential: 0 target line(s), 1 refusal marker(s); sha256=a5f89430a49ea3fcf775e9c998b2227e947f9cbb5f535e9cfd1dd3965fae0834. No device was contacted for this stage.",
-          "outcome": "BLOCKED",
-          "reason": "RENDERER_ABSENT",
-          "reference": "gate:ubuntu_frr/routing.ISIS@d879b511a42d#30fa1af1bce931c8",
-          "test_type": "STATIC"
+          "detail": "pristine: {'actions': ['routing_isis=APPLY/True/-', 'routing_binding=APPLY/True/-'], 'statuses': ['COMPENSATED', 'COMPENSATED'], 'failure': '', 'imported': True, 'control': True, 'after': True, 'preserved': True, 'read_ok': True, 'post_ok': True, 'runtime_ok': True, 'applied': True, 'verified': True, 'detail': 'operator postcheck=True []; parser import=True; IS-IS neighbor and route=True; peer adjacency=True', 'compensation_codes': ['-', '-'], 'compensated': True, 'config_restored': True, 'restored': True} || configured: {'actions': ['routing_isis=APPLY/True/-', 'routing_binding=APPLY/True/-'], 'statuses': ['COMPENSATED', 'COMPENSATED'], 'failure': '', 'imported': True, 'control': True, 'after': True, 'preserved': True, 'read_ok': True, 'post_ok': True, 'runtime_ok': True, 'applied': True, 'verified': True, 'detail': 'operator postcheck=True []; parser import=True; IS-IS neighbor and route=True; peer adjacency=True', 'compensation_codes': ['-', '-'], 'compensated': True, 'config_restored': True, 'restored': True}",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-validation/frr-isis/2026-10-30T01:56:59.870668+00:00",
+          "test_type": "LIVE"
         },
         "parser_import": {
-          "detail": "Real ubuntu-frr-1.0 parser executed; target semantic match=False; unmanaged blocks=18.",
-          "outcome": "FAIL",
-          "reason": "PARSER_ABSENT",
+          "detail": "Real ubuntu-frr-1.0 parser executed; target semantic match=True; unmanaged blocks=17.",
+          "outcome": "PASS",
+          "reason": "",
           "reference": "",
           "test_type": "FIXTURE"
         },
         "renderer": {
-          "detail": "Authoritative renderer differential: 0 target line(s), 1 refusal marker(s); sha256=a5f89430a49ea3fcf775e9c998b2227e947f9cbb5f535e9cfd1dd3965fae0834.",
-          "outcome": "FAIL",
-          "reason": "RENDERER_ABSENT",
+          "detail": "Authoritative renderer differential: 9 target line(s), 0 refusal marker(s); sha256=9c4234ad5d5c8be1282fab4420b9252f7debbd2949113e4e6e7be0290b8b3c96.",
+          "outcome": "PASS",
+          "reason": "",
           "reference": "",
           "test_type": "FIXTURE"
         },
         "runtime_validation": {
-          "detail": "Not attempted: NMAS prerequisite layer(s) failed their deliberate probe (renderer=RENDERER_ABSENT, candidate_generation=RENDERER_ABSENT, executor=EXECUTOR_REFUSED). First blocker renderer: Authoritative renderer differential: 0 target line(s), 1 refusal marker(s); sha256=a5f89430a49ea3fcf775e9c998b2227e947f9cbb5f535e9cfd1dd3965fae0834. No device was contacted for this stage.",
-          "outcome": "BLOCKED",
-          "reason": "RENDERER_ABSENT",
-          "reference": "gate:ubuntu_frr/routing.ISIS@d879b511a42d#30fa1af1bce931c8",
-          "test_type": "STATIC"
+          "detail": "pristine: {'actions': ['routing_isis=APPLY/True/-', 'routing_binding=APPLY/True/-'], 'statuses': ['COMPENSATED', 'COMPENSATED'], 'failure': '', 'imported': True, 'control': True, 'after': True, 'preserved': True, 'read_ok': True, 'post_ok': True, 'runtime_ok': True, 'applied': True, 'verified': True, 'detail': 'operator postcheck=True []; parser import=True; IS-IS neighbor and route=True; peer adjacency=True', 'compensation_codes': ['-', '-'], 'compensated': True, 'config_restored': True, 'restored': True} || configured: {'actions': ['routing_isis=APPLY/True/-', 'routing_binding=APPLY/True/-'], 'statuses': ['COMPENSATED', 'COMPENSATED'], 'failure': '', 'imported': True, 'control': True, 'after': True, 'preserved': True, 'read_ok': True, 'post_ok': True, 'runtime_ok': True, 'applied': True, 'verified': True, 'detail': 'operator postcheck=True []; parser import=True; IS-IS neighbor and route=True; peer adjacency=True', 'compensation_codes': ['-', '-'], 'compensated': True, 'config_restored': True, 'restored': True}",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-validation/frr-isis/2026-10-30T01:56:59.870668+00:00",
+          "test_type": "LIVE"
         },
         "semantic_model": {
           "detail": "Canonical fixture resolves the feature-specific path routing.isis.isis_0000000000000003.net.",
@@ -52338,22 +52328,16 @@
           "test_type": "FIXTURE"
         }
       },
-      "renderer": "FAIL",
-      "repository_head": "d879b511a42dea60d7547a4fc17ecdeea4073377",
-      "runtime_test": "BLOCKED",
-      "runtime_version": "not contacted (prerequisite gate); platform runtime last observed: clab-raw-verifier-frr:8.4.4-1.1ubuntu6.7",
+      "renderer": "PASS",
+      "repository_head": "9c334edf033ba3cc32acbe18ba4ecd74f5d5701e",
+      "runtime_test": "PASS",
+      "runtime_version": "FRRouting 8.4.4 / FRRouting 8.4.4 isolated pair",
       "semantic": "PASS",
-      "status": "UNSUPPORTED",
-      "strongest_test_type": "FIXTURE",
-      "timestamp": "2026-10-04T23:07:29.890928+00:00",
-      "unsupported_reasons": [
-        "CONFIG_VALIDATION_FAILED",
-        "EXECUTOR_REFUSED",
-        "PARSER_ABSENT",
-        "RENDERER_ABSENT",
-        "UI_ABSENT"
-      ],
-      "validator": "FAIL"
+      "status": "SUPPORTED",
+      "strongest_test_type": "LIVE",
+      "timestamp": "2026-10-30T01:55:03.568718+00:00",
+      "unsupported_reasons": [],
+      "validator": "PASS"
     },
     {
       "assessment_basis": "RUNTIME_INVESTIGATION",
@@ -59108,33 +59092,33 @@
     "ubuntu_frr": {
       "assessed": 66,
       "fixture_tested": 66,
-      "live_tested": 15,
-      "static_tested": 51,
-      "supported": 15,
+      "live_tested": 16,
+      "static_tested": 50,
+      "supported": 16,
       "total": 66,
-      "unsupported": 51
+      "unsupported": 50
     }
   },
   "reason_counts": {
     "COMPENSATION_ABSENT": 68,
-    "CONFIG_VALIDATION_FAILED": 295,
+    "CONFIG_VALIDATION_FAILED": 294,
     "EXECUTOR_ABSENT": 132,
-    "EXECUTOR_REFUSED": 200,
+    "EXECUTOR_REFUSED": 199,
     "FIELD_VALIDATION_FAILED": 65,
     "FUNCTIONAL_TEST_FAILED": 67,
     "LIVE_READ_ABSENT": 2,
-    "PARSER_ABSENT": 264,
+    "PARSER_ABSENT": 263,
     "PARSER_FAILED": 38,
     "PLATFORM_DOES_NOT_SUPPORT": 3,
     "POSTCHECK_ABSENT": 69,
-    "RENDERER_ABSENT": 294,
+    "RENDERER_ABSENT": 293,
     "RUNTIME_IMAGE_UNAVAILABLE": 66,
-    "UI_ABSENT": 289
+    "UI_ABSENT": 288
   },
   "remaining_cells": [],
   "schema_version": 2,
-  "supported": 62,
+  "supported": 63,
   "total": 396,
   "unassessed": 0,
-  "unsupported": 334
+  "unsupported": 333
 }

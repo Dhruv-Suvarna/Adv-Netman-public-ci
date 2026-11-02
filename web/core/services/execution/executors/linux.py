@@ -27,7 +27,7 @@ from . import frr_routing, state
 from .base import APPLY, REFUSE, ApplyOutcome, Assessment, CompensationOutcome, ConfigletSpec, DeviceExecutor, ExecutorError
 from .ceos import config_inverse
 
-FRR_ROUTING_TYPES = frozenset({"routing_ospf", "routing_binding", "routing_rip", "routing_bgp",
+FRR_ROUTING_TYPES = frozenset({"routing_ospf", "routing_binding", "routing_rip", "routing_isis", "routing_bgp",
                                "bgp_neighbor", "bgp_neighbor_af", "bgp_network"})
 
 
@@ -197,6 +197,11 @@ def read_frr_config(container: str, timeout: float) -> str:
 def frr_config_digest(text: str) -> str:
     lines = [line.strip() for line in text.splitlines() if line.strip() and not line.lstrip().startswith("!")
              and line.strip().lower() not in {"building configuration...", "current configuration:", "end"}]
+    # FRR keeps an empty vtysh context for an active kernel interface after its last routing leaf is removed.
+    # The interface cannot be deleted while active.  Its empty context has no configuration semantics.
+    lines = [line for index, line in enumerate(lines) if not (
+        line.startswith("interface ") and index + 1 < len(lines) and lines[index + 1] == "exit"
+    ) and not (line == "exit" and index > 0 and lines[index - 1].startswith("interface "))]
     return hashlib.sha256("\n".join(lines).encode()).hexdigest()
 
 _NAME = r"[A-Za-z0-9_.-]{1,32}"

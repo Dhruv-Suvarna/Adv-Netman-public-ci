@@ -35,26 +35,29 @@ EXIT_AF = "exit-address-family"
 PROCESS_SETTINGS = ("no bgp default ipv4-unicast", "no bgp ebgp-requires-policy")
 _AF = re.compile(r"^address-family (ipv4|ipv6) unicast$")
 _INTERFACE = re.compile(rf"^(?:no )?interface {_NAME}$")
-_PROCESS = re.compile(rf"^(?:no )?router (?:(ospf6?|rip|ripng)|(bgp) {_ASN})$")
+_PROCESS = re.compile(rf"^(?:no )?router (?:(ospf6?|rip|ripng)|(bgp) {_ASN}|(?P<isis>isis {_NAME}))$")
 _NEIGHBOR = re.compile(rf"^neighbor ({_ADDR}) (.+)$")
 
 # context -> the only leaves the Jinja feature templates and their captured-state inverses may emit there
 _LEAVES = {
     "interface": re.compile(r"^(?:no )?(?:ip ospf (?:area [0-9.]+|cost \d+|network point-to-point)|"
-                            r"ipv6 ospf6 (?:area [0-9.]+|cost \d+|network point-to-point))$"),
+                            rf"ipv6 ospf6 (?:area [0-9.]+|cost \d+|network point-to-point)|"
+                            rf"(?:ip|ipv6) router isis {_NAME}|"
+                            r"isis (?:network point-to-point|circuit-type (?:level-1|level-2-only|level-1-2)|metric \d+|passive))$"),
     "ospf": re.compile(rf"^(?:no )?(?:ospf router-id {_IP4}|network {_PREFIX} area [0-9.]+)$"),
     "ospf6": re.compile(rf"^(?:no )?ospf6 router-id {_IP4}$"),
     "rip": re.compile(rf"^(?:no )?(?:version 2|network {_NAME}|passive-interface {_NAME})$"),
     "ripng": re.compile(rf"^(?:no )?(?:network {_NAME}|passive-interface {_NAME})$"),
+    "isis": re.compile(r"^(?:no )?(?:net 49\.[0-9.]+|is-type (?:level-1|level-2-only|level-1-2)|metric-style wide)$"),
     "bgp": re.compile(rf"^(?:{'|'.join(map(re.escape, PROCESS_SETTINGS))}|(?:no )?(?:bgp router-id {_IP4}|"
                       rf"neighbor {_ADDR} (?:remote-as {_ASN}|update-source {_NAME}|ebgp-multihop \d{{1,3}}|shutdown)))$"),
     "bgp-af": re.compile(rf"^(?:no )?(?:neighbor {_ADDR} (?:activate|next-hop-self|route-reflector-client)|"
                          rf"network {_PREFIX})$"),
 }
 # single-valued leaves: a different configured value means the Configlet REPLACES state another object depends on
-_SCALARS = ("bgp router-id ", "ospf router-id ", "ospf6 router-id ", "version ")
+_SCALARS = ("bgp router-id ", "ospf router-id ", "ospf6 router-id ", "version ", "net ", "is-type ", "metric-style ")
 _NEIGHBOR_SCALARS = ("update-source ", "ebgp-multihop ")
-DAEMONS = {"ospf": "ospfd", "ospf6": "ospf6d", "rip": "ripd", "ripng": "ripngd", "bgp": "bgpd"}
+DAEMONS = {"ospf": "ospfd", "ospf6": "ospf6d", "rip": "ripd", "ripng": "ripngd", "bgp": "bgpd", "isis": "isisd"}
 
 
 @dataclass
@@ -70,7 +73,7 @@ def _kind(header: str) -> str | None:
     if _INTERFACE.fullmatch(header):
         return "interface"
     found = _PROCESS.fullmatch(header)
-    return (found.group(1) or found.group(2)) if found else None
+    return (found.group(1) or found.group(2) or ("isis" if found.group("isis") else None)) if found else None
 
 
 def parse(lines) -> list[Block] | None:

@@ -529,7 +529,7 @@ class ValidatorTests(Base):
         bundle = copy.deepcopy(self.good)
         bundle["devices"][0]["features"] = []                                                        # a bundle cannot under-declare what its intent asks for
         self.assertIn("R1: requested features are the ones in the intent", self.failed(rehash(bundle))["C"])
-        self.assertEqual((checks.matrix_status("ubuntu_frr", "routing.ISIS"), checks.matrix_status("arista_ceos", "routing.EIGRP_IPV4")), ("NOT_IMPLEMENTED", "UNSUPPORTED"))
+        self.assertEqual((checks.matrix_status("ubuntu_frr", "routing.ISIS"), checks.matrix_status("arista_ceos", "routing.EIGRP_IPV4")), ("SUPPORTED", "UNSUPPORTED"))
 
     def production_shaped_r1(self):
         """A bundle whose R1 intent holds what the live R1 imports to: RIP, OSPFv2, OSPFv3, IS-IS, both static families."""
@@ -588,7 +588,7 @@ class ValidatorTests(Base):
             self.assertIn(f"R1: {name} on arista_ceos", self.failed(rehash(bundle))["C"], name)       # never skipped, never assumed supported
         bundle = self.production_shaped_r1()
         bundle["devices"][0]["platform"] = bundle["intent"]["devices"][0]["platform"] = "ubuntu_frr"
-        self.assertIn("R1: routing.ISIS on ubuntu_frr", self.failed(rehash(bundle))["C"])            # IS-IS support is still judged per platform
+        self.assertNotIn("R1: routing.ISIS on ubuntu_frr", self.failed(rehash(bundle)).get("C", []))
 
     def test_the_protected_vlan_the_managed_scope_and_the_authority_boundaries_are_enforced(self):
         bundle = copy.deepcopy(self.good)

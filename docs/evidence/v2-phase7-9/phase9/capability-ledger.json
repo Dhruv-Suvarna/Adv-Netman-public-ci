@@ -13738,45 +13738,29 @@
       ]
     },
     {
-      "capability_status": "NOT_IMPLEMENTED",
-      "closure_class": "NOT_IMPLEMENTED",
+      "capability_status": "SUPPORTED",
+      "closure_class": "SUPPORTED",
       "environment_blocker": [],
       "evidence_references": [
-        "gate:ubuntu_frr/routing.ISIS@d879b511a42d#30fa1af1bce931c8"
+        "live:nmas-cap-validation/frr-isis/2026-10-30T01:56:59.870668+00:00"
       ],
       "feature": "routing.ISIS",
-      "final_status": "UNSUPPORTED",
-      "missing_stages": [
-        "intent",
-        "renderer",
-        "validation",
-        "execution",
-        "readback",
-        "postcheck",
-        "compensation",
-        "restoration",
-        "live"
-      ],
+      "final_status": "SUPPORTED",
+      "missing_stages": [],
       "platform": "ubuntu_frr",
       "stages": {
-        "compensation": false,
-        "execution": false,
-        "intent": false,
-        "live": false,
-        "postcheck": false,
-        "readback": false,
-        "renderer": false,
-        "restoration": false,
+        "compensation": true,
+        "execution": true,
+        "intent": true,
+        "live": true,
+        "postcheck": true,
+        "readback": true,
+        "renderer": true,
+        "restoration": true,
         "tests": true,
-        "validation": false
+        "validation": true
       },
-      "unsupported_reasons": [
-        "CONFIG_VALIDATION_FAILED",
-        "EXECUTOR_REFUSED",
-        "PARSER_ABSENT",
-        "RENDERER_ABSENT",
-        "UI_ABSENT"
-      ]
+      "unsupported_reasons": []
     },
     {
       "capability_status": "SUPPORTED",
@@ -15501,8 +15485,8 @@
     "environment_blocked_by_platform": {
       "cisco_iosxr": 66
     },
-    "supported": 62,
-    "technically_feasible_remaining": 265,
+    "supported": 63,
+    "technically_feasible_remaining": 264,
     "total": 396,
     "unsupported_or_out_of_scope": 3
   },
@@ -15529,7 +15513,7 @@
       }
     }
   ],
-  "matrix_supported": 62,
+  "matrix_supported": 63,
   "matrix_total": 396,
   "per_platform": {
     "arista_ceos": {
@@ -15590,11 +15574,11 @@
     "ubuntu_frr": {
       "BLOCKED_BY_ENVIRONMENT": 0,
       "LIVE_EVIDENCE_MISSING": 0,
-      "NOT_IMPLEMENTED": 51,
+      "NOT_IMPLEMENTED": 50,
       "OUT_OF_SCOPE": 0,
       "PARTIAL": 0,
       "RENDER_VALIDATE_ONLY": 0,
-      "SUPPORTED": 15,
+      "SUPPORTED": 16,
       "UNSUPPORTED": 0,
       "total": 66
     }
@@ -15616,11 +15600,11 @@
   "totals": {
     "BLOCKED_BY_ENVIRONMENT": 0,
     "LIVE_EVIDENCE_MISSING": 0,
-    "NOT_IMPLEMENTED": 292,
+    "NOT_IMPLEMENTED": 291,
     "OUT_OF_SCOPE": 0,
     "PARTIAL": 39,
     "RENDER_VALIDATE_ONLY": 0,
-    "SUPPORTED": 62,
+    "SUPPORTED": 63,
     "UNSUPPORTED": 3
   }
 }

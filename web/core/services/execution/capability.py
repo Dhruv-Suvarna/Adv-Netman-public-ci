@@ -50,7 +50,7 @@ CEOS_COMPENSABLE = frozenset({"interface", "address", "static_route", *REMOVAL_T
                               "acl", "acl_attachment", "dhcp_relay", "fhrp", "routing_rip", "routing_ospf", "routing_isis",
                               "routing_bgp", "routing_binding", "bgp_neighbor", "bgp_neighbor_af", "bgp_network",
                               *MANAGEMENT_TYPES})
-_LINUX_ROUTING = ("routing_ospf", "routing_binding", "routing_rip", "routing_bgp", "bgp_neighbor", "bgp_neighbor_af", "bgp_network")
+_LINUX_ROUTING = ("routing_ospf", "routing_binding", "routing_rip", "routing_isis", "routing_bgp", "bgp_neighbor", "bgp_neighbor_af", "bgp_network")
 LINUX_APPLY = frozenset({"interface", "address", "static_route", "nat_rule", *_LINUX_ROUTING})
 LINUX_COMPENSABLE = frozenset({"interface", "address", "static_route", "nat_rule", *_LINUX_ROUTING})
 # executors.srlinux.OBJECT_TYPES: every applied type is compensated from the captured configuration tree.  The routing and
@@ -67,7 +67,7 @@ _NOT_IMPLEMENTED_TYPES = {
     "nat_pool": "No platform renders NAT pools.", "nat_rule": "Multi-rule nftables table merge is unresolved (Phase 14 limitation).",
     "pbr_policy": "No platform supports PBR.", "pbr_attachment": "No platform supports PBR.",
     "raw_configlet": "No supported, incremental raw-FRR apply mechanism is proven (master.py applies frr.conf as a whole); a Raw Configlet is never run as a Linux shell command.",
-    "routing_isis": "Rendered and executed on cEOS only.", "routing_eigrp": "No renderer on any platform.",
+    "routing_isis": "Rendered and executed on cEOS and FRR.", "routing_eigrp": "No renderer on any platform.",
     "mgmt_vrf": "Management VRF: rendered and validated; execution is implemented for cEOS only.",
     "mgmt_vrf_binding": "Management VRF: rendered and validated; execution is implemented for cEOS only.",
     "mgmt_vrf_route": "Management VRF: rendered and validated; execution is implemented for cEOS only.",
