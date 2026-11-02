@@ -81,7 +81,7 @@
       "size": 1261
     }
   ],
-  "mirror_parent_commit": "e0e85e6fa13fd75f4015bf356364f6914085649f",
+  "mirror_parent_commit": "cf0d79e80aec3e4cc01c377a4cf9a8fb1922f5fa",
   "mirror_root_commit": "e0e85e6fa13fd75f4015bf356364f6914085649f",
   "schema_version": 1,
   "source_file_count": 1721,
@@ -413,8 +413,8 @@
     {
       "mode": "100644",
       "path": "challenge_console/tests/test_tg_ui_closure.py",
-      "sha256": "90ed1bc294fc7b20224c914642a1f644fed3113af0e96333456cf8abaa71c05e",
-      "size": 17023
+      "sha256": "254620876edf8cf7b00d530bcc2341df26aa7c6caaa2511cfb5e39911a05556d",
+      "size": 17737
     },
     {
       "mode": "100644",
@@ -10413,8 +10413,8 @@
       "size": 178
     }
   ],
-  "source_manifest_sha256": "c4992673feb727148af12b5dac046e8394cd87d54f4ad6eaf81946746f8f08c2",
+  "source_manifest_sha256": "6222f8e11fb9e31b087ead30da60448f57a3b545710235cd7e7ac7abab8bb6ae",
   "source_repository": "Dhruv-Suvarna/Adv-Netman",
-  "source_revision": "39dee216cf439c890fcec03d9699f35d7c1e7f66",
-  "source_tree_oid": "9565b28b8aa3ffc16a97ab09da5cb5f0fccb29d6"
+  "source_revision": "623bdac516241e59d315028d3351298d0f5b82b1",
+  "source_tree_oid": "b3d5473d810a07f7a9491fcc40ce40f182c9600a"
 }

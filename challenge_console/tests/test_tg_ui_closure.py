@@ -10,6 +10,7 @@ No collector touches the network here: the runtimes are built with no collectors
 
 from __future__ import annotations
 
+import gc
 import json
 import signal
 import time
@@ -59,8 +60,20 @@ class _ProbeView(View if not TK_REASON else object):
 class TkCase(ConsoleTestCase):
     def setUp(self):
         super().setUp()
+        # Registered before the root exists, so it runs LAST: after the root / app / runtime cleanups.
+        self.addCleanup(self._release_tk_on_main_thread)
         self.root = tk.Tk()
         self.addCleanup(self._destroy_root)
+
+    def _release_tk_on_main_thread(self) -> None:
+        """Free this test's Tk interpreter on the main thread (the same guard as ``test_ui.UiTestCase``).
+
+        Tcl aborts the whole process (``Tcl_AsyncDelete: async handler deleted by the wrong thread``) when a Tk interpreter is freed
+        on any other thread.  The root sits in reference cycles, so without this it waits for the cyclic collector, which can then
+        run on a later test's collector threads.
+        """
+        self.__dict__.pop("root", None)
+        gc.collect()
 
     def _destroy_root(self):
         try:
