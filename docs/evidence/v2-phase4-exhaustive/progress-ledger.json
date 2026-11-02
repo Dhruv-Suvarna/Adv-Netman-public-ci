@@ -1,9 +1,9 @@
 {
   "assessed": 396,
   "capability_counts": {
-    "NOT_IMPLEMENTED": 346,
+    "NOT_IMPLEMENTED": 343,
     "OUT_OF_SCOPE": 0,
-    "SUPPORTED": 47,
+    "SUPPORTED": 50,
     "UNSUPPORTED": 3
   },
   "cells": [
@@ -2984,7 +2984,7 @@
       "device_builder": "PASS",
       "evidence_ids": [],
       "evidence_references": [
-        "live:nmas-cap-validation/ceos-isis-ssh/2026-10-29T05:56:01.552700+00:00"
+        "live:nmas-cap-validation/ceos-isis-ssh/2026-10-29T06:00:59.813918+00:00"
       ],
       "executor": "PASS",
       "feasibility": "PROVEN",
@@ -3015,7 +3015,7 @@
           "detail": "cEOS 4.36.2F / FRR 8.4.4 Ethernet2\u2194eth2; pinned, source-bound SSH via the verified disposable management bridge; NMAS renderer + CeosExecutor: preflight=['routing_isis:APPLY/True/-', 'routing_binding:APPLY/True/-', 'routing_binding:APPLY/True/-']; compensation=['COMPENSATED', 'COMPENSATED', 'COMPENSATED']; negative control=True; adjacency+routes=True; import=True; postcheck=True; exact pre-apply state=True; full baseline=True; absence after compensation=True; failure=none",
           "outcome": "PASS",
           "reason": "",
-          "reference": "live:nmas-cap-validation/ceos-isis-ssh/2026-10-29T05:56:01.552700+00:00",
+          "reference": "live:nmas-cap-validation/ceos-isis-ssh/2026-10-29T06:00:59.813918+00:00",
           "test_type": "LIVE"
         },
         "config_validation": {
@@ -3050,28 +3050,28 @@
           "detail": "cEOS 4.36.2F / FRR 8.4.4 Ethernet2\u2194eth2; pinned, source-bound SSH via the verified disposable management bridge; NMAS renderer + CeosExecutor: preflight=['routing_isis:APPLY/True/-', 'routing_binding:APPLY/True/-', 'routing_binding:APPLY/True/-']; compensation=['COMPENSATED', 'COMPENSATED', 'COMPENSATED']; negative control=True; adjacency+routes=True; import=True; postcheck=True; exact pre-apply state=True; full baseline=True; absence after compensation=True; failure=none",
           "outcome": "PASS",
           "reason": "",
-          "reference": "live:nmas-cap-validation/ceos-isis-ssh/2026-10-29T05:56:01.552700+00:00",
+          "reference": "live:nmas-cap-validation/ceos-isis-ssh/2026-10-29T06:00:59.813918+00:00",
           "test_type": "LIVE"
         },
         "live_read": {
           "detail": "cEOS 4.36.2F / FRR 8.4.4 Ethernet2\u2194eth2; pinned, source-bound SSH via the verified disposable management bridge; NMAS renderer + CeosExecutor: preflight=['routing_isis:APPLY/True/-', 'routing_binding:APPLY/True/-', 'routing_binding:APPLY/True/-']; compensation=['COMPENSATED', 'COMPENSATED', 'COMPENSATED']; negative control=True; adjacency+routes=True; import=True; postcheck=True; exact pre-apply state=True; full baseline=True; absence after compensation=True; failure=none",
           "outcome": "PASS",
           "reason": "",
-          "reference": "live:nmas-cap-validation/ceos-isis-ssh/2026-10-29T05:56:01.552700+00:00",
+          "reference": "live:nmas-cap-validation/ceos-isis-ssh/2026-10-29T06:00:59.813918+00:00",
           "test_type": "LIVE"
         },
         "live_write": {
           "detail": "cEOS 4.36.2F / FRR 8.4.4 Ethernet2\u2194eth2; pinned, source-bound SSH via the verified disposable management bridge; NMAS renderer + CeosExecutor: preflight=['routing_isis:APPLY/True/-', 'routing_binding:APPLY/True/-', 'routing_binding:APPLY/True/-']; compensation=['COMPENSATED', 'COMPENSATED', 'COMPENSATED']; negative control=True; adjacency+routes=True; import=True; postcheck=True; exact pre-apply state=True; full baseline=True; absence after compensation=True; failure=none",
           "outcome": "PASS",
           "reason": "",
-          "reference": "live:nmas-cap-validation/ceos-isis-ssh/2026-10-29T05:56:01.552700+00:00",
+          "reference": "live:nmas-cap-validation/ceos-isis-ssh/2026-10-29T06:00:59.813918+00:00",
           "test_type": "LIVE"
         },
         "parser_import": {
           "detail": "cEOS 4.36.2F / FRR 8.4.4 Ethernet2\u2194eth2; pinned, source-bound SSH via the verified disposable management bridge; NMAS renderer + CeosExecutor: preflight=['routing_isis:APPLY/True/-', 'routing_binding:APPLY/True/-', 'routing_binding:APPLY/True/-']; compensation=['COMPENSATED', 'COMPENSATED', 'COMPENSATED']; negative control=True; adjacency+routes=True; import=True; postcheck=True; exact pre-apply state=True; full baseline=True; absence after compensation=True; failure=none",
           "outcome": "PASS",
           "reason": "",
-          "reference": "live:nmas-cap-validation/ceos-isis-ssh/2026-10-29T05:56:01.552700+00:00",
+          "reference": "live:nmas-cap-validation/ceos-isis-ssh/2026-10-29T06:00:59.813918+00:00",
           "test_type": "LIVE"
         },
         "renderer": {
@@ -3085,7 +3085,7 @@
           "detail": "cEOS 4.36.2F / FRR 8.4.4 Ethernet2\u2194eth2; pinned, source-bound SSH via the verified disposable management bridge; NMAS renderer + CeosExecutor: preflight=['routing_isis:APPLY/True/-', 'routing_binding:APPLY/True/-', 'routing_binding:APPLY/True/-']; compensation=['COMPENSATED', 'COMPENSATED', 'COMPENSATED']; negative control=True; adjacency+routes=True; import=True; postcheck=True; exact pre-apply state=True; full baseline=True; absence after compensation=True; failure=none",
           "outcome": "PASS",
           "reason": "",
-          "reference": "live:nmas-cap-validation/ceos-isis-ssh/2026-10-29T05:56:01.552700+00:00",
+          "reference": "live:nmas-cap-validation/ceos-isis-ssh/2026-10-29T06:00:59.813918+00:00",
           "test_type": "LIVE"
         },
         "semantic_model": {
@@ -3097,13 +3097,13 @@
         }
       },
       "renderer": "PASS",
-      "repository_head": "d6efab553f0a319cc294894f1c949e2cf8b51329",
+      "repository_head": "c5f17b4085a23b44624153b5914974879d426d19",
       "runtime_test": "PASS",
       "runtime_version": "ceos:4.36.2F / FRRouting 8.4.4",
       "semantic": "PASS",
       "status": "SUPPORTED",
       "strongest_test_type": "LIVE",
-      "timestamp": "2026-10-29T05:54:40.865696+00:00",
+      "timestamp": "2026-10-29T05:59:38.185147+00:00",
       "unsupported_reasons": [],
       "validator": "PASS"
     },
@@ -4123,38 +4123,28 @@
       "validator": "PASS"
     },
     {
-      "assessment_basis": "PREREQUISITE_GATE",
+      "assessment_basis": "RUNTIME_INVESTIGATION",
       "assessment_complete": true,
-      "assessment_id": 925,
+      "assessment_id": null,
       "automated_tests": "PASS",
-      "candidate": "FAIL",
-      "compensation": "BLOCKED",
-      "device_builder": "FAIL",
-      "evidence_ids": [
-        6205,
-        6206,
-        6207,
-        6208,
-        6209,
-        6210,
-        6211,
-        6212,
-        6213,
-        6214,
-        6215
-      ],
+      "candidate": "PASS",
+      "capability_status": "SUPPORTED",
+      "compensation": "PASS",
+      "device_builder": "PASS",
+      "evidence_ids": [],
       "evidence_references": [
-        "gate:arista_ceos/service_policy.ACL_ATTACH_IPV6@d879b511a42d#a7fd330c0c0a856d"
+        "live:nmas-cap-validation/ceos-acl_attach_ipv6/2026-10-29T02:39:34.956402+00:00"
       ],
-      "executor": "FAIL",
+      "executor": "PASS",
+      "feasibility": "PROVEN",
       "feature": "service_policy.ACL_ATTACH_IPV6",
       "field_validation": "PASS",
-      "final_status": "UNSUPPORTED",
-      "live_read": "BLOCKED",
-      "live_write": "BLOCKED",
-      "parser": "FAIL",
+      "final_status": "SUPPORTED",
+      "live_read": "PASS",
+      "live_write": "PASS",
+      "parser": "PASS",
       "platform": "arista_ceos",
-      "postcheck": "BLOCKED",
+      "postcheck": "PASS",
       "probes": {
         "automated_tests": {
           "detail": "Repeated renderer determinism=True; feature-specific valid/invalid field regression=PASS.",
@@ -4164,37 +4154,37 @@
           "test_type": "FIXTURE"
         },
         "candidate_generation": {
-          "detail": "Real candidate_renderer.render ran; 943 chars; target-rendered=FAIL.",
-          "outcome": "FAIL",
-          "reason": "RENDERER_ABSENT",
+          "detail": "Real candidate_renderer.render ran; 805 chars; target-rendered=PASS.",
+          "outcome": "PASS",
+          "reason": "",
           "reference": "",
           "test_type": "FIXTURE"
         },
         "compensation": {
-          "detail": "Not attempted: NMAS prerequisite layer(s) failed their deliberate probe (renderer=RENDERER_ABSENT, candidate_generation=RENDERER_ABSENT, executor=EXECUTOR_REFUSED). First blocker renderer: Authoritative renderer differential: 0 target line(s), 1 refusal marker(s); sha256=e5a76a5f1a8311243ebe8cf1df6b2ae02c7b7bbd46fb4375cd2e1bb06fb34bf1. No device was contacted for this stage.",
-          "outcome": "BLOCKED",
-          "reason": "RENDERER_ABSENT",
-          "reference": "gate:arista_ceos/service_policy.ACL_ATTACH_IPV6@d879b511a42d#a7fd330c0c0a856d",
-          "test_type": "STATIC"
+          "detail": "isolated cEOS IPV6 EXTENDED ACL CAP_ACL (deny 2001:db8:44::66, permit any) attached inbound on Ethernet1: NMAS rendered [ipv6 access-list CAP_ACL; 10 deny icmpv6 host 2001:db8:44::66 any; 15 deny tcp any range 1024 2048 host 2001:db8:44::1 eq 80; 20 permit ipv6 any any; interface Ethernet1; ipv6 access-group CAP_ACL in] and applied it through the registered executor; preflight proved exact inverse=True; executor compensation statuses=['COMPENSATED', 'COMPENSATED']; running-config identical to pre-apply capture=True; behaviour reverted=True.",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-validation/ceos-acl_attach_ipv6/2026-10-29T02:39:34.956402+00:00",
+          "test_type": "LIVE"
         },
         "config_validation": {
-          "detail": "Actual network-config validation=BLOCKED; failing checks=['PLATFORM_CAPABILITY']; external inputs are OFFLINE_FIXTURE only.",
-          "outcome": "FAIL",
-          "reason": "CONFIG_VALIDATION_FAILED",
+          "detail": "Actual network-config validation=PASS; failing checks=[]; external inputs are OFFLINE_FIXTURE only.",
+          "outcome": "PASS",
+          "reason": "",
           "reference": "",
           "test_type": "FIXTURE"
         },
         "device_builder_ui": {
-          "detail": "Real authoring API refused the feature (CollectionMutationError).",
-          "outcome": "FAIL",
-          "reason": "UI_ABSENT",
+          "detail": "Real Device Builder mutation API accepted the feature.",
+          "outcome": "PASS",
+          "reason": "",
           "reference": "",
           "test_type": "FIXTURE"
         },
         "executor": {
-          "detail": "Real executor.assess on fixture: action=REFUSE; exact inverse present=False; restorable=False; no connection/apply invoked.",
-          "outcome": "FAIL",
-          "reason": "EXECUTOR_REFUSED",
+          "detail": "Real executor.assess on fixture: action=SKIP_SATISFIED; exact inverse present=False; restorable=True; no connection/apply invoked.",
+          "outcome": "PASS",
+          "reason": "",
           "reference": "",
           "test_type": "FIXTURE"
         },
@@ -4206,46 +4196,46 @@
           "test_type": "FIXTURE"
         },
         "live_post_write_validation": {
-          "detail": "Not attempted: NMAS prerequisite layer(s) failed their deliberate probe (renderer=RENDERER_ABSENT, candidate_generation=RENDERER_ABSENT, executor=EXECUTOR_REFUSED). First blocker renderer: Authoritative renderer differential: 0 target line(s), 1 refusal marker(s); sha256=e5a76a5f1a8311243ebe8cf1df6b2ae02c7b7bbd46fb4375cd2e1bb06fb34bf1. No device was contacted for this stage.",
-          "outcome": "BLOCKED",
-          "reason": "RENDERER_ABSENT",
-          "reference": "gate:arista_ceos/service_policy.ACL_ATTACH_IPV6@d879b511a42d#a7fd330c0c0a856d",
-          "test_type": "STATIC"
+          "detail": "isolated cEOS IPV6 EXTENDED ACL CAP_ACL (deny 2001:db8:44::66, permit any) attached inbound on Ethernet1: NMAS rendered [ipv6 access-list CAP_ACL; 10 deny icmpv6 host 2001:db8:44::66 any; 15 deny tcp any range 1024 2048 host 2001:db8:44::1 eq 80; 20 permit ipv6 any any; interface Ethernet1; ipv6 access-group CAP_ACL in] and applied it through the registered executor; operator health facts (config / virtual_addresses groups) contain the intended object=True; observed {\"config\": {\"acl_attachments\": [{\"acl\": \"CAP_ACL\", \"direction\": \"IN\", \"interface\": \"Ethernet1\"}], \"acl_definitions\": [\"CAP_ACL\"], \"dhcp_relays\": []}, \"virtual_addresses\": []}.",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-validation/ceos-acl_attach_ipv6/2026-10-29T02:39:34.956402+00:00",
+          "test_type": "LIVE"
         },
         "live_read": {
-          "detail": "Not attempted: NMAS prerequisite layer(s) failed their deliberate probe (renderer=RENDERER_ABSENT, candidate_generation=RENDERER_ABSENT, executor=EXECUTOR_REFUSED). First blocker renderer: Authoritative renderer differential: 0 target line(s), 1 refusal marker(s); sha256=e5a76a5f1a8311243ebe8cf1df6b2ae02c7b7bbd46fb4375cd2e1bb06fb34bf1. No device was contacted for this stage.",
-          "outcome": "BLOCKED",
-          "reason": "RENDERER_ABSENT",
-          "reference": "gate:arista_ceos/service_policy.ACL_ATTACH_IPV6@d879b511a42d#a7fd330c0c0a856d",
-          "test_type": "STATIC"
+          "detail": "isolated cEOS IPV6 EXTENDED ACL CAP_ACL (deny 2001:db8:44::66, permit any) attached inbound on Ethernet1: NMAS rendered [ipv6 access-list CAP_ACL; 10 deny icmpv6 host 2001:db8:44::66 any; 15 deny tcp any range 1024 2048 host 2001:db8:44::1 eq 80; 20 permit ipv6 any any; interface Ethernet1; ipv6 access-group CAP_ACL in] and applied it through the registered executor; operator health reader reached the device and returned its fact groups=True.",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-validation/ceos-acl_attach_ipv6/2026-10-29T02:39:34.956402+00:00",
+          "test_type": "LIVE"
         },
         "live_write": {
-          "detail": "Not attempted: NMAS prerequisite layer(s) failed their deliberate probe (renderer=RENDERER_ABSENT, candidate_generation=RENDERER_ABSENT, executor=EXECUTOR_REFUSED). First blocker renderer: Authoritative renderer differential: 0 target line(s), 1 refusal marker(s); sha256=e5a76a5f1a8311243ebe8cf1df6b2ae02c7b7bbd46fb4375cd2e1bb06fb34bf1. No device was contacted for this stage.",
-          "outcome": "BLOCKED",
-          "reason": "RENDERER_ABSENT",
-          "reference": "gate:arista_ceos/service_policy.ACL_ATTACH_IPV6@d879b511a42d#a7fd330c0c0a856d",
-          "test_type": "STATIC"
+          "detail": "isolated cEOS IPV6 EXTENDED ACL CAP_ACL (deny 2001:db8:44::66, permit any) attached inbound on Ethernet1: NMAS rendered [ipv6 access-list CAP_ACL; 10 deny icmpv6 host 2001:db8:44::66 any; 15 deny tcp any range 1024 2048 host 2001:db8:44::1 eq 80; 20 permit ipv6 any any; interface Ethernet1; ipv6 access-group CAP_ACL in] and applied it through the registered executor; device accepted every line=True.",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-validation/ceos-acl_attach_ipv6/2026-10-29T02:39:34.956402+00:00",
+          "test_type": "LIVE"
         },
         "parser_import": {
-          "detail": "Real ceos-2.0 parser executed; target semantic match=False; unmanaged blocks=10.",
-          "outcome": "FAIL",
-          "reason": "PARSER_ABSENT",
-          "reference": "",
-          "test_type": "FIXTURE"
+          "detail": "isolated cEOS IPV6 EXTENDED ACL CAP_ACL (deny 2001:db8:44::66, permit any) attached inbound on Ethernet1: NMAS rendered [ipv6 access-list CAP_ACL; 10 deny icmpv6 host 2001:db8:44::66 any; 15 deny tcp any range 1024 2048 host 2001:db8:44::1 eq 80; 20 permit ipv6 any any; interface Ethernet1; ipv6 access-group CAP_ACL in] and applied it through the registered executor; cEOS import parser recovered the same semantic object from live running-config=True.",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-validation/ceos-acl_attach_ipv6/2026-10-29T02:39:34.956402+00:00",
+          "test_type": "LIVE"
         },
         "renderer": {
-          "detail": "Authoritative renderer differential: 0 target line(s), 1 refusal marker(s); sha256=e5a76a5f1a8311243ebe8cf1df6b2ae02c7b7bbd46fb4375cd2e1bb06fb34bf1.",
-          "outcome": "FAIL",
-          "reason": "RENDERER_ABSENT",
+          "detail": "Authoritative renderer differential: 1 target line(s), 0 refusal marker(s); sha256=208825cf0f8c182c0d681ebeb846e9371f3f4df4c1c00c6f7b1346e183a92ee2.",
+          "outcome": "PASS",
+          "reason": "",
           "reference": "",
           "test_type": "FIXTURE"
         },
         "runtime_validation": {
-          "detail": "Not attempted: NMAS prerequisite layer(s) failed their deliberate probe (renderer=RENDERER_ABSENT, candidate_generation=RENDERER_ABSENT, executor=EXECUTOR_REFUSED). First blocker renderer: Authoritative renderer differential: 0 target line(s), 1 refusal marker(s); sha256=e5a76a5f1a8311243ebe8cf1df6b2ae02c7b7bbd46fb4375cd2e1bb06fb34bf1. No device was contacted for this stage.",
-          "outcome": "BLOCKED",
-          "reason": "RENDERER_ABSENT",
-          "reference": "gate:arista_ceos/service_policy.ACL_ATTACH_IPV6@d879b511a42d#a7fd330c0c0a856d",
-          "test_type": "STATIC"
+          "detail": "isolated cEOS IPV6 EXTENDED ACL CAP_ACL (deny 2001:db8:44::66, permit any) attached inbound on Ethernet1: NMAS rendered [ipv6 access-list CAP_ACL; 10 deny icmpv6 host 2001:db8:44::66 any; 15 deny tcp any range 1024 2048 host 2001:db8:44::1 eq 80; 20 permit ipv6 any any; interface Ethernet1; ipv6 access-group CAP_ACL in] and applied it through the registered executor; behaviour with feature: permitted-source ping=True, denied-source ping=False; control before: permitted-source ping=True, denied-source ping=True; after removal: permitted-source ping=True, denied-source ping=True.",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-validation/ceos-acl_attach_ipv6/2026-10-29T02:39:34.956402+00:00",
+          "test_type": "LIVE"
         },
         "semantic_model": {
           "detail": "Canonical fixture resolves the feature-specific path security.attachments.attach_0000000000000003.direction.",
@@ -4255,22 +4245,16 @@
           "test_type": "FIXTURE"
         }
       },
-      "renderer": "FAIL",
-      "repository_head": "d879b511a42dea60d7547a4fc17ecdeea4073377",
-      "runtime_test": "BLOCKED",
-      "runtime_version": "not contacted (prerequisite gate); platform runtime last observed: ceos:4.36.2F / Ubuntu-FRR 8.4.4 peer",
+      "renderer": "PASS",
+      "repository_head": "256bd32890986d6740ab3726608426f030566970",
+      "runtime_test": "PASS",
+      "runtime_version": "ceos:4.36.2F / Linux peer namespaces",
       "semantic": "PASS",
-      "status": "UNSUPPORTED",
-      "strongest_test_type": "FIXTURE",
-      "timestamp": "2026-10-04T23:07:27.817257+00:00",
-      "unsupported_reasons": [
-        "CONFIG_VALIDATION_FAILED",
-        "EXECUTOR_REFUSED",
-        "PARSER_ABSENT",
-        "RENDERER_ABSENT",
-        "UI_ABSENT"
-      ],
-      "validator": "FAIL"
+      "status": "SUPPORTED",
+      "strongest_test_type": "LIVE",
+      "timestamp": "2026-10-29T02:38:21.423478+00:00",
+      "unsupported_reasons": [],
+      "validator": "PASS"
     },
     {
       "assessment_basis": "RUNTIME_INVESTIGATION",
@@ -4561,38 +4545,28 @@
       "validator": "PASS"
     },
     {
-      "assessment_basis": "PREREQUISITE_GATE",
+      "assessment_basis": "RUNTIME_INVESTIGATION",
       "assessment_complete": true,
-      "assessment_id": 924,
+      "assessment_id": null,
       "automated_tests": "PASS",
-      "candidate": "FAIL",
-      "compensation": "BLOCKED",
-      "device_builder": "FAIL",
-      "evidence_ids": [
-        6194,
-        6195,
-        6196,
-        6197,
-        6198,
-        6199,
-        6200,
-        6201,
-        6202,
-        6203,
-        6204
-      ],
+      "candidate": "PASS",
+      "capability_status": "SUPPORTED",
+      "compensation": "PASS",
+      "device_builder": "PASS",
+      "evidence_ids": [],
       "evidence_references": [
-        "gate:arista_ceos/service_policy.ACL_IPV6_EXTENDED@d879b511a42d#4e5009a757febb98"
+        "live:nmas-cap-validation/ceos-acl_ipv6_extended/2026-10-29T02:39:12.707635+00:00"
       ],
-      "executor": "FAIL",
+      "executor": "PASS",
+      "feasibility": "PROVEN",
       "feature": "service_policy.ACL_IPV6_EXTENDED",
       "field_validation": "PASS",
-      "final_status": "UNSUPPORTED",
-      "live_read": "BLOCKED",
-      "live_write": "BLOCKED",
-      "parser": "FAIL",
+      "final_status": "SUPPORTED",
+      "live_read": "PASS",
+      "live_write": "PASS",
+      "parser": "PASS",
       "platform": "arista_ceos",
-      "postcheck": "BLOCKED",
+      "postcheck": "PASS",
       "probes": {
         "automated_tests": {
           "detail": "Repeated renderer determinism=True; feature-specific valid/invalid field regression=PASS.",
@@ -4602,37 +4576,37 @@
           "test_type": "FIXTURE"
         },
         "candidate_generation": {
-          "detail": "Real candidate_renderer.render ran; 819 chars; target-rendered=FAIL.",
-          "outcome": "FAIL",
-          "reason": "RENDERER_ABSENT",
+          "detail": "Real candidate_renderer.render ran; 773 chars; target-rendered=PASS.",
+          "outcome": "PASS",
+          "reason": "",
           "reference": "",
           "test_type": "FIXTURE"
         },
         "compensation": {
-          "detail": "Not attempted: NMAS prerequisite layer(s) failed their deliberate probe (renderer=RENDERER_ABSENT, candidate_generation=RENDERER_ABSENT, executor=EXECUTOR_REFUSED). First blocker renderer: Authoritative renderer differential: 0 target line(s), 1 refusal marker(s); sha256=c97f488b779c966cdbb04921a4c8a2b690d7038362d40a2478f00cc3d4d20ed7. No device was contacted for this stage.",
-          "outcome": "BLOCKED",
-          "reason": "RENDERER_ABSENT",
-          "reference": "gate:arista_ceos/service_policy.ACL_IPV6_EXTENDED@d879b511a42d#4e5009a757febb98",
-          "test_type": "STATIC"
+          "detail": "isolated cEOS IPV6 EXTENDED ACL CAP_ACL (deny 2001:db8:44::66, permit any) attached inbound on Ethernet1: NMAS rendered [ipv6 access-list CAP_ACL; 10 deny icmpv6 host 2001:db8:44::66 any; 15 deny tcp any range 1024 2048 host 2001:db8:44::1 eq 80; 20 permit ipv6 any any; interface Ethernet1; ipv6 access-group CAP_ACL in] and applied it through the registered executor; preflight proved exact inverse=True; executor compensation statuses=['COMPENSATED', 'COMPENSATED']; running-config identical to pre-apply capture=True; behaviour reverted=True.",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-validation/ceos-acl_ipv6_extended/2026-10-29T02:39:12.707635+00:00",
+          "test_type": "LIVE"
         },
         "config_validation": {
-          "detail": "Actual network-config validation=BLOCKED; failing checks=['PLATFORM_CAPABILITY']; external inputs are OFFLINE_FIXTURE only.",
-          "outcome": "FAIL",
-          "reason": "CONFIG_VALIDATION_FAILED",
+          "detail": "Actual network-config validation=PASS; failing checks=[]; external inputs are OFFLINE_FIXTURE only.",
+          "outcome": "PASS",
+          "reason": "",
           "reference": "",
           "test_type": "FIXTURE"
         },
         "device_builder_ui": {
-          "detail": "Real authoring API refused the feature (CollectionMutationError).",
-          "outcome": "FAIL",
-          "reason": "UI_ABSENT",
+          "detail": "Real Device Builder mutation API accepted the feature.",
+          "outcome": "PASS",
+          "reason": "",
           "reference": "",
           "test_type": "FIXTURE"
         },
         "executor": {
-          "detail": "Real executor.assess on fixture: action=REFUSE; exact inverse present=False; restorable=False; no connection/apply invoked.",
-          "outcome": "FAIL",
-          "reason": "EXECUTOR_REFUSED",
+          "detail": "Real executor.assess on fixture: action=APPLY; exact inverse present=False; restorable=True; no connection/apply invoked.",
+          "outcome": "PASS",
+          "reason": "",
           "reference": "",
           "test_type": "FIXTURE"
         },
@@ -4644,46 +4618,46 @@
           "test_type": "FIXTURE"
         },
         "live_post_write_validation": {
-          "detail": "Not attempted: NMAS prerequisite layer(s) failed their deliberate probe (renderer=RENDERER_ABSENT, candidate_generation=RENDERER_ABSENT, executor=EXECUTOR_REFUSED). First blocker renderer: Authoritative renderer differential: 0 target line(s), 1 refusal marker(s); sha256=c97f488b779c966cdbb04921a4c8a2b690d7038362d40a2478f00cc3d4d20ed7. No device was contacted for this stage.",
-          "outcome": "BLOCKED",
-          "reason": "RENDERER_ABSENT",
-          "reference": "gate:arista_ceos/service_policy.ACL_IPV6_EXTENDED@d879b511a42d#4e5009a757febb98",
-          "test_type": "STATIC"
+          "detail": "isolated cEOS IPV6 EXTENDED ACL CAP_ACL (deny 2001:db8:44::66, permit any) attached inbound on Ethernet1: NMAS rendered [ipv6 access-list CAP_ACL; 10 deny icmpv6 host 2001:db8:44::66 any; 15 deny tcp any range 1024 2048 host 2001:db8:44::1 eq 80; 20 permit ipv6 any any; interface Ethernet1; ipv6 access-group CAP_ACL in] and applied it through the registered executor; operator health facts (config / virtual_addresses groups) contain the intended object=True; observed {\"config\": {\"acl_attachments\": [{\"acl\": \"CAP_ACL\", \"direction\": \"IN\", \"interface\": \"Ethernet1\"}], \"acl_definitions\": [\"CAP_ACL\"], \"dhcp_relays\": []}, \"virtual_addresses\": []}.",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-validation/ceos-acl_ipv6_extended/2026-10-29T02:39:12.707635+00:00",
+          "test_type": "LIVE"
         },
         "live_read": {
-          "detail": "Not attempted: NMAS prerequisite layer(s) failed their deliberate probe (renderer=RENDERER_ABSENT, candidate_generation=RENDERER_ABSENT, executor=EXECUTOR_REFUSED). First blocker renderer: Authoritative renderer differential: 0 target line(s), 1 refusal marker(s); sha256=c97f488b779c966cdbb04921a4c8a2b690d7038362d40a2478f00cc3d4d20ed7. No device was contacted for this stage.",
-          "outcome": "BLOCKED",
-          "reason": "RENDERER_ABSENT",
-          "reference": "gate:arista_ceos/service_policy.ACL_IPV6_EXTENDED@d879b511a42d#4e5009a757febb98",
-          "test_type": "STATIC"
+          "detail": "isolated cEOS IPV6 EXTENDED ACL CAP_ACL (deny 2001:db8:44::66, permit any) attached inbound on Ethernet1: NMAS rendered [ipv6 access-list CAP_ACL; 10 deny icmpv6 host 2001:db8:44::66 any; 15 deny tcp any range 1024 2048 host 2001:db8:44::1 eq 80; 20 permit ipv6 any any; interface Ethernet1; ipv6 access-group CAP_ACL in] and applied it through the registered executor; operator health reader reached the device and returned its fact groups=True.",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-validation/ceos-acl_ipv6_extended/2026-10-29T02:39:12.707635+00:00",
+          "test_type": "LIVE"
         },
         "live_write": {
-          "detail": "Not attempted: NMAS prerequisite layer(s) failed their deliberate probe (renderer=RENDERER_ABSENT, candidate_generation=RENDERER_ABSENT, executor=EXECUTOR_REFUSED). First blocker renderer: Authoritative renderer differential: 0 target line(s), 1 refusal marker(s); sha256=c97f488b779c966cdbb04921a4c8a2b690d7038362d40a2478f00cc3d4d20ed7. No device was contacted for this stage.",
-          "outcome": "BLOCKED",
-          "reason": "RENDERER_ABSENT",
-          "reference": "gate:arista_ceos/service_policy.ACL_IPV6_EXTENDED@d879b511a42d#4e5009a757febb98",
-          "test_type": "STATIC"
+          "detail": "isolated cEOS IPV6 EXTENDED ACL CAP_ACL (deny 2001:db8:44::66, permit any) attached inbound on Ethernet1: NMAS rendered [ipv6 access-list CAP_ACL; 10 deny icmpv6 host 2001:db8:44::66 any; 15 deny tcp any range 1024 2048 host 2001:db8:44::1 eq 80; 20 permit ipv6 any any; interface Ethernet1; ipv6 access-group CAP_ACL in] and applied it through the registered executor; device accepted every line=True.",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-validation/ceos-acl_ipv6_extended/2026-10-29T02:39:12.707635+00:00",
+          "test_type": "LIVE"
         },
         "parser_import": {
-          "detail": "Real ceos-2.0 parser executed; target semantic match=False; unmanaged blocks=9.",
-          "outcome": "FAIL",
-          "reason": "PARSER_ABSENT",
-          "reference": "",
-          "test_type": "FIXTURE"
+          "detail": "isolated cEOS IPV6 EXTENDED ACL CAP_ACL (deny 2001:db8:44::66, permit any) attached inbound on Ethernet1: NMAS rendered [ipv6 access-list CAP_ACL; 10 deny icmpv6 host 2001:db8:44::66 any; 15 deny tcp any range 1024 2048 host 2001:db8:44::1 eq 80; 20 permit ipv6 any any; interface Ethernet1; ipv6 access-group CAP_ACL in] and applied it through the registered executor; cEOS import parser recovered the same semantic object from live running-config=True.",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-validation/ceos-acl_ipv6_extended/2026-10-29T02:39:12.707635+00:00",
+          "test_type": "LIVE"
         },
         "renderer": {
-          "detail": "Authoritative renderer differential: 0 target line(s), 1 refusal marker(s); sha256=c97f488b779c966cdbb04921a4c8a2b690d7038362d40a2478f00cc3d4d20ed7.",
-          "outcome": "FAIL",
-          "reason": "RENDERER_ABSENT",
+          "detail": "Authoritative renderer differential: 2 target line(s), 0 refusal marker(s); sha256=44f3a1e9800a3dddeee903755508ac78bf92dee86a7c7431552fd7190fbecbfa.",
+          "outcome": "PASS",
+          "reason": "",
           "reference": "",
           "test_type": "FIXTURE"
         },
         "runtime_validation": {
-          "detail": "Not attempted: NMAS prerequisite layer(s) failed their deliberate probe (renderer=RENDERER_ABSENT, candidate_generation=RENDERER_ABSENT, executor=EXECUTOR_REFUSED). First blocker renderer: Authoritative renderer differential: 0 target line(s), 1 refusal marker(s); sha256=c97f488b779c966cdbb04921a4c8a2b690d7038362d40a2478f00cc3d4d20ed7. No device was contacted for this stage.",
-          "outcome": "BLOCKED",
-          "reason": "RENDERER_ABSENT",
-          "reference": "gate:arista_ceos/service_policy.ACL_IPV6_EXTENDED@d879b511a42d#4e5009a757febb98",
-          "test_type": "STATIC"
+          "detail": "isolated cEOS IPV6 EXTENDED ACL CAP_ACL (deny 2001:db8:44::66, permit any) attached inbound on Ethernet1: NMAS rendered [ipv6 access-list CAP_ACL; 10 deny icmpv6 host 2001:db8:44::66 any; 15 deny tcp any range 1024 2048 host 2001:db8:44::1 eq 80; 20 permit ipv6 any any; interface Ethernet1; ipv6 access-group CAP_ACL in] and applied it through the registered executor; behaviour with feature: permitted-source ping=True, denied-source ping=False; control before: permitted-source ping=True, denied-source ping=True; after removal: permitted-source ping=True, denied-source ping=True.",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-validation/ceos-acl_ipv6_extended/2026-10-29T02:39:12.707635+00:00",
+          "test_type": "LIVE"
         },
         "semantic_model": {
           "detail": "Canonical fixture resolves the feature-specific path security.acls.acl_0000000000000003.family.",
@@ -4693,56 +4667,40 @@
           "test_type": "FIXTURE"
         }
       },
-      "renderer": "FAIL",
-      "repository_head": "d879b511a42dea60d7547a4fc17ecdeea4073377",
-      "runtime_test": "BLOCKED",
-      "runtime_version": "not contacted (prerequisite gate); platform runtime last observed: ceos:4.36.2F / Ubuntu-FRR 8.4.4 peer",
+      "renderer": "PASS",
+      "repository_head": "256bd32890986d6740ab3726608426f030566970",
+      "runtime_test": "PASS",
+      "runtime_version": "ceos:4.36.2F / Linux peer namespaces",
       "semantic": "PASS",
-      "status": "UNSUPPORTED",
-      "strongest_test_type": "FIXTURE",
-      "timestamp": "2026-10-04T23:07:27.681728+00:00",
-      "unsupported_reasons": [
-        "CONFIG_VALIDATION_FAILED",
-        "EXECUTOR_REFUSED",
-        "PARSER_ABSENT",
-        "RENDERER_ABSENT",
-        "UI_ABSENT"
-      ],
-      "validator": "FAIL"
+      "status": "SUPPORTED",
+      "strongest_test_type": "LIVE",
+      "timestamp": "2026-10-29T02:38:21.343048+00:00",
+      "unsupported_reasons": [],
+      "validator": "PASS"
     },
     {
-      "assessment_basis": "PREREQUISITE_GATE",
+      "assessment_basis": "RUNTIME_INVESTIGATION",
       "assessment_complete": true,
-      "assessment_id": 923,
+      "assessment_id": null,
       "automated_tests": "PASS",
-      "candidate": "FAIL",
-      "compensation": "BLOCKED",
-      "device_builder": "FAIL",
-      "evidence_ids": [
-        6183,
-        6184,
-        6185,
-        6186,
-        6187,
-        6188,
-        6189,
-        6190,
-        6191,
-        6192,
-        6193
-      ],
+      "candidate": "PASS",
+      "capability_status": "SUPPORTED",
+      "compensation": "PASS",
+      "device_builder": "PASS",
+      "evidence_ids": [],
       "evidence_references": [
-        "gate:arista_ceos/service_policy.ACL_IPV6_STANDARD@d879b511a42d#4e5009a757febb98"
+        "live:nmas-cap-validation/ceos-acl_ipv6_standard/2026-10-29T02:38:49.910641+00:00"
       ],
-      "executor": "FAIL",
+      "executor": "PASS",
+      "feasibility": "PROVEN",
       "feature": "service_policy.ACL_IPV6_STANDARD",
       "field_validation": "PASS",
-      "final_status": "UNSUPPORTED",
-      "live_read": "BLOCKED",
-      "live_write": "BLOCKED",
-      "parser": "FAIL",
+      "final_status": "SUPPORTED",
+      "live_read": "PASS",
+      "live_write": "PASS",
+      "parser": "PASS",
       "platform": "arista_ceos",
-      "postcheck": "BLOCKED",
+      "postcheck": "PASS",
       "probes": {
         "automated_tests": {
           "detail": "Repeated renderer determinism=True; feature-specific valid/invalid field regression=PASS.",
@@ -4752,37 +4710,37 @@
           "test_type": "FIXTURE"
         },
         "candidate_generation": {
-          "detail": "Real candidate_renderer.render ran; 819 chars; target-rendered=FAIL.",
-          "outcome": "FAIL",
-          "reason": "RENDERER_ABSENT",
+          "detail": "Real candidate_renderer.render ran; 773 chars; target-rendered=PASS.",
+          "outcome": "PASS",
+          "reason": "",
           "reference": "",
           "test_type": "FIXTURE"
         },
         "compensation": {
-          "detail": "Not attempted: NMAS prerequisite layer(s) failed their deliberate probe (renderer=RENDERER_ABSENT, candidate_generation=RENDERER_ABSENT, executor=EXECUTOR_REFUSED). First blocker renderer: Authoritative renderer differential: 0 target line(s), 1 refusal marker(s); sha256=c97f488b779c966cdbb04921a4c8a2b690d7038362d40a2478f00cc3d4d20ed7. No device was contacted for this stage.",
-          "outcome": "BLOCKED",
-          "reason": "RENDERER_ABSENT",
-          "reference": "gate:arista_ceos/service_policy.ACL_IPV6_STANDARD@d879b511a42d#4e5009a757febb98",
-          "test_type": "STATIC"
+          "detail": "isolated cEOS IPV6 STANDARD ACL CAP_ACL (deny 2001:db8:44::66, permit any) attached inbound on Ethernet1: NMAS rendered [ipv6 access-list standard CAP_ACL; 10 deny host 2001:db8:44::66; 20 permit any; interface Ethernet1; ipv6 access-group CAP_ACL in] and applied it through the registered executor; preflight proved exact inverse=True; executor compensation statuses=['COMPENSATED', 'COMPENSATED']; running-config identical to pre-apply capture=True; behaviour reverted=True.",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-validation/ceos-acl_ipv6_standard/2026-10-29T02:38:49.910641+00:00",
+          "test_type": "LIVE"
         },
         "config_validation": {
-          "detail": "Actual network-config validation=BLOCKED; failing checks=['PLATFORM_CAPABILITY']; external inputs are OFFLINE_FIXTURE only.",
-          "outcome": "FAIL",
-          "reason": "CONFIG_VALIDATION_FAILED",
+          "detail": "Actual network-config validation=PASS; failing checks=[]; external inputs are OFFLINE_FIXTURE only.",
+          "outcome": "PASS",
+          "reason": "",
           "reference": "",
           "test_type": "FIXTURE"
         },
         "device_builder_ui": {
-          "detail": "Real authoring API refused the feature (CollectionMutationError).",
-          "outcome": "FAIL",
-          "reason": "UI_ABSENT",
+          "detail": "Real Device Builder mutation API accepted the feature.",
+          "outcome": "PASS",
+          "reason": "",
           "reference": "",
           "test_type": "FIXTURE"
         },
         "executor": {
-          "detail": "Real executor.assess on fixture: action=REFUSE; exact inverse present=False; restorable=False; no connection/apply invoked.",
-          "outcome": "FAIL",
-          "reason": "EXECUTOR_REFUSED",
+          "detail": "Real executor.assess on fixture: action=APPLY; exact inverse present=False; restorable=True; no connection/apply invoked.",
+          "outcome": "PASS",
+          "reason": "",
           "reference": "",
           "test_type": "FIXTURE"
         },
@@ -4794,46 +4752,46 @@
           "test_type": "FIXTURE"
         },
         "live_post_write_validation": {
-          "detail": "Not attempted: NMAS prerequisite layer(s) failed their deliberate probe (renderer=RENDERER_ABSENT, candidate_generation=RENDERER_ABSENT, executor=EXECUTOR_REFUSED). First blocker renderer: Authoritative renderer differential: 0 target line(s), 1 refusal marker(s); sha256=c97f488b779c966cdbb04921a4c8a2b690d7038362d40a2478f00cc3d4d20ed7. No device was contacted for this stage.",
-          "outcome": "BLOCKED",
-          "reason": "RENDERER_ABSENT",
-          "reference": "gate:arista_ceos/service_policy.ACL_IPV6_STANDARD@d879b511a42d#4e5009a757febb98",
-          "test_type": "STATIC"
+          "detail": "isolated cEOS IPV6 STANDARD ACL CAP_ACL (deny 2001:db8:44::66, permit any) attached inbound on Ethernet1: NMAS rendered [ipv6 access-list standard CAP_ACL; 10 deny host 2001:db8:44::66; 20 permit any; interface Ethernet1; ipv6 access-group CAP_ACL in] and applied it through the registered executor; operator health facts (config / virtual_addresses groups) contain the intended object=True; observed {\"config\": {\"acl_attachments\": [{\"acl\": \"CAP_ACL\", \"direction\": \"IN\", \"interface\": \"Ethernet1\"}], \"acl_definitions\": [\"CAP_ACL\"], \"dhcp_relays\": []}, \"virtual_addresses\": []}.",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-validation/ceos-acl_ipv6_standard/2026-10-29T02:38:49.910641+00:00",
+          "test_type": "LIVE"
         },
         "live_read": {
-          "detail": "Not attempted: NMAS prerequisite layer(s) failed their deliberate probe (renderer=RENDERER_ABSENT, candidate_generation=RENDERER_ABSENT, executor=EXECUTOR_REFUSED). First blocker renderer: Authoritative renderer differential: 0 target line(s), 1 refusal marker(s); sha256=c97f488b779c966cdbb04921a4c8a2b690d7038362d40a2478f00cc3d4d20ed7. No device was contacted for this stage.",
-          "outcome": "BLOCKED",
-          "reason": "RENDERER_ABSENT",
-          "reference": "gate:arista_ceos/service_policy.ACL_IPV6_STANDARD@d879b511a42d#4e5009a757febb98",
-          "test_type": "STATIC"
+          "detail": "isolated cEOS IPV6 STANDARD ACL CAP_ACL (deny 2001:db8:44::66, permit any) attached inbound on Ethernet1: NMAS rendered [ipv6 access-list standard CAP_ACL; 10 deny host 2001:db8:44::66; 20 permit any; interface Ethernet1; ipv6 access-group CAP_ACL in] and applied it through the registered executor; operator health reader reached the device and returned its fact groups=True.",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-validation/ceos-acl_ipv6_standard/2026-10-29T02:38:49.910641+00:00",
+          "test_type": "LIVE"
         },
         "live_write": {
-          "detail": "Not attempted: NMAS prerequisite layer(s) failed their deliberate probe (renderer=RENDERER_ABSENT, candidate_generation=RENDERER_ABSENT, executor=EXECUTOR_REFUSED). First blocker renderer: Authoritative renderer differential: 0 target line(s), 1 refusal marker(s); sha256=c97f488b779c966cdbb04921a4c8a2b690d7038362d40a2478f00cc3d4d20ed7. No device was contacted for this stage.",
-          "outcome": "BLOCKED",
-          "reason": "RENDERER_ABSENT",
-          "reference": "gate:arista_ceos/service_policy.ACL_IPV6_STANDARD@d879b511a42d#4e5009a757febb98",
-          "test_type": "STATIC"
+          "detail": "isolated cEOS IPV6 STANDARD ACL CAP_ACL (deny 2001:db8:44::66, permit any) attached inbound on Ethernet1: NMAS rendered [ipv6 access-list standard CAP_ACL; 10 deny host 2001:db8:44::66; 20 permit any; interface Ethernet1; ipv6 access-group CAP_ACL in] and applied it through the registered executor; device accepted every line=True.",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-validation/ceos-acl_ipv6_standard/2026-10-29T02:38:49.910641+00:00",
+          "test_type": "LIVE"
         },
         "parser_import": {
-          "detail": "Real ceos-2.0 parser executed; target semantic match=False; unmanaged blocks=9.",
-          "outcome": "FAIL",
-          "reason": "PARSER_ABSENT",
-          "reference": "",
-          "test_type": "FIXTURE"
+          "detail": "isolated cEOS IPV6 STANDARD ACL CAP_ACL (deny 2001:db8:44::66, permit any) attached inbound on Ethernet1: NMAS rendered [ipv6 access-list standard CAP_ACL; 10 deny host 2001:db8:44::66; 20 permit any; interface Ethernet1; ipv6 access-group CAP_ACL in] and applied it through the registered executor; cEOS import parser recovered the same semantic object from live running-config=True.",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-validation/ceos-acl_ipv6_standard/2026-10-29T02:38:49.910641+00:00",
+          "test_type": "LIVE"
         },
         "renderer": {
-          "detail": "Authoritative renderer differential: 0 target line(s), 1 refusal marker(s); sha256=c97f488b779c966cdbb04921a4c8a2b690d7038362d40a2478f00cc3d4d20ed7.",
-          "outcome": "FAIL",
-          "reason": "RENDERER_ABSENT",
+          "detail": "Authoritative renderer differential: 2 target line(s), 0 refusal marker(s); sha256=ef3cdf4586aede1d1bcf307b45fcdddcf0f8b3d2233d65ce8cdca50179761a00.",
+          "outcome": "PASS",
+          "reason": "",
           "reference": "",
           "test_type": "FIXTURE"
         },
         "runtime_validation": {
-          "detail": "Not attempted: NMAS prerequisite layer(s) failed their deliberate probe (renderer=RENDERER_ABSENT, candidate_generation=RENDERER_ABSENT, executor=EXECUTOR_REFUSED). First blocker renderer: Authoritative renderer differential: 0 target line(s), 1 refusal marker(s); sha256=c97f488b779c966cdbb04921a4c8a2b690d7038362d40a2478f00cc3d4d20ed7. No device was contacted for this stage.",
-          "outcome": "BLOCKED",
-          "reason": "RENDERER_ABSENT",
-          "reference": "gate:arista_ceos/service_policy.ACL_IPV6_STANDARD@d879b511a42d#4e5009a757febb98",
-          "test_type": "STATIC"
+          "detail": "isolated cEOS IPV6 STANDARD ACL CAP_ACL (deny 2001:db8:44::66, permit any) attached inbound on Ethernet1: NMAS rendered [ipv6 access-list standard CAP_ACL; 10 deny host 2001:db8:44::66; 20 permit any; interface Ethernet1; ipv6 access-group CAP_ACL in] and applied it through the registered executor; behaviour with feature: permitted-source ping=True, denied-source ping=False; control before: permitted-source ping=True, denied-source ping=True; after removal: permitted-source ping=True, denied-source ping=True.",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-validation/ceos-acl_ipv6_standard/2026-10-29T02:38:49.910641+00:00",
+          "test_type": "LIVE"
         },
         "semantic_model": {
           "detail": "Canonical fixture resolves the feature-specific path security.acls.acl_0000000000000003.family.",
@@ -4843,22 +4801,16 @@
           "test_type": "FIXTURE"
         }
       },
-      "renderer": "FAIL",
-      "repository_head": "d879b511a42dea60d7547a4fc17ecdeea4073377",
-      "runtime_test": "BLOCKED",
-      "runtime_version": "not contacted (prerequisite gate); platform runtime last observed: ceos:4.36.2F / Ubuntu-FRR 8.4.4 peer",
+      "renderer": "PASS",
+      "repository_head": "256bd32890986d6740ab3726608426f030566970",
+      "runtime_test": "PASS",
+      "runtime_version": "ceos:4.36.2F / Linux peer namespaces",
       "semantic": "PASS",
-      "status": "UNSUPPORTED",
-      "strongest_test_type": "FIXTURE",
-      "timestamp": "2026-10-04T23:07:27.604659+00:00",
-      "unsupported_reasons": [
-        "CONFIG_VALIDATION_FAILED",
-        "EXECUTOR_REFUSED",
-        "PARSER_ABSENT",
-        "RENDERER_ABSENT",
-        "UI_ABSENT"
-      ],
-      "validator": "FAIL"
+      "status": "SUPPORTED",
+      "strongest_test_type": "LIVE",
+      "timestamp": "2026-10-29T02:38:21.251463+00:00",
+      "unsupported_reasons": [],
+      "validator": "PASS"
     },
     {
       "assessment_basis": "PREREQUISITE_GATE",
@@ -59262,11 +59214,11 @@
     "arista_ceos": {
       "assessed": 66,
       "fixture_tested": 66,
-      "live_tested": 25,
-      "static_tested": 41,
-      "supported": 22,
+      "live_tested": 28,
+      "static_tested": 38,
+      "supported": 25,
       "total": 66,
-      "unsupported": 44
+      "unsupported": 41
     },
     "cisco_c8000v_iosxe": {
       "assessed": 66,
@@ -59316,24 +59268,24 @@
   },
   "reason_counts": {
     "COMPENSATION_ABSENT": 68,
-    "CONFIG_VALIDATION_FAILED": 298,
+    "CONFIG_VALIDATION_FAILED": 295,
     "EXECUTOR_ABSENT": 132,
-    "EXECUTOR_REFUSED": 215,
+    "EXECUTOR_REFUSED": 212,
     "FIELD_VALIDATION_FAILED": 65,
     "FUNCTIONAL_TEST_FAILED": 67,
     "LIVE_READ_ABSENT": 2,
-    "PARSER_ABSENT": 273,
+    "PARSER_ABSENT": 270,
     "PARSER_FAILED": 39,
     "PLATFORM_DOES_NOT_SUPPORT": 3,
     "POSTCHECK_ABSENT": 69,
-    "RENDERER_ABSENT": 297,
+    "RENDERER_ABSENT": 294,
     "RUNTIME_IMAGE_UNAVAILABLE": 66,
-    "UI_ABSENT": 292
+    "UI_ABSENT": 289
   },
   "remaining_cells": [],
   "schema_version": 2,
-  "supported": 47,
+  "supported": 50,
   "total": 396,
   "unassessed": 0,
-  "unsupported": 349
+  "unsupported": 346
 }

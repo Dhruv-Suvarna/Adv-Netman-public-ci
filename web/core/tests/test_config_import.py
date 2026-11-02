@@ -137,7 +137,7 @@ class ImportServiceTests(TestCase):
         self.assertEqual(result.provenance["platform"], "ceos")
         self.assertTrue(result.provenance["config_digest"])
         self.assertTrue(result.provenance["captured_at"])
-        self.assertEqual(result.provenance["parser_version"], "ceos-2.0")
+        self.assertEqual(result.provenance["parser_version"], "ceos-2.1")
 
     def test_a_failed_fetch_never_creates_partial_draft_state(self):
         change, intent, revision = self.new_existing_device_candidate()

@@ -579,6 +579,9 @@ _P12_PLATFORM_UNVERIFIED = (
 _P12_CEOS_VARP = "Tracked S1/S2 cEOS 4.36.2F templates and logs use ip/ipv6 virtual-router address and a global virtual-router MAC."
 _P12_CEOS_RELAY = "Tracked S1/S2 cEOS templates and logs use ip helper-address and ipv6 dhcp relay destination."
 _P12_CEOS_ACL = "Tracked cEOS monitoring template uses ip access-list standard; tracked backup lab template uses named ip access-list entries."
+_P12_CEOS_ACL6 = ("V2 Phase 9: ipv6 access-list [standard] NAME / ipv6 access-group NAME in|out, live-verified on the isolated "
+                  "cEOS 4.36.2F (filtering by source, protocol and port, exact compensation). EOS accepts but does not "
+                  "act on 'log' in an IPv6 entry ('ipv6 logging not supported'), so IPv6 logging is refused.")
 _P12_LINUX_PAT = "Tracked live R3/R4 Ubuntu templates use nftables table ip EDGE_PAT with IPv4 source-prefix masquerade rules."
 _P12_NAT_PT = "NAT-PT is deprecated/obsolete and is intentionally unsupported; it is not mapped to NAT64."
 
@@ -603,6 +606,9 @@ SERVICE_POLICY_CAPABILITIES = {
         ServicePolicyFeature.ACL_IPV4_STANDARD: (CapabilityStatus.SUPPORTED, _P12_CEOS_ACL),
         ServicePolicyFeature.ACL_IPV4_EXTENDED: (CapabilityStatus.SUPPORTED, _P12_CEOS_ACL),
         ServicePolicyFeature.ACL_ATTACH_IPV4: (CapabilityStatus.SUPPORTED, _P12_CEOS_ACL),
+        ServicePolicyFeature.ACL_IPV6_STANDARD: (CapabilityStatus.SUPPORTED, _P12_CEOS_ACL6),
+        ServicePolicyFeature.ACL_IPV6_EXTENDED: (CapabilityStatus.SUPPORTED, _P12_CEOS_ACL6),
+        ServicePolicyFeature.ACL_ATTACH_IPV6: (CapabilityStatus.SUPPORTED, _P12_CEOS_ACL6),
         ServicePolicyFeature.NAT_NAT_PT_STATIC: (CapabilityStatus.UNSUPPORTED, _P12_NAT_PT),
     }),
     "ubuntu_frr": _service_caps({
@@ -1494,11 +1500,13 @@ def _render_fhrp(platform: str, display_name: str, fhrp: dict, interfaces_by_id:
 def _acl_interface_contributions(interface: dict, *, platform: str = "arista_ceos") -> list[dict]:
     lines: list[dict] = []
     for attachment in (interface.get("_scope") or {}).get("acl_attachments", []):
-        if attachment.get("family") != "IPV4" or not _service_policy_supported(platform, "ACL_ATTACH_IPV4"):
+        family = attachment.get("family")
+        if family not in ("IPV4", "IPV6") or not _service_policy_supported(platform, f"ACL_ATTACH_{family}"):
             continue
+        keyword = "ip" if family == "IPV4" else "ipv6"
         lines.append({
             "kind": "static",
-            "text": f"   ip access-group {attachment.get('acl_name')} {str(attachment.get('direction') or 'IN').lower()}",
+            "text": f"   {keyword} access-group {attachment.get('acl_name')} {str(attachment.get('direction') or 'IN').lower()}",
         })
     return lines
 
@@ -1607,17 +1615,36 @@ def _port_clause(value: str) -> str:
     return f" eq {value}"
 
 
+# EOS spells "any protocol" and ICMP per family (cEOS 4.36.2F): ``ip`` / ``icmp`` in an IPv4 list, ``ipv6`` / ``icmpv6`` in an
+# IPv6 list.  The intent vocabulary carries both spellings, so either maps to the one the list's family takes.
+_CEOS_ACL_PROTOCOL = {"IPV4": {"IP": "ip", "IPV6": "ip", "ICMP": "icmp", "ICMPV6": "icmp"},
+                      "IPV6": {"IP": "ipv6", "IPV6": "ipv6", "ICMP": "icmpv6", "ICMPV6": "icmpv6"}}
+
+
+def ceos_acl_protocol(family: str, protocol) -> str:
+    """The EOS protocol keyword of an intent ACL entry in a list of ``family`` (TCP / UDP unchanged, lower case)."""
+    text = str(protocol or "IP").upper()
+    return _CEOS_ACL_PROTOCOL.get(family, _CEOS_ACL_PROTOCOL["IPV4"]).get(text, text.lower())
+
+
 def _render_ceos_acl(acl: dict) -> list[dict]:
+    family = "IPV6" if acl.get("family") == "IPV6" else "IPV4"
+    keyword = "ip" if family == "IPV4" else "ipv6"
     lines = feature_template_renderer.render_descriptors(
-        template_name="ceos/acl_ipv4.j2", fields={}, flags={"name": acl.get("name") or "<acl-name-required>"}
+        template_name=f"ceos/acl_{family.lower()}.j2", fields={}, flags={"name": acl.get("name") or "<acl-name-required>"}
     )
     if acl.get("acl_type") == "STANDARD":
-        # EOS only accepts source-only entries inside a ``standard`` list (verified on cEOS 4.36.2F).
-        lines = [{**row, "text": row["text"].replace("ip access-list ", "ip access-list standard ", 1)}
-                 if str(row.get("text", "")).startswith("ip access-list ") else row for row in lines]
+        # EOS only accepts source-only entries inside a ``standard`` list (verified on cEOS 4.36.2F, both families).
+        lines = [{**row, "text": row["text"].replace(f"{keyword} access-list ", f"{keyword} access-list standard ", 1)}
+                 if str(row.get("text", "")).startswith(f"{keyword} access-list ") else row for row in lines]
     for ace in sorted((acl.get("entries") or {}).values(), key=lambda row: (int(row.get("sequence") or 0), row.get("id", ""))):
+        if family == "IPV6" and ace.get("logging"):
+            # EOS accepts ``log`` here but warns "ipv6 logging not supported" and ignores it: never claim it was configured.
+            lines.append(_phase12_unsupported("Arista cEOS", f"logging on IPv6 ACL {acl.get('name')} entry {ace.get('sequence')}",
+                                              CapabilityStatus.UNSUPPORTED.value))
+            continue
         action = str(ace.get("action") or "DENY").lower()
-        protocol = str(ace.get("protocol") or "IP").lower()
+        protocol = ceos_acl_protocol(family, ace.get("protocol"))
         source = _acl_match(ace.get("source_type"), ace.get("source_value"))
         destination = _acl_match(ace.get("destination_type"), ace.get("destination_value"))
         if acl.get("acl_type") == "STANDARD":
