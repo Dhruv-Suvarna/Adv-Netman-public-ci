@@ -222,6 +222,13 @@ class RoutingObjectCreationTests(TestCase):
 class RoutingCapabilityGateTests(TestCase):
     """New objects are refused where the registry says NOT_IMPLEMENTED / UNSUPPORTED; real status is asserted unpatched."""
 
+    def test_isis_on_ubuntu_frr_is_accepted_now_that_it_is_supported(self):
+        # V2 Phase 9 proved FRR IS-IS live; the same gate that refuses unsupported pairs now admits it.
+        self.assertEqual(platform_drivers.capability_for_routing(models.Platform.UBUNTU_FRR, RoutingProtocol.ISIS).status,
+                         CapabilityStatus.SUPPORTED)
+        _, _, revision = make_candidate(platform=models.Platform.UBUNTU_FRR, device_name="X1")
+        add_instance(revision, family="isis")
+
     def test_new_objects_are_refused_on_platforms_that_cannot_render_them(self):
         # (label, platform, device, family, kwargs, protocol whose registry status is asserted, expected status)
         cases = [
@@ -235,7 +242,6 @@ class RoutingCapabilityGateTests(TestCase):
              RoutingProtocol.EIGRP_IPV4, CapabilityStatus.UNSUPPORTED),
             ("EIGRP on Ubuntu/FRR (no eigrpd)", models.Platform.UBUNTU_FRR, "family", "eigrp", {"address_family": "IPV4"},
              RoutingProtocol.EIGRP_IPV4, CapabilityStatus.NOT_IMPLEMENTED),
-            ("IS-IS on Ubuntu/FRR", models.Platform.UBUNTU_FRR, "family", "isis", {}, RoutingProtocol.ISIS, CapabilityStatus.NOT_IMPLEMENTED),
         ]
         for label, platform, mode, family, kwargs, protocol, status in cases:
             with self.subTest(case=label):

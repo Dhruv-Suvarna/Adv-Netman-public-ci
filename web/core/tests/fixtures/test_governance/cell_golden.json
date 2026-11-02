@@ -53,6 +53,7 @@
  "ubuntu_frr|interface.SVI": "47ef83bd8de13448b962c75cbb00c5af7d7ba935bedaa1f90dacf9e5829c31e6",
  "ubuntu_frr|routing.BGP_IPV4": "e5dd866f6180d4d10e7b99ffaa335cfc71b3546c08777b641fc30a4f2ade5b82",
  "ubuntu_frr|routing.BGP_IPV6": "9013038cad3120cd91fd0e67365361b2b4bbbb74667af3c05bf616c470b1dc0b",
+ "ubuntu_frr|routing.ISIS": "9c4234ad5d5c8be1282fab4420b9252f7debbd2949113e4e6e7be0290b8b3c96",
  "ubuntu_frr|routing.OSPFV2": "62f1f2c5a9ab54c373d823402b59346d58f23e4431cdea363146f33108620bac",
  "ubuntu_frr|routing.OSPFV3": "4195281a6c4d3bac54e94f447c85afe8ec966553d91f8b852333c6b1c3d97ea9",
  "ubuntu_frr|routing.RIPNG": "76db16712e8ddabe191116c9086b6295cea8eceafce5583c285220e16c5d820e",

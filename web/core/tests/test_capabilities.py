@@ -80,7 +80,7 @@ class CapabilityRegistryTests(SimpleTestCase):
             ("cEOS BOND", interface(models.Platform.ARISTA_CEOS, "BOND"), Status.UNSUPPORTED),
             ("cEOS OSPFv2", routing("arista_ceos", Protocol.OSPFV2), Status.SUPPORTED),
             ("cEOS IS-IS", routing("arista_ceos", Protocol.ISIS), Status.SUPPORTED),
-            ("FRR IS-IS", routing("ubuntu_frr", Protocol.ISIS), Status.NOT_IMPLEMENTED),
+            ("FRR IS-IS", routing("ubuntu_frr", Protocol.ISIS), Status.SUPPORTED),
             ("cEOS EIGRP (vendor mismatch)", routing("arista_ceos", Protocol.EIGRP_IPV4), Status.UNSUPPORTED),
         ]
         for label, capability, expected in cases:
@@ -93,7 +93,7 @@ class CapabilityRegistryTests(SimpleTestCase):
             ("interface: cEOS LAG", platform_drivers.is_interface_kind_selectable("arista_ceos", "LAG"), False),
             ("routing: cEOS BGP", platform_drivers.is_routing_protocol_selectable("arista_ceos", Protocol.BGP_IPV4), True),
             ("routing: cEOS IS-IS", platform_drivers.is_routing_protocol_selectable("arista_ceos", Protocol.ISIS), True),
-            ("routing: FRR IS-IS", platform_drivers.is_routing_protocol_selectable("ubuntu_frr", Protocol.ISIS), False),
+            ("routing: FRR IS-IS", platform_drivers.is_routing_protocol_selectable("ubuntu_frr", Protocol.ISIS), True),
             ("routing: SONiC OSPFv2", platform_drivers.is_routing_protocol_selectable("sonic", Protocol.OSPFV2), False),
         ]
         for label, actual, expected in cases:

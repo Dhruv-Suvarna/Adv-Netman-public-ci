@@ -120,6 +120,10 @@ def sample(platform, feature) -> ProbeCase:
                     instance["networks"] = {f"net_{OBJ}": {"id": f"net_{OBJ}", "prefix": "198.18.0.0/30", "area": "0"}}
             if family == "rip":
                 instance["interfaces"] = {f"bind_{OBJ}": {"id": f"bind_{OBJ}", "interface_id": IF, "passive": False}}
+            if family == "isis":
+                instance["net"] = "49.0001.0000.0000.0044.00"
+                instance["interfaces"] = {f"bind_{OBJ}": {"id": f"bind_{OBJ}", "interface_id": IF,
+                    "passive": False, "metric": 20}}
             if family == "bgp":
                 peer = "2001:db8:44::2" if v6 else "198.18.0.2"
                 instance["neighbors"] = {f"peer_{OBJ}": {"id": f"peer_{OBJ}", "family": "IPV6" if v6 else "IPV4",

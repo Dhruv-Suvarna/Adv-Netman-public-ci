@@ -76,20 +76,22 @@ class CeosIsisRenderTests(TestCase):
 
     def test_other_platforms_still_report_isis_honestly(self):
         self.assertEqual(platform_drivers.capability_for_routing("arista_ceos", RoutingProtocol.ISIS).status, CapabilityStatus.SUPPORTED)
-        for platform in ("ubuntu_frr", "nokia_srlinux", "cisco_c8000v_iosxe", "cisco_iosxr", "sonic"):
+        self.assertEqual(platform_drivers.capability_for_routing("ubuntu_frr", RoutingProtocol.ISIS).status, CapabilityStatus.SUPPORTED)
+        for platform in ("nokia_srlinux", "cisco_c8000v_iosxe", "cisco_iosxr", "sonic"):
             with self.subTest(platform=platform):
                 self.assertEqual(platform_drivers.capability_for_routing(platform, RoutingProtocol.ISIS).status,
                                  CapabilityStatus.NOT_IMPLEMENTED)
-        with self.assertRaises(service.CollectionMutationError):
-            add_instance(make_candidate(platform=models.Platform.UBUNTU_FRR, device_name="R3")[2], family="isis")
+        self.assertTrue(add_instance(make_candidate(platform=models.Platform.UBUNTU_FRR, device_name="R3")[2], family="isis"))
 
 
 class CeosIsisExecutionTests(TestCase):
-    def test_apply_and_compensation_are_ceos_only(self):
+    def test_apply_and_compensation_cover_ceos_and_frr(self):
         ceos = execution_capability.capability_for("arista_ceos", "routing_isis")
         self.assertEqual((ceos.apply, ceos.compensation), (Capability.SUPPORTED, Capability.SUPPORTED))
         self.assertIn("routing_isis", CONFIG_BLOCK_TYPES)
-        for platform in ("ubuntu_frr", "nokia_srlinux", "cisco_c8000v_iosxe"):
+        frr = execution_capability.capability_for("ubuntu_frr", "routing_isis")
+        self.assertEqual((frr.apply, frr.compensation), (Capability.SUPPORTED, Capability.SUPPORTED))
+        for platform in ("nokia_srlinux", "cisco_c8000v_iosxe"):
             with self.subTest(platform=platform):
                 self.assertEqual(execution_capability.capability_for(platform, "routing_isis").apply, Capability.NOT_IMPLEMENTED)
 

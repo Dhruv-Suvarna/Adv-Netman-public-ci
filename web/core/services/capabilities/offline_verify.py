@@ -89,6 +89,13 @@ def _parsed_contains(parsed, feature, case):
             if family == "rip":
                 return instance.fields.get("address_family") == af and instance.fields.get("enabled") is True and \
                     any(b.get("interface_name") == case.expected["interface"] for b in instance.bindings)
+            if family == "isis":
+                wanted = next(iter(case.sections["routing"]["isis"].values()))
+                return instance.fields.get("net") == wanted.get("net") and instance.fields.get("level") == wanted.get("level") \
+                    and instance.fields.get("address_family_ipv4") == wanted.get("address_family_ipv4") \
+                    and instance.fields.get("address_family_ipv6") == wanted.get("address_family_ipv6") \
+                    and any(b.get("interface_name") == case.expected["interface"] and b.get("passive") is False
+                            and b.get("metric") == 20 for b in instance.bindings)
             return instance.fields.get("version", code) == code and instance.fields.get("address_family", af) == af
         return False
     if code.startswith("FHRP_"):

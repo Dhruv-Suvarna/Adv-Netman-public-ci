@@ -566,6 +566,8 @@ class LiveRegistry(dict):
         for key in FRR_INTERFACE_CELLS:
             self["ubuntu_frr", key] = lambda cell, key=key: probe_frr_interface(cell, key)
         from .batch_frr_routing import probe_bgp, probe_ospf, probe_rip
+        from .batch_frr_isis import probe_frr_isis
+        self["ubuntu_frr", "routing.ISIS"] = probe_frr_isis
         for code in ("BGP_IPV4", "BGP_IPV6"):
             self["ubuntu_frr", f"routing.{code}"] = lambda cell, code=code: probe_bgp(cell, code)
         from .batch_ceos_interfaces import probe_ceos_interface

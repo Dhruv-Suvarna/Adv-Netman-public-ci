@@ -1,0 +1,208 @@
+{
+  "assessment": {
+    "assessment_basis": "RUNTIME_INVESTIGATION",
+    "assessment_complete": true,
+    "assessment_id": null,
+    "automated_tests": "PASS",
+    "candidate": "PASS",
+    "capability_status": "SUPPORTED",
+    "compensation": "PASS",
+    "device_builder": "PASS",
+    "evidence_ids": [],
+    "evidence_references": [
+      "live:nmas-cap-validation/frr-isis/2026-10-30T01:56:59.870668+00:00"
+    ],
+    "executor": "PASS",
+    "feasibility": "PROVEN",
+    "feature": "routing.ISIS",
+    "field_validation": "PASS",
+    "final_status": "SUPPORTED",
+    "live_read": "PASS",
+    "live_write": "PASS",
+    "parser": "PASS",
+    "platform": "ubuntu_frr",
+    "postcheck": "PASS",
+    "probes": {
+      "automated_tests": {
+        "detail": "Repeated renderer determinism=True; feature-specific valid/invalid field regression=PASS.",
+        "outcome": "PASS",
+        "reason": "",
+        "reference": "",
+        "test_type": "FIXTURE"
+      },
+      "candidate_generation": {
+        "detail": "Real candidate_renderer.render ran; 950 chars; target-rendered=PASS.",
+        "outcome": "PASS",
+        "reason": "",
+        "reference": "",
+        "test_type": "FIXTURE"
+      },
+      "compensation": {
+        "detail": "pristine: {'actions': ['routing_isis=APPLY/True/-', 'routing_binding=APPLY/True/-'], 'statuses': ['COMPENSATED', 'COMPENSATED'], 'failure': '', 'imported': True, 'control': True, 'after': True, 'preserved': True, 'read_ok': True, 'post_ok': True, 'runtime_ok': True, 'applied': True, 'verified': True, 'detail': 'operator postcheck=True []; parser import=True; IS-IS neighbor and route=True; peer adjacency=True', 'compensation_codes': ['-', '-'], 'compensated': True, 'config_restored': True, 'restored': True} || configured: {'actions': ['routing_isis=APPLY/True/-', 'routing_binding=APPLY/True/-'], 'statuses': ['COMPENSATED', 'COMPENSATED'], 'failure': '', 'imported': True, 'control': True, 'after': True, 'preserved': True, 'read_ok': True, 'post_ok': True, 'runtime_ok': True, 'applied': True, 'verified': True, 'detail': 'operator postcheck=True []; parser import=True; IS-IS neighbor and route=True; peer adjacency=True', 'compensation_codes': ['-', '-'], 'compensated': True, 'config_restored': True, 'restored': True}",
+        "outcome": "PASS",
+        "reason": "",
+        "reference": "live:nmas-cap-validation/frr-isis/2026-10-30T01:56:59.870668+00:00",
+        "test_type": "LIVE"
+      },
+      "config_validation": {
+        "detail": "Actual network-config validation=PASS; failing checks=[]; external inputs are OFFLINE_FIXTURE only.",
+        "outcome": "PASS",
+        "reason": "",
+        "reference": "",
+        "test_type": "FIXTURE"
+      },
+      "device_builder_ui": {
+        "detail": "Real Device Builder mutation API accepted the feature.",
+        "outcome": "PASS",
+        "reason": "",
+        "reference": "",
+        "test_type": "FIXTURE"
+      },
+      "executor": {
+        "detail": "Real executor.assess on fixture: action=APPLY; exact inverse present=True; restorable=True; no connection/apply invoked.",
+        "outcome": "PASS",
+        "reason": "",
+        "reference": "",
+        "test_type": "FIXTURE"
+      },
+      "field_validation": {
+        "detail": "Feature field commit: valid sample=VALID; invalid sample=INVALID.",
+        "outcome": "PASS",
+        "reason": "",
+        "reference": "",
+        "test_type": "FIXTURE"
+      },
+      "live_post_write_validation": {
+        "detail": "pristine: {'actions': ['routing_isis=APPLY/True/-', 'routing_binding=APPLY/True/-'], 'statuses': ['COMPENSATED', 'COMPENSATED'], 'failure': '', 'imported': True, 'control': True, 'after': True, 'preserved': True, 'read_ok': True, 'post_ok': True, 'runtime_ok': True, 'applied': True, 'verified': True, 'detail': 'operator postcheck=True []; parser import=True; IS-IS neighbor and route=True; peer adjacency=True', 'compensation_codes': ['-', '-'], 'compensated': True, 'config_restored': True, 'restored': True} || configured: {'actions': ['routing_isis=APPLY/True/-', 'routing_binding=APPLY/True/-'], 'statuses': ['COMPENSATED', 'COMPENSATED'], 'failure': '', 'imported': True, 'control': True, 'after': True, 'preserved': True, 'read_ok': True, 'post_ok': True, 'runtime_ok': True, 'applied': True, 'verified': True, 'detail': 'operator postcheck=True []; parser import=True; IS-IS neighbor and route=True; peer adjacency=True', 'compensation_codes': ['-', '-'], 'compensated': True, 'config_restored': True, 'restored': True}",
+        "outcome": "PASS",
+        "reason": "",
+        "reference": "live:nmas-cap-validation/frr-isis/2026-10-30T01:56:59.870668+00:00",
+        "test_type": "LIVE"
+      },
+      "live_read": {
+        "detail": "pristine: {'actions': ['routing_isis=APPLY/True/-', 'routing_binding=APPLY/True/-'], 'statuses': ['COMPENSATED', 'COMPENSATED'], 'failure': '', 'imported': True, 'control': True, 'after': True, 'preserved': True, 'read_ok': True, 'post_ok': True, 'runtime_ok': True, 'applied': True, 'verified': True, 'detail': 'operator postcheck=True []; parser import=True; IS-IS neighbor and route=True; peer adjacency=True', 'compensation_codes': ['-', '-'], 'compensated': True, 'config_restored': True, 'restored': True} || configured: {'actions': ['routing_isis=APPLY/True/-', 'routing_binding=APPLY/True/-'], 'statuses': ['COMPENSATED', 'COMPENSATED'], 'failure': '', 'imported': True, 'control': True, 'after': True, 'preserved': True, 'read_ok': True, 'post_ok': True, 'runtime_ok': True, 'applied': True, 'verified': True, 'detail': 'operator postcheck=True []; parser import=True; IS-IS neighbor and route=True; peer adjacency=True', 'compensation_codes': ['-', '-'], 'compensated': True, 'config_restored': True, 'restored': True}",
+        "outcome": "PASS",
+        "reason": "",
+        "reference": "live:nmas-cap-validation/frr-isis/2026-10-30T01:56:59.870668+00:00",
+        "test_type": "LIVE"
+      },
+      "live_write": {
+        "detail": "pristine: {'actions': ['routing_isis=APPLY/True/-', 'routing_binding=APPLY/True/-'], 'statuses': ['COMPENSATED', 'COMPENSATED'], 'failure': '', 'imported': True, 'control': True, 'after': True, 'preserved': True, 'read_ok': True, 'post_ok': True, 'runtime_ok': True, 'applied': True, 'verified': True, 'detail': 'operator postcheck=True []; parser import=True; IS-IS neighbor and route=True; peer adjacency=True', 'compensation_codes': ['-', '-'], 'compensated': True, 'config_restored': True, 'restored': True} || configured: {'actions': ['routing_isis=APPLY/True/-', 'routing_binding=APPLY/True/-'], 'statuses': ['COMPENSATED', 'COMPENSATED'], 'failure': '', 'imported': True, 'control': True, 'after': True, 'preserved': True, 'read_ok': True, 'post_ok': True, 'runtime_ok': True, 'applied': True, 'verified': True, 'detail': 'operator postcheck=True []; parser import=True; IS-IS neighbor and route=True; peer adjacency=True', 'compensation_codes': ['-', '-'], 'compensated': True, 'config_restored': True, 'restored': True}",
+        "outcome": "PASS",
+        "reason": "",
+        "reference": "live:nmas-cap-validation/frr-isis/2026-10-30T01:56:59.870668+00:00",
+        "test_type": "LIVE"
+      },
+      "parser_import": {
+        "detail": "Real ubuntu-frr-1.0 parser executed; target semantic match=True; unmanaged blocks=17.",
+        "outcome": "PASS",
+        "reason": "",
+        "reference": "",
+        "test_type": "FIXTURE"
+      },
+      "renderer": {
+        "detail": "Authoritative renderer differential: 9 target line(s), 0 refusal marker(s); sha256=9c4234ad5d5c8be1282fab4420b9252f7debbd2949113e4e6e7be0290b8b3c96.",
+        "outcome": "PASS",
+        "reason": "",
+        "reference": "",
+        "test_type": "FIXTURE"
+      },
+      "runtime_validation": {
+        "detail": "pristine: {'actions': ['routing_isis=APPLY/True/-', 'routing_binding=APPLY/True/-'], 'statuses': ['COMPENSATED', 'COMPENSATED'], 'failure': '', 'imported': True, 'control': True, 'after': True, 'preserved': True, 'read_ok': True, 'post_ok': True, 'runtime_ok': True, 'applied': True, 'verified': True, 'detail': 'operator postcheck=True []; parser import=True; IS-IS neighbor and route=True; peer adjacency=True', 'compensation_codes': ['-', '-'], 'compensated': True, 'config_restored': True, 'restored': True} || configured: {'actions': ['routing_isis=APPLY/True/-', 'routing_binding=APPLY/True/-'], 'statuses': ['COMPENSATED', 'COMPENSATED'], 'failure': '', 'imported': True, 'control': True, 'after': True, 'preserved': True, 'read_ok': True, 'post_ok': True, 'runtime_ok': True, 'applied': True, 'verified': True, 'detail': 'operator postcheck=True []; parser import=True; IS-IS neighbor and route=True; peer adjacency=True', 'compensation_codes': ['-', '-'], 'compensated': True, 'config_restored': True, 'restored': True}",
+        "outcome": "PASS",
+        "reason": "",
+        "reference": "live:nmas-cap-validation/frr-isis/2026-10-30T01:56:59.870668+00:00",
+        "test_type": "LIVE"
+      },
+      "semantic_model": {
+        "detail": "Canonical fixture resolves the feature-specific path routing.isis.isis_0000000000000003.net.",
+        "outcome": "PASS",
+        "reason": "",
+        "reference": "",
+        "test_type": "FIXTURE"
+      }
+    },
+    "renderer": "PASS",
+    "repository_head": "9c334edf033ba3cc32acbe18ba4ecd74f5d5701e",
+    "runtime_test": "PASS",
+    "runtime_version": "FRRouting 8.4.4 / FRRouting 8.4.4 isolated pair",
+    "semantic": "PASS",
+    "status": "SUPPORTED",
+    "strongest_test_type": "LIVE",
+    "timestamp": "2026-10-30T01:55:03.568718+00:00",
+    "unsupported_reasons": [],
+    "validator": "PASS"
+  },
+  "ephemeral_database": true,
+  "repository_head": "9c334edf033ba3cc32acbe18ba4ecd74f5d5701e",
+  "scenarios": {
+    "configured": {
+      "actions": [
+        "routing_isis=APPLY/True/-",
+        "routing_binding=APPLY/True/-"
+      ],
+      "after": true,
+      "applied": true,
+      "compensated": true,
+      "compensation_codes": [
+        "-",
+        "-"
+      ],
+      "config_restored": true,
+      "control": true,
+      "detail": "operator postcheck=True []; parser import=True; IS-IS neighbor and route=True; peer adjacency=True",
+      "failure": "",
+      "imported": true,
+      "post_ok": true,
+      "preserved": true,
+      "read_ok": true,
+      "restored": true,
+      "runtime_ok": true,
+      "statuses": [
+        "COMPENSATED",
+        "COMPENSATED"
+      ],
+      "verified": true
+    },
+    "pristine": {
+      "actions": [
+        "routing_isis=APPLY/True/-",
+        "routing_binding=APPLY/True/-"
+      ],
+      "after": true,
+      "applied": true,
+      "compensated": true,
+      "compensation_codes": [
+        "-",
+        "-"
+      ],
+      "config_restored": true,
+      "control": true,
+      "detail": "operator postcheck=True []; parser import=True; IS-IS neighbor and route=True; peer adjacency=True",
+      "failure": "",
+      "imported": true,
+      "post_ok": true,
+      "preserved": true,
+      "read_ok": true,
+      "restored": true,
+      "runtime_ok": true,
+      "statuses": [
+        "COMPENSATED",
+        "COMPENSATED"
+      ],
+      "verified": true
+    }
+  },
+  "schema": "nmas.v2.phase9.frr-isis-live/1",
+  "uncommitted_source_sha256": {
+    "templates/features/ubuntu_frr/routing_isis.j2": "120ed115f4782f0cbcd9146f4ed427c4e0c18223248c9231dd7e466e031734b2",
+    "web/core/services/candidate_composition.py": "0f5a27f3224f9c7f07215c0d97eff720dda3d7d99aa459e5a6286ad26a231a89",
+    "web/core/services/capabilities/batch_frr_isis.py": "f7db5b4fd41d74f930e1e9adeacbfd588e7247463e69eeb33a2f46a0cf6e6bb4",
+    "web/core/services/capabilities/offline_verify.py": "1293c93667a5cc80bd0e7d6d44c41c1d7c02b3567f53d473ca9436e2a6fcca88",
+    "web/core/services/config_import/parser_frr.py": "d87260e16362f62e78ceff5169905ff32f79f19cfe48256eaf78a93d326e476f",
+    "web/core/services/execution/executors/frr_routing.py": "0692c2ae951e3006bad71f6d0ad0cda0f91ecb62132fd9708559b1b805542480",
+    "web/core/services/execution/executors/linux.py": "682c6203c9bfa4673f20d5124e465a6ab17b1e66b130186e9b87020e52cda1a1",
+    "web/core/services/health/live.py": "03092d03c12fae4ada25b4bf47cb41b63f4004f02d80586ff9f96aa74fc335ab",
+    "web/core/services/platform_drivers.py": "f81a959540b4b1da8e51abedbf980dc2730a6a71521abd4b96b4ed016afc0a15"
+  }
+}

@@ -82,7 +82,7 @@ class CaseAndCellHelperTests(SimpleTestCase):
     def test_load_cells_accepts_the_repository_ledger(self):
         loaded = cells_module.load_cells()
         self.assertEqual(loaded, cells_module.default_cells())
-        self.assertEqual(len(cells_module.supported_cells(loaded)), 62)
+        self.assertEqual(len(cells_module.supported_cells(loaded)), 63)
         self.assertIn("arista_ceos", cells_module.supported_platforms(loaded))
 
     def test_load_cells_refuses_a_missing_or_malformed_ledger(self):

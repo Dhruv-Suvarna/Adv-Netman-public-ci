@@ -69,7 +69,7 @@ HEALTH_CAPABILITIES = MappingProxyType({
                         "routing_config", "management_services")},
     "linux": {"status": Capability.SUPPORTED, "transport": "docker-exec",
               "evidence": "modules/snmp.py + verify_dhcp_servers.py docker-exec pattern; master.py verify_linux_router() reads.",
-              "groups": ("interfaces", "addresses", "routes", "ospf", "bgp", "rip", "nat", "routing_config")},
+              "groups": ("interfaces", "addresses", "routes", "ospf", "isis", "bgp", "rip", "nat", "routing_config")},
     "nokia_srlinux": {"status": Capability.SUPPORTED, "transport": "gnmi-get",
                       "evidence": "gNMI Get of structured state, verified on an isolated SR Linux 24.10.7 node (not part of the approved Labs 2/3 baseline).",
                       "groups": ("interfaces", "addresses", "routes", "ospf", "bgp", "routing_config", "config")},
@@ -112,6 +112,7 @@ LINUX_COMMANDS = MappingProxyType({
     "route6": ("ip", "-j", "-6", "route", "show"),
     "ospf": ("vtysh", "-c", "show ip ospf neighbor json"),
     "ospf6": ("vtysh", "-c", "show ipv6 ospf6 neighbor json"),
+    "isis": ("vtysh", "-c", "show isis neighbor json"),
     "bgp": ("vtysh", "-c", "show bgp summary json"),
     "rip": ("vtysh", "-c", "show ip rip"),
     "ripng": ("vtysh", "-c", "show ipv6 ripng"),
@@ -686,6 +687,17 @@ def parse_frr_ospf(v2_text: str, v3_text: str) -> list:
     return sorted(neighbors, key=lambda n: (n["family"], n["interface"], n["neighbor_id"]))
 
 
+def parse_frr_isis(text: str) -> list:
+    neighbors = []
+    data = _json(text, tolerate_absent=True)
+    for area in data.get("areas") or []:
+        for circuit in area.get("circuits") or []:
+            neighbors.append({"instance": str(area.get("area") or ""), "system_id": str(circuit.get("adj") or ""),
+                              "hostname": str(circuit.get("adj") or ""), "interface": str(circuit.get("interface") or ""),
+                              "level": str(circuit.get("level") or ""), "state": str(circuit.get("state") or "").upper()})
+    return sorted(neighbors, key=lambda n: (n["instance"], n["interface"], n["system_id"]))
+
+
 def parse_frr_bgp(text: str) -> list:
     peers = []
     data = _json(text, tolerate_absent=True)
@@ -1102,6 +1114,7 @@ _LINUX_GROUPS = {
     "addresses": lambda f: parse_linux_addr(f("addr"))[1],
     "routes": lambda f: parse_linux_routes(f("route4"), f("route6")),
     "ospf": lambda f: parse_frr_ospf(f("ospf"), f("ospf6")),
+    "isis": lambda f: parse_frr_isis(f("isis")),
     "bgp": lambda f: parse_frr_bgp(f("bgp")),
     "rip": lambda f: parse_frr_rip(f("rip"), f("ripng")),
     "nat": lambda f: parse_nft(f("nft")),

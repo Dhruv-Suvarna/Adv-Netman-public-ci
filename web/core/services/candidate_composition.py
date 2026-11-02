@@ -360,10 +360,14 @@ def _contribute_interfaces(builder: _Builder, routing: dict, phase12: dict) -> d
         for binding in sorted((instance.get("interfaces") or {}).values(), key=_seq):
             path = f"routing.isis.{instance.get('id')}.interfaces.{binding.get('id')}"
             value = {"id": binding.get("id"), "instance_id": instance.get("id"), "passive": bool(binding.get("passive")),
-                     "metric": binding.get("metric"), "path": path}
+                     "metric": binding.get("metric"), "path": path,
+                     "address_family_ipv4": bool(instance.get("address_family_ipv4")),
+                     "address_family_ipv6": bool(instance.get("address_family_ipv6")), "level": instance.get("level")}
             builder.add_single(
                 binding.get("interface_id"), "isis", "ISIS", value,
-                semantic={"passive": value["passive"], "metric": value["metric"]}, source=path,
+                semantic={"passive": value["passive"], "metric": value["metric"],
+                          "address_family_ipv4": value["address_family_ipv4"],
+                          "address_family_ipv6": value["address_family_ipv6"], "level": value["level"]}, source=path,
             )
 
     fhrp = (phase12.get("fhrp") or {}).get("instances") or {}

@@ -15,6 +15,8 @@ import re
 from .schema import ParsedConfig, ParsedInterface, ParsedNatRule, ParsedRoutingInstance, ParsedStaticRoute, UnmanagedBlock
 
 PARSER_VERSION = "ubuntu-frr-1.0"
+ISIS_TAG = "NMAS44"  # platform_drivers.FRR_ISIS_TAG: only NMAS's named process is imported
+_ISIS_LEVELS = {"level-1": "LEVEL_1", "level-2-only": "LEVEL_2", "level-1-2": "LEVEL_1_2"}
 
 
 def _blocks(text: str) -> list[list[str]]:
@@ -102,6 +104,18 @@ def _parse_interface(block: list[str], interfaces: dict[str, ParsedInterface]) -
             for binding in interface.ospf_bindings[-1:]: binding["cost"] = int(match.group(1))
         elif (match := re.fullmatch(r"ipv6 ospf6 cost\s+(\d+)", command, re.I)):
             for binding in interface.ospf_bindings[-1:]: binding["cost"] = int(match.group(1))
+        elif command in {f"ip router isis {ISIS_TAG}", f"ipv6 router isis {ISIS_TAG}"}:
+            if not interface.isis_bindings:
+                interface.isis_bindings.append({"passive": False, "metric": None,
+                                                "address_family_ipv4": False, "address_family_ipv6": False})
+            interface.isis_bindings[0]["address_family_ipv6" if command.startswith("ipv6 ") else "address_family_ipv4"] = True
+        elif lower == "isis passive" and interface.isis_bindings:
+            interface.isis_bindings[0]["passive"] = True
+        elif (match := re.fullmatch(r"isis metric\s+(\d+)", lower)) and interface.isis_bindings:
+            interface.isis_bindings[0]["metric"] = int(match.group(1))
+        elif lower in {"isis network point-to-point", "isis circuit-type level-2-only", "isis circuit-type level-1",
+                       "isis circuit-type level-1-2"} and interface.isis_bindings:
+            pass
         else:
             interface.preserved_lines.append(line)
 
@@ -148,6 +162,25 @@ def _parse_rip(block: list[str], family: str) -> ParsedRoutingInstance:
         family="rip", fields={"address_family": family, "enabled": True},
         bindings=bindings, preserved_lines=preserved,
     )
+
+
+def _parse_isis(block: list[str]) -> ParsedRoutingInstance:
+    fields = {"net": "", "level": "LEVEL_1_2", "address_family_ipv4": False, "address_family_ipv6": False}
+    preserved = []
+    for line in block[1:]:
+        command = line.strip().lower()
+        if match := re.fullmatch(r"net\s+(\S+)", command):
+            fields["net"] = match.group(1)
+        elif match := re.fullmatch(r"is-type\s+(\S+)", command):
+            if match.group(1) in _ISIS_LEVELS:
+                fields["level"] = _ISIS_LEVELS[match.group(1)]
+            else:
+                preserved.append(line)
+        elif command == "metric-style wide":
+            continue
+        else:
+            preserved.append(line)
+    return ParsedRoutingInstance(family="isis", fields=fields, preserved_lines=preserved)
 
 
 def _parse_bgp(block: list[str]) -> ParsedRoutingInstance | None:
@@ -254,6 +287,7 @@ def parse(frr_text: str, *, addr_json: str = "", nft_text: str = "", management_
         elif lower.startswith("interface "): _parse_interface(block, interfaces)
         elif lower == "router ospf": result.routing_instances.append(_parse_ospf(block, "OSPFV2"))
         elif lower == "router ospf6": result.routing_instances.append(_parse_ospf(block, "OSPFV3"))
+        elif lower == f"router isis {ISIS_TAG.lower()}": result.routing_instances.append(_parse_isis(block))
         elif lower == "router rip": result.routing_instances.append(_parse_rip(block, "IPV4"))
         elif lower == "router ripng": result.routing_instances.append(_parse_rip(block, "IPV6"))
         elif lower.startswith("router bgp "):
@@ -274,5 +308,11 @@ def parse(frr_text: str, *, addr_json: str = "", nft_text: str = "", management_
         for binding in interface.ospf_bindings:
             instance = ospf.get((binding["version"], binding.get("process_id")))
             if instance: instance.bindings.append({"interface_name": interface.name, **binding})
+        for binding in interface.isis_bindings:
+            instance = next((row for row in result.routing_instances if row.family == "isis"), None)
+            if instance:
+                instance.bindings.append({"interface_name": interface.name, **binding})
+                instance.fields["address_family_ipv4"] |= binding["address_family_ipv4"]
+                instance.fields["address_family_ipv6"] |= binding["address_family_ipv6"]
     _parse_nft(nft_text, result)
     return result
