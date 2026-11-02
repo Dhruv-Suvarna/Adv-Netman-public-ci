@@ -170,7 +170,7 @@ class IosXeSessionTests(SimpleTestCase):
             self.assertEqual(caught.exception.code, code)
         conn = FakeConn({"show ipv6 interface": "% Invalid input detected at '^' marker."})
         session = live.IosXeSession({"name": "C8K"}, conn=conn)
-        for key, code in (("ipv6_interfaces", "COMMAND_FAILED"), ("running_config", "COMMAND_NOT_ALLOWED")):
+        for key, code in (("ipv6_interfaces", "COMMAND_FAILED"), ("startup_config", "COMMAND_NOT_ALLOWED")):
             with self.subTest(case=f"refused {key}"), self.assertRaises(live.LiveError) as caught:
                 session.run(key)
             self.assertEqual(caught.exception.code, code)

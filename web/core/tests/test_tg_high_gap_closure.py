@@ -87,7 +87,7 @@ class _TextDevice:
 
     # netmiko surface used by the cEOS / IOS-XE executors
     def send_command(self, command, **_kwargs):
-        if command == "show tcp brief":
+        if command == "show tcp brief numeric":
             return ""
         if command != "show running-config":
             raise ValueError("fake device only serves the running configuration")

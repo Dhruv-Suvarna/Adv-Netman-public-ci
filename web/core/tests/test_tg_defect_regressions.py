@@ -50,8 +50,16 @@ class F2RenderContributionGateTests(SimpleTestCase):
         self.assertEqual(pd._ospf_interface_contributions(_interface(ospf=[OSPF_V2, OSPF_V3]), ceos=False, platform="sonic"), [])
 
     def test_ospfv3_binding_refused_while_ospfv2_still_renders_on_a_v2_only_platform(self):
-        # Cisco IOS-XE: OSPFv2 SUPPORTED, OSPFv3 NOT_IMPLEMENTED -- the gate is per version, not per protocol family
-        lines = pd._ospf_interface_contributions(_interface(ospf=[OSPF_V2, OSPF_V3]), ceos=False, platform="cisco_c8000v_iosxe")
+        # The gate is per version, not per protocol family.  No shipped platform is OSPFv2-only any more (IOS XE gained
+        # OSPFv3 in V2 Phase 9), so the split is made explicit for the duration of the test.
+        both = pd._ospf_interface_contributions(_interface(ospf=[OSPF_V2, OSPF_V3]), ceos=False, platform="cisco_c8000v_iosxe")
+        self.assertIn("   ipv6 ospf6 area 0", _texts(both))
+        original = pd.ROUTING_CAPABILITIES["cisco_c8000v_iosxe"][pd.RoutingProtocol.OSPFV3]
+        try:
+            pd.ROUTING_CAPABILITIES["cisco_c8000v_iosxe"][pd.RoutingProtocol.OSPFV3] = pd.PlatformCapability(pd.CapabilityStatus.NOT_IMPLEMENTED, "probe")
+            lines = pd._ospf_interface_contributions(_interface(ospf=[OSPF_V2, OSPF_V3]), ceos=False, platform="cisco_c8000v_iosxe")
+        finally:
+            pd.ROUTING_CAPABILITIES["cisco_c8000v_iosxe"][pd.RoutingProtocol.OSPFV3] = original
         self.assertEqual(_texts(lines), ["   ip ospf area 0", "   ip ospf cost 10", "   ip ospf network point-to-point"])
 
     def test_frr_interface_block_not_rendered_when_ospf_is_unsupported(self):

@@ -47,7 +47,7 @@ interface Loopback44
 !
 ip route 203.0.113.0 255.255.255.0 192.0.2.2 200
 """)
-        self.assertEqual(parsed.parser_version, "iosxe-1.0")
+        self.assertEqual(parsed.parser_version, "iosxe-1.2")
         self.assertEqual(parsed.interfaces[0].kind, "LOOPBACK")
         self.assertEqual(parsed.interfaces[0].addresses[0]["cidr"], "198.51.100.44/32")
         self.assertEqual(parsed.static_routes[0].destination, "203.0.113.0/24")

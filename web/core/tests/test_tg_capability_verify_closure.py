@@ -132,7 +132,7 @@ class RuntimeAbsenceTests(TestCase):
 class OfflineFixtureAndCommandTests(TestCase):
     def test_fixture_sessions_serve_only_the_running_configuration(self):
         session, gnmi = offline_verify._FixtureConfigSession("hostname R1\n"), offline_verify._FixtureGnmi({"system": {}})
-        self.assertEqual((session.send_command("show running-config"), session.send_command("show tcp brief")), ("hostname R1\n", ""))
+        self.assertEqual((session.send_command("show running-config"), session.send_command("show tcp brief numeric")), ("hostname R1\n", ""))
         self.assertEqual(gnmi.get("/"), {"notification": [{"update": [{"path": None, "val": {"system": {}}}]}]})
 
     def test_fixture_sessions_refuse_every_other_command_or_path(self):

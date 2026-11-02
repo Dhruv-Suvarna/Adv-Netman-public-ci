@@ -63,7 +63,7 @@ class DerivationTests(TestCase):
         "nokia_srlinux": LIVE_BASE | {"routing.OSPFV2", "routing.OSPFV3", "routing.BGP_IPV4", "routing.BGP_IPV6", *(f"service_policy.{c}" for c in (
             "ACL_IPV4_STANDARD", "ACL_IPV4_EXTENDED", "ACL_IPV6_STANDARD", "ACL_IPV6_EXTENDED", "ACL_ATTACH_IPV4", "ACL_ATTACH_IPV6",
             "DHCP_RELAY_IPV4", "DHCP_RELAY_IPV6"))},
-        "cisco_c8000v_iosxe": LIVE_BASE,
+        "cisco_c8000v_iosxe": LIVE_BASE | {"routing.OSPFV2", "routing.OSPFV3", "routing.RIPV2", "routing.BGP_IPV4", "routing.BGP_IPV6"},
     }
 
     def test_srlinux_and_iosxe_are_live_only_for_what_their_executors_can_invert(self):

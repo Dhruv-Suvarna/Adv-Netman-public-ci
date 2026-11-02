@@ -589,6 +589,9 @@ class LiveRegistry(dict):
         from .batch_iosxe import CELLS as IOSXE_CELLS, probe_iosxe
         for key in IOSXE_CELLS:
             self["cisco_c8000v_iosxe", key] = lambda cell, key=key: probe_iosxe(cell, key)
+        from .batch_iosxe_routing import CELLS as IOSXE_ROUTING_CELLS, probe_iosxe_routing
+        for key in IOSXE_ROUTING_CELLS:      # V2 Phase 9: OSPFv2 / OSPFv3 / RIPv2 / BGP against an FRR peer
+            self["cisco_c8000v_iosxe", key] = lambda cell, key=key: probe_iosxe_routing(cell, key)
         for version in ("OSPFV2", "OSPFV3"):
             self["ubuntu_frr", f"routing.{version}"] = lambda cell, version=version: probe_ospf(cell, version)
 
