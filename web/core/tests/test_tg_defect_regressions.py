@@ -69,7 +69,9 @@ class F2RenderContributionGateTests(SimpleTestCase):
         binding = {"path": "routing.isis.n1", "metric": 20, "passive": True}
         self.assertEqual(_texts(pd._ceos_isis_interface_contributions(_interface(isis=[binding]), platform="arista_ceos")),
                          ["   isis enable NMAS", "   isis metric 20", "   isis passive"])
-        self.assertEqual(pd._ceos_isis_interface_contributions(_interface(isis=[binding]), platform="ubuntu_frr"), [])
+        # Ubuntu/FRR IS-IS is SUPPORTED since V2 Phase 9; SR Linux IS-IS is still NOT_IMPLEMENTED.
+        self.assertEqual(pd.capability_for_routing("nokia_srlinux", pd.RoutingProtocol.ISIS).status, pd.CapabilityStatus.NOT_IMPLEMENTED)
+        self.assertEqual(pd._ceos_isis_interface_contributions(_interface(isis=[binding]), platform="nokia_srlinux"), [])
 
     def test_acl_attachment_renders_exact_line_on_ceos(self):
         self.assertEqual(_texts(pd._acl_interface_contributions(_interface(acl_attachments=[ACL]), platform="arista_ceos")),
