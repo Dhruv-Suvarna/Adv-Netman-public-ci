@@ -15033,7 +15033,7 @@
       "closure_class": "SUPPORTED",
       "environment_blocker": [],
       "evidence_references": [
-        "live:nmas-cap-validation/frr-nat_nat44_static/2026-11-02T09:56:36.782487+00:00"
+        "live:nmas-cap-validation/frr-nat_nat44_static/2026-11-02T10:50:01.208191+00:00"
       ],
       "feature": "service_policy.NAT_NAT44_STATIC",
       "final_status": "SUPPORTED",

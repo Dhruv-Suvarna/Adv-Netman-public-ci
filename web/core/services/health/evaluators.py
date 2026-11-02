@@ -455,6 +455,11 @@ def _acl_attachment(req, ctx):
                    {"attachments": [a for a in group.data["acl_attachments"] if a["interface"] == wanted["interface"]]}, wanted, group)
 
 
+def _nft_host(value) -> str:
+    """A host address as nft lists it (without /32)."""
+    return str(value or "").removesuffix("/32")
+
+
 def _nat_rule(req, ctx):
     group, missing = _need(ctx, req.device, "nat")
     if missing:
@@ -463,8 +468,8 @@ def _nat_rule(req, ctx):
     outside = facts.get("outside_interface")
     if facts.get("mode") == "STATIC":
         # a static mapping is proven only by both directions of exactly this 1:1 pair on the outside interface
-        host = lambda value: str(value or "").removesuffix("/32")   # noqa: E731  (nft lists a host without /32)
-        expected = {"outside_interface": outside, "inside": host(facts.get("original_source")), "global": host(facts.get("translated_source"))}
+        expected = {"outside_interface": outside, "inside": _nft_host(facts.get("original_source")),
+                    "global": _nft_host(facts.get("translated_source"))}
         mappings = group.data.get("static") or []
         if any({"outside_interface": m["oif"], "inside": m["inside"], "global": m["global"]} == expected for m in mappings):
             return Outcome(S.PASS, "NAT_RULE_EXPECTED_PRESENT",

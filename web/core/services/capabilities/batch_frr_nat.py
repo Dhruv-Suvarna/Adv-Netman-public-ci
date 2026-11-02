@@ -17,6 +17,7 @@ from copy import deepcopy
 from django.utils import timezone
 
 from ..config_import import parser_frr
+from ..execution.executors.base import ExecutorError
 from ..execution.executors.linux import LinuxExecutor, nft_digest
 from . import assessment
 from .batch_frr_routing import FrrPair, _call, _configlet, _postcheck, _requirements, _transaction
@@ -245,7 +246,7 @@ class StaticNatLab(NatLab):
         super().__init__()
         try:
             FrrPair.must(self.fc, "ip", "route", "add", "blackhole", GLOBAL_NET)
-        except Exception:
+        except (RuntimeError, OSError, subprocess.SubprocessError):
             super().close()
             raise
 
@@ -262,6 +263,9 @@ class StaticNatLab(NatLab):
         if getattr(self, "prepared", False):
             _call(self.fc, "ip", "route", "del", "blackhole", GLOBAL_NET)
         return super().close()
+
+
+_SCENARIO_ERRORS = (RuntimeError, ExecutorError, OSError, subprocess.SubprocessError, ValueError, KeyError)
 
 
 def _seed_static() -> str:
@@ -315,7 +319,7 @@ def _static_scenario(specs, requirements, rule, conflicting, seeded: bool) -> di
         result["after"] = observe()
         result["config_restored"] = nft_digest(_call(lab.fc, "nft", "list", "ruleset").stdout) == before
         result["compensated"] = result["compensated"] and result["after"] == result["control"]
-    except Exception as exc:
+    except _SCENARIO_ERRORS as exc:     # recorded as the scenario's failure; anything else aborts the run (fail closed)
         result["failure"] = f"{type(exc).__name__}: {str(exc)[:400]}"
     finally:
         executor.close()
@@ -352,7 +356,10 @@ def probe_nat_static(cell):
         for label, r in scenarios.items())
     detail = f"isolated FRR NAT_NAT44_STATIC: rendered={[line.strip() for line in block]} || {text}"
     negative_ok = scenarios["existing NMAS table (mapping appended)"]["negative"] == "APPLY/False/COMPENSATION_NOT_PROVABLE"
-    every = lambda *keys: all(r.get(key) for r in scenarios.values() for key in keys)   # noqa: E731
+
+    def every(*keys):
+        return all(r.get(key) for r in scenarios.values() for key in keys)
+
     for name, ok, reason in (
         ("live_write", every("applied"), "FUNCTIONAL_TEST_FAILED"),
         ("live_read", every("read_ok"), "LIVE_READ_ABSENT"),

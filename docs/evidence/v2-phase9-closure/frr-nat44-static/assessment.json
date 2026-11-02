@@ -10,7 +10,7 @@
     "device_builder": "PASS",
     "evidence_ids": [],
     "evidence_references": [
-      "live:nmas-cap-validation/frr-nat_nat44_static/2026-11-02T09:56:36.782487+00:00"
+      "live:nmas-cap-validation/frr-nat_nat44_static/2026-11-02T10:50:01.208191+00:00"
     ],
     "executor": "PASS",
     "feasibility": "PROVEN",
@@ -41,7 +41,7 @@
         "detail": "isolated FRR NAT_NAT44_STATIC: rendered=['table ip DEVICE_BUILDER_NAT44_STATIC {', 'chain prerouting {', 'type nat hook prerouting priority dstnat; policy accept;', 'iifname \"nmasout0\" ip daddr 203.0.113.44 dnat to 198.18.0.2', '}', 'chain postrouting {', 'type nat hook postrouting priority srcnat; policy accept;', 'oifname \"nmasout0\" ip saddr 198.18.0.2 snat to 203.0.113.44', '}', '}'] || new table: preflight=['nat_rule=APPLY/True/-']; control before (outbound inside, outbound other, inbound global, inbound unowned)=('198.18.0.2', '198.18.9.2', ('NONE', 'NONE'), ('NONE', 'NONE')); conflicting-mapping preflight=APPLY/True/-; operator postcheck pass=True []; nat static facts=[{'table': 'DEVICE_BUILDER_NAT44_STATIC', 'oif': 'nmasout0', 'inside': '198.18.0.2', 'global': '203.0.113.44'}]; import parser read [('STATIC', 'nmasout0', '198.18.0.2', '203.0.113.44')] (STATIC 198.18.0.2->203.0.113.44 recovered=True); OUTBOUND: outside endpoint saw source 203.0.113.44 for inside host 198.18.0.2 (expected 203.0.113.44); source 198.18.9.2 seen as 198.18.9.2 (expected 198.18.9.2); INBOUND: datagram from 198.18.1.2 to 203.0.113.44 reached the inside host as from 198.18.1.2 and the outside endpoint got [REPLY 203.0.113.44] (reply source reverse-translated to 203.0.113.44); datagram to unowned 203.0.113.45: inside saw [NONE], outside got [NONE]; compensation=['COMPENSATED']; after compensation=('198.18.0.2', '198.18.9.2', ('NONE', 'NONE'), ('NONE', 'NONE')); nft ruleset identical to pre-apply capture=True; lab namespace/package/route baseline restored=True; no failure || existing NMAS table (mapping appended): preflight=['nat_rule=APPLY/True/-']; control before (outbound inside, outbound other, inbound global, inbound unowned)=('198.18.0.2', '203.0.113.99', ('NONE', 'NONE'), ('NONE', 'NONE')); conflicting-mapping preflight=APPLY/False/COMPENSATION_NOT_PROVABLE; operator postcheck pass=True []; nat static facts=[{'table': 'DEVICE_BUILDER_NAT44_STATIC', 'oif': 'nmasout0', 'inside': '19",
         "outcome": "PASS",
         "reason": "",
-        "reference": "live:nmas-cap-validation/frr-nat_nat44_static/2026-11-02T09:56:36.782487+00:00",
+        "reference": "live:nmas-cap-validation/frr-nat_nat44_static/2026-11-02T10:50:01.208191+00:00",
         "test_type": "LIVE"
       },
       "config_validation": {
@@ -76,21 +76,21 @@
         "detail": "isolated FRR NAT_NAT44_STATIC: rendered=['table ip DEVICE_BUILDER_NAT44_STATIC {', 'chain prerouting {', 'type nat hook prerouting priority dstnat; policy accept;', 'iifname \"nmasout0\" ip daddr 203.0.113.44 dnat to 198.18.0.2', '}', 'chain postrouting {', 'type nat hook postrouting priority srcnat; policy accept;', 'oifname \"nmasout0\" ip saddr 198.18.0.2 snat to 203.0.113.44', '}', '}'] || new table: preflight=['nat_rule=APPLY/True/-']; control before (outbound inside, outbound other, inbound global, inbound unowned)=('198.18.0.2', '198.18.9.2', ('NONE', 'NONE'), ('NONE', 'NONE')); conflicting-mapping preflight=APPLY/True/-; operator postcheck pass=True []; nat static facts=[{'table': 'DEVICE_BUILDER_NAT44_STATIC', 'oif': 'nmasout0', 'inside': '198.18.0.2', 'global': '203.0.113.44'}]; import parser read [('STATIC', 'nmasout0', '198.18.0.2', '203.0.113.44')] (STATIC 198.18.0.2->203.0.113.44 recovered=True); OUTBOUND: outside endpoint saw source 203.0.113.44 for inside host 198.18.0.2 (expected 203.0.113.44); source 198.18.9.2 seen as 198.18.9.2 (expected 198.18.9.2); INBOUND: datagram from 198.18.1.2 to 203.0.113.44 reached the inside host as from 198.18.1.2 and the outside endpoint got [REPLY 203.0.113.44] (reply source reverse-translated to 203.0.113.44); datagram to unowned 203.0.113.45: inside saw [NONE], outside got [NONE]; compensation=['COMPENSATED']; after compensation=('198.18.0.2', '198.18.9.2', ('NONE', 'NONE'), ('NONE', 'NONE')); nft ruleset identical to pre-apply capture=True; lab namespace/package/route baseline restored=True; no failure || existing NMAS table (mapping appended): preflight=['nat_rule=APPLY/True/-']; control before (outbound inside, outbound other, inbound global, inbound unowned)=('198.18.0.2', '203.0.113.99', ('NONE', 'NONE'), ('NONE', 'NONE')); conflicting-mapping preflight=APPLY/False/COMPENSATION_NOT_PROVABLE; operator postcheck pass=True []; nat static facts=[{'table': 'DEVICE_BUILDER_NAT44_STATIC', 'oif': 'nmasout0', 'inside': '19",
         "outcome": "PASS",
         "reason": "",
-        "reference": "live:nmas-cap-validation/frr-nat_nat44_static/2026-11-02T09:56:36.782487+00:00",
+        "reference": "live:nmas-cap-validation/frr-nat_nat44_static/2026-11-02T10:50:01.208191+00:00",
         "test_type": "LIVE"
       },
       "live_read": {
         "detail": "isolated FRR NAT_NAT44_STATIC: rendered=['table ip DEVICE_BUILDER_NAT44_STATIC {', 'chain prerouting {', 'type nat hook prerouting priority dstnat; policy accept;', 'iifname \"nmasout0\" ip daddr 203.0.113.44 dnat to 198.18.0.2', '}', 'chain postrouting {', 'type nat hook postrouting priority srcnat; policy accept;', 'oifname \"nmasout0\" ip saddr 198.18.0.2 snat to 203.0.113.44', '}', '}'] || new table: preflight=['nat_rule=APPLY/True/-']; control before (outbound inside, outbound other, inbound global, inbound unowned)=('198.18.0.2', '198.18.9.2', ('NONE', 'NONE'), ('NONE', 'NONE')); conflicting-mapping preflight=APPLY/True/-; operator postcheck pass=True []; nat static facts=[{'table': 'DEVICE_BUILDER_NAT44_STATIC', 'oif': 'nmasout0', 'inside': '198.18.0.2', 'global': '203.0.113.44'}]; import parser read [('STATIC', 'nmasout0', '198.18.0.2', '203.0.113.44')] (STATIC 198.18.0.2->203.0.113.44 recovered=True); OUTBOUND: outside endpoint saw source 203.0.113.44 for inside host 198.18.0.2 (expected 203.0.113.44); source 198.18.9.2 seen as 198.18.9.2 (expected 198.18.9.2); INBOUND: datagram from 198.18.1.2 to 203.0.113.44 reached the inside host as from 198.18.1.2 and the outside endpoint got [REPLY 203.0.113.44] (reply source reverse-translated to 203.0.113.44); datagram to unowned 203.0.113.45: inside saw [NONE], outside got [NONE]; compensation=['COMPENSATED']; after compensation=('198.18.0.2', '198.18.9.2', ('NONE', 'NONE'), ('NONE', 'NONE')); nft ruleset identical to pre-apply capture=True; lab namespace/package/route baseline restored=True; no failure || existing NMAS table (mapping appended): preflight=['nat_rule=APPLY/True/-']; control before (outbound inside, outbound other, inbound global, inbound unowned)=('198.18.0.2', '203.0.113.99', ('NONE', 'NONE'), ('NONE', 'NONE')); conflicting-mapping preflight=APPLY/False/COMPENSATION_NOT_PROVABLE; operator postcheck pass=True []; nat static facts=[{'table': 'DEVICE_BUILDER_NAT44_STATIC', 'oif': 'nmasout0', 'inside': '19",
         "outcome": "PASS",
         "reason": "",
-        "reference": "live:nmas-cap-validation/frr-nat_nat44_static/2026-11-02T09:56:36.782487+00:00",
+        "reference": "live:nmas-cap-validation/frr-nat_nat44_static/2026-11-02T10:50:01.208191+00:00",
         "test_type": "LIVE"
       },
       "live_write": {
         "detail": "isolated FRR NAT_NAT44_STATIC: rendered=['table ip DEVICE_BUILDER_NAT44_STATIC {', 'chain prerouting {', 'type nat hook prerouting priority dstnat; policy accept;', 'iifname \"nmasout0\" ip daddr 203.0.113.44 dnat to 198.18.0.2', '}', 'chain postrouting {', 'type nat hook postrouting priority srcnat; policy accept;', 'oifname \"nmasout0\" ip saddr 198.18.0.2 snat to 203.0.113.44', '}', '}'] || new table: preflight=['nat_rule=APPLY/True/-']; control before (outbound inside, outbound other, inbound global, inbound unowned)=('198.18.0.2', '198.18.9.2', ('NONE', 'NONE'), ('NONE', 'NONE')); conflicting-mapping preflight=APPLY/True/-; operator postcheck pass=True []; nat static facts=[{'table': 'DEVICE_BUILDER_NAT44_STATIC', 'oif': 'nmasout0', 'inside': '198.18.0.2', 'global': '203.0.113.44'}]; import parser read [('STATIC', 'nmasout0', '198.18.0.2', '203.0.113.44')] (STATIC 198.18.0.2->203.0.113.44 recovered=True); OUTBOUND: outside endpoint saw source 203.0.113.44 for inside host 198.18.0.2 (expected 203.0.113.44); source 198.18.9.2 seen as 198.18.9.2 (expected 198.18.9.2); INBOUND: datagram from 198.18.1.2 to 203.0.113.44 reached the inside host as from 198.18.1.2 and the outside endpoint got [REPLY 203.0.113.44] (reply source reverse-translated to 203.0.113.44); datagram to unowned 203.0.113.45: inside saw [NONE], outside got [NONE]; compensation=['COMPENSATED']; after compensation=('198.18.0.2', '198.18.9.2', ('NONE', 'NONE'), ('NONE', 'NONE')); nft ruleset identical to pre-apply capture=True; lab namespace/package/route baseline restored=True; no failure || existing NMAS table (mapping appended): preflight=['nat_rule=APPLY/True/-']; control before (outbound inside, outbound other, inbound global, inbound unowned)=('198.18.0.2', '203.0.113.99', ('NONE', 'NONE'), ('NONE', 'NONE')); conflicting-mapping preflight=APPLY/False/COMPENSATION_NOT_PROVABLE; operator postcheck pass=True []; nat static facts=[{'table': 'DEVICE_BUILDER_NAT44_STATIC', 'oif': 'nmasout0', 'inside': '19",
         "outcome": "PASS",
         "reason": "",
-        "reference": "live:nmas-cap-validation/frr-nat_nat44_static/2026-11-02T09:56:36.782487+00:00",
+        "reference": "live:nmas-cap-validation/frr-nat_nat44_static/2026-11-02T10:50:01.208191+00:00",
         "test_type": "LIVE"
       },
       "parser_import": {
@@ -111,7 +111,7 @@
         "detail": "isolated FRR NAT_NAT44_STATIC: rendered=['table ip DEVICE_BUILDER_NAT44_STATIC {', 'chain prerouting {', 'type nat hook prerouting priority dstnat; policy accept;', 'iifname \"nmasout0\" ip daddr 203.0.113.44 dnat to 198.18.0.2', '}', 'chain postrouting {', 'type nat hook postrouting priority srcnat; policy accept;', 'oifname \"nmasout0\" ip saddr 198.18.0.2 snat to 203.0.113.44', '}', '}'] || new table: preflight=['nat_rule=APPLY/True/-']; control before (outbound inside, outbound other, inbound global, inbound unowned)=('198.18.0.2', '198.18.9.2', ('NONE', 'NONE'), ('NONE', 'NONE')); conflicting-mapping preflight=APPLY/True/-; operator postcheck pass=True []; nat static facts=[{'table': 'DEVICE_BUILDER_NAT44_STATIC', 'oif': 'nmasout0', 'inside': '198.18.0.2', 'global': '203.0.113.44'}]; import parser read [('STATIC', 'nmasout0', '198.18.0.2', '203.0.113.44')] (STATIC 198.18.0.2->203.0.113.44 recovered=True); OUTBOUND: outside endpoint saw source 203.0.113.44 for inside host 198.18.0.2 (expected 203.0.113.44); source 198.18.9.2 seen as 198.18.9.2 (expected 198.18.9.2); INBOUND: datagram from 198.18.1.2 to 203.0.113.44 reached the inside host as from 198.18.1.2 and the outside endpoint got [REPLY 203.0.113.44] (reply source reverse-translated to 203.0.113.44); datagram to unowned 203.0.113.45: inside saw [NONE], outside got [NONE]; compensation=['COMPENSATED']; after compensation=('198.18.0.2', '198.18.9.2', ('NONE', 'NONE'), ('NONE', 'NONE')); nft ruleset identical to pre-apply capture=True; lab namespace/package/route baseline restored=True; no failure || existing NMAS table (mapping appended): preflight=['nat_rule=APPLY/True/-']; control before (outbound inside, outbound other, inbound global, inbound unowned)=('198.18.0.2', '203.0.113.99', ('NONE', 'NONE'), ('NONE', 'NONE')); conflicting-mapping preflight=APPLY/False/COMPENSATION_NOT_PROVABLE; operator postcheck pass=True []; nat static facts=[{'table': 'DEVICE_BUILDER_NAT44_STATIC', 'oif': 'nmasout0', 'inside': '19",
         "outcome": "PASS",
         "reason": "",
-        "reference": "live:nmas-cap-validation/frr-nat_nat44_static/2026-11-02T09:56:36.782487+00:00",
+        "reference": "live:nmas-cap-validation/frr-nat_nat44_static/2026-11-02T10:50:01.208191+00:00",
         "test_type": "LIVE"
       },
       "semantic_model": {
@@ -123,18 +123,18 @@
       }
     },
     "renderer": "PASS",
-    "repository_head": "eb1aa68b4fcd788485b1c40cfe117d874e872a2c",
+    "repository_head": "31ee879d53245e53059dc7b29096a608f07e5adf",
     "runtime_test": "PASS",
     "runtime_version": "FRRouting 8.4.4 / Ubuntu 24.04 isolated container, nftables 1.0.9 (lab-installed)",
     "semantic": "PASS",
     "status": "SUPPORTED",
     "strongest_test_type": "LIVE",
-    "timestamp": "2026-11-02T09:54:39.949257+00:00",
+    "timestamp": "2026-11-02T10:48:02.444885+00:00",
     "unsupported_reasons": [],
     "validator": "PASS"
   },
   "ephemeral_database": true,
-  "repository_head": "eb1aa68b4fcd788485b1c40cfe117d874e872a2c",
+  "repository_head": "31ee879d53245e53059dc7b29096a608f07e5adf",
   "scenarios": {
     "existing NMAS table (mapping appended)": {
       "actions": [
@@ -230,12 +230,12 @@
   "schema": "nmas.v2.phase9.frr-nat44-static-live/1",
   "uncommitted_source_sha256": {
     "templates/features/ubuntu_frr/nat_static.j2": "3c1104d7cc6dce4624b3f7220e85593885f37cb6e6905c711d9474fe0af9593c",
-    "web/core/services/capabilities/batch_frr_nat.py": "7522bdf57920e526e22036485561298ad24c1f71bc78b4b0b2159f8145cbb31f",
+    "web/core/services/capabilities/batch_frr_nat.py": "e59b373aede9b86b55fbd4a6c735e9b44ffaeb029070ad1edf4c83f01dffeb91",
     "web/core/services/capabilities/offline_verify.py": "6554d8a57fc0991c0cfb89bd2442361d02a14b2780eab73e3fb3c53ad59e5bd2",
     "web/core/services/config_import/parser_frr.py": "db557e0f7db1f0119b222ff809f5634d7c56d3da8edb97582181da43a7d9dd8f",
     "web/core/services/config_import/service.py": "3cbd0c48d7cdabd19207874625112a2752de21db20404d4ae41002961b0183d2",
     "web/core/services/execution/executors/linux.py": "2909f557db1bffe951324dd88c59b8aea718c7eecb15155b086522db347f8d96",
-    "web/core/services/health/evaluators.py": "3b8630742520419ccd23269f60b37dcd2b0a869bec458f93d41da64c54f10441",
+    "web/core/services/health/evaluators.py": "af318b03ed93f4d4e88a4da14c6e21b89a44ba7ab89e3019a966584bc892f1a0",
     "web/core/services/health/live.py": "0313487d7816dcbc73654f3e26cbd315ac919cb6531e250eaf9e12290ffa79a2",
     "web/core/services/planning/configlet_factory.py": "8d4d7d2ad1ed9a61a734b18ff5660d0906f2e0ff1e15da6d383b2e406124bad6",
     "web/core/services/platform_drivers.py": "462daef63575b4cda707eb88cf7ec03071cda2e363b77e3fb144b4817d7ca253"
