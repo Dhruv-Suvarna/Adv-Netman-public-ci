@@ -13913,250 +13913,154 @@
       "unsupported_reasons": []
     },
     {
-      "capability_status": "NOT_IMPLEMENTED",
-      "closure_class": "NOT_IMPLEMENTED",
+      "capability_status": "SUPPORTED",
+      "closure_class": "SUPPORTED",
       "environment_blocker": [],
       "evidence_references": [
-        "gate:ubuntu_frr/service_policy.ACL_ATTACH_IPV4@d879b511a42d#e0449dea56a4e145"
+        "live:nmas-cap-validation/frr-acl_attach_ipv4/2026-11-02T19:56:15.916467+00:00"
       ],
       "feature": "service_policy.ACL_ATTACH_IPV4",
-      "final_status": "UNSUPPORTED",
-      "missing_stages": [
-        "intent",
-        "renderer",
-        "validation",
-        "execution",
-        "readback",
-        "postcheck",
-        "compensation",
-        "restoration",
-        "live"
-      ],
+      "final_status": "SUPPORTED",
+      "missing_stages": [],
       "platform": "ubuntu_frr",
       "stages": {
-        "compensation": false,
-        "execution": false,
-        "intent": false,
-        "live": false,
-        "postcheck": false,
-        "readback": false,
-        "renderer": false,
-        "restoration": false,
+        "compensation": true,
+        "execution": true,
+        "intent": true,
+        "live": true,
+        "postcheck": true,
+        "readback": true,
+        "renderer": true,
+        "restoration": true,
         "tests": true,
-        "validation": false
+        "validation": true
       },
-      "unsupported_reasons": [
-        "CONFIG_VALIDATION_FAILED",
-        "EXECUTOR_REFUSED",
-        "PARSER_ABSENT",
-        "RENDERER_ABSENT",
-        "UI_ABSENT"
-      ]
+      "unsupported_reasons": []
     },
     {
-      "capability_status": "NOT_IMPLEMENTED",
-      "closure_class": "NOT_IMPLEMENTED",
+      "capability_status": "SUPPORTED",
+      "closure_class": "SUPPORTED",
       "environment_blocker": [],
       "evidence_references": [
-        "gate:ubuntu_frr/service_policy.ACL_ATTACH_IPV6@d879b511a42d#e0449dea56a4e145"
+        "live:nmas-cap-validation/frr-acl_attach_ipv6/2026-11-02T19:58:01.855225+00:00"
       ],
       "feature": "service_policy.ACL_ATTACH_IPV6",
-      "final_status": "UNSUPPORTED",
-      "missing_stages": [
-        "intent",
-        "renderer",
-        "validation",
-        "execution",
-        "readback",
-        "postcheck",
-        "compensation",
-        "restoration",
-        "live"
-      ],
+      "final_status": "SUPPORTED",
+      "missing_stages": [],
       "platform": "ubuntu_frr",
       "stages": {
-        "compensation": false,
-        "execution": false,
-        "intent": false,
-        "live": false,
-        "postcheck": false,
-        "readback": false,
-        "renderer": false,
-        "restoration": false,
+        "compensation": true,
+        "execution": true,
+        "intent": true,
+        "live": true,
+        "postcheck": true,
+        "readback": true,
+        "renderer": true,
+        "restoration": true,
         "tests": true,
-        "validation": false
+        "validation": true
       },
-      "unsupported_reasons": [
-        "CONFIG_VALIDATION_FAILED",
-        "EXECUTOR_REFUSED",
-        "PARSER_ABSENT",
-        "RENDERER_ABSENT",
-        "UI_ABSENT"
-      ]
+      "unsupported_reasons": []
     },
     {
-      "capability_status": "NOT_IMPLEMENTED",
-      "closure_class": "NOT_IMPLEMENTED",
+      "capability_status": "SUPPORTED",
+      "closure_class": "SUPPORTED",
       "environment_blocker": [],
       "evidence_references": [
-        "gate:ubuntu_frr/service_policy.ACL_IPV4_EXTENDED@d879b511a42d#effb7c61343e5a09"
+        "live:nmas-cap-validation/frr-acl_ipv4_extended/2026-11-02T19:51:57.818447+00:00"
       ],
       "feature": "service_policy.ACL_IPV4_EXTENDED",
-      "final_status": "UNSUPPORTED",
-      "missing_stages": [
-        "intent",
-        "renderer",
-        "validation",
-        "execution",
-        "readback",
-        "postcheck",
-        "compensation",
-        "restoration",
-        "live"
-      ],
+      "final_status": "SUPPORTED",
+      "missing_stages": [],
       "platform": "ubuntu_frr",
       "stages": {
-        "compensation": false,
-        "execution": false,
-        "intent": false,
-        "live": false,
-        "postcheck": false,
-        "readback": false,
-        "renderer": false,
-        "restoration": false,
+        "compensation": true,
+        "execution": true,
+        "intent": true,
+        "live": true,
+        "postcheck": true,
+        "readback": true,
+        "renderer": true,
+        "restoration": true,
         "tests": true,
-        "validation": false
+        "validation": true
       },
-      "unsupported_reasons": [
-        "CONFIG_VALIDATION_FAILED",
-        "EXECUTOR_REFUSED",
-        "PARSER_ABSENT",
-        "RENDERER_ABSENT",
-        "UI_ABSENT"
-      ]
+      "unsupported_reasons": []
     },
     {
-      "capability_status": "NOT_IMPLEMENTED",
-      "closure_class": "NOT_IMPLEMENTED",
+      "capability_status": "SUPPORTED",
+      "closure_class": "SUPPORTED",
       "environment_blocker": [],
       "evidence_references": [
-        "gate:ubuntu_frr/service_policy.ACL_IPV4_STANDARD@d879b511a42d#effb7c61343e5a09"
+        "live:nmas-cap-validation/frr-acl_ipv4_standard/2026-11-02T19:50:46.029185+00:00"
       ],
       "feature": "service_policy.ACL_IPV4_STANDARD",
-      "final_status": "UNSUPPORTED",
-      "missing_stages": [
-        "intent",
-        "renderer",
-        "validation",
-        "execution",
-        "readback",
-        "postcheck",
-        "compensation",
-        "restoration",
-        "live"
-      ],
+      "final_status": "SUPPORTED",
+      "missing_stages": [],
       "platform": "ubuntu_frr",
       "stages": {
-        "compensation": false,
-        "execution": false,
-        "intent": false,
-        "live": false,
-        "postcheck": false,
-        "readback": false,
-        "renderer": false,
-        "restoration": false,
+        "compensation": true,
+        "execution": true,
+        "intent": true,
+        "live": true,
+        "postcheck": true,
+        "readback": true,
+        "renderer": true,
+        "restoration": true,
         "tests": true,
-        "validation": false
+        "validation": true
       },
-      "unsupported_reasons": [
-        "CONFIG_VALIDATION_FAILED",
-        "EXECUTOR_REFUSED",
-        "PARSER_ABSENT",
-        "RENDERER_ABSENT",
-        "UI_ABSENT"
-      ]
+      "unsupported_reasons": []
     },
     {
-      "capability_status": "NOT_IMPLEMENTED",
-      "closure_class": "NOT_IMPLEMENTED",
+      "capability_status": "SUPPORTED",
+      "closure_class": "SUPPORTED",
       "environment_blocker": [],
       "evidence_references": [
-        "gate:ubuntu_frr/service_policy.ACL_IPV6_EXTENDED@d879b511a42d#effb7c61343e5a09"
+        "live:nmas-cap-validation/frr-acl_ipv6_extended/2026-11-02T19:54:31.631899+00:00"
       ],
       "feature": "service_policy.ACL_IPV6_EXTENDED",
-      "final_status": "UNSUPPORTED",
-      "missing_stages": [
-        "intent",
-        "renderer",
-        "validation",
-        "execution",
-        "readback",
-        "postcheck",
-        "compensation",
-        "restoration",
-        "live"
-      ],
+      "final_status": "SUPPORTED",
+      "missing_stages": [],
       "platform": "ubuntu_frr",
       "stages": {
-        "compensation": false,
-        "execution": false,
-        "intent": false,
-        "live": false,
-        "postcheck": false,
-        "readback": false,
-        "renderer": false,
-        "restoration": false,
+        "compensation": true,
+        "execution": true,
+        "intent": true,
+        "live": true,
+        "postcheck": true,
+        "readback": true,
+        "renderer": true,
+        "restoration": true,
         "tests": true,
-        "validation": false
+        "validation": true
       },
-      "unsupported_reasons": [
-        "CONFIG_VALIDATION_FAILED",
-        "EXECUTOR_REFUSED",
-        "PARSER_ABSENT",
-        "RENDERER_ABSENT",
-        "UI_ABSENT"
-      ]
+      "unsupported_reasons": []
     },
     {
-      "capability_status": "NOT_IMPLEMENTED",
-      "closure_class": "NOT_IMPLEMENTED",
+      "capability_status": "SUPPORTED",
+      "closure_class": "SUPPORTED",
       "environment_blocker": [],
       "evidence_references": [
-        "gate:ubuntu_frr/service_policy.ACL_IPV6_STANDARD@d879b511a42d#effb7c61343e5a09"
+        "live:nmas-cap-validation/frr-acl_ipv6_standard/2026-11-02T19:53:16.655873+00:00"
       ],
       "feature": "service_policy.ACL_IPV6_STANDARD",
-      "final_status": "UNSUPPORTED",
-      "missing_stages": [
-        "intent",
-        "renderer",
-        "validation",
-        "execution",
-        "readback",
-        "postcheck",
-        "compensation",
-        "restoration",
-        "live"
-      ],
+      "final_status": "SUPPORTED",
+      "missing_stages": [],
       "platform": "ubuntu_frr",
       "stages": {
-        "compensation": false,
-        "execution": false,
-        "intent": false,
-        "live": false,
-        "postcheck": false,
-        "readback": false,
-        "renderer": false,
-        "restoration": false,
+        "compensation": true,
+        "execution": true,
+        "intent": true,
+        "live": true,
+        "postcheck": true,
+        "readback": true,
+        "renderer": true,
+        "restoration": true,
         "tests": true,
-        "validation": false
+        "validation": true
       },
-      "unsupported_reasons": [
-        "CONFIG_VALIDATION_FAILED",
-        "EXECUTOR_REFUSED",
-        "PARSER_ABSENT",
-        "RENDERER_ABSENT",
-        "UI_ABSENT"
-      ]
+      "unsupported_reasons": []
     },
     {
       "capability_status": "NOT_IMPLEMENTED",
@@ -15469,8 +15373,8 @@
     "environment_blocked_by_platform": {
       "cisco_iosxr": 66
     },
-    "supported": 64,
-    "technically_feasible_remaining": 263,
+    "supported": 70,
+    "technically_feasible_remaining": 257,
     "total": 396,
     "unsupported_or_out_of_scope": 3
   },
@@ -15497,7 +15401,7 @@
       }
     }
   ],
-  "matrix_supported": 64,
+  "matrix_supported": 70,
   "matrix_total": 396,
   "per_platform": {
     "arista_ceos": {
@@ -15558,11 +15462,11 @@
     "ubuntu_frr": {
       "BLOCKED_BY_ENVIRONMENT": 0,
       "LIVE_EVIDENCE_MISSING": 0,
-      "NOT_IMPLEMENTED": 49,
+      "NOT_IMPLEMENTED": 43,
       "OUT_OF_SCOPE": 0,
       "PARTIAL": 0,
       "RENDER_VALIDATE_ONLY": 0,
-      "SUPPORTED": 17,
+      "SUPPORTED": 23,
       "UNSUPPORTED": 0,
       "total": 66
     }
@@ -15584,11 +15488,11 @@
   "totals": {
     "BLOCKED_BY_ENVIRONMENT": 0,
     "LIVE_EVIDENCE_MISSING": 0,
-    "NOT_IMPLEMENTED": 290,
+    "NOT_IMPLEMENTED": 284,
     "OUT_OF_SCOPE": 0,
     "PARTIAL": 39,
     "RENDER_VALIDATE_ONLY": 0,
-    "SUPPORTED": 64,
+    "SUPPORTED": 70,
     "UNSUPPORTED": 3
   }
 }

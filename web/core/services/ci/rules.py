@@ -120,7 +120,7 @@ PATH_RULES: tuple[PathRule, ...] = (
         "interface_intent_service", "routing_intent_service", "service_policy_intent_service"),
         f"{_SVC}/config_import/**")),
     PathRule("candidate_rendering", (*_svc("candidate_renderer", "candidate_composition", "feature_template_renderer"), "templates/features/**")),
-    PathRule("platform_drivers", _svc("platform_drivers", "srlinux_model")),
+    PathRule("platform_drivers", _svc("platform_drivers", "srlinux_model", "nft_acl")),
     PathRule("validation", (f"{_SVC}/validation/**", f"{_SVC}/configuration_validation/**", *_svc("change_validation_service"),
                              "web/core/management/commands/nmas_configuration_validation.py")),
     PathRule("network_config_validation", _svc("network_config_validation")),
@@ -211,6 +211,7 @@ PATH_RULES: tuple[PathRule, ...] = (
         "labs/phase9-srlinux-isolated/**", "docs/evidence/v2-phase9-closure/srlinux/**",
         "labs/phase9-frr-isis-isolated/**", "docs/evidence/v2-phase9-closure/frr-isis/**",
         "labs/phase9-frr-nat44-static-isolated/**", "docs/evidence/v2-phase9-closure/frr-nat44-static/**",
+        "labs/phase9-frr-acl-isolated/**", "docs/evidence/v2-phase9-closure/frr-acl/**",
         "docs/evidence/v2-phase7-9/phase9/**",
         # V2 Phase 9: a RIP instance disabled in intent, live on cEOS (runs in the decommission fixture's NMAS namespace)
         "web/core/tests/live_disabled_rip_fixture.py", "docs/evidence/v2-phase9-closure/disabled-rip/**",

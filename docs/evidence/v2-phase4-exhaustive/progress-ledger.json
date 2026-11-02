@@ -1,9 +1,9 @@
 {
   "assessed": 396,
   "capability_counts": {
-    "NOT_IMPLEMENTED": 329,
+    "NOT_IMPLEMENTED": 323,
     "OUT_OF_SCOPE": 0,
-    "SUPPORTED": 64,
+    "SUPPORTED": 70,
     "UNSUPPORTED": 3
   },
   "cells": [
@@ -53204,38 +53204,28 @@
       "validator": "PASS"
     },
     {
-      "assessment_basis": "PREREQUISITE_GATE",
+      "assessment_basis": "RUNTIME_INVESTIGATION",
       "assessment_complete": true,
-      "assessment_id": 983,
+      "assessment_id": null,
       "automated_tests": "PASS",
-      "candidate": "FAIL",
-      "compensation": "BLOCKED",
-      "device_builder": "FAIL",
-      "evidence_ids": [
-        6843,
-        6844,
-        6845,
-        6846,
-        6847,
-        6848,
-        6849,
-        6850,
-        6851,
-        6852,
-        6853
-      ],
+      "candidate": "PASS",
+      "capability_status": "SUPPORTED",
+      "compensation": "PASS",
+      "device_builder": "PASS",
+      "evidence_ids": [],
       "evidence_references": [
-        "gate:ubuntu_frr/service_policy.ACL_ATTACH_IPV4@d879b511a42d#e0449dea56a4e145"
+        "live:nmas-cap-validation/frr-acl_attach_ipv4/2026-11-02T19:56:15.916467+00:00"
       ],
-      "executor": "FAIL",
+      "executor": "PASS",
+      "feasibility": "PROVEN",
       "feature": "service_policy.ACL_ATTACH_IPV4",
       "field_validation": "PASS",
-      "final_status": "UNSUPPORTED",
-      "live_read": "BLOCKED",
-      "live_write": "BLOCKED",
-      "parser": "FAIL",
+      "final_status": "SUPPORTED",
+      "live_read": "PASS",
+      "live_write": "PASS",
+      "parser": "PASS",
       "platform": "ubuntu_frr",
-      "postcheck": "BLOCKED",
+      "postcheck": "PASS",
       "probes": {
         "automated_tests": {
           "detail": "Repeated renderer determinism=True; feature-specific valid/invalid field regression=PASS.",
@@ -53245,37 +53235,37 @@
           "test_type": "FIXTURE"
         },
         "candidate_generation": {
-          "detail": "Real candidate_renderer.render ran; 1015 chars; target-rendered=FAIL.",
-          "outcome": "FAIL",
-          "reason": "RENDERER_ABSENT",
+          "detail": "Real candidate_renderer.render ran; 1088 chars; target-rendered=PASS.",
+          "outcome": "PASS",
+          "reason": "",
           "reference": "",
           "test_type": "FIXTURE"
         },
         "compensation": {
-          "detail": "Not attempted: NMAS prerequisite layer(s) failed their deliberate probe (renderer=RENDERER_ABSENT, candidate_generation=RENDERER_ABSENT, executor=EXECUTOR_REFUSED). First blocker renderer: Authoritative renderer differential: 0 target line(s), 1 refusal marker(s); sha256=a3ebfac34b3de71555165b98bc194d9d65662c86dde74608a10e214818046961. No device was contacted for this stage.",
-          "outcome": "BLOCKED",
-          "reason": "RENDERER_ABSENT",
-          "reference": "gate:ubuntu_frr/service_policy.ACL_ATTACH_IPV4@d879b511a42d#e0449dea56a4e145",
-          "test_type": "STATIC"
+          "detail": "isolated FRR service_policy.ACL_ATTACH_IPV4 against an FRR peer through the registered LinuxExecutor (nftables table DEVICE_BUILDER_ACL, atomic transactions, captured-ruleset inverse) || pristine node: preflight=['acl=APPLY/True/-', 'acl_attachment=APPLY/True/-']; conflicting-attachment preflight=n/a; control before apply (unfiltered expected) ok=True after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port': True, 'tcp denied source': True}; operator postcheck pass=True []; config facts={'acl_definitions': ['CAP_ACL'], 'acl_attachments': [{'interface': 'eth3', 'acl': 'CAP_ACL', 'direction': 'IN'}]}; live nft import recovered the list, its 1 definition(s) and every entry, and the IN attachment=True; flows while attached (expected {'ping permitted': True, 'ping denied': False, 'tcp permitted, source port in denied range': False, 'tcp permitted, other source port': True, 'tcp denied source': True}): {'ping permitted': True, 'ping denied': False, 'tcp permitted, source port in denied range': False, 'tcp permitted, other source port': True, 'tcp denied source': True}; pre-existing NMAS list preserved=True; after compensation (unfiltered expected) after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port': True, 'tcp denied source': True}; compensation=['COMPENSATED', 'COMPENSATED'] codes=['-', '-']; nft ruleset identical to pre-apply capture=True; pre-existing list preserved=True; lab baseline restored=True; no failure || existing NMAS ACL table (another list attached elsewhere): preflight=['acl=APPLY/True/-', 'acl_attachment=APPLY/True/-']; conflicting-attachment preflight=APPLY/False/COMPENSATION_NOT_PROVABLE; control before apply (unfiltered expected) ok=True after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-validation/frr-acl_attach_ipv4/2026-11-02T19:56:15.916467+00:00",
+          "test_type": "LIVE"
         },
         "config_validation": {
-          "detail": "Actual network-config validation=BLOCKED; failing checks=['PLATFORM_CAPABILITY']; external inputs are OFFLINE_FIXTURE only.",
-          "outcome": "FAIL",
-          "reason": "CONFIG_VALIDATION_FAILED",
+          "detail": "Actual network-config validation=PASS; failing checks=[]; external inputs are OFFLINE_FIXTURE only.",
+          "outcome": "PASS",
+          "reason": "",
           "reference": "",
           "test_type": "FIXTURE"
         },
         "device_builder_ui": {
-          "detail": "Real authoring API refused the feature (CollectionMutationError).",
-          "outcome": "FAIL",
-          "reason": "UI_ABSENT",
+          "detail": "Real Device Builder mutation API accepted the feature.",
+          "outcome": "PASS",
+          "reason": "",
           "reference": "",
           "test_type": "FIXTURE"
         },
         "executor": {
-          "detail": "Real executor.assess on fixture: action=APPLY; exact inverse present=False; restorable=False; no connection/apply invoked.",
-          "outcome": "FAIL",
-          "reason": "EXECUTOR_REFUSED",
+          "detail": "Real executor.assess on fixture: action=APPLY; exact inverse present=False; restorable=True; no connection/apply invoked.",
+          "outcome": "PASS",
+          "reason": "",
           "reference": "",
           "test_type": "FIXTURE"
         },
@@ -53287,46 +53277,46 @@
           "test_type": "FIXTURE"
         },
         "live_post_write_validation": {
-          "detail": "Not attempted: NMAS prerequisite layer(s) failed their deliberate probe (renderer=RENDERER_ABSENT, candidate_generation=RENDERER_ABSENT, executor=EXECUTOR_REFUSED). First blocker renderer: Authoritative renderer differential: 0 target line(s), 1 refusal marker(s); sha256=a3ebfac34b3de71555165b98bc194d9d65662c86dde74608a10e214818046961. No device was contacted for this stage.",
-          "outcome": "BLOCKED",
-          "reason": "RENDERER_ABSENT",
-          "reference": "gate:ubuntu_frr/service_policy.ACL_ATTACH_IPV4@d879b511a42d#e0449dea56a4e145",
-          "test_type": "STATIC"
+          "detail": "isolated FRR service_policy.ACL_ATTACH_IPV4 against an FRR peer through the registered LinuxExecutor (nftables table DEVICE_BUILDER_ACL, atomic transactions, captured-ruleset inverse) || pristine node: preflight=['acl=APPLY/True/-', 'acl_attachment=APPLY/True/-']; conflicting-attachment preflight=n/a; control before apply (unfiltered expected) ok=True after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port': True, 'tcp denied source': True}; operator postcheck pass=True []; config facts={'acl_definitions': ['CAP_ACL'], 'acl_attachments': [{'interface': 'eth3', 'acl': 'CAP_ACL', 'direction': 'IN'}]}; live nft import recovered the list, its 1 definition(s) and every entry, and the IN attachment=True; flows while attached (expected {'ping permitted': True, 'ping denied': False, 'tcp permitted, source port in denied range': False, 'tcp permitted, other source port': True, 'tcp denied source': True}): {'ping permitted': True, 'ping denied': False, 'tcp permitted, source port in denied range': False, 'tcp permitted, other source port': True, 'tcp denied source': True}; pre-existing NMAS list preserved=True; after compensation (unfiltered expected) after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port': True, 'tcp denied source': True}; compensation=['COMPENSATED', 'COMPENSATED'] codes=['-', '-']; nft ruleset identical to pre-apply capture=True; pre-existing list preserved=True; lab baseline restored=True; no failure || existing NMAS ACL table (another list attached elsewhere): preflight=['acl=APPLY/True/-', 'acl_attachment=APPLY/True/-']; conflicting-attachment preflight=APPLY/False/COMPENSATION_NOT_PROVABLE; control before apply (unfiltered expected) ok=True after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-validation/frr-acl_attach_ipv4/2026-11-02T19:56:15.916467+00:00",
+          "test_type": "LIVE"
         },
         "live_read": {
-          "detail": "Not attempted: NMAS prerequisite layer(s) failed their deliberate probe (renderer=RENDERER_ABSENT, candidate_generation=RENDERER_ABSENT, executor=EXECUTOR_REFUSED). First blocker renderer: Authoritative renderer differential: 0 target line(s), 1 refusal marker(s); sha256=a3ebfac34b3de71555165b98bc194d9d65662c86dde74608a10e214818046961. No device was contacted for this stage.",
-          "outcome": "BLOCKED",
-          "reason": "RENDERER_ABSENT",
-          "reference": "gate:ubuntu_frr/service_policy.ACL_ATTACH_IPV4@d879b511a42d#e0449dea56a4e145",
-          "test_type": "STATIC"
+          "detail": "isolated FRR service_policy.ACL_ATTACH_IPV4 against an FRR peer through the registered LinuxExecutor (nftables table DEVICE_BUILDER_ACL, atomic transactions, captured-ruleset inverse) || pristine node: preflight=['acl=APPLY/True/-', 'acl_attachment=APPLY/True/-']; conflicting-attachment preflight=n/a; control before apply (unfiltered expected) ok=True after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port': True, 'tcp denied source': True}; operator postcheck pass=True []; config facts={'acl_definitions': ['CAP_ACL'], 'acl_attachments': [{'interface': 'eth3', 'acl': 'CAP_ACL', 'direction': 'IN'}]}; live nft import recovered the list, its 1 definition(s) and every entry, and the IN attachment=True; flows while attached (expected {'ping permitted': True, 'ping denied': False, 'tcp permitted, source port in denied range': False, 'tcp permitted, other source port': True, 'tcp denied source': True}): {'ping permitted': True, 'ping denied': False, 'tcp permitted, source port in denied range': False, 'tcp permitted, other source port': True, 'tcp denied source': True}; pre-existing NMAS list preserved=True; after compensation (unfiltered expected) after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port': True, 'tcp denied source': True}; compensation=['COMPENSATED', 'COMPENSATED'] codes=['-', '-']; nft ruleset identical to pre-apply capture=True; pre-existing list preserved=True; lab baseline restored=True; no failure || existing NMAS ACL table (another list attached elsewhere): preflight=['acl=APPLY/True/-', 'acl_attachment=APPLY/True/-']; conflicting-attachment preflight=APPLY/False/COMPENSATION_NOT_PROVABLE; control before apply (unfiltered expected) ok=True after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-validation/frr-acl_attach_ipv4/2026-11-02T19:56:15.916467+00:00",
+          "test_type": "LIVE"
         },
         "live_write": {
-          "detail": "Not attempted: NMAS prerequisite layer(s) failed their deliberate probe (renderer=RENDERER_ABSENT, candidate_generation=RENDERER_ABSENT, executor=EXECUTOR_REFUSED). First blocker renderer: Authoritative renderer differential: 0 target line(s), 1 refusal marker(s); sha256=a3ebfac34b3de71555165b98bc194d9d65662c86dde74608a10e214818046961. No device was contacted for this stage.",
-          "outcome": "BLOCKED",
-          "reason": "RENDERER_ABSENT",
-          "reference": "gate:ubuntu_frr/service_policy.ACL_ATTACH_IPV4@d879b511a42d#e0449dea56a4e145",
-          "test_type": "STATIC"
+          "detail": "isolated FRR service_policy.ACL_ATTACH_IPV4 against an FRR peer through the registered LinuxExecutor (nftables table DEVICE_BUILDER_ACL, atomic transactions, captured-ruleset inverse) || pristine node: preflight=['acl=APPLY/True/-', 'acl_attachment=APPLY/True/-']; conflicting-attachment preflight=n/a; control before apply (unfiltered expected) ok=True after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port': True, 'tcp denied source': True}; operator postcheck pass=True []; config facts={'acl_definitions': ['CAP_ACL'], 'acl_attachments': [{'interface': 'eth3', 'acl': 'CAP_ACL', 'direction': 'IN'}]}; live nft import recovered the list, its 1 definition(s) and every entry, and the IN attachment=True; flows while attached (expected {'ping permitted': True, 'ping denied': False, 'tcp permitted, source port in denied range': False, 'tcp permitted, other source port': True, 'tcp denied source': True}): {'ping permitted': True, 'ping denied': False, 'tcp permitted, source port in denied range': False, 'tcp permitted, other source port': True, 'tcp denied source': True}; pre-existing NMAS list preserved=True; after compensation (unfiltered expected) after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port': True, 'tcp denied source': True}; compensation=['COMPENSATED', 'COMPENSATED'] codes=['-', '-']; nft ruleset identical to pre-apply capture=True; pre-existing list preserved=True; lab baseline restored=True; no failure || existing NMAS ACL table (another list attached elsewhere): preflight=['acl=APPLY/True/-', 'acl_attachment=APPLY/True/-']; conflicting-attachment preflight=APPLY/False/COMPENSATION_NOT_PROVABLE; control before apply (unfiltered expected) ok=True after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-validation/frr-acl_attach_ipv4/2026-11-02T19:56:15.916467+00:00",
+          "test_type": "LIVE"
         },
         "parser_import": {
-          "detail": "Real ubuntu-frr-1.0 parser executed; target semantic match=False; unmanaged blocks=20.",
-          "outcome": "FAIL",
-          "reason": "PARSER_ABSENT",
-          "reference": "",
-          "test_type": "FIXTURE"
+          "detail": "isolated FRR service_policy.ACL_ATTACH_IPV4 against an FRR peer through the registered LinuxExecutor (nftables table DEVICE_BUILDER_ACL, atomic transactions, captured-ruleset inverse) || pristine node: preflight=['acl=APPLY/True/-', 'acl_attachment=APPLY/True/-']; conflicting-attachment preflight=n/a; control before apply (unfiltered expected) ok=True after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port': True, 'tcp denied source': True}; operator postcheck pass=True []; config facts={'acl_definitions': ['CAP_ACL'], 'acl_attachments': [{'interface': 'eth3', 'acl': 'CAP_ACL', 'direction': 'IN'}]}; live nft import recovered the list, its 1 definition(s) and every entry, and the IN attachment=True; flows while attached (expected {'ping permitted': True, 'ping denied': False, 'tcp permitted, source port in denied range': False, 'tcp permitted, other source port': True, 'tcp denied source': True}): {'ping permitted': True, 'ping denied': False, 'tcp permitted, source port in denied range': False, 'tcp permitted, other source port': True, 'tcp denied source': True}; pre-existing NMAS list preserved=True; after compensation (unfiltered expected) after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port': True, 'tcp denied source': True}; compensation=['COMPENSATED', 'COMPENSATED'] codes=['-', '-']; nft ruleset identical to pre-apply capture=True; pre-existing list preserved=True; lab baseline restored=True; no failure || existing NMAS ACL table (another list attached elsewhere): preflight=['acl=APPLY/True/-', 'acl_attachment=APPLY/True/-']; conflicting-attachment preflight=APPLY/False/COMPENSATION_NOT_PROVABLE; control before apply (unfiltered expected) ok=True after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-validation/frr-acl_attach_ipv4/2026-11-02T19:56:15.916467+00:00",
+          "test_type": "LIVE"
         },
         "renderer": {
-          "detail": "Authoritative renderer differential: 0 target line(s), 1 refusal marker(s); sha256=a3ebfac34b3de71555165b98bc194d9d65662c86dde74608a10e214818046961.",
-          "outcome": "FAIL",
-          "reason": "RENDERER_ABSENT",
+          "detail": "Authoritative renderer differential: 4 target line(s), 0 refusal marker(s); sha256=c1cfb77a936024f924d7e041af2785c564df1bd91d43536275dd7e7fed2a034e.",
+          "outcome": "PASS",
+          "reason": "",
           "reference": "",
           "test_type": "FIXTURE"
         },
         "runtime_validation": {
-          "detail": "Not attempted: NMAS prerequisite layer(s) failed their deliberate probe (renderer=RENDERER_ABSENT, candidate_generation=RENDERER_ABSENT, executor=EXECUTOR_REFUSED). First blocker renderer: Authoritative renderer differential: 0 target line(s), 1 refusal marker(s); sha256=a3ebfac34b3de71555165b98bc194d9d65662c86dde74608a10e214818046961. No device was contacted for this stage.",
-          "outcome": "BLOCKED",
-          "reason": "RENDERER_ABSENT",
-          "reference": "gate:ubuntu_frr/service_policy.ACL_ATTACH_IPV4@d879b511a42d#e0449dea56a4e145",
-          "test_type": "STATIC"
+          "detail": "isolated FRR service_policy.ACL_ATTACH_IPV4 against an FRR peer through the registered LinuxExecutor (nftables table DEVICE_BUILDER_ACL, atomic transactions, captured-ruleset inverse) || pristine node: preflight=['acl=APPLY/True/-', 'acl_attachment=APPLY/True/-']; conflicting-attachment preflight=n/a; control before apply (unfiltered expected) ok=True after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port': True, 'tcp denied source': True}; operator postcheck pass=True []; config facts={'acl_definitions': ['CAP_ACL'], 'acl_attachments': [{'interface': 'eth3', 'acl': 'CAP_ACL', 'direction': 'IN'}]}; live nft import recovered the list, its 1 definition(s) and every entry, and the IN attachment=True; flows while attached (expected {'ping permitted': True, 'ping denied': False, 'tcp permitted, source port in denied range': False, 'tcp permitted, other source port': True, 'tcp denied source': True}): {'ping permitted': True, 'ping denied': False, 'tcp permitted, source port in denied range': False, 'tcp permitted, other source port': True, 'tcp denied source': True}; pre-existing NMAS list preserved=True; after compensation (unfiltered expected) after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port': True, 'tcp denied source': True}; compensation=['COMPENSATED', 'COMPENSATED'] codes=['-', '-']; nft ruleset identical to pre-apply capture=True; pre-existing list preserved=True; lab baseline restored=True; no failure || existing NMAS ACL table (another list attached elsewhere): preflight=['acl=APPLY/True/-', 'acl_attachment=APPLY/True/-']; conflicting-attachment preflight=APPLY/False/COMPENSATION_NOT_PROVABLE; control before apply (unfiltered expected) ok=True after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-validation/frr-acl_attach_ipv4/2026-11-02T19:56:15.916467+00:00",
+          "test_type": "LIVE"
         },
         "semantic_model": {
           "detail": "Canonical fixture resolves the feature-specific path security.attachments.attach_0000000000000003.direction.",
@@ -53336,56 +53326,40 @@
           "test_type": "FIXTURE"
         }
       },
-      "renderer": "FAIL",
-      "repository_head": "d879b511a42dea60d7547a4fc17ecdeea4073377",
-      "runtime_test": "BLOCKED",
-      "runtime_version": "not contacted (prerequisite gate); platform runtime last observed: clab-raw-verifier-frr:8.4.4-1.1ubuntu6.7",
+      "renderer": "PASS",
+      "repository_head": "b648aaefe55812459ac1c4665a54b2fa1a1db595",
+      "runtime_test": "PASS",
+      "runtime_version": "FRRouting 8.4.4 / Ubuntu 24.04 isolated container, nftables 1.0.9 (lab-installed)",
       "semantic": "PASS",
-      "status": "UNSUPPORTED",
-      "strongest_test_type": "FIXTURE",
-      "timestamp": "2026-10-04T23:07:32.811088+00:00",
-      "unsupported_reasons": [
-        "CONFIG_VALIDATION_FAILED",
-        "EXECUTOR_REFUSED",
-        "PARSER_ABSENT",
-        "RENDERER_ABSENT",
-        "UI_ABSENT"
-      ],
-      "validator": "FAIL"
+      "status": "SUPPORTED",
+      "strongest_test_type": "LIVE",
+      "timestamp": "2026-11-02T19:54:31.635253+00:00",
+      "unsupported_reasons": [],
+      "validator": "PASS"
     },
     {
-      "assessment_basis": "PREREQUISITE_GATE",
+      "assessment_basis": "RUNTIME_INVESTIGATION",
       "assessment_complete": true,
-      "assessment_id": 984,
+      "assessment_id": null,
       "automated_tests": "PASS",
-      "candidate": "FAIL",
-      "compensation": "BLOCKED",
-      "device_builder": "FAIL",
-      "evidence_ids": [
-        6854,
-        6855,
-        6856,
-        6857,
-        6858,
-        6859,
-        6860,
-        6861,
-        6862,
-        6863,
-        6864
-      ],
+      "candidate": "PASS",
+      "capability_status": "SUPPORTED",
+      "compensation": "PASS",
+      "device_builder": "PASS",
+      "evidence_ids": [],
       "evidence_references": [
-        "gate:ubuntu_frr/service_policy.ACL_ATTACH_IPV6@d879b511a42d#e0449dea56a4e145"
+        "live:nmas-cap-validation/frr-acl_attach_ipv6/2026-11-02T19:58:01.855225+00:00"
       ],
-      "executor": "FAIL",
+      "executor": "PASS",
+      "feasibility": "PROVEN",
       "feature": "service_policy.ACL_ATTACH_IPV6",
       "field_validation": "PASS",
-      "final_status": "UNSUPPORTED",
-      "live_read": "BLOCKED",
-      "live_write": "BLOCKED",
-      "parser": "FAIL",
+      "final_status": "SUPPORTED",
+      "live_read": "PASS",
+      "live_write": "PASS",
+      "parser": "PASS",
       "platform": "ubuntu_frr",
-      "postcheck": "BLOCKED",
+      "postcheck": "PASS",
       "probes": {
         "automated_tests": {
           "detail": "Repeated renderer determinism=True; feature-specific valid/invalid field regression=PASS.",
@@ -53395,37 +53369,37 @@
           "test_type": "FIXTURE"
         },
         "candidate_generation": {
-          "detail": "Real candidate_renderer.render ran; 1015 chars; target-rendered=FAIL.",
-          "outcome": "FAIL",
-          "reason": "RENDERER_ABSENT",
+          "detail": "Real candidate_renderer.render ran; 1181 chars; target-rendered=PASS.",
+          "outcome": "PASS",
+          "reason": "",
           "reference": "",
           "test_type": "FIXTURE"
         },
         "compensation": {
-          "detail": "Not attempted: NMAS prerequisite layer(s) failed their deliberate probe (renderer=RENDERER_ABSENT, candidate_generation=RENDERER_ABSENT, executor=EXECUTOR_REFUSED). First blocker renderer: Authoritative renderer differential: 0 target line(s), 1 refusal marker(s); sha256=a3ebfac34b3de71555165b98bc194d9d65662c86dde74608a10e214818046961. No device was contacted for this stage.",
-          "outcome": "BLOCKED",
-          "reason": "RENDERER_ABSENT",
-          "reference": "gate:ubuntu_frr/service_policy.ACL_ATTACH_IPV6@d879b511a42d#e0449dea56a4e145",
-          "test_type": "STATIC"
+          "detail": "isolated FRR service_policy.ACL_ATTACH_IPV6 against an FRR peer through the registered LinuxExecutor (nftables table DEVICE_BUILDER_ACL, atomic transactions, captured-ruleset inverse) || pristine node: preflight=['acl=APPLY/True/-', 'acl_attachment=APPLY/True/-']; conflicting-attachment preflight=n/a; control before apply (unfiltered expected) ok=True after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port': True, 'tcp denied source': True}; operator postcheck pass=True []; config facts={'acl_definitions': ['CAP_ACL'], 'acl_attachments': [{'interface': 'eth3', 'acl': 'CAP_ACL', 'direction': 'IN'}]}; live nft import recovered the list, its 1 definition(s) and every entry, and the IN attachment=True; flows while attached (expected {'ping permitted': True, 'ping denied': False, 'tcp permitted, source port in denied range': False, 'tcp permitted, other source port': True, 'tcp denied source': True}): {'ping permitted': True, 'ping denied': False, 'tcp permitted, source port in denied range': False, 'tcp permitted, other source port': True, 'tcp denied source': True}; pre-existing NMAS list preserved=True; after compensation (unfiltered expected) after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port': True, 'tcp denied source': True}; compensation=['COMPENSATED', 'COMPENSATED'] codes=['-', '-']; nft ruleset identical to pre-apply capture=True; pre-existing list preserved=True; lab baseline restored=True; no failure || existing NMAS ACL table (another list attached elsewhere): preflight=['acl=APPLY/True/-', 'acl_attachment=APPLY/True/-']; conflicting-attachment preflight=APPLY/False/COMPENSATION_NOT_PROVABLE; control before apply (unfiltered expected) ok=True after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-validation/frr-acl_attach_ipv6/2026-11-02T19:58:01.855225+00:00",
+          "test_type": "LIVE"
         },
         "config_validation": {
-          "detail": "Actual network-config validation=BLOCKED; failing checks=['PLATFORM_CAPABILITY']; external inputs are OFFLINE_FIXTURE only.",
-          "outcome": "FAIL",
-          "reason": "CONFIG_VALIDATION_FAILED",
+          "detail": "Actual network-config validation=PASS; failing checks=[]; external inputs are OFFLINE_FIXTURE only.",
+          "outcome": "PASS",
+          "reason": "",
           "reference": "",
           "test_type": "FIXTURE"
         },
         "device_builder_ui": {
-          "detail": "Real authoring API refused the feature (CollectionMutationError).",
-          "outcome": "FAIL",
-          "reason": "UI_ABSENT",
+          "detail": "Real Device Builder mutation API accepted the feature.",
+          "outcome": "PASS",
+          "reason": "",
           "reference": "",
           "test_type": "FIXTURE"
         },
         "executor": {
-          "detail": "Real executor.assess on fixture: action=APPLY; exact inverse present=False; restorable=False; no connection/apply invoked.",
-          "outcome": "FAIL",
-          "reason": "EXECUTOR_REFUSED",
+          "detail": "Real executor.assess on fixture: action=APPLY; exact inverse present=False; restorable=True; no connection/apply invoked.",
+          "outcome": "PASS",
+          "reason": "",
           "reference": "",
           "test_type": "FIXTURE"
         },
@@ -53437,46 +53411,46 @@
           "test_type": "FIXTURE"
         },
         "live_post_write_validation": {
-          "detail": "Not attempted: NMAS prerequisite layer(s) failed their deliberate probe (renderer=RENDERER_ABSENT, candidate_generation=RENDERER_ABSENT, executor=EXECUTOR_REFUSED). First blocker renderer: Authoritative renderer differential: 0 target line(s), 1 refusal marker(s); sha256=a3ebfac34b3de71555165b98bc194d9d65662c86dde74608a10e214818046961. No device was contacted for this stage.",
-          "outcome": "BLOCKED",
-          "reason": "RENDERER_ABSENT",
-          "reference": "gate:ubuntu_frr/service_policy.ACL_ATTACH_IPV6@d879b511a42d#e0449dea56a4e145",
-          "test_type": "STATIC"
+          "detail": "isolated FRR service_policy.ACL_ATTACH_IPV6 against an FRR peer through the registered LinuxExecutor (nftables table DEVICE_BUILDER_ACL, atomic transactions, captured-ruleset inverse) || pristine node: preflight=['acl=APPLY/True/-', 'acl_attachment=APPLY/True/-']; conflicting-attachment preflight=n/a; control before apply (unfiltered expected) ok=True after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port': True, 'tcp denied source': True}; operator postcheck pass=True []; config facts={'acl_definitions': ['CAP_ACL'], 'acl_attachments': [{'interface': 'eth3', 'acl': 'CAP_ACL', 'direction': 'IN'}]}; live nft import recovered the list, its 1 definition(s) and every entry, and the IN attachment=True; flows while attached (expected {'ping permitted': True, 'ping denied': False, 'tcp permitted, source port in denied range': False, 'tcp permitted, other source port': True, 'tcp denied source': True}): {'ping permitted': True, 'ping denied': False, 'tcp permitted, source port in denied range': False, 'tcp permitted, other source port': True, 'tcp denied source': True}; pre-existing NMAS list preserved=True; after compensation (unfiltered expected) after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port': True, 'tcp denied source': True}; compensation=['COMPENSATED', 'COMPENSATED'] codes=['-', '-']; nft ruleset identical to pre-apply capture=True; pre-existing list preserved=True; lab baseline restored=True; no failure || existing NMAS ACL table (another list attached elsewhere): preflight=['acl=APPLY/True/-', 'acl_attachment=APPLY/True/-']; conflicting-attachment preflight=APPLY/False/COMPENSATION_NOT_PROVABLE; control before apply (unfiltered expected) ok=True after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-validation/frr-acl_attach_ipv6/2026-11-02T19:58:01.855225+00:00",
+          "test_type": "LIVE"
         },
         "live_read": {
-          "detail": "Not attempted: NMAS prerequisite layer(s) failed their deliberate probe (renderer=RENDERER_ABSENT, candidate_generation=RENDERER_ABSENT, executor=EXECUTOR_REFUSED). First blocker renderer: Authoritative renderer differential: 0 target line(s), 1 refusal marker(s); sha256=a3ebfac34b3de71555165b98bc194d9d65662c86dde74608a10e214818046961. No device was contacted for this stage.",
-          "outcome": "BLOCKED",
-          "reason": "RENDERER_ABSENT",
-          "reference": "gate:ubuntu_frr/service_policy.ACL_ATTACH_IPV6@d879b511a42d#e0449dea56a4e145",
-          "test_type": "STATIC"
+          "detail": "isolated FRR service_policy.ACL_ATTACH_IPV6 against an FRR peer through the registered LinuxExecutor (nftables table DEVICE_BUILDER_ACL, atomic transactions, captured-ruleset inverse) || pristine node: preflight=['acl=APPLY/True/-', 'acl_attachment=APPLY/True/-']; conflicting-attachment preflight=n/a; control before apply (unfiltered expected) ok=True after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port': True, 'tcp denied source': True}; operator postcheck pass=True []; config facts={'acl_definitions': ['CAP_ACL'], 'acl_attachments': [{'interface': 'eth3', 'acl': 'CAP_ACL', 'direction': 'IN'}]}; live nft import recovered the list, its 1 definition(s) and every entry, and the IN attachment=True; flows while attached (expected {'ping permitted': True, 'ping denied': False, 'tcp permitted, source port in denied range': False, 'tcp permitted, other source port': True, 'tcp denied source': True}): {'ping permitted': True, 'ping denied': False, 'tcp permitted, source port in denied range': False, 'tcp permitted, other source port': True, 'tcp denied source': True}; pre-existing NMAS list preserved=True; after compensation (unfiltered expected) after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port': True, 'tcp denied source': True}; compensation=['COMPENSATED', 'COMPENSATED'] codes=['-', '-']; nft ruleset identical to pre-apply capture=True; pre-existing list preserved=True; lab baseline restored=True; no failure || existing NMAS ACL table (another list attached elsewhere): preflight=['acl=APPLY/True/-', 'acl_attachment=APPLY/True/-']; conflicting-attachment preflight=APPLY/False/COMPENSATION_NOT_PROVABLE; control before apply (unfiltered expected) ok=True after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-validation/frr-acl_attach_ipv6/2026-11-02T19:58:01.855225+00:00",
+          "test_type": "LIVE"
         },
         "live_write": {
-          "detail": "Not attempted: NMAS prerequisite layer(s) failed their deliberate probe (renderer=RENDERER_ABSENT, candidate_generation=RENDERER_ABSENT, executor=EXECUTOR_REFUSED). First blocker renderer: Authoritative renderer differential: 0 target line(s), 1 refusal marker(s); sha256=a3ebfac34b3de71555165b98bc194d9d65662c86dde74608a10e214818046961. No device was contacted for this stage.",
-          "outcome": "BLOCKED",
-          "reason": "RENDERER_ABSENT",
-          "reference": "gate:ubuntu_frr/service_policy.ACL_ATTACH_IPV6@d879b511a42d#e0449dea56a4e145",
-          "test_type": "STATIC"
+          "detail": "isolated FRR service_policy.ACL_ATTACH_IPV6 against an FRR peer through the registered LinuxExecutor (nftables table DEVICE_BUILDER_ACL, atomic transactions, captured-ruleset inverse) || pristine node: preflight=['acl=APPLY/True/-', 'acl_attachment=APPLY/True/-']; conflicting-attachment preflight=n/a; control before apply (unfiltered expected) ok=True after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port': True, 'tcp denied source': True}; operator postcheck pass=True []; config facts={'acl_definitions': ['CAP_ACL'], 'acl_attachments': [{'interface': 'eth3', 'acl': 'CAP_ACL', 'direction': 'IN'}]}; live nft import recovered the list, its 1 definition(s) and every entry, and the IN attachment=True; flows while attached (expected {'ping permitted': True, 'ping denied': False, 'tcp permitted, source port in denied range': False, 'tcp permitted, other source port': True, 'tcp denied source': True}): {'ping permitted': True, 'ping denied': False, 'tcp permitted, source port in denied range': False, 'tcp permitted, other source port': True, 'tcp denied source': True}; pre-existing NMAS list preserved=True; after compensation (unfiltered expected) after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port': True, 'tcp denied source': True}; compensation=['COMPENSATED', 'COMPENSATED'] codes=['-', '-']; nft ruleset identical to pre-apply capture=True; pre-existing list preserved=True; lab baseline restored=True; no failure || existing NMAS ACL table (another list attached elsewhere): preflight=['acl=APPLY/True/-', 'acl_attachment=APPLY/True/-']; conflicting-attachment preflight=APPLY/False/COMPENSATION_NOT_PROVABLE; control before apply (unfiltered expected) ok=True after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-validation/frr-acl_attach_ipv6/2026-11-02T19:58:01.855225+00:00",
+          "test_type": "LIVE"
         },
         "parser_import": {
-          "detail": "Real ubuntu-frr-1.0 parser executed; target semantic match=False; unmanaged blocks=20.",
-          "outcome": "FAIL",
-          "reason": "PARSER_ABSENT",
-          "reference": "",
-          "test_type": "FIXTURE"
+          "detail": "isolated FRR service_policy.ACL_ATTACH_IPV6 against an FRR peer through the registered LinuxExecutor (nftables table DEVICE_BUILDER_ACL, atomic transactions, captured-ruleset inverse) || pristine node: preflight=['acl=APPLY/True/-', 'acl_attachment=APPLY/True/-']; conflicting-attachment preflight=n/a; control before apply (unfiltered expected) ok=True after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port': True, 'tcp denied source': True}; operator postcheck pass=True []; config facts={'acl_definitions': ['CAP_ACL'], 'acl_attachments': [{'interface': 'eth3', 'acl': 'CAP_ACL', 'direction': 'IN'}]}; live nft import recovered the list, its 1 definition(s) and every entry, and the IN attachment=True; flows while attached (expected {'ping permitted': True, 'ping denied': False, 'tcp permitted, source port in denied range': False, 'tcp permitted, other source port': True, 'tcp denied source': True}): {'ping permitted': True, 'ping denied': False, 'tcp permitted, source port in denied range': False, 'tcp permitted, other source port': True, 'tcp denied source': True}; pre-existing NMAS list preserved=True; after compensation (unfiltered expected) after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port': True, 'tcp denied source': True}; compensation=['COMPENSATED', 'COMPENSATED'] codes=['-', '-']; nft ruleset identical to pre-apply capture=True; pre-existing list preserved=True; lab baseline restored=True; no failure || existing NMAS ACL table (another list attached elsewhere): preflight=['acl=APPLY/True/-', 'acl_attachment=APPLY/True/-']; conflicting-attachment preflight=APPLY/False/COMPENSATION_NOT_PROVABLE; control before apply (unfiltered expected) ok=True after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-validation/frr-acl_attach_ipv6/2026-11-02T19:58:01.855225+00:00",
+          "test_type": "LIVE"
         },
         "renderer": {
-          "detail": "Authoritative renderer differential: 0 target line(s), 1 refusal marker(s); sha256=a3ebfac34b3de71555165b98bc194d9d65662c86dde74608a10e214818046961.",
-          "outcome": "FAIL",
-          "reason": "RENDERER_ABSENT",
+          "detail": "Authoritative renderer differential: 4 target line(s), 0 refusal marker(s); sha256=751e3e29a1504026d55fdd4b08580e5ed1f81582cdfaf56c7ce234acc078248c.",
+          "outcome": "PASS",
+          "reason": "",
           "reference": "",
           "test_type": "FIXTURE"
         },
         "runtime_validation": {
-          "detail": "Not attempted: NMAS prerequisite layer(s) failed their deliberate probe (renderer=RENDERER_ABSENT, candidate_generation=RENDERER_ABSENT, executor=EXECUTOR_REFUSED). First blocker renderer: Authoritative renderer differential: 0 target line(s), 1 refusal marker(s); sha256=a3ebfac34b3de71555165b98bc194d9d65662c86dde74608a10e214818046961. No device was contacted for this stage.",
-          "outcome": "BLOCKED",
-          "reason": "RENDERER_ABSENT",
-          "reference": "gate:ubuntu_frr/service_policy.ACL_ATTACH_IPV6@d879b511a42d#e0449dea56a4e145",
-          "test_type": "STATIC"
+          "detail": "isolated FRR service_policy.ACL_ATTACH_IPV6 against an FRR peer through the registered LinuxExecutor (nftables table DEVICE_BUILDER_ACL, atomic transactions, captured-ruleset inverse) || pristine node: preflight=['acl=APPLY/True/-', 'acl_attachment=APPLY/True/-']; conflicting-attachment preflight=n/a; control before apply (unfiltered expected) ok=True after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port': True, 'tcp denied source': True}; operator postcheck pass=True []; config facts={'acl_definitions': ['CAP_ACL'], 'acl_attachments': [{'interface': 'eth3', 'acl': 'CAP_ACL', 'direction': 'IN'}]}; live nft import recovered the list, its 1 definition(s) and every entry, and the IN attachment=True; flows while attached (expected {'ping permitted': True, 'ping denied': False, 'tcp permitted, source port in denied range': False, 'tcp permitted, other source port': True, 'tcp denied source': True}): {'ping permitted': True, 'ping denied': False, 'tcp permitted, source port in denied range': False, 'tcp permitted, other source port': True, 'tcp denied source': True}; pre-existing NMAS list preserved=True; after compensation (unfiltered expected) after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port': True, 'tcp denied source': True}; compensation=['COMPENSATED', 'COMPENSATED'] codes=['-', '-']; nft ruleset identical to pre-apply capture=True; pre-existing list preserved=True; lab baseline restored=True; no failure || existing NMAS ACL table (another list attached elsewhere): preflight=['acl=APPLY/True/-', 'acl_attachment=APPLY/True/-']; conflicting-attachment preflight=APPLY/False/COMPENSATION_NOT_PROVABLE; control before apply (unfiltered expected) ok=True after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-validation/frr-acl_attach_ipv6/2026-11-02T19:58:01.855225+00:00",
+          "test_type": "LIVE"
         },
         "semantic_model": {
           "detail": "Canonical fixture resolves the feature-specific path security.attachments.attach_0000000000000003.direction.",
@@ -53486,56 +53460,40 @@
           "test_type": "FIXTURE"
         }
       },
-      "renderer": "FAIL",
-      "repository_head": "d879b511a42dea60d7547a4fc17ecdeea4073377",
-      "runtime_test": "BLOCKED",
-      "runtime_version": "not contacted (prerequisite gate); platform runtime last observed: clab-raw-verifier-frr:8.4.4-1.1ubuntu6.7",
+      "renderer": "PASS",
+      "repository_head": "b648aaefe55812459ac1c4665a54b2fa1a1db595",
+      "runtime_test": "PASS",
+      "runtime_version": "FRRouting 8.4.4 / Ubuntu 24.04 isolated container, nftables 1.0.9 (lab-installed)",
       "semantic": "PASS",
-      "status": "UNSUPPORTED",
-      "strongest_test_type": "FIXTURE",
-      "timestamp": "2026-10-04T23:07:32.890798+00:00",
-      "unsupported_reasons": [
-        "CONFIG_VALIDATION_FAILED",
-        "EXECUTOR_REFUSED",
-        "PARSER_ABSENT",
-        "RENDERER_ABSENT",
-        "UI_ABSENT"
-      ],
-      "validator": "FAIL"
+      "status": "SUPPORTED",
+      "strongest_test_type": "LIVE",
+      "timestamp": "2026-11-02T19:56:15.921555+00:00",
+      "unsupported_reasons": [],
+      "validator": "PASS"
     },
     {
-      "assessment_basis": "PREREQUISITE_GATE",
+      "assessment_basis": "RUNTIME_INVESTIGATION",
       "assessment_complete": true,
-      "assessment_id": 980,
+      "assessment_id": null,
       "automated_tests": "PASS",
-      "candidate": "FAIL",
-      "compensation": "BLOCKED",
-      "device_builder": "FAIL",
-      "evidence_ids": [
-        6810,
-        6811,
-        6812,
-        6813,
-        6814,
-        6815,
-        6816,
-        6817,
-        6818,
-        6819,
-        6820
-      ],
+      "candidate": "PASS",
+      "capability_status": "SUPPORTED",
+      "compensation": "PASS",
+      "device_builder": "PASS",
+      "evidence_ids": [],
       "evidence_references": [
-        "gate:ubuntu_frr/service_policy.ACL_IPV4_EXTENDED@d879b511a42d#effb7c61343e5a09"
+        "live:nmas-cap-validation/frr-acl_ipv4_extended/2026-11-02T19:51:57.818447+00:00"
       ],
-      "executor": "FAIL",
+      "executor": "PASS",
+      "feasibility": "PROVEN",
       "feature": "service_policy.ACL_IPV4_EXTENDED",
       "field_validation": "PASS",
-      "final_status": "UNSUPPORTED",
-      "live_read": "BLOCKED",
-      "live_write": "BLOCKED",
-      "parser": "FAIL",
+      "final_status": "SUPPORTED",
+      "live_read": "PASS",
+      "live_write": "PASS",
+      "parser": "PASS",
       "platform": "ubuntu_frr",
-      "postcheck": "BLOCKED",
+      "postcheck": "PASS",
       "probes": {
         "automated_tests": {
           "detail": "Repeated renderer determinism=True; feature-specific valid/invalid field regression=PASS.",
@@ -53545,37 +53503,37 @@
           "test_type": "FIXTURE"
         },
         "candidate_generation": {
-          "detail": "Real candidate_renderer.render ran; 890 chars; target-rendered=FAIL.",
-          "outcome": "FAIL",
-          "reason": "RENDERER_ABSENT",
+          "detail": "Real candidate_renderer.render ran; 933 chars; target-rendered=PASS.",
+          "outcome": "PASS",
+          "reason": "",
           "reference": "",
           "test_type": "FIXTURE"
         },
         "compensation": {
-          "detail": "Not attempted: NMAS prerequisite layer(s) failed their deliberate probe (renderer=RENDERER_ABSENT, candidate_generation=RENDERER_ABSENT, executor=EXECUTOR_REFUSED). First blocker renderer: Authoritative renderer differential: 0 target line(s), 1 refusal marker(s); sha256=610b34fa4248aef38afedf2189de51102865c78650c23a672dde8a7d26433109. No device was contacted for this stage.",
-          "outcome": "BLOCKED",
-          "reason": "RENDERER_ABSENT",
-          "reference": "gate:ubuntu_frr/service_policy.ACL_IPV4_EXTENDED@d879b511a42d#effb7c61343e5a09",
-          "test_type": "STATIC"
+          "detail": "isolated FRR service_policy.ACL_IPV4_EXTENDED against an FRR peer through the registered LinuxExecutor (nftables table DEVICE_BUILDER_ACL, atomic transactions, captured-ruleset inverse) || pristine node: preflight=['acl=APPLY/True/-', 'acl_attachment=APPLY/True/-']; conflicting-attachment preflight=n/a; control before apply (unfiltered expected) ok=True after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port': True, 'tcp denied source': True}; operator postcheck pass=True []; config facts={'acl_definitions': ['CAP_ACL'], 'acl_attachments': [{'interface': 'eth3', 'acl': 'CAP_ACL', 'direction': 'IN'}]}; live nft import recovered the list, its 1 definition(s) and every entry, and the IN attachment=True; flows while attached (expected {'ping permitted': True, 'ping denied': False, 'tcp permitted, source port in denied range': False, 'tcp permitted, other source port': True, 'tcp denied source': True}): {'ping permitted': True, 'ping denied': False, 'tcp permitted, source port in denied range': False, 'tcp permitted, other source port': True, 'tcp denied source': True}; pre-existing NMAS list preserved=True; after compensation (unfiltered expected) after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port': True, 'tcp denied source': True}; compensation=['COMPENSATED', 'COMPENSATED'] codes=['-', '-']; nft ruleset identical to pre-apply capture=True; pre-existing list preserved=True; lab baseline restored=True; no failure || existing NMAS ACL table (another list attached elsewhere): preflight=['acl=APPLY/True/-', 'acl_attachment=APPLY/True/-']; conflicting-attachment preflight=APPLY/False/COMPENSATION_NOT_PROVABLE; control before apply (unfiltered expected) ok=True after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source po",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-validation/frr-acl_ipv4_extended/2026-11-02T19:51:57.818447+00:00",
+          "test_type": "LIVE"
         },
         "config_validation": {
-          "detail": "Actual network-config validation=BLOCKED; failing checks=['PLATFORM_CAPABILITY']; external inputs are OFFLINE_FIXTURE only.",
-          "outcome": "FAIL",
-          "reason": "CONFIG_VALIDATION_FAILED",
+          "detail": "Actual network-config validation=PASS; failing checks=[]; external inputs are OFFLINE_FIXTURE only.",
+          "outcome": "PASS",
+          "reason": "",
           "reference": "",
           "test_type": "FIXTURE"
         },
         "device_builder_ui": {
-          "detail": "Real authoring API refused the feature (CollectionMutationError).",
-          "outcome": "FAIL",
-          "reason": "UI_ABSENT",
+          "detail": "Real Device Builder mutation API accepted the feature.",
+          "outcome": "PASS",
+          "reason": "",
           "reference": "",
           "test_type": "FIXTURE"
         },
         "executor": {
-          "detail": "Real executor.assess on fixture: action=APPLY; exact inverse present=False; restorable=False; no connection/apply invoked.",
-          "outcome": "FAIL",
-          "reason": "EXECUTOR_REFUSED",
+          "detail": "Real executor.assess on fixture: action=APPLY; exact inverse present=False; restorable=True; no connection/apply invoked.",
+          "outcome": "PASS",
+          "reason": "",
           "reference": "",
           "test_type": "FIXTURE"
         },
@@ -53587,46 +53545,46 @@
           "test_type": "FIXTURE"
         },
         "live_post_write_validation": {
-          "detail": "Not attempted: NMAS prerequisite layer(s) failed their deliberate probe (renderer=RENDERER_ABSENT, candidate_generation=RENDERER_ABSENT, executor=EXECUTOR_REFUSED). First blocker renderer: Authoritative renderer differential: 0 target line(s), 1 refusal marker(s); sha256=610b34fa4248aef38afedf2189de51102865c78650c23a672dde8a7d26433109. No device was contacted for this stage.",
-          "outcome": "BLOCKED",
-          "reason": "RENDERER_ABSENT",
-          "reference": "gate:ubuntu_frr/service_policy.ACL_IPV4_EXTENDED@d879b511a42d#effb7c61343e5a09",
-          "test_type": "STATIC"
+          "detail": "isolated FRR service_policy.ACL_IPV4_EXTENDED against an FRR peer through the registered LinuxExecutor (nftables table DEVICE_BUILDER_ACL, atomic transactions, captured-ruleset inverse) || pristine node: preflight=['acl=APPLY/True/-', 'acl_attachment=APPLY/True/-']; conflicting-attachment preflight=n/a; control before apply (unfiltered expected) ok=True after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port': True, 'tcp denied source': True}; operator postcheck pass=True []; config facts={'acl_definitions': ['CAP_ACL'], 'acl_attachments': [{'interface': 'eth3', 'acl': 'CAP_ACL', 'direction': 'IN'}]}; live nft import recovered the list, its 1 definition(s) and every entry, and the IN attachment=True; flows while attached (expected {'ping permitted': True, 'ping denied': False, 'tcp permitted, source port in denied range': False, 'tcp permitted, other source port': True, 'tcp denied source': True}): {'ping permitted': True, 'ping denied': False, 'tcp permitted, source port in denied range': False, 'tcp permitted, other source port': True, 'tcp denied source': True}; pre-existing NMAS list preserved=True; after compensation (unfiltered expected) after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port': True, 'tcp denied source': True}; compensation=['COMPENSATED', 'COMPENSATED'] codes=['-', '-']; nft ruleset identical to pre-apply capture=True; pre-existing list preserved=True; lab baseline restored=True; no failure || existing NMAS ACL table (another list attached elsewhere): preflight=['acl=APPLY/True/-', 'acl_attachment=APPLY/True/-']; conflicting-attachment preflight=APPLY/False/COMPENSATION_NOT_PROVABLE; control before apply (unfiltered expected) ok=True after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source po",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-validation/frr-acl_ipv4_extended/2026-11-02T19:51:57.818447+00:00",
+          "test_type": "LIVE"
         },
         "live_read": {
-          "detail": "Not attempted: NMAS prerequisite layer(s) failed their deliberate probe (renderer=RENDERER_ABSENT, candidate_generation=RENDERER_ABSENT, executor=EXECUTOR_REFUSED). First blocker renderer: Authoritative renderer differential: 0 target line(s), 1 refusal marker(s); sha256=610b34fa4248aef38afedf2189de51102865c78650c23a672dde8a7d26433109. No device was contacted for this stage.",
-          "outcome": "BLOCKED",
-          "reason": "RENDERER_ABSENT",
-          "reference": "gate:ubuntu_frr/service_policy.ACL_IPV4_EXTENDED@d879b511a42d#effb7c61343e5a09",
-          "test_type": "STATIC"
+          "detail": "isolated FRR service_policy.ACL_IPV4_EXTENDED against an FRR peer through the registered LinuxExecutor (nftables table DEVICE_BUILDER_ACL, atomic transactions, captured-ruleset inverse) || pristine node: preflight=['acl=APPLY/True/-', 'acl_attachment=APPLY/True/-']; conflicting-attachment preflight=n/a; control before apply (unfiltered expected) ok=True after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port': True, 'tcp denied source': True}; operator postcheck pass=True []; config facts={'acl_definitions': ['CAP_ACL'], 'acl_attachments': [{'interface': 'eth3', 'acl': 'CAP_ACL', 'direction': 'IN'}]}; live nft import recovered the list, its 1 definition(s) and every entry, and the IN attachment=True; flows while attached (expected {'ping permitted': True, 'ping denied': False, 'tcp permitted, source port in denied range': False, 'tcp permitted, other source port': True, 'tcp denied source': True}): {'ping permitted': True, 'ping denied': False, 'tcp permitted, source port in denied range': False, 'tcp permitted, other source port': True, 'tcp denied source': True}; pre-existing NMAS list preserved=True; after compensation (unfiltered expected) after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port': True, 'tcp denied source': True}; compensation=['COMPENSATED', 'COMPENSATED'] codes=['-', '-']; nft ruleset identical to pre-apply capture=True; pre-existing list preserved=True; lab baseline restored=True; no failure || existing NMAS ACL table (another list attached elsewhere): preflight=['acl=APPLY/True/-', 'acl_attachment=APPLY/True/-']; conflicting-attachment preflight=APPLY/False/COMPENSATION_NOT_PROVABLE; control before apply (unfiltered expected) ok=True after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source po",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-validation/frr-acl_ipv4_extended/2026-11-02T19:51:57.818447+00:00",
+          "test_type": "LIVE"
         },
         "live_write": {
-          "detail": "Not attempted: NMAS prerequisite layer(s) failed their deliberate probe (renderer=RENDERER_ABSENT, candidate_generation=RENDERER_ABSENT, executor=EXECUTOR_REFUSED). First blocker renderer: Authoritative renderer differential: 0 target line(s), 1 refusal marker(s); sha256=610b34fa4248aef38afedf2189de51102865c78650c23a672dde8a7d26433109. No device was contacted for this stage.",
-          "outcome": "BLOCKED",
-          "reason": "RENDERER_ABSENT",
-          "reference": "gate:ubuntu_frr/service_policy.ACL_IPV4_EXTENDED@d879b511a42d#effb7c61343e5a09",
-          "test_type": "STATIC"
+          "detail": "isolated FRR service_policy.ACL_IPV4_EXTENDED against an FRR peer through the registered LinuxExecutor (nftables table DEVICE_BUILDER_ACL, atomic transactions, captured-ruleset inverse) || pristine node: preflight=['acl=APPLY/True/-', 'acl_attachment=APPLY/True/-']; conflicting-attachment preflight=n/a; control before apply (unfiltered expected) ok=True after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port': True, 'tcp denied source': True}; operator postcheck pass=True []; config facts={'acl_definitions': ['CAP_ACL'], 'acl_attachments': [{'interface': 'eth3', 'acl': 'CAP_ACL', 'direction': 'IN'}]}; live nft import recovered the list, its 1 definition(s) and every entry, and the IN attachment=True; flows while attached (expected {'ping permitted': True, 'ping denied': False, 'tcp permitted, source port in denied range': False, 'tcp permitted, other source port': True, 'tcp denied source': True}): {'ping permitted': True, 'ping denied': False, 'tcp permitted, source port in denied range': False, 'tcp permitted, other source port': True, 'tcp denied source': True}; pre-existing NMAS list preserved=True; after compensation (unfiltered expected) after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port': True, 'tcp denied source': True}; compensation=['COMPENSATED', 'COMPENSATED'] codes=['-', '-']; nft ruleset identical to pre-apply capture=True; pre-existing list preserved=True; lab baseline restored=True; no failure || existing NMAS ACL table (another list attached elsewhere): preflight=['acl=APPLY/True/-', 'acl_attachment=APPLY/True/-']; conflicting-attachment preflight=APPLY/False/COMPENSATION_NOT_PROVABLE; control before apply (unfiltered expected) ok=True after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source po",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-validation/frr-acl_ipv4_extended/2026-11-02T19:51:57.818447+00:00",
+          "test_type": "LIVE"
         },
         "parser_import": {
-          "detail": "Real ubuntu-frr-1.0 parser executed; target semantic match=False; unmanaged blocks=19.",
-          "outcome": "FAIL",
-          "reason": "PARSER_ABSENT",
-          "reference": "",
-          "test_type": "FIXTURE"
+          "detail": "isolated FRR service_policy.ACL_IPV4_EXTENDED against an FRR peer through the registered LinuxExecutor (nftables table DEVICE_BUILDER_ACL, atomic transactions, captured-ruleset inverse) || pristine node: preflight=['acl=APPLY/True/-', 'acl_attachment=APPLY/True/-']; conflicting-attachment preflight=n/a; control before apply (unfiltered expected) ok=True after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port': True, 'tcp denied source': True}; operator postcheck pass=True []; config facts={'acl_definitions': ['CAP_ACL'], 'acl_attachments': [{'interface': 'eth3', 'acl': 'CAP_ACL', 'direction': 'IN'}]}; live nft import recovered the list, its 1 definition(s) and every entry, and the IN attachment=True; flows while attached (expected {'ping permitted': True, 'ping denied': False, 'tcp permitted, source port in denied range': False, 'tcp permitted, other source port': True, 'tcp denied source': True}): {'ping permitted': True, 'ping denied': False, 'tcp permitted, source port in denied range': False, 'tcp permitted, other source port': True, 'tcp denied source': True}; pre-existing NMAS list preserved=True; after compensation (unfiltered expected) after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port': True, 'tcp denied source': True}; compensation=['COMPENSATED', 'COMPENSATED'] codes=['-', '-']; nft ruleset identical to pre-apply capture=True; pre-existing list preserved=True; lab baseline restored=True; no failure || existing NMAS ACL table (another list attached elsewhere): preflight=['acl=APPLY/True/-', 'acl_attachment=APPLY/True/-']; conflicting-attachment preflight=APPLY/False/COMPENSATION_NOT_PROVABLE; control before apply (unfiltered expected) ok=True after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source po",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-validation/frr-acl_ipv4_extended/2026-11-02T19:51:57.818447+00:00",
+          "test_type": "LIVE"
         },
         "renderer": {
-          "detail": "Authoritative renderer differential: 0 target line(s), 1 refusal marker(s); sha256=610b34fa4248aef38afedf2189de51102865c78650c23a672dde8a7d26433109.",
-          "outcome": "FAIL",
-          "reason": "RENDERER_ABSENT",
+          "detail": "Authoritative renderer differential: 6 target line(s), 0 refusal marker(s); sha256=3a3be71eae177db2cc100b05bcb8ec56e250ff2f6e4b3b671f1051ba42792880.",
+          "outcome": "PASS",
+          "reason": "",
           "reference": "",
           "test_type": "FIXTURE"
         },
         "runtime_validation": {
-          "detail": "Not attempted: NMAS prerequisite layer(s) failed their deliberate probe (renderer=RENDERER_ABSENT, candidate_generation=RENDERER_ABSENT, executor=EXECUTOR_REFUSED). First blocker renderer: Authoritative renderer differential: 0 target line(s), 1 refusal marker(s); sha256=610b34fa4248aef38afedf2189de51102865c78650c23a672dde8a7d26433109. No device was contacted for this stage.",
-          "outcome": "BLOCKED",
-          "reason": "RENDERER_ABSENT",
-          "reference": "gate:ubuntu_frr/service_policy.ACL_IPV4_EXTENDED@d879b511a42d#effb7c61343e5a09",
-          "test_type": "STATIC"
+          "detail": "isolated FRR service_policy.ACL_IPV4_EXTENDED against an FRR peer through the registered LinuxExecutor (nftables table DEVICE_BUILDER_ACL, atomic transactions, captured-ruleset inverse) || pristine node: preflight=['acl=APPLY/True/-', 'acl_attachment=APPLY/True/-']; conflicting-attachment preflight=n/a; control before apply (unfiltered expected) ok=True after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port': True, 'tcp denied source': True}; operator postcheck pass=True []; config facts={'acl_definitions': ['CAP_ACL'], 'acl_attachments': [{'interface': 'eth3', 'acl': 'CAP_ACL', 'direction': 'IN'}]}; live nft import recovered the list, its 1 definition(s) and every entry, and the IN attachment=True; flows while attached (expected {'ping permitted': True, 'ping denied': False, 'tcp permitted, source port in denied range': False, 'tcp permitted, other source port': True, 'tcp denied source': True}): {'ping permitted': True, 'ping denied': False, 'tcp permitted, source port in denied range': False, 'tcp permitted, other source port': True, 'tcp denied source': True}; pre-existing NMAS list preserved=True; after compensation (unfiltered expected) after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port': True, 'tcp denied source': True}; compensation=['COMPENSATED', 'COMPENSATED'] codes=['-', '-']; nft ruleset identical to pre-apply capture=True; pre-existing list preserved=True; lab baseline restored=True; no failure || existing NMAS ACL table (another list attached elsewhere): preflight=['acl=APPLY/True/-', 'acl_attachment=APPLY/True/-']; conflicting-attachment preflight=APPLY/False/COMPENSATION_NOT_PROVABLE; control before apply (unfiltered expected) ok=True after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source po",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-validation/frr-acl_ipv4_extended/2026-11-02T19:51:57.818447+00:00",
+          "test_type": "LIVE"
         },
         "semantic_model": {
           "detail": "Canonical fixture resolves the feature-specific path security.acls.acl_0000000000000003.family.",
@@ -53636,56 +53594,40 @@
           "test_type": "FIXTURE"
         }
       },
-      "renderer": "FAIL",
-      "repository_head": "d879b511a42dea60d7547a4fc17ecdeea4073377",
-      "runtime_test": "BLOCKED",
-      "runtime_version": "not contacted (prerequisite gate); platform runtime last observed: clab-raw-verifier-frr:8.4.4-1.1ubuntu6.7",
+      "renderer": "PASS",
+      "repository_head": "b648aaefe55812459ac1c4665a54b2fa1a1db595",
+      "runtime_test": "PASS",
+      "runtime_version": "FRRouting 8.4.4 / Ubuntu 24.04 isolated container, nftables 1.0.9 (lab-installed)",
       "semantic": "PASS",
-      "status": "UNSUPPORTED",
-      "strongest_test_type": "FIXTURE",
-      "timestamp": "2026-10-04T23:07:32.573582+00:00",
-      "unsupported_reasons": [
-        "CONFIG_VALIDATION_FAILED",
-        "EXECUTOR_REFUSED",
-        "PARSER_ABSENT",
-        "RENDERER_ABSENT",
-        "UI_ABSENT"
-      ],
-      "validator": "FAIL"
+      "status": "SUPPORTED",
+      "strongest_test_type": "LIVE",
+      "timestamp": "2026-11-02T19:50:46.032278+00:00",
+      "unsupported_reasons": [],
+      "validator": "PASS"
     },
     {
-      "assessment_basis": "PREREQUISITE_GATE",
+      "assessment_basis": "RUNTIME_INVESTIGATION",
       "assessment_complete": true,
-      "assessment_id": 979,
+      "assessment_id": null,
       "automated_tests": "PASS",
-      "candidate": "FAIL",
-      "compensation": "BLOCKED",
-      "device_builder": "FAIL",
-      "evidence_ids": [
-        6799,
-        6800,
-        6801,
-        6802,
-        6803,
-        6804,
-        6805,
-        6806,
-        6807,
-        6808,
-        6809
-      ],
+      "candidate": "PASS",
+      "capability_status": "SUPPORTED",
+      "compensation": "PASS",
+      "device_builder": "PASS",
+      "evidence_ids": [],
       "evidence_references": [
-        "gate:ubuntu_frr/service_policy.ACL_IPV4_STANDARD@d879b511a42d#effb7c61343e5a09"
+        "live:nmas-cap-validation/frr-acl_ipv4_standard/2026-11-02T19:50:46.029185+00:00"
       ],
-      "executor": "FAIL",
+      "executor": "PASS",
+      "feasibility": "PROVEN",
       "feature": "service_policy.ACL_IPV4_STANDARD",
       "field_validation": "PASS",
-      "final_status": "UNSUPPORTED",
-      "live_read": "BLOCKED",
-      "live_write": "BLOCKED",
-      "parser": "FAIL",
+      "final_status": "SUPPORTED",
+      "live_read": "PASS",
+      "live_write": "PASS",
+      "parser": "PASS",
       "platform": "ubuntu_frr",
-      "postcheck": "BLOCKED",
+      "postcheck": "PASS",
       "probes": {
         "automated_tests": {
           "detail": "Repeated renderer determinism=True; feature-specific valid/invalid field regression=PASS.",
@@ -53695,37 +53637,37 @@
           "test_type": "FIXTURE"
         },
         "candidate_generation": {
-          "detail": "Real candidate_renderer.render ran; 890 chars; target-rendered=FAIL.",
-          "outcome": "FAIL",
-          "reason": "RENDERER_ABSENT",
+          "detail": "Real candidate_renderer.render ran; 933 chars; target-rendered=PASS.",
+          "outcome": "PASS",
+          "reason": "",
           "reference": "",
           "test_type": "FIXTURE"
         },
         "compensation": {
-          "detail": "Not attempted: NMAS prerequisite layer(s) failed their deliberate probe (renderer=RENDERER_ABSENT, candidate_generation=RENDERER_ABSENT, executor=EXECUTOR_REFUSED). First blocker renderer: Authoritative renderer differential: 0 target line(s), 1 refusal marker(s); sha256=610b34fa4248aef38afedf2189de51102865c78650c23a672dde8a7d26433109. No device was contacted for this stage.",
-          "outcome": "BLOCKED",
-          "reason": "RENDERER_ABSENT",
-          "reference": "gate:ubuntu_frr/service_policy.ACL_IPV4_STANDARD@d879b511a42d#effb7c61343e5a09",
-          "test_type": "STATIC"
+          "detail": "isolated FRR service_policy.ACL_IPV4_STANDARD against an FRR peer through the registered LinuxExecutor (nftables table DEVICE_BUILDER_ACL, atomic transactions, captured-ruleset inverse) || pristine node: preflight=['acl=APPLY/True/-', 'acl_attachment=APPLY/True/-']; conflicting-attachment preflight=n/a; control before apply (unfiltered expected) ok=True after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port': True, 'tcp denied source': True}; operator postcheck pass=True []; config facts={'acl_definitions': ['CAP_ACL'], 'acl_attachments': [{'interface': 'eth3', 'acl': 'CAP_ACL', 'direction': 'IN'}]}; live nft import recovered the list, its 1 definition(s) and every entry, and the IN attachment=True; flows while attached (expected {'ping permitted': True, 'ping denied': False, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port': True, 'tcp denied source': False}): {'ping permitted': True, 'ping denied': False, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port': True, 'tcp denied source': False}; pre-existing NMAS list preserved=True; after compensation (unfiltered expected) after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port': True, 'tcp denied source': True}; compensation=['COMPENSATED', 'COMPENSATED'] codes=['-', '-']; nft ruleset identical to pre-apply capture=True; pre-existing list preserved=True; lab baseline restored=True; no failure || existing NMAS ACL table (another list attached elsewhere): preflight=['acl=APPLY/True/-', 'acl_attachment=APPLY/True/-']; conflicting-attachment preflight=APPLY/False/COMPENSATION_NOT_PROVABLE; control before apply (unfiltered expected) ok=True after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source po",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-validation/frr-acl_ipv4_standard/2026-11-02T19:50:46.029185+00:00",
+          "test_type": "LIVE"
         },
         "config_validation": {
-          "detail": "Actual network-config validation=BLOCKED; failing checks=['PLATFORM_CAPABILITY']; external inputs are OFFLINE_FIXTURE only.",
-          "outcome": "FAIL",
-          "reason": "CONFIG_VALIDATION_FAILED",
+          "detail": "Actual network-config validation=PASS; failing checks=[]; external inputs are OFFLINE_FIXTURE only.",
+          "outcome": "PASS",
+          "reason": "",
           "reference": "",
           "test_type": "FIXTURE"
         },
         "device_builder_ui": {
-          "detail": "Real authoring API refused the feature (CollectionMutationError).",
-          "outcome": "FAIL",
-          "reason": "UI_ABSENT",
+          "detail": "Real Device Builder mutation API accepted the feature.",
+          "outcome": "PASS",
+          "reason": "",
           "reference": "",
           "test_type": "FIXTURE"
         },
         "executor": {
-          "detail": "Real executor.assess on fixture: action=APPLY; exact inverse present=False; restorable=False; no connection/apply invoked.",
-          "outcome": "FAIL",
-          "reason": "EXECUTOR_REFUSED",
+          "detail": "Real executor.assess on fixture: action=APPLY; exact inverse present=False; restorable=True; no connection/apply invoked.",
+          "outcome": "PASS",
+          "reason": "",
           "reference": "",
           "test_type": "FIXTURE"
         },
@@ -53737,46 +53679,46 @@
           "test_type": "FIXTURE"
         },
         "live_post_write_validation": {
-          "detail": "Not attempted: NMAS prerequisite layer(s) failed their deliberate probe (renderer=RENDERER_ABSENT, candidate_generation=RENDERER_ABSENT, executor=EXECUTOR_REFUSED). First blocker renderer: Authoritative renderer differential: 0 target line(s), 1 refusal marker(s); sha256=610b34fa4248aef38afedf2189de51102865c78650c23a672dde8a7d26433109. No device was contacted for this stage.",
-          "outcome": "BLOCKED",
-          "reason": "RENDERER_ABSENT",
-          "reference": "gate:ubuntu_frr/service_policy.ACL_IPV4_STANDARD@d879b511a42d#effb7c61343e5a09",
-          "test_type": "STATIC"
+          "detail": "isolated FRR service_policy.ACL_IPV4_STANDARD against an FRR peer through the registered LinuxExecutor (nftables table DEVICE_BUILDER_ACL, atomic transactions, captured-ruleset inverse) || pristine node: preflight=['acl=APPLY/True/-', 'acl_attachment=APPLY/True/-']; conflicting-attachment preflight=n/a; control before apply (unfiltered expected) ok=True after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port': True, 'tcp denied source': True}; operator postcheck pass=True []; config facts={'acl_definitions': ['CAP_ACL'], 'acl_attachments': [{'interface': 'eth3', 'acl': 'CAP_ACL', 'direction': 'IN'}]}; live nft import recovered the list, its 1 definition(s) and every entry, and the IN attachment=True; flows while attached (expected {'ping permitted': True, 'ping denied': False, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port': True, 'tcp denied source': False}): {'ping permitted': True, 'ping denied': False, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port': True, 'tcp denied source': False}; pre-existing NMAS list preserved=True; after compensation (unfiltered expected) after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port': True, 'tcp denied source': True}; compensation=['COMPENSATED', 'COMPENSATED'] codes=['-', '-']; nft ruleset identical to pre-apply capture=True; pre-existing list preserved=True; lab baseline restored=True; no failure || existing NMAS ACL table (another list attached elsewhere): preflight=['acl=APPLY/True/-', 'acl_attachment=APPLY/True/-']; conflicting-attachment preflight=APPLY/False/COMPENSATION_NOT_PROVABLE; control before apply (unfiltered expected) ok=True after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source po",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-validation/frr-acl_ipv4_standard/2026-11-02T19:50:46.029185+00:00",
+          "test_type": "LIVE"
         },
         "live_read": {
-          "detail": "Not attempted: NMAS prerequisite layer(s) failed their deliberate probe (renderer=RENDERER_ABSENT, candidate_generation=RENDERER_ABSENT, executor=EXECUTOR_REFUSED). First blocker renderer: Authoritative renderer differential: 0 target line(s), 1 refusal marker(s); sha256=610b34fa4248aef38afedf2189de51102865c78650c23a672dde8a7d26433109. No device was contacted for this stage.",
-          "outcome": "BLOCKED",
-          "reason": "RENDERER_ABSENT",
-          "reference": "gate:ubuntu_frr/service_policy.ACL_IPV4_STANDARD@d879b511a42d#effb7c61343e5a09",
-          "test_type": "STATIC"
+          "detail": "isolated FRR service_policy.ACL_IPV4_STANDARD against an FRR peer through the registered LinuxExecutor (nftables table DEVICE_BUILDER_ACL, atomic transactions, captured-ruleset inverse) || pristine node: preflight=['acl=APPLY/True/-', 'acl_attachment=APPLY/True/-']; conflicting-attachment preflight=n/a; control before apply (unfiltered expected) ok=True after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port': True, 'tcp denied source': True}; operator postcheck pass=True []; config facts={'acl_definitions': ['CAP_ACL'], 'acl_attachments': [{'interface': 'eth3', 'acl': 'CAP_ACL', 'direction': 'IN'}]}; live nft import recovered the list, its 1 definition(s) and every entry, and the IN attachment=True; flows while attached (expected {'ping permitted': True, 'ping denied': False, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port': True, 'tcp denied source': False}): {'ping permitted': True, 'ping denied': False, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port': True, 'tcp denied source': False}; pre-existing NMAS list preserved=True; after compensation (unfiltered expected) after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port': True, 'tcp denied source': True}; compensation=['COMPENSATED', 'COMPENSATED'] codes=['-', '-']; nft ruleset identical to pre-apply capture=True; pre-existing list preserved=True; lab baseline restored=True; no failure || existing NMAS ACL table (another list attached elsewhere): preflight=['acl=APPLY/True/-', 'acl_attachment=APPLY/True/-']; conflicting-attachment preflight=APPLY/False/COMPENSATION_NOT_PROVABLE; control before apply (unfiltered expected) ok=True after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source po",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-validation/frr-acl_ipv4_standard/2026-11-02T19:50:46.029185+00:00",
+          "test_type": "LIVE"
         },
         "live_write": {
-          "detail": "Not attempted: NMAS prerequisite layer(s) failed their deliberate probe (renderer=RENDERER_ABSENT, candidate_generation=RENDERER_ABSENT, executor=EXECUTOR_REFUSED). First blocker renderer: Authoritative renderer differential: 0 target line(s), 1 refusal marker(s); sha256=610b34fa4248aef38afedf2189de51102865c78650c23a672dde8a7d26433109. No device was contacted for this stage.",
-          "outcome": "BLOCKED",
-          "reason": "RENDERER_ABSENT",
-          "reference": "gate:ubuntu_frr/service_policy.ACL_IPV4_STANDARD@d879b511a42d#effb7c61343e5a09",
-          "test_type": "STATIC"
+          "detail": "isolated FRR service_policy.ACL_IPV4_STANDARD against an FRR peer through the registered LinuxExecutor (nftables table DEVICE_BUILDER_ACL, atomic transactions, captured-ruleset inverse) || pristine node: preflight=['acl=APPLY/True/-', 'acl_attachment=APPLY/True/-']; conflicting-attachment preflight=n/a; control before apply (unfiltered expected) ok=True after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port': True, 'tcp denied source': True}; operator postcheck pass=True []; config facts={'acl_definitions': ['CAP_ACL'], 'acl_attachments': [{'interface': 'eth3', 'acl': 'CAP_ACL', 'direction': 'IN'}]}; live nft import recovered the list, its 1 definition(s) and every entry, and the IN attachment=True; flows while attached (expected {'ping permitted': True, 'ping denied': False, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port': True, 'tcp denied source': False}): {'ping permitted': True, 'ping denied': False, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port': True, 'tcp denied source': False}; pre-existing NMAS list preserved=True; after compensation (unfiltered expected) after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port': True, 'tcp denied source': True}; compensation=['COMPENSATED', 'COMPENSATED'] codes=['-', '-']; nft ruleset identical to pre-apply capture=True; pre-existing list preserved=True; lab baseline restored=True; no failure || existing NMAS ACL table (another list attached elsewhere): preflight=['acl=APPLY/True/-', 'acl_attachment=APPLY/True/-']; conflicting-attachment preflight=APPLY/False/COMPENSATION_NOT_PROVABLE; control before apply (unfiltered expected) ok=True after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source po",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-validation/frr-acl_ipv4_standard/2026-11-02T19:50:46.029185+00:00",
+          "test_type": "LIVE"
         },
         "parser_import": {
-          "detail": "Real ubuntu-frr-1.0 parser executed; target semantic match=False; unmanaged blocks=19.",
-          "outcome": "FAIL",
-          "reason": "PARSER_ABSENT",
-          "reference": "",
-          "test_type": "FIXTURE"
+          "detail": "isolated FRR service_policy.ACL_IPV4_STANDARD against an FRR peer through the registered LinuxExecutor (nftables table DEVICE_BUILDER_ACL, atomic transactions, captured-ruleset inverse) || pristine node: preflight=['acl=APPLY/True/-', 'acl_attachment=APPLY/True/-']; conflicting-attachment preflight=n/a; control before apply (unfiltered expected) ok=True after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port': True, 'tcp denied source': True}; operator postcheck pass=True []; config facts={'acl_definitions': ['CAP_ACL'], 'acl_attachments': [{'interface': 'eth3', 'acl': 'CAP_ACL', 'direction': 'IN'}]}; live nft import recovered the list, its 1 definition(s) and every entry, and the IN attachment=True; flows while attached (expected {'ping permitted': True, 'ping denied': False, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port': True, 'tcp denied source': False}): {'ping permitted': True, 'ping denied': False, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port': True, 'tcp denied source': False}; pre-existing NMAS list preserved=True; after compensation (unfiltered expected) after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port': True, 'tcp denied source': True}; compensation=['COMPENSATED', 'COMPENSATED'] codes=['-', '-']; nft ruleset identical to pre-apply capture=True; pre-existing list preserved=True; lab baseline restored=True; no failure || existing NMAS ACL table (another list attached elsewhere): preflight=['acl=APPLY/True/-', 'acl_attachment=APPLY/True/-']; conflicting-attachment preflight=APPLY/False/COMPENSATION_NOT_PROVABLE; control before apply (unfiltered expected) ok=True after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source po",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-validation/frr-acl_ipv4_standard/2026-11-02T19:50:46.029185+00:00",
+          "test_type": "LIVE"
         },
         "renderer": {
-          "detail": "Authoritative renderer differential: 0 target line(s), 1 refusal marker(s); sha256=610b34fa4248aef38afedf2189de51102865c78650c23a672dde8a7d26433109.",
-          "outcome": "FAIL",
-          "reason": "RENDERER_ABSENT",
+          "detail": "Authoritative renderer differential: 6 target line(s), 0 refusal marker(s); sha256=c25a7ac6da89be8511b1f40fae7ed09f2861b50fce761216ea0ac14a92119530.",
+          "outcome": "PASS",
+          "reason": "",
           "reference": "",
           "test_type": "FIXTURE"
         },
         "runtime_validation": {
-          "detail": "Not attempted: NMAS prerequisite layer(s) failed their deliberate probe (renderer=RENDERER_ABSENT, candidate_generation=RENDERER_ABSENT, executor=EXECUTOR_REFUSED). First blocker renderer: Authoritative renderer differential: 0 target line(s), 1 refusal marker(s); sha256=610b34fa4248aef38afedf2189de51102865c78650c23a672dde8a7d26433109. No device was contacted for this stage.",
-          "outcome": "BLOCKED",
-          "reason": "RENDERER_ABSENT",
-          "reference": "gate:ubuntu_frr/service_policy.ACL_IPV4_STANDARD@d879b511a42d#effb7c61343e5a09",
-          "test_type": "STATIC"
+          "detail": "isolated FRR service_policy.ACL_IPV4_STANDARD against an FRR peer through the registered LinuxExecutor (nftables table DEVICE_BUILDER_ACL, atomic transactions, captured-ruleset inverse) || pristine node: preflight=['acl=APPLY/True/-', 'acl_attachment=APPLY/True/-']; conflicting-attachment preflight=n/a; control before apply (unfiltered expected) ok=True after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port': True, 'tcp denied source': True}; operator postcheck pass=True []; config facts={'acl_definitions': ['CAP_ACL'], 'acl_attachments': [{'interface': 'eth3', 'acl': 'CAP_ACL', 'direction': 'IN'}]}; live nft import recovered the list, its 1 definition(s) and every entry, and the IN attachment=True; flows while attached (expected {'ping permitted': True, 'ping denied': False, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port': True, 'tcp denied source': False}): {'ping permitted': True, 'ping denied': False, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port': True, 'tcp denied source': False}; pre-existing NMAS list preserved=True; after compensation (unfiltered expected) after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port': True, 'tcp denied source': True}; compensation=['COMPENSATED', 'COMPENSATED'] codes=['-', '-']; nft ruleset identical to pre-apply capture=True; pre-existing list preserved=True; lab baseline restored=True; no failure || existing NMAS ACL table (another list attached elsewhere): preflight=['acl=APPLY/True/-', 'acl_attachment=APPLY/True/-']; conflicting-attachment preflight=APPLY/False/COMPENSATION_NOT_PROVABLE; control before apply (unfiltered expected) ok=True after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source po",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-validation/frr-acl_ipv4_standard/2026-11-02T19:50:46.029185+00:00",
+          "test_type": "LIVE"
         },
         "semantic_model": {
           "detail": "Canonical fixture resolves the feature-specific path security.acls.acl_0000000000000003.family.",
@@ -53786,56 +53728,40 @@
           "test_type": "FIXTURE"
         }
       },
-      "renderer": "FAIL",
-      "repository_head": "d879b511a42dea60d7547a4fc17ecdeea4073377",
-      "runtime_test": "BLOCKED",
-      "runtime_version": "not contacted (prerequisite gate); platform runtime last observed: clab-raw-verifier-frr:8.4.4-1.1ubuntu6.7",
+      "renderer": "PASS",
+      "repository_head": "b648aaefe55812459ac1c4665a54b2fa1a1db595",
+      "runtime_test": "PASS",
+      "runtime_version": "FRRouting 8.4.4 / Ubuntu 24.04 isolated container, nftables 1.0.9 (lab-installed)",
       "semantic": "PASS",
-      "status": "UNSUPPORTED",
-      "strongest_test_type": "FIXTURE",
-      "timestamp": "2026-10-04T23:07:32.489991+00:00",
-      "unsupported_reasons": [
-        "CONFIG_VALIDATION_FAILED",
-        "EXECUTOR_REFUSED",
-        "PARSER_ABSENT",
-        "RENDERER_ABSENT",
-        "UI_ABSENT"
-      ],
-      "validator": "FAIL"
+      "status": "SUPPORTED",
+      "strongest_test_type": "LIVE",
+      "timestamp": "2026-11-02T19:49:29.602468+00:00",
+      "unsupported_reasons": [],
+      "validator": "PASS"
     },
     {
-      "assessment_basis": "PREREQUISITE_GATE",
+      "assessment_basis": "RUNTIME_INVESTIGATION",
       "assessment_complete": true,
-      "assessment_id": 982,
+      "assessment_id": null,
       "automated_tests": "PASS",
-      "candidate": "FAIL",
-      "compensation": "BLOCKED",
-      "device_builder": "FAIL",
-      "evidence_ids": [
-        6832,
-        6833,
-        6834,
-        6835,
-        6836,
-        6837,
-        6838,
-        6839,
-        6840,
-        6841,
-        6842
-      ],
+      "candidate": "PASS",
+      "capability_status": "SUPPORTED",
+      "compensation": "PASS",
+      "device_builder": "PASS",
+      "evidence_ids": [],
       "evidence_references": [
-        "gate:ubuntu_frr/service_policy.ACL_IPV6_EXTENDED@d879b511a42d#effb7c61343e5a09"
+        "live:nmas-cap-validation/frr-acl_ipv6_extended/2026-11-02T19:54:31.631899+00:00"
       ],
-      "executor": "FAIL",
+      "executor": "PASS",
+      "feasibility": "PROVEN",
       "feature": "service_policy.ACL_IPV6_EXTENDED",
       "field_validation": "PASS",
-      "final_status": "UNSUPPORTED",
-      "live_read": "BLOCKED",
-      "live_write": "BLOCKED",
-      "parser": "FAIL",
+      "final_status": "SUPPORTED",
+      "live_read": "PASS",
+      "live_write": "PASS",
+      "parser": "PASS",
       "platform": "ubuntu_frr",
-      "postcheck": "BLOCKED",
+      "postcheck": "PASS",
       "probes": {
         "automated_tests": {
           "detail": "Repeated renderer determinism=True; feature-specific valid/invalid field regression=PASS.",
@@ -53845,37 +53771,37 @@
           "test_type": "FIXTURE"
         },
         "candidate_generation": {
-          "detail": "Real candidate_renderer.render ran; 890 chars; target-rendered=FAIL.",
-          "outcome": "FAIL",
-          "reason": "RENDERER_ABSENT",
+          "detail": "Real candidate_renderer.render ran; 1026 chars; target-rendered=PASS.",
+          "outcome": "PASS",
+          "reason": "",
           "reference": "",
           "test_type": "FIXTURE"
         },
         "compensation": {
-          "detail": "Not attempted: NMAS prerequisite layer(s) failed their deliberate probe (renderer=RENDERER_ABSENT, candidate_generation=RENDERER_ABSENT, executor=EXECUTOR_REFUSED). First blocker renderer: Authoritative renderer differential: 0 target line(s), 1 refusal marker(s); sha256=610b34fa4248aef38afedf2189de51102865c78650c23a672dde8a7d26433109. No device was contacted for this stage.",
-          "outcome": "BLOCKED",
-          "reason": "RENDERER_ABSENT",
-          "reference": "gate:ubuntu_frr/service_policy.ACL_IPV6_EXTENDED@d879b511a42d#effb7c61343e5a09",
-          "test_type": "STATIC"
+          "detail": "isolated FRR service_policy.ACL_IPV6_EXTENDED against an FRR peer through the registered LinuxExecutor (nftables table DEVICE_BUILDER_ACL, atomic transactions, captured-ruleset inverse) || pristine node: preflight=['acl=APPLY/True/-', 'acl_attachment=APPLY/True/-']; conflicting-attachment preflight=n/a; control before apply (unfiltered expected) ok=True after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port': True, 'tcp denied source': True}; operator postcheck pass=True []; config facts={'acl_definitions': ['CAP_ACL'], 'acl_attachments': [{'interface': 'eth3', 'acl': 'CAP_ACL', 'direction': 'IN'}]}; live nft import recovered the list, its 1 definition(s) and every entry, and the IN attachment=True; flows while attached (expected {'ping permitted': True, 'ping denied': False, 'tcp permitted, source port in denied range': False, 'tcp permitted, other source port': True, 'tcp denied source': True}): {'ping permitted': True, 'ping denied': False, 'tcp permitted, source port in denied range': False, 'tcp permitted, other source port': True, 'tcp denied source': True}; pre-existing NMAS list preserved=True; after compensation (unfiltered expected) after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port': True, 'tcp denied source': True}; compensation=['COMPENSATED', 'COMPENSATED'] codes=['-', '-']; nft ruleset identical to pre-apply capture=True; pre-existing list preserved=True; lab baseline restored=True; no failure || existing NMAS ACL table (another list attached elsewhere): preflight=['acl=APPLY/True/-', 'acl_attachment=APPLY/True/-']; conflicting-attachment preflight=APPLY/False/COMPENSATION_NOT_PROVABLE; control before apply (unfiltered expected) ok=True after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source po",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-validation/frr-acl_ipv6_extended/2026-11-02T19:54:31.631899+00:00",
+          "test_type": "LIVE"
         },
         "config_validation": {
-          "detail": "Actual network-config validation=BLOCKED; failing checks=['PLATFORM_CAPABILITY']; external inputs are OFFLINE_FIXTURE only.",
-          "outcome": "FAIL",
-          "reason": "CONFIG_VALIDATION_FAILED",
+          "detail": "Actual network-config validation=PASS; failing checks=[]; external inputs are OFFLINE_FIXTURE only.",
+          "outcome": "PASS",
+          "reason": "",
           "reference": "",
           "test_type": "FIXTURE"
         },
         "device_builder_ui": {
-          "detail": "Real authoring API refused the feature (CollectionMutationError).",
-          "outcome": "FAIL",
-          "reason": "UI_ABSENT",
+          "detail": "Real Device Builder mutation API accepted the feature.",
+          "outcome": "PASS",
+          "reason": "",
           "reference": "",
           "test_type": "FIXTURE"
         },
         "executor": {
-          "detail": "Real executor.assess on fixture: action=APPLY; exact inverse present=False; restorable=False; no connection/apply invoked.",
-          "outcome": "FAIL",
-          "reason": "EXECUTOR_REFUSED",
+          "detail": "Real executor.assess on fixture: action=APPLY; exact inverse present=False; restorable=True; no connection/apply invoked.",
+          "outcome": "PASS",
+          "reason": "",
           "reference": "",
           "test_type": "FIXTURE"
         },
@@ -53887,46 +53813,46 @@
           "test_type": "FIXTURE"
         },
         "live_post_write_validation": {
-          "detail": "Not attempted: NMAS prerequisite layer(s) failed their deliberate probe (renderer=RENDERER_ABSENT, candidate_generation=RENDERER_ABSENT, executor=EXECUTOR_REFUSED). First blocker renderer: Authoritative renderer differential: 0 target line(s), 1 refusal marker(s); sha256=610b34fa4248aef38afedf2189de51102865c78650c23a672dde8a7d26433109. No device was contacted for this stage.",
-          "outcome": "BLOCKED",
-          "reason": "RENDERER_ABSENT",
-          "reference": "gate:ubuntu_frr/service_policy.ACL_IPV6_EXTENDED@d879b511a42d#effb7c61343e5a09",
-          "test_type": "STATIC"
+          "detail": "isolated FRR service_policy.ACL_IPV6_EXTENDED against an FRR peer through the registered LinuxExecutor (nftables table DEVICE_BUILDER_ACL, atomic transactions, captured-ruleset inverse) || pristine node: preflight=['acl=APPLY/True/-', 'acl_attachment=APPLY/True/-']; conflicting-attachment preflight=n/a; control before apply (unfiltered expected) ok=True after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port': True, 'tcp denied source': True}; operator postcheck pass=True []; config facts={'acl_definitions': ['CAP_ACL'], 'acl_attachments': [{'interface': 'eth3', 'acl': 'CAP_ACL', 'direction': 'IN'}]}; live nft import recovered the list, its 1 definition(s) and every entry, and the IN attachment=True; flows while attached (expected {'ping permitted': True, 'ping denied': False, 'tcp permitted, source port in denied range': False, 'tcp permitted, other source port': True, 'tcp denied source': True}): {'ping permitted': True, 'ping denied': False, 'tcp permitted, source port in denied range': False, 'tcp permitted, other source port': True, 'tcp denied source': True}; pre-existing NMAS list preserved=True; after compensation (unfiltered expected) after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port': True, 'tcp denied source': True}; compensation=['COMPENSATED', 'COMPENSATED'] codes=['-', '-']; nft ruleset identical to pre-apply capture=True; pre-existing list preserved=True; lab baseline restored=True; no failure || existing NMAS ACL table (another list attached elsewhere): preflight=['acl=APPLY/True/-', 'acl_attachment=APPLY/True/-']; conflicting-attachment preflight=APPLY/False/COMPENSATION_NOT_PROVABLE; control before apply (unfiltered expected) ok=True after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source po",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-validation/frr-acl_ipv6_extended/2026-11-02T19:54:31.631899+00:00",
+          "test_type": "LIVE"
         },
         "live_read": {
-          "detail": "Not attempted: NMAS prerequisite layer(s) failed their deliberate probe (renderer=RENDERER_ABSENT, candidate_generation=RENDERER_ABSENT, executor=EXECUTOR_REFUSED). First blocker renderer: Authoritative renderer differential: 0 target line(s), 1 refusal marker(s); sha256=610b34fa4248aef38afedf2189de51102865c78650c23a672dde8a7d26433109. No device was contacted for this stage.",
-          "outcome": "BLOCKED",
-          "reason": "RENDERER_ABSENT",
-          "reference": "gate:ubuntu_frr/service_policy.ACL_IPV6_EXTENDED@d879b511a42d#effb7c61343e5a09",
-          "test_type": "STATIC"
+          "detail": "isolated FRR service_policy.ACL_IPV6_EXTENDED against an FRR peer through the registered LinuxExecutor (nftables table DEVICE_BUILDER_ACL, atomic transactions, captured-ruleset inverse) || pristine node: preflight=['acl=APPLY/True/-', 'acl_attachment=APPLY/True/-']; conflicting-attachment preflight=n/a; control before apply (unfiltered expected) ok=True after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port': True, 'tcp denied source': True}; operator postcheck pass=True []; config facts={'acl_definitions': ['CAP_ACL'], 'acl_attachments': [{'interface': 'eth3', 'acl': 'CAP_ACL', 'direction': 'IN'}]}; live nft import recovered the list, its 1 definition(s) and every entry, and the IN attachment=True; flows while attached (expected {'ping permitted': True, 'ping denied': False, 'tcp permitted, source port in denied range': False, 'tcp permitted, other source port': True, 'tcp denied source': True}): {'ping permitted': True, 'ping denied': False, 'tcp permitted, source port in denied range': False, 'tcp permitted, other source port': True, 'tcp denied source': True}; pre-existing NMAS list preserved=True; after compensation (unfiltered expected) after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port': True, 'tcp denied source': True}; compensation=['COMPENSATED', 'COMPENSATED'] codes=['-', '-']; nft ruleset identical to pre-apply capture=True; pre-existing list preserved=True; lab baseline restored=True; no failure || existing NMAS ACL table (another list attached elsewhere): preflight=['acl=APPLY/True/-', 'acl_attachment=APPLY/True/-']; conflicting-attachment preflight=APPLY/False/COMPENSATION_NOT_PROVABLE; control before apply (unfiltered expected) ok=True after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source po",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-validation/frr-acl_ipv6_extended/2026-11-02T19:54:31.631899+00:00",
+          "test_type": "LIVE"
         },
         "live_write": {
-          "detail": "Not attempted: NMAS prerequisite layer(s) failed their deliberate probe (renderer=RENDERER_ABSENT, candidate_generation=RENDERER_ABSENT, executor=EXECUTOR_REFUSED). First blocker renderer: Authoritative renderer differential: 0 target line(s), 1 refusal marker(s); sha256=610b34fa4248aef38afedf2189de51102865c78650c23a672dde8a7d26433109. No device was contacted for this stage.",
-          "outcome": "BLOCKED",
-          "reason": "RENDERER_ABSENT",
-          "reference": "gate:ubuntu_frr/service_policy.ACL_IPV6_EXTENDED@d879b511a42d#effb7c61343e5a09",
-          "test_type": "STATIC"
+          "detail": "isolated FRR service_policy.ACL_IPV6_EXTENDED against an FRR peer through the registered LinuxExecutor (nftables table DEVICE_BUILDER_ACL, atomic transactions, captured-ruleset inverse) || pristine node: preflight=['acl=APPLY/True/-', 'acl_attachment=APPLY/True/-']; conflicting-attachment preflight=n/a; control before apply (unfiltered expected) ok=True after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port': True, 'tcp denied source': True}; operator postcheck pass=True []; config facts={'acl_definitions': ['CAP_ACL'], 'acl_attachments': [{'interface': 'eth3', 'acl': 'CAP_ACL', 'direction': 'IN'}]}; live nft import recovered the list, its 1 definition(s) and every entry, and the IN attachment=True; flows while attached (expected {'ping permitted': True, 'ping denied': False, 'tcp permitted, source port in denied range': False, 'tcp permitted, other source port': True, 'tcp denied source': True}): {'ping permitted': True, 'ping denied': False, 'tcp permitted, source port in denied range': False, 'tcp permitted, other source port': True, 'tcp denied source': True}; pre-existing NMAS list preserved=True; after compensation (unfiltered expected) after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port': True, 'tcp denied source': True}; compensation=['COMPENSATED', 'COMPENSATED'] codes=['-', '-']; nft ruleset identical to pre-apply capture=True; pre-existing list preserved=True; lab baseline restored=True; no failure || existing NMAS ACL table (another list attached elsewhere): preflight=['acl=APPLY/True/-', 'acl_attachment=APPLY/True/-']; conflicting-attachment preflight=APPLY/False/COMPENSATION_NOT_PROVABLE; control before apply (unfiltered expected) ok=True after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source po",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-validation/frr-acl_ipv6_extended/2026-11-02T19:54:31.631899+00:00",
+          "test_type": "LIVE"
         },
         "parser_import": {
-          "detail": "Real ubuntu-frr-1.0 parser executed; target semantic match=False; unmanaged blocks=19.",
-          "outcome": "FAIL",
-          "reason": "PARSER_ABSENT",
-          "reference": "",
-          "test_type": "FIXTURE"
+          "detail": "isolated FRR service_policy.ACL_IPV6_EXTENDED against an FRR peer through the registered LinuxExecutor (nftables table DEVICE_BUILDER_ACL, atomic transactions, captured-ruleset inverse) || pristine node: preflight=['acl=APPLY/True/-', 'acl_attachment=APPLY/True/-']; conflicting-attachment preflight=n/a; control before apply (unfiltered expected) ok=True after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port': True, 'tcp denied source': True}; operator postcheck pass=True []; config facts={'acl_definitions': ['CAP_ACL'], 'acl_attachments': [{'interface': 'eth3', 'acl': 'CAP_ACL', 'direction': 'IN'}]}; live nft import recovered the list, its 1 definition(s) and every entry, and the IN attachment=True; flows while attached (expected {'ping permitted': True, 'ping denied': False, 'tcp permitted, source port in denied range': False, 'tcp permitted, other source port': True, 'tcp denied source': True}): {'ping permitted': True, 'ping denied': False, 'tcp permitted, source port in denied range': False, 'tcp permitted, other source port': True, 'tcp denied source': True}; pre-existing NMAS list preserved=True; after compensation (unfiltered expected) after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port': True, 'tcp denied source': True}; compensation=['COMPENSATED', 'COMPENSATED'] codes=['-', '-']; nft ruleset identical to pre-apply capture=True; pre-existing list preserved=True; lab baseline restored=True; no failure || existing NMAS ACL table (another list attached elsewhere): preflight=['acl=APPLY/True/-', 'acl_attachment=APPLY/True/-']; conflicting-attachment preflight=APPLY/False/COMPENSATION_NOT_PROVABLE; control before apply (unfiltered expected) ok=True after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source po",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-validation/frr-acl_ipv6_extended/2026-11-02T19:54:31.631899+00:00",
+          "test_type": "LIVE"
         },
         "renderer": {
-          "detail": "Authoritative renderer differential: 0 target line(s), 1 refusal marker(s); sha256=610b34fa4248aef38afedf2189de51102865c78650c23a672dde8a7d26433109.",
-          "outcome": "FAIL",
-          "reason": "RENDERER_ABSENT",
+          "detail": "Authoritative renderer differential: 7 target line(s), 0 refusal marker(s); sha256=b9fcb58bb07bc3df04c8f9a688c117faf1e40784c0a5cee1bbea3a901a33438e.",
+          "outcome": "PASS",
+          "reason": "",
           "reference": "",
           "test_type": "FIXTURE"
         },
         "runtime_validation": {
-          "detail": "Not attempted: NMAS prerequisite layer(s) failed their deliberate probe (renderer=RENDERER_ABSENT, candidate_generation=RENDERER_ABSENT, executor=EXECUTOR_REFUSED). First blocker renderer: Authoritative renderer differential: 0 target line(s), 1 refusal marker(s); sha256=610b34fa4248aef38afedf2189de51102865c78650c23a672dde8a7d26433109. No device was contacted for this stage.",
-          "outcome": "BLOCKED",
-          "reason": "RENDERER_ABSENT",
-          "reference": "gate:ubuntu_frr/service_policy.ACL_IPV6_EXTENDED@d879b511a42d#effb7c61343e5a09",
-          "test_type": "STATIC"
+          "detail": "isolated FRR service_policy.ACL_IPV6_EXTENDED against an FRR peer through the registered LinuxExecutor (nftables table DEVICE_BUILDER_ACL, atomic transactions, captured-ruleset inverse) || pristine node: preflight=['acl=APPLY/True/-', 'acl_attachment=APPLY/True/-']; conflicting-attachment preflight=n/a; control before apply (unfiltered expected) ok=True after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port': True, 'tcp denied source': True}; operator postcheck pass=True []; config facts={'acl_definitions': ['CAP_ACL'], 'acl_attachments': [{'interface': 'eth3', 'acl': 'CAP_ACL', 'direction': 'IN'}]}; live nft import recovered the list, its 1 definition(s) and every entry, and the IN attachment=True; flows while attached (expected {'ping permitted': True, 'ping denied': False, 'tcp permitted, source port in denied range': False, 'tcp permitted, other source port': True, 'tcp denied source': True}): {'ping permitted': True, 'ping denied': False, 'tcp permitted, source port in denied range': False, 'tcp permitted, other source port': True, 'tcp denied source': True}; pre-existing NMAS list preserved=True; after compensation (unfiltered expected) after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port': True, 'tcp denied source': True}; compensation=['COMPENSATED', 'COMPENSATED'] codes=['-', '-']; nft ruleset identical to pre-apply capture=True; pre-existing list preserved=True; lab baseline restored=True; no failure || existing NMAS ACL table (another list attached elsewhere): preflight=['acl=APPLY/True/-', 'acl_attachment=APPLY/True/-']; conflicting-attachment preflight=APPLY/False/COMPENSATION_NOT_PROVABLE; control before apply (unfiltered expected) ok=True after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source po",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-validation/frr-acl_ipv6_extended/2026-11-02T19:54:31.631899+00:00",
+          "test_type": "LIVE"
         },
         "semantic_model": {
           "detail": "Canonical fixture resolves the feature-specific path security.acls.acl_0000000000000003.family.",
@@ -53936,56 +53862,40 @@
           "test_type": "FIXTURE"
         }
       },
-      "renderer": "FAIL",
-      "repository_head": "d879b511a42dea60d7547a4fc17ecdeea4073377",
-      "runtime_test": "BLOCKED",
-      "runtime_version": "not contacted (prerequisite gate); platform runtime last observed: clab-raw-verifier-frr:8.4.4-1.1ubuntu6.7",
+      "renderer": "PASS",
+      "repository_head": "b648aaefe55812459ac1c4665a54b2fa1a1db595",
+      "runtime_test": "PASS",
+      "runtime_version": "FRRouting 8.4.4 / Ubuntu 24.04 isolated container, nftables 1.0.9 (lab-installed)",
       "semantic": "PASS",
-      "status": "UNSUPPORTED",
-      "strongest_test_type": "FIXTURE",
-      "timestamp": "2026-10-04T23:07:32.732148+00:00",
-      "unsupported_reasons": [
-        "CONFIG_VALIDATION_FAILED",
-        "EXECUTOR_REFUSED",
-        "PARSER_ABSENT",
-        "RENDERER_ABSENT",
-        "UI_ABSENT"
-      ],
-      "validator": "FAIL"
+      "status": "SUPPORTED",
+      "strongest_test_type": "LIVE",
+      "timestamp": "2026-11-02T19:53:16.660188+00:00",
+      "unsupported_reasons": [],
+      "validator": "PASS"
     },
     {
-      "assessment_basis": "PREREQUISITE_GATE",
+      "assessment_basis": "RUNTIME_INVESTIGATION",
       "assessment_complete": true,
-      "assessment_id": 981,
+      "assessment_id": null,
       "automated_tests": "PASS",
-      "candidate": "FAIL",
-      "compensation": "BLOCKED",
-      "device_builder": "FAIL",
-      "evidence_ids": [
-        6821,
-        6822,
-        6823,
-        6824,
-        6825,
-        6826,
-        6827,
-        6828,
-        6829,
-        6830,
-        6831
-      ],
+      "candidate": "PASS",
+      "capability_status": "SUPPORTED",
+      "compensation": "PASS",
+      "device_builder": "PASS",
+      "evidence_ids": [],
       "evidence_references": [
-        "gate:ubuntu_frr/service_policy.ACL_IPV6_STANDARD@d879b511a42d#effb7c61343e5a09"
+        "live:nmas-cap-validation/frr-acl_ipv6_standard/2026-11-02T19:53:16.655873+00:00"
       ],
-      "executor": "FAIL",
+      "executor": "PASS",
+      "feasibility": "PROVEN",
       "feature": "service_policy.ACL_IPV6_STANDARD",
       "field_validation": "PASS",
-      "final_status": "UNSUPPORTED",
-      "live_read": "BLOCKED",
-      "live_write": "BLOCKED",
-      "parser": "FAIL",
+      "final_status": "SUPPORTED",
+      "live_read": "PASS",
+      "live_write": "PASS",
+      "parser": "PASS",
       "platform": "ubuntu_frr",
-      "postcheck": "BLOCKED",
+      "postcheck": "PASS",
       "probes": {
         "automated_tests": {
           "detail": "Repeated renderer determinism=True; feature-specific valid/invalid field regression=PASS.",
@@ -53995,37 +53905,37 @@
           "test_type": "FIXTURE"
         },
         "candidate_generation": {
-          "detail": "Real candidate_renderer.render ran; 890 chars; target-rendered=FAIL.",
-          "outcome": "FAIL",
-          "reason": "RENDERER_ABSENT",
+          "detail": "Real candidate_renderer.render ran; 1026 chars; target-rendered=PASS.",
+          "outcome": "PASS",
+          "reason": "",
           "reference": "",
           "test_type": "FIXTURE"
         },
         "compensation": {
-          "detail": "Not attempted: NMAS prerequisite layer(s) failed their deliberate probe (renderer=RENDERER_ABSENT, candidate_generation=RENDERER_ABSENT, executor=EXECUTOR_REFUSED). First blocker renderer: Authoritative renderer differential: 0 target line(s), 1 refusal marker(s); sha256=610b34fa4248aef38afedf2189de51102865c78650c23a672dde8a7d26433109. No device was contacted for this stage.",
-          "outcome": "BLOCKED",
-          "reason": "RENDERER_ABSENT",
-          "reference": "gate:ubuntu_frr/service_policy.ACL_IPV6_STANDARD@d879b511a42d#effb7c61343e5a09",
-          "test_type": "STATIC"
+          "detail": "isolated FRR service_policy.ACL_IPV6_STANDARD against an FRR peer through the registered LinuxExecutor (nftables table DEVICE_BUILDER_ACL, atomic transactions, captured-ruleset inverse) || pristine node: preflight=['acl=APPLY/True/-', 'acl_attachment=APPLY/True/-']; conflicting-attachment preflight=n/a; control before apply (unfiltered expected) ok=True after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port': True, 'tcp denied source': True}; operator postcheck pass=True []; config facts={'acl_definitions': ['CAP_ACL'], 'acl_attachments': [{'interface': 'eth3', 'acl': 'CAP_ACL', 'direction': 'IN'}]}; live nft import recovered the list, its 1 definition(s) and every entry, and the IN attachment=True; flows while attached (expected {'ping permitted': True, 'ping denied': False, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port': True, 'tcp denied source': False}): {'ping permitted': True, 'ping denied': False, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port': True, 'tcp denied source': False}; pre-existing NMAS list preserved=True; after compensation (unfiltered expected) after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port': True, 'tcp denied source': True}; compensation=['COMPENSATED', 'COMPENSATED'] codes=['-', '-']; nft ruleset identical to pre-apply capture=True; pre-existing list preserved=True; lab baseline restored=True; no failure || existing NMAS ACL table (another list attached elsewhere): preflight=['acl=APPLY/True/-', 'acl_attachment=APPLY/True/-']; conflicting-attachment preflight=APPLY/False/COMPENSATION_NOT_PROVABLE; control before apply (unfiltered expected) ok=True after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source po",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-validation/frr-acl_ipv6_standard/2026-11-02T19:53:16.655873+00:00",
+          "test_type": "LIVE"
         },
         "config_validation": {
-          "detail": "Actual network-config validation=BLOCKED; failing checks=['PLATFORM_CAPABILITY']; external inputs are OFFLINE_FIXTURE only.",
-          "outcome": "FAIL",
-          "reason": "CONFIG_VALIDATION_FAILED",
+          "detail": "Actual network-config validation=PASS; failing checks=[]; external inputs are OFFLINE_FIXTURE only.",
+          "outcome": "PASS",
+          "reason": "",
           "reference": "",
           "test_type": "FIXTURE"
         },
         "device_builder_ui": {
-          "detail": "Real authoring API refused the feature (CollectionMutationError).",
-          "outcome": "FAIL",
-          "reason": "UI_ABSENT",
+          "detail": "Real Device Builder mutation API accepted the feature.",
+          "outcome": "PASS",
+          "reason": "",
           "reference": "",
           "test_type": "FIXTURE"
         },
         "executor": {
-          "detail": "Real executor.assess on fixture: action=APPLY; exact inverse present=False; restorable=False; no connection/apply invoked.",
-          "outcome": "FAIL",
-          "reason": "EXECUTOR_REFUSED",
+          "detail": "Real executor.assess on fixture: action=APPLY; exact inverse present=False; restorable=True; no connection/apply invoked.",
+          "outcome": "PASS",
+          "reason": "",
           "reference": "",
           "test_type": "FIXTURE"
         },
@@ -54037,46 +53947,46 @@
           "test_type": "FIXTURE"
         },
         "live_post_write_validation": {
-          "detail": "Not attempted: NMAS prerequisite layer(s) failed their deliberate probe (renderer=RENDERER_ABSENT, candidate_generation=RENDERER_ABSENT, executor=EXECUTOR_REFUSED). First blocker renderer: Authoritative renderer differential: 0 target line(s), 1 refusal marker(s); sha256=610b34fa4248aef38afedf2189de51102865c78650c23a672dde8a7d26433109. No device was contacted for this stage.",
-          "outcome": "BLOCKED",
-          "reason": "RENDERER_ABSENT",
-          "reference": "gate:ubuntu_frr/service_policy.ACL_IPV6_STANDARD@d879b511a42d#effb7c61343e5a09",
-          "test_type": "STATIC"
+          "detail": "isolated FRR service_policy.ACL_IPV6_STANDARD against an FRR peer through the registered LinuxExecutor (nftables table DEVICE_BUILDER_ACL, atomic transactions, captured-ruleset inverse) || pristine node: preflight=['acl=APPLY/True/-', 'acl_attachment=APPLY/True/-']; conflicting-attachment preflight=n/a; control before apply (unfiltered expected) ok=True after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port': True, 'tcp denied source': True}; operator postcheck pass=True []; config facts={'acl_definitions': ['CAP_ACL'], 'acl_attachments': [{'interface': 'eth3', 'acl': 'CAP_ACL', 'direction': 'IN'}]}; live nft import recovered the list, its 1 definition(s) and every entry, and the IN attachment=True; flows while attached (expected {'ping permitted': True, 'ping denied': False, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port': True, 'tcp denied source': False}): {'ping permitted': True, 'ping denied': False, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port': True, 'tcp denied source': False}; pre-existing NMAS list preserved=True; after compensation (unfiltered expected) after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port': True, 'tcp denied source': True}; compensation=['COMPENSATED', 'COMPENSATED'] codes=['-', '-']; nft ruleset identical to pre-apply capture=True; pre-existing list preserved=True; lab baseline restored=True; no failure || existing NMAS ACL table (another list attached elsewhere): preflight=['acl=APPLY/True/-', 'acl_attachment=APPLY/True/-']; conflicting-attachment preflight=APPLY/False/COMPENSATION_NOT_PROVABLE; control before apply (unfiltered expected) ok=True after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source po",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-validation/frr-acl_ipv6_standard/2026-11-02T19:53:16.655873+00:00",
+          "test_type": "LIVE"
         },
         "live_read": {
-          "detail": "Not attempted: NMAS prerequisite layer(s) failed their deliberate probe (renderer=RENDERER_ABSENT, candidate_generation=RENDERER_ABSENT, executor=EXECUTOR_REFUSED). First blocker renderer: Authoritative renderer differential: 0 target line(s), 1 refusal marker(s); sha256=610b34fa4248aef38afedf2189de51102865c78650c23a672dde8a7d26433109. No device was contacted for this stage.",
-          "outcome": "BLOCKED",
-          "reason": "RENDERER_ABSENT",
-          "reference": "gate:ubuntu_frr/service_policy.ACL_IPV6_STANDARD@d879b511a42d#effb7c61343e5a09",
-          "test_type": "STATIC"
+          "detail": "isolated FRR service_policy.ACL_IPV6_STANDARD against an FRR peer through the registered LinuxExecutor (nftables table DEVICE_BUILDER_ACL, atomic transactions, captured-ruleset inverse) || pristine node: preflight=['acl=APPLY/True/-', 'acl_attachment=APPLY/True/-']; conflicting-attachment preflight=n/a; control before apply (unfiltered expected) ok=True after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port': True, 'tcp denied source': True}; operator postcheck pass=True []; config facts={'acl_definitions': ['CAP_ACL'], 'acl_attachments': [{'interface': 'eth3', 'acl': 'CAP_ACL', 'direction': 'IN'}]}; live nft import recovered the list, its 1 definition(s) and every entry, and the IN attachment=True; flows while attached (expected {'ping permitted': True, 'ping denied': False, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port': True, 'tcp denied source': False}): {'ping permitted': True, 'ping denied': False, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port': True, 'tcp denied source': False}; pre-existing NMAS list preserved=True; after compensation (unfiltered expected) after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port': True, 'tcp denied source': True}; compensation=['COMPENSATED', 'COMPENSATED'] codes=['-', '-']; nft ruleset identical to pre-apply capture=True; pre-existing list preserved=True; lab baseline restored=True; no failure || existing NMAS ACL table (another list attached elsewhere): preflight=['acl=APPLY/True/-', 'acl_attachment=APPLY/True/-']; conflicting-attachment preflight=APPLY/False/COMPENSATION_NOT_PROVABLE; control before apply (unfiltered expected) ok=True after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source po",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-validation/frr-acl_ipv6_standard/2026-11-02T19:53:16.655873+00:00",
+          "test_type": "LIVE"
         },
         "live_write": {
-          "detail": "Not attempted: NMAS prerequisite layer(s) failed their deliberate probe (renderer=RENDERER_ABSENT, candidate_generation=RENDERER_ABSENT, executor=EXECUTOR_REFUSED). First blocker renderer: Authoritative renderer differential: 0 target line(s), 1 refusal marker(s); sha256=610b34fa4248aef38afedf2189de51102865c78650c23a672dde8a7d26433109. No device was contacted for this stage.",
-          "outcome": "BLOCKED",
-          "reason": "RENDERER_ABSENT",
-          "reference": "gate:ubuntu_frr/service_policy.ACL_IPV6_STANDARD@d879b511a42d#effb7c61343e5a09",
-          "test_type": "STATIC"
+          "detail": "isolated FRR service_policy.ACL_IPV6_STANDARD against an FRR peer through the registered LinuxExecutor (nftables table DEVICE_BUILDER_ACL, atomic transactions, captured-ruleset inverse) || pristine node: preflight=['acl=APPLY/True/-', 'acl_attachment=APPLY/True/-']; conflicting-attachment preflight=n/a; control before apply (unfiltered expected) ok=True after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port': True, 'tcp denied source': True}; operator postcheck pass=True []; config facts={'acl_definitions': ['CAP_ACL'], 'acl_attachments': [{'interface': 'eth3', 'acl': 'CAP_ACL', 'direction': 'IN'}]}; live nft import recovered the list, its 1 definition(s) and every entry, and the IN attachment=True; flows while attached (expected {'ping permitted': True, 'ping denied': False, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port': True, 'tcp denied source': False}): {'ping permitted': True, 'ping denied': False, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port': True, 'tcp denied source': False}; pre-existing NMAS list preserved=True; after compensation (unfiltered expected) after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port': True, 'tcp denied source': True}; compensation=['COMPENSATED', 'COMPENSATED'] codes=['-', '-']; nft ruleset identical to pre-apply capture=True; pre-existing list preserved=True; lab baseline restored=True; no failure || existing NMAS ACL table (another list attached elsewhere): preflight=['acl=APPLY/True/-', 'acl_attachment=APPLY/True/-']; conflicting-attachment preflight=APPLY/False/COMPENSATION_NOT_PROVABLE; control before apply (unfiltered expected) ok=True after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source po",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-validation/frr-acl_ipv6_standard/2026-11-02T19:53:16.655873+00:00",
+          "test_type": "LIVE"
         },
         "parser_import": {
-          "detail": "Real ubuntu-frr-1.0 parser executed; target semantic match=False; unmanaged blocks=19.",
-          "outcome": "FAIL",
-          "reason": "PARSER_ABSENT",
-          "reference": "",
-          "test_type": "FIXTURE"
+          "detail": "isolated FRR service_policy.ACL_IPV6_STANDARD against an FRR peer through the registered LinuxExecutor (nftables table DEVICE_BUILDER_ACL, atomic transactions, captured-ruleset inverse) || pristine node: preflight=['acl=APPLY/True/-', 'acl_attachment=APPLY/True/-']; conflicting-attachment preflight=n/a; control before apply (unfiltered expected) ok=True after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port': True, 'tcp denied source': True}; operator postcheck pass=True []; config facts={'acl_definitions': ['CAP_ACL'], 'acl_attachments': [{'interface': 'eth3', 'acl': 'CAP_ACL', 'direction': 'IN'}]}; live nft import recovered the list, its 1 definition(s) and every entry, and the IN attachment=True; flows while attached (expected {'ping permitted': True, 'ping denied': False, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port': True, 'tcp denied source': False}): {'ping permitted': True, 'ping denied': False, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port': True, 'tcp denied source': False}; pre-existing NMAS list preserved=True; after compensation (unfiltered expected) after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port': True, 'tcp denied source': True}; compensation=['COMPENSATED', 'COMPENSATED'] codes=['-', '-']; nft ruleset identical to pre-apply capture=True; pre-existing list preserved=True; lab baseline restored=True; no failure || existing NMAS ACL table (another list attached elsewhere): preflight=['acl=APPLY/True/-', 'acl_attachment=APPLY/True/-']; conflicting-attachment preflight=APPLY/False/COMPENSATION_NOT_PROVABLE; control before apply (unfiltered expected) ok=True after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source po",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-validation/frr-acl_ipv6_standard/2026-11-02T19:53:16.655873+00:00",
+          "test_type": "LIVE"
         },
         "renderer": {
-          "detail": "Authoritative renderer differential: 0 target line(s), 1 refusal marker(s); sha256=610b34fa4248aef38afedf2189de51102865c78650c23a672dde8a7d26433109.",
-          "outcome": "FAIL",
-          "reason": "RENDERER_ABSENT",
+          "detail": "Authoritative renderer differential: 7 target line(s), 0 refusal marker(s); sha256=de1a9317b73de2f21479bf54cab09f057b82bd047897ab41d7ae05a015713498.",
+          "outcome": "PASS",
+          "reason": "",
           "reference": "",
           "test_type": "FIXTURE"
         },
         "runtime_validation": {
-          "detail": "Not attempted: NMAS prerequisite layer(s) failed their deliberate probe (renderer=RENDERER_ABSENT, candidate_generation=RENDERER_ABSENT, executor=EXECUTOR_REFUSED). First blocker renderer: Authoritative renderer differential: 0 target line(s), 1 refusal marker(s); sha256=610b34fa4248aef38afedf2189de51102865c78650c23a672dde8a7d26433109. No device was contacted for this stage.",
-          "outcome": "BLOCKED",
-          "reason": "RENDERER_ABSENT",
-          "reference": "gate:ubuntu_frr/service_policy.ACL_IPV6_STANDARD@d879b511a42d#effb7c61343e5a09",
-          "test_type": "STATIC"
+          "detail": "isolated FRR service_policy.ACL_IPV6_STANDARD against an FRR peer through the registered LinuxExecutor (nftables table DEVICE_BUILDER_ACL, atomic transactions, captured-ruleset inverse) || pristine node: preflight=['acl=APPLY/True/-', 'acl_attachment=APPLY/True/-']; conflicting-attachment preflight=n/a; control before apply (unfiltered expected) ok=True after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port': True, 'tcp denied source': True}; operator postcheck pass=True []; config facts={'acl_definitions': ['CAP_ACL'], 'acl_attachments': [{'interface': 'eth3', 'acl': 'CAP_ACL', 'direction': 'IN'}]}; live nft import recovered the list, its 1 definition(s) and every entry, and the IN attachment=True; flows while attached (expected {'ping permitted': True, 'ping denied': False, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port': True, 'tcp denied source': False}): {'ping permitted': True, 'ping denied': False, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port': True, 'tcp denied source': False}; pre-existing NMAS list preserved=True; after compensation (unfiltered expected) after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source port': True, 'tcp denied source': True}; compensation=['COMPENSATED', 'COMPENSATED'] codes=['-', '-']; nft ruleset identical to pre-apply capture=True; pre-existing list preserved=True; lab baseline restored=True; no failure || existing NMAS ACL table (another list attached elsewhere): preflight=['acl=APPLY/True/-', 'acl_attachment=APPLY/True/-']; conflicting-attachment preflight=APPLY/False/COMPENSATION_NOT_PROVABLE; control before apply (unfiltered expected) ok=True after 2 s: {'ping permitted': True, 'ping denied': True, 'tcp permitted, source port in denied range': True, 'tcp permitted, other source po",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-validation/frr-acl_ipv6_standard/2026-11-02T19:53:16.655873+00:00",
+          "test_type": "LIVE"
         },
         "semantic_model": {
           "detail": "Canonical fixture resolves the feature-specific path security.acls.acl_0000000000000003.family.",
@@ -54086,22 +53996,16 @@
           "test_type": "FIXTURE"
         }
       },
-      "renderer": "FAIL",
-      "repository_head": "d879b511a42dea60d7547a4fc17ecdeea4073377",
-      "runtime_test": "BLOCKED",
-      "runtime_version": "not contacted (prerequisite gate); platform runtime last observed: clab-raw-verifier-frr:8.4.4-1.1ubuntu6.7",
+      "renderer": "PASS",
+      "repository_head": "b648aaefe55812459ac1c4665a54b2fa1a1db595",
+      "runtime_test": "PASS",
+      "runtime_version": "FRRouting 8.4.4 / Ubuntu 24.04 isolated container, nftables 1.0.9 (lab-installed)",
       "semantic": "PASS",
-      "status": "UNSUPPORTED",
-      "strongest_test_type": "FIXTURE",
-      "timestamp": "2026-10-04T23:07:32.653381+00:00",
-      "unsupported_reasons": [
-        "CONFIG_VALIDATION_FAILED",
-        "EXECUTOR_REFUSED",
-        "PARSER_ABSENT",
-        "RENDERER_ABSENT",
-        "UI_ABSENT"
-      ],
-      "validator": "FAIL"
+      "status": "SUPPORTED",
+      "strongest_test_type": "LIVE",
+      "timestamp": "2026-11-02T19:51:57.821382+00:00",
+      "unsupported_reasons": [],
+      "validator": "PASS"
     },
     {
       "assessment_basis": "PREREQUISITE_GATE",
@@ -59076,33 +58980,33 @@
     "ubuntu_frr": {
       "assessed": 66,
       "fixture_tested": 66,
-      "live_tested": 17,
-      "static_tested": 49,
-      "supported": 17,
+      "live_tested": 23,
+      "static_tested": 43,
+      "supported": 23,
       "total": 66,
-      "unsupported": 49
+      "unsupported": 43
     }
   },
   "reason_counts": {
     "COMPENSATION_ABSENT": 68,
-    "CONFIG_VALIDATION_FAILED": 293,
+    "CONFIG_VALIDATION_FAILED": 287,
     "EXECUTOR_ABSENT": 132,
-    "EXECUTOR_REFUSED": 198,
+    "EXECUTOR_REFUSED": 192,
     "FIELD_VALIDATION_FAILED": 65,
     "FUNCTIONAL_TEST_FAILED": 67,
     "LIVE_READ_ABSENT": 2,
-    "PARSER_ABSENT": 262,
+    "PARSER_ABSENT": 256,
     "PARSER_FAILED": 38,
     "PLATFORM_DOES_NOT_SUPPORT": 3,
     "POSTCHECK_ABSENT": 69,
-    "RENDERER_ABSENT": 292,
+    "RENDERER_ABSENT": 286,
     "RUNTIME_IMAGE_UNAVAILABLE": 66,
-    "UI_ABSENT": 287
+    "UI_ABSENT": 281
   },
   "remaining_cells": [],
   "schema_version": 2,
-  "supported": 64,
+  "supported": 70,
   "total": 396,
   "unassessed": 0,
-  "unsupported": 332
+  "unsupported": 326
 }

@@ -8,7 +8,10 @@ OSPF, RIP/RIPng and BGP process changes whose inverse is derived from the captur
 when that exact NMAS-shaped table already exists, extended by the new rule and restored to the captured rule list.  A
 table of that name holding anything else is never merged into.  Static NAT44 (V2 Phase 9) is a second dedicated table of
 the same discipline: a prerouting ``dnat`` and a postrouting ``snat`` chain whose rules pair up as 1:1 host mappings, both
-directions of a mapping always written and removed in one atomic nft transaction.
+directions of a mapping always written and removed in one atomic nft transaction.  ACLs (V2 Phase 9) are a third such
+table, ``inet DEVICE_BUILDER_ACL`` (``nft_acl``): an ACL Configlet creates or replaces one list chain, an attachment
+Configlet adds one family-guarded jump to the IN / OUT hook chain; each is one atomic nft transaction whose inverse
+(delete what it created, or restore the captured rule list) must bring the whole ruleset back to its captured digest.
 
 SECURITY: a Configlet line is NEVER handed to a shell.  Each line must match one of a small set of STRICT patterns (the
 exact shapes the Jinja feature templates emit) and is converted into an argv list of validated tokens; anything else
@@ -23,6 +26,7 @@ import json
 import re
 import subprocess
 
+from ... import nft_acl
 from ...health import live
 from ..codes import device_timeout_seconds
 from . import frr_routing, state
@@ -219,6 +223,29 @@ def nat_table_rules(ruleset: str, table: str, kind: str = ""):
     return owned["rules"] if owned and owned.get("kind", "") == kind else False
 
 
+ACL_TYPES = frozenset({"acl", "acl_attachment"})
+
+
+def acl_request(spec: ConfigletSpec) -> dict | None:
+    """What one ACL Configlet asks for: {"chain", "rules"} (a list definition) or {"direction", "jump"} (an attachment).
+
+    The definition must carry exactly one list chain and nothing else; the attachment exactly one hook chain holding
+    exactly one jump.  Anything else -- or any line outside the ``nft_acl`` grammar -- is refused."""
+    model = nft_acl.parse_table(spec.lines, snippet=True)
+    if model is None:
+        return None
+    jumps = [(direction, jump) for direction, rows in model["hooks"].items() for jump in rows]
+    if spec.object_type == "acl":
+        if len(model["acls"]) != 1 or model["hook_chains"]:
+            return None
+        chain, acl = next(iter(model["acls"].items()))
+        return {"chain": chain, "rules": acl["rules"]}
+    if spec.object_type != "acl_attachment" or model["acls"] or len(jumps) != 1 or len(model["hook_chains"]) != 1:
+        return None
+    direction, jump = jumps[0]
+    return {"direction": direction, "jump": jump}
+
+
 def read_nft_ruleset(container: str, timeout: float) -> str:
     try:
         result = docker_exec(container, ["nft", "list", "ruleset"], timeout)
@@ -377,6 +404,7 @@ class LinuxExecutor(DeviceExecutor):
         self._routing_inverses: dict[str, list[str]] = {}
         self._routing_applied: dict[str, str] = {}   # cfg_id -> digest captured immediately before that apply
         self._nat_applied: dict[str, dict] = {}      # cfg_id -> ruleset digest and NMAS table rules right before that apply
+        self._acl_applied: dict[str, dict] = {}      # cfg_id -> ruleset digest right before that apply and how to undo it
 
     def _routing_config(self) -> str:
         return self._config_reader(self._device["container"], self._timeout)
@@ -591,6 +619,111 @@ class LinuxExecutor(DeviceExecutor):
             return CompensationOutcome("COMPENSATION_UNVERIFIED", exc.code)
         return CompensationOutcome("COMPENSATED", detail={"action": "INVERSE_APPLIED", "commands": 1})
 
+    # -- nftables ACLs: one dedicated table; a list chain per ACL, jumps per attachment ---------------------------------
+    def _assess_acl(self, spec: ConfigletSpec) -> Assessment:
+        request = acl_request(spec)
+        if request is None:
+            return Assessment(REFUSE, False, {}, "PLATFORM_EXECUTION_UNSUPPORTED")
+        ruleset = self._nft()
+        existing = nft_acl.table_from_ruleset(ruleset)
+        state_before = {"kind": "nft_acl", "table": nft_acl.TABLE, "ruleset_digest": nft_digest(ruleset)}
+        if existing is False:
+            # a table of that name NMAS did not write in this shape: writing into it has no proven inverse
+            return Assessment(APPLY, False, state_before, state.COMPENSATION_NOT_PROVABLE)
+        if "chain" in request:
+            current = (existing or {}).get("acls", {}).get(request["chain"])
+            if current and current["rules"] == request["rules"]:
+                return Assessment("SKIP_SATISFIED", True, state_before)
+            return Assessment(APPLY, True, {**state_before, "replaces": bool(current)})
+        present = (existing or {}).get("hooks", {}).get(request["direction"], [])
+        if request["jump"] in present:
+            return Assessment("SKIP_SATISFIED", True, state_before)
+        if any(other[:2] == request["jump"][:2] for other in present):
+            # another list of this family already filters the interface in this direction: its final deny would make
+            # the new one unreachable, and replacing it is not what an attachment asks for
+            return Assessment(APPLY, False, state_before, state.COMPENSATION_NOT_PROVABLE)
+        return Assessment(APPLY, True, state_before)
+
+    def _apply_acl(self, spec: ConfigletSpec, assessment: Assessment) -> ApplyOutcome:
+        """One atomic nft transaction against the table found NOW (an earlier Configlet may have created it)."""
+        request = acl_request(spec)
+        if request is None or not assessment.restorable:
+            return ApplyOutcome(False, "UNSUPPORTED")
+        try:
+            ruleset = self._nft()
+            existing = nft_acl.table_from_ruleset(ruleset)
+            if existing is False:
+                return ApplyOutcome(False, "COMMAND_REJECTED")        # foreign content since preflight: never merge
+            undo = {"digest": nft_digest(ruleset)}
+            table = "" if existing else f"create table inet {nft_acl.TABLE}\n"
+            if "chain" in request:
+                chain, current = request["chain"], (existing or {}).get("acls", {}).get(request["chain"])
+                if current and current["rules"] == request["rules"]:
+                    command = ""
+                elif current:
+                    command = nft_acl.replace_chain_commands(chain, request["rules"])
+                    undo.update(chain=chain, rules=current["rules"])
+                else:
+                    command = table + nft_acl.create_chain_commands(chain, request["rules"])
+                    undo.update(chain=chain, created="table" if table else "chain")
+            else:
+                direction, jump = request["direction"], request["jump"]
+                hook, present = nft_acl.HOOKS[direction][0], (existing or {}).get("hooks", {}).get(direction, [])
+                if any(other[:2] == jump[:2] and other != jump for other in present):
+                    return ApplyOutcome(False, "COMMAND_REJECTED")
+                if jump in present:
+                    command = ""
+                elif hook in (existing or {}).get("hook_chains", []):
+                    command = nft_acl.jump_commands(direction, [jump])
+                    undo.update(direction=direction, jumps=present)
+                else:
+                    # nft refuses a jump to a list chain that does not exist, so nothing is written for an undefined ACL
+                    command = table + nft_acl.create_hook_commands(direction) + nft_acl.jump_commands(direction, [jump])
+                    undo.update(chain=hook, created="table" if table else "chain")
+            self._acl_applied[spec.cfg_id] = undo
+            if command and self._exec(["nft", command]) != 0:
+                return ApplyOutcome(False, "COMMAND_REJECTED")
+        except ExecutorError as exc:
+            return ApplyOutcome(False, exc.code)
+        return ApplyOutcome(True, lines_sent=1 if command else 0)
+
+    def _acl_inverse(self, undo: dict, current) -> str | None:
+        """The nft transaction that undoes one applied ACL Configlet, or None when it cannot be undone exactly."""
+        if not current:
+            return None                                        # the table vanished or is no longer the NMAS shape
+        if undo.get("created") == "table":
+            # delete the table only when it again holds nothing but what this Configlet created
+            owned = set(current["acls"]) | set(current["hook_chains"])
+            return f"delete table inet {nft_acl.TABLE}\n" if owned == {undo["chain"]} else None
+        if undo.get("created") == "chain":
+            return f"delete chain inet {nft_acl.TABLE} {undo['chain']}\n"   # nft refuses while a jump still uses it
+        if "rules" in undo:
+            return nft_acl.replace_chain_commands(undo["chain"], undo["rules"])
+        if "jumps" in undo:
+            hook = nft_acl.HOOKS[undo["direction"]][0]
+            return f"flush chain inet {nft_acl.TABLE} {hook}\n" + nft_acl.jump_commands(undo["direction"], undo["jumps"])
+        return None
+
+    def _compensate_acl(self, spec: ConfigletSpec, assessment: Assessment) -> CompensationOutcome:
+        undo = self._acl_applied.get(spec.cfg_id) or {}
+        wanted = undo.get("digest") or assessment.previous_state.get("ruleset_digest")
+        try:
+            ruleset = self._nft()
+            if wanted and nft_digest(ruleset) == wanted:
+                return CompensationOutcome("COMPENSATED", detail={"action": "NONE_NEEDED"})
+            if not wanted or not undo:
+                return CompensationOutcome("COMPENSATION_FAILED", "UNSUPPORTED")
+            command = self._acl_inverse(undo, nft_acl.table_from_ruleset(ruleset))
+            if command is None:
+                return CompensationOutcome("COMPENSATION_FAILED", "STATE_NOT_RESTORED")
+            if self._exec(["nft", command]) != 0:
+                return CompensationOutcome("COMPENSATION_FAILED", "COMMAND_REJECTED")
+            if nft_digest(self._nft()) != wanted:
+                return CompensationOutcome("COMPENSATION_FAILED", "STATE_NOT_RESTORED")
+        except ExecutorError as exc:
+            return CompensationOutcome("COMPENSATION_UNVERIFIED", exc.code)
+        return CompensationOutcome("COMPENSATED", detail={"action": "INVERSE_APPLIED", "commands": 1})
+
     def connect(self) -> None:
         if not self._device.get("container"):
             raise ExecutorError("NOT_CONFIGURED")
@@ -611,6 +744,9 @@ class LinuxExecutor(DeviceExecutor):
         if spec.object_type in NAT_TYPES:
             self._read()
             return self._assess_nat(spec)
+        if spec.object_type in ACL_TYPES:
+            self._read()
+            return self._assess_acl(spec)
         if not spec.lines or parse_lines(spec.lines) is None:   # an empty Configlet is refused, as by every other executor
             return Assessment(REFUSE, False, {}, "PLATFORM_EXECUTION_UNSUPPORTED")
         evidence = self._read()
@@ -641,6 +777,8 @@ class LinuxExecutor(DeviceExecutor):
             return self._apply_routing(spec, assessment)
         if spec.object_type in NAT_TYPES:
             return self._apply_nat(spec, assessment)
+        if spec.object_type in ACL_TYPES:
+            return self._apply_acl(spec, assessment)
         operations = parse_lines(spec.lines)
         if operations is None:
             return ApplyOutcome(False, "UNSUPPORTED")
@@ -679,6 +817,8 @@ class LinuxExecutor(DeviceExecutor):
             return self._compensate_routing(spec, assessment)
         if spec.object_type in NAT_TYPES:
             return self._compensate_nat(spec, assessment)
+        if spec.object_type in ACL_TYPES:
+            return self._compensate_acl(spec, assessment)
         if assessment.previous_state.get("kind") == "link":
             return self._compensate_existing_link(assessment)
         try:

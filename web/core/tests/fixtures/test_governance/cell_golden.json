@@ -60,6 +60,12 @@
  "ubuntu_frr|routing.RIPV2": "c281d76b308924cabf32253afba1344bbd459f3ae8fc083711aece85ccd4b6a8",
  "ubuntu_frr|routing.STATIC_IPV4": "b198b8f87ccc185012a5c338914599878932db88122c4b8966c039bdb8131472",
  "ubuntu_frr|routing.STATIC_IPV6": "bfe4c2f24e07be880fd3c78d129db2e54844cb73d11d4130028f03744a3b2185",
+ "ubuntu_frr|service_policy.ACL_ATTACH_IPV4": "2b85602af8bde0532616a7745c1a644f9554edde66de6c65e72d9aa9ae1fe52b",
+ "ubuntu_frr|service_policy.ACL_ATTACH_IPV6": "267b17180623828a5e32555e6fbc149cdc1a214737ce3a2f5c7e3900e83b2488",
+ "ubuntu_frr|service_policy.ACL_IPV4_EXTENDED": "3a3be71eae177db2cc100b05bcb8ec56e250ff2f6e4b3b671f1051ba42792880",
+ "ubuntu_frr|service_policy.ACL_IPV4_STANDARD": "c25a7ac6da89be8511b1f40fae7ed09f2861b50fce761216ea0ac14a92119530",
+ "ubuntu_frr|service_policy.ACL_IPV6_EXTENDED": "b9fcb58bb07bc3df04c8f9a688c117faf1e40784c0a5cee1bbea3a901a33438e",
+ "ubuntu_frr|service_policy.ACL_IPV6_STANDARD": "de1a9317b73de2f21479bf54cab09f057b82bd047897ab41d7ae05a015713498",
  "ubuntu_frr|service_policy.NAT_NAT44_PAT": "883a8304a714485ef1ebc8a79e2efa733b3ed3eac4c62d8e019e07e6ef0629a8",
  "ubuntu_frr|service_policy.NAT_NAT44_STATEFUL": "9bd4cfa3e757003beaad9c69e85d4f8949f8235485f49a65da11e555cc02a67f",
  "ubuntu_frr|service_policy.NAT_NAT44_STATIC": "9e224e1c8a985249a17f61e5123884ec325702f138c4cfd669551df9207a363b"

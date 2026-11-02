@@ -20,6 +20,7 @@ from . import (
     feature_template_renderer,
     field_validators,
     interface_intent_service,
+    nft_acl,
     service_policy_intent_service,
 )
 
@@ -588,6 +589,11 @@ _P12_LINUX_STATIC = ("V2 Phase 9: 1:1 static NAT44 of one IPv4 host as one dedic
                      "postrouting snat on the outside interface), live-verified on the isolated FRR 8.4.4 / nftables 1.0.9 "
                      "container in both directions with exact compensation. Prefix-to-prefix mappings, ports and protocol "
                      "filters are refused.")
+_P12_LINUX_ACL = ("V2 Phase 9: one dedicated nftables table (inet DEVICE_BUILDER_ACL): a regular chain per ACL whose rules "
+                  "are the entries in sequence order ending in an explicit deny, jumped to from prerouting (IN) / "
+                  "postrouting (OUT) filter chains per interface and family. Live-verified on the isolated FRR 8.4.4 / "
+                  "nftables 1.0.9 container: permitted and denied sources, protocol/port entries, both directions, "
+                  "exact compensation.")
 _P12_NAT_PT = "NAT-PT is deprecated/obsolete and is intentionally unsupported; it is not mapped to NAT64."
 
 
@@ -620,6 +626,12 @@ SERVICE_POLICY_CAPABILITIES = {
         ServicePolicyFeature.NAT_NAT44_PAT: (CapabilityStatus.SUPPORTED, _P12_LINUX_PAT),
         ServicePolicyFeature.NAT_NAT44_STATEFUL: (CapabilityStatus.SUPPORTED, _P12_LINUX_PAT),
         ServicePolicyFeature.NAT_NAT44_STATIC: (CapabilityStatus.SUPPORTED, _P12_LINUX_STATIC),
+        ServicePolicyFeature.ACL_IPV4_STANDARD: (CapabilityStatus.SUPPORTED, _P12_LINUX_ACL),
+        ServicePolicyFeature.ACL_IPV4_EXTENDED: (CapabilityStatus.SUPPORTED, _P12_LINUX_ACL),
+        ServicePolicyFeature.ACL_IPV6_STANDARD: (CapabilityStatus.SUPPORTED, _P12_LINUX_ACL),
+        ServicePolicyFeature.ACL_IPV6_EXTENDED: (CapabilityStatus.SUPPORTED, _P12_LINUX_ACL),
+        ServicePolicyFeature.ACL_ATTACH_IPV4: (CapabilityStatus.SUPPORTED, _P12_LINUX_ACL),
+        ServicePolicyFeature.ACL_ATTACH_IPV6: (CapabilityStatus.SUPPORTED, _P12_LINUX_ACL),
         ServicePolicyFeature.NAT_NAT_PT_STATIC: (CapabilityStatus.UNSUPPORTED, _P12_NAT_PT),
     }),
     "nokia_srlinux": _service_caps({
@@ -1885,6 +1897,95 @@ def _render_security(platform: str, display_name: str, security: dict, interface
     return lines
 
 
+def _ubuntu_acl_plan(platform: str, security: dict, interfaces_by_id: dict):
+    """-> ([(acl, chain, rules)], [(direction, interface, family, chain)], {object id: why refused}).
+
+    An ACL renders only when its feature is SUPPORTED and every entry has an exact nftables form; an attachment only when
+    its ACL rendered, its interface has a usable name and no other list of that family already filters that interface
+    in that direction (the first jump's final deny would make the second unreachable)."""
+    acls = _phase12_seq((security.get("acls") or {}).values())
+    rendered, refused, chains = [], {}, {}
+    for acl in acls:
+        if not _service_policy_supported(platform, f"ACL_{acl.get('family')}_{acl.get('acl_type')}"):
+            continue
+        try:
+            rules = nft_acl.acl_rules(acl)
+        except nft_acl.AclRenderError as exc:
+            refused[acl.get("id")] = str(exc)
+            continue
+        chain = nft_acl.chain_name(acl["family"], acl["name"])
+        if chain in chains.values():
+            refused[acl.get("id")] = "another ACL of this family already has that name"
+            continue
+        chains[acl.get("id")] = chain
+        rendered.append((acl, chain, rules))
+    jumps, used = [], set()
+    for attachment in _phase12_seq((security.get("attachments") or {}).values()):
+        acl = next((row for row in acls if row.get("id") == attachment.get("acl_id")), {})
+        family = acl.get("family")
+        if not _service_policy_supported(platform, f"ACL_ATTACH_{family}"):
+            continue
+        name = (interfaces_by_id.get(attachment.get("interface_id") or "") or {}).get("name") or ""
+        direction = str(attachment.get("direction") or "IN").upper()
+        if attachment.get("acl_id") not in chains:
+            refused[attachment.get("id")] = "its ACL is not rendered"
+        elif direction not in nft_acl.HOOKS or not nft_acl.INTERFACE.fullmatch(name):
+            refused[attachment.get("id")] = "a known direction and an interface name are required"
+        elif (direction, name, family) in used:
+            refused[attachment.get("id")] = f"another {family} ACL is already attached {direction.lower()} on {name}"
+        else:
+            used.add((direction, name, family))
+            jumps.append((direction, name, family, chains[attachment["acl_id"]]))
+    return rendered, jumps, refused
+
+
+def _render_ubuntu_security(platform: str, display_name: str, security: dict, interfaces_by_id: dict) -> list[dict]:
+    """Ubuntu/FRR ACLs as the one NMAS nftables table of ``nft_acl`` (definitions, then IN / OUT hook chains)."""
+    acls = _phase12_seq((security.get("acls") or {}).values())
+    attachments = _phase12_seq((security.get("attachments") or {}).values())
+    if not acls and not attachments:
+        return [{"kind": "static", "text": "! Security/ACL: not configured in current candidate"}]
+    rendered, jumps, refused = _ubuntu_acl_plan(platform, security, interfaces_by_id)
+    lines = []
+    if rendered or jumps:
+        lines.append({"kind": "static", "text": nft_acl.TABLE_HEADER})
+        for acl, _chain, rules in rendered:
+            lines.extend(feature_template_renderer.render_descriptors(
+                template_name=f"ubuntu_frr/acl_{acl['family'].lower()}.j2", fields={}, flags={"name": acl["name"]}))
+            lines.extend({"kind": "static", "text": f"        {rule}"} for rule in rules)
+            lines.append({"kind": "static", "text": "    }"})
+        for direction in nft_acl.HOOKS:
+            wanted = [jump[1:] for jump in jumps if jump[0] == direction]
+            if wanted:
+                lines.extend({"kind": "static", "text": f"{indent}{text}"}
+                             for indent, text in zip(("    ", "        "), nft_acl.hook_header(direction)))
+                lines.extend({"kind": "static", "text": f"        {nft_acl.jump_rule(direction, *jump)}"} for jump in wanted)
+                lines.append({"kind": "static", "text": "    }"})
+        lines.append({"kind": "static", "text": "}"})
+    shown = {acl.get("id") for acl, _chain, _rules in rendered}
+    for acl in acls:
+        if acl.get("id") in shown:
+            continue
+        cap = _service_policy_capability_or_not_implemented(platform, f"ACL_{acl.get('family')}_{acl.get('acl_type')}")
+        reason = f" ({refused[acl['id']]})" if acl.get("id") in refused else ""
+        status = CapabilityStatus.NOT_IMPLEMENTED.value if reason else cap.status.value
+        lines.append(_phase12_unsupported(display_name, f"ACL {acl.get('name') or acl.get('id')}{reason}", status))
+    rendered_ids = {acl.get("id") for acl, _chain, _rules in rendered}
+    jump_keys = {(direction, name, family) for direction, name, family, _chain in jumps}
+    for attachment in attachments:
+        acl = next((row for row in acls if row.get("id") == attachment.get("acl_id")), {})
+        name = (interfaces_by_id.get(attachment.get("interface_id") or "") or {}).get("name") or ""
+        key = (str(attachment.get("direction") or "IN").upper(), name, acl.get("family"))
+        if attachment.get("id") not in refused and acl.get("id") in rendered_ids and key in jump_keys:
+            continue
+        cap = _service_policy_capability_or_not_implemented(platform, f"ACL_ATTACH_{acl.get('family', 'IPV4')}")
+        reason = f" ({refused[attachment['id']]})" if attachment.get("id") in refused else ""
+        status = CapabilityStatus.NOT_IMPLEMENTED.value if reason else cap.status.value
+        lines.append(_phase12_unsupported(display_name, f"ACL attachment {attachment.get('id')}{reason}", status))
+    lines.append({"kind": "static", "text": "! Traffic-impact validation has not run; project validation pending."})
+    return lines
+
+
 def _render_ios_dhcp_relays(relays: list[dict], interfaces_by_id: dict) -> list[dict]:
     lines: list[dict] = []
     by_family = {
@@ -1975,7 +2076,11 @@ def _render_phase12(
         platform, display_name, phase12.get("services") or {}, interfaces_by_id,
         ceos=ceos, iosxr=iosxr, srlinux=srlinux,
     ))
-    lines.extend(_render_security(platform, display_name, phase12.get("security") or {}, interfaces_by_id, acl_renderer=acl_renderer or (_render_ceos_acl if ceos else None)))
+    if ubuntu:
+        lines.extend(_render_ubuntu_security(platform, display_name, phase12.get("security") or {}, interfaces_by_id))
+    else:
+        lines.extend(_render_security(platform, display_name, phase12.get("security") or {}, interfaces_by_id,
+                                      acl_renderer=acl_renderer or (_render_ceos_acl if ceos else None)))
     lines.extend(_render_policy(platform, display_name, phase12.get("policy") or {}))
     return lines
 

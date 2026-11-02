@@ -78,7 +78,9 @@ class F2RenderContributionGateTests(SimpleTestCase):
                          ["   ip access-group EDGE_IN in"])
 
     def test_acl_attachment_not_rendered_where_attachment_is_not_implemented(self):
-        self.assertEqual(pd._acl_interface_contributions(_interface(acl_attachments=[ACL]), platform="ubuntu_frr"), [])
+        # Ubuntu/FRR ACL attachment is SUPPORTED since V2 Phase 9 (nftables, never this EOS helper); IOS XE is still not.
+        self.assertEqual(pd.capability_for_service_policy("cisco_c8000v_iosxe", "ACL_ATTACH_IPV4").status, pd.CapabilityStatus.NOT_IMPLEMENTED)
+        self.assertEqual(pd._acl_interface_contributions(_interface(acl_attachments=[ACL]), platform="cisco_c8000v_iosxe"), [])
 
     def test_dhcp_relay_renders_both_families_on_ceos(self):
         self.assertEqual(_texts(pd._dhcp_interface_contributions(_interface(dhcp_relays=[RELAY_V4, RELAY_V6]), platform="arista_ceos")),

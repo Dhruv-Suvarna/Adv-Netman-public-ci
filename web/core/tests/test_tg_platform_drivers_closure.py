@@ -46,8 +46,12 @@ EXPECTED = {
     "ubuntu_frr": {
         "identity": ["hostnamectl set-hostname R1"], "no_identity": [NOT_IMPLEMENTED],
         "routing": ["ip route 10.9.0.0/24 192.0.2.1", "!", "router ospf", "   ospf router-id 10.0.0.1", "!"],
+        # one nftables table (V2 Phase 9): the list chain, then its IN jump guarded by family
         "policy": [*HEAD, unsupported("DHCP relay dhcp_ID", "NOT_IMPLEMENTED", "Ubuntu / FRR"), *INHERIT,
-                   unsupported("ACL EDGE-IN", "NOT_IMPLEMENTED", "Ubuntu / FRR"), "!", unsupported("ACL attachment attach_ID", "NOT_IMPLEMENTED", "Ubuntu / FRR"), *TRAILER],
+                   "table inet DEVICE_BUILDER_ACL {", "    chain acl4_EDGE-IN {", '        tcp dport 22 accept comment "seq 10"',
+                   '        drop comment "implicit-deny EXTENDED"', "    }", "    chain filter_in {",
+                   "        type filter hook prerouting priority filter; policy accept;",
+                   '        iifname "Ethernet1" meta nfproto ipv4 jump acl4_EDGE-IN', "    }", "}", *TRAILER],
         "contribution": ["!", "interface Ethernet1", "   ip ospf area 0.0.0.0"],
     },
     "nokia_srlinux": {
