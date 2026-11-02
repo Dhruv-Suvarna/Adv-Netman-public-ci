@@ -370,6 +370,8 @@ def _nat_rule(ctx, node):
     facts = {"inside_interface": _iface_name(ctx, rule.get("inside_interface_id")),
              "outside_interface": _iface_name(ctx, rule.get("outside_interface_id")),
              "mode": rule.get("mode"), "original_source": rule.get("original_source") or ""}
+    if rule.get("mode") == "STATIC":     # the static postcheck matches the exact 1:1 pair
+        facts["translated_source"] = rule.get("translated_source") or ""
     return [_spec(ctx, node, "nat_rule", lines, facts=facts)]
 
 

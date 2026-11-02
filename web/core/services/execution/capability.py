@@ -16,7 +16,8 @@ Linux -- apply evidence: the tracked R3/R4 scripts use iproute2 link/address com
          RIP/RIPng and BGP process changes with a captured-configuration inverse, and NAT44 masquerade as one
          dedicated nftables table (created atomically and deleted as a whole, or extended when that exact
          NMAS-shaped table exists and restored to its captured rule list). A table holding anything else
-         is never merged into.
+         is never merged into. Static NAT44 (V2 Phase 9) is a second such table: paired prerouting dnat /
+         postrouting snat 1:1 host mappings, written and removed in one atomic nft transaction.
 SR Linux -- apply evidence: an isolated SR Linux 24.10.7 node accepts the rendered ``set`` paths as one atomic gNMI
          CLI-origin SetRequest; interfaces, addresses and static routes are inverted against the running configuration
          captured by gNMI Get and restoration is proven by an identical configuration tree. Other object types have no

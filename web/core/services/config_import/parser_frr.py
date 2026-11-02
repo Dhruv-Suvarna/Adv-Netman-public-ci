@@ -233,8 +233,25 @@ def _parse_static(block: list[str], family: str) -> ParsedStaticRoute | None:
 NAT_STATEFUL_COMMENT = "nmas-nat44-stateful"   # platform_drivers.NAT_STATEFUL_COMMENT (kept equal by test)
 
 
+def _static_nat_pairs(text: str) -> list:
+    """Static NAT44 mappings of every exact NMAS static table (executor shape) in a listed ruleset."""
+    from ..execution.executors.linux import parse_static_nat_table   # the one definition of the shape
+
+    lines, found = text.splitlines(), []
+    for start, line in enumerate(lines):
+        if re.fullmatch(r"table ip [A-Za-z0-9_]{1,32} \{", line):
+            end = next((i for i in range(start + 1, len(lines)) if lines[i].startswith("}")), None)
+            table = parse_static_nat_table(lines[start:end + 1]) if end is not None else None
+            if table:
+                found.extend((rule, lines[start:end + 1]) for rule in table["rules"])
+    return found
+
+
 def _parse_nft(text: str, result: ParsedConfig) -> None:
     recognized = []
+    for (oif, inside, glob), block in _static_nat_pairs(text):
+        result.nat_rules.append(ParsedNatRule(mode="STATIC", original_source=inside, translated_source=glob,
+                                              outside_interface=oif, lines=[line for line in block if inside in line]))
     for line in text.splitlines():
         match = re.search(r'oifname\s+"([^"]+)"\s+ip saddr\s+(\S+)\s+masquerade(?:\s+comment\s+"([^"]*)")?\s*$', line.strip())
         if match and match.group(3) in (None, NAT_STATEFUL_COMMENT):   # a foreign comment is not an NMAS rule shape

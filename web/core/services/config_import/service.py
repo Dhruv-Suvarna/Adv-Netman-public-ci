@@ -429,6 +429,9 @@ def _apply_parsed_config(*, change, intent, revision, parsed: ParsedConfig,
         if nat_data.original_source:
             _commit(change=change, intent=intent, revision=revision,
                     path=f"nat.rules.{obj['id']}.original_source", value=nat_data.original_source)
+        if getattr(nat_data, "translated_source", ""):
+            _commit(change=change, intent=intent, revision=revision,
+                    path=f"nat.rules.{obj['id']}.translated_source", value=nat_data.translated_source)
         outside_id = interface_ids.get(nat_data.outside_interface)
         if outside_id:
             _commit(change=change, intent=intent, revision=revision,

@@ -1,9 +1,9 @@
 {
   "assessed": 396,
   "capability_counts": {
-    "NOT_IMPLEMENTED": 330,
+    "NOT_IMPLEMENTED": 329,
     "OUT_OF_SCOPE": 0,
-    "SUPPORTED": 63,
+    "SUPPORTED": 64,
     "UNSUPPORTED": 3
   },
   "cells": [
@@ -57392,38 +57392,28 @@
       "validator": "PASS"
     },
     {
-      "assessment_basis": "PREREQUISITE_GATE",
+      "assessment_basis": "RUNTIME_INVESTIGATION",
       "assessment_complete": true,
-      "assessment_id": 1221,
+      "assessment_id": null,
       "automated_tests": "PASS",
-      "candidate": "FAIL",
-      "compensation": "BLOCKED",
-      "device_builder": "FAIL",
-      "evidence_ids": [
-        9461,
-        9462,
-        9463,
-        9464,
-        9465,
-        9466,
-        9467,
-        9468,
-        9469,
-        9470,
-        9471
-      ],
+      "candidate": "PASS",
+      "capability_status": "SUPPORTED",
+      "compensation": "PASS",
+      "device_builder": "PASS",
+      "evidence_ids": [],
       "evidence_references": [
-        "gate:ubuntu_frr/service_policy.NAT_NAT44_STATIC@5cb292428d57#f22dea5e8c4482d7"
+        "live:nmas-cap-validation/frr-nat_nat44_static/2026-11-02T10:50:01.208191+00:00"
       ],
-      "executor": "FAIL",
+      "executor": "PASS",
+      "feasibility": "PROVEN",
       "feature": "service_policy.NAT_NAT44_STATIC",
       "field_validation": "PASS",
-      "final_status": "UNSUPPORTED",
-      "live_read": "BLOCKED",
-      "live_write": "BLOCKED",
-      "parser": "FAIL",
+      "final_status": "SUPPORTED",
+      "live_read": "PASS",
+      "live_write": "PASS",
+      "parser": "PASS",
       "platform": "ubuntu_frr",
-      "postcheck": "BLOCKED",
+      "postcheck": "PASS",
       "probes": {
         "automated_tests": {
           "detail": "Repeated renderer determinism=True; feature-specific valid/invalid field regression=PASS.",
@@ -57433,37 +57423,37 @@
           "test_type": "FIXTURE"
         },
         "candidate_generation": {
-          "detail": "Real candidate_renderer.render ran; 1019 chars; target-rendered=FAIL.",
-          "outcome": "FAIL",
-          "reason": "RENDERER_ABSENT",
+          "detail": "Real candidate_renderer.render ran; 1299 chars; target-rendered=PASS.",
+          "outcome": "PASS",
+          "reason": "",
           "reference": "",
           "test_type": "FIXTURE"
         },
         "compensation": {
-          "detail": "Not attempted: NMAS prerequisite layer(s) failed their deliberate probe (renderer=RENDERER_ABSENT, candidate_generation=RENDERER_ABSENT, executor=EXECUTOR_REFUSED). First blocker renderer: Authoritative renderer differential: 0 target line(s), 1 refusal marker(s); sha256=4f4b2579d313189d3f63f7bd5b3697555d3e340257e11408762346c7072f0041. No device was contacted for this stage.",
-          "outcome": "BLOCKED",
-          "reason": "RENDERER_ABSENT",
-          "reference": "gate:ubuntu_frr/service_policy.NAT_NAT44_STATIC@5cb292428d57#f22dea5e8c4482d7",
-          "test_type": "STATIC"
+          "detail": "isolated FRR NAT_NAT44_STATIC: rendered=['table ip DEVICE_BUILDER_NAT44_STATIC {', 'chain prerouting {', 'type nat hook prerouting priority dstnat; policy accept;', 'iifname \"nmasout0\" ip daddr 203.0.113.44 dnat to 198.18.0.2', '}', 'chain postrouting {', 'type nat hook postrouting priority srcnat; policy accept;', 'oifname \"nmasout0\" ip saddr 198.18.0.2 snat to 203.0.113.44', '}', '}'] || new table: preflight=['nat_rule=APPLY/True/-']; control before (outbound inside, outbound other, inbound global, inbound unowned)=('198.18.0.2', '198.18.9.2', ('NONE', 'NONE'), ('NONE', 'NONE')); conflicting-mapping preflight=APPLY/True/-; operator postcheck pass=True []; nat static facts=[{'table': 'DEVICE_BUILDER_NAT44_STATIC', 'oif': 'nmasout0', 'inside': '198.18.0.2', 'global': '203.0.113.44'}]; import parser read [('STATIC', 'nmasout0', '198.18.0.2', '203.0.113.44')] (STATIC 198.18.0.2->203.0.113.44 recovered=True); OUTBOUND: outside endpoint saw source 203.0.113.44 for inside host 198.18.0.2 (expected 203.0.113.44); source 198.18.9.2 seen as 198.18.9.2 (expected 198.18.9.2); INBOUND: datagram from 198.18.1.2 to 203.0.113.44 reached the inside host as from 198.18.1.2 and the outside endpoint got [REPLY 203.0.113.44] (reply source reverse-translated to 203.0.113.44); datagram to unowned 203.0.113.45: inside saw [NONE], outside got [NONE]; compensation=['COMPENSATED']; after compensation=('198.18.0.2', '198.18.9.2', ('NONE', 'NONE'), ('NONE', 'NONE')); nft ruleset identical to pre-apply capture=True; lab namespace/package/route baseline restored=True; no failure || existing NMAS table (mapping appended): preflight=['nat_rule=APPLY/True/-']; control before (outbound inside, outbound other, inbound global, inbound unowned)=('198.18.0.2', '203.0.113.99', ('NONE', 'NONE'), ('NONE', 'NONE')); conflicting-mapping preflight=APPLY/False/COMPENSATION_NOT_PROVABLE; operator postcheck pass=True []; nat static facts=[{'table': 'DEVICE_BUILDER_NAT44_STATIC', 'oif': 'nmasout0', 'inside': '19",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-validation/frr-nat_nat44_static/2026-11-02T10:50:01.208191+00:00",
+          "test_type": "LIVE"
         },
         "config_validation": {
-          "detail": "Actual network-config validation=BLOCKED; failing checks=['PLATFORM_CAPABILITY']; external inputs are OFFLINE_FIXTURE only.",
-          "outcome": "FAIL",
-          "reason": "CONFIG_VALIDATION_FAILED",
+          "detail": "Actual network-config validation=PASS; failing checks=[]; external inputs are OFFLINE_FIXTURE only.",
+          "outcome": "PASS",
+          "reason": "",
           "reference": "",
           "test_type": "FIXTURE"
         },
         "device_builder_ui": {
-          "detail": "Real authoring API refused the feature (CollectionMutationError).",
-          "outcome": "FAIL",
-          "reason": "UI_ABSENT",
+          "detail": "Real Device Builder mutation API accepted the feature.",
+          "outcome": "PASS",
+          "reason": "",
           "reference": "",
           "test_type": "FIXTURE"
         },
         "executor": {
-          "detail": "Real executor.assess on fixture: action=REFUSE; exact inverse present=False; restorable=False; no connection/apply invoked.",
-          "outcome": "FAIL",
-          "reason": "EXECUTOR_REFUSED",
+          "detail": "Real executor.assess on fixture: action=APPLY; exact inverse present=False; restorable=True; no connection/apply invoked.",
+          "outcome": "PASS",
+          "reason": "",
           "reference": "",
           "test_type": "FIXTURE"
         },
@@ -57475,46 +57465,46 @@
           "test_type": "FIXTURE"
         },
         "live_post_write_validation": {
-          "detail": "Not attempted: NMAS prerequisite layer(s) failed their deliberate probe (renderer=RENDERER_ABSENT, candidate_generation=RENDERER_ABSENT, executor=EXECUTOR_REFUSED). First blocker renderer: Authoritative renderer differential: 0 target line(s), 1 refusal marker(s); sha256=4f4b2579d313189d3f63f7bd5b3697555d3e340257e11408762346c7072f0041. No device was contacted for this stage.",
-          "outcome": "BLOCKED",
-          "reason": "RENDERER_ABSENT",
-          "reference": "gate:ubuntu_frr/service_policy.NAT_NAT44_STATIC@5cb292428d57#f22dea5e8c4482d7",
-          "test_type": "STATIC"
+          "detail": "isolated FRR NAT_NAT44_STATIC: rendered=['table ip DEVICE_BUILDER_NAT44_STATIC {', 'chain prerouting {', 'type nat hook prerouting priority dstnat; policy accept;', 'iifname \"nmasout0\" ip daddr 203.0.113.44 dnat to 198.18.0.2', '}', 'chain postrouting {', 'type nat hook postrouting priority srcnat; policy accept;', 'oifname \"nmasout0\" ip saddr 198.18.0.2 snat to 203.0.113.44', '}', '}'] || new table: preflight=['nat_rule=APPLY/True/-']; control before (outbound inside, outbound other, inbound global, inbound unowned)=('198.18.0.2', '198.18.9.2', ('NONE', 'NONE'), ('NONE', 'NONE')); conflicting-mapping preflight=APPLY/True/-; operator postcheck pass=True []; nat static facts=[{'table': 'DEVICE_BUILDER_NAT44_STATIC', 'oif': 'nmasout0', 'inside': '198.18.0.2', 'global': '203.0.113.44'}]; import parser read [('STATIC', 'nmasout0', '198.18.0.2', '203.0.113.44')] (STATIC 198.18.0.2->203.0.113.44 recovered=True); OUTBOUND: outside endpoint saw source 203.0.113.44 for inside host 198.18.0.2 (expected 203.0.113.44); source 198.18.9.2 seen as 198.18.9.2 (expected 198.18.9.2); INBOUND: datagram from 198.18.1.2 to 203.0.113.44 reached the inside host as from 198.18.1.2 and the outside endpoint got [REPLY 203.0.113.44] (reply source reverse-translated to 203.0.113.44); datagram to unowned 203.0.113.45: inside saw [NONE], outside got [NONE]; compensation=['COMPENSATED']; after compensation=('198.18.0.2', '198.18.9.2', ('NONE', 'NONE'), ('NONE', 'NONE')); nft ruleset identical to pre-apply capture=True; lab namespace/package/route baseline restored=True; no failure || existing NMAS table (mapping appended): preflight=['nat_rule=APPLY/True/-']; control before (outbound inside, outbound other, inbound global, inbound unowned)=('198.18.0.2', '203.0.113.99', ('NONE', 'NONE'), ('NONE', 'NONE')); conflicting-mapping preflight=APPLY/False/COMPENSATION_NOT_PROVABLE; operator postcheck pass=True []; nat static facts=[{'table': 'DEVICE_BUILDER_NAT44_STATIC', 'oif': 'nmasout0', 'inside': '19",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-validation/frr-nat_nat44_static/2026-11-02T10:50:01.208191+00:00",
+          "test_type": "LIVE"
         },
         "live_read": {
-          "detail": "Not attempted: NMAS prerequisite layer(s) failed their deliberate probe (renderer=RENDERER_ABSENT, candidate_generation=RENDERER_ABSENT, executor=EXECUTOR_REFUSED). First blocker renderer: Authoritative renderer differential: 0 target line(s), 1 refusal marker(s); sha256=4f4b2579d313189d3f63f7bd5b3697555d3e340257e11408762346c7072f0041. No device was contacted for this stage.",
-          "outcome": "BLOCKED",
-          "reason": "RENDERER_ABSENT",
-          "reference": "gate:ubuntu_frr/service_policy.NAT_NAT44_STATIC@5cb292428d57#f22dea5e8c4482d7",
-          "test_type": "STATIC"
+          "detail": "isolated FRR NAT_NAT44_STATIC: rendered=['table ip DEVICE_BUILDER_NAT44_STATIC {', 'chain prerouting {', 'type nat hook prerouting priority dstnat; policy accept;', 'iifname \"nmasout0\" ip daddr 203.0.113.44 dnat to 198.18.0.2', '}', 'chain postrouting {', 'type nat hook postrouting priority srcnat; policy accept;', 'oifname \"nmasout0\" ip saddr 198.18.0.2 snat to 203.0.113.44', '}', '}'] || new table: preflight=['nat_rule=APPLY/True/-']; control before (outbound inside, outbound other, inbound global, inbound unowned)=('198.18.0.2', '198.18.9.2', ('NONE', 'NONE'), ('NONE', 'NONE')); conflicting-mapping preflight=APPLY/True/-; operator postcheck pass=True []; nat static facts=[{'table': 'DEVICE_BUILDER_NAT44_STATIC', 'oif': 'nmasout0', 'inside': '198.18.0.2', 'global': '203.0.113.44'}]; import parser read [('STATIC', 'nmasout0', '198.18.0.2', '203.0.113.44')] (STATIC 198.18.0.2->203.0.113.44 recovered=True); OUTBOUND: outside endpoint saw source 203.0.113.44 for inside host 198.18.0.2 (expected 203.0.113.44); source 198.18.9.2 seen as 198.18.9.2 (expected 198.18.9.2); INBOUND: datagram from 198.18.1.2 to 203.0.113.44 reached the inside host as from 198.18.1.2 and the outside endpoint got [REPLY 203.0.113.44] (reply source reverse-translated to 203.0.113.44); datagram to unowned 203.0.113.45: inside saw [NONE], outside got [NONE]; compensation=['COMPENSATED']; after compensation=('198.18.0.2', '198.18.9.2', ('NONE', 'NONE'), ('NONE', 'NONE')); nft ruleset identical to pre-apply capture=True; lab namespace/package/route baseline restored=True; no failure || existing NMAS table (mapping appended): preflight=['nat_rule=APPLY/True/-']; control before (outbound inside, outbound other, inbound global, inbound unowned)=('198.18.0.2', '203.0.113.99', ('NONE', 'NONE'), ('NONE', 'NONE')); conflicting-mapping preflight=APPLY/False/COMPENSATION_NOT_PROVABLE; operator postcheck pass=True []; nat static facts=[{'table': 'DEVICE_BUILDER_NAT44_STATIC', 'oif': 'nmasout0', 'inside': '19",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-validation/frr-nat_nat44_static/2026-11-02T10:50:01.208191+00:00",
+          "test_type": "LIVE"
         },
         "live_write": {
-          "detail": "Not attempted: NMAS prerequisite layer(s) failed their deliberate probe (renderer=RENDERER_ABSENT, candidate_generation=RENDERER_ABSENT, executor=EXECUTOR_REFUSED). First blocker renderer: Authoritative renderer differential: 0 target line(s), 1 refusal marker(s); sha256=4f4b2579d313189d3f63f7bd5b3697555d3e340257e11408762346c7072f0041. No device was contacted for this stage.",
-          "outcome": "BLOCKED",
-          "reason": "RENDERER_ABSENT",
-          "reference": "gate:ubuntu_frr/service_policy.NAT_NAT44_STATIC@5cb292428d57#f22dea5e8c4482d7",
-          "test_type": "STATIC"
+          "detail": "isolated FRR NAT_NAT44_STATIC: rendered=['table ip DEVICE_BUILDER_NAT44_STATIC {', 'chain prerouting {', 'type nat hook prerouting priority dstnat; policy accept;', 'iifname \"nmasout0\" ip daddr 203.0.113.44 dnat to 198.18.0.2', '}', 'chain postrouting {', 'type nat hook postrouting priority srcnat; policy accept;', 'oifname \"nmasout0\" ip saddr 198.18.0.2 snat to 203.0.113.44', '}', '}'] || new table: preflight=['nat_rule=APPLY/True/-']; control before (outbound inside, outbound other, inbound global, inbound unowned)=('198.18.0.2', '198.18.9.2', ('NONE', 'NONE'), ('NONE', 'NONE')); conflicting-mapping preflight=APPLY/True/-; operator postcheck pass=True []; nat static facts=[{'table': 'DEVICE_BUILDER_NAT44_STATIC', 'oif': 'nmasout0', 'inside': '198.18.0.2', 'global': '203.0.113.44'}]; import parser read [('STATIC', 'nmasout0', '198.18.0.2', '203.0.113.44')] (STATIC 198.18.0.2->203.0.113.44 recovered=True); OUTBOUND: outside endpoint saw source 203.0.113.44 for inside host 198.18.0.2 (expected 203.0.113.44); source 198.18.9.2 seen as 198.18.9.2 (expected 198.18.9.2); INBOUND: datagram from 198.18.1.2 to 203.0.113.44 reached the inside host as from 198.18.1.2 and the outside endpoint got [REPLY 203.0.113.44] (reply source reverse-translated to 203.0.113.44); datagram to unowned 203.0.113.45: inside saw [NONE], outside got [NONE]; compensation=['COMPENSATED']; after compensation=('198.18.0.2', '198.18.9.2', ('NONE', 'NONE'), ('NONE', 'NONE')); nft ruleset identical to pre-apply capture=True; lab namespace/package/route baseline restored=True; no failure || existing NMAS table (mapping appended): preflight=['nat_rule=APPLY/True/-']; control before (outbound inside, outbound other, inbound global, inbound unowned)=('198.18.0.2', '203.0.113.99', ('NONE', 'NONE'), ('NONE', 'NONE')); conflicting-mapping preflight=APPLY/False/COMPENSATION_NOT_PROVABLE; operator postcheck pass=True []; nat static facts=[{'table': 'DEVICE_BUILDER_NAT44_STATIC', 'oif': 'nmasout0', 'inside': '19",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-validation/frr-nat_nat44_static/2026-11-02T10:50:01.208191+00:00",
+          "test_type": "LIVE"
         },
         "parser_import": {
-          "detail": "Real ubuntu-frr-1.0 parser executed; target semantic match=False; unmanaged blocks=24.",
-          "outcome": "FAIL",
-          "reason": "PARSER_ABSENT",
+          "detail": "Real ubuntu-frr-1.0 parser executed; target semantic match=True; unmanaged blocks=26.",
+          "outcome": "PASS",
+          "reason": "",
           "reference": "",
           "test_type": "FIXTURE"
         },
         "renderer": {
-          "detail": "Authoritative renderer differential: 0 target line(s), 1 refusal marker(s); sha256=4f4b2579d313189d3f63f7bd5b3697555d3e340257e11408762346c7072f0041.",
-          "outcome": "FAIL",
-          "reason": "RENDERER_ABSENT",
+          "detail": "Authoritative renderer differential: 10 target line(s), 0 refusal marker(s); sha256=f6467c61335ad07deb9b3c75aa37b0e53de45419949eceb5801fddea481a8449.",
+          "outcome": "PASS",
+          "reason": "",
           "reference": "",
           "test_type": "FIXTURE"
         },
         "runtime_validation": {
-          "detail": "Not attempted: NMAS prerequisite layer(s) failed their deliberate probe (renderer=RENDERER_ABSENT, candidate_generation=RENDERER_ABSENT, executor=EXECUTOR_REFUSED). First blocker renderer: Authoritative renderer differential: 0 target line(s), 1 refusal marker(s); sha256=4f4b2579d313189d3f63f7bd5b3697555d3e340257e11408762346c7072f0041. No device was contacted for this stage.",
-          "outcome": "BLOCKED",
-          "reason": "RENDERER_ABSENT",
-          "reference": "gate:ubuntu_frr/service_policy.NAT_NAT44_STATIC@5cb292428d57#f22dea5e8c4482d7",
-          "test_type": "STATIC"
+          "detail": "isolated FRR NAT_NAT44_STATIC: rendered=['table ip DEVICE_BUILDER_NAT44_STATIC {', 'chain prerouting {', 'type nat hook prerouting priority dstnat; policy accept;', 'iifname \"nmasout0\" ip daddr 203.0.113.44 dnat to 198.18.0.2', '}', 'chain postrouting {', 'type nat hook postrouting priority srcnat; policy accept;', 'oifname \"nmasout0\" ip saddr 198.18.0.2 snat to 203.0.113.44', '}', '}'] || new table: preflight=['nat_rule=APPLY/True/-']; control before (outbound inside, outbound other, inbound global, inbound unowned)=('198.18.0.2', '198.18.9.2', ('NONE', 'NONE'), ('NONE', 'NONE')); conflicting-mapping preflight=APPLY/True/-; operator postcheck pass=True []; nat static facts=[{'table': 'DEVICE_BUILDER_NAT44_STATIC', 'oif': 'nmasout0', 'inside': '198.18.0.2', 'global': '203.0.113.44'}]; import parser read [('STATIC', 'nmasout0', '198.18.0.2', '203.0.113.44')] (STATIC 198.18.0.2->203.0.113.44 recovered=True); OUTBOUND: outside endpoint saw source 203.0.113.44 for inside host 198.18.0.2 (expected 203.0.113.44); source 198.18.9.2 seen as 198.18.9.2 (expected 198.18.9.2); INBOUND: datagram from 198.18.1.2 to 203.0.113.44 reached the inside host as from 198.18.1.2 and the outside endpoint got [REPLY 203.0.113.44] (reply source reverse-translated to 203.0.113.44); datagram to unowned 203.0.113.45: inside saw [NONE], outside got [NONE]; compensation=['COMPENSATED']; after compensation=('198.18.0.2', '198.18.9.2', ('NONE', 'NONE'), ('NONE', 'NONE')); nft ruleset identical to pre-apply capture=True; lab namespace/package/route baseline restored=True; no failure || existing NMAS table (mapping appended): preflight=['nat_rule=APPLY/True/-']; control before (outbound inside, outbound other, inbound global, inbound unowned)=('198.18.0.2', '203.0.113.99', ('NONE', 'NONE'), ('NONE', 'NONE')); conflicting-mapping preflight=APPLY/False/COMPENSATION_NOT_PROVABLE; operator postcheck pass=True []; nat static facts=[{'table': 'DEVICE_BUILDER_NAT44_STATIC', 'oif': 'nmasout0', 'inside': '19",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-validation/frr-nat_nat44_static/2026-11-02T10:50:01.208191+00:00",
+          "test_type": "LIVE"
         },
         "semantic_model": {
           "detail": "Canonical fixture resolves the feature-specific path nat.rules.nat_0000000000000003.mode.",
@@ -57524,22 +57514,16 @@
           "test_type": "FIXTURE"
         }
       },
-      "renderer": "FAIL",
-      "repository_head": "5cb292428d573de73fde351e128cd967043313a3",
-      "runtime_test": "BLOCKED",
-      "runtime_version": "not contacted (prerequisite gate); platform runtime last observed: FRRouting 8.4.4 / cEOS 4.36.2F isolated pair",
+      "renderer": "PASS",
+      "repository_head": "31ee879d53245e53059dc7b29096a608f07e5adf",
+      "runtime_test": "PASS",
+      "runtime_version": "FRRouting 8.4.4 / Ubuntu 24.04 isolated container, nftables 1.0.9 (lab-installed)",
       "semantic": "PASS",
-      "status": "UNSUPPORTED",
-      "strongest_test_type": "FIXTURE",
-      "timestamp": "2026-10-05T02:41:31.658245+00:00",
-      "unsupported_reasons": [
-        "CONFIG_VALIDATION_FAILED",
-        "EXECUTOR_REFUSED",
-        "PARSER_ABSENT",
-        "RENDERER_ABSENT",
-        "UI_ABSENT"
-      ],
-      "validator": "FAIL"
+      "status": "SUPPORTED",
+      "strongest_test_type": "LIVE",
+      "timestamp": "2026-11-02T10:48:02.444885+00:00",
+      "unsupported_reasons": [],
+      "validator": "PASS"
     },
     {
       "assessment_basis": "PREREQUISITE_GATE",
@@ -59092,33 +59076,33 @@
     "ubuntu_frr": {
       "assessed": 66,
       "fixture_tested": 66,
-      "live_tested": 16,
-      "static_tested": 50,
-      "supported": 16,
+      "live_tested": 17,
+      "static_tested": 49,
+      "supported": 17,
       "total": 66,
-      "unsupported": 50
+      "unsupported": 49
     }
   },
   "reason_counts": {
     "COMPENSATION_ABSENT": 68,
-    "CONFIG_VALIDATION_FAILED": 294,
+    "CONFIG_VALIDATION_FAILED": 293,
     "EXECUTOR_ABSENT": 132,
-    "EXECUTOR_REFUSED": 199,
+    "EXECUTOR_REFUSED": 198,
     "FIELD_VALIDATION_FAILED": 65,
     "FUNCTIONAL_TEST_FAILED": 67,
     "LIVE_READ_ABSENT": 2,
-    "PARSER_ABSENT": 263,
+    "PARSER_ABSENT": 262,
     "PARSER_FAILED": 38,
     "PLATFORM_DOES_NOT_SUPPORT": 3,
     "POSTCHECK_ABSENT": 69,
-    "RENDERER_ABSENT": 293,
+    "RENDERER_ABSENT": 292,
     "RUNTIME_IMAGE_UNAVAILABLE": 66,
-    "UI_ABSENT": 288
+    "UI_ABSENT": 287
   },
   "remaining_cells": [],
   "schema_version": 2,
-  "supported": 63,
+  "supported": 64,
   "total": 396,
   "unassessed": 0,
-  "unsupported": 333
+  "unsupported": 332
 }

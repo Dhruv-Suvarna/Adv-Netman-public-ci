@@ -455,11 +455,29 @@ def _acl_attachment(req, ctx):
                    {"attachments": [a for a in group.data["acl_attachments"] if a["interface"] == wanted["interface"]]}, wanted, group)
 
 
+def _nft_host(value) -> str:
+    """A host address as nft lists it (without /32)."""
+    return str(value or "").removesuffix("/32")
+
+
 def _nat_rule(req, ctx):
     group, missing = _need(ctx, req.device, "nat")
     if missing:
         return missing
-    outside = _facts(req).get("outside_interface")
+    facts = _facts(req)
+    outside = facts.get("outside_interface")
+    if facts.get("mode") == "STATIC":
+        # a static mapping is proven only by both directions of exactly this 1:1 pair on the outside interface
+        expected = {"outside_interface": outside, "inside": _nft_host(facts.get("original_source")),
+                    "global": _nft_host(facts.get("translated_source"))}
+        mappings = group.data.get("static") or []
+        if any({"outside_interface": m["oif"], "inside": m["inside"], "global": m["global"]} == expected for m in mappings):
+            return Outcome(S.PASS, "NAT_RULE_EXPECTED_PRESENT",
+                           f"{expected['inside']} is statically translated to {expected['global']} (both directions) on {outside}.",
+                           {"static": mappings}, expected, group)
+        return Outcome(S.FAIL, "NAT_RULE_MISSING",
+                       f"No static NAT maps {expected['inside']} to {expected['global']} in both directions on {outside}.",
+                       {"static": mappings}, expected, group)
     expected = {"outside_interface": outside, "action": "masquerade|snat"}
     if any(rule["oif"] == outside for rule in group.data["rules"]):
         return Outcome(S.PASS, "NAT_RULE_EXPECTED_PRESENT", f"A NAT rule translates traffic leaving {outside}.", {"rules": group.data["rules"]}, expected, group)

@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import ipaddress
 import json
+import re
 from dataclasses import dataclass
 from enum import StrEnum
 
@@ -583,6 +584,10 @@ _P12_CEOS_ACL6 = ("V2 Phase 9: ipv6 access-list [standard] NAME / ipv6 access-gr
                   "cEOS 4.36.2F (filtering by source, protocol and port, exact compensation). EOS accepts but does not "
                   "act on 'log' in an IPv6 entry ('ipv6 logging not supported'), so IPv6 logging is refused.")
 _P12_LINUX_PAT = "Tracked live R3/R4 Ubuntu templates use nftables table ip EDGE_PAT with IPv4 source-prefix masquerade rules."
+_P12_LINUX_STATIC = ("V2 Phase 9: 1:1 static NAT44 of one IPv4 host as one dedicated nftables table (prerouting dnat + "
+                     "postrouting snat on the outside interface), live-verified on the isolated FRR 8.4.4 / nftables 1.0.9 "
+                     "container in both directions with exact compensation. Prefix-to-prefix mappings, ports and protocol "
+                     "filters are refused.")
 _P12_NAT_PT = "NAT-PT is deprecated/obsolete and is intentionally unsupported; it is not mapped to NAT64."
 
 
@@ -614,6 +619,7 @@ SERVICE_POLICY_CAPABILITIES = {
     "ubuntu_frr": _service_caps({
         ServicePolicyFeature.NAT_NAT44_PAT: (CapabilityStatus.SUPPORTED, _P12_LINUX_PAT),
         ServicePolicyFeature.NAT_NAT44_STATEFUL: (CapabilityStatus.SUPPORTED, _P12_LINUX_PAT),
+        ServicePolicyFeature.NAT_NAT44_STATIC: (CapabilityStatus.SUPPORTED, _P12_LINUX_STATIC),
         ServicePolicyFeature.NAT_NAT_PT_STATIC: (CapabilityStatus.UNSUPPORTED, _P12_NAT_PT),
     }),
     "nokia_srlinux": _service_caps({
@@ -1702,6 +1708,39 @@ def _option82_global_lines(platform: str, display_name: str, relays: list[dict])
 NAT_STATEFUL_COMMENT = "nmas-nat44-stateful"
 
 
+def _static_nat44_rules(platform: str, rules: list, interfaces_by_id: dict):
+    """Ubuntu static NAT44 rules that render as 1:1 nftables host mappings -> ([(rule, oif, inside, global)], {id: why refused}).
+
+    Only the variant the live proof covers is rendered: an IPv4 host to an IPv4 host on a named outside interface, any
+    protocol, no ports.  A prefix, port or protocol filter, or an address another mapping already uses is refused with a
+    marker (intent preserved) instead of being approximated."""
+    if _service_policy_capability_or_not_implemented(platform, "NAT_NAT44_STATIC").status != CapabilityStatus.SUPPORTED:
+        return [], {}
+    rendered, refused, used = [], {}, set()
+    for rule in rules:
+        if rule.get("family") != "NAT44" or rule.get("mode") != "STATIC":
+            continue
+        try:
+            inside = ipaddress.ip_network(rule.get("original_source") or "", strict=True)
+            glob = ipaddress.ip_network(rule.get("translated_source") or "", strict=True)
+        except ValueError:
+            refused[rule.get("id")] = "an IPv4 inside and translated host address are required"
+            continue
+        out_name = (interfaces_by_id.get(rule.get("outside_interface_id") or "") or {}).get("name") or ""
+        if inside.version != 4 or glob.version != 4 or inside.prefixlen != 32 or glob.prefixlen != 32:
+            refused[rule.get("id")] = "only IPv4 host-to-host static mappings are implemented"
+        elif (rule.get("protocol") or "IP") != "IP" or rule.get("original_port") or rule.get("translated_port"):
+            refused[rule.get("id")] = "static port/protocol translation is not implemented"
+        elif not re.fullmatch(r"[A-Za-z0-9_.-]{1,15}", out_name):
+            refused[rule.get("id")] = "an outside interface is required"
+        elif {inside, glob} & used or inside == glob:
+            refused[rule.get("id")] = "the address is already used by another static mapping"
+        else:
+            used |= {inside, glob}
+            rendered.append((rule, out_name, str(inside.network_address), str(glob.network_address)))
+    return rendered, refused
+
+
 def _render_nat(platform: str, display_name: str, nat: dict, interfaces_by_id: dict, *, ubuntu=False) -> list[dict]:
     pools = _phase12_seq((nat.get("pools") or {}).values())
     rules = _phase12_seq((nat.get("rules") or {}).values())
@@ -1731,8 +1770,26 @@ def _render_nat(platform: str, display_name: str, nat: dict, interfaces_by_id: d
             {"kind": "static", "text": "    }"},
             {"kind": "static", "text": "}"},
         ))
+    static, refused = _static_nat44_rules(platform, rules, interfaces_by_id) if ubuntu else ([], {})
+    if static:
+        lines.extend(feature_template_renderer.render_descriptors(
+            template_name="ubuntu_frr/nat_static.j2", fields={}, flags={}
+        ))
+        for chain, hook, priority, template in (
+                ("prerouting", "prerouting", "dstnat", '        iifname "{oif}" ip daddr {glob} dnat to {inside}'),
+                ("postrouting", "postrouting", "srcnat", '        oifname "{oif}" ip saddr {inside} snat to {glob}')):
+            lines.append({"kind": "static", "text": f"    chain {chain} {{"})
+            lines.append({"kind": "static", "text": f"        type nat hook {hook} priority {priority}; policy accept;"})
+            lines.extend({"kind": "static", "text": template.format(oif=oif, inside=inside, glob=glob)} for _r, oif, inside, glob in static)
+            lines.append({"kind": "static", "text": "    }"})
+        lines.append({"kind": "static", "text": "}"})
+    rendered_static = [row[0] for row in static]
     for rule in rules:
-        if rule in supported_pat:
+        if rule in supported_pat or rule in rendered_static:
+            continue
+        if rule.get("id") in refused:
+            lines.append(_phase12_unsupported(display_name, f"NAT44 STATIC rule {rule.get('id')} ({refused[rule['id']]})",
+                                              CapabilityStatus.NOT_IMPLEMENTED.value))
             continue
         feature = f"NAT_{rule.get('family')}_{rule.get('mode')}"
         cap = _service_policy_capability_or_not_implemented(platform, feature)

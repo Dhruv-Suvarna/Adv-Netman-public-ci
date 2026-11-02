@@ -62,8 +62,10 @@ class CellContext:
         self.case = probe_cases.sample(platform, self.feature)
         self.lines = offline_verify._descriptors(platform, self.case.sections)    # pylint: disable=protected-access
         self.base = offline_verify._descriptors(platform, self.case.baseline)     # pylint: disable=protected-access
-        self.added = list((Counter(self.lines) - Counter(self.base)).elements())
-        self.target = [s for s in self.added if s.strip() and not s.lstrip().startswith(("!", "#"))]
+        self.added = list((Counter(self.lines) - Counter(self.base)).elements())    # golden digest input (canonical order)
+        # what an executor receives keeps the rendered order (as the planner's diff does): a block may repeat a line
+        self.target = [s for s in offline_verify.ordered_added(self.lines, self.base)
+                       if s.strip() and not s.lstrip().startswith(("!", "#"))]
         if platform == "arista_ceos":
             self.target = _with_parents(self.target, self.lines, self.base)
 

@@ -76,6 +76,7 @@ class ParsedNatRule:
     mode: str = "PAT"
     original_source: str = ""
     outside_interface: str = ""
+    translated_source: str = ""           # static NAT: the outside (global) host address
     lines: list[str] = field(default_factory=list)
 
 

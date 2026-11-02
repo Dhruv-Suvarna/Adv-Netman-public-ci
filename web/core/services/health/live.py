@@ -747,7 +747,25 @@ def parse_nft(text: str) -> dict:
         if current and action:
             oif = _NFT_OIF.search(line)
             rules.append({"table": current, "oif": oif.group(1) if oif else "", "action": action.group(1)})
-    return {"tables": sorted(set(tables)), "rules": sorted(rules, key=lambda r: (r["table"], r["oif"], r["action"]))}
+    found = {"tables": sorted(set(tables)), "rules": sorted(rules, key=lambda r: (r["table"], r["oif"], r["action"]))}
+    static = _nft_static_mappings(text or "")
+    if static:                          # only present when an exact NMAS static NAT44 table is listed
+        found["static"] = static
+    return found
+
+
+def _nft_static_mappings(text: str) -> list:
+    """1:1 mappings of every exact NMAS static NAT44 table: [{"table", "oif", "inside", "global"}] (executor shape)."""
+    from ..execution.executors.linux import parse_static_nat_table
+
+    lines, rows = text.splitlines(), []
+    for start, line in enumerate(lines):
+        match = re.fullmatch(r"table ip ([A-Za-z0-9_]{1,32}) \{", line)
+        end = next((i for i in range(start + 1, len(lines)) if lines[i].startswith("}")), None) if match else None
+        table = parse_static_nat_table(lines[start:end + 1]) if end is not None else None
+        rows.extend({"table": table["table"], "oif": oif, "inside": inside, "global": glob}
+                    for oif, inside, glob in (table["rules"] if table else []))
+    return sorted(rows, key=lambda r: (r["table"], r["oif"], r["inside"]))
 
 
 # --- sessions ----------------------------------------------------------------------------------------------------
