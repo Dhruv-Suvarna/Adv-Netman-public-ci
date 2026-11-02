@@ -427,6 +427,9 @@ def _dhcp_relay(req, ctx):
         return missing
     facts = _facts(req)
     wanted = {"interface": facts.get("interface"), "destination": norm_ip(facts.get("destination"))}
+    if "dhcp_relays" not in group.data:      # a platform whose configuration read has no DHCP relay facts (Linux)
+        return Outcome(S.UNKNOWN, DATA_UNAVAILABLE, "This platform's configuration read does not report DHCP relays.",
+                       expected=wanted, group=group)
     if wanted in group.data["dhcp_relays"]:
         return Outcome(S.PASS, "DHCP_RELAY_EXPECTED_PRESENT", f"DHCP relay {wanted['destination']} configured on {wanted['interface']}.", expected=wanted, group=group)
     return Outcome(S.FAIL, "DHCP_RELAY_MISSING", f"DHCP relay {wanted['destination']} is not configured on {wanted['interface']}.",

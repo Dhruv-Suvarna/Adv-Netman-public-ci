@@ -24,7 +24,8 @@ from core.services.test_governance.cases import NEGATIVE, POSITIVE, case
 
 LIVE = "web/core/services/health/live.py"
 MALFORMED = (("garbage", "Traceback (most recent call last):"), ("wrong shape list", "[1, 2]"), ("wrong shape scalar", "42"))
-TEXT_PARSERS = {"parse_eos_config", "parse_eos_varp", "parse_frr_rip", "parse_iosxe_interfaces", "parse_iosxe_routes", "parse_nft"}
+TEXT_PARSERS = {"parse_eos_config", "parse_eos_varp", "parse_frr_rip", "parse_iosxe_interfaces", "parse_iosxe_routes", "parse_nft",
+                "parse_nft_acl"}
 NOW = datetime(2026, 1, 1, tzinfo=timezone.utc)
 
 
@@ -51,7 +52,7 @@ class HealthParserNegativeTests(SimpleTestCase):
                     continue
                 with self.assertRaises((live.LiveError, ValueError, KeyError, TypeError, AttributeError)):
                     parser(*([text] * arity))
-                group = live._group(lambda: parser(*([text] * arity)), now=NOW)        # pylint: disable=protected-access
+                group = live._group(lambda text=text: parser(*([text] * arity)), now=NOW)  # pylint: disable=protected-access
                 self.assertFalse(group.available)
                 self.assertEqual(group.error, "PARSE_ERROR")
                 self.assertNotIn(text, repr(group))                                   # the raw output is never carried

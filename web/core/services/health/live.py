@@ -69,7 +69,7 @@ HEALTH_CAPABILITIES = MappingProxyType({
                         "routing_config", "management_services")},
     "linux": {"status": Capability.SUPPORTED, "transport": "docker-exec",
               "evidence": "modules/snmp.py + verify_dhcp_servers.py docker-exec pattern; master.py verify_linux_router() reads.",
-              "groups": ("interfaces", "addresses", "routes", "ospf", "isis", "bgp", "rip", "nat", "routing_config")},
+              "groups": ("interfaces", "addresses", "routes", "ospf", "isis", "bgp", "rip", "nat", "routing_config", "config")},
     "nokia_srlinux": {"status": Capability.SUPPORTED, "transport": "gnmi-get",
                       "evidence": "gNMI Get of structured state, verified on an isolated SR Linux 24.10.7 node (not part of the approved Labs 2/3 baseline).",
                       "groups": ("interfaces", "addresses", "routes", "ospf", "bgp", "routing_config", "config")},
@@ -754,6 +754,19 @@ def parse_nft(text: str) -> dict:
     return found
 
 
+def parse_nft_acl(text: str) -> dict:
+    """ACL definitions / attachments of the NMAS nftables ACL table (``nft_acl``); empty when the table is absent or not
+    the NMAS shape.  Linux has no DHCP relay read, so this group carries no ``dhcp_relays`` key."""
+    from .. import nft_acl
+
+    model = nft_acl.table_from_ruleset(text or "") or {"acls": {}, "hooks": {}}
+    names = {chain: acl["name"] for chain, acl in model["acls"].items()}
+    attachments = [{"interface": interface, "acl": names[chain], "direction": direction}
+                   for direction, jumps in model["hooks"].items() for interface, _family, chain in jumps if chain in names]
+    return {"acl_definitions": sorted(set(names.values())),
+            "acl_attachments": sorted(attachments, key=lambda a: (a["interface"], a["acl"], a["direction"]))}
+
+
 def _nft_static_mappings(text: str) -> list:
     """1:1 mappings of every exact NMAS static NAT44 table: [{"table", "oif", "inside", "global"}] (executor shape)."""
     from ..execution.executors.linux import parse_static_nat_table
@@ -1137,6 +1150,7 @@ _LINUX_GROUPS = {
     "rip": lambda f: parse_frr_rip(f("rip"), f("ripng")),
     "nat": lambda f: parse_nft(f("nft")),
     "routing_config": lambda f: _routing_config_frr(f("frr_config"), f("addr")),
+    "config": lambda f: parse_nft_acl(f("nft")),
 }
 
 

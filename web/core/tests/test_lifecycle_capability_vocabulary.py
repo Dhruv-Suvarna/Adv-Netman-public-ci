@@ -57,7 +57,7 @@ class ClassifyTests(SimpleTestCase):
         ledger = json.loads(LEDGER.read_text(encoding="utf-8"))
         batch.check_report(ledger)                     # historical rows without derived fields still pass
         derived = vocabulary.counts(ledger["cells"])
-        self.assertEqual((ledger["supported"], derived["SUPPORTED"]), (64, 64))
+        self.assertEqual((ledger["supported"], derived["SUPPORTED"]), (70, 70))
         self.assertEqual(sum(derived.values()), 396)
         self.assertEqual({c["feature"] for c in ledger["cells"] if c["final_status"] == "SUPPORTED"},
                          {c["feature"] for c in ledger["cells"] if vocabulary.classify_cell(c)["capability_status"] == "SUPPORTED"})

@@ -193,19 +193,21 @@ class FeatureTests(SimpleTestCase):
         self.assertEqual(features.unknown_features(["routing.WARP", "x" * 100, "interface.SVI"]), ["routing.WARP", "x" * 80])
 
     def test_supported_platforms_returns_platforms_rendering_every_feature(self):
-        self.assertEqual(features.supported_platforms(["interface.SVI", "routing.OSPFV2", "service_policy.ACL_IPV4_EXTENDED"]), ["arista_ceos"])
+        self.assertEqual(features.supported_platforms(["interface.SVI", "routing.OSPFV2", "service_policy.ACL_IPV4_EXTENDED"]),
+                         ["arista_ceos", "ubuntu_frr"])     # Ubuntu/FRR nftables ACLs since V2 Phase 9
+        self.assertEqual(features.supported_platforms(["interface.SVI", "service_policy.FHRP_VARP_IPV4"]), ["arista_ceos"])
         self.assertEqual(features.supported_platforms(["service_policy.NAT_NAT44_PAT"]), ["ubuntu_frr"])
 
     def test_supported_platforms_of_an_unsupported_feature_mix_is_empty(self):
         with self.subTest(case="refused incompatible feature mix"):
-            self.assertEqual(features.supported_platforms(["service_policy.ACL_IPV4_EXTENDED", "service_policy.NAT_NAT44_PAT"]), [])
+            self.assertEqual(features.supported_platforms(["service_policy.FHRP_VARP_IPV4", "service_policy.NAT_NAT44_PAT"]), [])
 
     def test_platform_gaps_returns_nothing_for_a_fully_supported_platform(self):
         self.assertEqual(features.platform_gaps(["interface.SVI", "routing.OSPFV2"], "arista_ceos"), [])
 
     def test_platform_gaps_lists_unsupported_features(self):
-        self.assertEqual(features.platform_gaps(["interface.SVI", "service_policy.ACL_IPV4_EXTENDED", "routing.WARP"], "ubuntu_frr"),
-                         ["service_policy.ACL_IPV4_EXTENDED"])
+        self.assertEqual(features.platform_gaps(["interface.SVI", "service_policy.FHRP_VARP_IPV4", "routing.WARP"], "ubuntu_frr"),
+                         ["service_policy.FHRP_VARP_IPV4"])
 
     def test_feature_templates_returns_tracked_template_references(self):
         self.assertEqual(features.feature_templates(["interface.SVI", "routing.OSPFV2", "service_policy.ACL_IPV4_EXTENDED"], ["arista_ceos"]),

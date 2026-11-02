@@ -12,7 +12,8 @@ import ipaddress
 import json
 import re
 
-from .schema import ParsedConfig, ParsedInterface, ParsedNatRule, ParsedRoutingInstance, ParsedStaticRoute, UnmanagedBlock
+from .schema import (ParsedAcl, ParsedConfig, ParsedInterface, ParsedNatRule, ParsedRoutingInstance, ParsedStaticRoute,
+                     UnmanagedBlock)
 
 PARSER_VERSION = "ubuntu-frr-1.0"
 ISIS_TAG = "NMAS44"  # platform_drivers.FRR_ISIS_TAG: only NMAS's named process is imported
@@ -247,8 +248,28 @@ def _static_nat_pairs(text: str) -> list:
     return found
 
 
+def _parse_nft_acls(text: str, result: ParsedConfig) -> None:
+    """The NMAS ACL table (``nft_acl``): each list chain as an ACL, each jump as an attachment on its interface.  A table
+    of that name in any other shape imports nothing (it stays in the preserved ruleset below)."""
+    from .. import nft_acl
+
+    model = nft_acl.table_from_ruleset(text)
+    if not model:
+        return
+    for acl in model["acls"].values():
+        result.acls.append(ParsedAcl(name=acl["name"], family=acl["family"], acl_type=acl["acl_type"],
+                                     entries=[dict(entry) for entry in acl["entries"]]))
+    interfaces = {row.name: row for row in result.interfaces}
+    for direction, jumps in model["hooks"].items():
+        for name, family, chain in jumps:
+            if name in interfaces:
+                interfaces[name].acl_attachments.append({"family": family, "name": model["acls"][chain]["name"],
+                                                         "direction": direction})
+
+
 def _parse_nft(text: str, result: ParsedConfig) -> None:
     recognized = []
+    _parse_nft_acls(text, result)
     for (oif, inside, glob), block in _static_nat_pairs(text):
         result.nat_rules.append(ParsedNatRule(mode="STATIC", original_source=inside, translated_source=glob,
                                               outside_interface=oif, lines=[line for line in block if inside in line]))
