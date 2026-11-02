@@ -372,7 +372,9 @@ def _transaction(executor, specs, verify, attempts=40):
     except Exception as exc:
         out["failure"] = f"{type(exc).__name__}: {str(exc)[:400]}"
     finally:
-        out["statuses"] = [executor.compensate(spec, preflight).status for spec, preflight in reversed(done)]
+        outcomes = [executor.compensate(spec, preflight) for spec, preflight in reversed(done)]
+        out["statuses"] = [outcome.status for outcome in outcomes]
+        out["compensation_codes"] = [outcome.error_code or "-" for outcome in outcomes]   # why a step failed, never guessed
     out["compensated"] = bool(done) and all(status == "COMPENSATED" for status in out["statuses"])
     return out
 

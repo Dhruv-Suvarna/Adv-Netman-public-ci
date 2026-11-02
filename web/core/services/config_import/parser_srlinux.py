@@ -25,9 +25,9 @@ import json
 from .. import srlinux_model
 from .schema import ParsedAcl, ParsedConfig, ParsedInterface, ParsedRoutingInstance, ParsedStaticRoute, UnmanagedBlock
 
-PARSER_VERSION = "srlinux-json-1.0"
+PARSER_VERSION = "srlinux-json-1.2"
 
-_KNOWN_TOP_KEYS = {"system", "interface", "network-instance", "acl"}
+_KNOWN_TOP_KEYS = {"system", "interface", "network-instance", "acl", "routing-policy"}
 
 
 def _preserve(result: ParsedConfig, label: str, value, classification: str = "RECOGNIZED_UNSUPPORTED") -> None:
@@ -81,7 +81,7 @@ def _subinterface_dhcp_relays(sub: dict, result: ParsedConfig, name: str, index)
         relay = family_cfg.get("dhcp-relay") or {} if isinstance(family_cfg, dict) else {}
         if not relay:
             continue
-        _extra(result, f"interface {name}.{index} {leaf} dhcp-relay", relay, {"server"})
+        _extra(result, f"interface {name}.{index} {leaf} dhcp-relay", relay, {"server", "admin-state"})
         servers = relay.get("server") if isinstance(relay, dict) else None
         if not isinstance(servers, list):
             _preserve(result, f"interface {name}.{index} {leaf} dhcp-relay (invalid server list)", relay, "UNKNOWN")
@@ -193,12 +193,15 @@ def _parse_static_routes(ni: dict, result: ParsedConfig) -> None:
 def _parse_ospf(ni: dict, result: ParsedConfig, interface_names: set[str]) -> None:
     for instance in ((ni.get("protocols") or {}).get("ospf") or {}).get("instance") or []:
         _extra(result, f"OSPF instance {instance.get('name') if isinstance(instance, dict) else '(invalid)'}", instance,
-               {"name", "version", "router-id", "area"})
+               {"name", "version", "router-id", "area", "admin-state", "address-family"})
         if not isinstance(instance, dict):
             continue
         version = "OSPFV3" if instance.get("version") == "ospf-v3" else "OSPFV2"
         process_id = instance.get("name")
-        fields = {"version": version, "process_id": process_id, "router_id": instance.get("router-id", ""), "_passive_interfaces": set()}
+        process_id = int(process_id) if str(process_id).isdigit() else process_id
+        # an SR Linux OSPF instance is administratively disabled unless it says otherwise
+        fields = {"version": version, "process_id": process_id, "router_id": instance.get("router-id", ""),
+                  "enabled": instance.get("admin-state") == "enable"}
         parsed = ParsedRoutingInstance(family="ospf", fields=fields)
         for area in instance.get("area") or []:
             _extra(result, f"OSPF area {area.get('area-id') if isinstance(area, dict) else '(invalid)'}", area,
@@ -207,18 +210,12 @@ def _parse_ospf(ni: dict, result: ParsedConfig, interface_names: set[str]) -> No
                 continue
             for iface_ref in area.get("interface") or []:
                 _extra(result, f"OSPF interface {iface_ref.get('interface-name') if isinstance(iface_ref, dict) else '(invalid)'}",
-                       iface_ref, {"interface-name", "metric", "interface-type"})
+                       iface_ref, {"interface-name", "metric", "interface-type", "passive"})
                 if not isinstance(iface_ref, dict):
                     continue
-                interface_name = iface_ref.get("interface-name", "")
-                # Canonical intent represents an untagged index-0 routed
-                # subinterface on its physical parent object.  SR Linux refers
-                # to that same object as ``parent.0`` in the network-instance.
-                # Tagged subinterfaces retain their full ``parent.index`` key.
-                if interface_name.endswith(".0") and interface_name[:-2] in interface_names:
-                    interface_name = interface_name[:-2]
-                binding = {"interface_name": interface_name, "area": area.get("area-id", ""),
-                           "process_id": process_id, "version": version}
+                binding = {"interface_name": _interface_key(iface_ref.get("interface-name", ""), interface_names),
+                           "area": area.get("area-id", ""), "process_id": process_id, "version": version,
+                           "passive": iface_ref.get("passive") is True}
                 if "metric" in iface_ref:
                     binding["cost"] = iface_ref["metric"]
                 if iface_ref.get("interface-type") == "point-to-point":
@@ -227,73 +224,226 @@ def _parse_ospf(ni: dict, result: ParsedConfig, interface_names: set[str]) -> No
         result.routing_instances.append(parsed)
 
 
-def _parse_bgp(ni: dict, result: ParsedConfig) -> None:
+def _interface_key(reference: str, interface_names: set[str]) -> str:
+    """A network-instance subinterface reference as the canonical interface name.  Canonical intent represents an untagged
+    index-0 routed subinterface on its physical parent object; SR Linux refers to it as ``parent.0``.  Tagged subinterfaces
+    keep their full ``parent.index`` key."""
+    if reference.endswith(".0") and reference[:-2] in interface_names:
+        return reference[:-2]
+    return reference
+
+
+_AFI = {"ipv4-unicast": "ipv4", "ipv6-unicast": "ipv6"}
+
+
+def _afi_states(rows) -> dict[str, bool]:
+    return {row.get("afi-safi-name"): row.get("admin-state") == "enable" for row in rows or [] if isinstance(row, dict)}
+
+
+def _network_prefixes(policy_names, policies: dict, result: ParsedConfig) -> list[dict]:
+    """The networks an export policy advertises: statements that accept routes matching one exact-match prefix-set (the form
+    the renderer writes).  Any other policy shape is not a network and is preserved."""
+    networks = []
+    for name in policy_names or []:
+        policy = policies["policy"].get(name)
+        if policy is None:
+            continue
+        policies["used_policies"].add(name)
+        for statement in policy.get("statement") or []:
+            match, action = statement.get("match") or {}, statement.get("action") or {}
+            prefix_set = policies["prefix-set"].get(match.get("prefix-set")) if set(match) == {"prefix-set"} else None
+            if prefix_set is None or action != {"policy-result": "accept"}:
+                _preserve(result, f"routing-policy {name} statement {statement.get('name')} (not a network advertisement)", statement)
+                continue
+            policies["used_sets"].add(match["prefix-set"])
+            for row in prefix_set.get("prefix") or []:
+                cidr = row.get("ip-prefix")
+                if cidr and row.get("mask-length-range") == "exact":
+                    networks.append({"family": "IPV6" if ":" in cidr else "IPV4", "cidr": cidr})
+                else:
+                    _preserve(result, f"prefix-set {match['prefix-set']} entry (not an exact network)", row)
+    return networks
+
+
+def _owner_of(address: str, interfaces: dict) -> str:
+    for name, interface in interfaces.items():
+        if any(row["cidr"].split("/", 1)[0] == address for row in interface.addresses):
+            return name
+    return ""
+
+
+def _parse_bgp(ni: dict, result: ParsedConfig, interfaces: dict | None = None, policies: dict | None = None) -> None:
     bgp = (ni.get("protocols") or {}).get("bgp")
     if not bgp:
         return
-    _extra(result, "BGP process", bgp, {"autonomous-system", "router-id", "group", "neighbor"})
-    fields = {"local_asn": bgp.get("autonomous-system"), "router_id": bgp.get("router-id", "")}
-    groups = {g.get("name"): g for g in bgp.get("group") or []}
+    interfaces = interfaces or {}
+    policies = policies or {"policy": {}, "prefix-set": {}, "used_policies": set(), "used_sets": set()}
+    _extra(result, "BGP process", bgp, {"autonomous-system", "router-id", "group", "neighbor", "admin-state", "afi-safi",
+                                        "export-policy", "ebgp-default-policy"})
+    if (bgp.get("ebgp-default-policy") or {}) not in ({}, {"import-reject-all": False, "export-reject-all": False}):
+        _preserve(result, "BGP ebgp-default-policy (RFC 8212 behaviour other than the NMAS rendering)", bgp["ebgp-default-policy"])
+    fields = {"local_asn": bgp.get("autonomous-system"), "router_id": bgp.get("router-id", ""),
+              "enabled": bgp.get("admin-state", "enable") == "enable"}
+    process_afi = _afi_states(bgp.get("afi-safi"))
+    groups = {g.get("group-name"): g for g in bgp.get("group") or [] if isinstance(g, dict)}
     for group in bgp.get("group") or []:
-        _extra(result, f"BGP group {group.get('name') if isinstance(group, dict) else '(invalid)'}", group,
-               {"name", "ipv4-unicast", "ipv6-unicast", "admin-state"})
+        _extra(result, f"BGP group {group.get('group-name') if isinstance(group, dict) else '(invalid)'}", group,
+               {"group-name", "afi-safi", "admin-state"})
     neighbors = []
     for neighbor in bgp.get("neighbor") or []:
         _extra(result, f"BGP neighbor {neighbor.get('peer-address') if isinstance(neighbor, dict) else '(invalid)'}", neighbor,
-               {"peer-address", "peer-group", "peer-as", "description", "admin-state"})
+               {"peer-address", "peer-group", "peer-as", "description", "admin-state", "transport", "multihop", "afi-safi"})
         if not isinstance(neighbor, dict):
             continue
         group = groups.get(neighbor.get("peer-group")) or {}
+        # a family is active when the neighbor, else its group, else the BGP instance enables it
+        active = {**process_afi, **_afi_states(group.get("afi-safi")), **_afi_states(neighbor.get("afi-safi"))}
+        multihop = neighbor.get("multihop") or {}
+        local = (neighbor.get("transport") or {}).get("local-address", "")
+        source = _owner_of(local, interfaces) if local else ""
+        if local and not source:
+            _preserve(result, f"BGP neighbor {neighbor.get('peer-address')} local-address {local} (no interface owns it)", neighbor)
         neighbors.append({
             "peer_address": neighbor.get("peer-address", ""), "remote_asn": neighbor.get("peer-as"),
             "description": neighbor.get("description", ""),
-            "activate_ipv4": (group.get("ipv4-unicast") or {}).get("admin-state") == "enable",
-            "activate_ipv6": (group.get("ipv6-unicast") or {}).get("admin-state") == "enable",
-            "update_source_interface": "", "ebgp_multihop": None, "next_hop_self": False,
-            "route_reflector_client": False, "shutdown": neighbor.get("admin-state") == "disable",
+            "activate_ipv4": active.get("ipv4-unicast", False), "activate_ipv6": active.get("ipv6-unicast", False),
+            "update_source_interface": source,
+            "ebgp_multihop": multihop.get("maximum-hops") if multihop.get("admin-state") == "enable" else None,
+            "next_hop_self": False, "route_reflector_client": False,
+            # a peer with no active family cannot be enabled on SR Linux: its ``disable`` is structural, not a shutdown
+            "shutdown": "disable" in (neighbor.get("admin-state"), group.get("admin-state"))
+                        and (active.get("ipv4-unicast", False) or active.get("ipv6-unicast", False)),
         })
-    result.routing_instances.append(ParsedRoutingInstance(family="bgp", fields=fields, neighbors=neighbors, networks=[]))
+    networks = _network_prefixes(bgp.get("export-policy"), policies, result)
+    result.routing_instances.append(ParsedRoutingInstance(family="bgp", fields=fields, neighbors=neighbors, networks=networks))
+
+
+def _routing_policies(doc: dict) -> dict:
+    policy_doc = doc.get("routing-policy") or {}
+    return {"policy": {row.get("name"): row for row in policy_doc.get("policy") or [] if isinstance(row, dict)},
+            "prefix-set": {row.get("name"): row for row in policy_doc.get("prefix-set") or [] if isinstance(row, dict)},
+            "used_policies": set(), "used_sets": set()}
+
+
+def _preserve_unused_policies(doc: dict, policies: dict, result: ParsedConfig) -> None:
+    _extra(result, "routing-policy", doc.get("routing-policy") or {}, {"policy", "prefix-set"})
+    for kind, used in (("policy", "used_policies"), ("prefix-set", "used_sets")):
+        for name, row in policies[kind].items():
+            if name not in policies[used]:
+                _preserve(result, f"routing-policy {kind} {name} (not referenced as a BGP network export)", row)
 
 
 def _match_back(match: dict) -> tuple[str, str]:
     prefix = match.get("prefix")
-    if prefix is None:
+    if prefix is None or prefix in ("0.0.0.0/0", "::/0"):
         return "ANY", ""
     if prefix.endswith("/32") or prefix.endswith("/128"):
         return "HOST", prefix.rsplit("/", 1)[0]
     return "PREFIX", prefix
 
 
-def _parse_acls(doc: dict, result: ParsedConfig) -> None:
-    acl_doc = doc.get("acl") or {}
-    _extra(result, "acl", acl_doc, {"ipv4-filter", "ipv6-filter"})
+def _port_back(port: dict) -> str:
+    if not isinstance(port, dict):
+        return ""
+    if port.get("operator") == "eq" and port.get("value") is not None:
+        return str(port["value"])
+    bounds = port.get("range") or {}
+    return f"{bounds.get('start')}-{bounds.get('end')}" if {"start", "end"} <= set(bounds) else ""
+
+
+_PROTOCOL_BACK = {"tcp": "TCP", "udp": "UDP", "icmp": "ICMP", "icmp6": "ICMPV6"}
+
+
+def _parse_legacy_acls(acl_doc: dict, result: ParsedConfig) -> None:
+    """Releases before 24.10 keyed filters by family (``acl ipv4-filter NAME`` / ``ipv6-filter NAME``, ``match source-ip``
+    directly under ``match``) and attached them on the subinterface (``_subinterface_acl_attachments``).  Documents
+    written by those releases are still imported; the classification rule is the 24.10 one."""
     for filter_kind, family in (("ipv4-filter", "IPV4"), ("ipv6-filter", "IPV6")):
         for entry in acl_doc.get(filter_kind) or []:
-            _extra(result, f"{filter_kind} {entry.get('name') if isinstance(entry, dict) else '(invalid)'}", entry,
-                   {"name", "entry"})
+            _extra(result, f"{filter_kind} {entry.get('name') if isinstance(entry, dict) else '(invalid)'}", entry, {"name", "entry"})
             if not isinstance(entry, dict):
                 continue
-            acl = ParsedAcl(name=entry.get("name", ""), family=family, acl_type="EXTENDED")
+            acl = ParsedAcl(name=entry.get("name", ""), family=family, acl_type="STANDARD")
             for ace in entry.get("entry") or []:
-                _extra(result, f"ACL {entry.get('name')} entry {ace.get('sequence-id') if isinstance(ace, dict) else '(invalid)'}",
-                       ace, {"sequence-id", "match", "action"})
+                label = f"ACL {entry.get('name')} entry {ace.get('sequence-id') if isinstance(ace, dict) else '(invalid)'}"
+                _extra(result, label, ace, {"sequence-id", "match", "action"})
                 if not isinstance(ace, dict):
                     continue
                 match = ace.get("match") or {}
-                _extra(result, f"ACL {entry.get('name')} entry {ace.get('sequence-id')} match", match,
-                       {"source-ip", "destination-ip", "protocol"})
+                _extra(result, f"{label} match", match, {"source-ip", "destination-ip", "protocol"})
                 action_obj = ace.get("action") or {}
-                _extra(result, f"ACL {entry.get('name')} entry {ace.get('sequence-id')} action", action_obj,
-                       {"accept", "drop"})
+                _extra(result, f"{label} action", action_obj, {"accept", "drop"})
                 source_type, source_value = _match_back(match.get("source-ip") or {})
                 destination_type, destination_value = _match_back(match.get("destination-ip") or {})
-                action = "PERMIT" if "accept" in (ace.get("action") or {}) else "DENY"
+                protocol = match.get("protocol")
+                if "destination-ip" in match or protocol:
+                    acl.acl_type = "EXTENDED"
                 acl.entries.append({
-                    "sequence": ace.get("sequence-id", 0), "action": action, "protocol": match.get("protocol", "IP"),
+                    "sequence": ace.get("sequence-id", 0), "action": "PERMIT" if "accept" in action_obj else "DENY",
+                    "protocol": _PROTOCOL_BACK.get(str(protocol), str(protocol).upper()) if protocol else ("IP" if family == "IPV4" else "IPV6"),
                     "source_type": source_type, "source_value": source_value,
-                    "destination_type": destination_type, "destination_value": destination_value, "logging": False,
+                    "destination_type": destination_type, "destination_value": destination_value,
+                    "source_port": "", "destination_port": "", "logging": False,
                 })
             result.acls.append(acl)
+
+
+def _parse_acls(doc: dict, result: ParsedConfig, interfaces: dict | None = None) -> None:
+    """24.10 ``acl acl-filter NAME type ipv4|ipv6`` (``match ipv4|ipv6 ...`` / ``match transport ...``) and its
+    ``acl interface <subif> input|output acl-filter`` attachments.  The built-in ``cpm`` filter is node policy, not intent."""
+    acl_doc = doc.get("acl") or {}
+    # ``policers`` (even the factory system-cpu-policer) is not modelled: it is preserved, never silently dropped
+    _extra(result, "acl", acl_doc, {"acl-filter", "interface", "ipv4-filter", "ipv6-filter"})
+    _parse_legacy_acls(acl_doc, result)
+    for entry in acl_doc.get("acl-filter") or []:
+        if not isinstance(entry, dict):
+            _preserve(result, "acl-filter (entry is not an object)", entry, "UNKNOWN")
+            continue
+        name, afi = entry.get("name", ""), entry.get("type", "")
+        if name == "cpm" or afi not in ("ipv4", "ipv6"):
+            continue
+        _extra(result, f"acl-filter {name}", entry, {"name", "type", "entry"})
+        family = "IPV4" if afi == "ipv4" else "IPV6"
+        acl = ParsedAcl(name=name, family=family, acl_type="STANDARD")
+        for ace in entry.get("entry") or []:
+            label = f"ACL {name} entry {ace.get('sequence-id') if isinstance(ace, dict) else '(invalid)'}"
+            _extra(result, label, ace, {"sequence-id", "match", "action"})
+            if not isinstance(ace, dict):
+                continue
+            match = ace.get("match") or {}
+            _extra(result, f"{label} match", match, {afi, "transport"})
+            ip = match.get(afi) or {}
+            _extra(result, f"{label} match {afi}", ip, {"source-ip", "destination-ip", "protocol", "next-header"})
+            transport = match.get("transport") or {}
+            _extra(result, f"{label} match transport", transport, {"source-port", "destination-port"})
+            action_obj = ace.get("action") or {}
+            _extra(result, f"{label} action", action_obj, {"accept", "drop", "log"})
+            source_type, source_value = _match_back(ip.get("source-ip") or {})
+            destination_type, destination_value = _match_back(ip.get("destination-ip") or {})
+            protocol = ip.get("protocol") or ip.get("next-header")
+            if "destination-ip" in ip or protocol or transport:
+                acl.acl_type = "EXTENDED"
+            acl.entries.append({
+                "sequence": ace.get("sequence-id", 0), "action": "PERMIT" if "accept" in action_obj else "DENY",
+                "protocol": _PROTOCOL_BACK.get(str(protocol), str(protocol).upper()) if protocol else ("IP" if family == "IPV4" else "IPV6"),
+                "source_type": source_type, "source_value": source_value,
+                "destination_type": destination_type, "destination_value": destination_value,
+                "source_port": _port_back(transport.get("source-port")), "destination_port": _port_back(transport.get("destination-port")),
+                "logging": action_obj.get("log") is True,
+            })
+        result.acls.append(acl)
+    for row in acl_doc.get("interface") or []:
+        if not isinstance(row, dict):
+            continue
+        _extra(result, f"acl interface {row.get('interface-id')}", row, {"interface-id", "input", "output"})
+        target = (interfaces or {}).get(_interface_key(row.get("interface-id", ""), set(interfaces or {})))
+        for direction_key, direction in (("input", "IN"), ("output", "OUT")):
+            for attached in ((row.get(direction_key) or {}).get("acl-filter") or []):
+                if target is None:
+                    _preserve(result, f"acl interface {row.get('interface-id')} (interface not imported)", row)
+                    continue
+                target.acl_attachments.append({"family": "IPV4" if attached.get("type") == "ipv4" else "IPV6",
+                                               "name": attached.get("name", ""), "direction": direction})
 
 
 def parse(source) -> ParsedConfig:
@@ -321,6 +471,7 @@ def parse(source) -> ParsedConfig:
     _extra(result, "system name", name, {"host-name"})
 
     network_instances = doc.get("network-instance") or []
+    policies = _routing_policies(doc)
     mgmt_names = _mgmt_interface_names(network_instances)
     interfaces = _parse_interfaces(doc, mgmt_names, result)
     result.interfaces = list(interfaces.values())
@@ -338,9 +489,10 @@ def parse(source) -> ParsedConfig:
         _extra(result, "network-instance default protocols", protocols, {"ospf", "bgp"})
         _parse_static_routes(ni, result)
         _parse_ospf(ni, result, set(interfaces))
-        _parse_bgp(ni, result)
+        _parse_bgp(ni, result, interfaces, policies)
 
-    _parse_acls(doc, result)
+    _parse_acls(doc, result, interfaces)
+    _preserve_unused_policies(doc, policies, result)
 
     for key, value in doc.items():
         if key not in _KNOWN_TOP_KEYS:

@@ -377,10 +377,11 @@ class HealthReadOnlyContractTests(SimpleTestCase):
                 self.assertTrue(command.startswith("show "))
                 self.assertFalse(any(ch in command for ch in "|{}%;&`$<>"), "no pipe, interpolation or shell metacharacter")
         for key, query in health_live.SRLINUX_QUERIES.items():
-            with self.subTest(platform="nokia_srlinux", key=key):          # gNMI Get of the state datastore only
+            with self.subTest(platform="nokia_srlinux", key=key):          # gNMI Get (read-only) of state, or of config for routing facts
                 path, datastore = query
                 self.assertTrue(path.startswith("/"))
-                self.assertEqual(datastore, "state")
+                self.assertIn(datastore, {"state", "config"})
+                self.assertEqual(datastore == "config", key == "running_config")
                 self.assertFalse(any(ch in path for ch in "{}%;&`$<>| "))
         self.assertEqual(set(health_live.PROBE_KEY), {"ceos", "linux", "nokia_srlinux", "cisco_c8000v_iosxe"})
         self.assertEqual(set(health_live.ALLOWLISTS), set(health_live.PROBE_KEY))

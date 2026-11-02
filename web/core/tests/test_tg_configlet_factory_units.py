@@ -77,6 +77,19 @@ class ConfigletFactoryUnitTests(TestCase):
         shell = ctx.shell("ospf", {"id": "o", "interfaces": {"x": {"interface_id": "i1"}, "y": {"interface_id": "missing"}}})
         self.assertEqual(shell["_bound_networks"], ["10.0.0.0/30"])
 
+    def test_shell_returns_the_bound_ipv4_networks_of_an_srlinux_ospf_process(self):
+        ctx = self._ctx()
+        ctx.platform = "nokia_srlinux"
+        ctx.interfaces = [{"id": "i1", "addresses": {"a": {"cidr": "198.18.0.1/30"}, "b": {"cidr": "2001:db8:44::1/64"}}}]
+        self.assertEqual(ctx.shell("ospf", {"id": "o", "interfaces": {"x": {"interface_id": "i1"}}}),
+                         {"id": "o", "interfaces": {}, "_bound_networks": ["198.18.0.0/30"]})
+
+    def test_shell_of_an_ospf_process_on_another_platform_has_no_bound_networks(self):
+        ctx = self._ctx()
+        ctx.platform = "arista_ceos"
+        ctx.interfaces = [{"id": "i1", "addresses": {"a": {"cidr": "198.18.0.1/30"}}}]
+        self.assertNotIn("_bound_networks", ctx.shell("ospf", {"id": "o", "interfaces": {"x": {"interface_id": "i1"}}}))
+
     def test_render_and_added_return_the_object_lines(self):
         ctx = self._ctx()
         lines = ctx.render(interfaces=ctx.interfaces)

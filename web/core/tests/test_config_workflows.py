@@ -300,8 +300,9 @@ class ContributionTests(TestCase):
         self.assertEqual(frr["static_route"]["mode"], "COMPLETE_OR_PARTIAL")
         # a platform with an executor but no proven apply path for the object type is never offered as executable
         srl = {r["key"]: r for r in contribution.operation_catalogue("nokia_srlinux")}
-        self.assertEqual((srl["static_route"]["mode"], srl["bgp_neighbor"]["mode"]), ("COMPLETE_OR_PARTIAL", "NOT_EXECUTABLE"))
-        self.assertFalse(srl["bgp_neighbor"]["executable"])
+        # V2 Phase 9 proved SR Linux BGP apply and exact compensation on the isolated lab; NAT has no SR Linux apply path
+        self.assertEqual((srl["static_route"]["mode"], srl["bgp_neighbor"]["mode"]), ("COMPLETE_OR_PARTIAL", "COMPLETE_OR_PARTIAL"))
+        self.assertTrue(all(row["executable"] for row in srl.values()), "every SR Linux widget now has a proven apply path")
         self.assertFalse({r["key"]: r for r in contribution.operation_catalogue("cisco_iosxr")}["static_route"]["executable"])
 
     def test_widget_catalogue_mode_follows_the_capability_model_and_never_exceeds_it(self):

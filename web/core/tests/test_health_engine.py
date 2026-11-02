@@ -336,6 +336,17 @@ class EvaluatorTests(SimpleTestCase):
         self.assertEqual(self.evaluate(bad, Phase.POSTCHECK, good).result, "FAIL")
         self.assertEqual(self.evaluate(req("BGP_NETWORK_INTENDED", {"prefix": "203.0.114.0/24", "family": "IPV4"}),
                                        Phase.POSTCHECK, good).result, "FAIL")
+        # the planner records the family of a bgp_network Configlet as 4 / 6 (configlet_factory._family): same meaning
+        self.assertEqual(self.evaluate(req("BGP_NETWORK_INTENDED", {"prefix": "203.0.113.0/24", "family": 4}),
+                                       Phase.POSTCHECK, good).result, "PASS")
+        self.assertEqual(self.evaluate(req("BGP_NETWORK_INTENDED", {"prefix": "203.0.113.0/24", "family": 6}),
+                                       Phase.POSTCHECK, good).result, "FAIL")
+
+    def test_family_label_spells_planner_and_descriptor_families_alike(self):
+        from core.services.health.evaluators import family_label
+
+        self.assertEqual([family_label(v) for v in (4, "4", "ipv4", "IPV4", 6, "IPV6")], ["IPV4"] * 4 + ["IPV6"] * 2)
+        self.assertEqual([family_label(v) for v in (None, "", "ipx")], ["", "", "IPX"])     # never guessed into a family
 
     def test_an_ospf_network_statement_enables_an_interface_only_when_it_covers_its_address_and_area(self):
         from core.services.health import routing_config

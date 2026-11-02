@@ -2,16 +2,16 @@
 
 Generated from `progress-ledger.json` by `nmas_capabilities verify-matrix` / `report-matrix`; do not edit by hand.
 
-**COMPLETE** — total 396, assessed 396, unassessed 0, supported 50, unsupported 346 (unassessed cells are fail-closed unsupported).
+**COMPLETE** — total 396, assessed 396, unassessed 0, supported 62, unsupported 334 (unassessed cells are fail-closed unsupported).
 
 | Platform | Total | Assessed | Unassessed | Supported | Runtime-investigated | Prerequisite-gated |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
 | arista_ceos | 66 | 66 | 0 | 25 | 28 | 38 |
+| ubuntu_frr | 66 | 66 | 0 | 15 | 15 | 51 |
+| nokia_srlinux | 66 | 66 | 0 | 17 | 18 | 48 |
 | cisco_c8000v_iosxe | 66 | 66 | 0 | 5 | 6 | 60 |
 | cisco_iosxr | 66 | 66 | 0 | 0 | 66 | 0 |
-| nokia_srlinux | 66 | 66 | 0 | 5 | 6 | 60 |
 | sonic | 66 | 66 | 0 | 0 | 1 | 65 |
-| ubuntu_frr | 66 | 66 | 0 | 15 | 15 | 51 |
 
 ## Capability status
 
@@ -19,10 +19,10 @@ Derived from the binary ledger: SUPPORTED is unchanged; UNSUPPORTED means a demo
 
 | Status | Cells |
 | --- | ---: |
-| NOT_IMPLEMENTED | 343 |
-| OUT_OF_SCOPE | 0 |
-| SUPPORTED | 50 |
+| SUPPORTED | 62 |
+| NOT_IMPLEMENTED | 331 |
 | UNSUPPORTED | 3 |
+| OUT_OF_SCOPE | 0 |
 
 ## Supported cells
 
@@ -59,8 +59,20 @@ Derived from the binary ledger: SUPPORTED is unchanged; UNSUPPORTED means a demo
 - `nokia_srlinux` `interface.LOOPBACK`
 - `nokia_srlinux` `interface.ROUTED_PHYSICAL`
 - `nokia_srlinux` `interface.SUBINTERFACE`
+- `nokia_srlinux` `routing.BGP_IPV4`
+- `nokia_srlinux` `routing.BGP_IPV6`
+- `nokia_srlinux` `routing.OSPFV2`
+- `nokia_srlinux` `routing.OSPFV3`
 - `nokia_srlinux` `routing.STATIC_IPV4`
 - `nokia_srlinux` `routing.STATIC_IPV6`
+- `nokia_srlinux` `service_policy.ACL_ATTACH_IPV4`
+- `nokia_srlinux` `service_policy.ACL_ATTACH_IPV6`
+- `nokia_srlinux` `service_policy.ACL_IPV4_EXTENDED`
+- `nokia_srlinux` `service_policy.ACL_IPV4_STANDARD`
+- `nokia_srlinux` `service_policy.ACL_IPV6_EXTENDED`
+- `nokia_srlinux` `service_policy.ACL_IPV6_STANDARD`
+- `nokia_srlinux` `service_policy.DHCP_RELAY_IPV4`
+- `nokia_srlinux` `service_policy.DHCP_RELAY_IPV6`
 - `ubuntu_frr` `interface.LOOPBACK`
 - `ubuntu_frr` `interface.MANAGEMENT`
 - `ubuntu_frr` `interface.ROUTED_PHYSICAL`
@@ -112,12 +124,11 @@ A cell is listed under every reason one of its probes recorded.
 | cisco_iosxr | RUNTIME_IMAGE_UNAVAILABLE | 66 |
 | cisco_iosxr | UI_ABSENT | 46 |
 | nokia_srlinux | CONFIG_VALIDATION_FAILED | 48 |
-| nokia_srlinux | EXECUTOR_REFUSED | 60 |
+| nokia_srlinux | EXECUTOR_REFUSED | 48 |
 | nokia_srlinux | FIELD_VALIDATION_FAILED | 12 |
 | nokia_srlinux | FUNCTIONAL_TEST_FAILED | 13 |
 | nokia_srlinux | LIVE_READ_ABSENT | 1 |
-| nokia_srlinux | PARSER_ABSENT | 55 |
-| nokia_srlinux | PARSER_FAILED | 1 |
+| nokia_srlinux | PARSER_ABSENT | 49 |
 | nokia_srlinux | POSTCHECK_ABSENT | 1 |
 | nokia_srlinux | RENDERER_ABSENT | 48 |
 | nokia_srlinux | UI_ABSENT | 47 |
@@ -146,7 +157,6 @@ A cell is listed under every reason one of its probes recorded.
 | arista_ceos | RENDERER_ABSENT | 38 |
 | cisco_c8000v_iosxe | EXECUTOR_REFUSED | 4 |
 | cisco_c8000v_iosxe | RENDERER_ABSENT | 56 |
-| nokia_srlinux | EXECUTOR_REFUSED | 12 |
 | nokia_srlinux | RENDERER_ABSENT | 48 |
 | sonic | EXECUTOR_ABSENT | 14 |
 | sonic | RENDERER_ABSENT | 51 |

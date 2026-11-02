@@ -128,7 +128,7 @@ class ImportSoftwareExistsButIsFixtureOnlyTests(TestCase):
         self.assertEqual(result.status, "imported")
         # Two physical parents plus the explicitly modeled tagged child.
         self.assertEqual(result.feature_counts["interfaces"], 3)
-        self.assertEqual(result.provenance["parser_version"], "srlinux-json-1.0")
+        self.assertEqual(result.provenance["parser_version"], "srlinux-json-1.2")
         self.assertIn("no live capture transport", result.provenance["source"])
         revision.refresh_from_db()
         text = candidate_renderer.render(intent, revision)["text"]
@@ -138,7 +138,8 @@ class ImportSoftwareExistsButIsFixtureOnlyTests(TestCase):
         self.assertIn("set network-instance default static-routes route 10.0.0.0/8", text)
         self.assertIn("set network-instance default protocols ospf instance 10 area 0.0.0.0 interface ethernet-1/1.0", text)
         self.assertIn("set network-instance default protocols bgp neighbor 192.0.2.5 peer-as 65020", text)
-        self.assertIn("set acl ipv4-filter EDGE-IN entry 10 match source-ip prefix 10.0.0.0/8", text)
+        # a pre-24.10 ``ipv4-filter`` document is imported and rendered in the 24.10 ``acl-filter`` grammar
+        self.assertIn("set acl acl-filter EDGE-IN type ipv4 entry 10 match ipv4 source-ip prefix 10.0.0.0/8", text)
         self.assertIn("set interface ethernet-1/1 subinterface 0 ipv4 dhcp-relay server [ 192.0.2.53 ]", text)
         self.assertEqual(result.feature_counts["dhcp_relays"], 1)
         writer_plan = srlinux_gnmi.build_set_plan(text)

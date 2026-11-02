@@ -19,10 +19,13 @@ for a container would produce a wrong (and therefore unsafe) inverse.
 from __future__ import annotations
 
 import json
+import re
 import shlex
 from dataclasses import dataclass
 
-# schema path (list/container names, keys removed) -> the key leaf of that list.  Verified against SR Linux 24.10.7.
+# schema path (list/container names, keys removed) -> the key leaf of that list, or the ordered key leaves of a list with
+# several keys (``acl-filter NAME type ipv4`` in the CLI, ``acl-filter[name=NAME][type=ipv4]`` in gNMI).  Every entry was
+# verified against SR Linux 24.10.7 (a committed tree read back with ``info | as json`` and gNMI Get).
 LIST_KEYS = {
     "interface": "name",
     "interface/subinterface": "index",
@@ -36,20 +39,40 @@ LIST_KEYS = {
     "network-instance/protocols/ospf/instance": "name",
     "network-instance/protocols/ospf/instance/area": "area-id",
     "network-instance/protocols/ospf/instance/area/interface": "interface-name",
+    "network-instance/protocols/bgp/afi-safi": "afi-safi-name",
     "network-instance/protocols/bgp/group": "group-name",
+    "network-instance/protocols/bgp/group/afi-safi": "afi-safi-name",
     "network-instance/protocols/bgp/neighbor": "peer-address",
-    "acl/ipv4-filter": "name",
-    "acl/ipv6-filter": "name",
-    "acl/ipv4-filter/entry": "sequence-id",
-    "acl/ipv6-filter/entry": "sequence-id",
+    "network-instance/protocols/bgp/neighbor/afi-safi": "afi-safi-name",
+    "routing-policy/prefix-set": "name",
+    "routing-policy/prefix-set/prefix": ("ip-prefix", "mask-length-range"),
+    "routing-policy/policy": "name",
+    "routing-policy/policy/statement": "name",
+    "acl/acl-filter": ("name", "type"),
+    "acl/acl-filter/entry": "sequence-id",
+    "acl/interface": "interface-id",
+    "acl/interface/input/acl-filter": ("name", "type"),
+    "acl/interface/output/acl-filter": ("name", "type"),
 }
-# multi-valued leaves: a ``set`` adds one value, so their inverse is not a simple leaf restore
-LEAF_LISTS = frozenset({"interface/subinterface/ipv4/dhcp-relay/server", "interface/subinterface/ipv6/dhcp-relay/server",
-                        "network-instance/protocols/ospf/instance/passive-interface"})
+# Leaf-lists.  SR Linux takes them only in bracket form (``server [ a b ]``) and a ``set`` REPLACES the whole list (verified on
+# 24.10.7: a second ``set ... server [ b ]`` leaves only ``b``, also across commits).
+LEAF_LISTS = frozenset({
+    "interface/subinterface/ipv4/dhcp-relay/server", "interface/subinterface/ipv6/dhcp-relay/server",
+    "network-instance/protocols/bgp/export-policy", "network-instance/protocols/bgp/import-policy",
+    "network-instance/protocols/bgp/group/export-policy", "network-instance/protocols/bgp/group/import-policy",
+    "network-instance/protocols/bgp/neighbor/export-policy", "network-instance/protocols/bgp/neighbor/import-policy",
+})
+# YANG choices: creating one case removes its sibling cases, so an inverse that only deletes the new case would not restore a
+# captured sibling.  Such an operation is not invertible here (the caller fails closed).
+CHOICES = {"acl/acl-filter/entry/action": frozenset({"accept", "drop"})}
+# Presence containers that end a statement (``... action accept``): a container, not a leaf ``action`` with value ``accept``.
+PRESENCE = frozenset({"acl/acl-filter/entry/action/accept", "acl/acl-filter/entry/action/drop"})
 INTEGER_LEAVES = frozenset({"index", "mtu", "ip-mtu", "preference", "metric", "vlan-id", "sequence-id", "autonomous-system",
-                            "peer-as"})
+                            "peer-as", "maximum-hops", "value", "start", "end"})
 # Subtrees whose list keys above are complete and live-verified: the only ones an executor may invert.
-MODELLED = ("interface", "network-instance/interface", "network-instance/static-routes", "network-instance/next-hop-groups")
+MODELLED = ("interface", "network-instance/interface", "network-instance/static-routes", "network-instance/next-hop-groups",
+            "network-instance/protocols/ospf", "network-instance/protocols/bgp", "routing-policy/prefix-set",
+            "routing-policy/policy", "acl/acl-filter", "acl/interface")
 MISSING = object()
 
 
@@ -60,16 +83,27 @@ class ModelError(ValueError):
 @dataclass(frozen=True)
 class Step:
     name: str
-    key: str = ""        # key leaf name; "" for a container
-    value: object = None  # key value
+    key: object = ""      # key leaf name, a tuple of key leaf names for a multi-key list, or "" for a container
+    value: object = None  # key value (a tuple of values, in key order, for a multi-key list)
+
+    @property
+    def keys(self) -> tuple:
+        return () if not self.key else (self.key if isinstance(self.key, tuple) else (self.key,))
+
+    @property
+    def values(self) -> tuple:
+        return self.value if isinstance(self.key, tuple) else (self.value,)
 
     @property
     def cli(self) -> str:
-        return f"{self.name} {format_value(self.value)}" if self.key else self.name
+        if not self.key:
+            return self.name
+        extra = [f"{key} {format_value(value)}" for key, value in zip(self.keys[1:], self.values[1:])]
+        return " ".join([self.name, format_value(self.values[0]), *extra])
 
     @property
     def gnmi(self) -> str:
-        return f"{self.name}[{self.key}={self.value}]" if self.key else self.name
+        return self.name + "".join(f"[{key}={value}]" for key, value in zip(self.keys, self.values)) if self.key else self.name
 
 
 @dataclass(frozen=True)
@@ -129,16 +163,21 @@ def operation(line: str, *, strict: bool = False) -> Operation:
     while i < len(tokens):
         candidate = "/".join([*schema, tokens[i]])
         if candidate in LIST_KEYS:
-            if i + 1 >= len(tokens):
-                raise ModelError("List entry without its key.")
-            key = LIST_KEYS[candidate]
-            steps.append(Step(tokens[i], key, _typed(key, tokens[i + 1])))
-            schema.append(tokens[i])
-            i += 2
+            step, i = _list_step(tokens, i, LIST_KEYS[candidate])
+            steps.append(step)
+            schema.append(step.name)
             continue
+        if candidate in LEAF_LISTS:
+            op = Operation(tuple(steps), tokens[i], _members(tokens[i + 1:], tokens[i]), multi=True)
+            break
         remaining = len(tokens) - i
+        if remaining == 2 and f"{candidate}/{tokens[i + 1]}" in PRESENCE:
+            steps.append(Step(tokens[i]))
+            schema.append(tokens[i])
+            i += 1
+            continue
         if remaining == 2:        # <leaf> <value>
-            op = Operation(tuple(steps), tokens[i], _typed(tokens[i], tokens[i + 1]), multi=candidate in LEAF_LISTS)
+            op = Operation(tuple(steps), tokens[i], _typed(tokens[i], tokens[i + 1]))
             break
         if remaining == 1:        # presence container / valueless leaf
             op = Operation((*steps, Step(tokens[i])))
@@ -155,6 +194,28 @@ def operation(line: str, *, strict: bool = False) -> Operation:
         if not any(where == root or where.startswith(root + "/") for root in MODELLED):
             raise ModelError("Statement is outside the SR Linux subtrees NMAS can invert.")
     return op
+
+
+def _list_step(tokens: list[str], i: int, keys) -> tuple[Step, int]:
+    """The list entry starting at ``tokens[i]`` -> (its Step, the index after its keys).  A multi-key list names every key
+    after the first (``acl-filter NAME type ipv4``)."""
+    names = keys if isinstance(keys, tuple) else (keys,)
+    if i + 1 >= len(tokens):
+        raise ModelError("List entry without its key.")
+    values, j = [_typed(names[0], tokens[i + 1])], i + 2
+    for name in names[1:]:
+        if tokens[j:j + 1] != [name] or j + 1 >= len(tokens):
+            raise ModelError("List entry without all of its keys.")
+        values.append(_typed(name, tokens[j + 1]))
+        j += 2
+    return Step(tokens[i], keys, tuple(values) if isinstance(keys, tuple) else values[0]), j
+
+
+def _members(rest: list[str], leaf: str) -> tuple:
+    """The members of a bracketed leaf-list value ``[ a b ]``; the statement must end with the closing bracket."""
+    if len(rest) < 2 or rest[0] != "[" or rest[-1] != "]" or "[" in rest[1:-1] or "]" in rest[1:-1]:
+        raise ModelError("An SR Linux leaf-list takes a bracketed value list.")
+    return tuple(_typed(leaf, token) for token in rest[1:-1])
 
 
 def operations(lines, *, strict: bool = False) -> list[Operation]:
@@ -177,27 +238,34 @@ def _child(node: dict, step: Step, *, create: bool):
         rows = node[step.name] = []
     if not isinstance(rows, list):
         return MISSING
+    pairs = list(zip(step.keys, step.values))
     for row in rows:
-        if isinstance(row, dict) and str(row.get(step.key)) == str(step.value):
+        if isinstance(row, dict) and all(str(row.get(key)) == str(value) for key, value in pairs):
             return row
     if not create:
         return MISSING
-    row = {step.key: step.value}
+    row = dict(pairs)
     rows.append(row)
     return row
 
 
+def _choice_siblings(schema: str, case: str) -> frozenset:
+    cases = CHOICES.get(schema, frozenset())
+    return cases - {case} if case in cases else frozenset()
+
+
 def apply_operation(tree: dict, op: Operation) -> None:
-    """Merge one ``set`` into ``tree`` the way the device's candidate datastore would."""
+    """Merge one ``set`` into ``tree`` the way the device's candidate datastore would (a leaf-list is replaced, and creating
+    one case of a choice removes its sibling cases)."""
     node = tree
-    for step in op.steps:
+    for depth, step in enumerate(op.steps):
+        for sibling in _choice_siblings("/".join(s.name for s in op.steps[:depth]), step.name):
+            node.pop(sibling, None)
         node = _child(node, step, create=True)
         if node is MISSING:
             raise ModelError("Statement conflicts with the tree's existing structure.")
     if op.leaf and op.multi:
-        node.setdefault(op.leaf, [])
-        if op.value not in node[op.leaf]:
-            node[op.leaf].append(op.value)
+        node[op.leaf] = list(op.value)
     elif op.leaf:
         node[op.leaf] = op.value
 
@@ -249,16 +317,21 @@ def tree_from_gnmi(response: dict) -> dict:
     return tree
 
 
+_GNMI_KEY = re.compile(r"\[([^=\]]+)=([^\]]*)\]")
+
+
 def _steps_from_gnmi(path: str) -> list[Step]:
     steps, token, depth = [], "", 0
     for ch in path.strip("/") + "/":
         if ch == "/" and depth == 0:
-            name, _, rest = token.partition("[")
-            if rest:
-                key, _, value = rest.rstrip("]").partition("=")
-                steps.append(Step(_bare(name), key, _typed(key, value)))
+            name = _bare(token.partition("[")[0])
+            pairs = _GNMI_KEY.findall(token)
+            if len(pairs) == 1:
+                steps.append(Step(name, pairs[0][0], _typed(pairs[0][0], pairs[0][1])))
+            elif pairs:
+                steps.append(Step(name, tuple(k for k, _ in pairs), tuple(_typed(k, v) for k, v in pairs)))
             else:
-                steps.append(Step(_bare(name)))
+                steps.append(Step(name))
             token = ""
             continue
         depth += ch == "["
@@ -284,15 +357,46 @@ def gnmi_path(steps, leaf: str = "") -> str:
     return "/" + "/".join([*(step.gnmi for step in steps), *([leaf] if leaf else [])])
 
 
+def _members_text(values) -> str:
+    return "[ " + " ".join(format_value(value) for value in values) + " ]"
+
+
+def statement(op: Operation) -> str:
+    """The CLI ``set`` statement of one operation (a leaf-list in its bracket form)."""
+    if op.leaf and op.multi:
+        return f"set / {cli_path(op.steps, op.leaf)} {_members_text(op.value)}"
+    if op.leaf:
+        return f"set / {cli_path(op.steps, op.leaf)} {format_value(op.value)}"
+    return f"set / {cli_path(op.steps)}"
+
+
+def additive(ops, tree: dict) -> list[Operation]:
+    """``ops`` with every leaf-list operation widened to the members ``tree`` already holds plus its own.
+
+    A ``set`` replaces an SR Linux leaf-list, but a Configlet adds ONE object (one DHCP relay server, one export policy):
+    sending its rendered members alone would silently drop the members another Configlet or the operator configured.
+    Captured members keep their order; the Configlet's new members follow."""
+    widened = []
+    for op in ops:
+        node = lookup(tree, op.steps) if op.multi else MISSING
+        current = node.get(op.leaf) if node is not MISSING else None
+        if op.multi and isinstance(current, list) and current:
+            held = {str(value) for value in current}
+            widened.append(Operation(op.steps, op.leaf, (*current, *(v for v in op.value if str(v) not in held)), multi=True))
+        else:
+            widened.append(op)
+    return widened
+
+
 def inverse(ops, tree: dict) -> list[str] | None:
     """Exact undo of ``ops`` against the captured ``tree`` as CLI statements: [] when satisfied, None when unprovable.
 
     * a node on the path that did not exist is deleted at its TOPMOST absent ancestor (a new address removes only that
       address; a new interface removes the interface; nothing that existed is ever deleted);
-    * a leaf that existed with another value is set back to the captured value;
-    * a leaf that did not exist under an existing node is deleted on its own.
-    Deletions run last-created-first, before the value restores.  Leaf-list members and non-scalar captured values are
-    not inverted here (None): the caller must fail closed.
+    * a leaf that existed with another value is set back to the captured value, a leaf-list to its captured members;
+    * a leaf (or leaf-list) that did not exist under an existing node is deleted on its own.
+    Deletions run last-created-first, before the value restores.  A non-scalar captured value where a leaf is set, or a new
+    choice case whose sibling case is captured, is not inverted here (None): the caller must fail closed.
     """
     deletes: list[tuple[Step, ...]] = []
     leaf_deletes: list[str] = []
@@ -300,8 +404,10 @@ def inverse(ops, tree: dict) -> list[str] | None:
     for op in ops:
         node, absent = tree, None
         for depth, step in enumerate(op.steps, 1):
-            node = _child(node, step, create=False)
+            parent, node = node, _child(node, step, create=False)
             if node is MISSING:
+                if any(sibling in parent for sibling in _choice_siblings("/".join(s.name for s in op.steps[:depth - 1]), step.name)):
+                    return None
                 absent = op.steps[:depth]
                 break
         if absent is not None:
@@ -310,13 +416,16 @@ def inverse(ops, tree: dict) -> list[str] | None:
             continue
         if not op.leaf:
             continue
-        if op.multi:
-            return None
         current = node.get(op.leaf, MISSING)
-        if current is MISSING:
+        if current is MISSING or (op.multi and current == []):
             path = cli_path(op.steps, op.leaf)
             if path not in leaf_deletes:
                 leaf_deletes.append(path)
+        elif op.multi:
+            if not isinstance(current, list):
+                return None
+            if sorted(map(str, current)) != sorted(map(str, op.value)):
+                restores.append(f"set / {cli_path(op.steps, op.leaf)} {_members_text(current)}")
         elif isinstance(current, (dict, list)):
             return None
         elif str(current) != str(op.value) or isinstance(current, bool) != isinstance(op.value, bool):

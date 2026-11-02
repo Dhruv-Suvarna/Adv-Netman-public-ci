@@ -21,7 +21,7 @@ from django.utils import timezone
 from .. import srlinux_model as model
 from ..config_import import parser_srlinux
 from ..execution.executors.srlinux import SrLinuxExecutor
-from ..execution.writers.srlinux_gnmi import GnmiSession
+from ..execution.writers.srlinux_gnmi import GnmiError, GnmiSession
 from ..health import live
 from . import assessment
 from .batch_frr_routing import FrrPair, _call, _postcheck, _requirements, _transaction
@@ -121,9 +121,22 @@ class SrlLab:
         statements = list(statements)
         if not statements:
             return
-        inverse = model.inverse(model.operations(statements), self.executor.config_tree())
-        self.gnmi.set_cli(statements)
-        self.undo.append(inverse or [])
+        before = self.executor.config_tree()
+        inverse = model.inverse(model.operations(statements), before)
+        if inverse is None:
+            raise RuntimeError("Native fixture prerequisite has no provable inverse.")
+        wanted = self.executor.tree_digest(before)
+        self.undo.append((inverse, wanted))
+        # Record the captured inverse before sending: a transport failure can leave the Set outcome unknown.
+        try:
+            self.gnmi.set_cli(statements)
+        except GnmiError as exc:
+            if exc.code != "SESSION_EXPIRED":
+                raise
+            # The writer renewed its channel. Retry only when read-back proves the first Set changed nothing.
+            if self.digest() != wanted:
+                raise RuntimeError("Native fixture Set outcome changed the captured tree; refusing to retry.") from exc
+            self.gnmi.set_cli(statements)
 
     def prepare_peer(self, plan) -> None:
         FrrPair.must(self.peer, "sysctl", "-w", f"net.ipv6.conf.{PEER_DEV}.accept_ra=0")
@@ -144,16 +157,28 @@ class SrlLab:
     def close(self) -> bool:
         restored = False
         try:
-            for inverse in reversed(self.undo):
-                if inverse:
-                    self.gnmi.set_cli(inverse)
-            for name in self.peer_links:
-                _call(self.peer, "ip", "link", "delete", name)
-            _call(self.peer, "ip", "addr", "flush", "dev", PEER_DEV, "scope", "global")
-            _call(self.peer, "sysctl", "-w", f"net.ipv6.conf.{PEER_DEV}.accept_ra={self.ra}")
-            restored = self.digest() == self.baseline and FrrPair.kernel(self.peer) == self.peer_baseline
+            for inverse, wanted in reversed(self.undo):
+                if self.digest() != wanted and inverse:
+                    try:
+                        self.gnmi.set_cli(inverse)
+                    except GnmiError as exc:
+                        if exc.code != "SESSION_EXPIRED":
+                            raise
+                        # On an expired session, the writer has renewed its channel. Retry only after read-back
+                        # proves the captured state is still absent; all other failures remain fatal.
+                        if self.digest() != wanted:
+                            self.gnmi.set_cli(inverse)
+                if self.digest() != wanted:
+                    raise RuntimeError("Native fixture prerequisite was not restored exactly.")
         finally:
-            self.executor.close()
+            try:
+                for name in self.peer_links:
+                    _call(self.peer, "ip", "link", "delete", name)
+                _call(self.peer, "ip", "addr", "flush", "dev", PEER_DEV, "scope", "global")
+                _call(self.peer, "sysctl", "-w", f"net.ipv6.conf.{PEER_DEV}.accept_ra={self.ra}")
+                restored = self.digest() == self.baseline and FrrPair.kernel(self.peer) == self.peer_baseline
+            finally:
+                self.executor.close()
         if not restored:
             raise RuntimeError("Isolated SR Linux lab was not restored to its captured baseline.")
         return True

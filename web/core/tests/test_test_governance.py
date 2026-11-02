@@ -251,8 +251,8 @@ class CellTests(SimpleTestCase):
                 with self.assertRaises(cells_module.LedgerError):
                     cells_module.parse_ledger(bad)
 
-    def test_the_tracked_ledger_has_50_supported_cells(self):
-        self.assertEqual(len(cells_module.supported_cells()), 50)
+    def test_the_tracked_ledger_has_62_supported_cells(self):
+        self.assertEqual(len(cells_module.supported_cells()), 62)
 
 
 def _report(files: dict, ev: catalog.Evidence, *, cell_rows=(), baseline=None, coverage_files=None, lint=None):

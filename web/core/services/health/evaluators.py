@@ -389,12 +389,18 @@ def _bgp_config(req, ctx):
     return _routing_result(group, facts, False, "BGP neighbor and address family")
 
 
+def family_label(value) -> str:
+    """A family fact as the routing rows spell it: the planner records 4 / 6, hand-written descriptors IPV4 / IPV6."""
+    text = str(value or "").upper()
+    return {"4": "IPV4", "6": "IPV6"}.get(text, text)
+
+
 def _bgp_network(req, ctx):
     rows, group, missing = _routing_rows(req, ctx)
     if missing:
         return missing
     facts = _facts(req)
-    wanted = {"family": str(facts.get("family") or "").upper(), "cidr": norm_prefix(facts["prefix"])}
+    wanted = {"family": family_label(facts.get("family")), "cidr": norm_prefix(facts["prefix"])}
     found = any(row["protocol"] == "bgp" and any(
         net.get("family") == wanted["family"] and norm_prefix(net.get("cidr")) == wanted["cidr"]
         for net in row["networks"]) for row in rows)

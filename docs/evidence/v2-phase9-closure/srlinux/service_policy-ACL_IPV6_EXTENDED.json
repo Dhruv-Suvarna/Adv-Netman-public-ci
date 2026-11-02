@@ -1,0 +1,212 @@
+{
+  "assessment": {
+    "assessment_basis": "RUNTIME_INVESTIGATION",
+    "assessment_complete": true,
+    "assessment_id": null,
+    "automated_tests": "PASS",
+    "candidate": "PASS",
+    "capability_status": "SUPPORTED",
+    "compensation": "PASS",
+    "device_builder": "PASS",
+    "evidence_ids": [],
+    "evidence_references": [
+      "live:nmas-cap-validation/srl-acl_ipv6_extended/2026-10-30T01:48:32.553541+00:00"
+    ],
+    "executor": "PASS",
+    "feasibility": "PROVEN",
+    "feature": "service_policy.ACL_IPV6_EXTENDED",
+    "field_validation": "PASS",
+    "final_status": "SUPPORTED",
+    "live_read": "PASS",
+    "live_write": "PASS",
+    "parser": "PASS",
+    "platform": "nokia_srlinux",
+    "postcheck": "PASS",
+    "probes": {
+      "automated_tests": {
+        "detail": "Repeated renderer determinism=True; feature-specific valid/invalid field regression=PASS.",
+        "outcome": "PASS",
+        "reason": "",
+        "reference": "",
+        "test_type": "FIXTURE"
+      },
+      "candidate_generation": {
+        "detail": "Real candidate_renderer.render ran; 1413 chars; target-rendered=PASS.",
+        "outcome": "PASS",
+        "reason": "",
+        "reference": "",
+        "test_type": "FIXTURE"
+      },
+      "compensation": {
+        "detail": "isolated SR Linux service_policy.ACL_IPV6_EXTENDED against an FRR 8.4.4 peer through the registered SrLinuxExecutor (atomic gNMI CLI-origin Set, gNMI Get captured-tree inverse) || pristine node: preflight=['acl=APPLY/True/-', 'acl_attachment=APPLY/True/-']; control before apply: unfiltered: permitted-source ping=True, denied-source ping=True (after 12 s); operator postcheck over gNMI pass=True []; live gNMI config import recovered intent=True; permitted-source ping=True, denied-source ping=False; pre-existing configuration preserved=True; after compensation: unfiltered: permitted-source ping=True, denied-source ping=True (after 4 s); compensation=['COMPENSATED', 'COMPENSATED'] codes=['-', '-']; running configuration identical to pre-apply capture=True; pre-existing configuration preserved=True; lab baseline restored=True; no failure || configured node: preflight=['acl=APPLY/True/-', 'acl_attachment=APPLY/True/-']; control before apply: unfiltered: permitted-source ping=True, denied-source ping=True (after 4 s); operator postcheck over gNMI pass=True []; live gNMI config import recovered intent=True; permitted-source ping=True, denied-source ping=False; pre-existing configuration preserved=True; after compensation: unfiltered: permitted-source ping=True, denied-source ping=True (after 4 s); compensation=['COMPENSATED', 'COMPENSATED'] codes=['-', '-']; running configuration identical to pre-apply capture=True; pre-existing configuration preserved=True; lab baseline restored=True; no failure || Configlets from the planner's own handlers: NMAS rendered [acl] acl acl-filter CAP_ACL type ipv6 / acl acl-filter CAP_ACL type ipv6 entry 10 match ipv6 source-ip prefix 2001:db8:44::66/128 / acl acl-filter CAP_ACL type ipv6 entry 10 match ipv6 destination-ip prefix ::/0 / acl acl-filter CAP_ACL type ipv6 entry 10 match ipv6 next-header icmp6 / acl acl-filter CAP_ACL type ipv6 entry 10 action drop / acl acl-filter CAP_ACL type ipv6 entry 15 match ipv6 source-ip prefix ::/0 / acl ",
+        "outcome": "PASS",
+        "reason": "",
+        "reference": "live:nmas-cap-validation/srl-acl_ipv6_extended/2026-10-30T01:48:32.553541+00:00",
+        "test_type": "LIVE"
+      },
+      "config_validation": {
+        "detail": "Actual network-config validation=PASS; failing checks=[]; external inputs are OFFLINE_FIXTURE only.",
+        "outcome": "PASS",
+        "reason": "",
+        "reference": "",
+        "test_type": "FIXTURE"
+      },
+      "device_builder_ui": {
+        "detail": "Real Device Builder mutation API accepted the feature.",
+        "outcome": "PASS",
+        "reason": "",
+        "reference": "",
+        "test_type": "FIXTURE"
+      },
+      "executor": {
+        "detail": "Real executor.assess on fixture: action=APPLY; exact inverse present=True; restorable=True; no connection/apply invoked.",
+        "outcome": "PASS",
+        "reason": "",
+        "reference": "",
+        "test_type": "FIXTURE"
+      },
+      "field_validation": {
+        "detail": "Feature field commit: valid sample=VALID; invalid sample=INVALID.",
+        "outcome": "PASS",
+        "reason": "",
+        "reference": "",
+        "test_type": "FIXTURE"
+      },
+      "live_post_write_validation": {
+        "detail": "isolated SR Linux service_policy.ACL_IPV6_EXTENDED against an FRR 8.4.4 peer through the registered SrLinuxExecutor (atomic gNMI CLI-origin Set, gNMI Get captured-tree inverse) || pristine node: preflight=['acl=APPLY/True/-', 'acl_attachment=APPLY/True/-']; control before apply: unfiltered: permitted-source ping=True, denied-source ping=True (after 12 s); operator postcheck over gNMI pass=True []; live gNMI config import recovered intent=True; permitted-source ping=True, denied-source ping=False; pre-existing configuration preserved=True; after compensation: unfiltered: permitted-source ping=True, denied-source ping=True (after 4 s); compensation=['COMPENSATED', 'COMPENSATED'] codes=['-', '-']; running configuration identical to pre-apply capture=True; pre-existing configuration preserved=True; lab baseline restored=True; no failure || configured node: preflight=['acl=APPLY/True/-', 'acl_attachment=APPLY/True/-']; control before apply: unfiltered: permitted-source ping=True, denied-source ping=True (after 4 s); operator postcheck over gNMI pass=True []; live gNMI config import recovered intent=True; permitted-source ping=True, denied-source ping=False; pre-existing configuration preserved=True; after compensation: unfiltered: permitted-source ping=True, denied-source ping=True (after 4 s); compensation=['COMPENSATED', 'COMPENSATED'] codes=['-', '-']; running configuration identical to pre-apply capture=True; pre-existing configuration preserved=True; lab baseline restored=True; no failure || Configlets from the planner's own handlers: NMAS rendered [acl] acl acl-filter CAP_ACL type ipv6 / acl acl-filter CAP_ACL type ipv6 entry 10 match ipv6 source-ip prefix 2001:db8:44::66/128 / acl acl-filter CAP_ACL type ipv6 entry 10 match ipv6 destination-ip prefix ::/0 / acl acl-filter CAP_ACL type ipv6 entry 10 match ipv6 next-header icmp6 / acl acl-filter CAP_ACL type ipv6 entry 10 action drop / acl acl-filter CAP_ACL type ipv6 entry 15 match ipv6 source-ip prefix ::/0 / acl ",
+        "outcome": "PASS",
+        "reason": "",
+        "reference": "live:nmas-cap-validation/srl-acl_ipv6_extended/2026-10-30T01:48:32.553541+00:00",
+        "test_type": "LIVE"
+      },
+      "live_read": {
+        "detail": "isolated SR Linux service_policy.ACL_IPV6_EXTENDED against an FRR 8.4.4 peer through the registered SrLinuxExecutor (atomic gNMI CLI-origin Set, gNMI Get captured-tree inverse) || pristine node: preflight=['acl=APPLY/True/-', 'acl_attachment=APPLY/True/-']; control before apply: unfiltered: permitted-source ping=True, denied-source ping=True (after 12 s); operator postcheck over gNMI pass=True []; live gNMI config import recovered intent=True; permitted-source ping=True, denied-source ping=False; pre-existing configuration preserved=True; after compensation: unfiltered: permitted-source ping=True, denied-source ping=True (after 4 s); compensation=['COMPENSATED', 'COMPENSATED'] codes=['-', '-']; running configuration identical to pre-apply capture=True; pre-existing configuration preserved=True; lab baseline restored=True; no failure || configured node: preflight=['acl=APPLY/True/-', 'acl_attachment=APPLY/True/-']; control before apply: unfiltered: permitted-source ping=True, denied-source ping=True (after 4 s); operator postcheck over gNMI pass=True []; live gNMI config import recovered intent=True; permitted-source ping=True, denied-source ping=False; pre-existing configuration preserved=True; after compensation: unfiltered: permitted-source ping=True, denied-source ping=True (after 4 s); compensation=['COMPENSATED', 'COMPENSATED'] codes=['-', '-']; running configuration identical to pre-apply capture=True; pre-existing configuration preserved=True; lab baseline restored=True; no failure || Configlets from the planner's own handlers: NMAS rendered [acl] acl acl-filter CAP_ACL type ipv6 / acl acl-filter CAP_ACL type ipv6 entry 10 match ipv6 source-ip prefix 2001:db8:44::66/128 / acl acl-filter CAP_ACL type ipv6 entry 10 match ipv6 destination-ip prefix ::/0 / acl acl-filter CAP_ACL type ipv6 entry 10 match ipv6 next-header icmp6 / acl acl-filter CAP_ACL type ipv6 entry 10 action drop / acl acl-filter CAP_ACL type ipv6 entry 15 match ipv6 source-ip prefix ::/0 / acl ",
+        "outcome": "PASS",
+        "reason": "",
+        "reference": "live:nmas-cap-validation/srl-acl_ipv6_extended/2026-10-30T01:48:32.553541+00:00",
+        "test_type": "LIVE"
+      },
+      "live_write": {
+        "detail": "isolated SR Linux service_policy.ACL_IPV6_EXTENDED against an FRR 8.4.4 peer through the registered SrLinuxExecutor (atomic gNMI CLI-origin Set, gNMI Get captured-tree inverse) || pristine node: preflight=['acl=APPLY/True/-', 'acl_attachment=APPLY/True/-']; control before apply: unfiltered: permitted-source ping=True, denied-source ping=True (after 12 s); operator postcheck over gNMI pass=True []; live gNMI config import recovered intent=True; permitted-source ping=True, denied-source ping=False; pre-existing configuration preserved=True; after compensation: unfiltered: permitted-source ping=True, denied-source ping=True (after 4 s); compensation=['COMPENSATED', 'COMPENSATED'] codes=['-', '-']; running configuration identical to pre-apply capture=True; pre-existing configuration preserved=True; lab baseline restored=True; no failure || configured node: preflight=['acl=APPLY/True/-', 'acl_attachment=APPLY/True/-']; control before apply: unfiltered: permitted-source ping=True, denied-source ping=True (after 4 s); operator postcheck over gNMI pass=True []; live gNMI config import recovered intent=True; permitted-source ping=True, denied-source ping=False; pre-existing configuration preserved=True; after compensation: unfiltered: permitted-source ping=True, denied-source ping=True (after 4 s); compensation=['COMPENSATED', 'COMPENSATED'] codes=['-', '-']; running configuration identical to pre-apply capture=True; pre-existing configuration preserved=True; lab baseline restored=True; no failure || Configlets from the planner's own handlers: NMAS rendered [acl] acl acl-filter CAP_ACL type ipv6 / acl acl-filter CAP_ACL type ipv6 entry 10 match ipv6 source-ip prefix 2001:db8:44::66/128 / acl acl-filter CAP_ACL type ipv6 entry 10 match ipv6 destination-ip prefix ::/0 / acl acl-filter CAP_ACL type ipv6 entry 10 match ipv6 next-header icmp6 / acl acl-filter CAP_ACL type ipv6 entry 10 action drop / acl acl-filter CAP_ACL type ipv6 entry 15 match ipv6 source-ip prefix ::/0 / acl ",
+        "outcome": "PASS",
+        "reason": "",
+        "reference": "live:nmas-cap-validation/srl-acl_ipv6_extended/2026-10-30T01:48:32.553541+00:00",
+        "test_type": "LIVE"
+      },
+      "parser_import": {
+        "detail": "isolated SR Linux service_policy.ACL_IPV6_EXTENDED against an FRR 8.4.4 peer through the registered SrLinuxExecutor (atomic gNMI CLI-origin Set, gNMI Get captured-tree inverse) || pristine node: preflight=['acl=APPLY/True/-', 'acl_attachment=APPLY/True/-']; control before apply: unfiltered: permitted-source ping=True, denied-source ping=True (after 12 s); operator postcheck over gNMI pass=True []; live gNMI config import recovered intent=True; permitted-source ping=True, denied-source ping=False; pre-existing configuration preserved=True; after compensation: unfiltered: permitted-source ping=True, denied-source ping=True (after 4 s); compensation=['COMPENSATED', 'COMPENSATED'] codes=['-', '-']; running configuration identical to pre-apply capture=True; pre-existing configuration preserved=True; lab baseline restored=True; no failure || configured node: preflight=['acl=APPLY/True/-', 'acl_attachment=APPLY/True/-']; control before apply: unfiltered: permitted-source ping=True, denied-source ping=True (after 4 s); operator postcheck over gNMI pass=True []; live gNMI config import recovered intent=True; permitted-source ping=True, denied-source ping=False; pre-existing configuration preserved=True; after compensation: unfiltered: permitted-source ping=True, denied-source ping=True (after 4 s); compensation=['COMPENSATED', 'COMPENSATED'] codes=['-', '-']; running configuration identical to pre-apply capture=True; pre-existing configuration preserved=True; lab baseline restored=True; no failure || Configlets from the planner's own handlers: NMAS rendered [acl] acl acl-filter CAP_ACL type ipv6 / acl acl-filter CAP_ACL type ipv6 entry 10 match ipv6 source-ip prefix 2001:db8:44::66/128 / acl acl-filter CAP_ACL type ipv6 entry 10 match ipv6 destination-ip prefix ::/0 / acl acl-filter CAP_ACL type ipv6 entry 10 match ipv6 next-header icmp6 / acl acl-filter CAP_ACL type ipv6 entry 10 action drop / acl acl-filter CAP_ACL type ipv6 entry 15 match ipv6 source-ip prefix ::/0 / acl ",
+        "outcome": "PASS",
+        "reason": "",
+        "reference": "live:nmas-cap-validation/srl-acl_ipv6_extended/2026-10-30T01:48:32.553541+00:00",
+        "test_type": "LIVE"
+      },
+      "renderer": {
+        "detail": "Authoritative renderer differential: 4 target line(s), 0 refusal marker(s); sha256=59406b84c8e912742cd3bdf982a5d9fd5fb6d6994b10f72f961b2fabeb540818.",
+        "outcome": "PASS",
+        "reason": "",
+        "reference": "",
+        "test_type": "FIXTURE"
+      },
+      "runtime_validation": {
+        "detail": "isolated SR Linux service_policy.ACL_IPV6_EXTENDED against an FRR 8.4.4 peer through the registered SrLinuxExecutor (atomic gNMI CLI-origin Set, gNMI Get captured-tree inverse) || pristine node: preflight=['acl=APPLY/True/-', 'acl_attachment=APPLY/True/-']; control before apply: unfiltered: permitted-source ping=True, denied-source ping=True (after 12 s); operator postcheck over gNMI pass=True []; live gNMI config import recovered intent=True; permitted-source ping=True, denied-source ping=False; pre-existing configuration preserved=True; after compensation: unfiltered: permitted-source ping=True, denied-source ping=True (after 4 s); compensation=['COMPENSATED', 'COMPENSATED'] codes=['-', '-']; running configuration identical to pre-apply capture=True; pre-existing configuration preserved=True; lab baseline restored=True; no failure || configured node: preflight=['acl=APPLY/True/-', 'acl_attachment=APPLY/True/-']; control before apply: unfiltered: permitted-source ping=True, denied-source ping=True (after 4 s); operator postcheck over gNMI pass=True []; live gNMI config import recovered intent=True; permitted-source ping=True, denied-source ping=False; pre-existing configuration preserved=True; after compensation: unfiltered: permitted-source ping=True, denied-source ping=True (after 4 s); compensation=['COMPENSATED', 'COMPENSATED'] codes=['-', '-']; running configuration identical to pre-apply capture=True; pre-existing configuration preserved=True; lab baseline restored=True; no failure || Configlets from the planner's own handlers: NMAS rendered [acl] acl acl-filter CAP_ACL type ipv6 / acl acl-filter CAP_ACL type ipv6 entry 10 match ipv6 source-ip prefix 2001:db8:44::66/128 / acl acl-filter CAP_ACL type ipv6 entry 10 match ipv6 destination-ip prefix ::/0 / acl acl-filter CAP_ACL type ipv6 entry 10 match ipv6 next-header icmp6 / acl acl-filter CAP_ACL type ipv6 entry 10 action drop / acl acl-filter CAP_ACL type ipv6 entry 15 match ipv6 source-ip prefix ::/0 / acl ",
+        "outcome": "PASS",
+        "reason": "",
+        "reference": "live:nmas-cap-validation/srl-acl_ipv6_extended/2026-10-30T01:48:32.553541+00:00",
+        "test_type": "LIVE"
+      },
+      "semantic_model": {
+        "detail": "Canonical fixture resolves the feature-specific path security.acls.acl_0000000000000003.family.",
+        "outcome": "PASS",
+        "reason": "",
+        "reference": "",
+        "test_type": "FIXTURE"
+      }
+    },
+    "renderer": "PASS",
+    "repository_head": "82147bc19e69fed68dbb8d677517437f3f3f553f",
+    "runtime_test": "PASS",
+    "runtime_version": "ghcr.io/nokia/srlinux:24.10 (24.10.7) / FRR Linux peer",
+    "semantic": "PASS",
+    "status": "SUPPORTED",
+    "strongest_test_type": "LIVE",
+    "timestamp": "2026-10-30T01:47:25.226170+00:00",
+    "unsupported_reasons": [],
+    "validator": "PASS"
+  },
+  "ephemeral_database": true,
+  "repository_head": "82147bc19e69fed68dbb8d677517437f3f3f553f",
+  "scenarios": {
+    "configured node": {
+      "actions": [
+        "acl=APPLY/True/-",
+        "acl_attachment=APPLY/True/-"
+      ],
+      "after": true,
+      "applied": true,
+      "compensated": true,
+      "compensation_codes": [
+        "-",
+        "-"
+      ],
+      "config_restored": true,
+      "control": true,
+      "detail": "control before apply: unfiltered: permitted-source ping=True, denied-source ping=True (after 4 s); operator postcheck over gNMI pass=True []; live gNMI config import recovered intent=True; permitted-source ping=True, denied-source ping=False; pre-existing configuration preserved=True; after compensation: unfiltered: permitted-source ping=True, denied-source ping=True (after 4 s)",
+      "failure": "",
+      "imported": true,
+      "post_ok": true,
+      "preserved": true,
+      "read_ok": true,
+      "restored": true,
+      "statuses": [
+        "COMPENSATED",
+        "COMPENSATED"
+      ],
+      "verified": true
+    },
+    "pristine node": {
+      "actions": [
+        "acl=APPLY/True/-",
+        "acl_attachment=APPLY/True/-"
+      ],
+      "after": true,
+      "applied": true,
+      "compensated": true,
+      "compensation_codes": [
+        "-",
+        "-"
+      ],
+      "config_restored": true,
+      "control": true,
+      "detail": "control before apply: unfiltered: permitted-source ping=True, denied-source ping=True (after 12 s); operator postcheck over gNMI pass=True []; live gNMI config import recovered intent=True; permitted-source ping=True, denied-source ping=False; pre-existing configuration preserved=True; after compensation: unfiltered: permitted-source ping=True, denied-source ping=True (after 4 s)",
+      "failure": "",
+      "imported": true,
+      "post_ok": true,
+      "preserved": true,
+      "read_ok": true,
+      "restored": true,
+      "statuses": [
+        "COMPENSATED",
+        "COMPENSATED"
+      ],
+      "verified": true
+    }
+  },
+  "schema": "nmas.v2.phase9.srlinux-live/1",
+  "uncommitted_source_sha256": {
+    "templates/features/srlinux/acl_ipv4.j2": "32492e809fb4ba353d520d31d6c96f04e9d6550cfe8e60746efab4cfd35ced2f",
+    "templates/features/srlinux/acl_ipv6.j2": "46bf74581ce7332ee570bb390e4a4ca0eb7a06a7e09d7dd5c2a6fa10b65b57c7",
+    "templates/features/srlinux/routing_ospfv2.j2": "634f18074d2c6b6c04a58301fd7298937e13f9a1ef2052010415387c5c3ae72a",
+    "templates/features/srlinux/routing_ospfv3.j2": "d725392bda3c19ddfdae22b6ae0cc0709a6eeb3b7f30aebb0435b046f2570cc6",
+    "web/core/services/capabilities/batch_srlinux.py": "56e960a8ceb34b2c6ed4c6d7ddb42a287c5d17eddbda9746fa66f2389af184ab",
+    "web/core/services/capabilities/batch_srlinux_phase9.py": "948b75cd5636617800ac7376533bfae3d852a8279ba059626c8d95b02d6cd803",
+    "web/core/services/capabilities/offline_verify.py": "822078bbed0892f002dc941014f7d361e602ebf4deeef760a30dea1986321140",
+    "web/core/services/config_import/parser_srlinux.py": "a4f95567b0e79e64af1aaf5e5ac95b11b298a8c66ea1939281470286020e6808",
+    "web/core/services/execution/executors/srlinux.py": "834c1d559d700b0cdcb5893f1def7b754086accd80a4d31040ca7d3fe6daaf00",
+    "web/core/services/execution/writers/srlinux_gnmi.py": "68d1546b12513e13178dfa4b9288c37794ef100fb660cb259c44844aec07b81e",
+    "web/core/services/health/live.py": "3e5c11ee2d4034f9043129c0959d9e707dee979a617ef37ff7507bdf8e3c65bd",
+    "web/core/services/health/routing_config.py": "e0daa1065cb6bdf7cc6436e8f10ae24bd04f51dc54e0f20df89370bec3822918",
+    "web/core/services/planning/configlet_factory.py": "6fed5644022a50623a5e7a73b04c4167adc56c6f79a10bdbb7092a8071ba7d9e",
+    "web/core/services/platform_drivers.py": "d1dfdaf1d9ab61f1816005977f35cacbf344b78e0b1309dbe417ef2b6a8bf88f",
+    "web/core/services/srlinux_model.py": "5461449faff283669389261333f6c3c1d658b0f480944822c2e4faceef7c92c9"
+  }
+}

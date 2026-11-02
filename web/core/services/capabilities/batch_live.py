@@ -581,6 +581,9 @@ class LiveRegistry(dict):
         from .batch_srlinux import CELLS as SRLINUX_CELLS, probe_srlinux
         for key in SRLINUX_CELLS:
             self["nokia_srlinux", key] = lambda cell, key=key: probe_srlinux(cell, key)
+        from .batch_srlinux_phase9 import CELLS as SRLINUX_PHASE9_CELLS, probe_srlinux_phase9
+        for key in SRLINUX_PHASE9_CELLS:     # V2 Phase 9: OSPF / BGP / ACL / DHCP relay against an FRR peer
+            self["nokia_srlinux", key] = lambda cell, key=key: probe_srlinux_phase9(cell, key)
         from .batch_iosxe import CELLS as IOSXE_CELLS, probe_iosxe
         for key in IOSXE_CELLS:
             self["cisco_c8000v_iosxe", key] = lambda cell, key=key: probe_iosxe(cell, key)

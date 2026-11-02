@@ -2,8 +2,8 @@
 
 These conversions decide what an SR Linux write and its rollback look like, so exactness matters in both directions.
 POSITIVE: paths, values, statements, trees, digests and inverses are exactly the documented shapes.  NEGATIVE: comment
-lines and module qualifiers are dropped, non-``set`` text is refused, an unprovable inverse (a leaf-list member or a
-non-scalar captured value) is None so the caller fails closed, and an empty gNMI response is an empty tree.  Pure.
+lines and module qualifiers are dropped, non-``set`` text and an unbracketed leaf-list member are refused, an unprovable
+inverse (a non-scalar captured value) is None so the caller fails closed, and an empty gNMI response is an empty tree.  Pure.
 """
 
 from __future__ import annotations
@@ -102,9 +102,16 @@ class InverseTests(SimpleTestCase):
                                  "delete / interface ethernet-1/1 mtu", "set / interface ethernet-1/1 description old"])
         self.assertEqual(sm.inverse(self.ops("set / interface ethernet-1/1 admin-state enable"), self.TREE), [])
 
-    def test_inverse_is_none_for_a_leaf_list_member_or_a_non_scalar_captured_value(self):
-        relay = self.ops("set / interface ethernet-1/1 subinterface 0 ipv4 dhcp-relay server 192.0.2.9")
-        self.assertIsNone(sm.inverse(relay, {"interface": [{"name": "ethernet-1/1", "subinterface": [{"index": 0, "ipv4": {"dhcp-relay": {}}}]}]}))
+    def test_inverse_deletes_a_new_leaf_list_and_restores_a_replaced_one(self):
+        relay = self.ops("set / interface ethernet-1/1 subinterface 0 ipv4 dhcp-relay server [ 192.0.2.9 ]")
+        empty = {"interface": [{"name": "ethernet-1/1", "subinterface": [{"index": 0, "ipv4": {"dhcp-relay": {}}}]}]}
+        held = {"interface": [{"name": "ethernet-1/1", "subinterface": [{"index": 0, "ipv4": {"dhcp-relay": {"server": ["192.0.2.7"]}}}]}]}
+        self.assertEqual(sm.inverse(relay, empty), ["delete / interface ethernet-1/1 subinterface 0 ipv4 dhcp-relay server"])
+        self.assertEqual(sm.inverse(relay, held), ["set / interface ethernet-1/1 subinterface 0 ipv4 dhcp-relay server [ 192.0.2.7 ]"])
+
+    def test_inverse_is_none_for_an_unbracketed_leaf_list_or_a_non_scalar_captured_value(self):
+        with self.assertRaises(sm.ModelError):
+            self.ops("set / interface ethernet-1/1 subinterface 0 ipv4 dhcp-relay server 192.0.2.9")
         self.assertIsNone(sm.inverse(self.ops("set / interface ethernet-1/1 description x"), {"interface": [{"name": "ethernet-1/1", "description": {"a": 1}}]}))
 
     def test_operations_refuse_unmodelled_or_malformed_statements(self):
