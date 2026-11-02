@@ -67,3 +67,67 @@ class FrrIsisTests(SimpleTestCase):
         self.assertEqual(live.parse_frr_isis(""), [])
         with self.assertRaises(live.LiveError):
             live.parse_frr_isis("not-json")
+
+
+class FrrIsisHarnessTests(SimpleTestCase):
+    """The isolated FRR IS-IS harness entry point, driven with its lab, database and Git replaced."""
+
+    SOURCES = ("web/core/services/capabilities/batch_frr_isis.py", "web/core/services/platform_drivers.py",
+               "web/core/services/execution/executors/frr_routing.py", "web/core/services/execution/executors/linux.py",
+               "web/core/services/config_import/parser_frr.py", "web/core/services/candidate_composition.py",
+               "web/core/services/health/live.py", "web/core/services/capabilities/offline_verify.py",
+               "templates/features/ubuntu_frr/routing_isis.j2")
+
+    @staticmethod
+    def load():
+        import importlib.util
+        from pathlib import Path
+        path = Path(__file__).resolve().parents[3] / "labs/phase9-frr-isis-isolated/run.py"
+        spec = importlib.util.spec_from_file_location("nmas_phase9_frr_isis_run", path)
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        return module
+
+    def run_main(self, root, outcome):
+        from types import SimpleNamespace
+        module = self.load()
+        cell = SimpleNamespace(probes={"renderer": {"outcome": outcome}}, complete=outcome == "PASS",
+                               status="SUPPORTED" if outcome == "PASS" else "NOT_IMPLEMENTED",
+                               as_dict=lambda: {"status": "SUPPORTED"})
+        with mock.patch.dict(module.settings.DATABASES["default"], {}, clear=False), \
+                mock.patch.object(module, "ROOT", root), \
+                mock.patch.object(module.subprocess, "check_output", return_value="revision\n"), \
+                mock.patch.object(module, "call_command"), \
+                mock.patch.object(module, "verify_cell", return_value=cell), \
+                mock.patch.object(module, "probe_frr_isis", return_value={"pristine": {"restored": True}}) as probe, \
+                mock.patch("builtins.print"):
+            module.main()
+        return probe
+
+    def fake_root(self, directory):
+        from pathlib import Path
+        root = Path(directory)
+        for name in self.SOURCES:
+            (root / name).parent.mkdir(parents=True, exist_ok=True)
+            (root / name).write_text("safe fixture\n")
+        return root
+
+    def test_frr_isis_harness_main_positive_writes_ephemeral_evidence(self):
+        import json
+        import tempfile
+        with tempfile.TemporaryDirectory() as directory:
+            root = self.fake_root(directory)
+            probe = self.run_main(root, "PASS")
+            evidence = json.loads((root / "docs/evidence/v2-phase9-closure/frr-isis/assessment.json").read_text())
+        probe.assert_called_once()
+        self.assertTrue(evidence["ephemeral_database"])
+        self.assertEqual(evidence["repository_head"], "revision")
+        self.assertEqual(set(evidence["uncommitted_source_sha256"]), set(self.SOURCES))
+
+    def test_frr_isis_harness_main_refuses_an_offline_failure_before_the_lab(self):
+        import tempfile
+        with tempfile.TemporaryDirectory() as directory:
+            root = self.fake_root(directory)
+            with self.assertRaisesRegex(RuntimeError, "offline failure"):
+                self.run_main(root, "FAIL")
+            self.assertFalse((root / "docs/evidence/v2-phase9-closure/frr-isis/assessment.json").exists())
