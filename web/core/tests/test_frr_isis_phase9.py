@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
+import json
 from copy import deepcopy
+from types import SimpleNamespace
 from unittest import mock
 
 from django.test import SimpleTestCase
@@ -131,3 +133,65 @@ class FrrIsisHarnessTests(SimpleTestCase):
             with self.assertRaisesRegex(RuntimeError, "offline failure"):
                 self.run_main(root, "FAIL")
             self.assertFalse((root / "docs/evidence/v2-phase9-closure/frr-isis/assessment.json").exists())
+
+
+class FrrIsisReleaseGovernanceTests(SimpleTestCase):
+    """Direct offline cases for the FRR IS-IS live runner; the live proof itself is the isolated evidence record."""
+
+    PASSING = {"applied": True, "read_ok": True, "post_ok": True, "verified": True, "runtime_ok": True, "control": True,
+               "compensated": True, "config_restored": True, "after": True, "restored": True, "preserved": True}
+
+    def _isis_frr_batch(self):
+        from core.services.capabilities import batch_frr_isis
+        return batch_frr_isis
+
+    def rendered_text(self) -> str:
+        specs, _requirements, _sections = self._isis_frr_batch().plan()
+        return "\n".join(line for spec in reversed(specs) for line in (*spec.lines, "exit", "!")) + "\n"
+
+    def test_plan_returns_the_bounded_process_binding_and_postchecks(self):
+        batch = self._isis_frr_batch()
+        specs, requirements, sections = batch.plan()
+        self.assertEqual([spec.object_type for spec in specs], ["routing_isis", "routing_binding"])
+        self.assertIn(f"net {batch.NET}", [line.strip() for line in specs[0].lines])
+        self.assertIn("ip router isis NMAS44", [line.strip() for line in specs[1].lines])
+        self.assertEqual(len(requirements), 3)
+        self.assertIn("isis", sections["routing"])
+
+    def test_plan_refuses_a_candidate_without_the_link_binding(self):
+        batch = self._isis_frr_batch()
+        with mock.patch.object(batch, "_block", side_effect=lambda _rendered, header: [header]):
+            with self.assertRaisesRegex(RuntimeError, "lacks the NMAS process or link binding"):
+                batch.plan()
+
+    def test_imported_accepts_the_exact_rendered_read_back(self):
+        self.assertTrue(self._isis_frr_batch().imported(self.rendered_text()))
+
+    def test_imported_rejects_a_missing_or_drifted_read_back(self):
+        batch = self._isis_frr_batch()
+        self.assertFalse(batch.imported(""))
+        self.assertFalse(batch.imported(self.rendered_text().replace("isis metric 20", "isis metric 10")))
+
+    def test_probe_records_a_passing_live_verdict_from_mocked_scenarios(self):
+        batch = self._isis_frr_batch()
+        cell = SimpleNamespace(probes={}, runtime_version="")
+        with mock.patch.object(batch, "_scenario", return_value=dict(self.PASSING)):
+            scenarios = batch.probe_frr_isis(cell)
+        self.assertEqual(set(scenarios), {"pristine", "configured"})
+        self.assertEqual({row["outcome"] for row in cell.probes.values()}, {"PASS"})
+        self.assertEqual(len(cell.probes), 5)
+
+    def test_probe_refuses_a_failed_live_verdict_without_a_device(self):
+        batch = self._isis_frr_batch()
+        cell = SimpleNamespace(probes={}, runtime_version="")
+        with mock.patch.object(batch, "_scenario", return_value={**self.PASSING, "verified": False, "restored": False}):
+            batch.probe_frr_isis(cell)
+        self.assertEqual(cell.probes["runtime_validation"]["outcome"], "FAIL")
+        self.assertEqual(cell.probes["compensation"]["outcome"], "FAIL")
+        self.assertEqual(cell.probes["live_write"]["outcome"], "PASS")
+
+    def test_parse_frr_isis_reads_one_adjacency_per_circuit(self):
+        text = json.dumps({"areas": [{"area": "NMAS44", "circuits": [
+            {"adj": "peer", "interface": "eth3", "level": 2, "state": "Up"}]}]})
+        self.assertEqual(live.parse_frr_isis(text), [{"instance": "NMAS44", "system_id": "peer", "hostname": "peer",
+                                                      "interface": "eth3", "level": "2", "state": "UP"}])
