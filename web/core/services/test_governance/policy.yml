@@ -38,10 +38,8 @@ exclude:
 
 # Whole-artifact exemptions: still inventoried and shown as EXEMPT (never silently dropped).
 artifact_exemptions:
-  - pattern: ".github/workflows/public-ci-integrity.yml"
-    reason: generated only in a sanitized mirror; exact content and execution are covered by public-CI snapshot/integrity tests
   - pattern: "PUBLIC_CI_SNAPSHOT.json"
-    reason: generated only in a sanitized mirror; every path, mode, size, and digest is covered by the fail-closed verifier tests
+    reason: immutable import record of the sanitized snapshot chain; its digests and immutability are covered by the fail-closed verifier tests
   - pattern: "web/core/migrations/**"
     reason: Django migration -- generated, append-only schema history; proven by the django.migrations drift gate and by every test database
   - pattern: "netbox/scripts/verify_*.py"
