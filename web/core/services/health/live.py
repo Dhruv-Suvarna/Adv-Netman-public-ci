@@ -72,7 +72,7 @@ HEALTH_CAPABILITIES = MappingProxyType({
               "groups": ("interfaces", "addresses", "routes", "ospf", "bgp", "rip", "nat", "routing_config")},
     "nokia_srlinux": {"status": Capability.SUPPORTED, "transport": "gnmi-get",
                       "evidence": "gNMI Get of structured state, verified on an isolated SR Linux 24.10.7 node (not part of the approved Labs 2/3 baseline).",
-                      "groups": ("interfaces", "addresses", "routes")},
+                      "groups": ("interfaces", "addresses", "routes", "ospf", "bgp", "routing_config", "config")},
     "cisco_c8000v_iosxe": {"status": Capability.SUPPORTED, "transport": "netmiko-ssh",
                            "evidence": "Allowlisted show commands, verified on an isolated Catalyst 8000V / IOS XE 17.06.01a (not part of the approved Labs 2/3 baseline).",
                            "groups": ("interfaces", "addresses", "routes")},
@@ -122,6 +122,9 @@ LINUX_COMMANDS = MappingProxyType({
 SRLINUX_QUERIES = MappingProxyType({
     "interfaces": ("/interface", "state"),
     "route_table": ("/network-instance[name=default]/route-table", "state"),
+    "ospf": ("/network-instance[name=default]/protocols/ospf", "state"),            # V2 Phase 9 routing reads
+    "bgp": ("/network-instance[name=default]/protocols/bgp/neighbor", "state"),
+    "running_config": ("/", "config"),        # only ever reduced to secret-free semantic facts through parser_srlinux
 })
 # IOS XE 17.6 has no ``| json``: the same fixed show commands, parsed from their documented text layout.
 IOSXE_COMMANDS = MappingProxyType({
@@ -549,6 +552,68 @@ def parse_srl_interfaces(text: str) -> tuple[dict, dict]:
     return interfaces, addresses
 
 
+# SR Linux names an OSPF route by version; the health model names the protocol (as on every other platform).
+_SRL_ROUTE_TYPES = {"ospfv2": "ospf", "ospfv3": "ospf"}
+
+
+def _srl_interface(reference: str) -> str:
+    """``ethernet-1/1.0`` (an untagged index-0 subinterface) is its parent's routed personality: report the parent name."""
+    return reference[:-2] if reference.endswith(".0") else reference
+
+
+def parse_srl_ospf(text: str) -> list:
+    """SR Linux gNMI OSPF state -> [{family, neighbor_id, interface, state}] (state as the health model spells it: FULL)."""
+    neighbors = []
+    ni = (_srl_tree(text).get("network-instance") or [{}])[0]
+    for instance in ((ni.get("protocols") or {}).get("ospf") or {}).get("instance") or []:
+        family = "OSPFV3" if instance.get("version") == "ospf-v3" else "OSPFV2"
+        for area in instance.get("area") or []:
+            for interface in area.get("interface") or []:
+                for neighbor in interface.get("neighbor") or []:
+                    if not neighbor.get("router-id"):
+                        continue
+                    neighbors.append({"family": family, "neighbor_id": neighbor["router-id"],
+                                      "interface": _srl_interface(interface.get("interface-name") or ""),
+                                      "state": str(neighbor.get("adjacency-state") or "").upper().replace("-", "_")})
+    return sorted(neighbors, key=lambda n: (n["family"], n["interface"], n["neighbor_id"]))
+
+
+def parse_srl_bgp(text: str) -> list:
+    """SR Linux gNMI BGP neighbor state -> [{peer, remote_as, state, family, prefixes_received}].  The family is the peer
+    address family; ``prefixes_received`` counts that family's received routes once the session is established."""
+    peers = []
+    ni = (_srl_tree(text).get("network-instance") or [{}])[0]
+    for row in ((ni.get("protocols") or {}).get("bgp") or {}).get("neighbor") or []:
+        peer = norm_ip(row.get("peer-address"))
+        if not peer:
+            continue
+        v6 = ":" in peer
+        state = str(row.get("session-state") or "").upper()
+        afi = next((a for a in row.get("afi-safi") or [] if a.get("afi-safi-name") == ("ipv6-unicast" if v6 else "ipv4-unicast")), {})
+        peers.append({"peer": peer, "remote_as": str(row.get("peer-as") or ""), "family": 6 if v6 else 4, "state": state,
+                      "prefixes_received": afi.get("received-routes") if state == "ESTABLISHED" else None})
+    return sorted(peers, key=lambda p: (p["family"], p["peer"]))
+
+
+def parse_srl_config(text: str) -> dict:
+    """ACL definitions / attachments and DHCP relays of the SR Linux running configuration (via ``parser_srlinux``)."""
+    from ..config_import import parser_srlinux
+
+    parsed = parser_srlinux.parse(_srl_tree(text))
+    attachments = [{"interface": interface.name, "acl": row["name"], "direction": row["direction"]}
+                   for interface in parsed.interfaces for row in interface.acl_attachments]
+    relays = [{"interface": interface.name, "destination": norm_ip(row["destination"])}
+              for interface in parsed.interfaces for row in interface.dhcp_relays]
+    return {"acl_definitions": sorted(acl.name for acl in parsed.acls),
+            "acl_attachments": sorted(attachments, key=lambda a: (a["interface"], a["acl"], a["direction"])),
+            "dhcp_relays": sorted(relays, key=lambda r: (r["interface"], r["destination"]))}
+
+
+def _routing_config_srl(text: str) -> list:
+    from .routing_config import srlinux
+    return srlinux(_srl_tree(text))
+
+
 def parse_srl_routes(text: str) -> list:
     """Active RIB entries of the SR Linux default network-instance with their resolved next hops."""
     table = (((_srl_tree(text).get("network-instance") or [{}])[0]).get("route-table") or {})
@@ -567,7 +632,7 @@ def parse_srl_routes(text: str) -> list:
                 sub = str(hop.get("subinterface") or "")
                 if sub:
                     interfaces.append(sub[:-2] if sub.endswith(".0") else sub)
-            routes.append({"prefix": prefix, "type": str(row.get("route-type") or ""),
+            routes.append({"prefix": prefix, "type": _SRL_ROUTE_TYPES.get(str(row.get("route-type") or ""), str(row.get("route-type") or "")),
                            "next_hops": [ip for hop in resolved if (ip := norm_ip(hop.get("ip-address")))],
                            "interfaces": interfaces})
     return routes
@@ -1020,6 +1085,10 @@ _SRL_GROUPS = {
     "interfaces": lambda f: parse_srl_interfaces(f("interfaces"))[0],
     "addresses": lambda f: parse_srl_interfaces(f("interfaces"))[1],
     "routes": lambda f: parse_srl_routes(f("route_table")),
+    "ospf": lambda f: parse_srl_ospf(f("ospf")),
+    "bgp": lambda f: parse_srl_bgp(f("bgp")),
+    "routing_config": lambda f: _routing_config_srl(f("running_config")),
+    "config": lambda f: parse_srl_config(f("running_config")),
 }
 
 _IOSXE_GROUPS = {

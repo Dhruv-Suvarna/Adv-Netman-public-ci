@@ -13,6 +13,10 @@ Evidence for each design choice (isolated SR Linux 24.10.7 node, ``nmas-cap-vali
                          that already existed is ever removed.
 * restoration proof      after compensation the running configuration must be IDENTICAL (canonical tree digest) to the
                          capture.  A difference is COMPENSATION_FAILED / STATE_NOT_RESTORED, never an assumed success.
+* leaf-lists             an SR Linux ``set`` replaces a leaf-list (24.10.7).  A Configlet adds ONE member (a DHCP relay
+                         server, an export policy), so the executor sends the captured members plus the Configlet's own:
+                         a member another Configlet or the operator configured is never dropped, and the inverse puts the
+                         captured members back exactly.
 * persistence            the change is committed to the running datastore only; no ``save startup`` is issued.
 """
 
@@ -25,15 +29,29 @@ from ..writers.srlinux_gnmi import GnmiError, inventory_session
 from . import state
 from .base import APPLY, REFUSE, SKIP_SATISFIED, ApplyOutcome, Assessment, CompensationOutcome, ConfigletSpec, DeviceExecutor, ExecutorError
 
-OBJECT_TYPES = frozenset({"interface", "address", "static_route"})
+ROUTING_TYPES = frozenset({"routing_ospf", "routing_binding", "routing_bgp", "bgp_neighbor", "bgp_neighbor_af", "bgp_network"})
+SERVICE_TYPES = frozenset({"acl", "acl_attachment", "dhcp_relay"})
+OBJECT_TYPES = frozenset({"interface", "address", "static_route", *ROUTING_TYPES, *SERVICE_TYPES})
+
+
+def _operations(spec_lines, tree: dict):
+    return model.additive(model.operations(spec_lines, strict=True), tree)
 
 
 def config_inverse(spec_lines, tree: dict) -> list[str] | None:
     """Exact inverse statements of a Configlet relative to ``tree``; None when the Configlet cannot be inverted safely."""
     try:
-        return model.inverse(model.operations(spec_lines, strict=True), tree)
+        return model.inverse(_operations(spec_lines, tree), tree)
     except model.ModelError:
         return None
+
+
+def outgoing(spec_lines, tree: dict) -> list[str]:
+    """The statements sent for a Configlet: its own rendered lines, except that a leaf-list carries the members ``tree``
+    already holds plus the Configlet's (see ``srlinux_model.additive``)."""
+    lines = model.statements(spec_lines)
+    return [model.statement(op) if op.multi else line
+            for line, op in zip(lines, _operations(lines, tree))]
 
 
 class SrLinuxExecutor(DeviceExecutor):
@@ -123,7 +141,17 @@ class SrLinuxExecutor(DeviceExecutor):
         self._inverses[spec.cfg_id], self._applied[spec.cfg_id] = inverse, self.tree_digest(tree)
         if not inverse:
             return ApplyOutcome(True, lines_sent=0)
-        return self._send(model.statements(spec.lines))
+        statements = outgoing(spec.lines, tree)
+        sent = self._send(statements)
+        if not sent.ok and sent.error_code == "SESSION_EXPIRED":
+            # The writer renewed its channel. Never replay a possibly committed Set without comparing the captured
+            # pre-apply tree; any changed or unreadable tree is left for compensation to resolve.
+            try:
+                if self.running_config_digest() == self._applied[spec.cfg_id]:
+                    sent = self._send(statements)
+            except ExecutorError as exc:
+                return ApplyOutcome(False, exc.code, partial_effects=True, lines_sent=len(statements))
+        return sent
 
     def compensate(self, spec: ConfigletSpec, assessment: Assessment) -> CompensationOutcome:
         wanted = self._applied.get(spec.cfg_id) or assessment.previous_state.get("config_digest")
@@ -134,6 +162,12 @@ class SrLinuxExecutor(DeviceExecutor):
             if not wanted or not inverse:
                 return CompensationOutcome("COMPENSATION_FAILED", "UNSUPPORTED")
             sent = self._send(inverse)
+            if not sent.ok and sent.error_code == "SESSION_EXPIRED":
+                # The stale session rejected the Set. Read through the renewed channel first: a write result is never
+                # assumed, and the inverse is sent again only if the captured configuration is still absent.
+                if self.running_config_digest() == wanted:
+                    return CompensationOutcome("COMPENSATED", detail={"action": "READBACK_RESTORED"})
+                sent = self._send(inverse)
             if not sent.ok:
                 return CompensationOutcome("COMPENSATION_FAILED", sent.error_code)
             if self.running_config_digest() != wanted:

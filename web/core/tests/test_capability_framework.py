@@ -56,12 +56,21 @@ class DerivationTests(TestCase):
                 self.assertNotIn(registry.capability_record(platform, feature, evidence={}).summary,
                                  (Summary.LIVE_IMPLEMENTED, Summary.LIVE_VERIFIED), (platform, feature.key))
 
+    LIVE_BASE = {"interface.LOOPBACK", "interface.MANAGEMENT", "interface.ROUTED_PHYSICAL", "interface.SUBINTERFACE",
+                 "routing.STATIC_IPV4", "routing.STATIC_IPV6"}
+    # one line per platform: what each executor was proven to apply AND invert on its isolated lab
+    LIVE = {
+        "nokia_srlinux": LIVE_BASE | {"routing.OSPFV2", "routing.OSPFV3", "routing.BGP_IPV4", "routing.BGP_IPV6", *(f"service_policy.{c}" for c in (
+            "ACL_IPV4_STANDARD", "ACL_IPV4_EXTENDED", "ACL_IPV6_STANDARD", "ACL_IPV6_EXTENDED", "ACL_ATTACH_IPV4", "ACL_ATTACH_IPV6",
+            "DHCP_RELAY_IPV4", "DHCP_RELAY_IPV6"))},
+        "cisco_c8000v_iosxe": LIVE_BASE,
+    }
+
     def test_srlinux_and_iosxe_are_live_only_for_what_their_executors_can_invert(self):
-        for platform in ("nokia_srlinux", "cisco_c8000v_iosxe"):
+        for platform, expected in self.LIVE.items():
             live = {feature.key for feature in features.catalogue()
                     if registry.capability_record(platform, feature, evidence={}).summary == Summary.LIVE_IMPLEMENTED}
-            self.assertEqual(live, {"interface.LOOPBACK", "interface.MANAGEMENT", "interface.ROUTED_PHYSICAL",
-                                    "interface.SUBINTERFACE", "routing.STATIC_IPV4", "routing.STATIC_IPV6"}, platform)
+            self.assertEqual(live, expected, platform)
 
     def test_ceos_routed_interface_has_phase2_config_validation_but_live_is_unverified(self):
         rec = registry.capability_record("arista_ceos", "interface.ROUTED_PHYSICAL")

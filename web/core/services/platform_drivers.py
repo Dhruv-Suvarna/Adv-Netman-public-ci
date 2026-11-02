@@ -1247,11 +1247,56 @@ def _srl_static_route_descriptors(route: dict, interfaces_by_id: dict) -> list[d
     return lines
 
 
+def _srl_area(value) -> str:
+    """An OSPF area as SR Linux requires it: dotted-quad ("0" -> "0.0.0.0"); anything else is left for validation to refuse."""
+    text = str(value if value is not None else "").strip()
+    try:
+        return str(ipaddress.IPv4Address(int(text) if text.isdigit() else text))
+    except (ipaddress.AddressValueError, ValueError):
+        return text or "<area-required>"
+
+
 def _srl_ospf_descriptors(instance: dict, interfaces_by_id: dict) -> list[dict]:
-    return _ospf_descriptors(
-        instance, interfaces_by_id,
-        v2_template="srlinux/routing_ospfv2.j2", v3_template="srlinux/routing_ospfv3.j2",
+    """OSPF instance in SR Linux 24.10 form (verified by ``commit validate`` and live adjacency on 24.10.7).
+
+    SR Linux enables OSPF per interface only (``area A interface X``); it has no ``network`` statement.  A network the
+    instance's own interface bindings already cover is redundant and omitted (as for FRR); any other network has no SR Linux
+    form and is refused with the explicit marker rather than dropped.  Passive bindings render ``passive true`` on their
+    area interface (the interface contribution renders the area, cost and network type).
+    """
+    is_v3 = instance.get("version") == "OSPFV3"
+    process = instance.get("process_id")
+    process_display = str(process) if process not in (None, "") else "<process-id-required>"
+    lines = feature_template_renderer.render_descriptors(
+        template_name="srlinux/routing_ospfv3.j2" if is_v3 else "srlinux/routing_ospfv2.j2",
+        fields={"router_id": {
+            "path": f"routing.ospf.{instance['id']}.router_id",
+            "value": instance.get("router_id") or "", "omit_if_empty": True,
+        }},
+        flags={"process_display": process_display},
     )
+    bound = set(instance.get("_bound_networks") or [])
+    for binding in sorted((instance.get("interfaces") or {}).values(), key=_seq_key):
+        interface = interfaces_by_id.get(binding.get("interface_id") or "")
+        if interface is None:
+            continue
+        bound.add(_connected_network_display(interface))
+        if binding.get("passive"):
+            lines.append({
+                "kind": "field", "path": f"routing.ospf.{instance['id']}.interfaces.{binding['id']}.passive",
+                "template": (f"set network-instance default protocols ospf instance {process_display} area "
+                             f"{_srl_area(binding.get('area'))} interface {_srl_subinterface_ref(interface)} passive {{value}}"),
+                "value": "true",
+            })
+    if not is_v3:
+        for network in sorted((instance.get("networks") or {}).values(), key=_seq_key):
+            if network.get("prefix") in bound:
+                continue
+            lines.append({"kind": "static", "text": (
+                f"{UNSUPPORTED_OBJECT_MARKER} OSPF network {network.get('prefix') or network.get('id')} area "
+                f"{network.get('area') or '0'} has no SR Linux form (OSPF is enabled per interface); bind its interfaces instead"
+            )})
+    return lines
 
 
 def _srl_interface_context(interface: dict) -> tuple[str, object]:
@@ -1282,16 +1327,20 @@ def _srl_subinterface_ref(interface: dict) -> str:
 
 
 def _srl_ospf_interface_contributions(interface: dict) -> list[dict]:
-    """OSPF area/interface assignment: SR Linix attaches interfaces to an OSPF
-    area at the protocol-instance level, not inside an interface CLI block, so
-    this renders as its own flat `set` line rather than nested text."""
+    """OSPF area/interface assignment: SR Linux attaches interfaces to an OSPF area at the protocol-instance level, not
+    inside an interface CLI block, so this renders as its own flat `set` line rather than nested text.  The area is the
+    dotted-quad form SR Linux requires."""
     lines: list[dict] = []
     subif = _srl_subinterface_ref(interface)
     for binding in (interface.get("_scope") or {}).get("ospf", []):
+        protocol = RoutingProtocol.OSPFV3 if binding.get("version") == "OSPFV3" else RoutingProtocol.OSPFV2
+        if not is_routing_protocol_selectable("nokia_srlinux", protocol):
+            continue
         process = binding.get("process_id")
         process_display = str(process) if process not in (None, "") else "<process-id-required>"
         path = binding.get("path") or "routing.ospf"
-        area = binding.get("area")
+        area = _srl_area(binding.get("area")) if binding.get("area") not in (None, "") else ""
+        prefix = f"set network-instance default protocols ospf instance {process_display} area {area or '<area-required>'} interface {subif}"
         if area:
             lines.append({
                 "kind": "field", "path": f"{path}.area",
@@ -1299,20 +1348,47 @@ def _srl_ospf_interface_contributions(interface: dict) -> list[dict]:
                 "value": area,
             })
         if binding.get("cost") is not None:
-            lines.append({
-                "kind": "field", "path": f"{path}.cost",
-                "template": f"set network-instance default protocols ospf instance {process_display} area {area or '<area-required>'} interface {subif} metric {{value}}",
-                "value": binding["cost"],
-            })
+            lines.append({"kind": "field", "path": f"{path}.cost", "template": f"{prefix} metric {{value}}", "value": binding["cost"]})
         if binding.get("network_type") == "POINT_TO_POINT":
-            lines.append({"kind": "static", "text": f"set network-instance default protocols ospf instance {process_display} area {area or '<area-required>'} interface {subif} interface-type point-to-point"})
+            lines.append({"kind": "static", "text": f"{prefix} interface-type point-to-point"})
     return lines
 
 
+_SRL_AFI = (("IPV4", "ipv4-unicast"), ("IPV6", "ipv6-unicast"))
+
+
+def srl_bgp_policy_name(instance: dict) -> str:
+    """The NMAS-owned routing-policy (and prefix-set) that advertises one BGP instance's networks."""
+    return f"nmas-bgp-{instance.get('id') or 'instance'}"
+
+
+def _srl_local_address(source: dict, peer: str) -> str:
+    """The update-source interface's address of the peer's family: SR Linux ``transport local-address`` takes an IP."""
+    family = "IPV6" if ":" in str(peer or "") else "IPV4"
+    for address in sorted((source.get("addresses") or {}).values(), key=_seq_key):
+        if address.get("family") == family and address.get("cidr"):
+            try:
+                return str(ipaddress.ip_interface(address["cidr"]).ip)
+            except ValueError:
+                break
+    return f"<{family.lower()}-address-of-{source.get('name') or 'update-source'}-required>"
+
+
 def _srl_bgp_descriptors(instance: dict, interfaces_by_id: dict) -> list[dict]:
-    """SR Linix requires every neighbor to reference a mandatory peer-group;
-    one group is created per neighbor (named after its peer address) since
-    this project's canonical model has no separate peer-group object."""
+    """BGP in SR Linux 24.10 form (verified by ``commit validate`` and live sessions on 24.10.7).
+
+    * SR Linux refuses a BGP instance without an enabled address family, and every Configlet commits on its own: the
+      instance therefore enables IPv4 and IPv6 unicast itself, and each neighbor's group states BOTH families explicitly
+      (enable when the neighbor activates it, disable otherwise), so no group inherits an activation it was not given.
+    * Every neighbor references a mandatory peer-group; one group per neighbor (this model has no peer-group object).
+    * An enabled group / neighbor must have an enabled family: one that activates none is rendered administratively
+      disabled (and enabled again by the address-family activation that gives it a family).
+    * A ``network`` is advertised the SR Linux way: an NMAS-owned prefix-set (exact match) and an accepting policy statement,
+      exported at BGP level so it applies to every peer like a network statement does.
+    * SR Linux applies RFC 8212 by default (an eBGP route is neither imported nor exported without a policy; observed:
+      received-routes 1, active-routes 0).  The NMAS BGP model carries no import/export policy, so -- exactly like the FRR
+      rendering's ``no bgp ebgp-requires-policy`` -- the instance turns that default off.
+    """
     instance_id = instance["id"]
     lines = [
         {"kind": "static", "text": f"set network-instance default protocols bgp autonomous-system {instance.get('local_asn')}"},
@@ -1322,49 +1398,64 @@ def _srl_bgp_descriptors(instance: dict, interfaces_by_id: dict) -> list[dict]:
             "template": "set network-instance default protocols bgp router-id {value}",
             "value": instance.get("router_id") or "", "omit_if_empty": True,
         },
+        *({"kind": "static", "text": f"set network-instance default protocols bgp afi-safi {afi} admin-state enable"}
+          for _family, afi in _SRL_AFI),
+        {"kind": "static", "text": "set network-instance default protocols bgp ebgp-default-policy import-reject-all false"},
+        {"kind": "static", "text": "set network-instance default protocols bgp ebgp-default-policy export-reject-all false"},
     ]
     neighbors = sorted((instance.get("neighbors") or {}).values(), key=_seq_key)
     for neighbor in neighbors:
         peer = neighbor.get("peer_address")
         neighbor_id = neighbor["id"]
         group = f"peer-{neighbor_id}"
-        state = "disable" if neighbor.get("shutdown") else "enable"
-        lines.append({"kind": "static", "text": f"set network-instance default protocols bgp group {group} admin-state {state}"})
-        if neighbor.get("activate_ipv4"):
-            lines.append({"kind": "static", "text": f"set network-instance default protocols bgp group {group} ipv4-unicast admin-state enable"})
-        if neighbor.get("activate_ipv6"):
-            lines.append({"kind": "static", "text": f"set network-instance default protocols bgp group {group} ipv6-unicast admin-state enable"})
-        lines.append({"kind": "static", "text": f"set network-instance default protocols bgp neighbor {peer} peer-group {group}"})
+        base = "set network-instance default protocols bgp"
+        # 24.10.7 refuses an ENABLED group or neighbor without an enabled family ("One of the address families must be
+        # enabled"): a neighbor that activates no family yet -- the planner's definition Configlet -- is held disabled.
+        activated = any(neighbor.get(f"activate_{family.lower()}") for family, _afi in _SRL_AFI)
+        state = "disable" if neighbor.get("shutdown") or not activated else "enable"
+        lines.append({"kind": "static", "text": f"{base} group {group} admin-state {state}"})
+        for family, afi in _SRL_AFI:
+            active = "enable" if neighbor.get(f"activate_{family.lower()}") else "disable"
+            lines.append({"kind": "static", "text": f"{base} group {group} afi-safi {afi} admin-state {active}"})
+        lines.append({"kind": "static", "text": f"{base} neighbor {peer} peer-group {group}"})
+        lines.append({"kind": "static", "text": f"{base} neighbor {peer} admin-state {state}"})
         lines.append({
             "kind": "field", "path": f"routing.bgp.{instance_id}.neighbors.{neighbor_id}.remote_asn",
-            "template": f"set network-instance default protocols bgp neighbor {peer} peer-as " + "{value}",
+            "template": f"{base} neighbor {peer} peer-as " + "{value}",
             "value": neighbor.get("remote_asn"),
         })
         if neighbor.get("description"):
             lines.append({
                 "kind": "field", "path": f"routing.bgp.{instance_id}.neighbors.{neighbor_id}.description",
-                "template": f"set network-instance default protocols bgp neighbor {peer} description " + "{value}",
+                "template": f"{base} neighbor {peer} description " + "{value}",
                 "value": neighbor.get("description"), "omit_if_empty": True,
             })
         if neighbor.get("update_source_interface_id"):
-            source = interfaces_by_id.get(neighbor["update_source_interface_id"], {})
-            lines.append({"kind": "static", "text": f"set network-instance default protocols bgp neighbor {peer} transport local-address {source.get('name') or neighbor['update_source_interface_id']}"})
+            source = interfaces_by_id.get(neighbor["update_source_interface_id"], {"name": neighbor["update_source_interface_id"]})
+            lines.append({"kind": "static", "text": f"{base} neighbor {peer} transport local-address {_srl_local_address(source, peer)}"})
         if neighbor.get("ebgp_multihop") is not None:
+            lines.append({"kind": "static", "text": f"{base} neighbor {peer} multihop admin-state enable"})
             lines.append({
                 "kind": "field", "path": f"routing.bgp.{instance_id}.neighbors.{neighbor_id}.ebgp_multihop",
-                "template": f"set network-instance default protocols bgp neighbor {peer} ebgp-multihop hops " + "{value}",
+                "template": f"{base} neighbor {peer} multihop maximum-hops " + "{value}",
                 "value": neighbor["ebgp_multihop"],
             })
         if neighbor.get("password_ref"):
             lines.append({"kind": "static", "text": f"! neighbor {peer} authentication reference present ({neighbor['password_ref']}); unresolved for deployment"})
-    active_networks = sorted((instance.get("networks") or {}).values(), key=_seq_key)
-    if active_networks:
-        lines.append({"kind": "static", "text": "! BGP network advertisement requires an export routing-policy in SR Linix; not rendered (networks preserved in intent):"})
-        for network in active_networks:
+    networks = sorted((instance.get("networks") or {}).values(), key=_seq_key)
+    if networks:
+        policy = srl_bgp_policy_name(instance)
+        for network in networks:
             lines.append({
                 "kind": "field", "path": f"routing.bgp.{instance_id}.networks.{network['id']}.cidr",
-                "template": "!   {value}", "value": network.get("cidr") or "", "omit_if_empty": True,
+                "template": f"set routing-policy prefix-set {policy} prefix {{value}} mask-length-range exact",
+                "value": network.get("cidr") or "", "omit_if_empty": True,
             })
+        lines.extend([
+            {"kind": "static", "text": f"set routing-policy policy {policy} statement 10 match prefix-set {policy}"},
+            {"kind": "static", "text": f"set routing-policy policy {policy} statement 10 action policy-result accept"},
+            {"kind": "static", "text": f"set network-instance default protocols bgp export-policy [ {policy} ]"},
+        ])
     return lines
 
 
@@ -1377,9 +1468,28 @@ def _srl_acl_match(match_type: str, value: str, family: str) -> str:
     return value or "<prefix-required>"
 
 
+# Canonical ACL protocol -> SR Linux ``match ipv4 protocol`` / ``match ipv6 next-header`` value (24.10.7 ``commit validate``).
+_SRL_ACL_PROTOCOLS = {"IPV4": {"TCP": "tcp", "UDP": "udp", "ICMP": "icmp"},
+                      "IPV6": {"TCP": "tcp", "UDP": "udp", "ICMP": "icmp6", "ICMPV6": "icmp6"}}
+
+
+def _srl_port_lines(prefix: str, which: str, value) -> list[dict]:
+    """``match transport <which>`` for a single port (operator eq) or a ``low-high`` range."""
+    text = str(value or "").strip()
+    if not text:
+        return []
+    if "-" in text:
+        low, high = text.split("-", 1)
+        return [{"kind": "static", "text": f"{prefix} match transport {which} range start {low}"},
+                {"kind": "static", "text": f"{prefix} match transport {which} range end {high}"}]
+    return [{"kind": "static", "text": f"{prefix} match transport {which} operator eq"},
+            {"kind": "static", "text": f"{prefix} match transport {which} value {text}"}]
+
+
 def _render_srl_acl(acl: dict) -> list[dict]:
+    """ACL as an SR Linux 24.10 ``acl-filter`` (keyed by name AND type; ``ipv4-filter`` does not exist on 24.10)."""
     family = acl.get("family") or "IPV4"
-    filter_kind = "ipv4-filter" if family == "IPV4" else "ipv6-filter"
+    afi = "ipv4" if family == "IPV4" else "ipv6"
     template_name = "srlinux/acl_ipv4.j2" if family == "IPV4" else "srlinux/acl_ipv6.j2"
     acl_name = acl.get("name") or "<acl-name-required>"
     lines = feature_template_renderer.render_descriptors(
@@ -1388,35 +1498,38 @@ def _render_srl_acl(acl: dict) -> list[dict]:
     for ace in sorted((acl.get("entries") or {}).values(), key=lambda row: (int(row.get("sequence") or 0), row.get("id", ""))):
         seq = int(ace.get("sequence") or 0)
         action = "accept" if str(ace.get("action") or "DENY").upper() == "PERMIT" else "drop"
-        prefix = f"set acl {filter_kind} {acl_name} entry {seq}"
+        prefix = f"set acl acl-filter {acl_name} type {afi} entry {seq}"
         source = _srl_acl_match(ace.get("source_type"), ace.get("source_value"), family)
-        lines.append({"kind": "static", "text": f"{prefix} match source-ip prefix {source}"})
+        lines.append({"kind": "static", "text": f"{prefix} match {afi} source-ip prefix {source}"})
         if acl.get("acl_type") != "STANDARD":
             destination = _srl_acl_match(ace.get("destination_type"), ace.get("destination_value"), family)
-            lines.append({"kind": "static", "text": f"{prefix} match destination-ip prefix {destination}"})
-            protocol = str(ace.get("protocol") or "").lower()
-            if protocol and protocol != "ip":
-                lines.append({"kind": "static", "text": f"{prefix} match protocol {protocol}"})
+            lines.append({"kind": "static", "text": f"{prefix} match {afi} destination-ip prefix {destination}"})
+            protocol = str(ace.get("protocol") or "IP").upper()
+            if protocol not in ("IP", "IPV6"):
+                keyword = _SRL_ACL_PROTOCOLS[family].get(protocol)
+                field = "protocol" if family == "IPV4" else "next-header"
+                lines.append({"kind": "static", "text": f"{prefix} match {afi} {field} {keyword}" if keyword else (
+                    f"{UNSUPPORTED_OBJECT_MARKER} ACL {acl_name} entry {seq} protocol {protocol} has no SR Linux {afi} match")})
+            lines.extend(_srl_port_lines(prefix, "source-port", ace.get("source_port")))
+            lines.extend(_srl_port_lines(prefix, "destination-port", ace.get("destination_port")))
         lines.append({"kind": "static", "text": f"{prefix} action {action}"})
-        if ace.get("source_port") or ace.get("destination_port") or ace.get("logging"):
-            lines.append({"kind": "static", "text": f"! entry {seq}: port-range and log-action match are not rendered pending exact SR Linix model verification"})
+        if ace.get("logging"):
+            lines.append({"kind": "static", "text": f"{prefix} action log true"})
     return lines
 
 
 def _srl_acl_interface_contributions(interface: dict) -> list[dict]:
+    """ACL attachment on SR Linux 24.10: ``acl interface <subif> input|output acl-filter NAME type ipv4|ipv6``."""
     lines: list[dict] = []
-    parent_name, index = _srl_interface_context(interface)
+    subif = _srl_subinterface_ref(interface)
     for attachment in (interface.get("_scope") or {}).get("acl_attachments", []):
-        family = attachment.get("family") or "IPV4"
-        filter_kind = "ipv4-filter" if family == "IPV4" else "ipv6-filter"
+        family = attachment.get("family")
+        if family not in ("IPV4", "IPV6") or not _service_policy_supported("nokia_srlinux", f"ACL_ATTACH_{family}"):
+            continue
+        afi = "ipv4" if family == "IPV4" else "ipv6"
         direction = "input" if str(attachment.get("direction") or "IN").upper() == "IN" else "output"
-        lines.append({
-            "kind": "static",
-            "text": (
-                f"set interface {parent_name} subinterface {index} acl {direction} "
-                f"{filter_kind} {attachment.get('acl_name')}"
-            ),
-        })
+        lines.append({"kind": "static",
+                      "text": f"set acl interface {subif} {direction} acl-filter {attachment.get('acl_name')} type {afi}"})
     return lines
 
 
@@ -1431,14 +1544,12 @@ def _srl_dhcp_interface_contributions(interface: dict) -> list[dict]:
         })
         if not servers:
             continue
+        if not _service_policy_supported("nokia_srlinux", f"DHCP_RELAY_{family}"):
+            continue
         family_kw = "ipv4" if family == "IPV4" else "ipv6"
-        lines.append({
-            "kind": "static",
-            "text": (
-                f"set interface {parent_name} subinterface {index} {family_kw} "
-                f"dhcp-relay server [ {' '.join(servers)} ]"
-            ),
-        })
+        relay = f"set interface {parent_name} subinterface {index} {family_kw} dhcp-relay"
+        lines.append({"kind": "static", "text": f"{relay} admin-state enable"})
+        lines.append({"kind": "static", "text": f"{relay} server [ {' '.join(servers)} ]"})
     return lines
 
 

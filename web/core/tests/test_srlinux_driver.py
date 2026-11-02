@@ -235,10 +235,16 @@ class RoutingTests(TestCase):
         self.assertIn(f"set network-instance default protocols bgp group {group} admin-state enable", text)
         self.assertIn(f"set network-instance default protocols bgp neighbor 192.0.2.5 peer-group {group}", text)
         self.assertIn(f"set network-instance default protocols bgp neighbor 192.0.2.5 peer-as 65020", text)
-        # network advertisement has no direct SR Linix syntax in this model; must be an honest comment, never fabricated
-        self.assertIn("BGP network advertisement requires an export routing-policy", text)
-        self.assertIn("!   10.0.0.0/8", text)
-        self.assertNotIn("network 10.0.0.0/8", text.replace("!   10.0.0.0/8", ""))
+        # SR Linux has no network statement: the advertisement is an exact prefix-set, an accepting policy, and that
+        # policy exported by BGP (24.10.7: ``match prefix-set``); RFC 8212 reject-all is opted out as FRR does
+        policy = f"nmas-bgp-{instance['id']}"
+        self.assertIn(f"set routing-policy prefix-set {policy} prefix 10.0.0.0/8 mask-length-range exact", text)
+        self.assertIn(f"set routing-policy policy {policy} statement 10 match prefix-set {policy}", text)
+        self.assertIn(f"set routing-policy policy {policy} statement 10 action policy-result accept", text)
+        self.assertIn(f"set network-instance default protocols bgp export-policy [ {policy} ]", text)
+        self.assertIn("set network-instance default protocols bgp ebgp-default-policy import-reject-all false", text)
+        self.assertIn(f"set network-instance default protocols bgp group {group} afi-safi ipv4-unicast admin-state enable", text)
+        self.assertNotIn("network 10.0.0.0/8", text)
 
     def test_rip_cannot_even_be_created_for_srlinux_because_the_platform_genuinely_lacks_it(self):
         """Unlike a NOT_IMPLEMENTED feature (which the operator can still add
@@ -263,12 +269,14 @@ class AclTests(TestCase):
         commit(change, intent, revision, f"security.acls.{acl['id']}.entries.{ace['id']}.destination_type", "ANY")
         service.add_acl_attachment(revision=revision, acl_id=acl["id"], interface_id=iface["id"], direction="IN")
         text = candidate_renderer.render(intent, revision)["text"]
-        self.assertIn("set acl ipv4-filter EDGE-IN type ipv4", text)
-        self.assertIn("set acl ipv4-filter EDGE-IN entry 10 match source-ip prefix 10.0.0.0/8", text)
-        self.assertIn("set acl ipv4-filter EDGE-IN entry 10 match destination-ip prefix 0.0.0.0/0", text)
-        self.assertIn("set acl ipv4-filter EDGE-IN entry 10 match protocol tcp", text)
-        self.assertIn("set acl ipv4-filter EDGE-IN entry 10 action accept", text)
-        self.assertIn("set interface ethernet-1/1 subinterface 0 acl input ipv4-filter EDGE-IN", text)
+        # 24.10 ``acl-filter NAME type ipv4`` (``ipv4-filter`` does not exist on 24.10.7)
+        self.assertIn("set acl acl-filter EDGE-IN type ipv4", text)
+        self.assertIn("set acl acl-filter EDGE-IN type ipv4 entry 10 match ipv4 source-ip prefix 10.0.0.0/8", text)
+        self.assertIn("set acl acl-filter EDGE-IN type ipv4 entry 10 match ipv4 destination-ip prefix 0.0.0.0/0", text)
+        self.assertIn("set acl acl-filter EDGE-IN type ipv4 entry 10 match ipv4 protocol tcp", text)
+        self.assertIn("set acl acl-filter EDGE-IN type ipv4 entry 10 action accept", text)
+        self.assertIn("set acl interface ethernet-1/1.0 input acl-filter EDGE-IN type ipv4", text)
+        self.assertNotIn("ipv4-filter", text)
 
     def test_standard_acl_omits_destination_and_protocol_match(self):
         change, intent, revision = _srl_candidate()
@@ -277,18 +285,20 @@ class AclTests(TestCase):
         commit(change, intent, revision, f"security.acls.{acl['id']}.entries.{ace['id']}.source_type", "HOST")
         commit(change, intent, revision, f"security.acls.{acl['id']}.entries.{ace['id']}.source_value", "203.0.113.5")
         text = candidate_renderer.render(intent, revision)["text"]
-        self.assertIn("set acl ipv4-filter MGMT-ALLOW entry 10 match source-ip prefix 203.0.113.5/32", text)
-        self.assertIn("set acl ipv4-filter MGMT-ALLOW entry 10 action drop", text)
+        self.assertIn("set acl acl-filter MGMT-ALLOW type ipv4 entry 10 match ipv4 source-ip prefix 203.0.113.5/32", text)
+        self.assertIn("set acl acl-filter MGMT-ALLOW type ipv4 entry 10 action drop", text)
+        self.assertNotIn("match ipv4 protocol", text)
         self.assertNotIn("match destination-ip", text)
 
-    def test_ipv6_acl_uses_the_ipv6_filter_namespace(self):
+    def test_ipv6_acl_is_an_acl_filter_of_type_ipv6(self):
         change, intent, revision = _srl_candidate()
         acl = service.add_acl(revision=revision, name="V6-IN", family="IPV6", acl_type="STANDARD")
         ace = service.add_ace(revision=revision, acl_id=acl["id"], action="PERMIT", protocol="IP")
         commit(change, intent, revision, f"security.acls.{acl['id']}.entries.{ace['id']}.source_type", "ANY")
         text = candidate_renderer.render(intent, revision)["text"]
-        self.assertIn("set acl ipv6-filter V6-IN type ipv6", text)
-        self.assertIn("set acl ipv6-filter V6-IN entry 10 match source-ip prefix ::/0", text)
+        self.assertIn("set acl acl-filter V6-IN type ipv6", text)
+        self.assertIn("set acl acl-filter V6-IN type ipv6 entry 10 match ipv6 source-ip prefix ::/0", text)
+        self.assertNotIn("ipv6-filter", text)
 
 
 class DhcpRelayTests(TestCase):

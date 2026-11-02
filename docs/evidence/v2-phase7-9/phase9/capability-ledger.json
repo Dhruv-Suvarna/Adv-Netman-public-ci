@@ -8549,74 +8549,54 @@
       ]
     },
     {
-      "capability_status": "NOT_IMPLEMENTED",
-      "closure_class": "PARTIAL",
+      "capability_status": "SUPPORTED",
+      "closure_class": "SUPPORTED",
       "environment_blocker": [],
       "evidence_references": [
-        "gate:nokia_srlinux/routing.BGP_IPV4@26da489ea015#232f26252d2fa3eb"
+        "live:nmas-cap-validation/srl-bgp_ipv4/2026-10-30T01:41:43.133646+00:00"
       ],
       "feature": "routing.BGP_IPV4",
-      "final_status": "UNSUPPORTED",
-      "missing_stages": [
-        "execution",
-        "readback",
-        "postcheck",
-        "compensation",
-        "restoration",
-        "live"
-      ],
+      "final_status": "SUPPORTED",
+      "missing_stages": [],
       "platform": "nokia_srlinux",
       "stages": {
-        "compensation": false,
-        "execution": false,
+        "compensation": true,
+        "execution": true,
         "intent": true,
-        "live": false,
-        "postcheck": false,
-        "readback": false,
+        "live": true,
+        "postcheck": true,
+        "readback": true,
         "renderer": true,
-        "restoration": false,
+        "restoration": true,
         "tests": true,
         "validation": true
       },
-      "unsupported_reasons": [
-        "EXECUTOR_REFUSED",
-        "PARSER_ABSENT"
-      ]
+      "unsupported_reasons": []
     },
     {
-      "capability_status": "NOT_IMPLEMENTED",
-      "closure_class": "PARTIAL",
+      "capability_status": "SUPPORTED",
+      "closure_class": "SUPPORTED",
       "environment_blocker": [],
       "evidence_references": [
-        "gate:nokia_srlinux/routing.BGP_IPV6@26da489ea015#a025ac6a545c0896"
+        "live:nmas-cap-validation/srl-bgp_ipv6/2026-10-30T01:43:44.557923+00:00"
       ],
       "feature": "routing.BGP_IPV6",
-      "final_status": "UNSUPPORTED",
-      "missing_stages": [
-        "execution",
-        "readback",
-        "postcheck",
-        "compensation",
-        "restoration",
-        "live"
-      ],
+      "final_status": "SUPPORTED",
+      "missing_stages": [],
       "platform": "nokia_srlinux",
       "stages": {
-        "compensation": false,
-        "execution": false,
+        "compensation": true,
+        "execution": true,
         "intent": true,
-        "live": false,
-        "postcheck": false,
-        "readback": false,
+        "live": true,
+        "postcheck": true,
+        "readback": true,
         "renderer": true,
-        "restoration": false,
+        "restoration": true,
         "tests": true,
         "validation": true
       },
-      "unsupported_reasons": [
-        "EXECUTOR_REFUSED",
-        "PARSER_ABSENT"
-      ]
+      "unsupported_reasons": []
     },
     {
       "capability_status": "NOT_IMPLEMENTED",
@@ -8742,73 +8722,54 @@
       ]
     },
     {
-      "capability_status": "NOT_IMPLEMENTED",
-      "closure_class": "PARTIAL",
+      "capability_status": "SUPPORTED",
+      "closure_class": "SUPPORTED",
       "environment_blocker": [],
       "evidence_references": [
-        "gate:nokia_srlinux/routing.OSPFV2@26da489ea015#7b0a264e19ddea49"
+        "live:nmas-cap-validation/srl-ospfv2/2026-10-30T01:38:44.133823+00:00"
       ],
       "feature": "routing.OSPFV2",
-      "final_status": "UNSUPPORTED",
-      "missing_stages": [
-        "execution",
-        "readback",
-        "postcheck",
-        "compensation",
-        "restoration",
-        "live"
-      ],
+      "final_status": "SUPPORTED",
+      "missing_stages": [],
       "platform": "nokia_srlinux",
       "stages": {
-        "compensation": false,
-        "execution": false,
+        "compensation": true,
+        "execution": true,
         "intent": true,
-        "live": false,
-        "postcheck": false,
-        "readback": false,
+        "live": true,
+        "postcheck": true,
+        "readback": true,
         "renderer": true,
-        "restoration": false,
+        "restoration": true,
         "tests": true,
         "validation": true
       },
-      "unsupported_reasons": [
-        "EXECUTOR_REFUSED",
-        "PARSER_FAILED"
-      ]
+      "unsupported_reasons": []
     },
     {
-      "capability_status": "NOT_IMPLEMENTED",
-      "closure_class": "PARTIAL",
+      "capability_status": "SUPPORTED",
+      "closure_class": "SUPPORTED",
       "environment_blocker": [],
       "evidence_references": [
-        "gate:nokia_srlinux/routing.OSPFV3@26da489ea015#a5bae20bd6f07503"
+        "live:nmas-cap-validation/srl-ospfv3/2026-10-30T01:39:39.926252+00:00"
       ],
       "feature": "routing.OSPFV3",
-      "final_status": "UNSUPPORTED",
-      "missing_stages": [
-        "execution",
-        "readback",
-        "postcheck",
-        "compensation",
-        "restoration",
-        "live"
-      ],
+      "final_status": "SUPPORTED",
+      "missing_stages": [],
       "platform": "nokia_srlinux",
       "stages": {
-        "compensation": false,
-        "execution": false,
+        "compensation": true,
+        "execution": true,
         "intent": true,
-        "live": false,
-        "postcheck": false,
-        "readback": false,
+        "live": true,
+        "postcheck": true,
+        "readback": true,
         "renderer": true,
-        "restoration": false,
+        "restoration": true,
         "tests": true,
         "validation": true
       },
-      "unsupported_reasons": [
-        "EXECUTOR_REFUSED"
-      ]
+      "unsupported_reasons": []
     },
     {
       "capability_status": "NOT_IMPLEMENTED",
@@ -8943,210 +8904,154 @@
       "unsupported_reasons": []
     },
     {
-      "capability_status": "NOT_IMPLEMENTED",
-      "closure_class": "PARTIAL",
+      "capability_status": "SUPPORTED",
+      "closure_class": "SUPPORTED",
       "environment_blocker": [],
       "evidence_references": [
-        "gate:nokia_srlinux/service_policy.ACL_ATTACH_IPV4@26da489ea015#cd56e7f6a837fcdc"
+        "live:nmas-cap-validation/srl-acl_attach_ipv4/2026-10-30T01:49:49.391560+00:00"
       ],
       "feature": "service_policy.ACL_ATTACH_IPV4",
-      "final_status": "UNSUPPORTED",
-      "missing_stages": [
-        "execution",
-        "readback",
-        "postcheck",
-        "compensation",
-        "restoration",
-        "live"
-      ],
+      "final_status": "SUPPORTED",
+      "missing_stages": [],
       "platform": "nokia_srlinux",
       "stages": {
-        "compensation": false,
-        "execution": false,
+        "compensation": true,
+        "execution": true,
         "intent": true,
-        "live": false,
-        "postcheck": false,
-        "readback": false,
+        "live": true,
+        "postcheck": true,
+        "readback": true,
         "renderer": true,
-        "restoration": false,
+        "restoration": true,
         "tests": true,
         "validation": true
       },
-      "unsupported_reasons": [
-        "EXECUTOR_REFUSED"
-      ]
+      "unsupported_reasons": []
     },
     {
-      "capability_status": "NOT_IMPLEMENTED",
-      "closure_class": "PARTIAL",
+      "capability_status": "SUPPORTED",
+      "closure_class": "SUPPORTED",
       "environment_blocker": [],
       "evidence_references": [
-        "gate:nokia_srlinux/service_policy.ACL_ATTACH_IPV6@26da489ea015#c39d55029e8e341c"
+        "live:nmas-cap-validation/srl-acl_attach_ipv6/2026-10-30T01:50:48.714379+00:00"
       ],
       "feature": "service_policy.ACL_ATTACH_IPV6",
-      "final_status": "UNSUPPORTED",
-      "missing_stages": [
-        "execution",
-        "readback",
-        "postcheck",
-        "compensation",
-        "restoration",
-        "live"
-      ],
+      "final_status": "SUPPORTED",
+      "missing_stages": [],
       "platform": "nokia_srlinux",
       "stages": {
-        "compensation": false,
-        "execution": false,
+        "compensation": true,
+        "execution": true,
         "intent": true,
-        "live": false,
-        "postcheck": false,
-        "readback": false,
+        "live": true,
+        "postcheck": true,
+        "readback": true,
         "renderer": true,
-        "restoration": false,
+        "restoration": true,
         "tests": true,
         "validation": true
       },
-      "unsupported_reasons": [
-        "EXECUTOR_REFUSED"
-      ]
+      "unsupported_reasons": []
     },
     {
-      "capability_status": "NOT_IMPLEMENTED",
-      "closure_class": "PARTIAL",
+      "capability_status": "SUPPORTED",
+      "closure_class": "SUPPORTED",
       "environment_blocker": [],
       "evidence_references": [
-        "gate:nokia_srlinux/service_policy.ACL_IPV4_EXTENDED@26da489ea015#f503859e5cd04178"
+        "live:nmas-cap-validation/srl-acl_ipv4_extended/2026-10-30T01:46:19.077247+00:00"
       ],
       "feature": "service_policy.ACL_IPV4_EXTENDED",
-      "final_status": "UNSUPPORTED",
-      "missing_stages": [
-        "execution",
-        "readback",
-        "postcheck",
-        "compensation",
-        "restoration",
-        "live"
-      ],
+      "final_status": "SUPPORTED",
+      "missing_stages": [],
       "platform": "nokia_srlinux",
       "stages": {
-        "compensation": false,
-        "execution": false,
+        "compensation": true,
+        "execution": true,
         "intent": true,
-        "live": false,
-        "postcheck": false,
-        "readback": false,
+        "live": true,
+        "postcheck": true,
+        "readback": true,
         "renderer": true,
-        "restoration": false,
+        "restoration": true,
         "tests": true,
         "validation": true
       },
-      "unsupported_reasons": [
-        "EXECUTOR_REFUSED"
-      ]
+      "unsupported_reasons": []
     },
     {
-      "capability_status": "NOT_IMPLEMENTED",
-      "closure_class": "PARTIAL",
+      "capability_status": "SUPPORTED",
+      "closure_class": "SUPPORTED",
       "environment_blocker": [],
       "evidence_references": [
-        "gate:nokia_srlinux/service_policy.ACL_IPV4_STANDARD@26da489ea015#4e2082d3dfbc3e4b"
+        "live:nmas-cap-validation/srl-acl_ipv4_standard/2026-10-30T01:45:01.630395+00:00"
       ],
       "feature": "service_policy.ACL_IPV4_STANDARD",
-      "final_status": "UNSUPPORTED",
-      "missing_stages": [
-        "execution",
-        "readback",
-        "postcheck",
-        "compensation",
-        "restoration",
-        "live"
-      ],
+      "final_status": "SUPPORTED",
+      "missing_stages": [],
       "platform": "nokia_srlinux",
       "stages": {
-        "compensation": false,
-        "execution": false,
+        "compensation": true,
+        "execution": true,
         "intent": true,
-        "live": false,
-        "postcheck": false,
-        "readback": false,
+        "live": true,
+        "postcheck": true,
+        "readback": true,
         "renderer": true,
-        "restoration": false,
+        "restoration": true,
         "tests": true,
         "validation": true
       },
-      "unsupported_reasons": [
-        "EXECUTOR_REFUSED",
-        "PARSER_ABSENT"
-      ]
+      "unsupported_reasons": []
     },
     {
-      "capability_status": "NOT_IMPLEMENTED",
-      "closure_class": "PARTIAL",
+      "capability_status": "SUPPORTED",
+      "closure_class": "SUPPORTED",
       "environment_blocker": [],
       "evidence_references": [
-        "gate:nokia_srlinux/service_policy.ACL_IPV6_EXTENDED@26da489ea015#2902d1f53907b46b"
+        "live:nmas-cap-validation/srl-acl_ipv6_extended/2026-10-30T01:48:32.553541+00:00"
       ],
       "feature": "service_policy.ACL_IPV6_EXTENDED",
-      "final_status": "UNSUPPORTED",
-      "missing_stages": [
-        "execution",
-        "readback",
-        "postcheck",
-        "compensation",
-        "restoration",
-        "live"
-      ],
+      "final_status": "SUPPORTED",
+      "missing_stages": [],
       "platform": "nokia_srlinux",
       "stages": {
-        "compensation": false,
-        "execution": false,
+        "compensation": true,
+        "execution": true,
         "intent": true,
-        "live": false,
-        "postcheck": false,
-        "readback": false,
+        "live": true,
+        "postcheck": true,
+        "readback": true,
         "renderer": true,
-        "restoration": false,
+        "restoration": true,
         "tests": true,
         "validation": true
       },
-      "unsupported_reasons": [
-        "EXECUTOR_REFUSED"
-      ]
+      "unsupported_reasons": []
     },
     {
-      "capability_status": "NOT_IMPLEMENTED",
-      "closure_class": "PARTIAL",
+      "capability_status": "SUPPORTED",
+      "closure_class": "SUPPORTED",
       "environment_blocker": [],
       "evidence_references": [
-        "gate:nokia_srlinux/service_policy.ACL_IPV6_STANDARD@26da489ea015#4a39c7de443acffa"
+        "live:nmas-cap-validation/srl-acl_ipv6_standard/2026-10-30T01:47:25.222864+00:00"
       ],
       "feature": "service_policy.ACL_IPV6_STANDARD",
-      "final_status": "UNSUPPORTED",
-      "missing_stages": [
-        "execution",
-        "readback",
-        "postcheck",
-        "compensation",
-        "restoration",
-        "live"
-      ],
+      "final_status": "SUPPORTED",
+      "missing_stages": [],
       "platform": "nokia_srlinux",
       "stages": {
-        "compensation": false,
-        "execution": false,
+        "compensation": true,
+        "execution": true,
         "intent": true,
-        "live": false,
-        "postcheck": false,
-        "readback": false,
+        "live": true,
+        "postcheck": true,
+        "readback": true,
         "renderer": true,
-        "restoration": false,
+        "restoration": true,
         "tests": true,
         "validation": true
       },
-      "unsupported_reasons": [
-        "EXECUTOR_REFUSED",
-        "PARSER_ABSENT"
-      ]
+      "unsupported_reasons": []
     },
     {
       "capability_status": "NOT_IMPLEMENTED",
@@ -9311,74 +9216,54 @@
       ]
     },
     {
-      "capability_status": "NOT_IMPLEMENTED",
-      "closure_class": "PARTIAL",
+      "capability_status": "SUPPORTED",
+      "closure_class": "SUPPORTED",
       "environment_blocker": [],
       "evidence_references": [
-        "gate:nokia_srlinux/service_policy.DHCP_RELAY_IPV4@26da489ea015#2f43cf91eca1b77b"
+        "live:nmas-cap-validation/srl-dhcp_relay_ipv4/2026-10-30T01:51:49.011192+00:00"
       ],
       "feature": "service_policy.DHCP_RELAY_IPV4",
-      "final_status": "UNSUPPORTED",
-      "missing_stages": [
-        "execution",
-        "readback",
-        "postcheck",
-        "compensation",
-        "restoration",
-        "live"
-      ],
+      "final_status": "SUPPORTED",
+      "missing_stages": [],
       "platform": "nokia_srlinux",
       "stages": {
-        "compensation": false,
-        "execution": false,
+        "compensation": true,
+        "execution": true,
         "intent": true,
-        "live": false,
-        "postcheck": false,
-        "readback": false,
+        "live": true,
+        "postcheck": true,
+        "readback": true,
         "renderer": true,
-        "restoration": false,
+        "restoration": true,
         "tests": true,
         "validation": true
       },
-      "unsupported_reasons": [
-        "EXECUTOR_REFUSED",
-        "PARSER_ABSENT"
-      ]
+      "unsupported_reasons": []
     },
     {
-      "capability_status": "NOT_IMPLEMENTED",
-      "closure_class": "PARTIAL",
+      "capability_status": "SUPPORTED",
+      "closure_class": "SUPPORTED",
       "environment_blocker": [],
       "evidence_references": [
-        "gate:nokia_srlinux/service_policy.DHCP_RELAY_IPV6@26da489ea015#ea8478a7ecafe83b"
+        "live:nmas-cap-validation/srl-dhcp_relay_ipv6/2026-10-30T01:52:52.778955+00:00"
       ],
       "feature": "service_policy.DHCP_RELAY_IPV6",
-      "final_status": "UNSUPPORTED",
-      "missing_stages": [
-        "execution",
-        "readback",
-        "postcheck",
-        "compensation",
-        "restoration",
-        "live"
-      ],
+      "final_status": "SUPPORTED",
+      "missing_stages": [],
       "platform": "nokia_srlinux",
       "stages": {
-        "compensation": false,
-        "execution": false,
+        "compensation": true,
+        "execution": true,
         "intent": true,
-        "live": false,
-        "postcheck": false,
-        "readback": false,
+        "live": true,
+        "postcheck": true,
+        "readback": true,
         "renderer": true,
-        "restoration": false,
+        "restoration": true,
         "tests": true,
         "validation": true
       },
-      "unsupported_reasons": [
-        "EXECUTOR_REFUSED",
-        "PARSER_ABSENT"
-      ]
+      "unsupported_reasons": []
     },
     {
       "capability_status": "NOT_IMPLEMENTED",
@@ -15616,8 +15501,8 @@
     "environment_blocked_by_platform": {
       "cisco_iosxr": 66
     },
-    "supported": 50,
-    "technically_feasible_remaining": 277,
+    "supported": 62,
+    "technically_feasible_remaining": 265,
     "total": 396,
     "unsupported_or_out_of_scope": 3
   },
@@ -15644,7 +15529,7 @@
       }
     }
   ],
-  "matrix_supported": 50,
+  "matrix_supported": 62,
   "matrix_total": 396,
   "per_platform": {
     "arista_ceos": {
@@ -15685,9 +15570,9 @@
       "LIVE_EVIDENCE_MISSING": 0,
       "NOT_IMPLEMENTED": 48,
       "OUT_OF_SCOPE": 0,
-      "PARTIAL": 13,
+      "PARTIAL": 1,
       "RENDER_VALIDATE_ONLY": 0,
-      "SUPPORTED": 5,
+      "SUPPORTED": 17,
       "UNSUPPORTED": 0,
       "total": 66
     },
@@ -15733,9 +15618,9 @@
     "LIVE_EVIDENCE_MISSING": 0,
     "NOT_IMPLEMENTED": 292,
     "OUT_OF_SCOPE": 0,
-    "PARTIAL": 51,
+    "PARTIAL": 39,
     "RENDER_VALIDATE_ONLY": 0,
-    "SUPPORTED": 50,
+    "SUPPORTED": 62,
     "UNSUPPORTED": 3
   }
 }

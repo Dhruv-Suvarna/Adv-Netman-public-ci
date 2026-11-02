@@ -91,6 +91,8 @@ class GnmiError(Exception):
 
 def _code(exc: Exception, *, default: str) -> str:
     text = f"{type(exc).__name__} {exc}".lower()
+    if "invalid session id" in text:
+        return "SESSION_EXPIRED"
     if "unauthenticated" in text or "authentication" in text or "permission_denied" in text:
         return "AUTH_FAILED"
     if "deadline" in text or "timeout" in text:
@@ -107,30 +109,47 @@ class GnmiSession:
     def __init__(self, *, host: str = "", port: int = 57400, username: str = "", password: str = "", insecure: bool = False,
                  timeout: float = 20, client=None):
         self._client = client
+        self._client_ctor = None
+        self._client_kwargs = {}
         if client is not None:
             return
         try:
             from pygnmi.client import gNMIclient
         except ImportError as exc:  # pragma: no cover - pygnmi is a project dependency
             raise GnmiError("CONNECTION_FAILED") from exc
+        # Lab nodes present a self-signed certificate: the channel is encrypted but the peer is not authenticated.
+        options = {"insecure": True} if insecure else {"skip_verify": True}
+        self._client_ctor = gNMIclient
+        self._client_kwargs = dict(target=(host, int(port)), username=username, password=password,
+                                   timeout=int(timeout), **options)
+        self._renew()
+
+    def _renew(self) -> None:
+        """Open a fresh authenticated channel after an explicit invalid-session refusal."""
+        if self._client_ctor is None:
+            raise GnmiError("SESSION_EXPIRED")
+        self.disconnect()
         try:
-            # Lab nodes present a self-signed certificate: the channel is encrypted but the peer is not authenticated.
-            options = {"insecure": True} if insecure else {"skip_verify": True}
-            self._client = gNMIclient(target=(host, int(port)), username=username, password=password,
-                                      timeout=int(timeout), **options)
+            self._client = self._client_ctor(**self._client_kwargs)
             self._client.connect()
             self._client.capabilities()
-        except Exception as exc:  # noqa: BLE001 - reduced to a fixed code
+        except Exception as exc:  # noqa: BLE001 - only a fixed error code escapes
             self.disconnect()
             raise GnmiError(_code(exc, default="CONNECTION_FAILED")) from None
 
     def get(self, path: str, datatype: str = "config") -> dict:
         if datatype not in ("config", "state"):
             raise GnmiError("COMMAND_NOT_ALLOWED")
-        try:
-            return self._client.get(path=[path], datatype=datatype, encoding="json_ietf") or {}
-        except Exception as exc:  # noqa: BLE001
-            raise GnmiError(_code(exc, default="COMMAND_FAILED")) from None
+        for attempt in range(2):
+            try:
+                return self._client.get(path=[path], datatype=datatype, encoding="json_ietf") or {}
+            except Exception as exc:  # noqa: BLE001 - only an explicit expired session is renewed
+                code = _code(exc, default="COMMAND_FAILED")
+                if code == "SESSION_EXPIRED" and not attempt:
+                    self._renew()
+                    continue
+                raise GnmiError(code) from None
+        raise GnmiError("COMMAND_FAILED")
 
     def set_cli(self, statements) -> int:
         """Commit ``set`` / ``delete`` statements as ONE transaction; -> number of statements sent."""
@@ -145,8 +164,11 @@ class GnmiSession:
             raise GnmiError("COMMAND_REJECTED")
         try:
             self._client.set(update=[("cli:/", "\n".join(lines))], encoding="ascii")
-        except Exception as exc:  # noqa: BLE001
-            raise GnmiError(_code(exc, default="TRANSPORT_ERROR")) from None
+        except Exception as exc:  # noqa: BLE001 - a write is never blindly retried
+            code = _code(exc, default="TRANSPORT_ERROR")
+            if code == "SESSION_EXPIRED":
+                self._renew()  # the caller must read back through this channel before deciding to retry
+            raise GnmiError(code) from None
         return len(lines)
 
     def disconnect(self) -> None:

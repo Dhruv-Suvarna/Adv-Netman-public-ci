@@ -208,6 +208,7 @@ PATH_RULES: tuple[PathRule, ...] = (
         "web/core/management/commands/nmas_phase9_ledger.py", *_svc("dhcp_relay_option82"), "labs/phase9-option82-isolated/**",
         "labs/phase9-ceos-isis-isolated/**", "docs/evidence/v2-phase9-closure/ceos-isis/**",
         "labs/phase9-ceos-acl6-isolated/**", "docs/evidence/v2-phase9-closure/ceos-acl6/**",
+        "labs/phase9-srlinux-isolated/**", "docs/evidence/v2-phase9-closure/srlinux/**",
         "docs/evidence/v2-phase7-9/phase9/**",
         # V2 Phase 9: a RIP instance disabled in intent, live on cEOS (runs in the decommission fixture's NMAS namespace)
         "web/core/tests/live_disabled_rip_fixture.py", "docs/evidence/v2-phase9-closure/disabled-rip/**",

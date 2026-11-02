@@ -1,5 +1,3 @@
 set network-instance default protocols ospf instance {{ process_display }} version ospf-v2
 set network-instance default protocols ospf instance {{ process_display }} admin-state enable
 set network-instance default protocols ospf instance {{ process_display }} router-id __DB_FIELD_router_id__
-{% for line in passive_lines %}set network-instance default protocols ospf instance {{ process_display }} passive-interface {{ line }}
-{% endfor %}

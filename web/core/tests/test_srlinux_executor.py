@@ -127,14 +127,21 @@ class ModelTests(SimpleTestCase):
         self.assertEqual(model.inverse(model.operations(LOOPBACK), model.tree_from_set_lines([*BASE, *LOOPBACK])), [])
 
     def test_unmodelled_and_multi_valued_statements_fail_closed(self):
-        for line in ("set system name host-name X", "set network-instance default protocols bgp autonomous-system 65001",
+        for line in ("set system name host-name X", "set network-instance default protocols isis instance i1 admin-state enable",
                      "set acl ipv4-filter A entry 10 action accept"):
             with self.assertRaises(model.ModelError):
                 model.operation(line, strict=True)
         with self.assertRaises(model.ModelError):
             model.statements(["hostname not-srlinux"])
-        relay = model.operations(["set interface ethernet-1/1 subinterface 0 ipv4 dhcp-relay server 192.0.2.1"])
-        self.assertIsNone(model.inverse(relay, model.tree_from_set_lines(BASE + relay_lines())))
+        with self.assertRaisesRegex(model.ModelError, "bracketed value list"):     # a leaf-list member is never guessed
+            model.operations(relay_lines(), strict=True)
+
+    def test_a_bracketed_leaf_list_extends_the_captured_members_and_restores_them(self):
+        captured = model.tree_from_set_lines([*BASE, "set interface ethernet-1/1 subinterface 0 ipv4 dhcp-relay server [ 192.0.2.9 ]"])
+        wanted = model.operations(["set interface ethernet-1/1 subinterface 0 ipv4 dhcp-relay server [ 192.0.2.1 ]"], strict=True)
+        widened = model.additive(wanted, captured)
+        self.assertEqual(widened[0].value, ("192.0.2.9", "192.0.2.1"))
+        self.assertEqual(model.inverse(widened, captured), ["set / interface ethernet-1/1 subinterface 0 ipv4 dhcp-relay server [ 192.0.2.9 ]"])
 
 
 def relay_lines():
@@ -147,7 +154,10 @@ class ExecutorTests(SimpleTestCase):
         for kind in ("interface", "address", "static_route"):
             cap = capability.capability_for("nokia_srlinux", kind)
             self.assertEqual((cap.apply, cap.compensation, cap.transport), ("SUPPORTED", "SUPPORTED", "gnmi-set"))
-        self.assertEqual(capability.capability_for("nokia_srlinux", "routing_bgp").apply, "NOT_IMPLEMENTED")
+        for kind in ("routing_ospf", "routing_binding", "routing_bgp", "bgp_neighbor", "bgp_neighbor_af", "bgp_network", "acl",
+                     "acl_attachment", "dhcp_relay"):
+            self.assertEqual(capability.capability_for("nokia_srlinux", kind).apply, "SUPPORTED", kind)
+        self.assertEqual(capability.capability_for("nokia_srlinux", "nat_rule").apply, "NOT_IMPLEMENTED")
         self.assertEqual(transport_capability.selected_transport("nokia_srlinux"), "GNMI_SET")
         with self.assertRaises(ExecutorError):
             registry.executor_for({"name": "x", "platform": "sonic"})
@@ -196,7 +206,7 @@ class ExecutorTests(SimpleTestCase):
 
     def test_refuses_what_it_cannot_invert(self):
         executor = _executor(FakeNode())
-        for spec in (_spec(1, "routing_bgp", ["set network-instance default protocols bgp autonomous-system 65001"]),
+        for spec in (_spec(1, "routing_isis", ["set network-instance default protocols isis instance i1 admin-state enable"]),
                      _spec(2, "interface", ["set system name host-name X"]),
                      _spec(3, "interface", LOOPBACK, origin="RAW"), _spec(4, "interface", ())):
             found = executor.assess(spec)
@@ -216,6 +226,121 @@ class ExecutorTests(SimpleTestCase):
         node.drift = "set interface ethernet-1/1 description drift"
         failed = executor.compensate(spec, preflight)
         self.assertEqual((failed.status, failed.error_code), ("COMPENSATION_FAILED", "STATE_NOT_RESTORED"))
+
+    def test_expired_session_compensation_reads_back_before_retrying_inverse(self):
+        node = FakeNode()
+        session = GnmiSession(client=node)
+        executor = SrLinuxExecutor({"name": "srl", "platform": "nokia_srlinux"}, connection_factory=lambda _d: session)
+        executor.connect()
+        spec = _spec(1, "interface", LOOPBACK)
+        preflight = executor.assess(spec)
+        self.assertTrue(executor.apply(spec, preflight).ok)
+        original_set = node.set
+        refused = []
+
+        def expire_once(update, encoding):
+            if not refused:
+                refused.append(True)
+                raise RuntimeError("Invalid session id 5235")
+            return original_set(update, encoding)
+
+        node.set = expire_once
+        session._renew = lambda: None  # the fake node stays usable after an explicit session renewal
+        result = executor.compensate(spec, preflight)
+        self.assertEqual(result.status, "COMPENSATED")
+        self.assertEqual(refused, [True])
+        self.assertEqual(executor.running_config_digest(), executor.tree_digest(model.tree_from_set_lines(BASE)))
+
+    def test_expired_session_apply_retries_only_after_unchanged_readback(self):
+        node = FakeNode()
+        session = GnmiSession(client=node)
+        session._renew = lambda: None
+        executor = SrLinuxExecutor({"name": "srl", "platform": "nokia_srlinux"},
+                                   connection_factory=lambda _d: session)
+        executor.connect()
+        spec = _spec(1, "interface", LOOPBACK)
+        preflight = executor.assess(spec)
+        original_set = node.set
+        calls = []
+
+        def rejected_then_accepted(update, encoding):
+            calls.append(True)
+            if len(calls) == 1:
+                raise RuntimeError("Invalid session id 5235")
+            return original_set(update, encoding)
+
+        node.set = rejected_then_accepted
+        self.assertTrue(executor.apply(spec, preflight).ok)
+        self.assertEqual(len(calls), 2)
+        self.assertEqual(executor.compensate(spec, preflight).status, "COMPENSATED")
+
+        node = FakeNode()
+        session = GnmiSession(client=node)
+        session._renew = lambda: None
+        executor = SrLinuxExecutor({"name": "srl", "platform": "nokia_srlinux"},
+                                   connection_factory=lambda _d: session)
+        executor.connect()
+        preflight = executor.assess(spec)
+        original_set = node.set
+        calls = []
+
+        def applied_but_unknown(update, encoding):
+            calls.append(True)
+            original_set(update, encoding)
+            raise RuntimeError("Invalid session id 5235")
+
+        node.set = applied_but_unknown
+        outcome = executor.apply(spec, preflight)
+        self.assertEqual((outcome.ok, outcome.error_code, outcome.partial_effects), (False, "SESSION_EXPIRED", True))
+        self.assertEqual(len(calls), 1)
+        node.set = original_set
+        self.assertEqual(executor.compensate(spec, preflight).status, "COMPENSATED")
+
+    def test_native_fixture_expired_set_retries_only_after_unchanged_readback(self):
+        node = FakeNode()
+        session = GnmiSession(client=node)
+        session._renew = lambda: None
+        lab = object.__new__(batch_srlinux.SrlLab)
+        lab.gnmi, lab.undo = session, []
+        lab.executor = SrLinuxExecutor({"name": "srl", "platform": "nokia_srlinux"},
+                                       connection_factory=lambda _d: session)
+        lab.executor.connect()
+        original_set = node.set
+        calls = []
+
+        def rejected_then_accepted(update, encoding):
+            calls.append(True)
+            if len(calls) == 1:
+                raise RuntimeError("Invalid session id 5235")
+            return original_set(update, encoding)
+
+        node.set = rejected_then_accepted
+        lab.native(LOOPBACK)
+        self.assertEqual(len(calls), 2)
+        self.assertEqual(len(lab.undo), 1)
+        self.assertEqual(lab.undo[0][1], lab.executor.tree_digest(model.tree_from_set_lines(BASE)))
+
+        node = FakeNode()
+        session = GnmiSession(client=node)
+        session._renew = lambda: None
+        lab.gnmi = session
+        lab.executor = SrLinuxExecutor({"name": "srl", "platform": "nokia_srlinux"},
+                                       connection_factory=lambda _d: session)
+        lab.executor.connect()
+        lab.undo = []
+        original_set = node.set
+        calls = []
+
+        def applied_but_unknown(update, encoding):
+            calls.append(True)
+            original_set(update, encoding)
+            raise RuntimeError("Invalid session id 5235")
+
+        node.set = applied_but_unknown
+        with self.assertRaisesRegex(RuntimeError, "refusing to retry"):
+            lab.native(LOOPBACK)
+        self.assertEqual(len(calls), 1)
+        self.assertEqual(len(lab.undo), 1)
 
     def test_unreadable_state_is_never_guessed(self):
         executor = SrLinuxExecutor({"name": "srl", "platform": "nokia_srlinux"},
@@ -285,11 +410,13 @@ class StateReaderTests(SimpleTestCase):
         device = {"name": "srl", "platform": "nokia_srlinux"}
         evidence = live.read_device(device, session_factory=lambda d: live.SrLinuxSession(d, gnmi=gnmi))
         self.assertTrue(evidence.live_reachable)
-        self.assertEqual(set(gnmi.calls), {("/interface", "state"), ("/network-instance[name=default]/route-table", "state")})
+        self.assertEqual(set(gnmi.calls), {("/interface", "state"), ("/network-instance[name=default]/route-table", "state"),
+                                           ("/network-instance[name=default]/protocols/ospf", "state"),
+                                           ("/network-instance[name=default]/protocols/bgp/neighbor", "state"), ("/", "config")})
         self.assertIn("lo44", evidence.facts("interfaces"))
         self.assertEqual(len(evidence.facts("routes")), 2)
         with self.assertRaises(live.LiveError):
-            live.SrLinuxSession(device, gnmi=gnmi).run("running_config")
+            live.SrLinuxSession(device, gnmi=gnmi).run("startup_config")
         self.assertEqual(live.read_device(device).live_error, "NOT_CONFIGURED")      # no inventory target: never guessed
 
 

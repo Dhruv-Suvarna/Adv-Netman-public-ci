@@ -106,10 +106,12 @@ class DeviceContext:
         """A routing process without its children (bindings / neighbors / networks)."""
         if family == "bgp":
             return {**instance, "neighbors": {}, "networks": {}}
-        if family == "ospf" and self.platform == "ubuntu_frr":
+        if family == "ospf" and self.platform in ("ubuntu_frr", "nokia_srlinux"):
             # FRR rejects a network statement overlapping an interface's
-            # explicit `ip ospf area` binding.  Preserve this render-only
-            # context while omitting the binding Configlet itself.
+            # explicit `ip ospf area` binding, and SR Linux has no network
+            # statement at all (a bound interface's network is redundant).
+            # Preserve this render-only context while omitting the binding
+            # Configlet itself.
             import ipaddress
 
             bound = set()

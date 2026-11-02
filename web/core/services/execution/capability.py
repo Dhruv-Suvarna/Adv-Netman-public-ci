@@ -53,8 +53,12 @@ CEOS_COMPENSABLE = frozenset({"interface", "address", "static_route", *REMOVAL_T
 _LINUX_ROUTING = ("routing_ospf", "routing_binding", "routing_rip", "routing_bgp", "bgp_neighbor", "bgp_neighbor_af", "bgp_network")
 LINUX_APPLY = frozenset({"interface", "address", "static_route", "nat_rule", *_LINUX_ROUTING})
 LINUX_COMPENSABLE = frozenset({"interface", "address", "static_route", "nat_rule", *_LINUX_ROUTING})
-# executors.srlinux.OBJECT_TYPES: every applied type is compensated from the captured configuration tree.
-SRLINUX_APPLY = SRLINUX_COMPENSABLE = frozenset({"interface", "address", "static_route"})
+# executors.srlinux.OBJECT_TYPES: every applied type is compensated from the captured configuration tree.  The routing and
+# service types (V2 Phase 9) were proven on the isolated SR Linux 24.10.7 node against an FRR peer: adjacency / session /
+# filtering / relaying, live import, exact restoration.
+SRLINUX_APPLY = SRLINUX_COMPENSABLE = frozenset({"interface", "address", "static_route", "routing_ospf", "routing_binding",
+                                                 "routing_bgp", "bgp_neighbor", "bgp_neighbor_af", "bgp_network", "acl",
+                                                 "acl_attachment", "dhcp_relay"})
 # executors.iosxe.OBJECT_TYPES: compensated from the captured running configuration.
 IOSXE_APPLY = IOSXE_COMPENSABLE = frozenset({"interface", "address", "static_route"})
 

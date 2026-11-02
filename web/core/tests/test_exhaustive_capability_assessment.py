@@ -67,6 +67,19 @@ class AssessmentContractTests(TestCase):
         binding = next(i for i in parsed.routing_instances if i.fields.get("version") == "OSPFV3").bindings[0]
         self.assertEqual((binding["cost"], binding["network_type"]), (10, "POINT_TO_POINT"))
 
+    def test_srlinux_ospf_import_matches_interface_area_without_a_network_statement(self):
+        from core.services.capabilities.probe_cases import sample
+
+        for key in ("routing.OSPFV2", "routing.OSPFV3"):
+            with self.subTest(feature=key):
+                feature = features.by_key()[key]
+                case = sample("nokia_srlinux", feature)
+                parsed = _parse("nokia_srlinux", _descriptors("nokia_srlinux", case.sections), case)
+                self.assertTrue(_parsed_contains(parsed, feature, case))
+                binding = next(i for i in parsed.routing_instances if i.family == "ospf").bindings[0]
+                binding["area"] = "1.0.0.0"
+                self.assertFalse(_parsed_contains(parsed, feature, case))
+
     def test_ceos_rip_renderer_enables_process_and_refuses_unsupported_passive(self):
         from core.services.capabilities.probe_cases import sample
 

@@ -24,6 +24,7 @@ from ..execution.codes import Capability
 from ..execution.executors import ceos, iosxe, linux, registry as executors, srlinux
 from ..execution.executors.base import ConfigletSpec, ExecutorError
 from ..health.evidence import DeviceEvidence, FactGroup
+from ..health.routing_config import normalized_area
 from ..validation import sources
 from ..validation.findings import sha256_of
 from .assessment import CellAssessment, LIVE_PROBES, PROBES, probe
@@ -80,8 +81,8 @@ def _parsed_contains(parsed, feature, case):
                                                         for n in instance.networks)
             if family == "ospf":
                 binding_ok = any(b.get("interface_name") == case.expected["interface"] and
-                                 b.get("area") == "0" and b.get("version") == code for b in instance.bindings)
-                network_ok = af == "IPV6" or (parsed.parser_version.startswith("ubuntu-frr") and binding_ok) or any(
+                                 normalized_area(b.get("area")) == "0" and b.get("version") == code for b in instance.bindings)
+                network_ok = af == "IPV6" or (parsed.parser_version.startswith(("ubuntu-frr", "srlinux")) and binding_ok) or any(
                     n.get("prefix") == "198.18.0.0/30" and n.get("area") == "0" for n in instance.networks)
                 return instance.fields.get("version") == code and instance.fields.get("router_id") == "198.18.44.1" \
                     and network_ok and binding_ok

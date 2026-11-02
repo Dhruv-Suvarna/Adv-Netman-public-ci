@@ -317,7 +317,8 @@ class CapabilityAndStateModelTests(SimpleTestCase):
             ("ubuntu_frr", "address", S, S), ("ubuntu_frr", "interface", S, S), ("ubuntu_frr", "static_route", S, S),
             ("ubuntu_frr", "routing_ospf", S, S), ("ubuntu_frr", "nat_rule", S, S), ("ubuntu_frr", "routing_bgp", S, S), ("ubuntu_frr", "routing_rip", S, S), ("ubuntu_frr", "nat_pool", N, N),
             ("nokia_srlinux", "interface", S, S), ("nokia_srlinux", "address", S, S), ("nokia_srlinux", "static_route", S, S),
-            ("nokia_srlinux", "routing_bgp", N, N), ("nokia_srlinux", "acl", N, N), ("cisco_c8000v_iosxe", "interface", S, S), ("cisco_c8000v_iosxe", "address", S, S),
+            ("nokia_srlinux", "routing_bgp", S, S), ("nokia_srlinux", "acl", S, S), ("nokia_srlinux", "dhcp_relay", S, S),
+            ("nokia_srlinux", "nat_rule", N, N), ("nokia_srlinux", "fhrp", N, N), ("cisco_c8000v_iosxe", "interface", S, S), ("cisco_c8000v_iosxe", "address", S, S),
             ("cisco_c8000v_iosxe", "static_route", S, S), ("cisco_c8000v_iosxe", "routing_ospf", N, N),
             ("cisco_iosxr", "interface", N, N), ("sonic", "address", N, N), ("mystery", "interface", K, K),
         ]
