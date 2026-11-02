@@ -710,7 +710,7 @@
       "closure_class": "SUPPORTED",
       "environment_blocker": [],
       "evidence_references": [
-        "live:nmas-cap-validation/ceos-isis-ssh/2026-10-29T05:56:01.552700+00:00"
+        "live:nmas-cap-validation/ceos-isis-ssh/2026-10-29T06:00:59.813918+00:00"
       ],
       "feature": "routing.ISIS",
       "final_status": "SUPPORTED",
@@ -923,45 +923,29 @@
       "unsupported_reasons": []
     },
     {
-      "capability_status": "NOT_IMPLEMENTED",
-      "closure_class": "NOT_IMPLEMENTED",
+      "capability_status": "SUPPORTED",
+      "closure_class": "SUPPORTED",
       "environment_blocker": [],
       "evidence_references": [
-        "gate:arista_ceos/service_policy.ACL_ATTACH_IPV6@d879b511a42d#a7fd330c0c0a856d"
+        "live:nmas-cap-validation/ceos-acl_attach_ipv6/2026-10-29T02:39:34.956402+00:00"
       ],
       "feature": "service_policy.ACL_ATTACH_IPV6",
-      "final_status": "UNSUPPORTED",
-      "missing_stages": [
-        "intent",
-        "renderer",
-        "validation",
-        "execution",
-        "readback",
-        "postcheck",
-        "compensation",
-        "restoration",
-        "live"
-      ],
+      "final_status": "SUPPORTED",
+      "missing_stages": [],
       "platform": "arista_ceos",
       "stages": {
-        "compensation": false,
-        "execution": false,
-        "intent": false,
-        "live": false,
-        "postcheck": false,
-        "readback": false,
-        "renderer": false,
-        "restoration": false,
+        "compensation": true,
+        "execution": true,
+        "intent": true,
+        "live": true,
+        "postcheck": true,
+        "readback": true,
+        "renderer": true,
+        "restoration": true,
         "tests": true,
-        "validation": false
+        "validation": true
       },
-      "unsupported_reasons": [
-        "CONFIG_VALIDATION_FAILED",
-        "EXECUTOR_REFUSED",
-        "PARSER_ABSENT",
-        "RENDERER_ABSENT",
-        "UI_ABSENT"
-      ]
+      "unsupported_reasons": []
     },
     {
       "capability_status": "SUPPORTED",
@@ -1014,86 +998,54 @@
       "unsupported_reasons": []
     },
     {
-      "capability_status": "NOT_IMPLEMENTED",
-      "closure_class": "NOT_IMPLEMENTED",
+      "capability_status": "SUPPORTED",
+      "closure_class": "SUPPORTED",
       "environment_blocker": [],
       "evidence_references": [
-        "gate:arista_ceos/service_policy.ACL_IPV6_EXTENDED@d879b511a42d#4e5009a757febb98"
+        "live:nmas-cap-validation/ceos-acl_ipv6_extended/2026-10-29T02:39:12.707635+00:00"
       ],
       "feature": "service_policy.ACL_IPV6_EXTENDED",
-      "final_status": "UNSUPPORTED",
-      "missing_stages": [
-        "intent",
-        "renderer",
-        "validation",
-        "execution",
-        "readback",
-        "postcheck",
-        "compensation",
-        "restoration",
-        "live"
-      ],
+      "final_status": "SUPPORTED",
+      "missing_stages": [],
       "platform": "arista_ceos",
       "stages": {
-        "compensation": false,
-        "execution": false,
-        "intent": false,
-        "live": false,
-        "postcheck": false,
-        "readback": false,
-        "renderer": false,
-        "restoration": false,
+        "compensation": true,
+        "execution": true,
+        "intent": true,
+        "live": true,
+        "postcheck": true,
+        "readback": true,
+        "renderer": true,
+        "restoration": true,
         "tests": true,
-        "validation": false
+        "validation": true
       },
-      "unsupported_reasons": [
-        "CONFIG_VALIDATION_FAILED",
-        "EXECUTOR_REFUSED",
-        "PARSER_ABSENT",
-        "RENDERER_ABSENT",
-        "UI_ABSENT"
-      ]
+      "unsupported_reasons": []
     },
     {
-      "capability_status": "NOT_IMPLEMENTED",
-      "closure_class": "NOT_IMPLEMENTED",
+      "capability_status": "SUPPORTED",
+      "closure_class": "SUPPORTED",
       "environment_blocker": [],
       "evidence_references": [
-        "gate:arista_ceos/service_policy.ACL_IPV6_STANDARD@d879b511a42d#4e5009a757febb98"
+        "live:nmas-cap-validation/ceos-acl_ipv6_standard/2026-10-29T02:38:49.910641+00:00"
       ],
       "feature": "service_policy.ACL_IPV6_STANDARD",
-      "final_status": "UNSUPPORTED",
-      "missing_stages": [
-        "intent",
-        "renderer",
-        "validation",
-        "execution",
-        "readback",
-        "postcheck",
-        "compensation",
-        "restoration",
-        "live"
-      ],
+      "final_status": "SUPPORTED",
+      "missing_stages": [],
       "platform": "arista_ceos",
       "stages": {
-        "compensation": false,
-        "execution": false,
-        "intent": false,
-        "live": false,
-        "postcheck": false,
-        "readback": false,
-        "renderer": false,
-        "restoration": false,
+        "compensation": true,
+        "execution": true,
+        "intent": true,
+        "live": true,
+        "postcheck": true,
+        "readback": true,
+        "renderer": true,
+        "restoration": true,
         "tests": true,
-        "validation": false
+        "validation": true
       },
-      "unsupported_reasons": [
-        "CONFIG_VALIDATION_FAILED",
-        "EXECUTOR_REFUSED",
-        "PARSER_ABSENT",
-        "RENDERER_ABSENT",
-        "UI_ABSENT"
-      ]
+      "unsupported_reasons": []
     },
     {
       "capability_status": "NOT_IMPLEMENTED",
@@ -15664,8 +15616,8 @@
     "environment_blocked_by_platform": {
       "cisco_iosxr": 66
     },
-    "supported": 47,
-    "technically_feasible_remaining": 280,
+    "supported": 50,
+    "technically_feasible_remaining": 277,
     "total": 396,
     "unsupported_or_out_of_scope": 3
   },
@@ -15692,17 +15644,17 @@
       }
     }
   ],
-  "matrix_supported": 47,
+  "matrix_supported": 50,
   "matrix_total": 396,
   "per_platform": {
     "arista_ceos": {
       "BLOCKED_BY_ENVIRONMENT": 0,
       "LIVE_EVIDENCE_MISSING": 0,
-      "NOT_IMPLEMENTED": 41,
+      "NOT_IMPLEMENTED": 38,
       "OUT_OF_SCOPE": 0,
       "PARTIAL": 0,
       "RENDER_VALIDATE_ONLY": 0,
-      "SUPPORTED": 22,
+      "SUPPORTED": 25,
       "UNSUPPORTED": 3,
       "total": 66
     },
@@ -15779,11 +15731,11 @@
   "totals": {
     "BLOCKED_BY_ENVIRONMENT": 0,
     "LIVE_EVIDENCE_MISSING": 0,
-    "NOT_IMPLEMENTED": 295,
+    "NOT_IMPLEMENTED": 292,
     "OUT_OF_SCOPE": 0,
     "PARTIAL": 51,
     "RENDER_VALIDATE_ONLY": 0,
-    "SUPPORTED": 47,
+    "SUPPORTED": 50,
     "UNSUPPORTED": 3
   }
 }

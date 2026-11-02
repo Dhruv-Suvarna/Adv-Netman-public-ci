@@ -2,11 +2,11 @@
 
 Generated from `progress-ledger.json` by `nmas_capabilities verify-matrix` / `report-matrix`; do not edit by hand.
 
-**COMPLETE** — total 396, assessed 396, unassessed 0, supported 47, unsupported 349 (unassessed cells are fail-closed unsupported).
+**COMPLETE** — total 396, assessed 396, unassessed 0, supported 50, unsupported 346 (unassessed cells are fail-closed unsupported).
 
 | Platform | Total | Assessed | Unassessed | Supported | Runtime-investigated | Prerequisite-gated |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| arista_ceos | 66 | 66 | 0 | 22 | 25 | 41 |
+| arista_ceos | 66 | 66 | 0 | 25 | 28 | 38 |
 | cisco_c8000v_iosxe | 66 | 66 | 0 | 5 | 6 | 60 |
 | cisco_iosxr | 66 | 66 | 0 | 0 | 66 | 0 |
 | nokia_srlinux | 66 | 66 | 0 | 5 | 6 | 60 |
@@ -19,9 +19,9 @@ Derived from the binary ledger: SUPPORTED is unchanged; UNSUPPORTED means a demo
 
 | Status | Cells |
 | --- | ---: |
-| NOT_IMPLEMENTED | 346 |
+| NOT_IMPLEMENTED | 343 |
 | OUT_OF_SCOPE | 0 |
-| SUPPORTED | 47 |
+| SUPPORTED | 50 |
 | UNSUPPORTED | 3 |
 
 ## Supported cells
@@ -42,8 +42,11 @@ Derived from the binary ledger: SUPPORTED is unchanged; UNSUPPORTED means a demo
 - `arista_ceos` `routing.STATIC_IPV4`
 - `arista_ceos` `routing.STATIC_IPV6`
 - `arista_ceos` `service_policy.ACL_ATTACH_IPV4`
+- `arista_ceos` `service_policy.ACL_ATTACH_IPV6`
 - `arista_ceos` `service_policy.ACL_IPV4_EXTENDED`
 - `arista_ceos` `service_policy.ACL_IPV4_STANDARD`
+- `arista_ceos` `service_policy.ACL_IPV6_EXTENDED`
+- `arista_ceos` `service_policy.ACL_IPV6_STANDARD`
 - `arista_ceos` `service_policy.DHCP_RELAY_IPV4`
 - `arista_ceos` `service_policy.DHCP_RELAY_IPV6`
 - `arista_ceos` `service_policy.FHRP_VARP_IPV4`
@@ -80,14 +83,14 @@ A cell is listed under every reason one of its probes recorded.
 
 | Platform | Reason | Cells |
 | --- | --- | ---: |
-| arista_ceos | CONFIG_VALIDATION_FAILED | 44 |
-| arista_ceos | EXECUTOR_REFUSED | 44 |
+| arista_ceos | CONFIG_VALIDATION_FAILED | 41 |
+| arista_ceos | EXECUTOR_REFUSED | 41 |
 | arista_ceos | FIELD_VALIDATION_FAILED | 9 |
 | arista_ceos | FUNCTIONAL_TEST_FAILED | 9 |
-| arista_ceos | PARSER_ABSENT | 44 |
+| arista_ceos | PARSER_ABSENT | 41 |
 | arista_ceos | PLATFORM_DOES_NOT_SUPPORT | 3 |
-| arista_ceos | RENDERER_ABSENT | 44 |
-| arista_ceos | UI_ABSENT | 43 |
+| arista_ceos | RENDERER_ABSENT | 41 |
+| arista_ceos | UI_ABSENT | 40 |
 | cisco_c8000v_iosxe | COMPENSATION_ABSENT | 1 |
 | cisco_c8000v_iosxe | CONFIG_VALIDATION_FAILED | 56 |
 | cisco_c8000v_iosxe | EXECUTOR_REFUSED | 60 |
@@ -140,7 +143,7 @@ A cell is listed under every reason one of its probes recorded.
 
 | Platform | First missing NMAS layer | Cells |
 | --- | --- | ---: |
-| arista_ceos | RENDERER_ABSENT | 41 |
+| arista_ceos | RENDERER_ABSENT | 38 |
 | cisco_c8000v_iosxe | EXECUTOR_REFUSED | 4 |
 | cisco_c8000v_iosxe | RENDERER_ABSENT | 56 |
 | nokia_srlinux | EXECUTOR_REFUSED | 12 |

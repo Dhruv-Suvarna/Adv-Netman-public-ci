@@ -22,16 +22,18 @@ from django.utils import timezone
 from ..config_import import parser_ceos
 from ..execution.executors.base import APPLY, ConfigletSpec
 from ..execution.executors.ceos import CeosExecutor
+from ..execution.executors.ceos import REJECTIONS
 from ..execution.executors.linux import LinuxExecutor
 from ..health import live
 from . import assessment
 from .features import by_key
-from .isolated_live import LAB, NETWORK, DockerEosConfigConnection, _run, _target
+from .fixture_ceos_ssh import FixtureCeosSsh
+from .isolated_live import LAB, NETWORK, _run, _target
 from .offline_verify import _descriptors, _parsed_contains
 from .probe_cases import sample
 
 RUNTIME = "ceos:4.36.2F / Linux peer namespaces"
-LINK4, LINK6 = ("198.18.0.1/24", "198.18.0.2/24", "198.18.0.66/24"), ("2001:db8:44::1/64", "2001:db8:44::2/64")
+LINK4, LINK6 = ("198.18.0.1/24", "198.18.0.2/24", "198.18.0.66/24"), ("2001:db8:44::1/64", "2001:db8:44::2/64", "2001:db8:44::66/64")
 FAR4, FAR6 = ("198.18.1.1/24", "198.18.1.2/24"), ("2001:db8:45::1/64", "2001:db8:45::2/64")
 VMAC = "00:1c:73:00:00:44"
 
@@ -130,7 +132,9 @@ class CeosServiceLab:
                     or NETWORK not in (doc.get("NetworkSettings") or {}).get("Networks", {}):
                 raise RuntimeError("Peer is outside the isolated lab.")
             self.pids[node] = str(doc["State"]["Pid"])
-        self.executor = CeosExecutor(self.device, connection_factory=DockerEosConfigConnection, reader=live.read_device)
+        self.fixture = FixtureCeosSsh()
+        self.reader = lambda device: live.read_device(device, session_factory=self.fixture.session)
+        self.executor = CeosExecutor(self.device, connection_factory=lambda _device: self.fixture.conn, reader=self.reader)
         self.executor.connect()
         self.baseline = self.executor._config_state_digest()
         text = self.executor._config_text()
@@ -161,6 +165,7 @@ class CeosServiceLab:
                 if self.ns(node, "ip", *argv).returncode:
                     raise RuntimeError("Peer preparation failed.")
         self.ns("frr", "ip", "addr", "add", LINK4[2], "dev", "eth1")
+        self.ns("frr", "ip", "-6", "addr", "add", LINK6[2], "dev", "eth1", "nodad")   # the IPv6 ACL's denied source
         self.prepared_digest = self.executor._config_state_digest()
         deadline = time.monotonic() + 30
         while not (self.ping("frr", "198.18.1.2") and self.ping("frr", "2001:db8:45::2")):
@@ -172,11 +177,23 @@ class CeosServiceLab:
         return _run(["sudo", "-n", "nsenter", "-t", self.pids[node], "-n", *argv], timeout=timeout)
 
     def eos(self, command, *, config=False):
-        payload = f"configure terminal\n{command}" if config else command
-        result = _run(["docker", "exec", self.device["container"], "Cli", "-p", "15", "--abort-on-error", "-c", payload], timeout=60)
-        if result.returncode or "% Error" in result.stdout or "% Invalid input" in result.stdout:
+        if config:
+            commands, in_interface = [], False
+            for line in command.splitlines():
+                global_command = line.startswith(("interface ", "default interface ", "ip routing", "no ip routing",
+                                                  "ipv6 unicast-routing", "no ipv6 unicast-routing"))
+                if in_interface and global_command:
+                    commands.append("exit")
+                    in_interface = False
+                commands.append(line)
+                if line.startswith("interface "):
+                    in_interface = True
+            result = self.fixture.conn.send_config_set(commands, read_timeout=90, cmd_verify=True)
+        else:
+            result = self.fixture.conn.send_command(command, read_timeout=60)
+        if any(marker in result for marker in REJECTIONS):
             raise RuntimeError(f"Disposable cEOS {'write' if config else 'read'} failed: {command[:50]}")
-        return result.stdout
+        return result
 
     def ping(self, node, target, *, source="") -> bool:
         argv = ["ping", "-c", "2", "-W", "1", *(("-I", source) if source else ()), target]
@@ -199,9 +216,51 @@ class CeosServiceLab:
             restored = self.executor._config_state_digest() == self.baseline
         finally:
             self.executor.close()
+            self.fixture.close()
         if not restored:
             raise RuntimeError("Isolated cEOS was not restored to its captured baseline.")
         return restored
+
+
+ACL_DENIED = {"IPV4": "198.18.0.66", "IPV6": "2001:db8:44::66"}
+
+
+def acl_entries(acl: dict, first: dict) -> dict:
+    """The behaviour-test entries of one ACL: deny the lab's denied source, permit everything else.  An EXTENDED list also
+    carries a protocol entry and a TCP port-range / port entry (logged on IPv4; EOS ignores ``log`` in an IPv6 entry, so
+    NMAS refuses it there), so import must recover protocol, ports and logging -- not only the list's name."""
+    v6 = acl.get("family") == "IPV6"
+    host, link = (ACL_DENIED["IPV6"], "2001:db8:44::1") if v6 else (ACL_DENIED["IPV4"], "198.18.0.1")
+    base = {**first, "source_port": "", "destination_port": "", "logging": False, "destination_type": "ANY",
+            "destination_value": "", "protocol": "IPV6" if v6 else "IP"}
+    rows = [{**base, "sequence": 10, "action": "DENY", "source_type": "HOST", "source_value": host}]
+    if acl.get("acl_type") == "EXTENDED":
+        rows[0]["protocol"] = "ICMPV6" if v6 else "ICMP"
+        rows.append({**base, "sequence": 15, "action": "DENY", "protocol": "TCP", "source_type": "ANY", "source_value": "",
+                     "source_port": "1024-2048", "destination_type": "HOST", "destination_value": link,
+                     "destination_port": "80", "logging": not v6})
+    rows.append({**base, "sequence": 20, "action": "PERMIT", "source_type": "ANY", "source_value": ""})
+    return {f"ace_00000000000000{row['sequence']:02d}": {**row, "id": f"ace_00000000000000{row['sequence']:02d}"} for row in rows}
+
+
+def _ace_facts(row: dict, family: str, extended: bool) -> tuple:
+    """The comparable facts of one ACL entry; "IP" / "IPV6" both mean any protocol and ICMP is ICMPV6 in an IPv6 list."""
+    protocol = str(row.get("protocol") or "IP").upper()
+    protocol = "IP" if protocol in ("IP", "IPV6") else ("ICMPV6" if family == "IPV6" and protocol == "ICMP" else protocol)
+    facts = (int(row.get("sequence") or 0), str(row.get("action")).upper(), row.get("source_type"), str(row.get("source_value") or ""))
+    if not extended:
+        return (*facts, bool(row.get("logging")))
+    return (*facts, protocol, row.get("destination_type"), str(row.get("destination_value") or ""),
+            str(row.get("source_port") or ""), str(row.get("destination_port") or ""), bool(row.get("logging")))
+
+
+def acl_imported(parsed, acl: dict) -> bool:
+    """The imported list carries every intended entry exactly (sequence, action, protocol, addresses, ports, logging)."""
+    extended = acl.get("acl_type") == "EXTENDED"
+    row = next((a for a in parsed.acls if a.name == acl.get("name") and a.family == acl.get("family")), None)
+    return bool(row) and row.acl_type == acl.get("acl_type") and not row.preserved_lines and \
+        sorted(_ace_facts(e, acl["family"], extended) for e in row.entries) == \
+        sorted(_ace_facts(e, acl["family"], extended) for e in acl["entries"].values())
 
 
 def _plan(lab, key):
@@ -212,13 +271,12 @@ def _plan(lab, key):
     iface_id = next(iter(sections["interfaces"]))
     if code.startswith("ACL_"):
         acl = next(iter(sections["security"]["acls"].values()))
-        first = next(iter(acl["entries"].values()))
-        acl["entries"] = {
-            "ace_0000000000000010": {**first, "id": "ace_0000000000000010", "sequence": 10, "action": "DENY",
-                                     "source_type": "HOST", "source_value": "198.18.0.66"},
-            "ace_0000000000000020": {**first, "id": "ace_0000000000000020", "sequence": 20, "action": "PERMIT"}}
+        acl["entries"] = acl_entries(acl, next(iter(acl["entries"].values())))
         sections["security"]["attachments"] = {"attach_0000000000000003": {
             "id": "attach_0000000000000003", "acl_id": acl["id"], "interface_id": iface_id, "direction": "IN"}}
+        v6 = acl.get("family") == "IPV6"
+        permitted, denied, far = ("2001:db8:44::2", ACL_DENIED["IPV6"], "2001:db8:45::2") if v6 else \
+            ("198.18.0.2", ACL_DENIED["IPV4"], "198.18.1.2")
 
         def post(observed):
             config = observed.facts("config") or {}
@@ -226,10 +284,10 @@ def _plan(lab, key):
                 {"interface": "Ethernet1", "acl": "CAP_ACL", "direction": "IN"} in config.get("acl_attachments", [])
 
         def behave(active):
-            permit = lab.ping("frr", "198.18.1.2", source="198.18.0.2")
-            deny = lab.ping("frr", "198.18.1.2", source="198.18.0.66")
+            permit = lab.ping("frr", far, source=permitted)
+            deny = lab.ping("frr", far, source=denied)
             return (permit and not deny) if active else (permit and deny), f"permitted-source ping={permit}, denied-source ping={deny}"
-        what = "ACL CAP_ACL (deny host 198.18.0.66, permit any) attached inbound on Ethernet1"
+        what = f"{acl.get('family')} {acl.get('acl_type')} ACL CAP_ACL (deny {denied}, permit any) attached inbound on Ethernet1"
     elif code.startswith("DHCP_RELAY_"):
         v6 = code.endswith("IPV6")
         relay = next(iter(sections["services"]["dhcp"]["relays"].values()))
@@ -304,12 +362,15 @@ def probe_cell(lab, cell, key) -> None:
             if not outcome.ok:
                 raise RuntimeError(f"cEOS rejected rendered {spec.object_type}: {outcome.error_code}.")
         wrote, restorable = True, all(p.restorable for _, p in applied)
-        observed = live.read_device(lab.device)
+        observed = lab.reader(lab.device)
         read_ok = bool(observed.live_reachable)
         post_ok = read_ok and bool(post(observed))
         facts = json.dumps({"virtual_addresses": (observed.facts("virtual_addresses") or {}).get("Ethernet1", []),
                             "config": observed.facts("config") or {}}, sort_keys=True)[:400]
-        imported = _parsed_contains(parser_ceos.parse(executor._config_text()), feature, case)
+        parsed = parser_ceos.parse(executor._config_text())
+        imported = _parsed_contains(parsed, feature, case)
+        if feature.code.startswith("ACL_"):
+            imported = imported and acl_imported(parsed, next(iter(case.sections["security"]["acls"].values())))
         behaved, behaviour = behave(True)
     finally:
         statuses = [executor.compensate(spec, preflight).status for spec, preflight in reversed(applied)]
@@ -320,7 +381,8 @@ def probe_cell(lab, cell, key) -> None:
                 child = [line for line in spec.lines if line.startswith(" ")]
                 undo = [f"no {line}" for line in top] + (["interface Ethernet1", *(f"no {line.strip()}" for line in child)]
                                                          if any(line.startswith("interface ") for line in spec.lines) else [])
-                _run(["docker", "exec", lab.device["container"], "Cli", "-p", "15", "-c", "configure terminal\n" + "\n".join(undo)], timeout=60)
+                if undo:
+                    lab.eos("\n".join(undo), config=True)
     after_ok, after = behave(False)
     compensated = bool(applied) and all(status == "COMPENSATED" for status in statuses) and restored and after_ok
     reference = f"live:{LAB}/ceos-{feature.code.lower()}/{timezone.now().isoformat()}"
@@ -348,8 +410,8 @@ def probe_cell(lab, cell, key) -> None:
 
 
 CEOS_SERVICE_CELLS = tuple(f"service_policy.{code}" for code in (
-    "ACL_IPV4_STANDARD", "ACL_IPV4_EXTENDED", "ACL_ATTACH_IPV4", "DHCP_RELAY_IPV4", "DHCP_RELAY_IPV6",
-    "FHRP_VARP_IPV4", "FHRP_VARP_IPV6"))
+    "ACL_IPV4_STANDARD", "ACL_IPV4_EXTENDED", "ACL_ATTACH_IPV4", "ACL_IPV6_STANDARD", "ACL_IPV6_EXTENDED", "ACL_ATTACH_IPV6",
+    "DHCP_RELAY_IPV4", "DHCP_RELAY_IPV6", "FHRP_VARP_IPV4", "FHRP_VARP_IPV6"))
 
 
 CEOS_INTERFACE_KINDS = ("ROUTED_PHYSICAL", "ACCESS", "TRUNK", "SUBINTERFACE", "SVI")

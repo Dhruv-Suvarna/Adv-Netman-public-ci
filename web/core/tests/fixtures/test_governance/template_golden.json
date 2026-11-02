@@ -12,6 +12,7 @@
  "templates/S3.cfg.j2": "b03e22f5f8c334925ce17fcc629d7a357df380862dfe2ed5bc5599bf3c215230",
  "templates/S4.cfg.j2": "7d0216b7ef24becb1f9778fbd77a413baede98cc47f253db1554a294c3a30d68",
  "templates/features/ceos/acl_ipv4.j2": "6333109908f2be7199497587035cfab2d143f992f3ff1f97602f9436ce6458f3",
+ "templates/features/ceos/acl_ipv6.j2": "b4e5b3ed5347a4439e73f97a8b8d6e33a12807ade772b09be2786310d60a3410",
  "templates/features/ceos/fhrp_varp.j2": "d653ae8ea9f3906fe68f144deb74c04e52d3ed3fe06b97e6e5ce54574a6eecd6",
  "templates/features/ceos/interface_access.j2": "ec97a12d767fbda19ceb2b60d16608eb6d0a1c2978fb11dd01ab47e43291bd33",
  "templates/features/ceos/interface_loopback.j2": "9f7045077aa1f51bf8ea7441e1021bffba47c2584edc530616faa9fcb1dbafff",

@@ -198,8 +198,8 @@ class PbrAndRendererTests(TestCase):
         _, _, revision = make_candidate()
         cases = {
             "PBR policy": lambda: service.add_pbr_policy(revision=revision, name="PBR-IN", family="IPV4"),
-            "IPv6 ACL (structured vocabulary, not selectable)": lambda: service.add_acl(
-                revision=revision, name="V6-IN", family="IPV6", acl_type="EXTENDED"),
+            # V2 Phase 9 made IPv6 ACLs selectable on cEOS; a NAT44 pool is still not implemented there.
+            "NAT44 pool (not implemented on cEOS)": lambda: service.add_nat_pool(revision=revision, family="NAT44", name="POOL"),
         }
         for label, attempt in cases.items():
             with self.subTest(object=label), self.assertRaises(service.CollectionMutationError):

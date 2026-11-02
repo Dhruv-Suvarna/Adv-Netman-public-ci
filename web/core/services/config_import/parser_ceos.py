@@ -11,9 +11,10 @@ from __future__ import annotations
 import ipaddress
 import re
 
+from . import ceos_port_names
 from .schema import ParsedAcl, ParsedConfig, ParsedInterface, ParsedRoutingInstance, ParsedStaticRoute, UnmanagedBlock
 
-PARSER_VERSION = "ceos-2.0"
+PARSER_VERSION = "ceos-2.1"
 
 _KNOWN_UNSUPPORTED_LABELS = {
     "router isis": "IS-IS routing process", "spanning-tree": "Spanning-tree configuration",
@@ -290,22 +291,58 @@ def _parse_acl(block: list[str]) -> ParsedAcl | None:
             acl.preserved_lines.append(line); continue
         sequence, action = int(tokens[0]), tokens[1].upper()
         if acl.acl_type == "STANDARD":
-            source = " ".join(tokens[2:4]) if tokens[2].lower() == "host" and len(tokens) > 3 else tokens[2]
+            source_end = 4 if tokens[2].lower() == "host" else 3
+            if len(tokens) < source_end or [t.lower() for t in tokens[source_end:]] not in ([], ["log"]):
+                acl.preserved_lines.append(line); continue
+            source = " ".join(tokens[2:source_end])
             source_type, source_value = _match_term(source.lower())
             acl.entries.append({"sequence": sequence, "action": action, "protocol": "IP", "source_type": source_type,
                 "source_value": source_value, "destination_type": "ANY", "destination_value": "",
-                "logging": "log" in [t.lower() for t in tokens[3:]]}); continue
-        protocol = tokens[2].upper(); cursor = 3
-        if cursor >= len(tokens): acl.preserved_lines.append(line); continue
-        source = " ".join(tokens[cursor:cursor + 2]) if tokens[cursor].lower() == "host" else tokens[cursor]
-        cursor += 2 if tokens[cursor].lower() == "host" else 1
-        if cursor >= len(tokens): acl.preserved_lines.append(line); continue
-        destination = " ".join(tokens[cursor:cursor + 2]) if tokens[cursor].lower() == "host" else tokens[cursor]
-        source_type, source_value = _match_term(source.lower()); destination_type, destination_value = _match_term(destination.lower())
-        acl.entries.append({"sequence": sequence, "action": action, "protocol": protocol, "source_type": source_type,
-            "source_value": source_value, "destination_type": destination_type, "destination_value": destination_value,
-            "logging": "log" in [t.lower() for t in tokens]})
+                "logging": len(tokens) > source_end}); continue
+        entry = _extended_entry(sequence, action, tokens)
+        if entry is None: acl.preserved_lines.append(line); continue
+        acl.entries.append(entry)
     return acl
+
+
+def _term(tokens: list[str], cursor: int) -> tuple[str, int] | None:
+    """An address term at ``cursor`` (``any`` / ``host A`` / a prefix) -> (its text, the next cursor)."""
+    if cursor >= len(tokens): return None
+    if tokens[cursor].lower() == "host":
+        return (" ".join(tokens[cursor:cursor + 2]), cursor + 2) if cursor + 1 < len(tokens) else None
+    return tokens[cursor], cursor + 1
+
+
+def _port_clause(protocol: str, tokens: list[str], cursor: int) -> tuple[str, int] | None:
+    """An optional ``eq P`` / ``range A B`` clause at ``cursor`` -> (the intent port text "80" / "1024-2048" / "", the next
+    cursor).  EOS prints well-known ports by name (``eq www``); a name outside the verified table, or another operator
+    (gt / lt / neq), is not modelled: None."""
+    operator = tokens[cursor].lower() if cursor < len(tokens) else ""
+    if operator == "eq" and cursor + 1 < len(tokens):
+        number = ceos_port_names.port_number(protocol, tokens[cursor + 1])
+        return (str(number), cursor + 2) if number is not None else None
+    if operator == "range" and cursor + 2 < len(tokens):
+        start, end = (ceos_port_names.port_number(protocol, t) for t in tokens[cursor + 1:cursor + 3])
+        return (f"{start}-{end}", cursor + 3) if start is not None and end is not None else None
+    if operator in ("gt", "lt", "neq", "eq", "range"):
+        return None
+    return "", cursor
+
+
+def _extended_entry(sequence: int, action: str, tokens: list[str]) -> dict | None:
+    """One extended entry ``SEQ ACTION PROTO SRC [PORTS] DST [PORTS] [log]`` -> its intent facts; None when any part is
+    outside the model (the caller preserves the line verbatim)."""
+    protocol = tokens[2].upper()
+    if (source := _term(tokens, 3)) is None: return None
+    if (source_port := _port_clause(protocol, tokens, source[1])) is None: return None
+    if (destination := _term(tokens, source_port[1])) is None: return None
+    if (destination_port := _port_clause(protocol, tokens, destination[1])) is None: return None
+    rest = [t.lower() for t in tokens[destination_port[1]:]]
+    if rest not in ([], ["log"]): return None
+    source_type, source_value = _match_term(source[0].lower()); destination_type, destination_value = _match_term(destination[0].lower())
+    return {"sequence": sequence, "action": action, "protocol": protocol, "source_type": source_type,
+            "source_value": source_value, "source_port": source_port[0], "destination_type": destination_type,
+            "destination_value": destination_value, "destination_port": destination_port[0], "logging": rest == ["log"]}
 
 
 def _interface_for_network(interfaces: list[ParsedInterface], value: str) -> str:
