@@ -319,7 +319,8 @@ class CapabilityAndStateModelTests(SimpleTestCase):
             ("nokia_srlinux", "interface", S, S), ("nokia_srlinux", "address", S, S), ("nokia_srlinux", "static_route", S, S),
             ("nokia_srlinux", "routing_bgp", S, S), ("nokia_srlinux", "acl", S, S), ("nokia_srlinux", "dhcp_relay", S, S),
             ("nokia_srlinux", "nat_rule", N, N), ("nokia_srlinux", "fhrp", N, N), ("cisco_c8000v_iosxe", "interface", S, S), ("cisco_c8000v_iosxe", "address", S, S),
-            ("cisco_c8000v_iosxe", "static_route", S, S), ("cisco_c8000v_iosxe", "routing_ospf", N, N),
+            ("cisco_c8000v_iosxe", "static_route", S, S), ("cisco_c8000v_iosxe", "routing_ospf", S, S),
+            ("cisco_c8000v_iosxe", "bgp_neighbor_af", S, S), ("cisco_c8000v_iosxe", "acl", N, N),
             ("cisco_iosxr", "interface", N, N), ("sonic", "address", N, N), ("mystery", "interface", K, K),
         ]
         for platform, kind, apply_status, compensation in rows:

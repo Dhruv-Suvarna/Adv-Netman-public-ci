@@ -68,6 +68,8 @@ _LINUX = "Tracked Ubuntu 24.04 R3/R4 scripts use iproute2 VLAN, bridge, address,
 _SRL = "Historical generated SR Linux v24.10.7 config.json shows interface/subinterface/address structures; no approved live SR Linux baseline."
 _IOSXR = "No IOS XR configuration artifact or live node exists in this repository baseline."
 _IOSXE = "Catalyst 8000V 17.06.01a qcow2 boot identity was observed in an isolated snapshot; NMAS has no live transport or executor."
+_IOSXE_ROUTING = ("Isolated Catalyst 8000V 17.06.01a (V2 Phase 9): NMAS-rendered lines applied by the registered IosXeExecutor "
+                  "reached FULL / Established / learned routes with an FRR 8.4.4 peer and were exactly compensated.")
 _SONIC = "Existing driver records SONiC as structured config_db-style configuration; no safe Phase-10 serializer exists."
 
 # Phase 20.5: SR Linux has no deployed lab node (see docs/PHASE_20_5_PLATFORM_CAPABILITY_AUDIT.md
@@ -451,15 +453,15 @@ ROUTING_CAPABILITIES: dict[str, dict[str, PlatformCapability]] = {
     "cisco_c8000v_iosxe": _routing_caps({
         RoutingProtocol.STATIC_IPV4: (CapabilityStatus.SUPPORTED, _IOSXE),
         RoutingProtocol.STATIC_IPV6: (CapabilityStatus.SUPPORTED, _IOSXE),
-        RoutingProtocol.RIPV2: (CapabilityStatus.SUPPORTED, _IOSXE),
+        RoutingProtocol.RIPV2: (CapabilityStatus.SUPPORTED, _IOSXE_ROUTING),
         RoutingProtocol.RIPNG: (CapabilityStatus.NOT_IMPLEMENTED, _IOSXE),
-        RoutingProtocol.OSPFV2: (CapabilityStatus.SUPPORTED, _IOSXE),
-        RoutingProtocol.OSPFV3: (CapabilityStatus.NOT_IMPLEMENTED, _IOSXE),
+        RoutingProtocol.OSPFV2: (CapabilityStatus.SUPPORTED, _IOSXE_ROUTING),
+        RoutingProtocol.OSPFV3: (CapabilityStatus.SUPPORTED, _IOSXE_ROUTING),
         RoutingProtocol.ISIS: (CapabilityStatus.NOT_IMPLEMENTED, _IOSXE),
         RoutingProtocol.EIGRP_IPV4: (CapabilityStatus.NOT_IMPLEMENTED, _IOSXE),
         RoutingProtocol.EIGRP_IPV6: (CapabilityStatus.NOT_IMPLEMENTED, _IOSXE),
-        RoutingProtocol.BGP_IPV4: (CapabilityStatus.SUPPORTED, _IOSXE),
-        RoutingProtocol.BGP_IPV6: (CapabilityStatus.SUPPORTED, _IOSXE),
+        RoutingProtocol.BGP_IPV4: (CapabilityStatus.SUPPORTED, _IOSXE_ROUTING),
+        RoutingProtocol.BGP_IPV6: (CapabilityStatus.SUPPORTED, _IOSXE_ROUTING),
     }),
     "cisco_iosxr": _routing_caps({
         RoutingProtocol.STATIC_IPV4: (CapabilityStatus.SUPPORTED, _IOSXR_STATIC),
@@ -1163,7 +1165,8 @@ def _ospf_interface_contributions(interface: dict, *, ceos: bool, platform: str)
     return result
 
 
-def _bgp_instance_descriptors(instance: dict, interfaces_by_id: dict, *, template_name: str, af_suffix: str, close_af: bool) -> list[dict]:
+def _bgp_instance_descriptors(instance: dict, interfaces_by_id: dict, *, template_name: str, af_suffix: str, close_af: bool,
+                              network_display=None) -> list[dict]:
     lines = feature_template_renderer.render_descriptors(
         template_name=template_name,
         fields={"router_id": {
@@ -1215,9 +1218,11 @@ def _bgp_instance_descriptors(instance: dict, interfaces_by_id: dict, *, templat
             if neighbor.get("route_reflector_client"):
                 lines.append({"kind": "static", "text": f"      neighbor {peer} route-reflector-client"})
         for network in active_networks:
+            cidr = network.get("cidr") or ""
             lines.append({
                 "kind": "field", "path": f"routing.bgp.{instance['id']}.networks.{network['id']}.cidr",
-                "template": "      network {value}", "value": network.get("cidr") or "", "omit_if_empty": True,
+                "template": "      network {value}", "value": network_display(cidr) if network_display and cidr else cidr,
+                "omit_if_empty": True,
             })
         if close_af:
             lines.append({"kind": "static", "text": "   exit-address-family"})
@@ -1958,10 +1963,23 @@ def _iosxe_rip_descriptors(instance: dict, interfaces_by_id: dict) -> list[dict]
     lines = [{"kind": "static", "text": "router rip"}, {"kind": "static", "text": " version 2"}]
     for binding in sorted((instance.get("interfaces") or {}).values(), key=_seq_key):
         interface = interfaces_by_id.get(binding.get("interface_id") or "", {})
-        lines.append({"kind": "static", "text": f" network {_connected_network_display(interface)}"})
+        lines.append({"kind": "static", "text": f" network {_classful_network_display(interface)}"})
         if binding.get("passive"):
             lines.append({"kind": "static", "text": f" passive-interface {interface.get('name') or binding.get('interface_id')}"})
     return lines
+
+
+def _classful_network_display(interface: dict) -> str:
+    """The classful network IOS XE's RIP ``network`` command takes (and displays): a CIDR length is rejected, and
+    ``network 10.1.1.0`` is stored as ``network 10.0.0.0``."""
+    connected = _connected_network_display(interface)
+    try:
+        address = ipaddress.ip_network(connected).network_address
+    except ValueError:
+        return connected
+    first = int(str(address).split(".")[0])
+    length = 8 if first < 128 else 16 if first < 192 else 24
+    return str(ipaddress.ip_network(f"{address}/{length}", strict=False).network_address)
 
 
 def _iosxe_ospf_descriptors(instance: dict, interfaces_by_id: dict) -> list[dict]:
@@ -1989,22 +2007,40 @@ def _iosxe_ospf_descriptors(instance: dict, interfaces_by_id: dict) -> list[dict
 def _iosxe_ospf_interface_contributions(interface: dict) -> list[dict]:
     lines: list[dict] = []
     for binding in (interface.get("_scope") or {}).get("ospf", []):
-        if binding.get("version") == "OSPFV3":
+        protocol = RoutingProtocol.OSPFV3 if binding.get("version") == "OSPFV3" else RoutingProtocol.OSPFV2
+        if not is_routing_protocol_selectable("cisco_c8000v_iosxe", protocol):
             continue
+        # OSPFv3 uses the classic ``ipv6 ospf N area A`` form, which IOS XE 17.6 accepts and displays verbatim.
+        keyword = "ipv6" if binding.get("version") == "OSPFV3" else "ip"
         process = binding.get("process_id") or "<process-id-required>"
         path = binding.get("path") or "routing.ospf"
-        lines.append({"kind": "field", "path": f"{path}.area", "template": f" ip ospf {process} area {{value}}",
+        lines.append({"kind": "field", "path": f"{path}.area", "template": f" {keyword} ospf {process} area {{value}}",
                       "value": binding.get("area") or "", "omit_if_empty": True})
         if binding.get("cost") is not None:
-            lines.append({"kind": "field", "path": f"{path}.cost", "template": " ip ospf cost {value}", "value": binding["cost"]})
+            lines.append({"kind": "field", "path": f"{path}.cost", "template": f" {keyword} ospf cost {{value}}", "value": binding["cost"]})
         if binding.get("network_type") == "POINT_TO_POINT":
-            lines.append({"kind": "static", "text": " ip ospf network point-to-point"})
+            lines.append({"kind": "static", "text": f" {keyword} ospf network point-to-point"})
     return lines
 
 
+def _iosxe_bgp_network_display(cidr: str) -> str:
+    """IOS XE ``network`` under ``address-family ipv4`` takes ``A.B.C.D mask M`` (a CIDR length is rejected); IPv6 keeps
+    the prefix form."""
+    network, mask = _iosxe_network_and_mask(cidr)
+    if not mask or "<" in network:
+        return network
+    # The device stores (and displays) a classful prefix without ``mask``: render the form read-back will hold.
+    first = int(network.split(".")[0])
+    classful = 8 if first < 128 else 16 if first < 192 else 24
+    return network if ipaddress.ip_network(cidr, strict=False).prefixlen == classful else f"{network} mask {mask}"
+
+
 def _iosxe_bgp_descriptors(instance: dict, interfaces_by_id: dict) -> list[dict]:
+    # IOS XE displays the unicast address families as ``address-family ipv4`` / ``address-family ipv6``: rendering the
+    # displayed form keeps read-back and idempotency comparisons exact.
     return _bgp_instance_descriptors(
-        instance, interfaces_by_id, template_name="iosxe/routing_bgp.j2", af_suffix=" unicast", close_af=True,
+        instance, interfaces_by_id, template_name="iosxe/routing_bgp.j2", af_suffix="", close_af=True,
+        network_display=_iosxe_bgp_network_display,
     )
 
 

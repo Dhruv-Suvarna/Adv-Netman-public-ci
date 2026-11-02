@@ -2,14 +2,14 @@
 
 Generated from `progress-ledger.json` by `nmas_capabilities verify-matrix` / `report-matrix`; do not edit by hand.
 
-**COMPLETE** — total 396, assessed 396, unassessed 0, supported 63, unsupported 333 (unassessed cells are fail-closed unsupported).
+**COMPLETE** — total 396, assessed 396, unassessed 0, supported 68, unsupported 328 (unassessed cells are fail-closed unsupported).
 
 | Platform | Total | Assessed | Unassessed | Supported | Runtime-investigated | Prerequisite-gated |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
 | arista_ceos | 66 | 66 | 0 | 25 | 28 | 38 |
 | ubuntu_frr | 66 | 66 | 0 | 16 | 16 | 50 |
 | nokia_srlinux | 66 | 66 | 0 | 17 | 18 | 48 |
-| cisco_c8000v_iosxe | 66 | 66 | 0 | 5 | 6 | 60 |
+| cisco_c8000v_iosxe | 66 | 66 | 0 | 10 | 11 | 55 |
 | cisco_iosxr | 66 | 66 | 0 | 0 | 66 | 0 |
 | sonic | 66 | 66 | 0 | 0 | 1 | 65 |
 
@@ -19,8 +19,8 @@ Derived from the binary ledger: SUPPORTED is unchanged; UNSUPPORTED means a demo
 
 | Status | Cells |
 | --- | ---: |
-| SUPPORTED | 63 |
-| NOT_IMPLEMENTED | 330 |
+| SUPPORTED | 68 |
+| NOT_IMPLEMENTED | 325 |
 | UNSUPPORTED | 3 |
 | OUT_OF_SCOPE | 0 |
 
@@ -54,6 +54,11 @@ Derived from the binary ledger: SUPPORTED is unchanged; UNSUPPORTED means a demo
 - `cisco_c8000v_iosxe` `interface.LOOPBACK`
 - `cisco_c8000v_iosxe` `interface.ROUTED_PHYSICAL`
 - `cisco_c8000v_iosxe` `interface.SUBINTERFACE`
+- `cisco_c8000v_iosxe` `routing.BGP_IPV4`
+- `cisco_c8000v_iosxe` `routing.BGP_IPV6`
+- `cisco_c8000v_iosxe` `routing.OSPFV2`
+- `cisco_c8000v_iosxe` `routing.OSPFV3`
+- `cisco_c8000v_iosxe` `routing.RIPV2`
 - `cisco_c8000v_iosxe` `routing.STATIC_IPV4`
 - `cisco_c8000v_iosxe` `routing.STATIC_IPV6`
 - `nokia_srlinux` `interface.LOOPBACK`
@@ -105,15 +110,15 @@ A cell is listed under every reason one of its probes recorded.
 | arista_ceos | RENDERER_ABSENT | 41 |
 | arista_ceos | UI_ABSENT | 40 |
 | cisco_c8000v_iosxe | COMPENSATION_ABSENT | 1 |
-| cisco_c8000v_iosxe | CONFIG_VALIDATION_FAILED | 56 |
-| cisco_c8000v_iosxe | EXECUTOR_REFUSED | 60 |
+| cisco_c8000v_iosxe | CONFIG_VALIDATION_FAILED | 55 |
+| cisco_c8000v_iosxe | EXECUTOR_REFUSED | 55 |
 | cisco_c8000v_iosxe | FIELD_VALIDATION_FAILED | 12 |
 | cisco_c8000v_iosxe | FUNCTIONAL_TEST_FAILED | 13 |
 | cisco_c8000v_iosxe | LIVE_READ_ABSENT | 1 |
-| cisco_c8000v_iosxe | PARSER_ABSENT | 61 |
+| cisco_c8000v_iosxe | PARSER_ABSENT | 56 |
 | cisco_c8000v_iosxe | POSTCHECK_ABSENT | 1 |
-| cisco_c8000v_iosxe | RENDERER_ABSENT | 56 |
-| cisco_c8000v_iosxe | UI_ABSENT | 56 |
+| cisco_c8000v_iosxe | RENDERER_ABSENT | 55 |
+| cisco_c8000v_iosxe | UI_ABSENT | 55 |
 | cisco_iosxr | COMPENSATION_ABSENT | 66 |
 | cisco_iosxr | CONFIG_VALIDATION_FAILED | 48 |
 | cisco_iosxr | EXECUTOR_ABSENT | 66 |
@@ -156,8 +161,7 @@ A cell is listed under every reason one of its probes recorded.
 | Platform | First missing NMAS layer | Cells |
 | --- | --- | ---: |
 | arista_ceos | RENDERER_ABSENT | 38 |
-| cisco_c8000v_iosxe | EXECUTOR_REFUSED | 4 |
-| cisco_c8000v_iosxe | RENDERER_ABSENT | 56 |
+| cisco_c8000v_iosxe | RENDERER_ABSENT | 55 |
 | nokia_srlinux | RENDERER_ABSENT | 48 |
 | sonic | EXECUTOR_ABSENT | 14 |
 | sonic | RENDERER_ABSENT | 51 |

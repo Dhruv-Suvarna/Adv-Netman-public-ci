@@ -148,7 +148,7 @@ class _FixtureConfigSession:
         self._text = text
 
     def send_command(self, command, **_kwargs):
-        if command == "show tcp brief":
+        if command == "show tcp brief numeric":
             return ""                                   # the fixture has no management session to protect
         if command != "show running-config":
             raise ValueError("Offline fixture session only serves the running configuration.")

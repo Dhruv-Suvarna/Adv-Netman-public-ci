@@ -2976,74 +2976,54 @@
       ]
     },
     {
-      "capability_status": "NOT_IMPLEMENTED",
-      "closure_class": "PARTIAL",
+      "capability_status": "SUPPORTED",
+      "closure_class": "SUPPORTED",
       "environment_blocker": [],
       "evidence_references": [
-        "gate:cisco_c8000v_iosxe/routing.BGP_IPV4@b52572f8c541#dc5fad51e438c204"
+        "live:nmas-cap-iosxe/iosxe-bgp_ipv4/2026-10-28T14:53:24.530393+00:00"
       ],
       "feature": "routing.BGP_IPV4",
-      "final_status": "UNSUPPORTED",
-      "missing_stages": [
-        "execution",
-        "readback",
-        "postcheck",
-        "compensation",
-        "restoration",
-        "live"
-      ],
+      "final_status": "SUPPORTED",
+      "missing_stages": [],
       "platform": "cisco_c8000v_iosxe",
       "stages": {
-        "compensation": false,
-        "execution": false,
+        "compensation": true,
+        "execution": true,
         "intent": true,
-        "live": false,
-        "postcheck": false,
-        "readback": false,
+        "live": true,
+        "postcheck": true,
+        "readback": true,
         "renderer": true,
-        "restoration": false,
+        "restoration": true,
         "tests": true,
         "validation": true
       },
-      "unsupported_reasons": [
-        "EXECUTOR_REFUSED",
-        "PARSER_ABSENT"
-      ]
+      "unsupported_reasons": []
     },
     {
-      "capability_status": "NOT_IMPLEMENTED",
-      "closure_class": "PARTIAL",
+      "capability_status": "SUPPORTED",
+      "closure_class": "SUPPORTED",
       "environment_blocker": [],
       "evidence_references": [
-        "gate:cisco_c8000v_iosxe/routing.BGP_IPV6@b52572f8c541#ca47a1864fcae0e5"
+        "live:nmas-cap-iosxe/iosxe-bgp_ipv6/2026-10-28T14:57:36.094894+00:00"
       ],
       "feature": "routing.BGP_IPV6",
-      "final_status": "UNSUPPORTED",
-      "missing_stages": [
-        "execution",
-        "readback",
-        "postcheck",
-        "compensation",
-        "restoration",
-        "live"
-      ],
+      "final_status": "SUPPORTED",
+      "missing_stages": [],
       "platform": "cisco_c8000v_iosxe",
       "stages": {
-        "compensation": false,
-        "execution": false,
+        "compensation": true,
+        "execution": true,
         "intent": true,
-        "live": false,
-        "postcheck": false,
-        "readback": false,
+        "live": true,
+        "postcheck": true,
+        "readback": true,
         "renderer": true,
-        "restoration": false,
+        "restoration": true,
         "tests": true,
         "validation": true
       },
-      "unsupported_reasons": [
-        "EXECUTOR_REFUSED",
-        "PARSER_ABSENT"
-      ]
+      "unsupported_reasons": []
     },
     {
       "capability_status": "NOT_IMPLEMENTED",
@@ -3169,80 +3149,54 @@
       ]
     },
     {
-      "capability_status": "NOT_IMPLEMENTED",
-      "closure_class": "PARTIAL",
+      "capability_status": "SUPPORTED",
+      "closure_class": "SUPPORTED",
       "environment_blocker": [],
       "evidence_references": [
-        "gate:cisco_c8000v_iosxe/routing.OSPFV2@b52572f8c541#b36e5391e567aa33"
+        "live:nmas-cap-iosxe/iosxe-ospfv2/2026-10-28T14:58:49.475506+00:00"
       ],
       "feature": "routing.OSPFV2",
-      "final_status": "UNSUPPORTED",
-      "missing_stages": [
-        "execution",
-        "readback",
-        "postcheck",
-        "compensation",
-        "restoration",
-        "live"
-      ],
+      "final_status": "SUPPORTED",
+      "missing_stages": [],
       "platform": "cisco_c8000v_iosxe",
       "stages": {
-        "compensation": false,
-        "execution": false,
+        "compensation": true,
+        "execution": true,
         "intent": true,
-        "live": false,
-        "postcheck": false,
-        "readback": false,
+        "live": true,
+        "postcheck": true,
+        "readback": true,
         "renderer": true,
-        "restoration": false,
+        "restoration": true,
         "tests": true,
         "validation": true
       },
-      "unsupported_reasons": [
-        "EXECUTOR_REFUSED",
-        "PARSER_ABSENT"
-      ]
+      "unsupported_reasons": []
     },
     {
-      "capability_status": "NOT_IMPLEMENTED",
-      "closure_class": "NOT_IMPLEMENTED",
+      "capability_status": "SUPPORTED",
+      "closure_class": "SUPPORTED",
       "environment_blocker": [],
       "evidence_references": [
-        "gate:cisco_c8000v_iosxe/routing.OSPFV3@b52572f8c541#a0b0a8f3a3aa1a65"
+        "live:nmas-cap-iosxe/iosxe-ospfv3/2026-10-28T15:00:10.827789+00:00"
       ],
       "feature": "routing.OSPFV3",
-      "final_status": "UNSUPPORTED",
-      "missing_stages": [
-        "intent",
-        "renderer",
-        "validation",
-        "execution",
-        "readback",
-        "postcheck",
-        "compensation",
-        "restoration",
-        "live"
-      ],
+      "final_status": "SUPPORTED",
+      "missing_stages": [],
       "platform": "cisco_c8000v_iosxe",
       "stages": {
-        "compensation": false,
-        "execution": false,
-        "intent": false,
-        "live": false,
-        "postcheck": false,
-        "readback": false,
-        "renderer": false,
-        "restoration": false,
+        "compensation": true,
+        "execution": true,
+        "intent": true,
+        "live": true,
+        "postcheck": true,
+        "readback": true,
+        "renderer": true,
+        "restoration": true,
         "tests": true,
-        "validation": false
+        "validation": true
       },
-      "unsupported_reasons": [
-        "CONFIG_VALIDATION_FAILED",
-        "EXECUTOR_REFUSED",
-        "PARSER_ABSENT",
-        "RENDERER_ABSENT",
-        "UI_ABSENT"
-      ]
+      "unsupported_reasons": []
     },
     {
       "capability_status": "NOT_IMPLEMENTED",
@@ -3286,39 +3240,29 @@
       ]
     },
     {
-      "capability_status": "NOT_IMPLEMENTED",
-      "closure_class": "PARTIAL",
+      "capability_status": "SUPPORTED",
+      "closure_class": "SUPPORTED",
       "environment_blocker": [],
       "evidence_references": [
-        "gate:cisco_c8000v_iosxe/routing.RIPV2@b52572f8c541#a205219c1aa9f243"
+        "live:nmas-cap-iosxe/iosxe-ripv2/2026-10-28T15:07:53.265108+00:00"
       ],
       "feature": "routing.RIPV2",
-      "final_status": "UNSUPPORTED",
-      "missing_stages": [
-        "execution",
-        "readback",
-        "postcheck",
-        "compensation",
-        "restoration",
-        "live"
-      ],
+      "final_status": "SUPPORTED",
+      "missing_stages": [],
       "platform": "cisco_c8000v_iosxe",
       "stages": {
-        "compensation": false,
-        "execution": false,
+        "compensation": true,
+        "execution": true,
         "intent": true,
-        "live": false,
-        "postcheck": false,
-        "readback": false,
+        "live": true,
+        "postcheck": true,
+        "readback": true,
         "renderer": true,
-        "restoration": false,
+        "restoration": true,
         "tests": true,
         "validation": true
       },
-      "unsupported_reasons": [
-        "EXECUTOR_REFUSED",
-        "PARSER_ABSENT"
-      ]
+      "unsupported_reasons": []
     },
     {
       "capability_status": "SUPPORTED",
@@ -15485,8 +15429,8 @@
     "environment_blocked_by_platform": {
       "cisco_iosxr": 66
     },
-    "supported": 63,
-    "technically_feasible_remaining": 264,
+    "supported": 68,
+    "technically_feasible_remaining": 259,
     "total": 396,
     "unsupported_or_out_of_scope": 3
   },
@@ -15513,7 +15457,7 @@
       }
     }
   ],
-  "matrix_supported": 63,
+  "matrix_supported": 68,
   "matrix_total": 396,
   "per_platform": {
     "arista_ceos": {
@@ -15530,11 +15474,11 @@
     "cisco_c8000v_iosxe": {
       "BLOCKED_BY_ENVIRONMENT": 0,
       "LIVE_EVIDENCE_MISSING": 0,
-      "NOT_IMPLEMENTED": 56,
+      "NOT_IMPLEMENTED": 55,
       "OUT_OF_SCOPE": 0,
-      "PARTIAL": 5,
+      "PARTIAL": 1,
       "RENDER_VALIDATE_ONLY": 0,
-      "SUPPORTED": 5,
+      "SUPPORTED": 10,
       "UNSUPPORTED": 0,
       "total": 66
     },
@@ -15600,11 +15544,11 @@
   "totals": {
     "BLOCKED_BY_ENVIRONMENT": 0,
     "LIVE_EVIDENCE_MISSING": 0,
-    "NOT_IMPLEMENTED": 291,
+    "NOT_IMPLEMENTED": 290,
     "OUT_OF_SCOPE": 0,
-    "PARTIAL": 39,
+    "PARTIAL": 35,
     "RENDER_VALIDATE_ONLY": 0,
-    "SUPPORTED": 63,
+    "SUPPORTED": 68,
     "UNSUPPORTED": 3
   }
 }

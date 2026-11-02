@@ -133,6 +133,11 @@ IOSXE_COMMANDS = MappingProxyType({
     "ipv6_interfaces": "show ipv6 interface",
     "ip_routes": "show ip route",
     "ipv6_routes": "show ipv6 route",
+    "ospf": "show ip ospf neighbor",                 # V2 Phase 9 routing reads (text layout of IOS XE 17.6)
+    "ospf3": "show ipv6 ospf neighbor",
+    "bgp": "show bgp ipv4 unicast summary",
+    "bgp6": "show bgp ipv6 unicast summary",
+    "running_config": "show running-config",         # only ever reduced to secret-free semantic routing facts
 })
 ALLOWLISTS = MappingProxyType({"ceos": CEOS_COMMANDS, "linux": LINUX_COMMANDS, "nokia_srlinux": SRLINUX_QUERIES,
                                "cisco_c8000v_iosxe": IOSXE_COMMANDS})
@@ -450,7 +455,9 @@ def parse_eos_config(text: str) -> dict:
 _XE_IFACE = re.compile(r"^(\S+) is (administratively down|up|down|deleted),? line protocol is (up|down)", re.I)
 _XE_V4 = re.compile(r"^\s+(?:Internet address is|Secondary address) (\d+\.\d+\.\d+\.\d+/\d+)")
 _XE_V6 = re.compile(r"^\s+([0-9A-Fa-f:]+), subnet is [0-9A-Fa-f:]+/(\d+)")
-_XE_ROUTE4 = re.compile(r"^([A-Za-z][A-Za-z0-9*+ ]{0,7}?)\s+(\d+\.\d+\.\d+\.\d+)(/\d+)? (?:\[\d+/\d+\] via (\S+?)(?:,\s*(\S+))?$|is directly connected, (\S+))")
+# A learned route reads ``via <hop>[, <age>][, <interface>]``; the age (``00:00:12``, ``1d02h``) is never an interface.
+_XE_ROUTE4 = re.compile(r"^([A-Za-z][A-Za-z0-9*+ ]{0,7}?)\s+(\d+\.\d+\.\d+\.\d+)(/\d+)? (?:\[\d+/\d+\] via (\S+?)"
+                        r"(?:,\s*\d[\dywdhm:]*)?(?:,\s*([A-Za-z]\S*))?$|is directly connected, (\S+))")
 _XE_SUBNETTED = re.compile(r"^\s+\d+\.\d+\.\d+\.\d+(/\d+) is subnetted")
 _XE_ROUTE6 = re.compile(r"^([A-Za-z][A-Za-z0-9 ]{0,3}?)\s+([0-9A-Fa-f:]+/\d+) \[\d+/\d+\]")
 _XE_VIA6 = re.compile(r"^\s+via ([0-9A-Fa-f:]+|\S+?)(?:,\s*(\S+))?(?:,|$)")
@@ -511,6 +518,57 @@ def parse_iosxe_routes(v4_text: str, v6_text: str) -> list:
             row["next_hops"].extend([hop] if hop else [])
             row["interfaces"].extend(name for name in ((via.group(1) if not hop else None), via.group(2)) if name and name != "receive")
     return routes
+
+
+_XE_OSPF_NEIGHBOR = re.compile(r"^(\S+)\s+\d+\s+([A-Z0-9-]+)/\s*\S*\s+\d\d:\d\d:\d\d\s+\S+\s+(\S+)\s*$")
+
+
+def parse_iosxe_ospf(v2_text: str, v3_text: str) -> list:
+    """IOS XE ``show ip ospf neighbor`` / ``show ipv6 ospf neighbor`` -> [{family, neighbor_id, interface, state}].
+
+    The state column reads ``FULL/  -`` (role after the slash); a row whose neighbor id is ``N/A`` is a hello seen before
+    the router id is learned and is not an adjacency.  A router without OSPF answers with no table: no neighbors."""
+    neighbors = []
+    for family, text in (("OSPFV2", v2_text), ("OSPFV3", v3_text)):
+        for line in (text or "").splitlines():
+            found = _XE_OSPF_NEIGHBOR.match(line.strip())
+            if not found or found.group(1) == "N/A" or not norm_ip(found.group(1)):
+                continue
+            neighbors.append({"family": family, "neighbor_id": found.group(1), "interface": found.group(3),
+                              "state": found.group(2).replace("-", "_")})
+    return sorted(neighbors, key=lambda n: (n["family"], n["interface"], n["neighbor_id"]))
+
+
+_XE_BGP_ROW = re.compile(r"^(\S+)?\s+4\s+(\d+)\s+\d+\s+\d+\s+\d+\s+\d+\s+\d+\s+(\S+)\s+(.+?)\s*$")
+
+
+def parse_iosxe_bgp(v4_text: str, v6_text: str) -> list:
+    """IOS XE ``show bgp ipv4|ipv6 unicast summary`` -> [{peer, remote_as, state, family, prefixes_received}].
+
+    The last column is the received-prefix count once the session is Established, otherwise the session state.  A
+    neighbor address too long for its column is printed on a line of its own; ``% BGP not active`` means no peers."""
+    peers = []
+    for family, text in ((4, v4_text), (6, v6_text)):
+        pending = ""
+        for line in (text or "").splitlines():
+            stripped = line.strip()
+            if stripped and " " not in stripped and norm_ip(stripped):
+                pending = stripped
+                continue
+            found = _XE_BGP_ROW.match(line if line[:1].strip() else line)
+            if not found:
+                pending = ""
+                continue
+            peer = norm_ip(found.group(1) or pending)
+            pending = ""
+            if not peer:
+                continue
+            last = found.group(4).strip()
+            established = last.isdigit()
+            peers.append({"peer": peer, "remote_as": found.group(2), "family": family,
+                          "state": "ESTABLISHED" if established else last.split()[0].upper(),
+                          "prefixes_received": int(last) if established else None})
+    return sorted(peers, key=lambda p: (p["family"], p["peer"]))
 
 
 def _srl_tree(text: str) -> dict:
@@ -1107,6 +1165,9 @@ _IOSXE_GROUPS = {
     "interfaces": lambda f: parse_iosxe_interfaces(f("ip_interfaces"), f("ipv6_interfaces"))[0],
     "addresses": lambda f: parse_iosxe_interfaces(f("ip_interfaces"), f("ipv6_interfaces"))[1],
     "routes": lambda f: parse_iosxe_routes(f("ip_routes"), f("ipv6_routes")),
+    "ospf": lambda f: parse_iosxe_ospf(f("ospf"), f("ospf3")),
+    "bgp": lambda f: parse_iosxe_bgp(f("bgp"), f("bgp6")),
+    "routing_config": lambda f: _routing_config_iosxe(f("running_config")),
 }
 
 _LINUX_GROUPS = {
@@ -1125,6 +1186,11 @@ _LINUX_GROUPS = {
 def _routing_config_eos(text):
     from .routing_config import eos
     return eos(text)
+
+
+def _routing_config_iosxe(text):
+    from .routing_config import iosxe
+    return iosxe(text)
 
 
 def _routing_config_frr(text, addr_json):

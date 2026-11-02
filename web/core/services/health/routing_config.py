@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import ipaddress
 
-from ..config_import import parser_ceos, parser_frr, parser_srlinux
+from ..config_import import parser_ceos, parser_frr, parser_iosxe, parser_srlinux
 
 
 def normalized_area(value) -> str:
@@ -83,6 +83,10 @@ def eos(text: str) -> list[dict]:
 
 def frr(text: str, addr_json: str) -> list[dict]:
     return _rows(parser_frr.parse(text, addr_json=addr_json))
+def iosxe(text: str) -> list[dict]:
+    return _rows(parser_iosxe.parse(text))
+
+
 def srlinux(tree: dict) -> list[dict]:
     """Routing rows of an SR Linux configuration tree (gNMI Get of the running configuration, module prefixes removed)."""
     return _rows(parser_srlinux.parse(tree))

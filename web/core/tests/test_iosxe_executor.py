@@ -42,7 +42,7 @@ class FakeIos:
                 self.blocks[line] = []
 
     def send_command(self, command, **_kwargs):
-        if command == "show tcp brief":
+        if command == "show tcp brief numeric":
             return "TCB       Local Address               Foreign Address             (state)\n7F1A2B3C  10.0.0.15.22               10.0.0.2.40122              ESTAB\n"
         assert command == "show running-config"
         return "Building configuration...\n" + "\n".join(
@@ -194,7 +194,7 @@ class ExecutorTests(SimpleTestCase):
 
     def test_refusals_and_unreadable_state(self):
         executor = _executor(FakeIos())
-        for spec in (_spec(1, "routing_ospf", ["router ospf 1"]), _spec(2, "interface", ()),
+        for spec in (_spec(1, "routing_isis", ["router isis NMAS"]), _spec(2, "interface", ()),
                      _spec(3, "interface", ["interface Loopback44"], origin="RAW")):
             self.assertEqual(executor.assess(spec).action, "REFUSE")
         blank = iosxe.IosXeExecutor({"name": "iosxe"}, connection_factory=lambda _d: FakeIos("hostname x\n"))
@@ -259,7 +259,7 @@ class StateReaderTests(SimpleTestCase):
 
             def send_command(self, command, **_kwargs):
                 self.sent.append(command)
-                return {"show ip interface": V4, "show ipv6 interface": V6, "show ip route": R4, "show ipv6 route": R6}[command]
+                return {"show ip interface": V4, "show ipv6 interface": V6, "show ip route": R4, "show ipv6 route": R6}.get(command, "")
 
         conn = Conn()
         device = {"name": "iosxe", "platform": "cisco_c8000v_iosxe"}
@@ -268,7 +268,7 @@ class StateReaderTests(SimpleTestCase):
         self.assertEqual(set(conn.sent), set(live.IOSXE_COMMANDS.values()))
         self.assertTrue(all(command.startswith("show ") for command in conn.sent))
         with self.assertRaises(live.LiveError):
-            live.IosXeSession(device, conn=conn).run("running_config")
+            live.IosXeSession(device, conn=conn).run("startup_config")
         self.assertEqual(live.read_device(device).live_error, "NOT_CONFIGURED")
 
 

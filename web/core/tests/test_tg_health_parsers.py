@@ -24,7 +24,8 @@ from core.services.test_governance.cases import NEGATIVE, POSITIVE, case
 
 LIVE = "web/core/services/health/live.py"
 MALFORMED = (("garbage", "Traceback (most recent call last):"), ("wrong shape list", "[1, 2]"), ("wrong shape scalar", "42"))
-TEXT_PARSERS = {"parse_eos_config", "parse_eos_varp", "parse_frr_rip", "parse_iosxe_interfaces", "parse_iosxe_routes", "parse_nft"}
+TEXT_PARSERS = {"parse_eos_config", "parse_eos_varp", "parse_frr_rip", "parse_iosxe_bgp", "parse_iosxe_interfaces", "parse_iosxe_ospf",
+                "parse_iosxe_routes", "parse_nft"}
 NOW = datetime(2026, 1, 1, tzinfo=timezone.utc)
 
 

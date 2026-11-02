@@ -1,9 +1,9 @@
 {
   "assessed": 396,
   "capability_counts": {
-    "NOT_IMPLEMENTED": 330,
+    "NOT_IMPLEMENTED": 325,
     "OUT_OF_SCOPE": 0,
-    "SUPPORTED": 63,
+    "SUPPORTED": 68,
     "UNSUPPORTED": 3
   },
   "cells": [
@@ -12144,38 +12144,40 @@
       "validator": "FAIL"
     },
     {
-      "assessment_basis": "PREREQUISITE_GATE",
+      "assessment_basis": "RUNTIME_INVESTIGATION",
       "assessment_complete": true,
-      "assessment_id": 1333,
+      "assessment_id": 1377,
       "automated_tests": "PASS",
       "candidate": "PASS",
-      "compensation": "BLOCKED",
+      "capability_status": "SUPPORTED",
+      "compensation": "PASS",
       "device_builder": "PASS",
       "evidence_ids": [
-        10693,
-        10694,
-        10695,
-        10696,
-        10697,
-        10698,
-        10699,
-        10700,
-        10701,
-        10702,
-        10703
+        11177,
+        11178,
+        11179,
+        11180,
+        11181,
+        11182,
+        11183,
+        11184,
+        11185,
+        11186,
+        11187
       ],
       "evidence_references": [
-        "gate:cisco_c8000v_iosxe/routing.BGP_IPV4@b52572f8c541#dc5fad51e438c204"
+        "live:nmas-cap-iosxe/iosxe-bgp_ipv4/2026-10-28T14:53:24.530393+00:00"
       ],
-      "executor": "FAIL",
+      "executor": "PASS",
+      "feasibility": "PROVEN",
       "feature": "routing.BGP_IPV4",
       "field_validation": "PASS",
-      "final_status": "UNSUPPORTED",
-      "live_read": "BLOCKED",
-      "live_write": "BLOCKED",
-      "parser": "FAIL",
+      "final_status": "SUPPORTED",
+      "live_read": "PASS",
+      "live_write": "PASS",
+      "parser": "PASS",
       "platform": "cisco_c8000v_iosxe",
-      "postcheck": "BLOCKED",
+      "postcheck": "PASS",
       "probes": {
         "automated_tests": {
           "detail": "Repeated renderer determinism=True; feature-specific valid/invalid field regression=PASS.",
@@ -12185,18 +12187,18 @@
           "test_type": "FIXTURE"
         },
         "candidate_generation": {
-          "detail": "Real candidate_renderer.render ran; 827 chars; target-rendered=PASS.",
+          "detail": "Real candidate_renderer.render ran; 845 chars; target-rendered=PASS.",
           "outcome": "PASS",
           "reason": "",
           "reference": "",
           "test_type": "FIXTURE"
         },
         "compensation": {
-          "detail": "Not attempted: NMAS prerequisite layer(s) failed their deliberate probe (executor=EXECUTOR_REFUSED). First blocker executor: Real executor.assess on fixture: action=REFUSE; exact inverse present=True; restorable=False; no connection/apply invoked. No device was contacted for this stage.",
-          "outcome": "BLOCKED",
-          "reason": "EXECUTOR_REFUSED",
-          "reference": "gate:cisco_c8000v_iosxe/routing.BGP_IPV4@b52572f8c541#dc5fad51e438c204",
-          "test_type": "STATIC"
+          "detail": "isolated IOS XE routing.BGP_IPV4 against an FRR 8.4.4 peer through the registered IosXeExecutor (Netmiko configuration mode, captured running-config inverse): NMAS rendered [routing_bgp] router bgp 65044 / no bgp default ipv4-unicast / bgp router-id 198.18.44.1; [bgp_neighbor] router bgp 65044 / neighbor 198.18.0.2 remote-as 65045; [bgp_neighbor_af] router bgp 65044 / address-family ipv4 / neighbor 198.18.0.2 activate / exit-address-family; [bgp_network] router bgp 65044 / address-family ipv4 / network 203.0.113.0 / exit-address-family || pristine router: preflight=['routing_bgp=APPLY/True/-', 'bgp_neighbor=APPLY/True/-', 'bgp_neighbor_af=APPLY/True/-', 'bgp_network=APPLY/True/-']; operator postcheck pass=True []; live running-config import recovered intent=True; session=ESTABLISHED remote-as=65045 prefixes received=1; DUT installed 192.0.2.0/24 from BGP=True; peer BGP table holds 203.0.113.0/24 from the DUT=True; unrelated process configuration preserved=True; adjacency/session and learned 192.0.2.0/24 withdrawn after compensation=True (after 2 s); compensation=['COMPENSATED', 'COMPENSATED', 'COMPENSATED', 'COMPENSATED']; running configuration identical to pre-apply capture=True; unrelated objects preserved=True; lab baseline restored=True; no failure || configured router: preflight=['routing_bgp=APPLY/True/-', 'bgp_neighbor=APPLY/True/-', 'bgp_neighbor_af=APPLY/True/-', 'bgp_network=APPLY/True/-']; operator postcheck pass=True []; live running-config import recovered intent=True; session=ESTABLISHED remote-as=65045 prefixes received=1; DUT installed 192.0.2.0/24 from BGP=True; peer BGP table holds 203.0.113.0/24 from the DUT=True; unrelated process configuration preserved=True; adjacency/session and learned 192.0.2.0/24 withdrawn after compensation=True (after 4 s); compensation=['COMPENSATED', 'COMPENSATED', 'COMPENSATED', 'COMPENSATED']; running configuration identical to pre-apply capture=True; unrelated objects preserved=True; lab baseline restored=True; no fa",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-iosxe/iosxe-bgp_ipv4/2026-10-28T14:53:24.530393+00:00",
+          "test_type": "LIVE"
         },
         "config_validation": {
           "detail": "Actual network-config validation=WARNING; failing checks=[]; external inputs are OFFLINE_FIXTURE only.",
@@ -12213,9 +12215,9 @@
           "test_type": "FIXTURE"
         },
         "executor": {
-          "detail": "Real executor.assess on fixture: action=REFUSE; exact inverse present=True; restorable=False; no connection/apply invoked.",
-          "outcome": "FAIL",
-          "reason": "EXECUTOR_REFUSED",
+          "detail": "Real executor.assess on fixture: action=APPLY; exact inverse present=True; restorable=True; no connection/apply invoked.",
+          "outcome": "PASS",
+          "reason": "",
           "reference": "",
           "test_type": "FIXTURE"
         },
@@ -12227,46 +12229,46 @@
           "test_type": "FIXTURE"
         },
         "live_post_write_validation": {
-          "detail": "Not attempted: NMAS prerequisite layer(s) failed their deliberate probe (executor=EXECUTOR_REFUSED). First blocker executor: Real executor.assess on fixture: action=REFUSE; exact inverse present=True; restorable=False; no connection/apply invoked. No device was contacted for this stage.",
-          "outcome": "BLOCKED",
-          "reason": "EXECUTOR_REFUSED",
-          "reference": "gate:cisco_c8000v_iosxe/routing.BGP_IPV4@b52572f8c541#dc5fad51e438c204",
-          "test_type": "STATIC"
+          "detail": "isolated IOS XE routing.BGP_IPV4 against an FRR 8.4.4 peer through the registered IosXeExecutor (Netmiko configuration mode, captured running-config inverse): NMAS rendered [routing_bgp] router bgp 65044 / no bgp default ipv4-unicast / bgp router-id 198.18.44.1; [bgp_neighbor] router bgp 65044 / neighbor 198.18.0.2 remote-as 65045; [bgp_neighbor_af] router bgp 65044 / address-family ipv4 / neighbor 198.18.0.2 activate / exit-address-family; [bgp_network] router bgp 65044 / address-family ipv4 / network 203.0.113.0 / exit-address-family || pristine router: preflight=['routing_bgp=APPLY/True/-', 'bgp_neighbor=APPLY/True/-', 'bgp_neighbor_af=APPLY/True/-', 'bgp_network=APPLY/True/-']; operator postcheck pass=True []; live running-config import recovered intent=True; session=ESTABLISHED remote-as=65045 prefixes received=1; DUT installed 192.0.2.0/24 from BGP=True; peer BGP table holds 203.0.113.0/24 from the DUT=True; unrelated process configuration preserved=True; adjacency/session and learned 192.0.2.0/24 withdrawn after compensation=True (after 2 s); compensation=['COMPENSATED', 'COMPENSATED', 'COMPENSATED', 'COMPENSATED']; running configuration identical to pre-apply capture=True; unrelated objects preserved=True; lab baseline restored=True; no failure || configured router: preflight=['routing_bgp=APPLY/True/-', 'bgp_neighbor=APPLY/True/-', 'bgp_neighbor_af=APPLY/True/-', 'bgp_network=APPLY/True/-']; operator postcheck pass=True []; live running-config import recovered intent=True; session=ESTABLISHED remote-as=65045 prefixes received=1; DUT installed 192.0.2.0/24 from BGP=True; peer BGP table holds 203.0.113.0/24 from the DUT=True; unrelated process configuration preserved=True; adjacency/session and learned 192.0.2.0/24 withdrawn after compensation=True (after 4 s); compensation=['COMPENSATED', 'COMPENSATED', 'COMPENSATED', 'COMPENSATED']; running configuration identical to pre-apply capture=True; unrelated objects preserved=True; lab baseline restored=True; no fa",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-iosxe/iosxe-bgp_ipv4/2026-10-28T14:53:24.530393+00:00",
+          "test_type": "LIVE"
         },
         "live_read": {
-          "detail": "Not attempted: NMAS prerequisite layer(s) failed their deliberate probe (executor=EXECUTOR_REFUSED). First blocker executor: Real executor.assess on fixture: action=REFUSE; exact inverse present=True; restorable=False; no connection/apply invoked. No device was contacted for this stage.",
-          "outcome": "BLOCKED",
-          "reason": "EXECUTOR_REFUSED",
-          "reference": "gate:cisco_c8000v_iosxe/routing.BGP_IPV4@b52572f8c541#dc5fad51e438c204",
-          "test_type": "STATIC"
+          "detail": "isolated IOS XE routing.BGP_IPV4 against an FRR 8.4.4 peer through the registered IosXeExecutor (Netmiko configuration mode, captured running-config inverse): NMAS rendered [routing_bgp] router bgp 65044 / no bgp default ipv4-unicast / bgp router-id 198.18.44.1; [bgp_neighbor] router bgp 65044 / neighbor 198.18.0.2 remote-as 65045; [bgp_neighbor_af] router bgp 65044 / address-family ipv4 / neighbor 198.18.0.2 activate / exit-address-family; [bgp_network] router bgp 65044 / address-family ipv4 / network 203.0.113.0 / exit-address-family || pristine router: preflight=['routing_bgp=APPLY/True/-', 'bgp_neighbor=APPLY/True/-', 'bgp_neighbor_af=APPLY/True/-', 'bgp_network=APPLY/True/-']; operator postcheck pass=True []; live running-config import recovered intent=True; session=ESTABLISHED remote-as=65045 prefixes received=1; DUT installed 192.0.2.0/24 from BGP=True; peer BGP table holds 203.0.113.0/24 from the DUT=True; unrelated process configuration preserved=True; adjacency/session and learned 192.0.2.0/24 withdrawn after compensation=True (after 2 s); compensation=['COMPENSATED', 'COMPENSATED', 'COMPENSATED', 'COMPENSATED']; running configuration identical to pre-apply capture=True; unrelated objects preserved=True; lab baseline restored=True; no failure || configured router: preflight=['routing_bgp=APPLY/True/-', 'bgp_neighbor=APPLY/True/-', 'bgp_neighbor_af=APPLY/True/-', 'bgp_network=APPLY/True/-']; operator postcheck pass=True []; live running-config import recovered intent=True; session=ESTABLISHED remote-as=65045 prefixes received=1; DUT installed 192.0.2.0/24 from BGP=True; peer BGP table holds 203.0.113.0/24 from the DUT=True; unrelated process configuration preserved=True; adjacency/session and learned 192.0.2.0/24 withdrawn after compensation=True (after 4 s); compensation=['COMPENSATED', 'COMPENSATED', 'COMPENSATED', 'COMPENSATED']; running configuration identical to pre-apply capture=True; unrelated objects preserved=True; lab baseline restored=True; no fa",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-iosxe/iosxe-bgp_ipv4/2026-10-28T14:53:24.530393+00:00",
+          "test_type": "LIVE"
         },
         "live_write": {
-          "detail": "Not attempted: NMAS prerequisite layer(s) failed their deliberate probe (executor=EXECUTOR_REFUSED). First blocker executor: Real executor.assess on fixture: action=REFUSE; exact inverse present=True; restorable=False; no connection/apply invoked. No device was contacted for this stage.",
-          "outcome": "BLOCKED",
-          "reason": "EXECUTOR_REFUSED",
-          "reference": "gate:cisco_c8000v_iosxe/routing.BGP_IPV4@b52572f8c541#dc5fad51e438c204",
-          "test_type": "STATIC"
+          "detail": "isolated IOS XE routing.BGP_IPV4 against an FRR 8.4.4 peer through the registered IosXeExecutor (Netmiko configuration mode, captured running-config inverse): NMAS rendered [routing_bgp] router bgp 65044 / no bgp default ipv4-unicast / bgp router-id 198.18.44.1; [bgp_neighbor] router bgp 65044 / neighbor 198.18.0.2 remote-as 65045; [bgp_neighbor_af] router bgp 65044 / address-family ipv4 / neighbor 198.18.0.2 activate / exit-address-family; [bgp_network] router bgp 65044 / address-family ipv4 / network 203.0.113.0 / exit-address-family || pristine router: preflight=['routing_bgp=APPLY/True/-', 'bgp_neighbor=APPLY/True/-', 'bgp_neighbor_af=APPLY/True/-', 'bgp_network=APPLY/True/-']; operator postcheck pass=True []; live running-config import recovered intent=True; session=ESTABLISHED remote-as=65045 prefixes received=1; DUT installed 192.0.2.0/24 from BGP=True; peer BGP table holds 203.0.113.0/24 from the DUT=True; unrelated process configuration preserved=True; adjacency/session and learned 192.0.2.0/24 withdrawn after compensation=True (after 2 s); compensation=['COMPENSATED', 'COMPENSATED', 'COMPENSATED', 'COMPENSATED']; running configuration identical to pre-apply capture=True; unrelated objects preserved=True; lab baseline restored=True; no failure || configured router: preflight=['routing_bgp=APPLY/True/-', 'bgp_neighbor=APPLY/True/-', 'bgp_neighbor_af=APPLY/True/-', 'bgp_network=APPLY/True/-']; operator postcheck pass=True []; live running-config import recovered intent=True; session=ESTABLISHED remote-as=65045 prefixes received=1; DUT installed 192.0.2.0/24 from BGP=True; peer BGP table holds 203.0.113.0/24 from the DUT=True; unrelated process configuration preserved=True; adjacency/session and learned 192.0.2.0/24 withdrawn after compensation=True (after 4 s); compensation=['COMPENSATED', 'COMPENSATED', 'COMPENSATED', 'COMPENSATED']; running configuration identical to pre-apply capture=True; unrelated objects preserved=True; lab baseline restored=True; no fa",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-iosxe/iosxe-bgp_ipv4/2026-10-28T14:53:24.530393+00:00",
+          "test_type": "LIVE"
         },
         "parser_import": {
-          "detail": "Real iosxe-1.0 parser executed; target semantic match=False; unmanaged blocks=8.",
-          "outcome": "FAIL",
-          "reason": "PARSER_ABSENT",
-          "reference": "",
-          "test_type": "FIXTURE"
+          "detail": "isolated IOS XE routing.BGP_IPV4 against an FRR 8.4.4 peer through the registered IosXeExecutor (Netmiko configuration mode, captured running-config inverse): NMAS rendered [routing_bgp] router bgp 65044 / no bgp default ipv4-unicast / bgp router-id 198.18.44.1; [bgp_neighbor] router bgp 65044 / neighbor 198.18.0.2 remote-as 65045; [bgp_neighbor_af] router bgp 65044 / address-family ipv4 / neighbor 198.18.0.2 activate / exit-address-family; [bgp_network] router bgp 65044 / address-family ipv4 / network 203.0.113.0 / exit-address-family || pristine router: preflight=['routing_bgp=APPLY/True/-', 'bgp_neighbor=APPLY/True/-', 'bgp_neighbor_af=APPLY/True/-', 'bgp_network=APPLY/True/-']; operator postcheck pass=True []; live running-config import recovered intent=True; session=ESTABLISHED remote-as=65045 prefixes received=1; DUT installed 192.0.2.0/24 from BGP=True; peer BGP table holds 203.0.113.0/24 from the DUT=True; unrelated process configuration preserved=True; adjacency/session and learned 192.0.2.0/24 withdrawn after compensation=True (after 2 s); compensation=['COMPENSATED', 'COMPENSATED', 'COMPENSATED', 'COMPENSATED']; running configuration identical to pre-apply capture=True; unrelated objects preserved=True; lab baseline restored=True; no failure || configured router: preflight=['routing_bgp=APPLY/True/-', 'bgp_neighbor=APPLY/True/-', 'bgp_neighbor_af=APPLY/True/-', 'bgp_network=APPLY/True/-']; operator postcheck pass=True []; live running-config import recovered intent=True; session=ESTABLISHED remote-as=65045 prefixes received=1; DUT installed 192.0.2.0/24 from BGP=True; peer BGP table holds 203.0.113.0/24 from the DUT=True; unrelated process configuration preserved=True; adjacency/session and learned 192.0.2.0/24 withdrawn after compensation=True (after 4 s); compensation=['COMPENSATED', 'COMPENSATED', 'COMPENSATED', 'COMPENSATED']; running configuration identical to pre-apply capture=True; unrelated objects preserved=True; lab baseline restored=True; no fa",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-iosxe/iosxe-bgp_ipv4/2026-10-28T14:53:24.530393+00:00",
+          "test_type": "LIVE"
         },
         "renderer": {
-          "detail": "Authoritative renderer differential: 7 target line(s), 0 refusal marker(s); sha256=eb7d79f1debc2e43c1d0579610a620315bce9f4beefcbb0c8fefa1cae82a390c.",
+          "detail": "Authoritative renderer differential: 8 target line(s), 0 refusal marker(s); sha256=a95c355d8b13d5863f8912a0e81fa13864a48ff7afebc0fbacc3cbe54a41d660.",
           "outcome": "PASS",
           "reason": "",
           "reference": "",
           "test_type": "FIXTURE"
         },
         "runtime_validation": {
-          "detail": "Not attempted: NMAS prerequisite layer(s) failed their deliberate probe (executor=EXECUTOR_REFUSED). First blocker executor: Real executor.assess on fixture: action=REFUSE; exact inverse present=True; restorable=False; no connection/apply invoked. No device was contacted for this stage.",
-          "outcome": "BLOCKED",
-          "reason": "EXECUTOR_REFUSED",
-          "reference": "gate:cisco_c8000v_iosxe/routing.BGP_IPV4@b52572f8c541#dc5fad51e438c204",
-          "test_type": "STATIC"
+          "detail": "isolated IOS XE routing.BGP_IPV4 against an FRR 8.4.4 peer through the registered IosXeExecutor (Netmiko configuration mode, captured running-config inverse): NMAS rendered [routing_bgp] router bgp 65044 / no bgp default ipv4-unicast / bgp router-id 198.18.44.1; [bgp_neighbor] router bgp 65044 / neighbor 198.18.0.2 remote-as 65045; [bgp_neighbor_af] router bgp 65044 / address-family ipv4 / neighbor 198.18.0.2 activate / exit-address-family; [bgp_network] router bgp 65044 / address-family ipv4 / network 203.0.113.0 / exit-address-family || pristine router: preflight=['routing_bgp=APPLY/True/-', 'bgp_neighbor=APPLY/True/-', 'bgp_neighbor_af=APPLY/True/-', 'bgp_network=APPLY/True/-']; operator postcheck pass=True []; live running-config import recovered intent=True; session=ESTABLISHED remote-as=65045 prefixes received=1; DUT installed 192.0.2.0/24 from BGP=True; peer BGP table holds 203.0.113.0/24 from the DUT=True; unrelated process configuration preserved=True; adjacency/session and learned 192.0.2.0/24 withdrawn after compensation=True (after 2 s); compensation=['COMPENSATED', 'COMPENSATED', 'COMPENSATED', 'COMPENSATED']; running configuration identical to pre-apply capture=True; unrelated objects preserved=True; lab baseline restored=True; no failure || configured router: preflight=['routing_bgp=APPLY/True/-', 'bgp_neighbor=APPLY/True/-', 'bgp_neighbor_af=APPLY/True/-', 'bgp_network=APPLY/True/-']; operator postcheck pass=True []; live running-config import recovered intent=True; session=ESTABLISHED remote-as=65045 prefixes received=1; DUT installed 192.0.2.0/24 from BGP=True; peer BGP table holds 203.0.113.0/24 from the DUT=True; unrelated process configuration preserved=True; adjacency/session and learned 192.0.2.0/24 withdrawn after compensation=True (after 4 s); compensation=['COMPENSATED', 'COMPENSATED', 'COMPENSATED', 'COMPENSATED']; running configuration identical to pre-apply capture=True; unrelated objects preserved=True; lab baseline restored=True; no fa",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-iosxe/iosxe-bgp_ipv4/2026-10-28T14:53:24.530393+00:00",
+          "test_type": "LIVE"
         },
         "semantic_model": {
           "detail": "Canonical fixture resolves the feature-specific path routing.bgp.bgp_0000000000000003.local_asn.",
@@ -12277,52 +12279,51 @@
         }
       },
       "renderer": "PASS",
-      "repository_head": "b52572f8c541241e01d7898165a3ae94810cd2f5",
-      "runtime_test": "BLOCKED",
-      "runtime_version": "not contacted (prerequisite gate); platform runtime last observed: vrnetlab/cisco_c8000v:17.06.01a",
+      "repository_head": "d70c256781f30c70d75eab6c16a4922866f198f7",
+      "runtime_test": "PASS",
+      "runtime_version": "vrnetlab/cisco_c8000v:17.06.01a (IOS XE 17.06.01a) / Linux peer running FRRouting 8.4.4",
       "semantic": "PASS",
-      "status": "UNSUPPORTED",
-      "strongest_test_type": "FIXTURE",
-      "timestamp": "2026-10-05T06:36:58.826750+00:00",
-      "unsupported_reasons": [
-        "EXECUTOR_REFUSED",
-        "PARSER_ABSENT"
-      ],
+      "status": "SUPPORTED",
+      "strongest_test_type": "LIVE",
+      "timestamp": "2026-10-28T14:53:24.556967+00:00",
+      "unsupported_reasons": [],
       "validator": "PASS"
     },
     {
-      "assessment_basis": "PREREQUISITE_GATE",
+      "assessment_basis": "RUNTIME_INVESTIGATION",
       "assessment_complete": true,
-      "assessment_id": 1334,
+      "assessment_id": 1378,
       "automated_tests": "PASS",
       "candidate": "PASS",
-      "compensation": "BLOCKED",
+      "capability_status": "SUPPORTED",
+      "compensation": "PASS",
       "device_builder": "PASS",
       "evidence_ids": [
-        10704,
-        10705,
-        10706,
-        10707,
-        10708,
-        10709,
-        10710,
-        10711,
-        10712,
-        10713,
-        10714
+        11188,
+        11189,
+        11190,
+        11191,
+        11192,
+        11193,
+        11194,
+        11195,
+        11196,
+        11197,
+        11198
       ],
       "evidence_references": [
-        "gate:cisco_c8000v_iosxe/routing.BGP_IPV6@b52572f8c541#ca47a1864fcae0e5"
+        "live:nmas-cap-iosxe/iosxe-bgp_ipv6/2026-10-28T14:57:36.094894+00:00"
       ],
-      "executor": "FAIL",
+      "executor": "PASS",
+      "feasibility": "PROVEN",
       "feature": "routing.BGP_IPV6",
       "field_validation": "PASS",
-      "final_status": "UNSUPPORTED",
-      "live_read": "BLOCKED",
-      "live_write": "BLOCKED",
-      "parser": "FAIL",
+      "final_status": "SUPPORTED",
+      "live_read": "PASS",
+      "live_write": "PASS",
+      "parser": "PASS",
       "platform": "cisco_c8000v_iosxe",
-      "postcheck": "BLOCKED",
+      "postcheck": "PASS",
       "probes": {
         "automated_tests": {
           "detail": "Repeated renderer determinism=True; feature-specific valid/invalid field regression=PASS.",
@@ -12332,18 +12333,18 @@
           "test_type": "FIXTURE"
         },
         "candidate_generation": {
-          "detail": "Real candidate_renderer.render ran; 838 chars; target-rendered=PASS.",
+          "detail": "Real candidate_renderer.render ran; 859 chars; target-rendered=PASS.",
           "outcome": "PASS",
           "reason": "",
           "reference": "",
           "test_type": "FIXTURE"
         },
         "compensation": {
-          "detail": "Not attempted: NMAS prerequisite layer(s) failed their deliberate probe (executor=EXECUTOR_REFUSED). First blocker executor: Real executor.assess on fixture: action=REFUSE; exact inverse present=True; restorable=False; no connection/apply invoked. No device was contacted for this stage.",
-          "outcome": "BLOCKED",
-          "reason": "EXECUTOR_REFUSED",
-          "reference": "gate:cisco_c8000v_iosxe/routing.BGP_IPV6@b52572f8c541#ca47a1864fcae0e5",
-          "test_type": "STATIC"
+          "detail": "isolated IOS XE routing.BGP_IPV6 against an FRR 8.4.4 peer through the registered IosXeExecutor (Netmiko configuration mode, captured running-config inverse): NMAS rendered [routing_bgp] router bgp 65044 / no bgp default ipv4-unicast / bgp router-id 198.18.44.1; [bgp_neighbor] router bgp 65044 / neighbor 2001:db8:44::2 remote-as 65045; [bgp_neighbor_af] router bgp 65044 / address-family ipv6 / neighbor 2001:db8:44::2 activate / exit-address-family; [bgp_network] router bgp 65044 / address-family ipv6 / network 2001:db8:113::/64 / exit-address-family || pristine router: preflight=['routing_bgp=APPLY/True/-', 'bgp_neighbor=APPLY/True/-', 'bgp_neighbor_af=APPLY/True/-', 'bgp_network=APPLY/True/-']; operator postcheck pass=True []; live running-config import recovered intent=True; session=ESTABLISHED remote-as=65045 prefixes received=1; DUT installed 2001:db8:99::/64 from BGP=True; peer BGP table holds 2001:db8:113::/64 from the DUT=True; unrelated process configuration preserved=True; adjacency/session and learned 2001:db8:99::/64 withdrawn after compensation=True (after 1 s); compensation=['COMPENSATED', 'COMPENSATED', 'COMPENSATED', 'COMPENSATED']; running configuration identical to pre-apply capture=True; unrelated objects preserved=True; lab baseline restored=True; no failure || configured router: preflight=['routing_bgp=APPLY/True/-', 'bgp_neighbor=APPLY/True/-', 'bgp_neighbor_af=APPLY/True/-', 'bgp_network=APPLY/True/-']; operator postcheck pass=True []; live running-config import recovered intent=True; session=ESTABLISHED remote-as=65045 prefixes received=1; DUT installed 2001:db8:99::/64 from BGP=True; peer BGP table holds 2001:db8:113::/64 from the DUT=True; unrelated process configuration preserved=True; adjacency/session and learned 2001:db8:99::/64 withdrawn after compensation=True (after 1 s); compensation=['COMPENSATED', 'COMPENSATED', 'COMPENSATED', 'COMPENSATED']; running configuration identical to pre-apply capture=True; unrelated objects preserved=Tru",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-iosxe/iosxe-bgp_ipv6/2026-10-28T14:57:36.094894+00:00",
+          "test_type": "LIVE"
         },
         "config_validation": {
           "detail": "Actual network-config validation=WARNING; failing checks=[]; external inputs are OFFLINE_FIXTURE only.",
@@ -12360,9 +12361,9 @@
           "test_type": "FIXTURE"
         },
         "executor": {
-          "detail": "Real executor.assess on fixture: action=REFUSE; exact inverse present=True; restorable=False; no connection/apply invoked.",
-          "outcome": "FAIL",
-          "reason": "EXECUTOR_REFUSED",
+          "detail": "Real executor.assess on fixture: action=APPLY; exact inverse present=True; restorable=True; no connection/apply invoked.",
+          "outcome": "PASS",
+          "reason": "",
           "reference": "",
           "test_type": "FIXTURE"
         },
@@ -12374,46 +12375,46 @@
           "test_type": "FIXTURE"
         },
         "live_post_write_validation": {
-          "detail": "Not attempted: NMAS prerequisite layer(s) failed their deliberate probe (executor=EXECUTOR_REFUSED). First blocker executor: Real executor.assess on fixture: action=REFUSE; exact inverse present=True; restorable=False; no connection/apply invoked. No device was contacted for this stage.",
-          "outcome": "BLOCKED",
-          "reason": "EXECUTOR_REFUSED",
-          "reference": "gate:cisco_c8000v_iosxe/routing.BGP_IPV6@b52572f8c541#ca47a1864fcae0e5",
-          "test_type": "STATIC"
+          "detail": "isolated IOS XE routing.BGP_IPV6 against an FRR 8.4.4 peer through the registered IosXeExecutor (Netmiko configuration mode, captured running-config inverse): NMAS rendered [routing_bgp] router bgp 65044 / no bgp default ipv4-unicast / bgp router-id 198.18.44.1; [bgp_neighbor] router bgp 65044 / neighbor 2001:db8:44::2 remote-as 65045; [bgp_neighbor_af] router bgp 65044 / address-family ipv6 / neighbor 2001:db8:44::2 activate / exit-address-family; [bgp_network] router bgp 65044 / address-family ipv6 / network 2001:db8:113::/64 / exit-address-family || pristine router: preflight=['routing_bgp=APPLY/True/-', 'bgp_neighbor=APPLY/True/-', 'bgp_neighbor_af=APPLY/True/-', 'bgp_network=APPLY/True/-']; operator postcheck pass=True []; live running-config import recovered intent=True; session=ESTABLISHED remote-as=65045 prefixes received=1; DUT installed 2001:db8:99::/64 from BGP=True; peer BGP table holds 2001:db8:113::/64 from the DUT=True; unrelated process configuration preserved=True; adjacency/session and learned 2001:db8:99::/64 withdrawn after compensation=True (after 1 s); compensation=['COMPENSATED', 'COMPENSATED', 'COMPENSATED', 'COMPENSATED']; running configuration identical to pre-apply capture=True; unrelated objects preserved=True; lab baseline restored=True; no failure || configured router: preflight=['routing_bgp=APPLY/True/-', 'bgp_neighbor=APPLY/True/-', 'bgp_neighbor_af=APPLY/True/-', 'bgp_network=APPLY/True/-']; operator postcheck pass=True []; live running-config import recovered intent=True; session=ESTABLISHED remote-as=65045 prefixes received=1; DUT installed 2001:db8:99::/64 from BGP=True; peer BGP table holds 2001:db8:113::/64 from the DUT=True; unrelated process configuration preserved=True; adjacency/session and learned 2001:db8:99::/64 withdrawn after compensation=True (after 1 s); compensation=['COMPENSATED', 'COMPENSATED', 'COMPENSATED', 'COMPENSATED']; running configuration identical to pre-apply capture=True; unrelated objects preserved=Tru",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-iosxe/iosxe-bgp_ipv6/2026-10-28T14:57:36.094894+00:00",
+          "test_type": "LIVE"
         },
         "live_read": {
-          "detail": "Not attempted: NMAS prerequisite layer(s) failed their deliberate probe (executor=EXECUTOR_REFUSED). First blocker executor: Real executor.assess on fixture: action=REFUSE; exact inverse present=True; restorable=False; no connection/apply invoked. No device was contacted for this stage.",
-          "outcome": "BLOCKED",
-          "reason": "EXECUTOR_REFUSED",
-          "reference": "gate:cisco_c8000v_iosxe/routing.BGP_IPV6@b52572f8c541#ca47a1864fcae0e5",
-          "test_type": "STATIC"
+          "detail": "isolated IOS XE routing.BGP_IPV6 against an FRR 8.4.4 peer through the registered IosXeExecutor (Netmiko configuration mode, captured running-config inverse): NMAS rendered [routing_bgp] router bgp 65044 / no bgp default ipv4-unicast / bgp router-id 198.18.44.1; [bgp_neighbor] router bgp 65044 / neighbor 2001:db8:44::2 remote-as 65045; [bgp_neighbor_af] router bgp 65044 / address-family ipv6 / neighbor 2001:db8:44::2 activate / exit-address-family; [bgp_network] router bgp 65044 / address-family ipv6 / network 2001:db8:113::/64 / exit-address-family || pristine router: preflight=['routing_bgp=APPLY/True/-', 'bgp_neighbor=APPLY/True/-', 'bgp_neighbor_af=APPLY/True/-', 'bgp_network=APPLY/True/-']; operator postcheck pass=True []; live running-config import recovered intent=True; session=ESTABLISHED remote-as=65045 prefixes received=1; DUT installed 2001:db8:99::/64 from BGP=True; peer BGP table holds 2001:db8:113::/64 from the DUT=True; unrelated process configuration preserved=True; adjacency/session and learned 2001:db8:99::/64 withdrawn after compensation=True (after 1 s); compensation=['COMPENSATED', 'COMPENSATED', 'COMPENSATED', 'COMPENSATED']; running configuration identical to pre-apply capture=True; unrelated objects preserved=True; lab baseline restored=True; no failure || configured router: preflight=['routing_bgp=APPLY/True/-', 'bgp_neighbor=APPLY/True/-', 'bgp_neighbor_af=APPLY/True/-', 'bgp_network=APPLY/True/-']; operator postcheck pass=True []; live running-config import recovered intent=True; session=ESTABLISHED remote-as=65045 prefixes received=1; DUT installed 2001:db8:99::/64 from BGP=True; peer BGP table holds 2001:db8:113::/64 from the DUT=True; unrelated process configuration preserved=True; adjacency/session and learned 2001:db8:99::/64 withdrawn after compensation=True (after 1 s); compensation=['COMPENSATED', 'COMPENSATED', 'COMPENSATED', 'COMPENSATED']; running configuration identical to pre-apply capture=True; unrelated objects preserved=Tru",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-iosxe/iosxe-bgp_ipv6/2026-10-28T14:57:36.094894+00:00",
+          "test_type": "LIVE"
         },
         "live_write": {
-          "detail": "Not attempted: NMAS prerequisite layer(s) failed their deliberate probe (executor=EXECUTOR_REFUSED). First blocker executor: Real executor.assess on fixture: action=REFUSE; exact inverse present=True; restorable=False; no connection/apply invoked. No device was contacted for this stage.",
-          "outcome": "BLOCKED",
-          "reason": "EXECUTOR_REFUSED",
-          "reference": "gate:cisco_c8000v_iosxe/routing.BGP_IPV6@b52572f8c541#ca47a1864fcae0e5",
-          "test_type": "STATIC"
+          "detail": "isolated IOS XE routing.BGP_IPV6 against an FRR 8.4.4 peer through the registered IosXeExecutor (Netmiko configuration mode, captured running-config inverse): NMAS rendered [routing_bgp] router bgp 65044 / no bgp default ipv4-unicast / bgp router-id 198.18.44.1; [bgp_neighbor] router bgp 65044 / neighbor 2001:db8:44::2 remote-as 65045; [bgp_neighbor_af] router bgp 65044 / address-family ipv6 / neighbor 2001:db8:44::2 activate / exit-address-family; [bgp_network] router bgp 65044 / address-family ipv6 / network 2001:db8:113::/64 / exit-address-family || pristine router: preflight=['routing_bgp=APPLY/True/-', 'bgp_neighbor=APPLY/True/-', 'bgp_neighbor_af=APPLY/True/-', 'bgp_network=APPLY/True/-']; operator postcheck pass=True []; live running-config import recovered intent=True; session=ESTABLISHED remote-as=65045 prefixes received=1; DUT installed 2001:db8:99::/64 from BGP=True; peer BGP table holds 2001:db8:113::/64 from the DUT=True; unrelated process configuration preserved=True; adjacency/session and learned 2001:db8:99::/64 withdrawn after compensation=True (after 1 s); compensation=['COMPENSATED', 'COMPENSATED', 'COMPENSATED', 'COMPENSATED']; running configuration identical to pre-apply capture=True; unrelated objects preserved=True; lab baseline restored=True; no failure || configured router: preflight=['routing_bgp=APPLY/True/-', 'bgp_neighbor=APPLY/True/-', 'bgp_neighbor_af=APPLY/True/-', 'bgp_network=APPLY/True/-']; operator postcheck pass=True []; live running-config import recovered intent=True; session=ESTABLISHED remote-as=65045 prefixes received=1; DUT installed 2001:db8:99::/64 from BGP=True; peer BGP table holds 2001:db8:113::/64 from the DUT=True; unrelated process configuration preserved=True; adjacency/session and learned 2001:db8:99::/64 withdrawn after compensation=True (after 1 s); compensation=['COMPENSATED', 'COMPENSATED', 'COMPENSATED', 'COMPENSATED']; running configuration identical to pre-apply capture=True; unrelated objects preserved=Tru",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-iosxe/iosxe-bgp_ipv6/2026-10-28T14:57:36.094894+00:00",
+          "test_type": "LIVE"
         },
         "parser_import": {
-          "detail": "Real iosxe-1.0 parser executed; target semantic match=False; unmanaged blocks=8.",
-          "outcome": "FAIL",
-          "reason": "PARSER_ABSENT",
-          "reference": "",
-          "test_type": "FIXTURE"
+          "detail": "isolated IOS XE routing.BGP_IPV6 against an FRR 8.4.4 peer through the registered IosXeExecutor (Netmiko configuration mode, captured running-config inverse): NMAS rendered [routing_bgp] router bgp 65044 / no bgp default ipv4-unicast / bgp router-id 198.18.44.1; [bgp_neighbor] router bgp 65044 / neighbor 2001:db8:44::2 remote-as 65045; [bgp_neighbor_af] router bgp 65044 / address-family ipv6 / neighbor 2001:db8:44::2 activate / exit-address-family; [bgp_network] router bgp 65044 / address-family ipv6 / network 2001:db8:113::/64 / exit-address-family || pristine router: preflight=['routing_bgp=APPLY/True/-', 'bgp_neighbor=APPLY/True/-', 'bgp_neighbor_af=APPLY/True/-', 'bgp_network=APPLY/True/-']; operator postcheck pass=True []; live running-config import recovered intent=True; session=ESTABLISHED remote-as=65045 prefixes received=1; DUT installed 2001:db8:99::/64 from BGP=True; peer BGP table holds 2001:db8:113::/64 from the DUT=True; unrelated process configuration preserved=True; adjacency/session and learned 2001:db8:99::/64 withdrawn after compensation=True (after 1 s); compensation=['COMPENSATED', 'COMPENSATED', 'COMPENSATED', 'COMPENSATED']; running configuration identical to pre-apply capture=True; unrelated objects preserved=True; lab baseline restored=True; no failure || configured router: preflight=['routing_bgp=APPLY/True/-', 'bgp_neighbor=APPLY/True/-', 'bgp_neighbor_af=APPLY/True/-', 'bgp_network=APPLY/True/-']; operator postcheck pass=True []; live running-config import recovered intent=True; session=ESTABLISHED remote-as=65045 prefixes received=1; DUT installed 2001:db8:99::/64 from BGP=True; peer BGP table holds 2001:db8:113::/64 from the DUT=True; unrelated process configuration preserved=True; adjacency/session and learned 2001:db8:99::/64 withdrawn after compensation=True (after 1 s); compensation=['COMPENSATED', 'COMPENSATED', 'COMPENSATED', 'COMPENSATED']; running configuration identical to pre-apply capture=True; unrelated objects preserved=Tru",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-iosxe/iosxe-bgp_ipv6/2026-10-28T14:57:36.094894+00:00",
+          "test_type": "LIVE"
         },
         "renderer": {
-          "detail": "Authoritative renderer differential: 7 target line(s), 0 refusal marker(s); sha256=ab6ad1ec1d471fff44f76101c4aeb5a45859ab4ab8c36ae5a652f234c4c55b0f.",
+          "detail": "Authoritative renderer differential: 8 target line(s), 0 refusal marker(s); sha256=d5be6a6729288287ec9dd22f262a45193c35f118a7821a1c317de9728a754b8b.",
           "outcome": "PASS",
           "reason": "",
           "reference": "",
           "test_type": "FIXTURE"
         },
         "runtime_validation": {
-          "detail": "Not attempted: NMAS prerequisite layer(s) failed their deliberate probe (executor=EXECUTOR_REFUSED). First blocker executor: Real executor.assess on fixture: action=REFUSE; exact inverse present=True; restorable=False; no connection/apply invoked. No device was contacted for this stage.",
-          "outcome": "BLOCKED",
-          "reason": "EXECUTOR_REFUSED",
-          "reference": "gate:cisco_c8000v_iosxe/routing.BGP_IPV6@b52572f8c541#ca47a1864fcae0e5",
-          "test_type": "STATIC"
+          "detail": "isolated IOS XE routing.BGP_IPV6 against an FRR 8.4.4 peer through the registered IosXeExecutor (Netmiko configuration mode, captured running-config inverse): NMAS rendered [routing_bgp] router bgp 65044 / no bgp default ipv4-unicast / bgp router-id 198.18.44.1; [bgp_neighbor] router bgp 65044 / neighbor 2001:db8:44::2 remote-as 65045; [bgp_neighbor_af] router bgp 65044 / address-family ipv6 / neighbor 2001:db8:44::2 activate / exit-address-family; [bgp_network] router bgp 65044 / address-family ipv6 / network 2001:db8:113::/64 / exit-address-family || pristine router: preflight=['routing_bgp=APPLY/True/-', 'bgp_neighbor=APPLY/True/-', 'bgp_neighbor_af=APPLY/True/-', 'bgp_network=APPLY/True/-']; operator postcheck pass=True []; live running-config import recovered intent=True; session=ESTABLISHED remote-as=65045 prefixes received=1; DUT installed 2001:db8:99::/64 from BGP=True; peer BGP table holds 2001:db8:113::/64 from the DUT=True; unrelated process configuration preserved=True; adjacency/session and learned 2001:db8:99::/64 withdrawn after compensation=True (after 1 s); compensation=['COMPENSATED', 'COMPENSATED', 'COMPENSATED', 'COMPENSATED']; running configuration identical to pre-apply capture=True; unrelated objects preserved=True; lab baseline restored=True; no failure || configured router: preflight=['routing_bgp=APPLY/True/-', 'bgp_neighbor=APPLY/True/-', 'bgp_neighbor_af=APPLY/True/-', 'bgp_network=APPLY/True/-']; operator postcheck pass=True []; live running-config import recovered intent=True; session=ESTABLISHED remote-as=65045 prefixes received=1; DUT installed 2001:db8:99::/64 from BGP=True; peer BGP table holds 2001:db8:113::/64 from the DUT=True; unrelated process configuration preserved=True; adjacency/session and learned 2001:db8:99::/64 withdrawn after compensation=True (after 1 s); compensation=['COMPENSATED', 'COMPENSATED', 'COMPENSATED', 'COMPENSATED']; running configuration identical to pre-apply capture=True; unrelated objects preserved=Tru",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-iosxe/iosxe-bgp_ipv6/2026-10-28T14:57:36.094894+00:00",
+          "test_type": "LIVE"
         },
         "semantic_model": {
           "detail": "Canonical fixture resolves the feature-specific path routing.bgp.bgp_0000000000000003.local_asn.",
@@ -12424,17 +12425,14 @@
         }
       },
       "renderer": "PASS",
-      "repository_head": "b52572f8c541241e01d7898165a3ae94810cd2f5",
-      "runtime_test": "BLOCKED",
-      "runtime_version": "not contacted (prerequisite gate); platform runtime last observed: vrnetlab/cisco_c8000v:17.06.01a",
+      "repository_head": "d70c256781f30c70d75eab6c16a4922866f198f7",
+      "runtime_test": "PASS",
+      "runtime_version": "vrnetlab/cisco_c8000v:17.06.01a (IOS XE 17.06.01a) / Linux peer running FRRouting 8.4.4",
       "semantic": "PASS",
-      "status": "UNSUPPORTED",
-      "strongest_test_type": "FIXTURE",
-      "timestamp": "2026-10-05T06:36:58.919599+00:00",
-      "unsupported_reasons": [
-        "EXECUTOR_REFUSED",
-        "PARSER_ABSENT"
-      ],
+      "status": "SUPPORTED",
+      "strongest_test_type": "LIVE",
+      "timestamp": "2026-10-28T14:57:36.117935+00:00",
+      "unsupported_reasons": [],
       "validator": "PASS"
     },
     {
@@ -12888,38 +12886,40 @@
       "validator": "FAIL"
     },
     {
-      "assessment_basis": "PREREQUISITE_GATE",
+      "assessment_basis": "RUNTIME_INVESTIGATION",
       "assessment_complete": true,
-      "assessment_id": 1328,
+      "assessment_id": 1379,
       "automated_tests": "PASS",
       "candidate": "PASS",
-      "compensation": "BLOCKED",
+      "capability_status": "SUPPORTED",
+      "compensation": "PASS",
       "device_builder": "PASS",
       "evidence_ids": [
-        10638,
-        10639,
-        10640,
-        10641,
-        10642,
-        10643,
-        10644,
-        10645,
-        10646,
-        10647,
-        10648
+        11199,
+        11200,
+        11201,
+        11202,
+        11203,
+        11204,
+        11205,
+        11206,
+        11207,
+        11208,
+        11209
       ],
       "evidence_references": [
-        "gate:cisco_c8000v_iosxe/routing.OSPFV2@b52572f8c541#b36e5391e567aa33"
+        "live:nmas-cap-iosxe/iosxe-ospfv2/2026-10-28T14:58:49.475506+00:00"
       ],
-      "executor": "FAIL",
+      "executor": "PASS",
+      "feasibility": "PROVEN",
       "feature": "routing.OSPFV2",
       "field_validation": "PASS",
-      "final_status": "UNSUPPORTED",
-      "live_read": "BLOCKED",
-      "live_write": "BLOCKED",
-      "parser": "FAIL",
+      "final_status": "SUPPORTED",
+      "live_read": "PASS",
+      "live_write": "PASS",
+      "parser": "PASS",
       "platform": "cisco_c8000v_iosxe",
-      "postcheck": "BLOCKED",
+      "postcheck": "PASS",
       "probes": {
         "automated_tests": {
           "detail": "Repeated renderer determinism=True; feature-specific valid/invalid field regression=PASS.",
@@ -12936,11 +12936,11 @@
           "test_type": "FIXTURE"
         },
         "compensation": {
-          "detail": "Not attempted: NMAS prerequisite layer(s) failed their deliberate probe (executor=EXECUTOR_REFUSED). First blocker executor: Real executor.assess on fixture: action=REFUSE; exact inverse present=True; restorable=False; no connection/apply invoked. No device was contacted for this stage.",
-          "outcome": "BLOCKED",
-          "reason": "EXECUTOR_REFUSED",
-          "reference": "gate:cisco_c8000v_iosxe/routing.OSPFV2@b52572f8c541#b36e5391e567aa33",
-          "test_type": "STATIC"
+          "detail": "isolated IOS XE routing.OSPFV2 against an FRR 8.4.4 peer through the registered IosXeExecutor (Netmiko configuration mode, captured running-config inverse): NMAS rendered [routing_ospf] router ospf 44 / router-id 198.18.44.1 / network 198.18.0.0 0.0.0.3 area 0; [routing_binding] interface GigabitEthernet2 / ip ospf 44 area 0 / ip ospf cost 10 / ip ospf network point-to-point || pristine router: preflight=['routing_ospf=APPLY/True/-', 'routing_binding=APPLY/True/-']; operator postcheck pass=True []; live running-config import recovered intent=True; DUT OSPFV2 adjacency FULL on GigabitEthernet2=True; DUT installed 192.0.2.0/24 from OSPF=True; peer sees the DUT FULL=True; unrelated process configuration preserved=True; adjacency/session and learned 192.0.2.0/24 withdrawn after compensation=True (after 2 s); compensation=['COMPENSATED', 'COMPENSATED']; running configuration identical to pre-apply capture=True; unrelated objects preserved=True; lab baseline restored=True; no failure || configured router: preflight=['routing_ospf=APPLY/True/-', 'routing_binding=APPLY/True/-']; operator postcheck pass=True []; live running-config import recovered intent=True; DUT OSPFV2 adjacency FULL on GigabitEthernet2=True; DUT installed 192.0.2.0/24 from OSPF=True; peer sees the DUT FULL=True; unrelated process configuration preserved=True; adjacency/session and learned 192.0.2.0/24 withdrawn after compensation=True (after 1 s); compensation=['COMPENSATED', 'COMPENSATED']; running configuration identical to pre-apply capture=True; unrelated objects preserved=True; lab baseline restored=True; no failure",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-iosxe/iosxe-ospfv2/2026-10-28T14:58:49.475506+00:00",
+          "test_type": "LIVE"
         },
         "config_validation": {
           "detail": "Actual network-config validation=PASS; failing checks=[]; external inputs are OFFLINE_FIXTURE only.",
@@ -12957,9 +12957,9 @@
           "test_type": "FIXTURE"
         },
         "executor": {
-          "detail": "Real executor.assess on fixture: action=REFUSE; exact inverse present=True; restorable=False; no connection/apply invoked.",
-          "outcome": "FAIL",
-          "reason": "EXECUTOR_REFUSED",
+          "detail": "Real executor.assess on fixture: action=APPLY; exact inverse present=True; restorable=True; no connection/apply invoked.",
+          "outcome": "PASS",
+          "reason": "",
           "reference": "",
           "test_type": "FIXTURE"
         },
@@ -12971,32 +12971,32 @@
           "test_type": "FIXTURE"
         },
         "live_post_write_validation": {
-          "detail": "Not attempted: NMAS prerequisite layer(s) failed their deliberate probe (executor=EXECUTOR_REFUSED). First blocker executor: Real executor.assess on fixture: action=REFUSE; exact inverse present=True; restorable=False; no connection/apply invoked. No device was contacted for this stage.",
-          "outcome": "BLOCKED",
-          "reason": "EXECUTOR_REFUSED",
-          "reference": "gate:cisco_c8000v_iosxe/routing.OSPFV2@b52572f8c541#b36e5391e567aa33",
-          "test_type": "STATIC"
+          "detail": "isolated IOS XE routing.OSPFV2 against an FRR 8.4.4 peer through the registered IosXeExecutor (Netmiko configuration mode, captured running-config inverse): NMAS rendered [routing_ospf] router ospf 44 / router-id 198.18.44.1 / network 198.18.0.0 0.0.0.3 area 0; [routing_binding] interface GigabitEthernet2 / ip ospf 44 area 0 / ip ospf cost 10 / ip ospf network point-to-point || pristine router: preflight=['routing_ospf=APPLY/True/-', 'routing_binding=APPLY/True/-']; operator postcheck pass=True []; live running-config import recovered intent=True; DUT OSPFV2 adjacency FULL on GigabitEthernet2=True; DUT installed 192.0.2.0/24 from OSPF=True; peer sees the DUT FULL=True; unrelated process configuration preserved=True; adjacency/session and learned 192.0.2.0/24 withdrawn after compensation=True (after 2 s); compensation=['COMPENSATED', 'COMPENSATED']; running configuration identical to pre-apply capture=True; unrelated objects preserved=True; lab baseline restored=True; no failure || configured router: preflight=['routing_ospf=APPLY/True/-', 'routing_binding=APPLY/True/-']; operator postcheck pass=True []; live running-config import recovered intent=True; DUT OSPFV2 adjacency FULL on GigabitEthernet2=True; DUT installed 192.0.2.0/24 from OSPF=True; peer sees the DUT FULL=True; unrelated process configuration preserved=True; adjacency/session and learned 192.0.2.0/24 withdrawn after compensation=True (after 1 s); compensation=['COMPENSATED', 'COMPENSATED']; running configuration identical to pre-apply capture=True; unrelated objects preserved=True; lab baseline restored=True; no failure",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-iosxe/iosxe-ospfv2/2026-10-28T14:58:49.475506+00:00",
+          "test_type": "LIVE"
         },
         "live_read": {
-          "detail": "Not attempted: NMAS prerequisite layer(s) failed their deliberate probe (executor=EXECUTOR_REFUSED). First blocker executor: Real executor.assess on fixture: action=REFUSE; exact inverse present=True; restorable=False; no connection/apply invoked. No device was contacted for this stage.",
-          "outcome": "BLOCKED",
-          "reason": "EXECUTOR_REFUSED",
-          "reference": "gate:cisco_c8000v_iosxe/routing.OSPFV2@b52572f8c541#b36e5391e567aa33",
-          "test_type": "STATIC"
+          "detail": "isolated IOS XE routing.OSPFV2 against an FRR 8.4.4 peer through the registered IosXeExecutor (Netmiko configuration mode, captured running-config inverse): NMAS rendered [routing_ospf] router ospf 44 / router-id 198.18.44.1 / network 198.18.0.0 0.0.0.3 area 0; [routing_binding] interface GigabitEthernet2 / ip ospf 44 area 0 / ip ospf cost 10 / ip ospf network point-to-point || pristine router: preflight=['routing_ospf=APPLY/True/-', 'routing_binding=APPLY/True/-']; operator postcheck pass=True []; live running-config import recovered intent=True; DUT OSPFV2 adjacency FULL on GigabitEthernet2=True; DUT installed 192.0.2.0/24 from OSPF=True; peer sees the DUT FULL=True; unrelated process configuration preserved=True; adjacency/session and learned 192.0.2.0/24 withdrawn after compensation=True (after 2 s); compensation=['COMPENSATED', 'COMPENSATED']; running configuration identical to pre-apply capture=True; unrelated objects preserved=True; lab baseline restored=True; no failure || configured router: preflight=['routing_ospf=APPLY/True/-', 'routing_binding=APPLY/True/-']; operator postcheck pass=True []; live running-config import recovered intent=True; DUT OSPFV2 adjacency FULL on GigabitEthernet2=True; DUT installed 192.0.2.0/24 from OSPF=True; peer sees the DUT FULL=True; unrelated process configuration preserved=True; adjacency/session and learned 192.0.2.0/24 withdrawn after compensation=True (after 1 s); compensation=['COMPENSATED', 'COMPENSATED']; running configuration identical to pre-apply capture=True; unrelated objects preserved=True; lab baseline restored=True; no failure",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-iosxe/iosxe-ospfv2/2026-10-28T14:58:49.475506+00:00",
+          "test_type": "LIVE"
         },
         "live_write": {
-          "detail": "Not attempted: NMAS prerequisite layer(s) failed their deliberate probe (executor=EXECUTOR_REFUSED). First blocker executor: Real executor.assess on fixture: action=REFUSE; exact inverse present=True; restorable=False; no connection/apply invoked. No device was contacted for this stage.",
-          "outcome": "BLOCKED",
-          "reason": "EXECUTOR_REFUSED",
-          "reference": "gate:cisco_c8000v_iosxe/routing.OSPFV2@b52572f8c541#b36e5391e567aa33",
-          "test_type": "STATIC"
+          "detail": "isolated IOS XE routing.OSPFV2 against an FRR 8.4.4 peer through the registered IosXeExecutor (Netmiko configuration mode, captured running-config inverse): NMAS rendered [routing_ospf] router ospf 44 / router-id 198.18.44.1 / network 198.18.0.0 0.0.0.3 area 0; [routing_binding] interface GigabitEthernet2 / ip ospf 44 area 0 / ip ospf cost 10 / ip ospf network point-to-point || pristine router: preflight=['routing_ospf=APPLY/True/-', 'routing_binding=APPLY/True/-']; operator postcheck pass=True []; live running-config import recovered intent=True; DUT OSPFV2 adjacency FULL on GigabitEthernet2=True; DUT installed 192.0.2.0/24 from OSPF=True; peer sees the DUT FULL=True; unrelated process configuration preserved=True; adjacency/session and learned 192.0.2.0/24 withdrawn after compensation=True (after 2 s); compensation=['COMPENSATED', 'COMPENSATED']; running configuration identical to pre-apply capture=True; unrelated objects preserved=True; lab baseline restored=True; no failure || configured router: preflight=['routing_ospf=APPLY/True/-', 'routing_binding=APPLY/True/-']; operator postcheck pass=True []; live running-config import recovered intent=True; DUT OSPFV2 adjacency FULL on GigabitEthernet2=True; DUT installed 192.0.2.0/24 from OSPF=True; peer sees the DUT FULL=True; unrelated process configuration preserved=True; adjacency/session and learned 192.0.2.0/24 withdrawn after compensation=True (after 1 s); compensation=['COMPENSATED', 'COMPENSATED']; running configuration identical to pre-apply capture=True; unrelated objects preserved=True; lab baseline restored=True; no failure",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-iosxe/iosxe-ospfv2/2026-10-28T14:58:49.475506+00:00",
+          "test_type": "LIVE"
         },
         "parser_import": {
-          "detail": "Real iosxe-1.0 parser executed; target semantic match=False; unmanaged blocks=8.",
-          "outcome": "FAIL",
-          "reason": "PARSER_ABSENT",
-          "reference": "",
-          "test_type": "FIXTURE"
+          "detail": "isolated IOS XE routing.OSPFV2 against an FRR 8.4.4 peer through the registered IosXeExecutor (Netmiko configuration mode, captured running-config inverse): NMAS rendered [routing_ospf] router ospf 44 / router-id 198.18.44.1 / network 198.18.0.0 0.0.0.3 area 0; [routing_binding] interface GigabitEthernet2 / ip ospf 44 area 0 / ip ospf cost 10 / ip ospf network point-to-point || pristine router: preflight=['routing_ospf=APPLY/True/-', 'routing_binding=APPLY/True/-']; operator postcheck pass=True []; live running-config import recovered intent=True; DUT OSPFV2 adjacency FULL on GigabitEthernet2=True; DUT installed 192.0.2.0/24 from OSPF=True; peer sees the DUT FULL=True; unrelated process configuration preserved=True; adjacency/session and learned 192.0.2.0/24 withdrawn after compensation=True (after 2 s); compensation=['COMPENSATED', 'COMPENSATED']; running configuration identical to pre-apply capture=True; unrelated objects preserved=True; lab baseline restored=True; no failure || configured router: preflight=['routing_ospf=APPLY/True/-', 'routing_binding=APPLY/True/-']; operator postcheck pass=True []; live running-config import recovered intent=True; DUT OSPFV2 adjacency FULL on GigabitEthernet2=True; DUT installed 192.0.2.0/24 from OSPF=True; peer sees the DUT FULL=True; unrelated process configuration preserved=True; adjacency/session and learned 192.0.2.0/24 withdrawn after compensation=True (after 1 s); compensation=['COMPENSATED', 'COMPENSATED']; running configuration identical to pre-apply capture=True; unrelated objects preserved=True; lab baseline restored=True; no failure",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-iosxe/iosxe-ospfv2/2026-10-28T14:58:49.475506+00:00",
+          "test_type": "LIVE"
         },
         "renderer": {
           "detail": "Authoritative renderer differential: 6 target line(s), 0 refusal marker(s); sha256=86c9fe3bca4af834ab2a343108aab2d90779502ffbd2631a90e97c3ed1547bb1.",
@@ -13006,11 +13006,11 @@
           "test_type": "FIXTURE"
         },
         "runtime_validation": {
-          "detail": "Not attempted: NMAS prerequisite layer(s) failed their deliberate probe (executor=EXECUTOR_REFUSED). First blocker executor: Real executor.assess on fixture: action=REFUSE; exact inverse present=True; restorable=False; no connection/apply invoked. No device was contacted for this stage.",
-          "outcome": "BLOCKED",
-          "reason": "EXECUTOR_REFUSED",
-          "reference": "gate:cisco_c8000v_iosxe/routing.OSPFV2@b52572f8c541#b36e5391e567aa33",
-          "test_type": "STATIC"
+          "detail": "isolated IOS XE routing.OSPFV2 against an FRR 8.4.4 peer through the registered IosXeExecutor (Netmiko configuration mode, captured running-config inverse): NMAS rendered [routing_ospf] router ospf 44 / router-id 198.18.44.1 / network 198.18.0.0 0.0.0.3 area 0; [routing_binding] interface GigabitEthernet2 / ip ospf 44 area 0 / ip ospf cost 10 / ip ospf network point-to-point || pristine router: preflight=['routing_ospf=APPLY/True/-', 'routing_binding=APPLY/True/-']; operator postcheck pass=True []; live running-config import recovered intent=True; DUT OSPFV2 adjacency FULL on GigabitEthernet2=True; DUT installed 192.0.2.0/24 from OSPF=True; peer sees the DUT FULL=True; unrelated process configuration preserved=True; adjacency/session and learned 192.0.2.0/24 withdrawn after compensation=True (after 2 s); compensation=['COMPENSATED', 'COMPENSATED']; running configuration identical to pre-apply capture=True; unrelated objects preserved=True; lab baseline restored=True; no failure || configured router: preflight=['routing_ospf=APPLY/True/-', 'routing_binding=APPLY/True/-']; operator postcheck pass=True []; live running-config import recovered intent=True; DUT OSPFV2 adjacency FULL on GigabitEthernet2=True; DUT installed 192.0.2.0/24 from OSPF=True; peer sees the DUT FULL=True; unrelated process configuration preserved=True; adjacency/session and learned 192.0.2.0/24 withdrawn after compensation=True (after 1 s); compensation=['COMPENSATED', 'COMPENSATED']; running configuration identical to pre-apply capture=True; unrelated objects preserved=True; lab baseline restored=True; no failure",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-iosxe/iosxe-ospfv2/2026-10-28T14:58:49.475506+00:00",
+          "test_type": "LIVE"
         },
         "semantic_model": {
           "detail": "Canonical fixture resolves the feature-specific path routing.ospf.ospf_0000000000000003.router_id.",
@@ -13021,52 +13021,51 @@
         }
       },
       "renderer": "PASS",
-      "repository_head": "b52572f8c541241e01d7898165a3ae94810cd2f5",
-      "runtime_test": "BLOCKED",
-      "runtime_version": "not contacted (prerequisite gate); platform runtime last observed: vrnetlab/cisco_c8000v:17.06.01a",
+      "repository_head": "d70c256781f30c70d75eab6c16a4922866f198f7",
+      "runtime_test": "PASS",
+      "runtime_version": "vrnetlab/cisco_c8000v:17.06.01a (IOS XE 17.06.01a) / Linux peer running FRRouting 8.4.4",
       "semantic": "PASS",
-      "status": "UNSUPPORTED",
-      "strongest_test_type": "FIXTURE",
-      "timestamp": "2026-10-05T06:36:58.322906+00:00",
-      "unsupported_reasons": [
-        "EXECUTOR_REFUSED",
-        "PARSER_ABSENT"
-      ],
+      "status": "SUPPORTED",
+      "strongest_test_type": "LIVE",
+      "timestamp": "2026-10-28T14:58:49.491433+00:00",
+      "unsupported_reasons": [],
       "validator": "PASS"
     },
     {
-      "assessment_basis": "PREREQUISITE_GATE",
+      "assessment_basis": "RUNTIME_INVESTIGATION",
       "assessment_complete": true,
-      "assessment_id": 1329,
+      "assessment_id": 1380,
       "automated_tests": "PASS",
-      "candidate": "FAIL",
-      "compensation": "BLOCKED",
-      "device_builder": "FAIL",
+      "candidate": "PASS",
+      "capability_status": "SUPPORTED",
+      "compensation": "PASS",
+      "device_builder": "PASS",
       "evidence_ids": [
-        10649,
-        10650,
-        10651,
-        10652,
-        10653,
-        10654,
-        10655,
-        10656,
-        10657,
-        10658,
-        10659
+        11210,
+        11211,
+        11212,
+        11213,
+        11214,
+        11215,
+        11216,
+        11217,
+        11218,
+        11219,
+        11220
       ],
       "evidence_references": [
-        "gate:cisco_c8000v_iosxe/routing.OSPFV3@b52572f8c541#a0b0a8f3a3aa1a65"
+        "live:nmas-cap-iosxe/iosxe-ospfv3/2026-10-28T15:00:10.827789+00:00"
       ],
-      "executor": "FAIL",
+      "executor": "PASS",
+      "feasibility": "PROVEN",
       "feature": "routing.OSPFV3",
       "field_validation": "PASS",
-      "final_status": "UNSUPPORTED",
-      "live_read": "BLOCKED",
-      "live_write": "BLOCKED",
-      "parser": "FAIL",
+      "final_status": "SUPPORTED",
+      "live_read": "PASS",
+      "live_write": "PASS",
+      "parser": "PASS",
       "platform": "cisco_c8000v_iosxe",
-      "postcheck": "BLOCKED",
+      "postcheck": "PASS",
       "probes": {
         "automated_tests": {
           "detail": "Repeated renderer determinism=True; feature-specific valid/invalid field regression=PASS.",
@@ -13076,37 +13075,37 @@
           "test_type": "FIXTURE"
         },
         "candidate_generation": {
-          "detail": "Real candidate_renderer.render ran; 759 chars; target-rendered=FAIL.",
-          "outcome": "FAIL",
-          "reason": "RENDERER_ABSENT",
+          "detail": "Real candidate_renderer.render ran; 739 chars; target-rendered=PASS.",
+          "outcome": "PASS",
+          "reason": "",
           "reference": "",
           "test_type": "FIXTURE"
         },
         "compensation": {
-          "detail": "Not attempted: NMAS prerequisite layer(s) failed their deliberate probe (renderer=RENDERER_ABSENT, candidate_generation=RENDERER_ABSENT, executor=EXECUTOR_REFUSED). First blocker renderer: Authoritative renderer differential: 0 target line(s), 1 refusal marker(s); sha256=a9a016b593e3809a5a11ecf7d16d380ea5df3212bd9f6c89387018cba06a767d. No device was contacted for this stage.",
-          "outcome": "BLOCKED",
-          "reason": "RENDERER_ABSENT",
-          "reference": "gate:cisco_c8000v_iosxe/routing.OSPFV3@b52572f8c541#a0b0a8f3a3aa1a65",
-          "test_type": "STATIC"
+          "detail": "isolated IOS XE routing.OSPFV3 against an FRR 8.4.4 peer through the registered IosXeExecutor (Netmiko configuration mode, captured running-config inverse): NMAS rendered [routing_ospf] ipv6 router ospf 44 / router-id 198.18.44.1; [routing_binding] interface GigabitEthernet2 / ipv6 ospf 44 area 0 / ipv6 ospf cost 10 / ipv6 ospf network point-to-point || pristine router: preflight=['routing_ospf=APPLY/True/-', 'routing_binding=APPLY/True/-']; operator postcheck pass=True []; live running-config import recovered intent=True; DUT OSPFV3 adjacency FULL on GigabitEthernet2=True; DUT installed 2001:db8:99::/64 from OSPF=True; peer sees the DUT FULL=True; unrelated process configuration preserved=True; adjacency/session and learned 2001:db8:99::/64 withdrawn after compensation=True (after 2 s); compensation=['COMPENSATED', 'COMPENSATED']; running configuration identical to pre-apply capture=True; unrelated objects preserved=True; lab baseline restored=True; no failure || configured router: preflight=['routing_ospf=APPLY/True/-', 'routing_binding=APPLY/True/-']; operator postcheck pass=True []; live running-config import recovered intent=True; DUT OSPFV3 adjacency FULL on GigabitEthernet2=True; DUT installed 2001:db8:99::/64 from OSPF=True; peer sees the DUT FULL=True; unrelated process configuration preserved=True; adjacency/session and learned 2001:db8:99::/64 withdrawn after compensation=True (after 1 s); compensation=['COMPENSATED', 'COMPENSATED']; running configuration identical to pre-apply capture=True; unrelated objects preserved=True; lab baseline restored=True; no failure",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-iosxe/iosxe-ospfv3/2026-10-28T15:00:10.827789+00:00",
+          "test_type": "LIVE"
         },
         "config_validation": {
-          "detail": "Actual network-config validation=BLOCKED; failing checks=['PLATFORM_CAPABILITY']; external inputs are OFFLINE_FIXTURE only.",
-          "outcome": "FAIL",
-          "reason": "CONFIG_VALIDATION_FAILED",
+          "detail": "Actual network-config validation=PASS; failing checks=[]; external inputs are OFFLINE_FIXTURE only.",
+          "outcome": "PASS",
+          "reason": "",
           "reference": "",
           "test_type": "FIXTURE"
         },
         "device_builder_ui": {
-          "detail": "Real authoring API refused the feature (CollectionMutationError).",
-          "outcome": "FAIL",
-          "reason": "UI_ABSENT",
+          "detail": "Real Device Builder mutation API accepted the feature.",
+          "outcome": "PASS",
+          "reason": "",
           "reference": "",
           "test_type": "FIXTURE"
         },
         "executor": {
-          "detail": "Real executor.assess on fixture: action=REFUSE; exact inverse present=True; restorable=False; no connection/apply invoked.",
-          "outcome": "FAIL",
-          "reason": "EXECUTOR_REFUSED",
+          "detail": "Real executor.assess on fixture: action=APPLY; exact inverse present=True; restorable=True; no connection/apply invoked.",
+          "outcome": "PASS",
+          "reason": "",
           "reference": "",
           "test_type": "FIXTURE"
         },
@@ -13118,46 +13117,46 @@
           "test_type": "FIXTURE"
         },
         "live_post_write_validation": {
-          "detail": "Not attempted: NMAS prerequisite layer(s) failed their deliberate probe (renderer=RENDERER_ABSENT, candidate_generation=RENDERER_ABSENT, executor=EXECUTOR_REFUSED). First blocker renderer: Authoritative renderer differential: 0 target line(s), 1 refusal marker(s); sha256=a9a016b593e3809a5a11ecf7d16d380ea5df3212bd9f6c89387018cba06a767d. No device was contacted for this stage.",
-          "outcome": "BLOCKED",
-          "reason": "RENDERER_ABSENT",
-          "reference": "gate:cisco_c8000v_iosxe/routing.OSPFV3@b52572f8c541#a0b0a8f3a3aa1a65",
-          "test_type": "STATIC"
+          "detail": "isolated IOS XE routing.OSPFV3 against an FRR 8.4.4 peer through the registered IosXeExecutor (Netmiko configuration mode, captured running-config inverse): NMAS rendered [routing_ospf] ipv6 router ospf 44 / router-id 198.18.44.1; [routing_binding] interface GigabitEthernet2 / ipv6 ospf 44 area 0 / ipv6 ospf cost 10 / ipv6 ospf network point-to-point || pristine router: preflight=['routing_ospf=APPLY/True/-', 'routing_binding=APPLY/True/-']; operator postcheck pass=True []; live running-config import recovered intent=True; DUT OSPFV3 adjacency FULL on GigabitEthernet2=True; DUT installed 2001:db8:99::/64 from OSPF=True; peer sees the DUT FULL=True; unrelated process configuration preserved=True; adjacency/session and learned 2001:db8:99::/64 withdrawn after compensation=True (after 2 s); compensation=['COMPENSATED', 'COMPENSATED']; running configuration identical to pre-apply capture=True; unrelated objects preserved=True; lab baseline restored=True; no failure || configured router: preflight=['routing_ospf=APPLY/True/-', 'routing_binding=APPLY/True/-']; operator postcheck pass=True []; live running-config import recovered intent=True; DUT OSPFV3 adjacency FULL on GigabitEthernet2=True; DUT installed 2001:db8:99::/64 from OSPF=True; peer sees the DUT FULL=True; unrelated process configuration preserved=True; adjacency/session and learned 2001:db8:99::/64 withdrawn after compensation=True (after 1 s); compensation=['COMPENSATED', 'COMPENSATED']; running configuration identical to pre-apply capture=True; unrelated objects preserved=True; lab baseline restored=True; no failure",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-iosxe/iosxe-ospfv3/2026-10-28T15:00:10.827789+00:00",
+          "test_type": "LIVE"
         },
         "live_read": {
-          "detail": "Not attempted: NMAS prerequisite layer(s) failed their deliberate probe (renderer=RENDERER_ABSENT, candidate_generation=RENDERER_ABSENT, executor=EXECUTOR_REFUSED). First blocker renderer: Authoritative renderer differential: 0 target line(s), 1 refusal marker(s); sha256=a9a016b593e3809a5a11ecf7d16d380ea5df3212bd9f6c89387018cba06a767d. No device was contacted for this stage.",
-          "outcome": "BLOCKED",
-          "reason": "RENDERER_ABSENT",
-          "reference": "gate:cisco_c8000v_iosxe/routing.OSPFV3@b52572f8c541#a0b0a8f3a3aa1a65",
-          "test_type": "STATIC"
+          "detail": "isolated IOS XE routing.OSPFV3 against an FRR 8.4.4 peer through the registered IosXeExecutor (Netmiko configuration mode, captured running-config inverse): NMAS rendered [routing_ospf] ipv6 router ospf 44 / router-id 198.18.44.1; [routing_binding] interface GigabitEthernet2 / ipv6 ospf 44 area 0 / ipv6 ospf cost 10 / ipv6 ospf network point-to-point || pristine router: preflight=['routing_ospf=APPLY/True/-', 'routing_binding=APPLY/True/-']; operator postcheck pass=True []; live running-config import recovered intent=True; DUT OSPFV3 adjacency FULL on GigabitEthernet2=True; DUT installed 2001:db8:99::/64 from OSPF=True; peer sees the DUT FULL=True; unrelated process configuration preserved=True; adjacency/session and learned 2001:db8:99::/64 withdrawn after compensation=True (after 2 s); compensation=['COMPENSATED', 'COMPENSATED']; running configuration identical to pre-apply capture=True; unrelated objects preserved=True; lab baseline restored=True; no failure || configured router: preflight=['routing_ospf=APPLY/True/-', 'routing_binding=APPLY/True/-']; operator postcheck pass=True []; live running-config import recovered intent=True; DUT OSPFV3 adjacency FULL on GigabitEthernet2=True; DUT installed 2001:db8:99::/64 from OSPF=True; peer sees the DUT FULL=True; unrelated process configuration preserved=True; adjacency/session and learned 2001:db8:99::/64 withdrawn after compensation=True (after 1 s); compensation=['COMPENSATED', 'COMPENSATED']; running configuration identical to pre-apply capture=True; unrelated objects preserved=True; lab baseline restored=True; no failure",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-iosxe/iosxe-ospfv3/2026-10-28T15:00:10.827789+00:00",
+          "test_type": "LIVE"
         },
         "live_write": {
-          "detail": "Not attempted: NMAS prerequisite layer(s) failed their deliberate probe (renderer=RENDERER_ABSENT, candidate_generation=RENDERER_ABSENT, executor=EXECUTOR_REFUSED). First blocker renderer: Authoritative renderer differential: 0 target line(s), 1 refusal marker(s); sha256=a9a016b593e3809a5a11ecf7d16d380ea5df3212bd9f6c89387018cba06a767d. No device was contacted for this stage.",
-          "outcome": "BLOCKED",
-          "reason": "RENDERER_ABSENT",
-          "reference": "gate:cisco_c8000v_iosxe/routing.OSPFV3@b52572f8c541#a0b0a8f3a3aa1a65",
-          "test_type": "STATIC"
+          "detail": "isolated IOS XE routing.OSPFV3 against an FRR 8.4.4 peer through the registered IosXeExecutor (Netmiko configuration mode, captured running-config inverse): NMAS rendered [routing_ospf] ipv6 router ospf 44 / router-id 198.18.44.1; [routing_binding] interface GigabitEthernet2 / ipv6 ospf 44 area 0 / ipv6 ospf cost 10 / ipv6 ospf network point-to-point || pristine router: preflight=['routing_ospf=APPLY/True/-', 'routing_binding=APPLY/True/-']; operator postcheck pass=True []; live running-config import recovered intent=True; DUT OSPFV3 adjacency FULL on GigabitEthernet2=True; DUT installed 2001:db8:99::/64 from OSPF=True; peer sees the DUT FULL=True; unrelated process configuration preserved=True; adjacency/session and learned 2001:db8:99::/64 withdrawn after compensation=True (after 2 s); compensation=['COMPENSATED', 'COMPENSATED']; running configuration identical to pre-apply capture=True; unrelated objects preserved=True; lab baseline restored=True; no failure || configured router: preflight=['routing_ospf=APPLY/True/-', 'routing_binding=APPLY/True/-']; operator postcheck pass=True []; live running-config import recovered intent=True; DUT OSPFV3 adjacency FULL on GigabitEthernet2=True; DUT installed 2001:db8:99::/64 from OSPF=True; peer sees the DUT FULL=True; unrelated process configuration preserved=True; adjacency/session and learned 2001:db8:99::/64 withdrawn after compensation=True (after 1 s); compensation=['COMPENSATED', 'COMPENSATED']; running configuration identical to pre-apply capture=True; unrelated objects preserved=True; lab baseline restored=True; no failure",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-iosxe/iosxe-ospfv3/2026-10-28T15:00:10.827789+00:00",
+          "test_type": "LIVE"
         },
         "parser_import": {
-          "detail": "Real iosxe-1.0 parser executed; target semantic match=False; unmanaged blocks=8.",
-          "outcome": "FAIL",
-          "reason": "PARSER_ABSENT",
-          "reference": "",
-          "test_type": "FIXTURE"
+          "detail": "isolated IOS XE routing.OSPFV3 against an FRR 8.4.4 peer through the registered IosXeExecutor (Netmiko configuration mode, captured running-config inverse): NMAS rendered [routing_ospf] ipv6 router ospf 44 / router-id 198.18.44.1; [routing_binding] interface GigabitEthernet2 / ipv6 ospf 44 area 0 / ipv6 ospf cost 10 / ipv6 ospf network point-to-point || pristine router: preflight=['routing_ospf=APPLY/True/-', 'routing_binding=APPLY/True/-']; operator postcheck pass=True []; live running-config import recovered intent=True; DUT OSPFV3 adjacency FULL on GigabitEthernet2=True; DUT installed 2001:db8:99::/64 from OSPF=True; peer sees the DUT FULL=True; unrelated process configuration preserved=True; adjacency/session and learned 2001:db8:99::/64 withdrawn after compensation=True (after 2 s); compensation=['COMPENSATED', 'COMPENSATED']; running configuration identical to pre-apply capture=True; unrelated objects preserved=True; lab baseline restored=True; no failure || configured router: preflight=['routing_ospf=APPLY/True/-', 'routing_binding=APPLY/True/-']; operator postcheck pass=True []; live running-config import recovered intent=True; DUT OSPFV3 adjacency FULL on GigabitEthernet2=True; DUT installed 2001:db8:99::/64 from OSPF=True; peer sees the DUT FULL=True; unrelated process configuration preserved=True; adjacency/session and learned 2001:db8:99::/64 withdrawn after compensation=True (after 1 s); compensation=['COMPENSATED', 'COMPENSATED']; running configuration identical to pre-apply capture=True; unrelated objects preserved=True; lab baseline restored=True; no failure",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-iosxe/iosxe-ospfv3/2026-10-28T15:00:10.827789+00:00",
+          "test_type": "LIVE"
         },
         "renderer": {
-          "detail": "Authoritative renderer differential: 0 target line(s), 1 refusal marker(s); sha256=a9a016b593e3809a5a11ecf7d16d380ea5df3212bd9f6c89387018cba06a767d.",
-          "outcome": "FAIL",
-          "reason": "RENDERER_ABSENT",
+          "detail": "Authoritative renderer differential: 5 target line(s), 0 refusal marker(s); sha256=8720cac491d11e471e619a8a1094a14e944cd9ea442aa8f219e69a1c4f6404bc.",
+          "outcome": "PASS",
+          "reason": "",
           "reference": "",
           "test_type": "FIXTURE"
         },
         "runtime_validation": {
-          "detail": "Not attempted: NMAS prerequisite layer(s) failed their deliberate probe (renderer=RENDERER_ABSENT, candidate_generation=RENDERER_ABSENT, executor=EXECUTOR_REFUSED). First blocker renderer: Authoritative renderer differential: 0 target line(s), 1 refusal marker(s); sha256=a9a016b593e3809a5a11ecf7d16d380ea5df3212bd9f6c89387018cba06a767d. No device was contacted for this stage.",
-          "outcome": "BLOCKED",
-          "reason": "RENDERER_ABSENT",
-          "reference": "gate:cisco_c8000v_iosxe/routing.OSPFV3@b52572f8c541#a0b0a8f3a3aa1a65",
-          "test_type": "STATIC"
+          "detail": "isolated IOS XE routing.OSPFV3 against an FRR 8.4.4 peer through the registered IosXeExecutor (Netmiko configuration mode, captured running-config inverse): NMAS rendered [routing_ospf] ipv6 router ospf 44 / router-id 198.18.44.1; [routing_binding] interface GigabitEthernet2 / ipv6 ospf 44 area 0 / ipv6 ospf cost 10 / ipv6 ospf network point-to-point || pristine router: preflight=['routing_ospf=APPLY/True/-', 'routing_binding=APPLY/True/-']; operator postcheck pass=True []; live running-config import recovered intent=True; DUT OSPFV3 adjacency FULL on GigabitEthernet2=True; DUT installed 2001:db8:99::/64 from OSPF=True; peer sees the DUT FULL=True; unrelated process configuration preserved=True; adjacency/session and learned 2001:db8:99::/64 withdrawn after compensation=True (after 2 s); compensation=['COMPENSATED', 'COMPENSATED']; running configuration identical to pre-apply capture=True; unrelated objects preserved=True; lab baseline restored=True; no failure || configured router: preflight=['routing_ospf=APPLY/True/-', 'routing_binding=APPLY/True/-']; operator postcheck pass=True []; live running-config import recovered intent=True; DUT OSPFV3 adjacency FULL on GigabitEthernet2=True; DUT installed 2001:db8:99::/64 from OSPF=True; peer sees the DUT FULL=True; unrelated process configuration preserved=True; adjacency/session and learned 2001:db8:99::/64 withdrawn after compensation=True (after 1 s); compensation=['COMPENSATED', 'COMPENSATED']; running configuration identical to pre-apply capture=True; unrelated objects preserved=True; lab baseline restored=True; no failure",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-iosxe/iosxe-ospfv3/2026-10-28T15:00:10.827789+00:00",
+          "test_type": "LIVE"
         },
         "semantic_model": {
           "detail": "Canonical fixture resolves the feature-specific path routing.ospf.ospf_0000000000000003.router_id.",
@@ -13167,22 +13166,16 @@
           "test_type": "FIXTURE"
         }
       },
-      "renderer": "FAIL",
-      "repository_head": "b52572f8c541241e01d7898165a3ae94810cd2f5",
-      "runtime_test": "BLOCKED",
-      "runtime_version": "not contacted (prerequisite gate); platform runtime last observed: vrnetlab/cisco_c8000v:17.06.01a",
+      "renderer": "PASS",
+      "repository_head": "d70c256781f30c70d75eab6c16a4922866f198f7",
+      "runtime_test": "PASS",
+      "runtime_version": "vrnetlab/cisco_c8000v:17.06.01a (IOS XE 17.06.01a) / Linux peer running FRRouting 8.4.4",
       "semantic": "PASS",
-      "status": "UNSUPPORTED",
-      "strongest_test_type": "FIXTURE",
-      "timestamp": "2026-10-05T06:36:58.424373+00:00",
-      "unsupported_reasons": [
-        "CONFIG_VALIDATION_FAILED",
-        "EXECUTOR_REFUSED",
-        "PARSER_ABSENT",
-        "RENDERER_ABSENT",
-        "UI_ABSENT"
-      ],
-      "validator": "FAIL"
+      "status": "SUPPORTED",
+      "strongest_test_type": "LIVE",
+      "timestamp": "2026-10-28T15:00:10.869716+00:00",
+      "unsupported_reasons": [],
+      "validator": "PASS"
     },
     {
       "assessment_basis": "PREREQUISITE_GATE",
@@ -13335,38 +13328,40 @@
       "validator": "FAIL"
     },
     {
-      "assessment_basis": "PREREQUISITE_GATE",
+      "assessment_basis": "RUNTIME_INVESTIGATION",
       "assessment_complete": true,
-      "assessment_id": 1326,
+      "assessment_id": 1381,
       "automated_tests": "PASS",
       "candidate": "PASS",
-      "compensation": "BLOCKED",
+      "capability_status": "SUPPORTED",
+      "compensation": "PASS",
       "device_builder": "PASS",
       "evidence_ids": [
-        10616,
-        10617,
-        10618,
-        10619,
-        10620,
-        10621,
-        10622,
-        10623,
-        10624,
-        10625,
-        10626
+        11221,
+        11222,
+        11223,
+        11224,
+        11225,
+        11226,
+        11227,
+        11228,
+        11229,
+        11230,
+        11231
       ],
       "evidence_references": [
-        "gate:cisco_c8000v_iosxe/routing.RIPV2@b52572f8c541#a205219c1aa9f243"
+        "live:nmas-cap-iosxe/iosxe-ripv2/2026-10-28T15:07:53.265108+00:00"
       ],
-      "executor": "FAIL",
+      "executor": "PASS",
+      "feasibility": "PROVEN",
       "feature": "routing.RIPV2",
       "field_validation": "PASS",
-      "final_status": "UNSUPPORTED",
-      "live_read": "BLOCKED",
-      "live_write": "BLOCKED",
-      "parser": "FAIL",
+      "final_status": "SUPPORTED",
+      "live_read": "PASS",
+      "live_write": "PASS",
+      "parser": "PASS",
       "platform": "cisco_c8000v_iosxe",
-      "postcheck": "BLOCKED",
+      "postcheck": "PASS",
       "probes": {
         "automated_tests": {
           "detail": "Repeated renderer determinism=True; feature-specific valid/invalid field regression=PASS.",
@@ -13376,18 +13371,18 @@
           "test_type": "FIXTURE"
         },
         "candidate_generation": {
-          "detail": "Real candidate_renderer.render ran; 667 chars; target-rendered=PASS.",
+          "detail": "Real candidate_renderer.render ran; 664 chars; target-rendered=PASS.",
           "outcome": "PASS",
           "reason": "",
           "reference": "",
           "test_type": "FIXTURE"
         },
         "compensation": {
-          "detail": "Not attempted: NMAS prerequisite layer(s) failed their deliberate probe (executor=EXECUTOR_REFUSED). First blocker executor: Real executor.assess on fixture: action=REFUSE; exact inverse present=True; restorable=False; no connection/apply invoked. No device was contacted for this stage.",
-          "outcome": "BLOCKED",
-          "reason": "EXECUTOR_REFUSED",
-          "reference": "gate:cisco_c8000v_iosxe/routing.RIPV2@b52572f8c541#a205219c1aa9f243",
-          "test_type": "STATIC"
+          "detail": "isolated IOS XE routing.RIPV2 against an FRR 8.4.4 peer through the registered IosXeExecutor (Netmiko configuration mode, captured running-config inverse): NMAS rendered [routing_rip] router rip / version 2 / network 198.18.0.0 || pristine router: preflight=['routing_rip=APPLY/True/-']; operator postcheck pass=True []; live running-config import recovered intent=True; DUT installed 192.0.2.0/24 from RIP=True; peer installed the DUT's 198.18.0.129/32 from RIP=True; unrelated process configuration preserved=True; adjacency/session and learned 192.0.2.0/24 withdrawn after compensation=True (after 180 s); compensation=['COMPENSATED']; running configuration identical to pre-apply capture=True; unrelated objects preserved=True; lab baseline restored=True; no failure || configured router: preflight=['routing_rip=APPLY/True/-']; operator postcheck pass=True []; live running-config import recovered intent=True; DUT installed 192.0.2.0/24 from RIP=True; peer installed the DUT's 198.18.0.129/32 from RIP=True; unrelated process configuration preserved=True; adjacency/session and learned 192.0.2.0/24 withdrawn after compensation=True (after 184 s); compensation=['COMPENSATED']; running configuration identical to pre-apply capture=True; unrelated objects preserved=True; lab baseline restored=True; no failure",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-iosxe/iosxe-ripv2/2026-10-28T15:07:53.265108+00:00",
+          "test_type": "LIVE"
         },
         "config_validation": {
           "detail": "Actual network-config validation=PASS; failing checks=[]; external inputs are OFFLINE_FIXTURE only.",
@@ -13404,9 +13399,9 @@
           "test_type": "FIXTURE"
         },
         "executor": {
-          "detail": "Real executor.assess on fixture: action=REFUSE; exact inverse present=True; restorable=False; no connection/apply invoked.",
-          "outcome": "FAIL",
-          "reason": "EXECUTOR_REFUSED",
+          "detail": "Real executor.assess on fixture: action=APPLY; exact inverse present=True; restorable=True; no connection/apply invoked.",
+          "outcome": "PASS",
+          "reason": "",
           "reference": "",
           "test_type": "FIXTURE"
         },
@@ -13418,46 +13413,46 @@
           "test_type": "FIXTURE"
         },
         "live_post_write_validation": {
-          "detail": "Not attempted: NMAS prerequisite layer(s) failed their deliberate probe (executor=EXECUTOR_REFUSED). First blocker executor: Real executor.assess on fixture: action=REFUSE; exact inverse present=True; restorable=False; no connection/apply invoked. No device was contacted for this stage.",
-          "outcome": "BLOCKED",
-          "reason": "EXECUTOR_REFUSED",
-          "reference": "gate:cisco_c8000v_iosxe/routing.RIPV2@b52572f8c541#a205219c1aa9f243",
-          "test_type": "STATIC"
+          "detail": "isolated IOS XE routing.RIPV2 against an FRR 8.4.4 peer through the registered IosXeExecutor (Netmiko configuration mode, captured running-config inverse): NMAS rendered [routing_rip] router rip / version 2 / network 198.18.0.0 || pristine router: preflight=['routing_rip=APPLY/True/-']; operator postcheck pass=True []; live running-config import recovered intent=True; DUT installed 192.0.2.0/24 from RIP=True; peer installed the DUT's 198.18.0.129/32 from RIP=True; unrelated process configuration preserved=True; adjacency/session and learned 192.0.2.0/24 withdrawn after compensation=True (after 180 s); compensation=['COMPENSATED']; running configuration identical to pre-apply capture=True; unrelated objects preserved=True; lab baseline restored=True; no failure || configured router: preflight=['routing_rip=APPLY/True/-']; operator postcheck pass=True []; live running-config import recovered intent=True; DUT installed 192.0.2.0/24 from RIP=True; peer installed the DUT's 198.18.0.129/32 from RIP=True; unrelated process configuration preserved=True; adjacency/session and learned 192.0.2.0/24 withdrawn after compensation=True (after 184 s); compensation=['COMPENSATED']; running configuration identical to pre-apply capture=True; unrelated objects preserved=True; lab baseline restored=True; no failure",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-iosxe/iosxe-ripv2/2026-10-28T15:07:53.265108+00:00",
+          "test_type": "LIVE"
         },
         "live_read": {
-          "detail": "Not attempted: NMAS prerequisite layer(s) failed their deliberate probe (executor=EXECUTOR_REFUSED). First blocker executor: Real executor.assess on fixture: action=REFUSE; exact inverse present=True; restorable=False; no connection/apply invoked. No device was contacted for this stage.",
-          "outcome": "BLOCKED",
-          "reason": "EXECUTOR_REFUSED",
-          "reference": "gate:cisco_c8000v_iosxe/routing.RIPV2@b52572f8c541#a205219c1aa9f243",
-          "test_type": "STATIC"
+          "detail": "isolated IOS XE routing.RIPV2 against an FRR 8.4.4 peer through the registered IosXeExecutor (Netmiko configuration mode, captured running-config inverse): NMAS rendered [routing_rip] router rip / version 2 / network 198.18.0.0 || pristine router: preflight=['routing_rip=APPLY/True/-']; operator postcheck pass=True []; live running-config import recovered intent=True; DUT installed 192.0.2.0/24 from RIP=True; peer installed the DUT's 198.18.0.129/32 from RIP=True; unrelated process configuration preserved=True; adjacency/session and learned 192.0.2.0/24 withdrawn after compensation=True (after 180 s); compensation=['COMPENSATED']; running configuration identical to pre-apply capture=True; unrelated objects preserved=True; lab baseline restored=True; no failure || configured router: preflight=['routing_rip=APPLY/True/-']; operator postcheck pass=True []; live running-config import recovered intent=True; DUT installed 192.0.2.0/24 from RIP=True; peer installed the DUT's 198.18.0.129/32 from RIP=True; unrelated process configuration preserved=True; adjacency/session and learned 192.0.2.0/24 withdrawn after compensation=True (after 184 s); compensation=['COMPENSATED']; running configuration identical to pre-apply capture=True; unrelated objects preserved=True; lab baseline restored=True; no failure",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-iosxe/iosxe-ripv2/2026-10-28T15:07:53.265108+00:00",
+          "test_type": "LIVE"
         },
         "live_write": {
-          "detail": "Not attempted: NMAS prerequisite layer(s) failed their deliberate probe (executor=EXECUTOR_REFUSED). First blocker executor: Real executor.assess on fixture: action=REFUSE; exact inverse present=True; restorable=False; no connection/apply invoked. No device was contacted for this stage.",
-          "outcome": "BLOCKED",
-          "reason": "EXECUTOR_REFUSED",
-          "reference": "gate:cisco_c8000v_iosxe/routing.RIPV2@b52572f8c541#a205219c1aa9f243",
-          "test_type": "STATIC"
+          "detail": "isolated IOS XE routing.RIPV2 against an FRR 8.4.4 peer through the registered IosXeExecutor (Netmiko configuration mode, captured running-config inverse): NMAS rendered [routing_rip] router rip / version 2 / network 198.18.0.0 || pristine router: preflight=['routing_rip=APPLY/True/-']; operator postcheck pass=True []; live running-config import recovered intent=True; DUT installed 192.0.2.0/24 from RIP=True; peer installed the DUT's 198.18.0.129/32 from RIP=True; unrelated process configuration preserved=True; adjacency/session and learned 192.0.2.0/24 withdrawn after compensation=True (after 180 s); compensation=['COMPENSATED']; running configuration identical to pre-apply capture=True; unrelated objects preserved=True; lab baseline restored=True; no failure || configured router: preflight=['routing_rip=APPLY/True/-']; operator postcheck pass=True []; live running-config import recovered intent=True; DUT installed 192.0.2.0/24 from RIP=True; peer installed the DUT's 198.18.0.129/32 from RIP=True; unrelated process configuration preserved=True; adjacency/session and learned 192.0.2.0/24 withdrawn after compensation=True (after 184 s); compensation=['COMPENSATED']; running configuration identical to pre-apply capture=True; unrelated objects preserved=True; lab baseline restored=True; no failure",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-iosxe/iosxe-ripv2/2026-10-28T15:07:53.265108+00:00",
+          "test_type": "LIVE"
         },
         "parser_import": {
-          "detail": "Real iosxe-1.0 parser executed; target semantic match=False; unmanaged blocks=8.",
-          "outcome": "FAIL",
-          "reason": "PARSER_ABSENT",
-          "reference": "",
-          "test_type": "FIXTURE"
+          "detail": "isolated IOS XE routing.RIPV2 against an FRR 8.4.4 peer through the registered IosXeExecutor (Netmiko configuration mode, captured running-config inverse): NMAS rendered [routing_rip] router rip / version 2 / network 198.18.0.0 || pristine router: preflight=['routing_rip=APPLY/True/-']; operator postcheck pass=True []; live running-config import recovered intent=True; DUT installed 192.0.2.0/24 from RIP=True; peer installed the DUT's 198.18.0.129/32 from RIP=True; unrelated process configuration preserved=True; adjacency/session and learned 192.0.2.0/24 withdrawn after compensation=True (after 180 s); compensation=['COMPENSATED']; running configuration identical to pre-apply capture=True; unrelated objects preserved=True; lab baseline restored=True; no failure || configured router: preflight=['routing_rip=APPLY/True/-']; operator postcheck pass=True []; live running-config import recovered intent=True; DUT installed 192.0.2.0/24 from RIP=True; peer installed the DUT's 198.18.0.129/32 from RIP=True; unrelated process configuration preserved=True; adjacency/session and learned 192.0.2.0/24 withdrawn after compensation=True (after 184 s); compensation=['COMPENSATED']; running configuration identical to pre-apply capture=True; unrelated objects preserved=True; lab baseline restored=True; no failure",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-iosxe/iosxe-ripv2/2026-10-28T15:07:53.265108+00:00",
+          "test_type": "LIVE"
         },
         "renderer": {
-          "detail": "Authoritative renderer differential: 3 target line(s), 0 refusal marker(s); sha256=8b4446bb25b34e481452efac7debfefc4ec7711665da507903d68f736f6bb478.",
+          "detail": "Authoritative renderer differential: 3 target line(s), 0 refusal marker(s); sha256=e25fe790f1e7e36fff6fb9f6251bb3d3a480e6f88b38c2ee0294867341669066.",
           "outcome": "PASS",
           "reason": "",
           "reference": "",
           "test_type": "FIXTURE"
         },
         "runtime_validation": {
-          "detail": "Not attempted: NMAS prerequisite layer(s) failed their deliberate probe (executor=EXECUTOR_REFUSED). First blocker executor: Real executor.assess on fixture: action=REFUSE; exact inverse present=True; restorable=False; no connection/apply invoked. No device was contacted for this stage.",
-          "outcome": "BLOCKED",
-          "reason": "EXECUTOR_REFUSED",
-          "reference": "gate:cisco_c8000v_iosxe/routing.RIPV2@b52572f8c541#a205219c1aa9f243",
-          "test_type": "STATIC"
+          "detail": "isolated IOS XE routing.RIPV2 against an FRR 8.4.4 peer through the registered IosXeExecutor (Netmiko configuration mode, captured running-config inverse): NMAS rendered [routing_rip] router rip / version 2 / network 198.18.0.0 || pristine router: preflight=['routing_rip=APPLY/True/-']; operator postcheck pass=True []; live running-config import recovered intent=True; DUT installed 192.0.2.0/24 from RIP=True; peer installed the DUT's 198.18.0.129/32 from RIP=True; unrelated process configuration preserved=True; adjacency/session and learned 192.0.2.0/24 withdrawn after compensation=True (after 180 s); compensation=['COMPENSATED']; running configuration identical to pre-apply capture=True; unrelated objects preserved=True; lab baseline restored=True; no failure || configured router: preflight=['routing_rip=APPLY/True/-']; operator postcheck pass=True []; live running-config import recovered intent=True; DUT installed 192.0.2.0/24 from RIP=True; peer installed the DUT's 198.18.0.129/32 from RIP=True; unrelated process configuration preserved=True; adjacency/session and learned 192.0.2.0/24 withdrawn after compensation=True (after 184 s); compensation=['COMPENSATED']; running configuration identical to pre-apply capture=True; unrelated objects preserved=True; lab baseline restored=True; no failure",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-iosxe/iosxe-ripv2/2026-10-28T15:07:53.265108+00:00",
+          "test_type": "LIVE"
         },
         "semantic_model": {
           "detail": "Canonical fixture resolves the feature-specific path routing.rip.rip_0000000000000003.address_family.",
@@ -13468,17 +13463,14 @@
         }
       },
       "renderer": "PASS",
-      "repository_head": "b52572f8c541241e01d7898165a3ae94810cd2f5",
-      "runtime_test": "BLOCKED",
-      "runtime_version": "not contacted (prerequisite gate); platform runtime last observed: vrnetlab/cisco_c8000v:17.06.01a",
+      "repository_head": "d70c256781f30c70d75eab6c16a4922866f198f7",
+      "runtime_test": "PASS",
+      "runtime_version": "vrnetlab/cisco_c8000v:17.06.01a (IOS XE 17.06.01a) / Linux peer running FRRouting 8.4.4",
       "semantic": "PASS",
-      "status": "UNSUPPORTED",
-      "strongest_test_type": "FIXTURE",
-      "timestamp": "2026-10-05T06:36:58.124661+00:00",
-      "unsupported_reasons": [
-        "EXECUTOR_REFUSED",
-        "PARSER_ABSENT"
-      ],
+      "status": "SUPPORTED",
+      "strongest_test_type": "LIVE",
+      "timestamp": "2026-10-28T15:07:53.284602+00:00",
+      "unsupported_reasons": [],
       "validator": "PASS"
     },
     {
@@ -59056,11 +59048,11 @@
     "cisco_c8000v_iosxe": {
       "assessed": 66,
       "fixture_tested": 66,
-      "live_tested": 6,
-      "static_tested": 60,
-      "supported": 5,
+      "live_tested": 11,
+      "static_tested": 55,
+      "supported": 10,
       "total": 66,
-      "unsupported": 61
+      "unsupported": 56
     },
     "cisco_iosxr": {
       "assessed": 66,
@@ -59101,24 +59093,24 @@
   },
   "reason_counts": {
     "COMPENSATION_ABSENT": 68,
-    "CONFIG_VALIDATION_FAILED": 294,
+    "CONFIG_VALIDATION_FAILED": 293,
     "EXECUTOR_ABSENT": 132,
-    "EXECUTOR_REFUSED": 199,
+    "EXECUTOR_REFUSED": 194,
     "FIELD_VALIDATION_FAILED": 65,
     "FUNCTIONAL_TEST_FAILED": 67,
     "LIVE_READ_ABSENT": 2,
-    "PARSER_ABSENT": 263,
+    "PARSER_ABSENT": 258,
     "PARSER_FAILED": 38,
     "PLATFORM_DOES_NOT_SUPPORT": 3,
     "POSTCHECK_ABSENT": 69,
-    "RENDERER_ABSENT": 293,
+    "RENDERER_ABSENT": 292,
     "RUNTIME_IMAGE_UNAVAILABLE": 66,
-    "UI_ABSENT": 288
+    "UI_ABSENT": 287
   },
   "remaining_cells": [],
   "schema_version": 2,
-  "supported": 63,
+  "supported": 68,
   "total": 396,
   "unassessed": 0,
-  "unsupported": 333
+  "unsupported": 328
 }

@@ -22,8 +22,9 @@ SR Linux -- apply evidence: an isolated SR Linux 24.10.7 node accepts the render
          captured by gNMI Get and restoration is proven by an identical configuration tree. Other object types have no
          verified list-key model and are refused.
 IOS XE -- apply evidence: an isolated Catalyst 8000V (IOS XE 17.06.01a) accepts the rendered lines in one Netmiko
-         configuration-mode session; interfaces, addresses and static routes are inverted against the running
-         configuration captured before apply and restoration is proven by an identical running configuration.
+         configuration-mode session; interfaces, addresses, static routes and the OSPF, RIP and BGP process changes are
+         inverted against the running configuration captured before apply (address-family sections inverted in their own
+         mode) and restoration is proven by an identical running configuration.
 """
 
 from __future__ import annotations
@@ -59,8 +60,10 @@ LINUX_COMPENSABLE = frozenset({"interface", "address", "static_route", "nat_rule
 SRLINUX_APPLY = SRLINUX_COMPENSABLE = frozenset({"interface", "address", "static_route", "routing_ospf", "routing_binding",
                                                  "routing_bgp", "bgp_neighbor", "bgp_neighbor_af", "bgp_network", "acl",
                                                  "acl_attachment", "dhcp_relay"})
-# executors.iosxe.OBJECT_TYPES: compensated from the captured running configuration.
-IOSXE_APPLY = IOSXE_COMPENSABLE = frozenset({"interface", "address", "static_route"})
+# executors.iosxe.OBJECT_TYPES: compensated from the captured running configuration.  The routing types (V2 Phase 9) were
+# proven on the isolated Catalyst 8000V against an FRR peer: adjacency/session, live import, exact restoration.
+IOSXE_APPLY = IOSXE_COMPENSABLE = frozenset({"interface", "address", "static_route", "routing_rip", "routing_ospf", "routing_bgp",
+                                             "routing_binding", "bgp_neighbor", "bgp_neighbor_af", "bgp_network"})
 
 _NOT_IMPLEMENTED_TYPES = {
     "device_identity": "A hostname rename changes the identity every telemetry stream is keyed by and has no verifier.",
