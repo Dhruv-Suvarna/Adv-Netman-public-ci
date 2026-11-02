@@ -405,7 +405,12 @@ def _pbr_policy(ctx, node):
     if policy is None:
         raise _missing(ctx, node)
     lines = ctx.added(dict(), dict(phase12={"policy": {"pbr": {"policies": {policy["id"]: policy}}}}))
-    return [_spec(ctx, node, "pbr_policy", lines)]
+    rows = sorted((policy.get("sequences") or {}).values(), key=lambda row: (int(row.get("sequence") or 0), row.get("id", "")))
+    facts = {"name": policy.get("name"), "family": policy.get("family"),
+             "sequences": [{"sequence": int(row.get("sequence") or 0), "source_prefix": row.get("source_prefix") or "",
+                            "destination_prefix": row.get("destination_prefix") or "", "next_hop": row.get("next_hop") or ""}
+                           for row in rows]}
+    return [_spec(ctx, node, "pbr_policy", lines, facts=facts)]
 
 
 def _pbr_attachment(ctx, node):
@@ -420,7 +425,9 @@ def _pbr_attachment(ctx, node):
         dict(interfaces=ref, phase12={"policy": {"pbr": {"policies": policies}}}),
         dict(interfaces=ref, phase12={"policy": {"pbr": {"policies": policies, "attachments": {attachment["id"]: attachment}}}}),
     )
-    return [_spec(ctx, node, "pbr_attachment", lines)]
+    facts = {"policy_name": policy.get("name"), "interface": _iface_name(ctx, attachment.get("interface_id")),
+             "direction": attachment.get("direction") or "IN"}
+    return [_spec(ctx, node, "pbr_attachment", lines, facts=facts)]
 
 
 # --- V2 Phase 4: management VRF ------------------------------------------------------------------------------------------

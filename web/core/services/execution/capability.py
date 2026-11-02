@@ -20,6 +20,8 @@ Linux -- apply evidence: the tracked R3/R4 scripts use iproute2 link/address com
          postrouting snat 1:1 host mappings, written and removed in one atomic nft transaction.  ACLs (V2 Phase 9)
          are a third: a chain per list plus family-guarded jumps from prerouting (IN) / postrouting (OUT) filter
          chains, each Configlet one atomic transaction with an inverse proven against the captured ruleset digest.
+         PBR (V2 Phase 9) is ``pbrd`` configuration on the same vtysh path: a ``pbr-map`` sequence absent before
+         apply is removed as a whole, an interface ``pbr-policy`` by its own ``no`` form, never over another policy.
 SR Linux -- apply evidence: an isolated SR Linux 24.10.7 node accepts the rendered ``set`` paths as one atomic gNMI
          CLI-origin SetRequest; interfaces, addresses and static routes are inverted against the running configuration
          captured by gNMI Get and restoration is proven by an identical configuration tree. Other object types have no
@@ -53,7 +55,8 @@ CEOS_COMPENSABLE = frozenset({"interface", "address", "static_route", *REMOVAL_T
                               "acl", "acl_attachment", "dhcp_relay", "fhrp", "routing_rip", "routing_ospf", "routing_isis",
                               "routing_bgp", "routing_binding", "bgp_neighbor", "bgp_neighbor_af", "bgp_network",
                               *MANAGEMENT_TYPES})
-_LINUX_ROUTING = ("routing_ospf", "routing_binding", "routing_rip", "routing_isis", "routing_bgp", "bgp_neighbor", "bgp_neighbor_af", "bgp_network")
+_LINUX_ROUTING = ("routing_ospf", "routing_binding", "routing_rip", "routing_isis", "routing_bgp", "bgp_neighbor", "bgp_neighbor_af", "bgp_network",
+                  "pbr_policy", "pbr_attachment")
 LINUX_APPLY = frozenset({"interface", "address", "static_route", "nat_rule", "acl", "acl_attachment", *_LINUX_ROUTING})
 LINUX_COMPENSABLE = frozenset({"interface", "address", "static_route", "nat_rule", "acl", "acl_attachment", *_LINUX_ROUTING})
 # executors.srlinux.OBJECT_TYPES: every applied type is compensated from the captured configuration tree.  The routing and

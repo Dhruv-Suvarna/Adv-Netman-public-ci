@@ -37,6 +37,7 @@ class ParsedInterface:
     dhcp_relays: list[dict] = field(default_factory=list)
     fhrp: list[dict] = field(default_factory=list)
     acl_attachments: list[dict] = field(default_factory=list)
+    pbr_attachments: list[dict] = field(default_factory=list)     # {"name", "direction"} (FRR ``pbr-policy``)
     preserved_lines: list[str] = field(default_factory=list)
 
 
@@ -71,6 +72,13 @@ class ParsedAcl:
 
 
 @dataclass
+class ParsedPbr:
+    name: str
+    family: str
+    sequences: list[dict] = field(default_factory=list)          # {"sequence", "source_prefix", "destination_prefix", "next_hop"}
+
+
+@dataclass
 class ParsedNatRule:
     family: str = "NAT44"
     mode: str = "PAT"
@@ -87,6 +95,7 @@ class ParsedConfig:
     static_routes: list[ParsedStaticRoute] = field(default_factory=list)
     routing_instances: list[ParsedRoutingInstance] = field(default_factory=list)
     acls: list[ParsedAcl] = field(default_factory=list)
+    pbr_policies: list[ParsedPbr] = field(default_factory=list)
     nat_rules: list[ParsedNatRule] = field(default_factory=list)
     unmanaged_blocks: list[UnmanagedBlock] = field(default_factory=list)
     parser_version: str = ""

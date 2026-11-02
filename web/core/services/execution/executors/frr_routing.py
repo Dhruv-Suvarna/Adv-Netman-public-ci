@@ -1,4 +1,4 @@
-"""Reusable FRR routing-operation primitives shared by OSPF, RIP/RIPng and BGP.
+"""Reusable FRR routing-operation primitives shared by OSPF, RIP/RIPng, IS-IS, BGP and PBR (``pbrd``).
 
 One strict grammar, one running-configuration reader and one inverse generator serve every FRR routing process, so a
 protocol is a table row rather than a separate executor:
@@ -15,7 +15,9 @@ protocol is a table row rather than a separate executor:
 
 Platform semantics kept explicit: FRR activates a new neighbor for IPv4 unicast by default, so an IPv4 ``activate``
 under an existing neighbor is already satisfied unless the configuration says otherwise; ``no neighbor X remote-as``
-removes the neighbor with all of its address-family leaves.
+removes the neighbor with all of its address-family leaves.  A PBR map sequence (``pbr-map NAME seq N``) is a process-like
+block: absent before apply it is removed as a whole; each of its match / set leaves is single-valued.  An interface's
+``pbr-policy`` is single-valued too, so attaching over another policy has no provable inverse.
 """
 
 from __future__ import annotations
@@ -36,6 +38,7 @@ PROCESS_SETTINGS = ("no bgp default ipv4-unicast", "no bgp ebgp-requires-policy"
 _AF = re.compile(r"^address-family (ipv4|ipv6) unicast$")
 _INTERFACE = re.compile(rf"^(?:no )?interface {_NAME}$")
 _PROCESS = re.compile(rf"^(?:no )?router (?:(ospf6?|rip|ripng)|(bgp) {_ASN}|(?P<isis>isis {_NAME}))$")
+_PBR_MAP = re.compile(rf"^(?:no )?pbr-map {_NAME} seq (?:[1-9]|[1-9]\d|[1-6]\d\d|700)$")    # FRR: seq 1-700
 _NEIGHBOR = re.compile(rf"^neighbor ({_ADDR}) (.+)$")
 
 # context -> the only leaves the Jinja feature templates and their captured-state inverses may emit there
@@ -43,27 +46,30 @@ _LEAVES = {
     "interface": re.compile(r"^(?:no )?(?:ip ospf (?:area [0-9.]+|cost \d+|network point-to-point)|"
                             rf"ipv6 ospf6 (?:area [0-9.]+|cost \d+|network point-to-point)|"
                             rf"(?:ip|ipv6) router isis {_NAME}|"
-                            r"isis (?:network point-to-point|circuit-type (?:level-1|level-2-only|level-1-2)|metric \d+|passive))$"),
+                            r"isis (?:network point-to-point|circuit-type (?:level-1|level-2-only|level-1-2)|metric \d+|passive)|"
+                            rf"pbr-policy {_NAME})$"),
     "ospf": re.compile(rf"^(?:no )?(?:ospf router-id {_IP4}|network {_PREFIX} area [0-9.]+)$"),
     "ospf6": re.compile(rf"^(?:no )?ospf6 router-id {_IP4}$"),
     "rip": re.compile(rf"^(?:no )?(?:version 2|network {_NAME}|passive-interface {_NAME})$"),
     "ripng": re.compile(rf"^(?:no )?(?:network {_NAME}|passive-interface {_NAME})$"),
     "isis": re.compile(r"^(?:no )?(?:net 49\.[0-9.]+|is-type (?:level-1|level-2-only|level-1-2)|metric-style wide)$"),
+    "pbr": re.compile(rf"^(?:no )?(?:match (?:src|dst)-ip {_PREFIX}|set nexthop {_ADDR}(?: {_NAME})?)$"),
     "bgp": re.compile(rf"^(?:{'|'.join(map(re.escape, PROCESS_SETTINGS))}|(?:no )?(?:bgp router-id {_IP4}|"
                       rf"neighbor {_ADDR} (?:remote-as {_ASN}|update-source {_NAME}|ebgp-multihop \d{{1,3}}|shutdown)))$"),
     "bgp-af": re.compile(rf"^(?:no )?(?:neighbor {_ADDR} (?:activate|next-hop-self|route-reflector-client)|"
                          rf"network {_PREFIX})$"),
 }
 # single-valued leaves: a different configured value means the Configlet REPLACES state another object depends on
-_SCALARS = ("bgp router-id ", "ospf router-id ", "ospf6 router-id ", "version ", "net ", "is-type ", "metric-style ")
+_SCALARS = ("bgp router-id ", "ospf router-id ", "ospf6 router-id ", "version ", "net ", "is-type ", "metric-style ",
+            "match src-ip ", "match dst-ip ", "set nexthop ")
 _NEIGHBOR_SCALARS = ("update-source ", "ebgp-multihop ")
-DAEMONS = {"ospf": "ospfd", "ospf6": "ospf6d", "rip": "ripd", "ripng": "ripngd", "bgp": "bgpd", "isis": "isisd"}
+DAEMONS = {"ospf": "ospfd", "ospf6": "ospf6d", "rip": "ripd", "ripng": "ripngd", "bgp": "bgpd", "isis": "isisd", "pbr": "pbrd"}
 
 
 @dataclass
 class Block:
     header: str
-    kind: str                                              # interface | ospf | ospf6 | rip | ripng | bgp
+    kind: str                                              # interface | ospf | ospf6 | rip | ripng | bgp | isis | pbr
     leaves: list[str] = field(default_factory=list)
     families: dict[str, list[str]] = field(default_factory=dict)   # "address-family ipv4 unicast" -> leaves
     sequence: list[str] = field(default_factory=list)      # the vtysh commands in Configlet order, context included
@@ -72,6 +78,8 @@ class Block:
 def _kind(header: str) -> str | None:
     if _INTERFACE.fullmatch(header):
         return "interface"
+    if _PBR_MAP.fullmatch(header):
+        return "pbr"
     found = _PROCESS.fullmatch(header)
     return (found.group(1) or found.group(2) or ("isis" if found.group("isis") else None)) if found else None
 
@@ -125,7 +133,10 @@ def commands(block: Block) -> list[str]:
 
 
 def required_daemons(blocks) -> set[str]:
-    return {"zebra", *(DAEMONS[b.kind] for b in blocks if b.kind in DAEMONS)}
+    """zebra plus the daemon of every process block; an interface ``pbr-policy`` leaf is a ``pbrd`` command."""
+    pbr_leaf = any(b.kind == "interface" and any(leaf.startswith(("pbr-policy ", "no pbr-policy ")) for leaf in b.leaves)
+                   for b in blocks)
+    return {"zebra", *(DAEMONS[b.kind] for b in blocks if b.kind in DAEMONS), *(("pbrd",) if pbr_leaf else ())}
 
 
 def tree(running_text: str) -> dict[str, dict[str, list[str]]]:

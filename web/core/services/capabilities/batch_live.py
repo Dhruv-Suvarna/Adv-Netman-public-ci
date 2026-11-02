@@ -583,6 +583,9 @@ class LiveRegistry(dict):
         from .batch_frr_acl import CELLS as FRR_ACL_CELLS, probe_frr_acl
         for key in FRR_ACL_CELLS:           # V2 Phase 9: nftables ACLs and their IN / OUT attachments
             self["ubuntu_frr", key] = lambda cell, key=key: probe_frr_acl(cell, key)
+        from .batch_frr_pbr import CELLS as FRR_PBR_CELLS, probe_frr_pbr
+        for key in FRR_PBR_CELLS:           # V2 Phase 9: pbrd policy-based routing and its IN attachments
+            self["ubuntu_frr", key] = lambda cell, key=key: probe_frr_pbr(cell, key)
         for code in ("RIPV2", "RIPNG"):
             self["ubuntu_frr", f"routing.{code}"] = lambda cell, code=code: probe_rip(cell, code)
         from .batch_srlinux import CELLS as SRLINUX_CELLS, probe_srlinux
