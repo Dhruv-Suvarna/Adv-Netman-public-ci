@@ -6,7 +6,9 @@ IPv4/IPv6 route add, normalized route readback, kernel forwarding choice and exa
 OSPF, RIP/RIPng and BGP process changes whose inverse is derived from the captured running configuration
 (``frr_routing``).  NAT44 masquerade lives in one dedicated nftables table: created atomically and deleted as a whole, or,
 when that exact NMAS-shaped table already exists, extended by the new rule and restored to the captured rule list.  A
-table of that name holding anything else is never merged into.
+table of that name holding anything else is never merged into.  Static NAT44 (V2 Phase 9) is a second dedicated table of
+the same discipline: a prerouting ``dnat`` and a postrouting ``snat`` chain whose rules pair up as 1:1 host mappings, both
+directions of a mapping always written and removed in one atomic nft transaction.
 
 SECURITY: a Configlet line is NEVER handed to a shell.  Each line must match one of a small set of STRICT patterns (the
 exact shapes the Jinja feature templates emit) and is converted into an argv list of validated tokens; anything else
@@ -99,12 +101,77 @@ _NAT_RULE = re.compile(r'^oifname "([A-Za-z0-9_.-]{1,15})" ip saddr (\d{1,3}(?:\
 _NAT_CHAIN = ("chain postrouting {", "type nat hook postrouting priority srcnat; policy accept;")
 
 
-def parse_nat_table(lines) -> dict | None:
-    """The one nftables shape the NAT feature template renders -> {"table", "rules": [(oif, source)]}, else None.
+_IPV4_HOST = r"(\d{1,3}(?:\.\d{1,3}){3})"
+_STATIC_DNAT = re.compile(r'^iifname "([A-Za-z0-9_.-]{1,15})" ip daddr ' + _IPV4_HOST + " dnat to " + _IPV4_HOST + "$")
+_STATIC_SNAT = re.compile(r'^oifname "([A-Za-z0-9_.-]{1,15})" ip saddr ' + _IPV4_HOST + " snat to " + _IPV4_HOST + "$")
+_STATIC_PRE = ("chain prerouting {", "type nat hook prerouting priority dstnat; policy accept;")
 
-    A dedicated NMAS-owned ``table ip`` with a single source-NAT postrouting chain of masquerade rules; nothing else.
+
+def parse_static_nat_table(lines) -> dict | None:
+    """The static NAT44 shape -> {"table", "kind": "static", "rules": [(oif, inside, global)]}, else None.
+
+    A dedicated NMAS-owned ``table ip`` with exactly a prerouting chain of ``dnat`` rules followed by a postrouting chain
+    of ``snat`` rules, where rule k of each chain is the two directions of one 1:1 host mapping (``nft list ruleset``
+    prints the chains in creation order).  Hosts only; an address used by two mappings is refused as ambiguous.
     """
     body = [line.strip() for line in lines if line.strip() and not line.lstrip().startswith("#")]
+    if len(body) < 10 or tuple(body[1:3]) != _STATIC_PRE or body[-2:] != ["}", "}"]:
+        return None
+    table = _NAT_TABLE.fullmatch(body[0])
+    try:
+        split = body.index("}", 3)
+    except ValueError:
+        return None
+    if not table or tuple(body[split + 1:split + 3]) != _NAT_CHAIN:
+        return None
+    dnat = [_STATIC_DNAT.fullmatch(line) for line in body[3:split]]
+    snat = [_STATIC_SNAT.fullmatch(line) for line in body[split + 3:-2]]
+    if not dnat or len(dnat) != len(snat) or not all(dnat) or not all(snat):
+        return None
+    rules = []
+    for d, s in zip(dnat, snat):
+        if (d.group(1), d.group(3), d.group(2)) != s.groups():
+            return None
+        try:
+            ipaddress.IPv4Address(s.group(2)), ipaddress.IPv4Address(s.group(3))
+        except ValueError:
+            return None
+        rules.append(s.groups())
+    if len({r[1] for r in rules}) != len(rules) or len({r[2] for r in rules}) != len(rules) or {r[1] for r in rules} & {r[2] for r in rules}:
+        return None
+    return {"table": table.group(1), "kind": "static", "rules": rules}
+
+
+def static_nat_statement(nat: dict) -> str:
+    """The whole static table in one atomic nft transaction (validated tokens only)."""
+    pre = "".join(f'  iifname "{oif}" ip daddr {glob} dnat to {inside}\n' for oif, inside, glob in nat["rules"])
+    post = "".join(f'  oifname "{oif}" ip saddr {inside} snat to {glob}\n' for oif, inside, glob in nat["rules"])
+    return (f"table ip {nat['table']} {{\n chain prerouting {{\n  type nat hook prerouting priority dstnat; policy accept;\n"
+            f"{pre} }}\n chain postrouting {{\n  type nat hook postrouting priority srcnat; policy accept;\n{post} }}\n}}")
+
+
+def static_nat_rule_commands(table: str, rules) -> str:
+    """``add rule`` commands for both directions of each mapping, for one atomic nft transaction."""
+    return "".join(f'add rule ip {table} prerouting iifname "{oif}" ip daddr {glob} dnat to {inside}\n'
+                   f'add rule ip {table} postrouting oifname "{oif}" ip saddr {inside} snat to {glob}\n'
+                   for oif, inside, glob in rules)
+
+
+def static_nat_conflict(rules, existing) -> bool:
+    """A new mapping that reuses an inside or global address already mapped differently: the result is ambiguous."""
+    used = {r[1] for r in existing} | {r[2] for r in existing}
+    return any(rule not in existing and (rule[1] in used or rule[2] in used) for rule in rules)
+
+
+def parse_nat_table(lines) -> dict | None:
+    """The NMAS nftables NAT shapes: masquerade (PAT/STATEFUL) -> {"table", "rules": [(oif, source, comment)]}, or the
+    static shape of ``parse_static_nat_table``; anything else -> None.
+
+    PAT: a dedicated NMAS-owned ``table ip`` with a single source-NAT postrouting chain of masquerade rules; nothing else.
+    """
+    body = [line.strip() for line in lines if line.strip() and not line.lstrip().startswith("#")]
+    if len(body) >= 3 and tuple(body[1:3]) == _STATIC_PRE:
+        return parse_static_nat_table(lines)
     if len(body) < 6 or tuple(body[1:3]) != _NAT_CHAIN or body[-2:] != ["}", "}"]:
         return None
     table = _NAT_TABLE.fullmatch(body[0])
@@ -136,15 +203,20 @@ def nat_rule_conflict(rules, existing) -> bool:
     return any(rule not in existing and rule[:2] == other[:2] for rule in rules for other in existing)
 
 
-def nat_table_rules(ruleset: str, table: str):
-    """Rules of ``table ip <table>`` in a listed ruleset: None when absent, False when it is not the exact NMAS shape."""
+def _nat_conflict(nat: dict, existing) -> bool:
+    return (static_nat_conflict if nat.get("kind") == "static" else nat_rule_conflict)(nat["rules"], existing)
+
+
+def nat_table_rules(ruleset: str, table: str, kind: str = ""):
+    """Rules of ``table ip <table>`` in a listed ruleset: None when absent, False when it is not the exact NMAS shape
+    of ``kind`` ("" = masquerade, "static")."""
     lines = ruleset.splitlines()
     start = next((i for i, line in enumerate(lines) if line.strip() == f"table ip {table} {{" and not line.startswith((" ", "\t"))), None)
     if start is None:
         return None
     end = next((i for i in range(start + 1, len(lines)) if lines[i].startswith("}")), None)
     owned = parse_nat_table(lines[start:end + 1]) if end is not None else None
-    return owned["rules"] if owned else False
+    return owned["rules"] if owned and owned.get("kind", "") == kind else False
 
 
 def read_nft_ruleset(container: str, timeout: float) -> str:
@@ -449,7 +521,10 @@ class LinuxExecutor(DeviceExecutor):
             return Assessment(REFUSE, False, {}, "PLATFORM_EXECUTION_UNSUPPORTED")
         ruleset = self._nft()
         state_before = {"kind": "nft_table", "table": nat["table"], "ruleset_digest": nft_digest(ruleset)}
-        existing = nat_table_rules(ruleset, nat["table"])
+        kind = nat.get("kind", "")
+        existing = nat_table_rules(ruleset, nat["table"], kind)
+        if kind:
+            state_before["nat_kind"] = kind
         if existing is None:
             return Assessment(APPLY, True, state_before)   # the inverse is the deletion of the table this Configlet creates
         if existing is False:
@@ -457,7 +532,7 @@ class LinuxExecutor(DeviceExecutor):
             return Assessment(APPLY, False, state_before, state.COMPENSATION_NOT_PROVABLE)
         if all(rule in existing for rule in nat["rules"]):
             return Assessment("SKIP_SATISFIED", True, state_before)
-        if nat_rule_conflict(nat["rules"], existing):
+        if _nat_conflict(nat, existing):
             # the same match already translates under the other intent mode; an appended rule would never be reached
             return Assessment(APPLY, False, state_before, state.COMPENSATION_NOT_PROVABLE)
         return Assessment(APPLY, True, {**state_before, "existing_rules": len(existing)})
@@ -469,15 +544,19 @@ class LinuxExecutor(DeviceExecutor):
             return ApplyOutcome(False, "UNSUPPORTED")
         try:
             ruleset = self._nft()
-            existing = nat_table_rules(ruleset, nat["table"])
-            if existing is False or (existing and nat_rule_conflict(nat["rules"], existing)):
+            static = nat.get("kind") == "static"
+            existing = nat_table_rules(ruleset, nat["table"], nat.get("kind", ""))
+            if existing is False or (existing and _nat_conflict(nat, existing)):
                 return ApplyOutcome(False, "COMMAND_REJECTED")     # foreign or conflicting content since preflight: never merge
             if existing is None:
-                argvs = [["nft", nat_statement(nat)]]
+                argvs = [["nft", static_nat_statement(nat) if static else nat_statement(nat)]]
+            elif static:
+                # both directions of every new mapping in one atomic transaction: a half-applied 1:1 mapping never exists
+                argvs = [["nft", static_nat_rule_commands(nat["table"], [r for r in nat["rules"] if r not in existing])]]
             else:
                 argvs = [["nft", "add", "rule", "ip", nat["table"], "postrouting", *nat_rule_tokens(rule)]
                          for rule in nat["rules"] if rule not in existing]
-            self._nat_applied[spec.cfg_id] = {"digest": nft_digest(ruleset), "rules": existing}
+            self._nat_applied[spec.cfg_id] = {"digest": nft_digest(ruleset), "rules": existing, "kind": nat.get("kind", "")}
             for sent, argv in enumerate(argvs, 1):
                 if self._exec(argv) != 0:
                     return ApplyOutcome(False, "COMMAND_REJECTED", partial_effects=sent > 1, lines_sent=sent)
@@ -494,7 +573,11 @@ class LinuxExecutor(DeviceExecutor):
             if not wanted or not table or not re.fullmatch(r"[A-Za-z0-9_]{1,32}", table):
                 return CompensationOutcome("COMPENSATION_FAILED", "UNSUPPORTED")
             captured = applied.get("rules")
-            if captured:
+            if captured and applied.get("kind") == "static":
+                # both chains back to exactly the captured mappings, in one atomic transaction
+                argv = ["nft", f"flush chain ip {table} prerouting\nflush chain ip {table} postrouting\n"
+                        + static_nat_rule_commands(table, captured)]
+            elif captured:
                 # the table existed: put its chain back to exactly the captured rule list, in one atomic transaction
                 argv = ["nft", f"flush chain ip {table} postrouting\n" + "".join(
                     f"add rule ip {table} postrouting {' '.join(nat_rule_tokens(rule))}\n" for rule in captured)]

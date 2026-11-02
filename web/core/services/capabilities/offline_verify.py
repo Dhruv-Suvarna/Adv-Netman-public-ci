@@ -121,6 +121,19 @@ def _parsed_contains(parsed, feature, case):
     return False
 
 
+def ordered_added(lines: list[str], base: list[str]) -> list[str]:
+    """``lines`` minus ``base`` as a multiset, in rendered order (``Counter.elements()`` groups repeated lines, which
+    breaks any block that closes two sub-blocks with the same line, e.g. the two chains of the static NAT44 table)."""
+    remaining = Counter(base)
+    kept = []
+    for line in lines:
+        if remaining[line] > 0:
+            remaining[line] -= 1
+        else:
+            kept.append(line)
+    return kept
+
+
 def _parse(platform, lines, case):
     text = "\n".join(lines)
     if platform == "arista_ceos":
@@ -228,7 +241,7 @@ def verify_cell(platform, feature, *, head) -> CellAssessment:
         try:
             lines = _descriptors(platform, case.sections)
             base = _descriptors(platform, case.baseline)
-            added = list((Counter(lines) - Counter(base)).elements())
+            added = ordered_added(lines, base)
             target = [s for s in added if s.strip() and not s.lstrip().startswith(("!", "#"))]
             markers = [s for s in added if s.startswith(platform_drivers.UNSUPPORTED_OBJECT_MARKER)]
             ok = bool(target) and not markers

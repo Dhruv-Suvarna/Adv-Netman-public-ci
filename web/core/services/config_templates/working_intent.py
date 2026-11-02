@@ -81,7 +81,7 @@ def intent_from_sections(sections: dict, *, hostname: str) -> dict:
                  "entries": [_keep(e, service_policy_intent_service.ACE_FIELDS) for e in _ordered(acl.get("entries"))]} for acl in acls.values()]
     nat = []
     for rule in _ordered((sections.get("nat") or {}).get("rules")):
-        item = _keep(rule, ("family", "mode", "original_source"))
+        item = _keep(rule, ("family", "mode", "original_source", "translated_source"))
         if rule.get("outside_interface_id") in names:
             item["outside_interface"] = names[rule["outside_interface_id"]]
         nat.append(item)

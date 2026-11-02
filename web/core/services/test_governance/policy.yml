@@ -115,6 +115,7 @@ template_features:
   acl_ipv6: [service_policy.ACL_IPV6_STANDARD, service_policy.ACL_IPV6_EXTENDED, service_policy.ACL_ATTACH_IPV6]
   fhrp_varp: [service_policy.FHRP_VARP_IPV4, service_policy.FHRP_VARP_IPV6]
   nat_pat: [service_policy.NAT_NAT44_PAT, service_policy.NAT_NAT44_STATEFUL]
+  nat_static: [service_policy.NAT_NAT44_STATIC]
 
 # Generic / control-plane coverage groups (first match wins: path globs, then Tier-3 subsystems from ci/rules.py).
 generic_groups:

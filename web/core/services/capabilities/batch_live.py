@@ -578,6 +578,8 @@ class LiveRegistry(dict):
         from .batch_frr_nat import probe_nat
         for code in ("NAT_NAT44_PAT", "NAT_NAT44_STATEFUL"):
             self["ubuntu_frr", f"service_policy.{code}"] = lambda cell, code=code: probe_nat(cell, code)
+        from .batch_frr_nat import probe_nat_static
+        self["ubuntu_frr", "service_policy.NAT_NAT44_STATIC"] = probe_nat_static     # V2 Phase 9: 1:1 static NAT44
         for code in ("RIPV2", "RIPNG"):
             self["ubuntu_frr", f"routing.{code}"] = lambda cell, code=code: probe_rip(cell, code)
         from .batch_srlinux import CELLS as SRLINUX_CELLS, probe_srlinux

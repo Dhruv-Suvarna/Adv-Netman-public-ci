@@ -13,7 +13,8 @@ _FEATURE_TEMPLATE = {"routing.OSPFV2": "routing_ospfv2", "routing.OSPFV3": "rout
                      "routing.RIPNG": "routing_rip", "routing.BGP_IPV4": "routing_bgp", "routing.BGP_IPV6": "routing_bgp",
                      "routing.STATIC_IPV4": "routing_static_route", "routing.STATIC_IPV6": "routing_static_route",
                      "service_policy.FHRP_VARP_IPV4": "fhrp_varp", "service_policy.FHRP_VARP_IPV6": "fhrp_varp",
-                     "service_policy.NAT_NAT44_PAT": "nat_pat", "service_policy.ACL_IPV4_EXTENDED": "acl_ipv4",
+                     "service_policy.NAT_NAT44_PAT": "nat_pat", "service_policy.NAT_NAT44_STATIC": "nat_static",
+                     "service_policy.ACL_IPV4_EXTENDED": "acl_ipv4",
                      "service_policy.ACL_IPV4_STANDARD": "acl_ipv4"}
 
 

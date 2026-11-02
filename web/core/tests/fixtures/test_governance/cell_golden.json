@@ -61,5 +61,6 @@
  "ubuntu_frr|routing.STATIC_IPV4": "b198b8f87ccc185012a5c338914599878932db88122c4b8966c039bdb8131472",
  "ubuntu_frr|routing.STATIC_IPV6": "bfe4c2f24e07be880fd3c78d129db2e54844cb73d11d4130028f03744a3b2185",
  "ubuntu_frr|service_policy.NAT_NAT44_PAT": "883a8304a714485ef1ebc8a79e2efa733b3ed3eac4c62d8e019e07e6ef0629a8",
- "ubuntu_frr|service_policy.NAT_NAT44_STATEFUL": "9bd4cfa3e757003beaad9c69e85d4f8949f8235485f49a65da11e555cc02a67f"
+ "ubuntu_frr|service_policy.NAT_NAT44_STATEFUL": "9bd4cfa3e757003beaad9c69e85d4f8949f8235485f49a65da11e555cc02a67f",
+ "ubuntu_frr|service_policy.NAT_NAT44_STATIC": "9e224e1c8a985249a17f61e5123884ec325702f138c4cfd669551df9207a363b"
 }
