@@ -8,7 +8,7 @@
  "arista_ceos|interface.TRUNK": "e524999563646e6e9dbdffaf4a689873a8662e0f5a85cbb8a2faa7b89f4fdda2",
  "arista_ceos|routing.BGP_IPV4": "4f904b435d593cbf010e5a8b23a6258fcabc683b25d263f91210e61bbee39a50",
  "arista_ceos|routing.BGP_IPV6": "5c7d56b8b038222f8b5c4956bdad7d0b739b5f2610ffd89df4344804b1226555",
- "arista_ceos|routing.ISIS": "bae7c0bf2348968d70a5ae0241a8f5d0b94b946baacf9b6f8c8a715701e90d57",
+ "arista_ceos|routing.ISIS": "79d17c9f99d5d7ad1d67b3dfabc8b488777ce5ea8bcc04032c4d552807af9b6c",
  "arista_ceos|routing.OSPFV2": "7d3cd2e55c182b497a6eb56a5f967f93160d1ef4a5ade77d9198836f627d4a8b",
  "arista_ceos|routing.OSPFV3": "1ae4c55a528717593c833fec5e96d0ec7b631b0f054da201b619358a0bf3a65c",
  "arista_ceos|routing.RIPV2": "e266e59391d56e4f4ccf28618752a5840b7f3ff9478267d0e2f8f151e5797853",
