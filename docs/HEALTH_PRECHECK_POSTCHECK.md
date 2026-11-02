@@ -268,6 +268,10 @@ Codes are stable identifiers: a PASS uses the "EXPECTED"/"FRESH" spelling, a fai
 | `ACL_DEFINITION_MISSING` | SERVICE | yes | — | — | An ACL is not defined on the device. |
 | `ACL_ATTACHMENT_EXPECTED_PRESENT` | SERVICE | — | — | — | An ACL is attached to its interface and direction. |
 | `ACL_ATTACHMENT_MISSING` | SERVICE | yes | — | — | An ACL is not attached to its interface and direction. |
+| `PBR_POLICY_EXPECTED_PRESENT` | SERVICE | — | — | — | A PBR policy is defined and every intended sequence is installed. |
+| `PBR_POLICY_MISSING` | SERVICE | yes | — | — | A PBR policy is not defined, or an intended sequence is missing or not installed. |
+| `PBR_ATTACHMENT_EXPECTED_PRESENT` | SERVICE | — | — | — | A PBR policy is applied to its ingress interface. |
+| `PBR_ATTACHMENT_MISSING` | SERVICE | yes | — | — | A PBR policy is not applied (or not valid) on its ingress interface. |
 | `NAT_RULE_EXPECTED_PRESENT` | SERVICE | — | — | — | A NAT rule is present on the device. |
 | `NAT_RULE_MISSING` | SERVICE | yes | — | — | A NAT rule is not present on the device. |
 | `CONFIG_REMOVED_CONFIRMED` | VERIFICATION | — | — | — | The configuration selected for removal is absent from the running configuration. |
@@ -331,7 +335,8 @@ before the plan that creates it.
 
 Fleet Quick has no routing telemetry (NOT_AVAILABLE). Deep Health reads live routing state. The plan-level routing
 requirements are static route, OSPF adjacency and BGP session (§17–§19). Routing-process definitions, BGP network advertisements,
-RIP bindings, NAT pools and PBR have **no evaluator** and are reported UNKNOWN / `REQUIREMENT_NOT_IMPLEMENTED`.
+RIP bindings and NAT pools have **no evaluator** and are reported UNKNOWN / `REQUIREMENT_NOT_IMPLEMENTED`. PBR policies and
+attachments are evaluated from the Ubuntu/FRR `pbr` group; a platform that reports no such group is UNKNOWN (data unavailable).
 
 ## 17. BGP
 
@@ -429,8 +434,8 @@ per object type maps to Phase-15 check types. Kinds without an evaluator are hon
 | `NAT_POOL_INTENDED` | nat_pool | **NOT_IMPLEMENTED** (UNKNOWN in a postcheck, not applicable in a precheck) |
 | `NAT_RULE_INTENDED` | nat_rule | `NAT_RULE_PRESENT` |
 | `CONFIG_REMOVED` | config_removal (Remove Configuration) | `CONFIG_OBJECT_ABSENT` — the removed statements' header-qualified signatures must be absent from the sanitized running config (evidence group `config_paths`, derived from the same `show running-config` output the `config` group already reads; no raw text is retained) |
-| `PBR_ATTACHMENT_INTENDED` | pbr_attachment | **NOT_IMPLEMENTED** (UNKNOWN in a postcheck, not applicable in a precheck) |
-| `PBR_POLICY_DEFINED` | pbr_policy | **NOT_IMPLEMENTED** (UNKNOWN in a postcheck, not applicable in a precheck) |
+| `PBR_ATTACHMENT_INTENDED` | pbr_attachment | `PBR_ATTACHMENT_PRESENT` — the policy is applied and valid on its ingress interface (Ubuntu/FRR `pbr` group: `show pbr interface json`) |
+| `PBR_POLICY_DEFINED` | pbr_policy | `PBR_POLICY_PRESENT` — the map is valid and every intended sequence is installed with its prefixes and next hop (Ubuntu/FRR `pbr` group: `show pbr map json` + `show pbr nexthop-groups json`) |
 | `ISIS_ROUTE_INTENDED` | stated by a migration stage (no Device Builder object emits it) | `ISIS_ROUTE_EXPECTED` — an IS-IS route is installed over exactly the expected paths, or (`present: false`) no IS-IS route for the prefix exists |
 | `RIP_ROUTE_INTENDED` | stated by a migration stage (no Device Builder object emits it) | `RIP_ROUTE_EXPECTED` — a RIP route is installed over exactly the expected paths, or (`present: false`) absent |
 | `RIP_PEERING_INTENDED` | stated by a migration stage (no Device Builder object emits it) | `RIP_NEIGHBOR_EXPECTED` — a RIP peer exists on the interface, or (`present: false`) none does; peers, never advertised prefixes |

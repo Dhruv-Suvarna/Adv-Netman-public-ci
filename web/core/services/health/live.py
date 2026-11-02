@@ -69,7 +69,8 @@ HEALTH_CAPABILITIES = MappingProxyType({
                         "routing_config", "management_services")},
     "linux": {"status": Capability.SUPPORTED, "transport": "docker-exec",
               "evidence": "modules/snmp.py + verify_dhcp_servers.py docker-exec pattern; master.py verify_linux_router() reads.",
-              "groups": ("interfaces", "addresses", "routes", "ospf", "isis", "bgp", "rip", "nat", "routing_config", "config")},
+              "groups": ("interfaces", "addresses", "routes", "ospf", "isis", "bgp", "rip", "nat", "routing_config", "config",
+                         "pbr")},
     "nokia_srlinux": {"status": Capability.SUPPORTED, "transport": "gnmi-get",
                       "evidence": "gNMI Get of structured state, verified on an isolated SR Linux 24.10.7 node (not part of the approved Labs 2/3 baseline).",
                       "groups": ("interfaces", "addresses", "routes", "ospf", "bgp", "routing_config", "config")},
@@ -117,6 +118,9 @@ LINUX_COMMANDS = MappingProxyType({
     "rip": ("vtysh", "-c", "show ip rip"),
     "ripng": ("vtysh", "-c", "show ipv6 ripng"),
     "nft": ("nft", "list", "ruleset"),
+    "pbr_map": ("vtysh", "-c", "show pbr map json"),
+    "pbr_nexthops": ("vtysh", "-c", "show pbr nexthop-groups json"),
+    "pbr_interface": ("vtysh", "-c", "show pbr interface json"),
     "frr_config": ("vtysh", "-c", "show running-config"),   # legacy bootstrap capture (read-only, like every other ``vtysh -c "show ..."`` here)
 })
 # SR Linux is read through gNMI Get only: key -> (path, datastore).  Structured state, never CLI text.
@@ -767,6 +771,32 @@ def parse_nft_acl(text: str) -> dict:
             "acl_attachments": sorted(attachments, key=lambda a: (a["interface"], a["acl"], a["direction"]))}
 
 
+def parse_frr_pbr(map_json: str, nexthop_json: str, interface_json: str) -> dict:
+    """FRR ``pbrd`` state: {"policies": {name: {"valid", "sequences": [{"sequence", "installed", "source_prefix",
+    "destination_prefix", "next_hops"}]}}, "attachments": [{"interface", "policy", "valid"}]}.
+
+    A sequence's next hops come from its nexthop group (joined on the table id ``show pbr map`` reports).  Prefixes and
+    addresses are normalised; anything that is not the documented JSON shape raises (the group becomes PARSE_ERROR)."""
+    maps, groups, interfaces = (json.loads(text or "[]") for text in (map_json, nexthop_json, interface_json))
+    if not all(isinstance(rows, list) for rows in (maps, groups, interfaces)):
+        raise ValueError("unexpected PBR JSON shape")
+    hops = {row["id"]: [norm_ip(hop["nexthop"]) for hop in row.get("nexthops") or [] if norm_ip(hop.get("nexthop"))]
+            for row in groups}
+    policies = {}
+    for row in maps:
+        sequences = []
+        for seq in row.get("policies") or []:
+            table = (seq.get("nexthopGroup") or {}).get("tableId")
+            sequences.append({"sequence": int(seq["sequenceNumber"]), "installed": bool(seq.get("installed")),
+                              "source_prefix": norm_prefix(seq["matchSrc"]) if seq.get("matchSrc") else "",
+                              "destination_prefix": norm_prefix(seq["matchDst"]) if seq.get("matchDst") else "",
+                              "next_hops": hops.get(table, [])})
+        policies[row["name"]] = {"valid": bool(row.get("valid")), "sequences": sorted(sequences, key=lambda r: r["sequence"])}
+    attachments = sorted(({"interface": row["name"], "policy": row["policy"], "valid": bool(row.get("valid"))}
+                          for row in interfaces), key=lambda a: (a["interface"], a["policy"]))
+    return {"policies": policies, "attachments": attachments}
+
+
 def _nft_static_mappings(text: str) -> list:
     """1:1 mappings of every exact NMAS static NAT44 table: [{"table", "oif", "inside", "global"}] (executor shape)."""
     from ..execution.executors.linux import parse_static_nat_table
@@ -1151,6 +1181,7 @@ _LINUX_GROUPS = {
     "nat": lambda f: parse_nft(f("nft")),
     "routing_config": lambda f: _routing_config_frr(f("frr_config"), f("addr")),
     "config": lambda f: parse_nft_acl(f("nft")),
+    "pbr": lambda f: parse_frr_pbr(f("pbr_map"), f("pbr_nexthops"), f("pbr_interface")),
 }
 
 

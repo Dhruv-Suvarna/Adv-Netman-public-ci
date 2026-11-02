@@ -458,6 +458,45 @@ def _acl_attachment(req, ctx):
                    {"attachments": [a for a in group.data["acl_attachments"] if a["interface"] == wanted["interface"]]}, wanted, group)
 
 
+def _pbr_sequence(row) -> tuple:
+    """A PBR sequence in comparable form: (sequence, source, destination, next hop); "" for an absent match."""
+    return (int(row.get("sequence") or 0), norm_prefix(row.get("source_prefix")) if row.get("source_prefix") else "",
+            norm_prefix(row.get("destination_prefix")) if row.get("destination_prefix") else "", norm_ip(row.get("next_hop")) or "")
+
+
+def _pbr_policy(req, ctx):
+    group, missing = _need(ctx, req.device, "pbr")
+    if missing:
+        return missing
+    facts = _facts(req)
+    name = facts.get("name")
+    wanted = sorted(_pbr_sequence(row) for row in facts.get("sequences") or [])
+    observed = (group.data.get("policies") or {}).get(name)
+    installed = sorted((int(row["sequence"]), row.get("source_prefix") or "", row.get("destination_prefix") or "", hop)
+                       for row in (observed or {}).get("sequences", []) if row.get("installed")
+                       for hop in row.get("next_hops") or [""])
+    expected = {"policy": name, "sequences": [list(row) for row in wanted]}
+    if observed and observed.get("valid") and wanted and all(row in installed for row in wanted):
+        return Outcome(S.PASS, "PBR_POLICY_EXPECTED_PRESENT", f"PBR policy {name} is valid and its {len(wanted)} sequence(s) are installed.",
+                       expected=expected, group=group)
+    return Outcome(S.FAIL, "PBR_POLICY_MISSING", f"PBR policy {name} is not defined, not valid, or a sequence is not installed.",
+                   {"policy": observed}, expected, group)
+
+
+def _pbr_attachment(req, ctx):
+    group, missing = _need(ctx, req.device, "pbr")
+    if missing:
+        return missing
+    facts = _facts(req)
+    wanted = {"interface": facts.get("interface"), "policy": facts.get("policy_name")}
+    if str(facts.get("direction") or "IN").upper() == "IN" and {**wanted, "valid": True} in (group.data.get("attachments") or []):
+        return Outcome(S.PASS, "PBR_ATTACHMENT_EXPECTED_PRESENT", f"PBR policy {wanted['policy']} is applied on {wanted['interface']}.",
+                       expected=wanted, group=group)
+    return Outcome(S.FAIL, "PBR_ATTACHMENT_MISSING", f"PBR policy {wanted['policy']} is not applied on {wanted['interface']}.",
+                   {"attachments": [a for a in group.data.get("attachments") or [] if a.get("interface") == wanted["interface"]]},
+                   wanted, group)
+
+
 def _nft_host(value) -> str:
     """A host address as nft lists it (without /32)."""
     return str(value or "").removesuffix("/32")
@@ -533,6 +572,10 @@ def _pre_dhcp_relay(req, ctx):
 
 
 def _pre_acl_attachment(req, ctx):
+    return _interface_prerequisite(req, ctx, [_facts(req).get("interface")])
+
+
+def _pre_pbr_attachment(req, ctx):
     return _interface_prerequisite(req, ctx, [_facts(req).get("interface")])
 
 
@@ -667,6 +710,8 @@ EVALUATORS = {
     "ACL_DEFINITION_PRESENT": (_acl_definition, None),
     "ACL_ATTACHMENT_PRESENT": (_acl_attachment, _pre_acl_attachment),
     "NAT_RULE_PRESENT": (_nat_rule, _pre_nat_rule),
+    "PBR_POLICY_PRESENT": (_pbr_policy, None),
+    "PBR_ATTACHMENT_PRESENT": (_pbr_attachment, _pre_pbr_attachment),
     "CONFIG_OBJECT_ABSENT": (_config_absent, _pre_config_absent),
     "MGMT_VRF_PRESENT": (_management_config, None),
     "MGMT_VRF_BOUND": (_management_config, None),
@@ -678,6 +723,7 @@ FUTURE_STATE_CODE = {
     "INTERFACE_PRESENT": "INTERFACE_EXPECTED_PRESENT", "INTERFACE_ADMIN_STATE": "INTERFACE_EXPECTED_UP",
     "INTERFACE_OPER_STATE": "INTERFACE_EXPECTED_UP", "ADDRESS_PRESENT": "ADDRESS_EXPECTED_PRESENT",
     "BGP_NEIGHBOR_EXPECTED": "BGP_EXPECTED_ESTABLISHED", "ACL_DEFINITION_PRESENT": "ACL_DEFINITION_EXPECTED_PRESENT",
+    "PBR_POLICY_PRESENT": "PBR_POLICY_EXPECTED_PRESENT",
     "ROUTING_PROCESS_CONFIG": "ROUTING_CONFIG_PRESENT", "ROUTING_BINDING_CONFIG": "ROUTING_CONFIG_PRESENT",
     "BGP_NEIGHBOR_CONFIG": "ROUTING_CONFIG_PRESENT", "BGP_NETWORK_CONFIG": "ROUTING_CONFIG_PRESENT",
     "MGMT_VRF_PRESENT": "MGMT_CONFIG_PRESENT", "MGMT_VRF_BOUND": "MGMT_CONFIG_PRESENT",
@@ -692,6 +738,7 @@ REQUIRED_FACTS = {
     "BGP_NEIGHBOR_EXPECTED": ("peer",), "FHRP_VIRTUAL_ADDRESS_PRESENT": ("interface", "virtual_addresses"),
     "DHCP_RELAY_CONFIG_PRESENT": ("interface", "destination"), "ACL_DEFINITION_PRESENT": ("name",),
     "ACL_ATTACHMENT_PRESENT": ("interface", "acl_name", "direction"), "NAT_RULE_PRESENT": ("outside_interface",),
+    "PBR_POLICY_PRESENT": ("name", "sequences"), "PBR_ATTACHMENT_PRESENT": ("interface", "policy_name"),
     "CONFIG_OBJECT_ABSENT": ("absent_paths",),
     "ROUTING_PROCESS_CONFIG": ("protocol",), "ROUTING_BINDING_CONFIG": ("protocol", "interface"),
     "BGP_NEIGHBOR_CONFIG": ("peer",), "BGP_NETWORK_CONFIG": ("prefix", "family"),

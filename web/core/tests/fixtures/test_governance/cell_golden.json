@@ -68,5 +68,9 @@
  "ubuntu_frr|service_policy.ACL_IPV6_STANDARD": "de1a9317b73de2f21479bf54cab09f057b82bd047897ab41d7ae05a015713498",
  "ubuntu_frr|service_policy.NAT_NAT44_PAT": "883a8304a714485ef1ebc8a79e2efa733b3ed3eac4c62d8e019e07e6ef0629a8",
  "ubuntu_frr|service_policy.NAT_NAT44_STATEFUL": "9bd4cfa3e757003beaad9c69e85d4f8949f8235485f49a65da11e555cc02a67f",
- "ubuntu_frr|service_policy.NAT_NAT44_STATIC": "9e224e1c8a985249a17f61e5123884ec325702f138c4cfd669551df9207a363b"
+ "ubuntu_frr|service_policy.NAT_NAT44_STATIC": "9e224e1c8a985249a17f61e5123884ec325702f138c4cfd669551df9207a363b",
+ "ubuntu_frr|service_policy.PBR_ATTACH_IPV4": "3c37235eeb1f7cdb27bfae45456456f07b4b22f5cfdf2494c1b1315416369275",
+ "ubuntu_frr|service_policy.PBR_ATTACH_IPV6": "3c37235eeb1f7cdb27bfae45456456f07b4b22f5cfdf2494c1b1315416369275",
+ "ubuntu_frr|service_policy.PBR_IPV4": "0d4448b1dbfdebe2497e7fe9ed1d46172d02281e4c21c564afec4932c4d4cba7",
+ "ubuntu_frr|service_policy.PBR_IPV6": "cd51848e04f2ed3b6aefdd843851f752b3c7bc661fec86b8854b6ac11b14f5e1"
 }

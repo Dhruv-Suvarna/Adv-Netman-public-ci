@@ -12,8 +12,8 @@ import ipaddress
 import json
 import re
 
-from .schema import (ParsedAcl, ParsedConfig, ParsedInterface, ParsedNatRule, ParsedRoutingInstance, ParsedStaticRoute,
-                     UnmanagedBlock)
+from .schema import (ParsedAcl, ParsedConfig, ParsedInterface, ParsedNatRule, ParsedPbr, ParsedRoutingInstance,
+                     ParsedStaticRoute, UnmanagedBlock)
 
 PARSER_VERSION = "ubuntu-frr-1.0"
 ISIS_TAG = "NMAS44"  # platform_drivers.FRR_ISIS_TAG: only NMAS's named process is imported
@@ -117,6 +117,8 @@ def _parse_interface(block: list[str], interfaces: dict[str, ParsedInterface]) -
         elif lower in {"isis network point-to-point", "isis circuit-type level-2-only", "isis circuit-type level-1",
                        "isis circuit-type level-1-2"} and interface.isis_bindings:
             pass
+        elif (match := re.fullmatch(r"pbr-policy\s+(\S+)", command)) and not interface.pbr_attachments:
+            interface.pbr_attachments.append({"name": match.group(1), "direction": "IN"})
         else:
             interface.preserved_lines.append(line)
 
@@ -289,6 +291,32 @@ def _parse_nft(text: str, result: ParsedConfig) -> None:
         ))
 
 
+def _collect_pbr(blocks: list[list[str]], result: ParsedConfig) -> None:
+    """``pbr-map`` sequences in the exact ``frr_pbr`` shape, grouped per map; a map with any other sequence, or with
+    sequences of both families, is preserved unmanaged as a whole.  Attachments to a map not imported stay preserved."""
+    from .. import frr_pbr
+
+    maps: dict[str, list] = {}
+    for block in blocks:
+        name = block[0].split()[1] if len(block[0].split()) > 1 else ""
+        maps.setdefault(name, []).append((block, frr_pbr.parse_block(block)))
+    imported = set()
+    for name, rows in maps.items():
+        families = {parsed[1]["family"] for _block, parsed in rows if parsed}
+        if any(parsed is None for _block, parsed in rows) or len(families) != 1:
+            for block, _parsed in rows:
+                result.unmanaged_blocks.append(UnmanagedBlock("Unmanaged FRR configuration (pbr-map)", "UNKNOWN", block))
+            continue
+        sequences = sorted(({k: v for k, v in entry.items() if k in ("sequence", "source_prefix", "destination_prefix", "next_hop")}
+                            for _block, (_name, entry) in rows), key=lambda row: row["sequence"])
+        result.pbr_policies.append(ParsedPbr(name=name, family=families.pop(), sequences=sequences))
+        imported.add(name)
+    for interface in result.interfaces:
+        for attachment in [a for a in interface.pbr_attachments if a["name"] not in imported]:
+            interface.pbr_attachments.remove(attachment)
+            interface.preserved_lines.append(f" pbr-policy {attachment['name']}")
+
+
 def _classify_management(interfaces: dict[str, ParsedInterface], management_addresses) -> None:
     """The plain physical interface that carries the address the device is managed through is its management port.
 
@@ -319,6 +347,7 @@ def parse(frr_text: str, *, addr_json: str = "", nft_text: str = "", management_
     result = ParsedConfig(parser_version=PARSER_VERSION)
     interfaces = _linux_interfaces(addr_json)
     _classify_management(interfaces, management_addresses)
+    pbr_blocks: list[list[str]] = []
     for block in _blocks(frr_text):
         first = block[0]; lower = first.lower()
         if match := re.fullmatch(r"hostname\s+(\S+)", first, re.I): result.hostname = match.group(1)
@@ -334,6 +363,8 @@ def parse(frr_text: str, *, addr_json: str = "", nft_text: str = "", management_
         elif lower.startswith(("ip route ", "ipv6 route ")):
             route = _parse_static(block, "IPV6" if lower.startswith("ipv6") else "IPV4")
             if route: result.static_routes.append(route)
+        elif lower.startswith("pbr-map "):
+            pbr_blocks.append(block)
         elif lower in {"building configuration...", "current configuration:", "end"}:
             continue
         else:
@@ -352,5 +383,6 @@ def parse(frr_text: str, *, addr_json: str = "", nft_text: str = "", management_
                 instance.bindings.append({"interface_name": interface.name, **binding})
                 instance.fields["address_family_ipv4"] |= binding["address_family_ipv4"]
                 instance.fields["address_family_ipv6"] |= binding["address_family_ipv6"]
+    _collect_pbr(pbr_blocks, result)
     _parse_nft(nft_text, result)
     return result

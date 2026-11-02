@@ -34,7 +34,8 @@ from .base import APPLY, REFUSE, ApplyOutcome, Assessment, CompensationOutcome, 
 from .ceos import config_inverse
 
 FRR_ROUTING_TYPES = frozenset({"routing_ospf", "routing_binding", "routing_rip", "routing_isis", "routing_bgp",
-                               "bgp_neighbor", "bgp_neighbor_af", "bgp_network"})
+                               "bgp_neighbor", "bgp_neighbor_af", "bgp_network",
+                               "pbr_policy", "pbr_attachment"})   # PBR (V2 Phase 9): pbrd configuration, same vtysh discipline
 
 
 def frr_routing_blocks(lines) -> list[list[str]] | None:

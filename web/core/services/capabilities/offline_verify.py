@@ -109,6 +109,13 @@ def _parsed_contains(parsed, feature, case):
     if code.startswith("ACL_"):
         _, af, acl_type = code.split("_")
         return any(a.name == "CAP_ACL" and a.family == af and a.acl_type == acl_type and a.entries for a in parsed.acls)
+    if code.startswith("PBR_"):
+        af = code.rsplit("_", 1)[1]
+        policies = {p.name for p in parsed.pbr_policies if p.name == "CAP_PBR" and p.family == af and p.sequences}
+        if code.startswith("PBR_ATTACH_"):
+            return any(a.get("name") in policies and a.get("direction") == "IN"
+                       for i in parsed.interfaces for a in i.pbr_attachments)
+        return bool(policies)
     if code.startswith("DHCP_RELAY_"):
         return any(r.get("family") == code.rsplit("_", 1)[1] for i in parsed.interfaces for r in i.dhcp_relays)
     if code.startswith("NAT_") and not code.startswith("NAT_POOL_"):

@@ -19,6 +19,7 @@ from . import (
     candidate_composition,
     feature_template_renderer,
     field_validators,
+    frr_pbr,
     interface_intent_service,
     nft_acl,
     service_policy_intent_service,
@@ -594,6 +595,10 @@ _P12_LINUX_ACL = ("V2 Phase 9: one dedicated nftables table (inet DEVICE_BUILDER
                   "postrouting (OUT) filter chains per interface and family. Live-verified on the isolated FRR 8.4.4 / "
                   "nftables 1.0.9 container: permitted and denied sources, protocol/port entries, both directions, "
                   "exact compensation.")
+_P12_LINUX_PBR = ("V2 Phase 9: FRR pbrd -- one pbr-map sequence per PBR sequence (match src-ip / dst-ip, set nexthop) and "
+                  "'pbr-policy' on the ingress interface. Live-verified on the isolated FRR 8.4.4 container: matching "
+                  "traffic is steered to the policy next hop while other traffic follows the main table, exact "
+                  "compensation. ip-protocol matches and next-hop interfaces are refused.")
 _P12_NAT_PT = "NAT-PT is deprecated/obsolete and is intentionally unsupported; it is not mapped to NAT64."
 
 
@@ -632,6 +637,10 @@ SERVICE_POLICY_CAPABILITIES = {
         ServicePolicyFeature.ACL_IPV6_EXTENDED: (CapabilityStatus.SUPPORTED, _P12_LINUX_ACL),
         ServicePolicyFeature.ACL_ATTACH_IPV4: (CapabilityStatus.SUPPORTED, _P12_LINUX_ACL),
         ServicePolicyFeature.ACL_ATTACH_IPV6: (CapabilityStatus.SUPPORTED, _P12_LINUX_ACL),
+        ServicePolicyFeature.PBR_IPV4: (CapabilityStatus.SUPPORTED, _P12_LINUX_PBR),
+        ServicePolicyFeature.PBR_IPV6: (CapabilityStatus.SUPPORTED, _P12_LINUX_PBR),
+        ServicePolicyFeature.PBR_ATTACH_IPV4: (CapabilityStatus.SUPPORTED, _P12_LINUX_PBR),
+        ServicePolicyFeature.PBR_ATTACH_IPV6: (CapabilityStatus.SUPPORTED, _P12_LINUX_PBR),
         ServicePolicyFeature.NAT_NAT_PT_STATIC: (CapabilityStatus.UNSUPPORTED, _P12_NAT_PT),
     }),
     "nokia_srlinux": _service_caps({
@@ -2063,6 +2072,85 @@ def _render_policy(platform: str, display_name: str, policy: dict) -> list[dict]
     return lines
 
 
+def _ubuntu_pbr_plan(platform: str, pbr: dict, interfaces_by_id: dict):
+    """-> ([(policy, [(seq, leaves)])], [(interface, name)], {object id: why refused}).
+
+    A policy renders when its feature is SUPPORTED and every sequence has an exact ``pbrd`` form (a policy without
+    sequences is valid but writes nothing); an attachment when its policy is valid, the direction is IN, the interface
+    has a usable name and no other policy is attached there (an interface carries one ``pbr-policy``)."""
+    policies = _phase12_seq((pbr.get("policies") or {}).values())
+    rendered, refused, names = [], {}, {}
+    for policy in policies:
+        if not _service_policy_supported(platform, f"PBR_{policy.get('family')}"):
+            continue
+        try:
+            rows = frr_pbr.sequences(policy)
+        except frr_pbr.PbrRenderError as exc:
+            refused[policy.get("id")] = str(exc)
+            continue
+        if policy["name"] in names.values():
+            refused[policy.get("id")] = "another PBR policy already has that name"
+            continue
+        names[policy.get("id")] = policy["name"]
+        rendered.append((policy, rows))
+    attached, used = [], set()
+    for attachment in _phase12_seq((pbr.get("attachments") or {}).values()):
+        policy = next((row for row in policies if row.get("id") == attachment.get("policy_id")), {})
+        if not _service_policy_supported(platform, f"PBR_ATTACH_{policy.get('family')}"):
+            continue
+        interface = (interfaces_by_id.get(attachment.get("interface_id") or "") or {}).get("name") or ""
+        if attachment.get("policy_id") not in names:
+            refused[attachment.get("id")] = "its PBR policy is not rendered"
+        elif str(attachment.get("direction") or "IN").upper() != "IN" or not frr_pbr.INTERFACE.fullmatch(interface):
+            refused[attachment.get("id")] = "direction IN and an interface name are required"
+        elif interface in used:
+            refused[attachment.get("id")] = f"another PBR policy is already attached on {interface}"
+        else:
+            used.add(interface)
+            attached.append((interface, names[attachment["policy_id"]]))
+    return rendered, attached, refused
+
+
+def _render_ubuntu_policy(platform: str, display_name: str, policy: dict, interfaces_by_id: dict) -> list[dict]:
+    """Ubuntu/FRR PBR as ``pbrd`` configuration (``frr_pbr``): every pbr-map sequence, then the interface attachments."""
+    pbr = policy.get("pbr") or {}
+    policies = _phase12_seq((pbr.get("policies") or {}).values())
+    attachments = _phase12_seq((pbr.get("attachments") or {}).values())
+    if not policies and not attachments:
+        return [{"kind": "static", "text": "! Policy/PBR: not configured in current candidate"}]
+    rendered, attached, refused = _ubuntu_pbr_plan(platform, pbr, interfaces_by_id)
+    lines = []
+    for row, sequences in rendered:
+        for number, leaves in sequences:
+            lines.extend(feature_template_renderer.render_descriptors(
+                template_name="ubuntu_frr/pbr_map.j2", fields={}, flags={"name": row["name"], "sequence": number}))
+            lines.extend({"kind": "static", "text": leaf} for leaf in leaves)
+            lines.append({"kind": "static", "text": "!"})
+    for interface, name in attached:
+        lines.extend({"kind": "static", "text": text} for text in frr_pbr.attachment_lines(interface, name))
+        lines.append({"kind": "static", "text": "!"})
+    shown = {row.get("id") for row, _sequences in rendered}
+    for row in policies:
+        if row.get("id") in shown:
+            continue
+        cap = _service_policy_capability_or_not_implemented(platform, f"PBR_{row.get('family')}")
+        reason = f" ({refused[row['id']]})" if row.get("id") in refused else ""
+        status = CapabilityStatus.NOT_IMPLEMENTED.value if reason else cap.status.value
+        lines.append(_phase12_unsupported(display_name, f"PBR policy {row.get('name') or row.get('id')}{reason}", status))
+    attached_keys = set(attached)
+    for attachment in attachments:
+        row = next((p for p in policies if p.get("id") == attachment.get("policy_id")), {})
+        interface = (interfaces_by_id.get(attachment.get("interface_id") or "") or {}).get("name") or ""
+        if attachment.get("id") not in refused and (interface, row.get("name")) in attached_keys:
+            continue
+        cap = _service_policy_capability_or_not_implemented(platform, f"PBR_ATTACH_{row.get('family', 'IPV4')}")
+        reason = f" ({refused[attachment['id']]})" if attachment.get("id") in refused else ""
+        status = CapabilityStatus.NOT_IMPLEMENTED.value if reason else cap.status.value
+        lines.append(_phase12_unsupported(display_name, f"PBR attachment {attachment.get('id')}{reason}", status))
+    lines.append({"kind": "static", "text": "! PBR next-hop reachability and loop-risk validation are Phase 13 concerns."})
+    return lines
+
+
 def _render_phase12(
     platform: str, display_name: str, phase12: dict, interfaces: list[dict], *,
     ceos=False, ubuntu=False, iosxr=False, srlinux=False, acl_renderer=None
@@ -2081,7 +2169,10 @@ def _render_phase12(
     else:
         lines.extend(_render_security(platform, display_name, phase12.get("security") or {}, interfaces_by_id,
                                       acl_renderer=acl_renderer or (_render_ceos_acl if ceos else None)))
-    lines.extend(_render_policy(platform, display_name, phase12.get("policy") or {}))
+    if ubuntu:
+        lines.extend(_render_ubuntu_policy(platform, display_name, phase12.get("policy") or {}, interfaces_by_id))
+    else:
+        lines.extend(_render_policy(platform, display_name, phase12.get("policy") or {}))
     return lines
 
 

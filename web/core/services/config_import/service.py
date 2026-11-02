@@ -153,6 +153,7 @@ def _remove_prior_import_objects(revision) -> None:
         "fhrp": ("fhrp", "instances"), "nat_rules": ("nat", "rules"),
         "dhcp_relays": ("services", "dhcp", "relays"), "acls": ("security", "acls"),
         "acl_attachments": ("security", "attachments"),
+        "pbr_policies": ("policy", "pbr", "policies"), "pbr_attachments": ("policy", "pbr", "attachments"),
         # V2 Phase 4 management VRF (objects carry no field states; the prefixes below match nothing)
         "mgmt_vrfs": ("management", "vrfs"), "mgmt_bindings": ("management", "bindings"),
         "mgmt_routes": ("management", "routes"), "mgmt_services": ("management", "services"),
@@ -162,6 +163,7 @@ def _remove_prior_import_objects(revision) -> None:
         "ospf": "routing.ospf", "bgp": "routing.bgp", "fhrp": "fhrp.instances",
         "nat_rules": "nat.rules", "dhcp_relays": "services.dhcp.relays", "acls": "security.acls",
         "acl_attachments": "security.attachments",
+        "pbr_policies": "policy.pbr.policies", "pbr_attachments": "policy.pbr.attachments",
         "mgmt_vrfs": "management.vrfs", "mgmt_bindings": "management.bindings",
         "mgmt_routes": "management.routes", "mgmt_services": "management.services",
     }
@@ -382,6 +384,9 @@ def _apply_parsed_config(*, change, intent, revision, parsed: ParsedConfig,
         _append_preserved(parsed, f"Additional ACL configuration for {parsed_acl.name}",
                           f"ip access-list {parsed_acl.name}", parsed_acl.preserved_lines)
 
+    pbr_ids = _apply_pbr_policies(change=change, intent=intent, revision=revision, parsed=parsed,
+                                  managed_ids=managed_ids, counts=counts)
+
     for parsed_interface in parsed.interfaces:
         if_id = interface_ids.get(parsed_interface.name)
         if not if_id:
@@ -421,6 +426,18 @@ def _apply_parsed_config(*, change, intent, revision, parsed: ParsedConfig,
                     ],
                 )
 
+    for parsed_interface in parsed.interfaces:
+        if_id = interface_ids.get(parsed_interface.name)
+        for attachment in parsed_interface.pbr_attachments:
+            if if_id and attachment["name"] in pbr_ids:
+                obj = service_policy_intent_service.add_pbr_attachment(
+                    revision=revision, policy_id=pbr_ids[attachment["name"]], interface_id=if_id, direction=attachment["direction"]
+                )
+                managed_ids.setdefault("pbr_attachments", []).append(obj["id"])
+            else:
+                _append_preserved(parsed, f"PBR attachment on {parsed_interface.name} could not be resolved",
+                                  f"interface {parsed_interface.name}", [f"pbr-policy {attachment['name']}"])
+
     for nat_data in parsed.nat_rules:
         obj = service_policy_intent_service.add_nat_rule(
             revision=revision, family=nat_data.family, mode=nat_data.mode
@@ -445,6 +462,24 @@ def _apply_parsed_config(*, change, intent, revision, parsed: ParsedConfig,
             )
     _apply_management(revision=revision, parsed=parsed, interface_ids=interface_ids, managed_ids=managed_ids, counts=counts)
     return counts["interfaces"], counts, {key: value for key, value in managed_ids.items() if value}
+
+
+def _apply_pbr_policies(*, change, intent, revision, parsed: ParsedConfig, managed_ids: dict, counts: dict) -> dict:
+    """PBR policies and their sequences through the canonical service-policy mutations -> {policy name: id}.  Nothing
+    runs when the parser found none, so ``counts`` / ``managed_ids`` of every other import are unchanged."""
+    ids = {}
+    for parsed_pbr in parsed.pbr_policies:
+        policy = service_policy_intent_service.add_pbr_policy(revision=revision, name=parsed_pbr.name, family=parsed_pbr.family)
+        ids[parsed_pbr.name] = policy["id"]
+        managed_ids.setdefault("pbr_policies", []).append(policy["id"])
+        counts["pbr_policies"] = counts.get("pbr_policies", 0) + 1
+        for row in parsed_pbr.sequences:
+            sequence = service_policy_intent_service.add_pbr_sequence(revision=revision, policy_id=policy["id"])
+            for field in ("sequence", "source_prefix", "destination_prefix", "next_hop"):
+                if row.get(field) not in (None, "") and row[field] != sequence.get(field):
+                    _commit(change=change, intent=intent, revision=revision,
+                            path=f"policy.pbr.policies.{policy['id']}.sequences.{sequence['id']}.{field}", value=row[field])
+    return ids
 
 
 def _apply_management(*, revision, parsed: ParsedConfig, interface_ids: dict, managed_ids: dict, counts: dict) -> None:

@@ -116,6 +116,7 @@ template_features:
   fhrp_varp: [service_policy.FHRP_VARP_IPV4, service_policy.FHRP_VARP_IPV6]
   nat_pat: [service_policy.NAT_NAT44_PAT, service_policy.NAT_NAT44_STATEFUL]
   nat_static: [service_policy.NAT_NAT44_STATIC]
+  pbr_map: [service_policy.PBR_IPV4, service_policy.PBR_IPV6, service_policy.PBR_ATTACH_IPV4, service_policy.PBR_ATTACH_IPV6]
 
 # Generic / control-plane coverage groups (first match wins: path globs, then Tier-3 subsystems from ci/rules.py).
 generic_groups:

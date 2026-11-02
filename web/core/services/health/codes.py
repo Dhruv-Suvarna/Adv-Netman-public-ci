@@ -189,6 +189,12 @@ CODES = MappingProxyType({
     "ACL_DEFINITION_MISSING": _c(SV, "An ACL is not defined on the device.", "Deploy or correct the ACL.", blocking=True),
     "ACL_ATTACHMENT_EXPECTED_PRESENT": _c(SV, "An ACL is attached to its interface and direction.", "None."),
     "ACL_ATTACHMENT_MISSING": _c(SV, "An ACL is not attached to its interface and direction.", "Deploy or correct the attachment.", blocking=True),
+    "PBR_POLICY_EXPECTED_PRESENT": _c(SV, "A PBR policy is defined and every intended sequence is installed.", "None."),
+    "PBR_POLICY_MISSING": _c(SV, "A PBR policy is not defined, or an intended sequence is missing or not installed.",
+                             "Deploy or correct the PBR policy; check its next hop is reachable.", blocking=True),
+    "PBR_ATTACHMENT_EXPECTED_PRESENT": _c(SV, "A PBR policy is applied to its ingress interface.", "None."),
+    "PBR_ATTACHMENT_MISSING": _c(SV, "A PBR policy is not applied (or not valid) on its ingress interface.",
+                                 "Deploy or correct the attachment.", blocking=True),
     "NAT_RULE_EXPECTED_PRESENT": _c(SV, "A NAT rule is present on the device.", "None."),
     "NAT_RULE_MISSING": _c(SV, "A NAT rule is not present on the device.", "Deploy or correct the NAT rule.", blocking=True),
     # -- Remove Configuration (running-config presence of the statements selected for removal) ------------------------

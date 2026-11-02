@@ -163,7 +163,7 @@ class RequirementMappingTests(SimpleTestCase):
             ("ROUTING_INTERFACE_ENABLED", {"protocol": "rip"}, ("ROUTING_BINDING_CONFIG",)),
             ("BGP_AF_ACTIVATION_INTENDED", {}, ("BGP_NEIGHBOR_EXPECTED", "BGP_NEIGHBOR_CONFIG")),
             ("NAT_POOL_INTENDED", {}, (reqs.NOT_IMPLEMENTED,)),
-            ("PBR_ATTACHMENT_INTENDED", {}, (reqs.NOT_IMPLEMENTED,)),
+            ("PBR_ATTACHMENT_INTENDED", {}, ("PBR_ATTACHMENT_PRESENT",)),
             ("SOMETHING_NEW", {}, (reqs.UNKNOWN_TYPE,)),
         ]
         for kind, expected, check_types in rows:

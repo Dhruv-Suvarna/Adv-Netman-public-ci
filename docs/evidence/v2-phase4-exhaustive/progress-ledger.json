@@ -1,9 +1,9 @@
 {
   "assessed": 396,
   "capability_counts": {
-    "NOT_IMPLEMENTED": 323,
+    "NOT_IMPLEMENTED": 319,
     "OUT_OF_SCOPE": 0,
-    "SUPPORTED": 70,
+    "SUPPORTED": 74,
     "UNSUPPORTED": 3
   },
   "cells": [
@@ -58330,38 +58330,28 @@
       "validator": "FAIL"
     },
     {
-      "assessment_basis": "PREREQUISITE_GATE",
+      "assessment_basis": "RUNTIME_INVESTIGATION",
       "assessment_complete": true,
-      "assessment_id": 987,
+      "assessment_id": null,
       "automated_tests": "PASS",
-      "candidate": "FAIL",
-      "compensation": "BLOCKED",
-      "device_builder": "FAIL",
-      "evidence_ids": [
-        6887,
-        6888,
-        6889,
-        6890,
-        6891,
-        6892,
-        6893,
-        6894,
-        6895,
-        6896,
-        6897
-      ],
+      "candidate": "PASS",
+      "capability_status": "SUPPORTED",
+      "compensation": "PASS",
+      "device_builder": "PASS",
+      "evidence_ids": [],
       "evidence_references": [
-        "gate:ubuntu_frr/service_policy.PBR_ATTACH_IPV4@d879b511a42d#7c2e59ae6be562ce"
+        "live:nmas-cap-validation/frr-pbr_attach_ipv4/2026-11-02T21:53:18.329114+00:00"
       ],
-      "executor": "FAIL",
+      "executor": "PASS",
+      "feasibility": "PROVEN",
       "feature": "service_policy.PBR_ATTACH_IPV4",
       "field_validation": "PASS",
-      "final_status": "UNSUPPORTED",
-      "live_read": "BLOCKED",
-      "live_write": "BLOCKED",
-      "parser": "FAIL",
+      "final_status": "SUPPORTED",
+      "live_read": "PASS",
+      "live_write": "PASS",
+      "parser": "PASS",
       "platform": "ubuntu_frr",
-      "postcheck": "BLOCKED",
+      "postcheck": "PASS",
       "probes": {
         "automated_tests": {
           "detail": "Repeated renderer determinism=True; feature-specific valid/invalid field regression=PASS.",
@@ -58371,37 +58361,37 @@
           "test_type": "FIXTURE"
         },
         "candidate_generation": {
-          "detail": "Real candidate_renderer.render ran; 1029 chars; target-rendered=FAIL.",
-          "outcome": "FAIL",
-          "reason": "RENDERER_ABSENT",
+          "detail": "Real candidate_renderer.render ran; 919 chars; target-rendered=PASS.",
+          "outcome": "PASS",
+          "reason": "",
           "reference": "",
           "test_type": "FIXTURE"
         },
         "compensation": {
-          "detail": "Not attempted: NMAS prerequisite layer(s) failed their deliberate probe (renderer=RENDERER_ABSENT, candidate_generation=RENDERER_ABSENT, executor=EXECUTOR_REFUSED). First blocker renderer: Authoritative renderer differential: 0 target line(s), 1 refusal marker(s); sha256=b27b62716b3e9c46f61401dcea320427797c0e50e9a58daf0a1c6ed7ec45287d. No device was contacted for this stage.",
-          "outcome": "BLOCKED",
-          "reason": "RENDERER_ABSENT",
-          "reference": "gate:ubuntu_frr/service_policy.PBR_ATTACH_IPV4@d879b511a42d#7c2e59ae6be562ce",
-          "test_type": "STATIC"
+          "detail": "isolated FRR service_policy.PBR_ATTACH_IPV4 against an FRR peer through the registered LinuxExecutor (pbrd via vtysh, captured-configuration inverse) || pristine node: preflight=['pbr_policy=APPLY/True/-', 'pbr_attachment=APPLY/True/-']; conflicting-attachment preflight=n/a; control before apply (nothing steered expected) ok=True after 17 s: {'matching source': 0, 'other source': 0}; operator postcheck pass=True []; pbr facts={'policies': {'CAP_PBR': {'valid': True, 'sequences': [{'sequence': 10, 'installed': True, 'source_prefix': '198.51.100.0/24', 'destination_prefix': '192.0.2.0/24', 'next_hops': ['198.18.7.2']}]}}, 'attachments': [{'interface': 'eth3', 'policy': 'CAP_PBR', 'valid': True}]}; kernel rules=['309:\\tfrom 198.51.100.0/24 to 192.0.2.0/24 iif eth3 lookup 10000 proto zebra']; live import recovered the policy, every sequence and the attachment=True; packets steered to 198.18.7.2 while attached (expected {'matching source': 6, 'other source': 0}): {'matching source': 6, 'other source': 0}; pre-existing policy preserved=True; after compensation (nothing steered expected) after 4 s: {'matching source': 0, 'other source': 0}; compensation=['COMPENSATED', 'COMPENSATED'] codes=['-', '-']; FRR running-config identical to pre-apply capture=True; pre-existing policy preserved=True; lab baseline restored=True; no failure || existing policy attached elsewhere: preflight=['pbr_policy=APPLY/True/-', 'pbr_attachment=APPLY/True/-']; conflicting-attachment preflight=APPLY/False/COMPENSATION_NOT_PROVABLE; control before apply (nothing steered expected) ok=True after 17 s: {'matching source': 0, 'other source': 0}; operator postcheck pass=True []; pbr facts={'policies': {'CAP_PBR': {'valid': True, 'sequences': [{'sequence': 10, 'installed': True, 'source_prefix': '198.51.100.0/24', 'destination_prefix': '192.0.2.0/24', 'next_hops': ['198.18.7.2']}]}, 'LEGACY': {'valid': True, 'sequences': [{'sequence': 10, 'installed': True, 'source_prefix': '203.0.113.0/24', 'destination",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-validation/frr-pbr_attach_ipv4/2026-11-02T21:53:18.329114+00:00",
+          "test_type": "LIVE"
         },
         "config_validation": {
-          "detail": "Actual network-config validation=BLOCKED; failing checks=['PLATFORM_CAPABILITY']; external inputs are OFFLINE_FIXTURE only.",
-          "outcome": "FAIL",
-          "reason": "CONFIG_VALIDATION_FAILED",
+          "detail": "Actual network-config validation=PASS; failing checks=[]; external inputs are OFFLINE_FIXTURE only.",
+          "outcome": "PASS",
+          "reason": "",
           "reference": "",
           "test_type": "FIXTURE"
         },
         "device_builder_ui": {
-          "detail": "Real authoring API refused the feature (CollectionMutationError).",
-          "outcome": "FAIL",
-          "reason": "UI_ABSENT",
+          "detail": "Real Device Builder mutation API accepted the feature.",
+          "outcome": "PASS",
+          "reason": "",
           "reference": "",
           "test_type": "FIXTURE"
         },
         "executor": {
-          "detail": "Real executor.assess on fixture: action=APPLY; exact inverse present=False; restorable=False; no connection/apply invoked.",
-          "outcome": "FAIL",
-          "reason": "EXECUTOR_REFUSED",
+          "detail": "Real executor.assess on fixture: action=APPLY; exact inverse present=True; restorable=True; no connection/apply invoked.",
+          "outcome": "PASS",
+          "reason": "",
           "reference": "",
           "test_type": "FIXTURE"
         },
@@ -58413,46 +58403,46 @@
           "test_type": "FIXTURE"
         },
         "live_post_write_validation": {
-          "detail": "Not attempted: NMAS prerequisite layer(s) failed their deliberate probe (renderer=RENDERER_ABSENT, candidate_generation=RENDERER_ABSENT, executor=EXECUTOR_REFUSED). First blocker renderer: Authoritative renderer differential: 0 target line(s), 1 refusal marker(s); sha256=b27b62716b3e9c46f61401dcea320427797c0e50e9a58daf0a1c6ed7ec45287d. No device was contacted for this stage.",
-          "outcome": "BLOCKED",
-          "reason": "RENDERER_ABSENT",
-          "reference": "gate:ubuntu_frr/service_policy.PBR_ATTACH_IPV4@d879b511a42d#7c2e59ae6be562ce",
-          "test_type": "STATIC"
+          "detail": "isolated FRR service_policy.PBR_ATTACH_IPV4 against an FRR peer through the registered LinuxExecutor (pbrd via vtysh, captured-configuration inverse) || pristine node: preflight=['pbr_policy=APPLY/True/-', 'pbr_attachment=APPLY/True/-']; conflicting-attachment preflight=n/a; control before apply (nothing steered expected) ok=True after 17 s: {'matching source': 0, 'other source': 0}; operator postcheck pass=True []; pbr facts={'policies': {'CAP_PBR': {'valid': True, 'sequences': [{'sequence': 10, 'installed': True, 'source_prefix': '198.51.100.0/24', 'destination_prefix': '192.0.2.0/24', 'next_hops': ['198.18.7.2']}]}}, 'attachments': [{'interface': 'eth3', 'policy': 'CAP_PBR', 'valid': True}]}; kernel rules=['309:\\tfrom 198.51.100.0/24 to 192.0.2.0/24 iif eth3 lookup 10000 proto zebra']; live import recovered the policy, every sequence and the attachment=True; packets steered to 198.18.7.2 while attached (expected {'matching source': 6, 'other source': 0}): {'matching source': 6, 'other source': 0}; pre-existing policy preserved=True; after compensation (nothing steered expected) after 4 s: {'matching source': 0, 'other source': 0}; compensation=['COMPENSATED', 'COMPENSATED'] codes=['-', '-']; FRR running-config identical to pre-apply capture=True; pre-existing policy preserved=True; lab baseline restored=True; no failure || existing policy attached elsewhere: preflight=['pbr_policy=APPLY/True/-', 'pbr_attachment=APPLY/True/-']; conflicting-attachment preflight=APPLY/False/COMPENSATION_NOT_PROVABLE; control before apply (nothing steered expected) ok=True after 17 s: {'matching source': 0, 'other source': 0}; operator postcheck pass=True []; pbr facts={'policies': {'CAP_PBR': {'valid': True, 'sequences': [{'sequence': 10, 'installed': True, 'source_prefix': '198.51.100.0/24', 'destination_prefix': '192.0.2.0/24', 'next_hops': ['198.18.7.2']}]}, 'LEGACY': {'valid': True, 'sequences': [{'sequence': 10, 'installed': True, 'source_prefix': '203.0.113.0/24', 'destination",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-validation/frr-pbr_attach_ipv4/2026-11-02T21:53:18.329114+00:00",
+          "test_type": "LIVE"
         },
         "live_read": {
-          "detail": "Not attempted: NMAS prerequisite layer(s) failed their deliberate probe (renderer=RENDERER_ABSENT, candidate_generation=RENDERER_ABSENT, executor=EXECUTOR_REFUSED). First blocker renderer: Authoritative renderer differential: 0 target line(s), 1 refusal marker(s); sha256=b27b62716b3e9c46f61401dcea320427797c0e50e9a58daf0a1c6ed7ec45287d. No device was contacted for this stage.",
-          "outcome": "BLOCKED",
-          "reason": "RENDERER_ABSENT",
-          "reference": "gate:ubuntu_frr/service_policy.PBR_ATTACH_IPV4@d879b511a42d#7c2e59ae6be562ce",
-          "test_type": "STATIC"
+          "detail": "isolated FRR service_policy.PBR_ATTACH_IPV4 against an FRR peer through the registered LinuxExecutor (pbrd via vtysh, captured-configuration inverse) || pristine node: preflight=['pbr_policy=APPLY/True/-', 'pbr_attachment=APPLY/True/-']; conflicting-attachment preflight=n/a; control before apply (nothing steered expected) ok=True after 17 s: {'matching source': 0, 'other source': 0}; operator postcheck pass=True []; pbr facts={'policies': {'CAP_PBR': {'valid': True, 'sequences': [{'sequence': 10, 'installed': True, 'source_prefix': '198.51.100.0/24', 'destination_prefix': '192.0.2.0/24', 'next_hops': ['198.18.7.2']}]}}, 'attachments': [{'interface': 'eth3', 'policy': 'CAP_PBR', 'valid': True}]}; kernel rules=['309:\\tfrom 198.51.100.0/24 to 192.0.2.0/24 iif eth3 lookup 10000 proto zebra']; live import recovered the policy, every sequence and the attachment=True; packets steered to 198.18.7.2 while attached (expected {'matching source': 6, 'other source': 0}): {'matching source': 6, 'other source': 0}; pre-existing policy preserved=True; after compensation (nothing steered expected) after 4 s: {'matching source': 0, 'other source': 0}; compensation=['COMPENSATED', 'COMPENSATED'] codes=['-', '-']; FRR running-config identical to pre-apply capture=True; pre-existing policy preserved=True; lab baseline restored=True; no failure || existing policy attached elsewhere: preflight=['pbr_policy=APPLY/True/-', 'pbr_attachment=APPLY/True/-']; conflicting-attachment preflight=APPLY/False/COMPENSATION_NOT_PROVABLE; control before apply (nothing steered expected) ok=True after 17 s: {'matching source': 0, 'other source': 0}; operator postcheck pass=True []; pbr facts={'policies': {'CAP_PBR': {'valid': True, 'sequences': [{'sequence': 10, 'installed': True, 'source_prefix': '198.51.100.0/24', 'destination_prefix': '192.0.2.0/24', 'next_hops': ['198.18.7.2']}]}, 'LEGACY': {'valid': True, 'sequences': [{'sequence': 10, 'installed': True, 'source_prefix': '203.0.113.0/24', 'destination",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-validation/frr-pbr_attach_ipv4/2026-11-02T21:53:18.329114+00:00",
+          "test_type": "LIVE"
         },
         "live_write": {
-          "detail": "Not attempted: NMAS prerequisite layer(s) failed their deliberate probe (renderer=RENDERER_ABSENT, candidate_generation=RENDERER_ABSENT, executor=EXECUTOR_REFUSED). First blocker renderer: Authoritative renderer differential: 0 target line(s), 1 refusal marker(s); sha256=b27b62716b3e9c46f61401dcea320427797c0e50e9a58daf0a1c6ed7ec45287d. No device was contacted for this stage.",
-          "outcome": "BLOCKED",
-          "reason": "RENDERER_ABSENT",
-          "reference": "gate:ubuntu_frr/service_policy.PBR_ATTACH_IPV4@d879b511a42d#7c2e59ae6be562ce",
-          "test_type": "STATIC"
+          "detail": "isolated FRR service_policy.PBR_ATTACH_IPV4 against an FRR peer through the registered LinuxExecutor (pbrd via vtysh, captured-configuration inverse) || pristine node: preflight=['pbr_policy=APPLY/True/-', 'pbr_attachment=APPLY/True/-']; conflicting-attachment preflight=n/a; control before apply (nothing steered expected) ok=True after 17 s: {'matching source': 0, 'other source': 0}; operator postcheck pass=True []; pbr facts={'policies': {'CAP_PBR': {'valid': True, 'sequences': [{'sequence': 10, 'installed': True, 'source_prefix': '198.51.100.0/24', 'destination_prefix': '192.0.2.0/24', 'next_hops': ['198.18.7.2']}]}}, 'attachments': [{'interface': 'eth3', 'policy': 'CAP_PBR', 'valid': True}]}; kernel rules=['309:\\tfrom 198.51.100.0/24 to 192.0.2.0/24 iif eth3 lookup 10000 proto zebra']; live import recovered the policy, every sequence and the attachment=True; packets steered to 198.18.7.2 while attached (expected {'matching source': 6, 'other source': 0}): {'matching source': 6, 'other source': 0}; pre-existing policy preserved=True; after compensation (nothing steered expected) after 4 s: {'matching source': 0, 'other source': 0}; compensation=['COMPENSATED', 'COMPENSATED'] codes=['-', '-']; FRR running-config identical to pre-apply capture=True; pre-existing policy preserved=True; lab baseline restored=True; no failure || existing policy attached elsewhere: preflight=['pbr_policy=APPLY/True/-', 'pbr_attachment=APPLY/True/-']; conflicting-attachment preflight=APPLY/False/COMPENSATION_NOT_PROVABLE; control before apply (nothing steered expected) ok=True after 17 s: {'matching source': 0, 'other source': 0}; operator postcheck pass=True []; pbr facts={'policies': {'CAP_PBR': {'valid': True, 'sequences': [{'sequence': 10, 'installed': True, 'source_prefix': '198.51.100.0/24', 'destination_prefix': '192.0.2.0/24', 'next_hops': ['198.18.7.2']}]}, 'LEGACY': {'valid': True, 'sequences': [{'sequence': 10, 'installed': True, 'source_prefix': '203.0.113.0/24', 'destination",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-validation/frr-pbr_attach_ipv4/2026-11-02T21:53:18.329114+00:00",
+          "test_type": "LIVE"
         },
         "parser_import": {
-          "detail": "Real ubuntu-frr-1.0 parser executed; target semantic match=False; unmanaged blocks=20.",
-          "outcome": "FAIL",
-          "reason": "PARSER_ABSENT",
-          "reference": "",
-          "test_type": "FIXTURE"
+          "detail": "isolated FRR service_policy.PBR_ATTACH_IPV4 against an FRR peer through the registered LinuxExecutor (pbrd via vtysh, captured-configuration inverse) || pristine node: preflight=['pbr_policy=APPLY/True/-', 'pbr_attachment=APPLY/True/-']; conflicting-attachment preflight=n/a; control before apply (nothing steered expected) ok=True after 17 s: {'matching source': 0, 'other source': 0}; operator postcheck pass=True []; pbr facts={'policies': {'CAP_PBR': {'valid': True, 'sequences': [{'sequence': 10, 'installed': True, 'source_prefix': '198.51.100.0/24', 'destination_prefix': '192.0.2.0/24', 'next_hops': ['198.18.7.2']}]}}, 'attachments': [{'interface': 'eth3', 'policy': 'CAP_PBR', 'valid': True}]}; kernel rules=['309:\\tfrom 198.51.100.0/24 to 192.0.2.0/24 iif eth3 lookup 10000 proto zebra']; live import recovered the policy, every sequence and the attachment=True; packets steered to 198.18.7.2 while attached (expected {'matching source': 6, 'other source': 0}): {'matching source': 6, 'other source': 0}; pre-existing policy preserved=True; after compensation (nothing steered expected) after 4 s: {'matching source': 0, 'other source': 0}; compensation=['COMPENSATED', 'COMPENSATED'] codes=['-', '-']; FRR running-config identical to pre-apply capture=True; pre-existing policy preserved=True; lab baseline restored=True; no failure || existing policy attached elsewhere: preflight=['pbr_policy=APPLY/True/-', 'pbr_attachment=APPLY/True/-']; conflicting-attachment preflight=APPLY/False/COMPENSATION_NOT_PROVABLE; control before apply (nothing steered expected) ok=True after 17 s: {'matching source': 0, 'other source': 0}; operator postcheck pass=True []; pbr facts={'policies': {'CAP_PBR': {'valid': True, 'sequences': [{'sequence': 10, 'installed': True, 'source_prefix': '198.51.100.0/24', 'destination_prefix': '192.0.2.0/24', 'next_hops': ['198.18.7.2']}]}, 'LEGACY': {'valid': True, 'sequences': [{'sequence': 10, 'installed': True, 'source_prefix': '203.0.113.0/24', 'destination",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-validation/frr-pbr_attach_ipv4/2026-11-02T21:53:18.329114+00:00",
+          "test_type": "LIVE"
         },
         "renderer": {
-          "detail": "Authoritative renderer differential: 0 target line(s), 1 refusal marker(s); sha256=b27b62716b3e9c46f61401dcea320427797c0e50e9a58daf0a1c6ed7ec45287d.",
-          "outcome": "FAIL",
-          "reason": "RENDERER_ABSENT",
+          "detail": "Authoritative renderer differential: 2 target line(s), 0 refusal marker(s); sha256=fcd69a1eda4fdc81a4876024d6b6373b4af0c7a5741a03090b62182369f2242d.",
+          "outcome": "PASS",
+          "reason": "",
           "reference": "",
           "test_type": "FIXTURE"
         },
         "runtime_validation": {
-          "detail": "Not attempted: NMAS prerequisite layer(s) failed their deliberate probe (renderer=RENDERER_ABSENT, candidate_generation=RENDERER_ABSENT, executor=EXECUTOR_REFUSED). First blocker renderer: Authoritative renderer differential: 0 target line(s), 1 refusal marker(s); sha256=b27b62716b3e9c46f61401dcea320427797c0e50e9a58daf0a1c6ed7ec45287d. No device was contacted for this stage.",
-          "outcome": "BLOCKED",
-          "reason": "RENDERER_ABSENT",
-          "reference": "gate:ubuntu_frr/service_policy.PBR_ATTACH_IPV4@d879b511a42d#7c2e59ae6be562ce",
-          "test_type": "STATIC"
+          "detail": "isolated FRR service_policy.PBR_ATTACH_IPV4 against an FRR peer through the registered LinuxExecutor (pbrd via vtysh, captured-configuration inverse) || pristine node: preflight=['pbr_policy=APPLY/True/-', 'pbr_attachment=APPLY/True/-']; conflicting-attachment preflight=n/a; control before apply (nothing steered expected) ok=True after 17 s: {'matching source': 0, 'other source': 0}; operator postcheck pass=True []; pbr facts={'policies': {'CAP_PBR': {'valid': True, 'sequences': [{'sequence': 10, 'installed': True, 'source_prefix': '198.51.100.0/24', 'destination_prefix': '192.0.2.0/24', 'next_hops': ['198.18.7.2']}]}}, 'attachments': [{'interface': 'eth3', 'policy': 'CAP_PBR', 'valid': True}]}; kernel rules=['309:\\tfrom 198.51.100.0/24 to 192.0.2.0/24 iif eth3 lookup 10000 proto zebra']; live import recovered the policy, every sequence and the attachment=True; packets steered to 198.18.7.2 while attached (expected {'matching source': 6, 'other source': 0}): {'matching source': 6, 'other source': 0}; pre-existing policy preserved=True; after compensation (nothing steered expected) after 4 s: {'matching source': 0, 'other source': 0}; compensation=['COMPENSATED', 'COMPENSATED'] codes=['-', '-']; FRR running-config identical to pre-apply capture=True; pre-existing policy preserved=True; lab baseline restored=True; no failure || existing policy attached elsewhere: preflight=['pbr_policy=APPLY/True/-', 'pbr_attachment=APPLY/True/-']; conflicting-attachment preflight=APPLY/False/COMPENSATION_NOT_PROVABLE; control before apply (nothing steered expected) ok=True after 17 s: {'matching source': 0, 'other source': 0}; operator postcheck pass=True []; pbr facts={'policies': {'CAP_PBR': {'valid': True, 'sequences': [{'sequence': 10, 'installed': True, 'source_prefix': '198.51.100.0/24', 'destination_prefix': '192.0.2.0/24', 'next_hops': ['198.18.7.2']}]}, 'LEGACY': {'valid': True, 'sequences': [{'sequence': 10, 'installed': True, 'source_prefix': '203.0.113.0/24', 'destination",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-validation/frr-pbr_attach_ipv4/2026-11-02T21:53:18.329114+00:00",
+          "test_type": "LIVE"
         },
         "semantic_model": {
           "detail": "Canonical fixture resolves the feature-specific path policy.pbr.attachments.attach_0000000000000003.direction.",
@@ -58462,56 +58452,40 @@
           "test_type": "FIXTURE"
         }
       },
-      "renderer": "FAIL",
-      "repository_head": "d879b511a42dea60d7547a4fc17ecdeea4073377",
-      "runtime_test": "BLOCKED",
-      "runtime_version": "not contacted (prerequisite gate); platform runtime last observed: clab-raw-verifier-frr:8.4.4-1.1ubuntu6.7",
+      "renderer": "PASS",
+      "repository_head": "16fe36e70fb4e9a728e9039131d63ed9d60b2aac",
+      "runtime_test": "PASS",
+      "runtime_version": "FRRouting 8.4.4 (zebra + pbrd) / Ubuntu 24.04 isolated container pair",
       "semantic": "PASS",
-      "status": "UNSUPPORTED",
-      "strongest_test_type": "FIXTURE",
-      "timestamp": "2026-10-04T23:07:33.119833+00:00",
-      "unsupported_reasons": [
-        "CONFIG_VALIDATION_FAILED",
-        "EXECUTOR_REFUSED",
-        "PARSER_ABSENT",
-        "RENDERER_ABSENT",
-        "UI_ABSENT"
-      ],
-      "validator": "FAIL"
+      "status": "SUPPORTED",
+      "strongest_test_type": "LIVE",
+      "timestamp": "2026-11-02T21:51:34.724122+00:00",
+      "unsupported_reasons": [],
+      "validator": "PASS"
     },
     {
-      "assessment_basis": "PREREQUISITE_GATE",
+      "assessment_basis": "RUNTIME_INVESTIGATION",
       "assessment_complete": true,
-      "assessment_id": 988,
+      "assessment_id": null,
       "automated_tests": "PASS",
-      "candidate": "FAIL",
-      "compensation": "BLOCKED",
-      "device_builder": "FAIL",
-      "evidence_ids": [
-        6898,
-        6899,
-        6900,
-        6901,
-        6902,
-        6903,
-        6904,
-        6905,
-        6906,
-        6907,
-        6908
-      ],
+      "candidate": "PASS",
+      "capability_status": "SUPPORTED",
+      "compensation": "PASS",
+      "device_builder": "PASS",
+      "evidence_ids": [],
       "evidence_references": [
-        "gate:ubuntu_frr/service_policy.PBR_ATTACH_IPV6@d879b511a42d#7c2e59ae6be562ce"
+        "live:nmas-cap-validation/frr-pbr_attach_ipv6/2026-11-02T21:54:46.132752+00:00"
       ],
-      "executor": "FAIL",
+      "executor": "PASS",
+      "feasibility": "PROVEN",
       "feature": "service_policy.PBR_ATTACH_IPV6",
       "field_validation": "PASS",
-      "final_status": "UNSUPPORTED",
-      "live_read": "BLOCKED",
-      "live_write": "BLOCKED",
-      "parser": "FAIL",
+      "final_status": "SUPPORTED",
+      "live_read": "PASS",
+      "live_write": "PASS",
+      "parser": "PASS",
       "platform": "ubuntu_frr",
-      "postcheck": "BLOCKED",
+      "postcheck": "PASS",
       "probes": {
         "automated_tests": {
           "detail": "Repeated renderer determinism=True; feature-specific valid/invalid field regression=PASS.",
@@ -58521,37 +58495,37 @@
           "test_type": "FIXTURE"
         },
         "candidate_generation": {
-          "detail": "Real candidate_renderer.render ran; 1029 chars; target-rendered=FAIL.",
-          "outcome": "FAIL",
-          "reason": "RENDERER_ABSENT",
+          "detail": "Real candidate_renderer.render ran; 926 chars; target-rendered=PASS.",
+          "outcome": "PASS",
+          "reason": "",
           "reference": "",
           "test_type": "FIXTURE"
         },
         "compensation": {
-          "detail": "Not attempted: NMAS prerequisite layer(s) failed their deliberate probe (renderer=RENDERER_ABSENT, candidate_generation=RENDERER_ABSENT, executor=EXECUTOR_REFUSED). First blocker renderer: Authoritative renderer differential: 0 target line(s), 1 refusal marker(s); sha256=b27b62716b3e9c46f61401dcea320427797c0e50e9a58daf0a1c6ed7ec45287d. No device was contacted for this stage.",
-          "outcome": "BLOCKED",
-          "reason": "RENDERER_ABSENT",
-          "reference": "gate:ubuntu_frr/service_policy.PBR_ATTACH_IPV6@d879b511a42d#7c2e59ae6be562ce",
-          "test_type": "STATIC"
+          "detail": "isolated FRR service_policy.PBR_ATTACH_IPV6 against an FRR peer through the registered LinuxExecutor (pbrd via vtysh, captured-configuration inverse) || pristine node: preflight=['pbr_policy=APPLY/True/-', 'pbr_attachment=APPLY/True/-']; conflicting-attachment preflight=n/a; control before apply (nothing steered expected) ok=True after 11 s: {'matching source': 0, 'other source': 0}; operator postcheck pass=True []; pbr facts={'policies': {'CAP_PBR': {'valid': True, 'sequences': [{'sequence': 10, 'installed': True, 'source_prefix': '2001:db8:114::/64', 'destination_prefix': '2001:db8:192::/64', 'next_hops': ['2001:db8:77::2']}]}}, 'attachments': [{'interface': 'eth3', 'policy': 'CAP_PBR', 'valid': True}]}; kernel rules=['309:\\tfrom 2001:db8:114::/64 to 2001:db8:192::/64 iif eth3 lookup 10000 proto zebra']; live import recovered the policy, every sequence and the attachment=True; packets steered to 2001:db8:77::2 while attached (expected {'matching source': 6, 'other source': 0}): {'matching source': 6, 'other source': 0}; pre-existing policy preserved=True; after compensation (nothing steered expected) after 4 s: {'matching source': 0, 'other source': 0}; compensation=['COMPENSATED', 'COMPENSATED'] codes=['-', '-']; FRR running-config identical to pre-apply capture=True; pre-existing policy preserved=True; lab baseline restored=True; no failure || existing policy attached elsewhere: preflight=['pbr_policy=APPLY/True/-', 'pbr_attachment=APPLY/True/-']; conflicting-attachment preflight=APPLY/False/COMPENSATION_NOT_PROVABLE; control before apply (nothing steered expected) ok=True after 17 s: {'matching source': 0, 'other source': 0}; operator postcheck pass=True []; pbr facts={'policies': {'CAP_PBR': {'valid': True, 'sequences': [{'sequence': 10, 'installed': True, 'source_prefix': '2001:db8:114::/64', 'destination_prefix': '2001:db8:192::/64', 'next_hops': ['2001:db8:77::2']}]}, 'LEGACY': {'valid': True, 'sequences': [{'sequence': 10, 'installed': True, 'source_prefix",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-validation/frr-pbr_attach_ipv6/2026-11-02T21:54:46.132752+00:00",
+          "test_type": "LIVE"
         },
         "config_validation": {
-          "detail": "Actual network-config validation=BLOCKED; failing checks=['PLATFORM_CAPABILITY']; external inputs are OFFLINE_FIXTURE only.",
-          "outcome": "FAIL",
-          "reason": "CONFIG_VALIDATION_FAILED",
+          "detail": "Actual network-config validation=PASS; failing checks=[]; external inputs are OFFLINE_FIXTURE only.",
+          "outcome": "PASS",
+          "reason": "",
           "reference": "",
           "test_type": "FIXTURE"
         },
         "device_builder_ui": {
-          "detail": "Real authoring API refused the feature (CollectionMutationError).",
-          "outcome": "FAIL",
-          "reason": "UI_ABSENT",
+          "detail": "Real Device Builder mutation API accepted the feature.",
+          "outcome": "PASS",
+          "reason": "",
           "reference": "",
           "test_type": "FIXTURE"
         },
         "executor": {
-          "detail": "Real executor.assess on fixture: action=APPLY; exact inverse present=False; restorable=False; no connection/apply invoked.",
-          "outcome": "FAIL",
-          "reason": "EXECUTOR_REFUSED",
+          "detail": "Real executor.assess on fixture: action=APPLY; exact inverse present=True; restorable=True; no connection/apply invoked.",
+          "outcome": "PASS",
+          "reason": "",
           "reference": "",
           "test_type": "FIXTURE"
         },
@@ -58563,46 +58537,46 @@
           "test_type": "FIXTURE"
         },
         "live_post_write_validation": {
-          "detail": "Not attempted: NMAS prerequisite layer(s) failed their deliberate probe (renderer=RENDERER_ABSENT, candidate_generation=RENDERER_ABSENT, executor=EXECUTOR_REFUSED). First blocker renderer: Authoritative renderer differential: 0 target line(s), 1 refusal marker(s); sha256=b27b62716b3e9c46f61401dcea320427797c0e50e9a58daf0a1c6ed7ec45287d. No device was contacted for this stage.",
-          "outcome": "BLOCKED",
-          "reason": "RENDERER_ABSENT",
-          "reference": "gate:ubuntu_frr/service_policy.PBR_ATTACH_IPV6@d879b511a42d#7c2e59ae6be562ce",
-          "test_type": "STATIC"
+          "detail": "isolated FRR service_policy.PBR_ATTACH_IPV6 against an FRR peer through the registered LinuxExecutor (pbrd via vtysh, captured-configuration inverse) || pristine node: preflight=['pbr_policy=APPLY/True/-', 'pbr_attachment=APPLY/True/-']; conflicting-attachment preflight=n/a; control before apply (nothing steered expected) ok=True after 11 s: {'matching source': 0, 'other source': 0}; operator postcheck pass=True []; pbr facts={'policies': {'CAP_PBR': {'valid': True, 'sequences': [{'sequence': 10, 'installed': True, 'source_prefix': '2001:db8:114::/64', 'destination_prefix': '2001:db8:192::/64', 'next_hops': ['2001:db8:77::2']}]}}, 'attachments': [{'interface': 'eth3', 'policy': 'CAP_PBR', 'valid': True}]}; kernel rules=['309:\\tfrom 2001:db8:114::/64 to 2001:db8:192::/64 iif eth3 lookup 10000 proto zebra']; live import recovered the policy, every sequence and the attachment=True; packets steered to 2001:db8:77::2 while attached (expected {'matching source': 6, 'other source': 0}): {'matching source': 6, 'other source': 0}; pre-existing policy preserved=True; after compensation (nothing steered expected) after 4 s: {'matching source': 0, 'other source': 0}; compensation=['COMPENSATED', 'COMPENSATED'] codes=['-', '-']; FRR running-config identical to pre-apply capture=True; pre-existing policy preserved=True; lab baseline restored=True; no failure || existing policy attached elsewhere: preflight=['pbr_policy=APPLY/True/-', 'pbr_attachment=APPLY/True/-']; conflicting-attachment preflight=APPLY/False/COMPENSATION_NOT_PROVABLE; control before apply (nothing steered expected) ok=True after 17 s: {'matching source': 0, 'other source': 0}; operator postcheck pass=True []; pbr facts={'policies': {'CAP_PBR': {'valid': True, 'sequences': [{'sequence': 10, 'installed': True, 'source_prefix': '2001:db8:114::/64', 'destination_prefix': '2001:db8:192::/64', 'next_hops': ['2001:db8:77::2']}]}, 'LEGACY': {'valid': True, 'sequences': [{'sequence': 10, 'installed': True, 'source_prefix",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-validation/frr-pbr_attach_ipv6/2026-11-02T21:54:46.132752+00:00",
+          "test_type": "LIVE"
         },
         "live_read": {
-          "detail": "Not attempted: NMAS prerequisite layer(s) failed their deliberate probe (renderer=RENDERER_ABSENT, candidate_generation=RENDERER_ABSENT, executor=EXECUTOR_REFUSED). First blocker renderer: Authoritative renderer differential: 0 target line(s), 1 refusal marker(s); sha256=b27b62716b3e9c46f61401dcea320427797c0e50e9a58daf0a1c6ed7ec45287d. No device was contacted for this stage.",
-          "outcome": "BLOCKED",
-          "reason": "RENDERER_ABSENT",
-          "reference": "gate:ubuntu_frr/service_policy.PBR_ATTACH_IPV6@d879b511a42d#7c2e59ae6be562ce",
-          "test_type": "STATIC"
+          "detail": "isolated FRR service_policy.PBR_ATTACH_IPV6 against an FRR peer through the registered LinuxExecutor (pbrd via vtysh, captured-configuration inverse) || pristine node: preflight=['pbr_policy=APPLY/True/-', 'pbr_attachment=APPLY/True/-']; conflicting-attachment preflight=n/a; control before apply (nothing steered expected) ok=True after 11 s: {'matching source': 0, 'other source': 0}; operator postcheck pass=True []; pbr facts={'policies': {'CAP_PBR': {'valid': True, 'sequences': [{'sequence': 10, 'installed': True, 'source_prefix': '2001:db8:114::/64', 'destination_prefix': '2001:db8:192::/64', 'next_hops': ['2001:db8:77::2']}]}}, 'attachments': [{'interface': 'eth3', 'policy': 'CAP_PBR', 'valid': True}]}; kernel rules=['309:\\tfrom 2001:db8:114::/64 to 2001:db8:192::/64 iif eth3 lookup 10000 proto zebra']; live import recovered the policy, every sequence and the attachment=True; packets steered to 2001:db8:77::2 while attached (expected {'matching source': 6, 'other source': 0}): {'matching source': 6, 'other source': 0}; pre-existing policy preserved=True; after compensation (nothing steered expected) after 4 s: {'matching source': 0, 'other source': 0}; compensation=['COMPENSATED', 'COMPENSATED'] codes=['-', '-']; FRR running-config identical to pre-apply capture=True; pre-existing policy preserved=True; lab baseline restored=True; no failure || existing policy attached elsewhere: preflight=['pbr_policy=APPLY/True/-', 'pbr_attachment=APPLY/True/-']; conflicting-attachment preflight=APPLY/False/COMPENSATION_NOT_PROVABLE; control before apply (nothing steered expected) ok=True after 17 s: {'matching source': 0, 'other source': 0}; operator postcheck pass=True []; pbr facts={'policies': {'CAP_PBR': {'valid': True, 'sequences': [{'sequence': 10, 'installed': True, 'source_prefix': '2001:db8:114::/64', 'destination_prefix': '2001:db8:192::/64', 'next_hops': ['2001:db8:77::2']}]}, 'LEGACY': {'valid': True, 'sequences': [{'sequence': 10, 'installed': True, 'source_prefix",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-validation/frr-pbr_attach_ipv6/2026-11-02T21:54:46.132752+00:00",
+          "test_type": "LIVE"
         },
         "live_write": {
-          "detail": "Not attempted: NMAS prerequisite layer(s) failed their deliberate probe (renderer=RENDERER_ABSENT, candidate_generation=RENDERER_ABSENT, executor=EXECUTOR_REFUSED). First blocker renderer: Authoritative renderer differential: 0 target line(s), 1 refusal marker(s); sha256=b27b62716b3e9c46f61401dcea320427797c0e50e9a58daf0a1c6ed7ec45287d. No device was contacted for this stage.",
-          "outcome": "BLOCKED",
-          "reason": "RENDERER_ABSENT",
-          "reference": "gate:ubuntu_frr/service_policy.PBR_ATTACH_IPV6@d879b511a42d#7c2e59ae6be562ce",
-          "test_type": "STATIC"
+          "detail": "isolated FRR service_policy.PBR_ATTACH_IPV6 against an FRR peer through the registered LinuxExecutor (pbrd via vtysh, captured-configuration inverse) || pristine node: preflight=['pbr_policy=APPLY/True/-', 'pbr_attachment=APPLY/True/-']; conflicting-attachment preflight=n/a; control before apply (nothing steered expected) ok=True after 11 s: {'matching source': 0, 'other source': 0}; operator postcheck pass=True []; pbr facts={'policies': {'CAP_PBR': {'valid': True, 'sequences': [{'sequence': 10, 'installed': True, 'source_prefix': '2001:db8:114::/64', 'destination_prefix': '2001:db8:192::/64', 'next_hops': ['2001:db8:77::2']}]}}, 'attachments': [{'interface': 'eth3', 'policy': 'CAP_PBR', 'valid': True}]}; kernel rules=['309:\\tfrom 2001:db8:114::/64 to 2001:db8:192::/64 iif eth3 lookup 10000 proto zebra']; live import recovered the policy, every sequence and the attachment=True; packets steered to 2001:db8:77::2 while attached (expected {'matching source': 6, 'other source': 0}): {'matching source': 6, 'other source': 0}; pre-existing policy preserved=True; after compensation (nothing steered expected) after 4 s: {'matching source': 0, 'other source': 0}; compensation=['COMPENSATED', 'COMPENSATED'] codes=['-', '-']; FRR running-config identical to pre-apply capture=True; pre-existing policy preserved=True; lab baseline restored=True; no failure || existing policy attached elsewhere: preflight=['pbr_policy=APPLY/True/-', 'pbr_attachment=APPLY/True/-']; conflicting-attachment preflight=APPLY/False/COMPENSATION_NOT_PROVABLE; control before apply (nothing steered expected) ok=True after 17 s: {'matching source': 0, 'other source': 0}; operator postcheck pass=True []; pbr facts={'policies': {'CAP_PBR': {'valid': True, 'sequences': [{'sequence': 10, 'installed': True, 'source_prefix': '2001:db8:114::/64', 'destination_prefix': '2001:db8:192::/64', 'next_hops': ['2001:db8:77::2']}]}, 'LEGACY': {'valid': True, 'sequences': [{'sequence': 10, 'installed': True, 'source_prefix",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-validation/frr-pbr_attach_ipv6/2026-11-02T21:54:46.132752+00:00",
+          "test_type": "LIVE"
         },
         "parser_import": {
-          "detail": "Real ubuntu-frr-1.0 parser executed; target semantic match=False; unmanaged blocks=20.",
-          "outcome": "FAIL",
-          "reason": "PARSER_ABSENT",
-          "reference": "",
-          "test_type": "FIXTURE"
+          "detail": "isolated FRR service_policy.PBR_ATTACH_IPV6 against an FRR peer through the registered LinuxExecutor (pbrd via vtysh, captured-configuration inverse) || pristine node: preflight=['pbr_policy=APPLY/True/-', 'pbr_attachment=APPLY/True/-']; conflicting-attachment preflight=n/a; control before apply (nothing steered expected) ok=True after 11 s: {'matching source': 0, 'other source': 0}; operator postcheck pass=True []; pbr facts={'policies': {'CAP_PBR': {'valid': True, 'sequences': [{'sequence': 10, 'installed': True, 'source_prefix': '2001:db8:114::/64', 'destination_prefix': '2001:db8:192::/64', 'next_hops': ['2001:db8:77::2']}]}}, 'attachments': [{'interface': 'eth3', 'policy': 'CAP_PBR', 'valid': True}]}; kernel rules=['309:\\tfrom 2001:db8:114::/64 to 2001:db8:192::/64 iif eth3 lookup 10000 proto zebra']; live import recovered the policy, every sequence and the attachment=True; packets steered to 2001:db8:77::2 while attached (expected {'matching source': 6, 'other source': 0}): {'matching source': 6, 'other source': 0}; pre-existing policy preserved=True; after compensation (nothing steered expected) after 4 s: {'matching source': 0, 'other source': 0}; compensation=['COMPENSATED', 'COMPENSATED'] codes=['-', '-']; FRR running-config identical to pre-apply capture=True; pre-existing policy preserved=True; lab baseline restored=True; no failure || existing policy attached elsewhere: preflight=['pbr_policy=APPLY/True/-', 'pbr_attachment=APPLY/True/-']; conflicting-attachment preflight=APPLY/False/COMPENSATION_NOT_PROVABLE; control before apply (nothing steered expected) ok=True after 17 s: {'matching source': 0, 'other source': 0}; operator postcheck pass=True []; pbr facts={'policies': {'CAP_PBR': {'valid': True, 'sequences': [{'sequence': 10, 'installed': True, 'source_prefix': '2001:db8:114::/64', 'destination_prefix': '2001:db8:192::/64', 'next_hops': ['2001:db8:77::2']}]}, 'LEGACY': {'valid': True, 'sequences': [{'sequence': 10, 'installed': True, 'source_prefix",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-validation/frr-pbr_attach_ipv6/2026-11-02T21:54:46.132752+00:00",
+          "test_type": "LIVE"
         },
         "renderer": {
-          "detail": "Authoritative renderer differential: 0 target line(s), 1 refusal marker(s); sha256=b27b62716b3e9c46f61401dcea320427797c0e50e9a58daf0a1c6ed7ec45287d.",
-          "outcome": "FAIL",
-          "reason": "RENDERER_ABSENT",
+          "detail": "Authoritative renderer differential: 2 target line(s), 0 refusal marker(s); sha256=fcd69a1eda4fdc81a4876024d6b6373b4af0c7a5741a03090b62182369f2242d.",
+          "outcome": "PASS",
+          "reason": "",
           "reference": "",
           "test_type": "FIXTURE"
         },
         "runtime_validation": {
-          "detail": "Not attempted: NMAS prerequisite layer(s) failed their deliberate probe (renderer=RENDERER_ABSENT, candidate_generation=RENDERER_ABSENT, executor=EXECUTOR_REFUSED). First blocker renderer: Authoritative renderer differential: 0 target line(s), 1 refusal marker(s); sha256=b27b62716b3e9c46f61401dcea320427797c0e50e9a58daf0a1c6ed7ec45287d. No device was contacted for this stage.",
-          "outcome": "BLOCKED",
-          "reason": "RENDERER_ABSENT",
-          "reference": "gate:ubuntu_frr/service_policy.PBR_ATTACH_IPV6@d879b511a42d#7c2e59ae6be562ce",
-          "test_type": "STATIC"
+          "detail": "isolated FRR service_policy.PBR_ATTACH_IPV6 against an FRR peer through the registered LinuxExecutor (pbrd via vtysh, captured-configuration inverse) || pristine node: preflight=['pbr_policy=APPLY/True/-', 'pbr_attachment=APPLY/True/-']; conflicting-attachment preflight=n/a; control before apply (nothing steered expected) ok=True after 11 s: {'matching source': 0, 'other source': 0}; operator postcheck pass=True []; pbr facts={'policies': {'CAP_PBR': {'valid': True, 'sequences': [{'sequence': 10, 'installed': True, 'source_prefix': '2001:db8:114::/64', 'destination_prefix': '2001:db8:192::/64', 'next_hops': ['2001:db8:77::2']}]}}, 'attachments': [{'interface': 'eth3', 'policy': 'CAP_PBR', 'valid': True}]}; kernel rules=['309:\\tfrom 2001:db8:114::/64 to 2001:db8:192::/64 iif eth3 lookup 10000 proto zebra']; live import recovered the policy, every sequence and the attachment=True; packets steered to 2001:db8:77::2 while attached (expected {'matching source': 6, 'other source': 0}): {'matching source': 6, 'other source': 0}; pre-existing policy preserved=True; after compensation (nothing steered expected) after 4 s: {'matching source': 0, 'other source': 0}; compensation=['COMPENSATED', 'COMPENSATED'] codes=['-', '-']; FRR running-config identical to pre-apply capture=True; pre-existing policy preserved=True; lab baseline restored=True; no failure || existing policy attached elsewhere: preflight=['pbr_policy=APPLY/True/-', 'pbr_attachment=APPLY/True/-']; conflicting-attachment preflight=APPLY/False/COMPENSATION_NOT_PROVABLE; control before apply (nothing steered expected) ok=True after 17 s: {'matching source': 0, 'other source': 0}; operator postcheck pass=True []; pbr facts={'policies': {'CAP_PBR': {'valid': True, 'sequences': [{'sequence': 10, 'installed': True, 'source_prefix': '2001:db8:114::/64', 'destination_prefix': '2001:db8:192::/64', 'next_hops': ['2001:db8:77::2']}]}, 'LEGACY': {'valid': True, 'sequences': [{'sequence': 10, 'installed': True, 'source_prefix",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-validation/frr-pbr_attach_ipv6/2026-11-02T21:54:46.132752+00:00",
+          "test_type": "LIVE"
         },
         "semantic_model": {
           "detail": "Canonical fixture resolves the feature-specific path policy.pbr.attachments.attach_0000000000000003.direction.",
@@ -58612,56 +58586,40 @@
           "test_type": "FIXTURE"
         }
       },
-      "renderer": "FAIL",
-      "repository_head": "d879b511a42dea60d7547a4fc17ecdeea4073377",
-      "runtime_test": "BLOCKED",
-      "runtime_version": "not contacted (prerequisite gate); platform runtime last observed: clab-raw-verifier-frr:8.4.4-1.1ubuntu6.7",
+      "renderer": "PASS",
+      "repository_head": "16fe36e70fb4e9a728e9039131d63ed9d60b2aac",
+      "runtime_test": "PASS",
+      "runtime_version": "FRRouting 8.4.4 (zebra + pbrd) / Ubuntu 24.04 isolated container pair",
       "semantic": "PASS",
-      "status": "UNSUPPORTED",
-      "strongest_test_type": "FIXTURE",
-      "timestamp": "2026-10-04T23:07:33.196897+00:00",
-      "unsupported_reasons": [
-        "CONFIG_VALIDATION_FAILED",
-        "EXECUTOR_REFUSED",
-        "PARSER_ABSENT",
-        "RENDERER_ABSENT",
-        "UI_ABSENT"
-      ],
-      "validator": "FAIL"
+      "status": "SUPPORTED",
+      "strongest_test_type": "LIVE",
+      "timestamp": "2026-11-02T21:53:18.334315+00:00",
+      "unsupported_reasons": [],
+      "validator": "PASS"
     },
     {
-      "assessment_basis": "PREREQUISITE_GATE",
+      "assessment_basis": "RUNTIME_INVESTIGATION",
       "assessment_complete": true,
-      "assessment_id": 985,
+      "assessment_id": null,
       "automated_tests": "PASS",
-      "candidate": "FAIL",
-      "compensation": "BLOCKED",
-      "device_builder": "FAIL",
-      "evidence_ids": [
-        6865,
-        6866,
-        6867,
-        6868,
-        6869,
-        6870,
-        6871,
-        6872,
-        6873,
-        6874,
-        6875
-      ],
+      "candidate": "PASS",
+      "capability_status": "SUPPORTED",
+      "compensation": "PASS",
+      "device_builder": "PASS",
+      "evidence_ids": [],
       "evidence_references": [
-        "gate:ubuntu_frr/service_policy.PBR_IPV4@d879b511a42d#a4d4adeae33b8b1c"
+        "live:nmas-cap-validation/frr-pbr_ipv4/2026-11-02T21:49:55.080047+00:00"
       ],
-      "executor": "FAIL",
+      "executor": "PASS",
+      "feasibility": "PROVEN",
       "feature": "service_policy.PBR_IPV4",
       "field_validation": "PASS",
-      "final_status": "UNSUPPORTED",
-      "live_read": "BLOCKED",
-      "live_write": "BLOCKED",
-      "parser": "FAIL",
+      "final_status": "SUPPORTED",
+      "live_read": "PASS",
+      "live_write": "PASS",
+      "parser": "PASS",
       "platform": "ubuntu_frr",
-      "postcheck": "BLOCKED",
+      "postcheck": "PASS",
       "probes": {
         "automated_tests": {
           "detail": "Repeated renderer determinism=True; feature-specific valid/invalid field regression=PASS.",
@@ -58671,37 +58629,37 @@
           "test_type": "FIXTURE"
         },
         "candidate_generation": {
-          "detail": "Real candidate_renderer.render ran; 904 chars; target-rendered=FAIL.",
-          "outcome": "FAIL",
-          "reason": "RENDERER_ABSENT",
+          "detail": "Real candidate_renderer.render ran; 880 chars; target-rendered=PASS.",
+          "outcome": "PASS",
+          "reason": "",
           "reference": "",
           "test_type": "FIXTURE"
         },
         "compensation": {
-          "detail": "Not attempted: NMAS prerequisite layer(s) failed their deliberate probe (renderer=RENDERER_ABSENT, candidate_generation=RENDERER_ABSENT, executor=EXECUTOR_REFUSED). First blocker renderer: Authoritative renderer differential: 0 target line(s), 1 refusal marker(s); sha256=1fffafa5f0e81ad0b4af55bcbc278e6f8525a08b36aba8f236f63d8a8bb11fbb. No device was contacted for this stage.",
-          "outcome": "BLOCKED",
-          "reason": "RENDERER_ABSENT",
-          "reference": "gate:ubuntu_frr/service_policy.PBR_IPV4@d879b511a42d#a4d4adeae33b8b1c",
-          "test_type": "STATIC"
+          "detail": "isolated FRR service_policy.PBR_IPV4 against an FRR peer through the registered LinuxExecutor (pbrd via vtysh, captured-configuration inverse) || pristine node: preflight=['pbr_policy=APPLY/True/-', 'pbr_attachment=APPLY/True/-']; conflicting-attachment preflight=n/a; control before apply (nothing steered expected) ok=True after 17 s: {'matching source': 0, 'other source': 0}; operator postcheck pass=True []; pbr facts={'policies': {'CAP_PBR': {'valid': True, 'sequences': [{'sequence': 10, 'installed': True, 'source_prefix': '198.51.100.0/24', 'destination_prefix': '192.0.2.0/24', 'next_hops': ['198.18.7.2']}]}}, 'attachments': [{'interface': 'eth3', 'policy': 'CAP_PBR', 'valid': True}]}; kernel rules=['309:\\tfrom 198.51.100.0/24 to 192.0.2.0/24 iif eth3 lookup 10000 proto zebra']; live import recovered the policy, every sequence and the attachment=True; packets steered to 198.18.7.2 while attached (expected {'matching source': 6, 'other source': 0}): {'matching source': 6, 'other source': 0}; pre-existing policy preserved=True; after compensation (nothing steered expected) after 4 s: {'matching source': 0, 'other source': 0}; compensation=['COMPENSATED', 'COMPENSATED'] codes=['-', '-']; FRR running-config identical to pre-apply capture=True; pre-existing policy preserved=True; lab baseline restored=True; no failure || existing policy attached elsewhere: preflight=['pbr_policy=APPLY/True/-', 'pbr_attachment=APPLY/True/-']; conflicting-attachment preflight=APPLY/False/COMPENSATION_NOT_PROVABLE; control before apply (nothing steered expected) ok=True after 17 s: {'matching source': 0, 'other source': 0}; operator postcheck pass=True []; pbr facts={'policies': {'CAP_PBR': {'valid': True, 'sequences': [{'sequence': 10, 'installed': True, 'source_prefix': '198.51.100.0/24', 'destination_prefix': '192.0.2.0/24', 'next_hops': ['198.18.7.2']}]}, 'LEGACY': {'valid': True, 'sequences': [{'sequence': 10, 'installed': True, 'source_prefix': '203.0.113.0/24', 'destination_prefix",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-validation/frr-pbr_ipv4/2026-11-02T21:49:55.080047+00:00",
+          "test_type": "LIVE"
         },
         "config_validation": {
-          "detail": "Actual network-config validation=BLOCKED; failing checks=['PLATFORM_CAPABILITY']; external inputs are OFFLINE_FIXTURE only.",
-          "outcome": "FAIL",
-          "reason": "CONFIG_VALIDATION_FAILED",
+          "detail": "Actual network-config validation=PASS; failing checks=[]; external inputs are OFFLINE_FIXTURE only.",
+          "outcome": "PASS",
+          "reason": "",
           "reference": "",
           "test_type": "FIXTURE"
         },
         "device_builder_ui": {
-          "detail": "Real authoring API refused the feature (CollectionMutationError).",
-          "outcome": "FAIL",
-          "reason": "UI_ABSENT",
+          "detail": "Real Device Builder mutation API accepted the feature.",
+          "outcome": "PASS",
+          "reason": "",
           "reference": "",
           "test_type": "FIXTURE"
         },
         "executor": {
-          "detail": "Real executor.assess on fixture: action=APPLY; exact inverse present=False; restorable=False; no connection/apply invoked.",
-          "outcome": "FAIL",
-          "reason": "EXECUTOR_REFUSED",
+          "detail": "Real executor.assess on fixture: action=APPLY; exact inverse present=True; restorable=True; no connection/apply invoked.",
+          "outcome": "PASS",
+          "reason": "",
           "reference": "",
           "test_type": "FIXTURE"
         },
@@ -58713,46 +58671,46 @@
           "test_type": "FIXTURE"
         },
         "live_post_write_validation": {
-          "detail": "Not attempted: NMAS prerequisite layer(s) failed their deliberate probe (renderer=RENDERER_ABSENT, candidate_generation=RENDERER_ABSENT, executor=EXECUTOR_REFUSED). First blocker renderer: Authoritative renderer differential: 0 target line(s), 1 refusal marker(s); sha256=1fffafa5f0e81ad0b4af55bcbc278e6f8525a08b36aba8f236f63d8a8bb11fbb. No device was contacted for this stage.",
-          "outcome": "BLOCKED",
-          "reason": "RENDERER_ABSENT",
-          "reference": "gate:ubuntu_frr/service_policy.PBR_IPV4@d879b511a42d#a4d4adeae33b8b1c",
-          "test_type": "STATIC"
+          "detail": "isolated FRR service_policy.PBR_IPV4 against an FRR peer through the registered LinuxExecutor (pbrd via vtysh, captured-configuration inverse) || pristine node: preflight=['pbr_policy=APPLY/True/-', 'pbr_attachment=APPLY/True/-']; conflicting-attachment preflight=n/a; control before apply (nothing steered expected) ok=True after 17 s: {'matching source': 0, 'other source': 0}; operator postcheck pass=True []; pbr facts={'policies': {'CAP_PBR': {'valid': True, 'sequences': [{'sequence': 10, 'installed': True, 'source_prefix': '198.51.100.0/24', 'destination_prefix': '192.0.2.0/24', 'next_hops': ['198.18.7.2']}]}}, 'attachments': [{'interface': 'eth3', 'policy': 'CAP_PBR', 'valid': True}]}; kernel rules=['309:\\tfrom 198.51.100.0/24 to 192.0.2.0/24 iif eth3 lookup 10000 proto zebra']; live import recovered the policy, every sequence and the attachment=True; packets steered to 198.18.7.2 while attached (expected {'matching source': 6, 'other source': 0}): {'matching source': 6, 'other source': 0}; pre-existing policy preserved=True; after compensation (nothing steered expected) after 4 s: {'matching source': 0, 'other source': 0}; compensation=['COMPENSATED', 'COMPENSATED'] codes=['-', '-']; FRR running-config identical to pre-apply capture=True; pre-existing policy preserved=True; lab baseline restored=True; no failure || existing policy attached elsewhere: preflight=['pbr_policy=APPLY/True/-', 'pbr_attachment=APPLY/True/-']; conflicting-attachment preflight=APPLY/False/COMPENSATION_NOT_PROVABLE; control before apply (nothing steered expected) ok=True after 17 s: {'matching source': 0, 'other source': 0}; operator postcheck pass=True []; pbr facts={'policies': {'CAP_PBR': {'valid': True, 'sequences': [{'sequence': 10, 'installed': True, 'source_prefix': '198.51.100.0/24', 'destination_prefix': '192.0.2.0/24', 'next_hops': ['198.18.7.2']}]}, 'LEGACY': {'valid': True, 'sequences': [{'sequence': 10, 'installed': True, 'source_prefix': '203.0.113.0/24', 'destination_prefix",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-validation/frr-pbr_ipv4/2026-11-02T21:49:55.080047+00:00",
+          "test_type": "LIVE"
         },
         "live_read": {
-          "detail": "Not attempted: NMAS prerequisite layer(s) failed their deliberate probe (renderer=RENDERER_ABSENT, candidate_generation=RENDERER_ABSENT, executor=EXECUTOR_REFUSED). First blocker renderer: Authoritative renderer differential: 0 target line(s), 1 refusal marker(s); sha256=1fffafa5f0e81ad0b4af55bcbc278e6f8525a08b36aba8f236f63d8a8bb11fbb. No device was contacted for this stage.",
-          "outcome": "BLOCKED",
-          "reason": "RENDERER_ABSENT",
-          "reference": "gate:ubuntu_frr/service_policy.PBR_IPV4@d879b511a42d#a4d4adeae33b8b1c",
-          "test_type": "STATIC"
+          "detail": "isolated FRR service_policy.PBR_IPV4 against an FRR peer through the registered LinuxExecutor (pbrd via vtysh, captured-configuration inverse) || pristine node: preflight=['pbr_policy=APPLY/True/-', 'pbr_attachment=APPLY/True/-']; conflicting-attachment preflight=n/a; control before apply (nothing steered expected) ok=True after 17 s: {'matching source': 0, 'other source': 0}; operator postcheck pass=True []; pbr facts={'policies': {'CAP_PBR': {'valid': True, 'sequences': [{'sequence': 10, 'installed': True, 'source_prefix': '198.51.100.0/24', 'destination_prefix': '192.0.2.0/24', 'next_hops': ['198.18.7.2']}]}}, 'attachments': [{'interface': 'eth3', 'policy': 'CAP_PBR', 'valid': True}]}; kernel rules=['309:\\tfrom 198.51.100.0/24 to 192.0.2.0/24 iif eth3 lookup 10000 proto zebra']; live import recovered the policy, every sequence and the attachment=True; packets steered to 198.18.7.2 while attached (expected {'matching source': 6, 'other source': 0}): {'matching source': 6, 'other source': 0}; pre-existing policy preserved=True; after compensation (nothing steered expected) after 4 s: {'matching source': 0, 'other source': 0}; compensation=['COMPENSATED', 'COMPENSATED'] codes=['-', '-']; FRR running-config identical to pre-apply capture=True; pre-existing policy preserved=True; lab baseline restored=True; no failure || existing policy attached elsewhere: preflight=['pbr_policy=APPLY/True/-', 'pbr_attachment=APPLY/True/-']; conflicting-attachment preflight=APPLY/False/COMPENSATION_NOT_PROVABLE; control before apply (nothing steered expected) ok=True after 17 s: {'matching source': 0, 'other source': 0}; operator postcheck pass=True []; pbr facts={'policies': {'CAP_PBR': {'valid': True, 'sequences': [{'sequence': 10, 'installed': True, 'source_prefix': '198.51.100.0/24', 'destination_prefix': '192.0.2.0/24', 'next_hops': ['198.18.7.2']}]}, 'LEGACY': {'valid': True, 'sequences': [{'sequence': 10, 'installed': True, 'source_prefix': '203.0.113.0/24', 'destination_prefix",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-validation/frr-pbr_ipv4/2026-11-02T21:49:55.080047+00:00",
+          "test_type": "LIVE"
         },
         "live_write": {
-          "detail": "Not attempted: NMAS prerequisite layer(s) failed their deliberate probe (renderer=RENDERER_ABSENT, candidate_generation=RENDERER_ABSENT, executor=EXECUTOR_REFUSED). First blocker renderer: Authoritative renderer differential: 0 target line(s), 1 refusal marker(s); sha256=1fffafa5f0e81ad0b4af55bcbc278e6f8525a08b36aba8f236f63d8a8bb11fbb. No device was contacted for this stage.",
-          "outcome": "BLOCKED",
-          "reason": "RENDERER_ABSENT",
-          "reference": "gate:ubuntu_frr/service_policy.PBR_IPV4@d879b511a42d#a4d4adeae33b8b1c",
-          "test_type": "STATIC"
+          "detail": "isolated FRR service_policy.PBR_IPV4 against an FRR peer through the registered LinuxExecutor (pbrd via vtysh, captured-configuration inverse) || pristine node: preflight=['pbr_policy=APPLY/True/-', 'pbr_attachment=APPLY/True/-']; conflicting-attachment preflight=n/a; control before apply (nothing steered expected) ok=True after 17 s: {'matching source': 0, 'other source': 0}; operator postcheck pass=True []; pbr facts={'policies': {'CAP_PBR': {'valid': True, 'sequences': [{'sequence': 10, 'installed': True, 'source_prefix': '198.51.100.0/24', 'destination_prefix': '192.0.2.0/24', 'next_hops': ['198.18.7.2']}]}}, 'attachments': [{'interface': 'eth3', 'policy': 'CAP_PBR', 'valid': True}]}; kernel rules=['309:\\tfrom 198.51.100.0/24 to 192.0.2.0/24 iif eth3 lookup 10000 proto zebra']; live import recovered the policy, every sequence and the attachment=True; packets steered to 198.18.7.2 while attached (expected {'matching source': 6, 'other source': 0}): {'matching source': 6, 'other source': 0}; pre-existing policy preserved=True; after compensation (nothing steered expected) after 4 s: {'matching source': 0, 'other source': 0}; compensation=['COMPENSATED', 'COMPENSATED'] codes=['-', '-']; FRR running-config identical to pre-apply capture=True; pre-existing policy preserved=True; lab baseline restored=True; no failure || existing policy attached elsewhere: preflight=['pbr_policy=APPLY/True/-', 'pbr_attachment=APPLY/True/-']; conflicting-attachment preflight=APPLY/False/COMPENSATION_NOT_PROVABLE; control before apply (nothing steered expected) ok=True after 17 s: {'matching source': 0, 'other source': 0}; operator postcheck pass=True []; pbr facts={'policies': {'CAP_PBR': {'valid': True, 'sequences': [{'sequence': 10, 'installed': True, 'source_prefix': '198.51.100.0/24', 'destination_prefix': '192.0.2.0/24', 'next_hops': ['198.18.7.2']}]}, 'LEGACY': {'valid': True, 'sequences': [{'sequence': 10, 'installed': True, 'source_prefix': '203.0.113.0/24', 'destination_prefix",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-validation/frr-pbr_ipv4/2026-11-02T21:49:55.080047+00:00",
+          "test_type": "LIVE"
         },
         "parser_import": {
-          "detail": "Real ubuntu-frr-1.0 parser executed; target semantic match=False; unmanaged blocks=19.",
-          "outcome": "FAIL",
-          "reason": "PARSER_ABSENT",
-          "reference": "",
-          "test_type": "FIXTURE"
+          "detail": "isolated FRR service_policy.PBR_IPV4 against an FRR peer through the registered LinuxExecutor (pbrd via vtysh, captured-configuration inverse) || pristine node: preflight=['pbr_policy=APPLY/True/-', 'pbr_attachment=APPLY/True/-']; conflicting-attachment preflight=n/a; control before apply (nothing steered expected) ok=True after 17 s: {'matching source': 0, 'other source': 0}; operator postcheck pass=True []; pbr facts={'policies': {'CAP_PBR': {'valid': True, 'sequences': [{'sequence': 10, 'installed': True, 'source_prefix': '198.51.100.0/24', 'destination_prefix': '192.0.2.0/24', 'next_hops': ['198.18.7.2']}]}}, 'attachments': [{'interface': 'eth3', 'policy': 'CAP_PBR', 'valid': True}]}; kernel rules=['309:\\tfrom 198.51.100.0/24 to 192.0.2.0/24 iif eth3 lookup 10000 proto zebra']; live import recovered the policy, every sequence and the attachment=True; packets steered to 198.18.7.2 while attached (expected {'matching source': 6, 'other source': 0}): {'matching source': 6, 'other source': 0}; pre-existing policy preserved=True; after compensation (nothing steered expected) after 4 s: {'matching source': 0, 'other source': 0}; compensation=['COMPENSATED', 'COMPENSATED'] codes=['-', '-']; FRR running-config identical to pre-apply capture=True; pre-existing policy preserved=True; lab baseline restored=True; no failure || existing policy attached elsewhere: preflight=['pbr_policy=APPLY/True/-', 'pbr_attachment=APPLY/True/-']; conflicting-attachment preflight=APPLY/False/COMPENSATION_NOT_PROVABLE; control before apply (nothing steered expected) ok=True after 17 s: {'matching source': 0, 'other source': 0}; operator postcheck pass=True []; pbr facts={'policies': {'CAP_PBR': {'valid': True, 'sequences': [{'sequence': 10, 'installed': True, 'source_prefix': '198.51.100.0/24', 'destination_prefix': '192.0.2.0/24', 'next_hops': ['198.18.7.2']}]}, 'LEGACY': {'valid': True, 'sequences': [{'sequence': 10, 'installed': True, 'source_prefix': '203.0.113.0/24', 'destination_prefix",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-validation/frr-pbr_ipv4/2026-11-02T21:49:55.080047+00:00",
+          "test_type": "LIVE"
         },
         "renderer": {
-          "detail": "Authoritative renderer differential: 0 target line(s), 1 refusal marker(s); sha256=1fffafa5f0e81ad0b4af55bcbc278e6f8525a08b36aba8f236f63d8a8bb11fbb.",
-          "outcome": "FAIL",
-          "reason": "RENDERER_ABSENT",
+          "detail": "Authoritative renderer differential: 3 target line(s), 0 refusal marker(s); sha256=ede30e0ea53aad7ad214467ff5b96bc7e116f3474bebe9b190bcf60f48b64351.",
+          "outcome": "PASS",
+          "reason": "",
           "reference": "",
           "test_type": "FIXTURE"
         },
         "runtime_validation": {
-          "detail": "Not attempted: NMAS prerequisite layer(s) failed their deliberate probe (renderer=RENDERER_ABSENT, candidate_generation=RENDERER_ABSENT, executor=EXECUTOR_REFUSED). First blocker renderer: Authoritative renderer differential: 0 target line(s), 1 refusal marker(s); sha256=1fffafa5f0e81ad0b4af55bcbc278e6f8525a08b36aba8f236f63d8a8bb11fbb. No device was contacted for this stage.",
-          "outcome": "BLOCKED",
-          "reason": "RENDERER_ABSENT",
-          "reference": "gate:ubuntu_frr/service_policy.PBR_IPV4@d879b511a42d#a4d4adeae33b8b1c",
-          "test_type": "STATIC"
+          "detail": "isolated FRR service_policy.PBR_IPV4 against an FRR peer through the registered LinuxExecutor (pbrd via vtysh, captured-configuration inverse) || pristine node: preflight=['pbr_policy=APPLY/True/-', 'pbr_attachment=APPLY/True/-']; conflicting-attachment preflight=n/a; control before apply (nothing steered expected) ok=True after 17 s: {'matching source': 0, 'other source': 0}; operator postcheck pass=True []; pbr facts={'policies': {'CAP_PBR': {'valid': True, 'sequences': [{'sequence': 10, 'installed': True, 'source_prefix': '198.51.100.0/24', 'destination_prefix': '192.0.2.0/24', 'next_hops': ['198.18.7.2']}]}}, 'attachments': [{'interface': 'eth3', 'policy': 'CAP_PBR', 'valid': True}]}; kernel rules=['309:\\tfrom 198.51.100.0/24 to 192.0.2.0/24 iif eth3 lookup 10000 proto zebra']; live import recovered the policy, every sequence and the attachment=True; packets steered to 198.18.7.2 while attached (expected {'matching source': 6, 'other source': 0}): {'matching source': 6, 'other source': 0}; pre-existing policy preserved=True; after compensation (nothing steered expected) after 4 s: {'matching source': 0, 'other source': 0}; compensation=['COMPENSATED', 'COMPENSATED'] codes=['-', '-']; FRR running-config identical to pre-apply capture=True; pre-existing policy preserved=True; lab baseline restored=True; no failure || existing policy attached elsewhere: preflight=['pbr_policy=APPLY/True/-', 'pbr_attachment=APPLY/True/-']; conflicting-attachment preflight=APPLY/False/COMPENSATION_NOT_PROVABLE; control before apply (nothing steered expected) ok=True after 17 s: {'matching source': 0, 'other source': 0}; operator postcheck pass=True []; pbr facts={'policies': {'CAP_PBR': {'valid': True, 'sequences': [{'sequence': 10, 'installed': True, 'source_prefix': '198.51.100.0/24', 'destination_prefix': '192.0.2.0/24', 'next_hops': ['198.18.7.2']}]}, 'LEGACY': {'valid': True, 'sequences': [{'sequence': 10, 'installed': True, 'source_prefix': '203.0.113.0/24', 'destination_prefix",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-validation/frr-pbr_ipv4/2026-11-02T21:49:55.080047+00:00",
+          "test_type": "LIVE"
         },
         "semantic_model": {
           "detail": "Canonical fixture resolves the feature-specific path policy.pbr.policies.pbr_0000000000000003.family.",
@@ -58762,56 +58720,40 @@
           "test_type": "FIXTURE"
         }
       },
-      "renderer": "FAIL",
-      "repository_head": "d879b511a42dea60d7547a4fc17ecdeea4073377",
-      "runtime_test": "BLOCKED",
-      "runtime_version": "not contacted (prerequisite gate); platform runtime last observed: clab-raw-verifier-frr:8.4.4-1.1ubuntu6.7",
+      "renderer": "PASS",
+      "repository_head": "16fe36e70fb4e9a728e9039131d63ed9d60b2aac",
+      "runtime_test": "PASS",
+      "runtime_version": "FRRouting 8.4.4 (zebra + pbrd) / Ubuntu 24.04 isolated container pair",
       "semantic": "PASS",
-      "status": "UNSUPPORTED",
-      "strongest_test_type": "FIXTURE",
-      "timestamp": "2026-10-04T23:07:32.969281+00:00",
-      "unsupported_reasons": [
-        "CONFIG_VALIDATION_FAILED",
-        "EXECUTOR_REFUSED",
-        "PARSER_ABSENT",
-        "RENDERER_ABSENT",
-        "UI_ABSENT"
-      ],
-      "validator": "FAIL"
+      "status": "SUPPORTED",
+      "strongest_test_type": "LIVE",
+      "timestamp": "2026-11-02T21:48:15.234275+00:00",
+      "unsupported_reasons": [],
+      "validator": "PASS"
     },
     {
-      "assessment_basis": "PREREQUISITE_GATE",
+      "assessment_basis": "RUNTIME_INVESTIGATION",
       "assessment_complete": true,
-      "assessment_id": 986,
+      "assessment_id": null,
       "automated_tests": "PASS",
-      "candidate": "FAIL",
-      "compensation": "BLOCKED",
-      "device_builder": "FAIL",
-      "evidence_ids": [
-        6876,
-        6877,
-        6878,
-        6879,
-        6880,
-        6881,
-        6882,
-        6883,
-        6884,
-        6885,
-        6886
-      ],
+      "candidate": "PASS",
+      "capability_status": "SUPPORTED",
+      "compensation": "PASS",
+      "device_builder": "PASS",
+      "evidence_ids": [],
       "evidence_references": [
-        "gate:ubuntu_frr/service_policy.PBR_IPV6@d879b511a42d#a4d4adeae33b8b1c"
+        "live:nmas-cap-validation/frr-pbr_ipv6/2026-11-02T21:51:34.720510+00:00"
       ],
-      "executor": "FAIL",
+      "executor": "PASS",
+      "feasibility": "PROVEN",
       "feature": "service_policy.PBR_IPV6",
       "field_validation": "PASS",
-      "final_status": "UNSUPPORTED",
-      "live_read": "BLOCKED",
-      "live_write": "BLOCKED",
-      "parser": "FAIL",
+      "final_status": "SUPPORTED",
+      "live_read": "PASS",
+      "live_write": "PASS",
+      "parser": "PASS",
       "platform": "ubuntu_frr",
-      "postcheck": "BLOCKED",
+      "postcheck": "PASS",
       "probes": {
         "automated_tests": {
           "detail": "Repeated renderer determinism=True; feature-specific valid/invalid field regression=PASS.",
@@ -58821,37 +58763,37 @@
           "test_type": "FIXTURE"
         },
         "candidate_generation": {
-          "detail": "Real candidate_renderer.render ran; 904 chars; target-rendered=FAIL.",
-          "outcome": "FAIL",
-          "reason": "RENDERER_ABSENT",
+          "detail": "Real candidate_renderer.render ran; 887 chars; target-rendered=PASS.",
+          "outcome": "PASS",
+          "reason": "",
           "reference": "",
           "test_type": "FIXTURE"
         },
         "compensation": {
-          "detail": "Not attempted: NMAS prerequisite layer(s) failed their deliberate probe (renderer=RENDERER_ABSENT, candidate_generation=RENDERER_ABSENT, executor=EXECUTOR_REFUSED). First blocker renderer: Authoritative renderer differential: 0 target line(s), 1 refusal marker(s); sha256=1fffafa5f0e81ad0b4af55bcbc278e6f8525a08b36aba8f236f63d8a8bb11fbb. No device was contacted for this stage.",
-          "outcome": "BLOCKED",
-          "reason": "RENDERER_ABSENT",
-          "reference": "gate:ubuntu_frr/service_policy.PBR_IPV6@d879b511a42d#a4d4adeae33b8b1c",
-          "test_type": "STATIC"
+          "detail": "isolated FRR service_policy.PBR_IPV6 against an FRR peer through the registered LinuxExecutor (pbrd via vtysh, captured-configuration inverse) || pristine node: preflight=['pbr_policy=APPLY/True/-', 'pbr_attachment=APPLY/True/-']; conflicting-attachment preflight=n/a; control before apply (nothing steered expected) ok=True after 17 s: {'matching source': 0, 'other source': 0}; operator postcheck pass=True []; pbr facts={'policies': {'CAP_PBR': {'valid': True, 'sequences': [{'sequence': 10, 'installed': True, 'source_prefix': '2001:db8:114::/64', 'destination_prefix': '2001:db8:192::/64', 'next_hops': ['2001:db8:77::2']}]}}, 'attachments': [{'interface': 'eth3', 'policy': 'CAP_PBR', 'valid': True}]}; kernel rules=['309:\\tfrom 2001:db8:114::/64 to 2001:db8:192::/64 iif eth3 lookup 10000 proto zebra']; live import recovered the policy, every sequence and the attachment=True; packets steered to 2001:db8:77::2 while attached (expected {'matching source': 6, 'other source': 0}): {'matching source': 6, 'other source': 0}; pre-existing policy preserved=True; after compensation (nothing steered expected) after 4 s: {'matching source': 0, 'other source': 0}; compensation=['COMPENSATED', 'COMPENSATED'] codes=['-', '-']; FRR running-config identical to pre-apply capture=True; pre-existing policy preserved=True; lab baseline restored=True; no failure || existing policy attached elsewhere: preflight=['pbr_policy=APPLY/True/-', 'pbr_attachment=APPLY/True/-']; conflicting-attachment preflight=APPLY/False/COMPENSATION_NOT_PROVABLE; control before apply (nothing steered expected) ok=True after 17 s: {'matching source': 0, 'other source': 0}; operator postcheck pass=True []; pbr facts={'policies': {'CAP_PBR': {'valid': True, 'sequences': [{'sequence': 10, 'installed': True, 'source_prefix': '2001:db8:114::/64', 'destination_prefix': '2001:db8:192::/64', 'next_hops': ['2001:db8:77::2']}]}, 'LEGACY': {'valid': True, 'sequences': [{'sequence': 10, 'installed': True, 'source_prefix': '203",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-validation/frr-pbr_ipv6/2026-11-02T21:51:34.720510+00:00",
+          "test_type": "LIVE"
         },
         "config_validation": {
-          "detail": "Actual network-config validation=BLOCKED; failing checks=['PLATFORM_CAPABILITY']; external inputs are OFFLINE_FIXTURE only.",
-          "outcome": "FAIL",
-          "reason": "CONFIG_VALIDATION_FAILED",
+          "detail": "Actual network-config validation=PASS; failing checks=[]; external inputs are OFFLINE_FIXTURE only.",
+          "outcome": "PASS",
+          "reason": "",
           "reference": "",
           "test_type": "FIXTURE"
         },
         "device_builder_ui": {
-          "detail": "Real authoring API refused the feature (CollectionMutationError).",
-          "outcome": "FAIL",
-          "reason": "UI_ABSENT",
+          "detail": "Real Device Builder mutation API accepted the feature.",
+          "outcome": "PASS",
+          "reason": "",
           "reference": "",
           "test_type": "FIXTURE"
         },
         "executor": {
-          "detail": "Real executor.assess on fixture: action=APPLY; exact inverse present=False; restorable=False; no connection/apply invoked.",
-          "outcome": "FAIL",
-          "reason": "EXECUTOR_REFUSED",
+          "detail": "Real executor.assess on fixture: action=APPLY; exact inverse present=True; restorable=True; no connection/apply invoked.",
+          "outcome": "PASS",
+          "reason": "",
           "reference": "",
           "test_type": "FIXTURE"
         },
@@ -58863,46 +58805,46 @@
           "test_type": "FIXTURE"
         },
         "live_post_write_validation": {
-          "detail": "Not attempted: NMAS prerequisite layer(s) failed their deliberate probe (renderer=RENDERER_ABSENT, candidate_generation=RENDERER_ABSENT, executor=EXECUTOR_REFUSED). First blocker renderer: Authoritative renderer differential: 0 target line(s), 1 refusal marker(s); sha256=1fffafa5f0e81ad0b4af55bcbc278e6f8525a08b36aba8f236f63d8a8bb11fbb. No device was contacted for this stage.",
-          "outcome": "BLOCKED",
-          "reason": "RENDERER_ABSENT",
-          "reference": "gate:ubuntu_frr/service_policy.PBR_IPV6@d879b511a42d#a4d4adeae33b8b1c",
-          "test_type": "STATIC"
+          "detail": "isolated FRR service_policy.PBR_IPV6 against an FRR peer through the registered LinuxExecutor (pbrd via vtysh, captured-configuration inverse) || pristine node: preflight=['pbr_policy=APPLY/True/-', 'pbr_attachment=APPLY/True/-']; conflicting-attachment preflight=n/a; control before apply (nothing steered expected) ok=True after 17 s: {'matching source': 0, 'other source': 0}; operator postcheck pass=True []; pbr facts={'policies': {'CAP_PBR': {'valid': True, 'sequences': [{'sequence': 10, 'installed': True, 'source_prefix': '2001:db8:114::/64', 'destination_prefix': '2001:db8:192::/64', 'next_hops': ['2001:db8:77::2']}]}}, 'attachments': [{'interface': 'eth3', 'policy': 'CAP_PBR', 'valid': True}]}; kernel rules=['309:\\tfrom 2001:db8:114::/64 to 2001:db8:192::/64 iif eth3 lookup 10000 proto zebra']; live import recovered the policy, every sequence and the attachment=True; packets steered to 2001:db8:77::2 while attached (expected {'matching source': 6, 'other source': 0}): {'matching source': 6, 'other source': 0}; pre-existing policy preserved=True; after compensation (nothing steered expected) after 4 s: {'matching source': 0, 'other source': 0}; compensation=['COMPENSATED', 'COMPENSATED'] codes=['-', '-']; FRR running-config identical to pre-apply capture=True; pre-existing policy preserved=True; lab baseline restored=True; no failure || existing policy attached elsewhere: preflight=['pbr_policy=APPLY/True/-', 'pbr_attachment=APPLY/True/-']; conflicting-attachment preflight=APPLY/False/COMPENSATION_NOT_PROVABLE; control before apply (nothing steered expected) ok=True after 17 s: {'matching source': 0, 'other source': 0}; operator postcheck pass=True []; pbr facts={'policies': {'CAP_PBR': {'valid': True, 'sequences': [{'sequence': 10, 'installed': True, 'source_prefix': '2001:db8:114::/64', 'destination_prefix': '2001:db8:192::/64', 'next_hops': ['2001:db8:77::2']}]}, 'LEGACY': {'valid': True, 'sequences': [{'sequence': 10, 'installed': True, 'source_prefix': '203",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-validation/frr-pbr_ipv6/2026-11-02T21:51:34.720510+00:00",
+          "test_type": "LIVE"
         },
         "live_read": {
-          "detail": "Not attempted: NMAS prerequisite layer(s) failed their deliberate probe (renderer=RENDERER_ABSENT, candidate_generation=RENDERER_ABSENT, executor=EXECUTOR_REFUSED). First blocker renderer: Authoritative renderer differential: 0 target line(s), 1 refusal marker(s); sha256=1fffafa5f0e81ad0b4af55bcbc278e6f8525a08b36aba8f236f63d8a8bb11fbb. No device was contacted for this stage.",
-          "outcome": "BLOCKED",
-          "reason": "RENDERER_ABSENT",
-          "reference": "gate:ubuntu_frr/service_policy.PBR_IPV6@d879b511a42d#a4d4adeae33b8b1c",
-          "test_type": "STATIC"
+          "detail": "isolated FRR service_policy.PBR_IPV6 against an FRR peer through the registered LinuxExecutor (pbrd via vtysh, captured-configuration inverse) || pristine node: preflight=['pbr_policy=APPLY/True/-', 'pbr_attachment=APPLY/True/-']; conflicting-attachment preflight=n/a; control before apply (nothing steered expected) ok=True after 17 s: {'matching source': 0, 'other source': 0}; operator postcheck pass=True []; pbr facts={'policies': {'CAP_PBR': {'valid': True, 'sequences': [{'sequence': 10, 'installed': True, 'source_prefix': '2001:db8:114::/64', 'destination_prefix': '2001:db8:192::/64', 'next_hops': ['2001:db8:77::2']}]}}, 'attachments': [{'interface': 'eth3', 'policy': 'CAP_PBR', 'valid': True}]}; kernel rules=['309:\\tfrom 2001:db8:114::/64 to 2001:db8:192::/64 iif eth3 lookup 10000 proto zebra']; live import recovered the policy, every sequence and the attachment=True; packets steered to 2001:db8:77::2 while attached (expected {'matching source': 6, 'other source': 0}): {'matching source': 6, 'other source': 0}; pre-existing policy preserved=True; after compensation (nothing steered expected) after 4 s: {'matching source': 0, 'other source': 0}; compensation=['COMPENSATED', 'COMPENSATED'] codes=['-', '-']; FRR running-config identical to pre-apply capture=True; pre-existing policy preserved=True; lab baseline restored=True; no failure || existing policy attached elsewhere: preflight=['pbr_policy=APPLY/True/-', 'pbr_attachment=APPLY/True/-']; conflicting-attachment preflight=APPLY/False/COMPENSATION_NOT_PROVABLE; control before apply (nothing steered expected) ok=True after 17 s: {'matching source': 0, 'other source': 0}; operator postcheck pass=True []; pbr facts={'policies': {'CAP_PBR': {'valid': True, 'sequences': [{'sequence': 10, 'installed': True, 'source_prefix': '2001:db8:114::/64', 'destination_prefix': '2001:db8:192::/64', 'next_hops': ['2001:db8:77::2']}]}, 'LEGACY': {'valid': True, 'sequences': [{'sequence': 10, 'installed': True, 'source_prefix': '203",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-validation/frr-pbr_ipv6/2026-11-02T21:51:34.720510+00:00",
+          "test_type": "LIVE"
         },
         "live_write": {
-          "detail": "Not attempted: NMAS prerequisite layer(s) failed their deliberate probe (renderer=RENDERER_ABSENT, candidate_generation=RENDERER_ABSENT, executor=EXECUTOR_REFUSED). First blocker renderer: Authoritative renderer differential: 0 target line(s), 1 refusal marker(s); sha256=1fffafa5f0e81ad0b4af55bcbc278e6f8525a08b36aba8f236f63d8a8bb11fbb. No device was contacted for this stage.",
-          "outcome": "BLOCKED",
-          "reason": "RENDERER_ABSENT",
-          "reference": "gate:ubuntu_frr/service_policy.PBR_IPV6@d879b511a42d#a4d4adeae33b8b1c",
-          "test_type": "STATIC"
+          "detail": "isolated FRR service_policy.PBR_IPV6 against an FRR peer through the registered LinuxExecutor (pbrd via vtysh, captured-configuration inverse) || pristine node: preflight=['pbr_policy=APPLY/True/-', 'pbr_attachment=APPLY/True/-']; conflicting-attachment preflight=n/a; control before apply (nothing steered expected) ok=True after 17 s: {'matching source': 0, 'other source': 0}; operator postcheck pass=True []; pbr facts={'policies': {'CAP_PBR': {'valid': True, 'sequences': [{'sequence': 10, 'installed': True, 'source_prefix': '2001:db8:114::/64', 'destination_prefix': '2001:db8:192::/64', 'next_hops': ['2001:db8:77::2']}]}}, 'attachments': [{'interface': 'eth3', 'policy': 'CAP_PBR', 'valid': True}]}; kernel rules=['309:\\tfrom 2001:db8:114::/64 to 2001:db8:192::/64 iif eth3 lookup 10000 proto zebra']; live import recovered the policy, every sequence and the attachment=True; packets steered to 2001:db8:77::2 while attached (expected {'matching source': 6, 'other source': 0}): {'matching source': 6, 'other source': 0}; pre-existing policy preserved=True; after compensation (nothing steered expected) after 4 s: {'matching source': 0, 'other source': 0}; compensation=['COMPENSATED', 'COMPENSATED'] codes=['-', '-']; FRR running-config identical to pre-apply capture=True; pre-existing policy preserved=True; lab baseline restored=True; no failure || existing policy attached elsewhere: preflight=['pbr_policy=APPLY/True/-', 'pbr_attachment=APPLY/True/-']; conflicting-attachment preflight=APPLY/False/COMPENSATION_NOT_PROVABLE; control before apply (nothing steered expected) ok=True after 17 s: {'matching source': 0, 'other source': 0}; operator postcheck pass=True []; pbr facts={'policies': {'CAP_PBR': {'valid': True, 'sequences': [{'sequence': 10, 'installed': True, 'source_prefix': '2001:db8:114::/64', 'destination_prefix': '2001:db8:192::/64', 'next_hops': ['2001:db8:77::2']}]}, 'LEGACY': {'valid': True, 'sequences': [{'sequence': 10, 'installed': True, 'source_prefix': '203",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-validation/frr-pbr_ipv6/2026-11-02T21:51:34.720510+00:00",
+          "test_type": "LIVE"
         },
         "parser_import": {
-          "detail": "Real ubuntu-frr-1.0 parser executed; target semantic match=False; unmanaged blocks=19.",
-          "outcome": "FAIL",
-          "reason": "PARSER_ABSENT",
-          "reference": "",
-          "test_type": "FIXTURE"
+          "detail": "isolated FRR service_policy.PBR_IPV6 against an FRR peer through the registered LinuxExecutor (pbrd via vtysh, captured-configuration inverse) || pristine node: preflight=['pbr_policy=APPLY/True/-', 'pbr_attachment=APPLY/True/-']; conflicting-attachment preflight=n/a; control before apply (nothing steered expected) ok=True after 17 s: {'matching source': 0, 'other source': 0}; operator postcheck pass=True []; pbr facts={'policies': {'CAP_PBR': {'valid': True, 'sequences': [{'sequence': 10, 'installed': True, 'source_prefix': '2001:db8:114::/64', 'destination_prefix': '2001:db8:192::/64', 'next_hops': ['2001:db8:77::2']}]}}, 'attachments': [{'interface': 'eth3', 'policy': 'CAP_PBR', 'valid': True}]}; kernel rules=['309:\\tfrom 2001:db8:114::/64 to 2001:db8:192::/64 iif eth3 lookup 10000 proto zebra']; live import recovered the policy, every sequence and the attachment=True; packets steered to 2001:db8:77::2 while attached (expected {'matching source': 6, 'other source': 0}): {'matching source': 6, 'other source': 0}; pre-existing policy preserved=True; after compensation (nothing steered expected) after 4 s: {'matching source': 0, 'other source': 0}; compensation=['COMPENSATED', 'COMPENSATED'] codes=['-', '-']; FRR running-config identical to pre-apply capture=True; pre-existing policy preserved=True; lab baseline restored=True; no failure || existing policy attached elsewhere: preflight=['pbr_policy=APPLY/True/-', 'pbr_attachment=APPLY/True/-']; conflicting-attachment preflight=APPLY/False/COMPENSATION_NOT_PROVABLE; control before apply (nothing steered expected) ok=True after 17 s: {'matching source': 0, 'other source': 0}; operator postcheck pass=True []; pbr facts={'policies': {'CAP_PBR': {'valid': True, 'sequences': [{'sequence': 10, 'installed': True, 'source_prefix': '2001:db8:114::/64', 'destination_prefix': '2001:db8:192::/64', 'next_hops': ['2001:db8:77::2']}]}, 'LEGACY': {'valid': True, 'sequences': [{'sequence': 10, 'installed': True, 'source_prefix': '203",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-validation/frr-pbr_ipv6/2026-11-02T21:51:34.720510+00:00",
+          "test_type": "LIVE"
         },
         "renderer": {
-          "detail": "Authoritative renderer differential: 0 target line(s), 1 refusal marker(s); sha256=1fffafa5f0e81ad0b4af55bcbc278e6f8525a08b36aba8f236f63d8a8bb11fbb.",
-          "outcome": "FAIL",
-          "reason": "RENDERER_ABSENT",
+          "detail": "Authoritative renderer differential: 3 target line(s), 0 refusal marker(s); sha256=4003798a1352a8a144d6b132b576f6418960f71a05dfea940b1cdf978e5ded0c.",
+          "outcome": "PASS",
+          "reason": "",
           "reference": "",
           "test_type": "FIXTURE"
         },
         "runtime_validation": {
-          "detail": "Not attempted: NMAS prerequisite layer(s) failed their deliberate probe (renderer=RENDERER_ABSENT, candidate_generation=RENDERER_ABSENT, executor=EXECUTOR_REFUSED). First blocker renderer: Authoritative renderer differential: 0 target line(s), 1 refusal marker(s); sha256=1fffafa5f0e81ad0b4af55bcbc278e6f8525a08b36aba8f236f63d8a8bb11fbb. No device was contacted for this stage.",
-          "outcome": "BLOCKED",
-          "reason": "RENDERER_ABSENT",
-          "reference": "gate:ubuntu_frr/service_policy.PBR_IPV6@d879b511a42d#a4d4adeae33b8b1c",
-          "test_type": "STATIC"
+          "detail": "isolated FRR service_policy.PBR_IPV6 against an FRR peer through the registered LinuxExecutor (pbrd via vtysh, captured-configuration inverse) || pristine node: preflight=['pbr_policy=APPLY/True/-', 'pbr_attachment=APPLY/True/-']; conflicting-attachment preflight=n/a; control before apply (nothing steered expected) ok=True after 17 s: {'matching source': 0, 'other source': 0}; operator postcheck pass=True []; pbr facts={'policies': {'CAP_PBR': {'valid': True, 'sequences': [{'sequence': 10, 'installed': True, 'source_prefix': '2001:db8:114::/64', 'destination_prefix': '2001:db8:192::/64', 'next_hops': ['2001:db8:77::2']}]}}, 'attachments': [{'interface': 'eth3', 'policy': 'CAP_PBR', 'valid': True}]}; kernel rules=['309:\\tfrom 2001:db8:114::/64 to 2001:db8:192::/64 iif eth3 lookup 10000 proto zebra']; live import recovered the policy, every sequence and the attachment=True; packets steered to 2001:db8:77::2 while attached (expected {'matching source': 6, 'other source': 0}): {'matching source': 6, 'other source': 0}; pre-existing policy preserved=True; after compensation (nothing steered expected) after 4 s: {'matching source': 0, 'other source': 0}; compensation=['COMPENSATED', 'COMPENSATED'] codes=['-', '-']; FRR running-config identical to pre-apply capture=True; pre-existing policy preserved=True; lab baseline restored=True; no failure || existing policy attached elsewhere: preflight=['pbr_policy=APPLY/True/-', 'pbr_attachment=APPLY/True/-']; conflicting-attachment preflight=APPLY/False/COMPENSATION_NOT_PROVABLE; control before apply (nothing steered expected) ok=True after 17 s: {'matching source': 0, 'other source': 0}; operator postcheck pass=True []; pbr facts={'policies': {'CAP_PBR': {'valid': True, 'sequences': [{'sequence': 10, 'installed': True, 'source_prefix': '2001:db8:114::/64', 'destination_prefix': '2001:db8:192::/64', 'next_hops': ['2001:db8:77::2']}]}, 'LEGACY': {'valid': True, 'sequences': [{'sequence': 10, 'installed': True, 'source_prefix': '203",
+          "outcome": "PASS",
+          "reason": "",
+          "reference": "live:nmas-cap-validation/frr-pbr_ipv6/2026-11-02T21:51:34.720510+00:00",
+          "test_type": "LIVE"
         },
         "semantic_model": {
           "detail": "Canonical fixture resolves the feature-specific path policy.pbr.policies.pbr_0000000000000003.family.",
@@ -58912,22 +58854,16 @@
           "test_type": "FIXTURE"
         }
       },
-      "renderer": "FAIL",
-      "repository_head": "d879b511a42dea60d7547a4fc17ecdeea4073377",
-      "runtime_test": "BLOCKED",
-      "runtime_version": "not contacted (prerequisite gate); platform runtime last observed: clab-raw-verifier-frr:8.4.4-1.1ubuntu6.7",
+      "renderer": "PASS",
+      "repository_head": "16fe36e70fb4e9a728e9039131d63ed9d60b2aac",
+      "runtime_test": "PASS",
+      "runtime_version": "FRRouting 8.4.4 (zebra + pbrd) / Ubuntu 24.04 isolated container pair",
       "semantic": "PASS",
-      "status": "UNSUPPORTED",
-      "strongest_test_type": "FIXTURE",
-      "timestamp": "2026-10-04T23:07:33.045927+00:00",
-      "unsupported_reasons": [
-        "CONFIG_VALIDATION_FAILED",
-        "EXECUTOR_REFUSED",
-        "PARSER_ABSENT",
-        "RENDERER_ABSENT",
-        "UI_ABSENT"
-      ],
-      "validator": "FAIL"
+      "status": "SUPPORTED",
+      "strongest_test_type": "LIVE",
+      "timestamp": "2026-11-02T21:49:55.083125+00:00",
+      "unsupported_reasons": [],
+      "validator": "PASS"
     }
   ],
   "offline_attempted": 396,
@@ -58980,33 +58916,33 @@
     "ubuntu_frr": {
       "assessed": 66,
       "fixture_tested": 66,
-      "live_tested": 23,
-      "static_tested": 43,
-      "supported": 23,
+      "live_tested": 27,
+      "static_tested": 39,
+      "supported": 27,
       "total": 66,
-      "unsupported": 43
+      "unsupported": 39
     }
   },
   "reason_counts": {
     "COMPENSATION_ABSENT": 68,
-    "CONFIG_VALIDATION_FAILED": 287,
+    "CONFIG_VALIDATION_FAILED": 283,
     "EXECUTOR_ABSENT": 132,
-    "EXECUTOR_REFUSED": 192,
+    "EXECUTOR_REFUSED": 188,
     "FIELD_VALIDATION_FAILED": 65,
     "FUNCTIONAL_TEST_FAILED": 67,
     "LIVE_READ_ABSENT": 2,
-    "PARSER_ABSENT": 256,
+    "PARSER_ABSENT": 252,
     "PARSER_FAILED": 38,
     "PLATFORM_DOES_NOT_SUPPORT": 3,
     "POSTCHECK_ABSENT": 69,
-    "RENDERER_ABSENT": 286,
+    "RENDERER_ABSENT": 282,
     "RUNTIME_IMAGE_UNAVAILABLE": 66,
-    "UI_ABSENT": 281
+    "UI_ABSENT": 277
   },
   "remaining_cells": [],
   "schema_version": 2,
-  "supported": 70,
+  "supported": 74,
   "total": 396,
   "unassessed": 0,
-  "unsupported": 326
+  "unsupported": 322
 }
