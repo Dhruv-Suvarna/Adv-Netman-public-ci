@@ -1,0 +1,26 @@
+# coverage.py configuration for the NMAS deployed-automation scope (Lab 7 test governance).
+# Statement AND branch coverage, measured over the repository's deployed code only: test code, migrations,
+# documentation, virtual environments and runtime output are omitted.  The authoritative artifact list is
+# web/core/services/test_governance (inventory); files outside it are ignored by the report even if measured.
+# NMAS_TG_REPO is set by the governance runner to the repository root (coverage expands ${VAR-default}).
+[run]
+branch = True
+source = ${NMAS_TG_REPO-.}
+omit =
+    */tests/*
+    */migrations/*
+    */docs/*
+    */.venv*/*
+    */site-packages/*
+    */tier3-governance/*
+    */web/var/*
+    */__pycache__/*
+
+[report]
+precision = 2
+skip_empty = False
+show_missing = True
+
+[json]
+pretty_print = False
+show_contexts = False

@@ -1,0 +1,114 @@
+{
+ "transition": "S1-aggregate-isis-to-static",
+ "ok": true,
+ "aborted": "",
+ "blockers": [],
+ "restored": null,
+ "stages": [
+  {
+   "stage": "precheck",
+   "at": "2026-10-11T16:19:56.686766+00:00",
+   "status": "PASS",
+   "host": {
+    "load1": 26.63,
+    "cpus": 8,
+    "available_mb": 60023,
+    "swap_used_mb": 0
+   },
+   "checks": [
+    {
+     "check": "ISIS_ROUTE_PRESENT",
+     "status": "PASS",
+     "subject": "S1 2001:db8::/32 by IS-IS via Ethernet1",
+     "message": "IS-IS route 2001:db8::/32 is installed via Ethernet1."
+    }
+   ]
+  },
+  {
+   "stage": "shield-install",
+   "at": "2026-10-11T16:20:15.243232+00:00",
+   "status": "APPLIED",
+   "cfg_id": "RS-S1-aggregate-isis-to-static-1-shield-install",
+   "read_back": "SKIP_SATISFIED",
+   "probes_lost": 0
+  },
+  {
+   "stage": "shield-verify",
+   "at": "2026-10-11T16:20:25.051866+00:00",
+   "status": "PASS",
+   "checks": [
+    {
+     "check": "ROUTE_EXPECTED_PRESENT",
+     "status": "PASS",
+     "subject": "S1 shield 2001:db8::/33",
+     "message": "Route 2001:db8::/33 is present."
+    },
+    {
+     "check": "ROUTE_EXPECTED_PRESENT",
+     "status": "PASS",
+     "subject": "S1 shield 2001:db8:8000::/33",
+     "message": "Route 2001:db8:8000::/33 is present."
+    }
+   ],
+   "probes_lost": 0
+  },
+  {
+   "stage": "transition",
+   "at": "2026-10-11T16:20:47.123715+00:00",
+   "status": "APPLIED",
+   "cfg_id": "RS-S1-aggregate-isis-to-static-10-static-restore",
+   "read_back": "SKIP_SATISFIED",
+   "probes_lost": 0
+  },
+  {
+   "stage": "transition-verify",
+   "at": "2026-10-11T16:21:02.200075+00:00",
+   "status": "PASS",
+   "checks": [
+    {
+     "check": "ROUTE_EXPECTED_PRESENT",
+     "status": "PASS",
+     "subject": "S1 2001:db8::/32 static via Ethernet1",
+     "message": "Route 2001:db8::/32 is present."
+    },
+    {
+     "check": "ISIS_ROUTE_ABSENT",
+     "status": "PASS",
+     "subject": "S1 2001:db8::/32 not owned by IS-IS",
+     "message": "No IS-IS route 2001:db8::/32 is installed."
+    }
+   ],
+   "probes_lost": 0
+  },
+  {
+   "stage": "shield-remove",
+   "at": "2026-10-11T16:21:14.146750+00:00",
+   "status": "APPLIED",
+   "cfg_id": "RS-S1-aggregate-isis-to-static-90-shield-remove",
+   "read_back": "SKIP_SATISFIED",
+   "probes_lost": 0
+  },
+  {
+   "stage": "final-verify",
+   "at": "2026-10-11T16:21:30.829543+00:00",
+   "status": "PASS",
+   "checks": [
+    {
+     "check": "ROUTE_EXPECTED_PRESENT",
+     "status": "PASS",
+     "subject": "S1 2001:db8::/32 static via Ethernet1",
+     "message": "Route 2001:db8::/32 is present."
+    },
+    {
+     "check": "ISIS_ROUTE_ABSENT",
+     "status": "PASS",
+     "subject": "S1 2001:db8::/32 not owned by IS-IS",
+     "message": "No IS-IS route 2001:db8::/32 is installed."
+    }
+   ],
+   "shield_remaining": false,
+   "probes_lost": 0
+  }
+ ],
+ "compensation": []
+}

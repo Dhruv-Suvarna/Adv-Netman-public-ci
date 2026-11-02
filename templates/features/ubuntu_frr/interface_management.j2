@@ -1,0 +1,5 @@
+# MANAGEMENT / STATIC - AUTO and DHCP are prohibited
+# interface: {{ name }}
+# description: {{ description }}
+ip link set dev {{ accepted_name }} mtu {{ mtu }}
+ip link set dev {{ accepted_name }} {% if admin_disabled %}down{% else %}up{% endif %}

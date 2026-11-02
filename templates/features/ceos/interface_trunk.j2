@@ -1,0 +1,12 @@
+!
+interface {{ name }}
+   description {{ description }}
+   switchport
+   switchport mode trunk
+   switchport trunk allowed vlan {{ trunk_allowed_vlans }}
+   switchport trunk native vlan {{ native_vlan }}
+   mtu {{ mtu }}
+   ! admin intent: {{ admin_state }}
+{% if admin_disabled %}   shutdown
+{% else %}   no shutdown
+{% endif %}

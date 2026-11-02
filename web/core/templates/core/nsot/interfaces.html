@@ -1,0 +1,51 @@
+{% extends "core/base.html" %}
+{% load nsot_extras %}
+{% block title %}Interfaces · NSOT{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>Interfaces</h1>
+  <p><span class="badge NETBOX">NETBOX</span></p>
+</div>
+{% include "core/nsot/_subnav.html" %}
+
+<form method="get" class="filter-bar">
+  <input class="form-control filter-bar__item" type="text" name="device" placeholder="Filter by device" value="{{ device_filter }}">
+  <button type="submit" class="btn btn--secondary">Apply</button>
+  <a class="btn btn--secondary" href="?{% if device_filter %}device={{ device_filter }}&{% endif %}refresh=1">Refresh NSOT</a>
+</form>
+<div class="filter-bar">
+  {% include "core/nsot/_freshness.html" with fetched_at=listing.fetched_at cache=listing.cache freshness=listing.freshness refresh_error=listing.refresh_error %}
+</div>
+
+{% if listing.status != "available" %}
+  <div class="alert alert--warning"><div><strong>NetBox unavailable.</strong> {{ listing.message }}</div></div>
+{% else %}
+  <div class="card">
+    <table class="data-table">
+      <thead><tr><th>Device</th><th>Interface</th><th>Type</th><th>Mode</th><th>VLAN</th><th>Addresses</th><th>Description</th></tr></thead>
+      <tbody>
+      {% for iface in interfaces %}
+        <tr>
+          <td><a href="{% url 'core:nsot_device_detail' iface.device %}">{{ iface.device }}</a></td>
+          <td>{{ iface.name }}{% if iface.untagged_vlan == 200 %} <span class="badge badge--info">management · static</span>{% endif %}</td>
+          <td>{{ iface.type|default:"—" }}</td>
+          <td>{{ iface.mode|default:"—" }}</td>
+          <td>{{ iface.untagged_vlan|default:"—" }}</td>
+          <td>{{ iface.addresses|join:", " }}</td>
+          <td>{{ iface.description|default:"—" }}</td>
+        </tr>
+      {% empty %}
+        <tr><td colspan="7"><div class="empty-state">No interfaces matched this filter.</div></td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% if page_obj.paginator.num_pages > 1 %}
+    <nav class="pagination" aria-label="Interface pages">
+      {% if page_obj.has_previous %}<a href="?page={{ page_obj.previous_page_number }}">&larr; Previous</a>{% endif %}
+      <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+      {% if page_obj.has_next %}<a href="?page={{ page_obj.next_page_number }}">Next &rarr;</a>{% endif %}
+    </nav>
+  {% endif %}
+{% endif %}
+{% endblock %}

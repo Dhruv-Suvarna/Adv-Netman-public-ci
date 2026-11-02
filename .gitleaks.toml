@@ -1,0 +1,27 @@
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Generated interpreter cache files are never source evidence"
+paths = ['''(?:^|/)__pycache__/''']
+
+[[rules]]
+id = "nmas-ceos-password-assignment"
+description = "NMAS cEOS password must be an opaque credential reference"
+regex = '''(?im)^\s*ceos_password\s*:\s*["']?([^\s"'#]+)'''
+secretGroup = 1
+keywords = ["ceos_password"]
+
+[[rules]]
+id = "nmas-linux-root-password-assignment"
+description = "NMAS Linux root password must not be stored in source"
+regex = '''(?m)^\s*ROOT_PASSWORD\s*=\s*["']([^"']{4,})["']'''
+secretGroup = 1
+keywords = ["ROOT_PASSWORD"]
+
+[[rules]]
+id = "nmas-linux-root-yaml-password-assignment"
+description = "NMAS Linux root password must be an opaque credential reference"
+regex = '''(?im)^\s*linux_root_password\s*:\s*["']?([^\s"'#]+)'''
+secretGroup = 1
+keywords = ["linux_root_password"]

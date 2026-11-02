@@ -1,0 +1,230 @@
+{% extends "core/base.html" %}
+{% block title %}Validation · {{ change.change_id }}{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>Change Validation <span style="font-weight:400;">· {{ change.change_id }}</span></h1>
+  <p><a href="{% url 'core:device_builder_change_detail' change.change_id %}">&larr; Back to {{ change.change_id }}</a></p>
+  <p>{{ change.title }}</p>
+  <p><strong>Project validation uses committed/accepted intent only.</strong> Uncommitted values typed in the Device Builder editor are not part of any validation run. Validation never deploys, never writes NetBox or Git, and never changes the Change lifecycle.</p>
+</div>
+
+<div class="card-grid">
+  <div class="card">
+    <h3>Currency</h3>
+    <table class="data-table">
+      <tbody>
+        <tr>
+          <th>Validation state</th>
+          <td>
+            {% if currency.state == "CURRENT" %}<span class="badge badge--success">CURRENT</span>
+            {% elif currency.state == "STALE" %}<span class="badge badge--warning">STALE</span>
+            {% else %}<span class="badge badge--neutral">NEVER RUN</span>{% endif %}
+          </td>
+        </tr>
+        <tr><th>Last completed result</th><td>{% if currency.last_status %}<span class="badge badge--neutral">{{ currency.last_status }}</span>{% else %}—{% endif %}</td></tr>
+        <tr><th>Change lifecycle</th><td><span class="badge badge--info">{{ change.get_lifecycle_state_display }}</span> <span style="color:var(--text-muted);">(validation does not change it)</span></td></tr>
+      </tbody>
+    </table>
+    {% if currency.state == "STALE" %}
+      <p class="field-row__message"><strong>Validation state: STALE. Last completed result: {{ currency.last_status }}. Re-run required.</strong> A stale result is not current authorization.
+        {% for reason in currency.reasons %}<br><code>{{ reason }}</code>{% endfor %}</p>
+    {% elif currency.state == "NEVER_RUN" %}
+      <p style="color:var(--text-muted);">This Change has not been validated yet.</p>
+    {% endif %}
+    {% if not historical %}
+      <p style="font-size:0.85rem;">
+        {% if sources_checked %}Source freshness was checked just now (read-only).
+        {% else %}Intent currency is checked automatically; <a href="?check_sources=1">check source freshness</a> reads NetBox/topology (read-only) and never persists anything.{% endif %}
+      </p>
+    {% endif %}
+    <form method="post" action="{% url 'core:change_validation_run' change.change_id %}">
+      {% csrf_token %}
+      <button type="submit" class="btn btn--primary">Run Change Validation</button>
+    </form>
+  </div>
+
+  {% include "core/device_builder/_configuration_validation_card.html" with cv=configuration_validation %}
+
+  {% if document %}
+  <div class="card">
+    <h3>{% if historical %}Historical run{% else %}Latest run{% endif %}</h3>
+    <table class="data-table">
+      <tbody>
+        <tr><th>Result</th>
+          <td>
+            {% if document.status == "PASS" %}<span class="badge badge--success">PASS</span>
+            {% elif document.status == "PASS_WITH_WARNINGS" %}<span class="badge badge--warning">PASS WITH WARNINGS</span>
+            {% elif document.status == "BLOCKED" %}<span class="badge badge--danger">BLOCKED</span>
+            {% else %}<span class="badge badge--info">INCOMPLETE</span>{% endif %}
+            {% if historical and not is_latest %}<span style="color:var(--text-muted);"> (historical, read-only)</span>{% endif %}
+          </td></tr>
+        <tr><th>Run</th><td><code>{{ document.run_id }}</code></td></tr>
+        <tr><th>Run at</th><td>{{ run.created_at }} by {{ document.created_by|default:"—" }}</td></tr>
+        <tr><th>Input fingerprint</th><td><code>{{ document.input_hash|slice:":16" }}</code> (SHA-256 of accepted snapshot)</td></tr>
+        <tr><th>Source fingerprint</th><td><code>{{ document.source_hash|slice:":16" }}</code></td></tr>
+        <tr><th>Engine</th><td>{{ document.engine_version }}</td></tr>
+        <tr><th>Repository HEAD</th><td>{{ document.repository_head|default:"—"|slice:":12" }}</td></tr>
+        <tr><th>Machine-readable</th><td><a href="{% url 'core:change_validation_report' change.change_id document.run_id %}">Download JSON report</a></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3>Summary</h3>
+    <table class="data-table">
+      <tbody>
+        <tr><th>Errors</th><td>{{ document.summary.errors }}</td></tr>
+        <tr><th>Warnings</th><td>{{ document.summary.warnings }}</td></tr>
+        <tr><th>Info</th><td>{{ document.summary.info }}</td></tr>
+        <tr><th>Blocking findings</th><td>{{ document.summary.blocking_findings }}</td></tr>
+        <tr><th>Devices checked</th><td>{{ document.summary.devices_checked }}</td></tr>
+        <tr><th>Objects checked</th><td>{{ document.summary.objects_checked }}</td></tr>
+        <tr><th>Sources available</th>
+          <td>{% for name, ok in document.summary.sources_available.items %}
+                <span class="badge {% if ok %}badge--success{% else %}badge--danger{% endif %}">{{ name }}</span>
+              {% endfor %}</td></tr>
+      </tbody>
+    </table>
+  </div>
+  {% endif %}
+</div>
+
+{% if document %}
+<div class="card" style="margin-top:16px;">
+  <h3>Source provenance</h3>
+  <table class="data-table">
+    <thead><tr><th>Source</th><th>Status</th><th>Fingerprint</th><th>Note</th></tr></thead>
+    <tbody>
+    {% for name, source in document.provenance.sources.items %}
+      <tr>
+        <td>{{ name }}</td><td>{{ source.status }}</td><td><code>{{ source.fingerprint|slice:":16" }}</code></td><td>{{ source.message|default:"—" }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<div class="card" style="margin-top:16px;">
+  <h3>Findings</h3>
+  <form method="get" class="filter-bar">
+    <label class="filter-bar__item">Severity
+      <select class="form-control" name="severity">
+        <option value="">All</option>
+        {% for sev in severities %}<option value="{{ sev }}"{% if filters.severity == sev %} selected{% endif %}>{{ sev }}</option>{% endfor %}
+      </select></label>
+    <label class="filter-bar__item">Category
+      <select class="form-control" name="category">
+        <option value="">All</option>
+        {% for cat in categories %}<option value="{{ cat }}"{% if filters.category == cat %} selected{% endif %}>{{ cat }}</option>{% endfor %}
+      </select></label>
+    <label class="filter-bar__item">Device
+      <select class="form-control" name="device">
+        <option value="">All</option>
+        {% for dev in filter_devices %}<option value="{{ dev }}"{% if filters.device == dev %} selected{% endif %}>{{ dev }}</option>{% endfor %}
+      </select></label>
+    <label class="filter-bar__item"><input type="checkbox" name="blocking" value="1"{% if filters.blocking %} checked{% endif %}> Blocking only</label>
+    <button class="btn btn--secondary" type="submit">Filter</button>
+  </form>
+  <table class="data-table">
+    <thead><tr><th>Code</th><th>Severity</th><th>Message</th><th>Device / object</th><th>Related</th><th>Source</th><th>Evidence</th><th>Remediation</th></tr></thead>
+    <tbody>
+    {% for finding in findings %}
+      <tr>
+        <td><code>{{ finding.code }}</code><br><span style="color:var(--text-muted);">{{ finding.category }}</span></td>
+        <td>
+          <span class="badge {% if finding.blocking %}badge--danger{% elif finding.severity == 'WARNING' %}badge--warning{% elif finding.incomplete %}badge--info{% else %}badge--neutral{% endif %}">{{ finding.severity }}</span>
+          {% if finding.blocking %}<br><strong>blocking</strong>{% elif finding.incomplete %}<br>evidence gap{% endif %}
+        </td>
+        <td>{{ finding.message }}</td>
+        <td>{{ finding.device|default:"—" }}{% if finding.object_id %}<br><code>{{ finding.object_type }} {{ finding.object_id }}</code>{% endif %}{% if finding.field_path %}<br><code>{{ finding.field_path }}</code>{% endif %}</td>
+        <td>{% for device in finding.related_devices %}{{ device }}{% if not forloop.last %}, {% endif %}{% endfor %}{% for obj in finding.related_objects %}<br><code>{{ obj }}</code>{% endfor %}{% if not finding.related_devices and not finding.related_objects %}—{% endif %}</td>
+        <td>{{ finding.source }}</td>
+        <td>{% for key, value in finding.evidence.items %}<code>{{ key }}</code>: {{ value }}<br>{% empty %}—{% endfor %}</td>
+        <td>{{ finding.remediation|default:"—" }}</td>
+      </tr>
+    {% empty %}
+      <tr><td colspan="8"><div class="empty-state">No findings match.</div></td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% if auto_facts or other_facts %}
+<div class="card" style="margin-top:16px;">
+  <h3>Derived facts</h3>
+  <p style="color:var(--text-muted); font-size:0.85rem;">Derived by validation only. Accepted intent is never modified, and NetBox is never written.</p>
+  {% if auto_facts %}
+  <table class="data-table">
+    <thead><tr><th>Device</th><th>Interface</th><th>Prefix</th><th>Proposed address</th><th>State</th></tr></thead>
+    <tbody>
+    {% for fact in auto_facts %}
+      <tr>
+        <td>{{ fact.device }}</td><td>{{ fact.interface }}</td><td>{{ fact.selected_prefix }}</td>
+        <td><code>{{ fact.proposed_address }}</code></td>
+        <td><span class="badge badge--warning">PROPOSED</span> <span class="badge badge--neutral">NOT RESERVED</span><br>Must be rechecked immediately before deployment.</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  {% endif %}
+  {% if other_facts %}
+  <table class="data-table" style="margin-top:12px;">
+    <thead><tr><th>Type</th><th>Detail</th></tr></thead>
+    <tbody>
+    {% for fact in other_facts %}
+      <tr><td><code>{{ fact.type }}</code></td><td>{% for key, value in fact.items %}{% if key != "type" %}<code>{{ key }}</code>: {{ value }} {% endif %}{% endfor %}</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  {% endif %}
+</div>
+{% endif %}
+
+<div class="card" style="margin-top:16px;">
+  <h3>Dependency summary</h3>
+  <p style="color:var(--text-muted); font-size:0.85rem;">A semantic dependency graph of accepted intent. It is not a deployment plan: no order or stage is derived here.</p>
+  {% if document.dependency_graph.cycles %}
+    <p class="field-row__message"><strong>Dependency cycle(s) detected:</strong>
+      {% for cycle in document.dependency_graph.cycles %}<br><code>{% for node in cycle %}{{ node }}{% if not forloop.last %} &rarr; {% endif %}{% endfor %}</code>{% endfor %}</p>
+  {% endif %}
+  <table class="data-table">
+    <thead><tr><th>Object</th><th>Depends on</th><th>Edge type</th><th>Status</th></tr></thead>
+    <tbody>
+    {% for row in dependency_rows %}
+      <tr{% if row.in_cycle %} style="outline:2px solid var(--danger);"{% endif %}>
+        <td>{{ row.object }}</td><td>{{ row.depends_on }}</td><td><code>{{ row.edge_type }}</code></td>
+        <td><span class="badge {% if row.status == 'MISSING' %}badge--danger{% else %}badge--success{% endif %}">{{ row.status }}</span></td>
+      </tr>
+    {% empty %}
+      <tr><td colspan="4"><div class="empty-state">No dependencies recorded.</div></td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<div class="card" style="margin-top:16px;">
+  <h3>Limitations of this result</h3>
+  <ul>{% for item in document.limitations %}<li>{{ item }}</li>{% endfor %}</ul>
+</div>
+{% endif %}
+
+<div class="card" style="margin-top:16px;">
+  <h3>Validation history</h3>
+  <table class="data-table">
+    <thead><tr><th>Run</th><th>Result</th><th>Run at</th><th>By</th><th>Input</th><th>Errors</th><th>Warnings</th></tr></thead>
+    <tbody>
+    {% for item in history %}
+      <tr>
+        <td><a href="{% url 'core:change_validation_detail' change.change_id item.run_id %}">{{ item.run_id|stringformat:"s"|slice:":8" }}</a></td>
+        <td><span class="badge badge--neutral">{{ item.status }}</span></td>
+        <td>{{ item.created_at }}</td><td>{{ item.created_by|default:"—" }}</td>
+        <td><code>{{ item.input_hash|slice:":12" }}</code></td>
+        <td>{{ item.summary.errors }}</td><td>{{ item.summary.warnings }}</td>
+      </tr>
+    {% empty %}
+      <tr><td colspan="7"><div class="empty-state">No validation runs recorded.</div></td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

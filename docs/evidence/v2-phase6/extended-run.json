@@ -1,0 +1,165 @@
+{
+  "duration_seconds": 3780.0,
+  "view_switches": 63,
+  "connectivity": [
+    {
+      "row": "H1/IPV4",
+      "samples": 756,
+      "failures": 0,
+      "in_memory_samples": 756,
+      "history_span_seconds": 3774.3,
+      "oldest": "2026-10-06T11:44:38.593Z",
+      "newest": "2026-10-06T12:47:32.918Z",
+      "largest_gap_seconds": 5.829,
+      "gaps_over_two_periods": 0
+    },
+    {
+      "row": "H1/IPV6",
+      "samples": 756,
+      "failures": 0,
+      "in_memory_samples": 756,
+      "history_span_seconds": 3774.3,
+      "oldest": "2026-10-06T11:44:38.594Z",
+      "newest": "2026-10-06T12:47:32.918Z",
+      "largest_gap_seconds": 5.829,
+      "gaps_over_two_periods": 0
+    },
+    {
+      "row": "H2/IPV4",
+      "samples": 756,
+      "failures": 0,
+      "in_memory_samples": 756,
+      "history_span_seconds": 3774.3,
+      "oldest": "2026-10-06T11:44:38.596Z",
+      "newest": "2026-10-06T12:47:32.918Z",
+      "largest_gap_seconds": 5.829,
+      "gaps_over_two_periods": 0
+    },
+    {
+      "row": "H2/IPV6",
+      "samples": 756,
+      "failures": 0,
+      "in_memory_samples": 756,
+      "history_span_seconds": 3774.3,
+      "oldest": "2026-10-06T11:44:38.604Z",
+      "newest": "2026-10-06T12:47:32.919Z",
+      "largest_gap_seconds": 5.838,
+      "gaps_over_two_periods": 0
+    },
+    {
+      "row": "H3/IPV4",
+      "samples": 756,
+      "failures": 0,
+      "in_memory_samples": 756,
+      "history_span_seconds": 3774.3,
+      "oldest": "2026-10-06T11:44:38.608Z",
+      "newest": "2026-10-06T12:47:32.920Z",
+      "largest_gap_seconds": 5.839,
+      "gaps_over_two_periods": 0
+    },
+    {
+      "row": "H3/IPV6",
+      "samples": 756,
+      "failures": 0,
+      "in_memory_samples": 756,
+      "history_span_seconds": 3774.3,
+      "oldest": "2026-10-06T11:44:38.609Z",
+      "newest": "2026-10-06T12:47:32.920Z",
+      "largest_gap_seconds": 5.839,
+      "gaps_over_two_periods": 0
+    },
+    {
+      "row": "H4/IPV6",
+      "samples": 756,
+      "failures": 0,
+      "in_memory_samples": 756,
+      "history_span_seconds": 3774.3,
+      "oldest": "2026-10-06T11:44:38.613Z",
+      "newest": "2026-10-06T12:47:32.920Z",
+      "largest_gap_seconds": 5.841,
+      "gaps_over_two_periods": 0
+    }
+  ],
+  "collectors": {
+    "connectivity": {
+      "cycles": 756,
+      "errors": 0,
+      "restarts": 0,
+      "state": "RUNNING"
+    },
+    "services": {
+      "cycles": 252,
+      "errors": 0,
+      "restarts": 0,
+      "state": "RUNNING"
+    },
+    "nsot": {
+      "cycles": 32,
+      "errors": 0,
+      "restarts": 0,
+      "state": "RUNNING"
+    },
+    "automation": {
+      "cycles": 189,
+      "errors": 0,
+      "restarts": 0,
+      "state": "RUNNING"
+    },
+    "counters": {
+      "cycles": 378,
+      "errors": 0,
+      "restarts": 0,
+      "state": "RUNNING"
+    }
+  },
+  "renders": {
+    "connectivity": 959,
+    "services": 887,
+    "nsot": 848,
+    "automation": 810,
+    "counters": 840
+  },
+  "slowest_ui_iteration_seconds": 0.266,
+  "rss_kb_after_30s": 55060,
+  "rss_kb_at_end": 78640,
+  "interfaces": 84,
+  "services": {
+    "nmas-web": "UP",
+    "netbox": "UP",
+    "influxdb": "UP",
+    "grafana": "UP",
+    "freeradius": "UP",
+    "privacyidea": "UP",
+    "traffic-runner": "UP",
+    "soak-timer": "UP",
+    "topology": "UP",
+    "gnmi-collector": "UP",
+    "syslog-ingest": "UP",
+    "snmptrapd": "UP"
+  },
+  "saved_bytes": 5995083,
+  "records": 12463,
+  "kinds": {
+    "app.start": 1,
+    "app.stop": 1,
+    "automation.snapshot": 189,
+    "collector.start": 5,
+    "collector.stop": 5,
+    "connectivity.addresses": 4,
+    "connectivity.plan": 1,
+    "connectivity.sample": 5292,
+    "counters.change": 252,
+    "counters.plan": 1,
+    "counters.sample": 3402,
+    "nsot.snapshot": 32,
+    "service.sample": 3024,
+    "session.meta": 1,
+    "session.summary": 1,
+    "telemetry.sample": 252
+  },
+  "errors_in_log": [],
+  "failures_in_log": 0,
+  "leftover_workers": [],
+  "started_at": "2026-10-06T11:44:37.486Z",
+  "ended_at": "2026-10-06T12:47:37.768Z"
+}

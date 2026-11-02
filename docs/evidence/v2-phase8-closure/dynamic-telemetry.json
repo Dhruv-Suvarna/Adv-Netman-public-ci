@@ -1,0 +1,1026 @@
+{
+  "collections": [
+    {
+      "at": "18:41:42",
+      "bindings": [
+        {
+          "interface": "eth1",
+          "peer": "10.254.40.21",
+          "source": "10.254.40.10"
+        }
+      ],
+      "file": "<work>/nmas-dynamic-targets.json",
+      "lifecycle_push": {
+        "points": 2,
+        "status": 204
+      },
+      "report": {
+        "counts": {
+          "COLLECTED": 1
+        },
+        "outcomes": [
+          {
+            "code": "",
+            "device": "DUT1",
+            "generation": 1,
+            "interfaces": 4,
+            "management_path": "MPATH-000001",
+            "points": 5,
+            "status": "COLLECTED"
+          }
+        ],
+        "push": {
+          "points": 5,
+          "status": 204
+        },
+        "targets": 1
+      },
+      "step": "oob",
+      "target": {
+        "address": "10.254.40.21",
+        "generation": 1,
+        "management_path": "MPATH-000001",
+        "state": "ACTIVE"
+      }
+    },
+    {
+      "at": "18:42:30",
+      "bindings": [],
+      "file": "<work>/stale-targets.json",
+      "lifecycle_push": {
+        "points": 3,
+        "status": 204
+      },
+      "report": {
+        "counts": {
+          "REFUSED": 1
+        },
+        "outcomes": [
+          {
+            "code": "STALE_TARGET",
+            "device": "DUT1",
+            "generation": 1,
+            "interfaces": 0,
+            "management_path": "MPATH-000001",
+            "points": 1,
+            "status": "REFUSED"
+          }
+        ],
+        "push": {
+          "points": 1,
+          "status": 204
+        },
+        "targets": 1
+      },
+      "step": "stale file after failover",
+      "target": {
+        "address": "10.254.40.21",
+        "generation": 2,
+        "management_path": "MPATH-000002",
+        "state": "ACTIVE"
+      }
+    },
+    {
+      "at": "18:42:32",
+      "bindings": [
+        {
+          "interface": "eth1",
+          "peer": "10.254.40.21",
+          "source": "10.254.40.10"
+        }
+      ],
+      "file": "<work>/nmas-dynamic-targets.json",
+      "lifecycle_push": {
+        "points": 3,
+        "status": 204
+      },
+      "report": {
+        "counts": {
+          "COLLECTED": 1
+        },
+        "outcomes": [
+          {
+            "code": "",
+            "device": "DUT1",
+            "generation": 2,
+            "interfaces": 4,
+            "management_path": "MPATH-000002",
+            "points": 5,
+            "status": "COLLECTED"
+          }
+        ],
+        "push": {
+          "points": 5,
+          "status": 204
+        },
+        "targets": 1
+      },
+      "step": "via-sw1",
+      "target": {
+        "address": "10.254.40.21",
+        "generation": 2,
+        "management_path": "MPATH-000002",
+        "state": "ACTIVE"
+      }
+    },
+    {
+      "at": "18:43:28",
+      "bindings": [
+        {
+          "interface": "eth2",
+          "peer": "10.254.42.1",
+          "source": "10.254.42.2"
+        }
+      ],
+      "file": "<work>/nmas-dynamic-targets.json",
+      "lifecycle_push": {
+        "points": 4,
+        "status": 204
+      },
+      "report": {
+        "counts": {
+          "COLLECTED": 1
+        },
+        "outcomes": [
+          {
+            "code": "",
+            "device": "DUT1",
+            "generation": 3,
+            "interfaces": 4,
+            "management_path": "MPATH-000003",
+            "points": 5,
+            "status": "COLLECTED"
+          }
+        ],
+        "push": {
+          "points": 5,
+          "status": 204
+        },
+        "targets": 1
+      },
+      "step": "vrf",
+      "target": {
+        "address": "10.254.42.1",
+        "generation": 3,
+        "management_path": "MPATH-000003",
+        "state": "ACTIVE"
+      }
+    },
+    {
+      "at": "18:44:17",
+      "bindings": [
+        {
+          "interface": "eth1",
+          "peer": "10.254.40.21",
+          "source": "10.254.40.10"
+        }
+      ],
+      "file": "<work>/nmas-dynamic-targets.json",
+      "lifecycle_push": {
+        "points": 5,
+        "status": 204
+      },
+      "report": {
+        "counts": {
+          "COLLECTED": 1
+        },
+        "outcomes": [
+          {
+            "code": "",
+            "device": "DUT1",
+            "generation": 4,
+            "interfaces": 4,
+            "management_path": "MPATH-000001",
+            "points": 5,
+            "status": "COLLECTED"
+          }
+        ],
+        "push": {
+          "points": 5,
+          "status": 204
+        },
+        "targets": 1
+      },
+      "step": "failback",
+      "target": {
+        "address": "10.254.40.21",
+        "generation": 4,
+        "management_path": "MPATH-000001",
+        "state": "ACTIVE"
+      }
+    },
+    {
+      "at": "18:44:18",
+      "bindings": [],
+      "file": "<work>/nmas-dynamic-targets.json",
+      "lifecycle_push": {
+        "points": 5,
+        "status": 204
+      },
+      "report": {
+        "counts": {
+          "FAILED": 1
+        },
+        "outcomes": [
+          {
+            "code": "CONNECTION_FAILED",
+            "device": "DUT1",
+            "generation": 4,
+            "interfaces": 0,
+            "management_path": "MPATH-000001",
+            "points": 1,
+            "status": "FAILED"
+          }
+        ],
+        "push": {
+          "points": 1,
+          "status": 204
+        },
+        "targets": 1
+      },
+      "step": "host key mismatch",
+      "target": {
+        "address": "10.254.40.21",
+        "generation": 4,
+        "management_path": "MPATH-000001",
+        "state": "ACTIVE"
+      }
+    },
+    {
+      "at": "18:44:21",
+      "bindings": [
+        {
+          "interface": "eth1",
+          "peer": "10.254.40.21",
+          "source": "10.254.40.10"
+        }
+      ],
+      "file": "<work>/nmas-dynamic-targets.json",
+      "lifecycle_push": {
+        "points": 5,
+        "status": 204
+      },
+      "report": {
+        "counts": {
+          "COLLECTED": 1
+        },
+        "outcomes": [
+          {
+            "code": "",
+            "device": "DUT1",
+            "generation": 4,
+            "interfaces": 4,
+            "management_path": "MPATH-000001",
+            "points": 5,
+            "status": "COLLECTED"
+          }
+        ],
+        "push": {
+          "points": 5,
+          "status": 204
+        },
+        "targets": 1
+      },
+      "step": "host key restored",
+      "target": {
+        "address": "10.254.40.21",
+        "generation": 4,
+        "management_path": "MPATH-000001",
+        "state": "ACTIVE"
+      }
+    },
+    {
+      "at": "18:44:21",
+      "bindings": [],
+      "file": "<work>/nmas-dynamic-targets.json",
+      "lifecycle_push": {
+        "points": 5,
+        "status": 204
+      },
+      "report": {
+        "counts": {
+          "REFUSED": 1
+        },
+        "outcomes": [
+          {
+            "code": "MGMT_NO_USABLE_PATH",
+            "device": "DUT1",
+            "generation": 4,
+            "interfaces": 0,
+            "management_path": "MPATH-000001",
+            "points": 1,
+            "status": "REFUSED"
+          }
+        ],
+        "push": {
+          "points": 1,
+          "status": 204
+        },
+        "targets": 1
+      },
+      "step": "active path revoked (collector before the consumer)",
+      "target": {
+        "address": "10.254.40.21",
+        "generation": 4,
+        "management_path": "MPATH-000001",
+        "state": "ACTIVE"
+      }
+    }
+  ],
+  "dut_host_key": "SHA256:GkbKJr8wVkdGKq3hmQ5cXul6omBHZFTO7diIZQT9wkE",
+  "evaluations": [
+    {
+      "active_path": "MPATH-000001",
+      "at": "18:41:34",
+      "codes": [],
+      "consumer_binding": {
+        "interface": "eth1",
+        "path": "MPATH-000001",
+        "port": 22,
+        "source": "10.254.40.10",
+        "target": "10.254.40.21"
+      },
+      "consumer_reached": "DUT1",
+      "decision": "ACTIVATE",
+      "device": "DUT1",
+      "endpoint": {
+        "address": "10.254.40.21",
+        "class": 1,
+        "codes": [],
+        "nmas_attachment": "NMA-000001",
+        "path_id": "MPATH-000001",
+        "path_type": "DIRECT_OOB",
+        "port": 22,
+        "source": "PATH",
+        "vrf": ""
+      },
+      "previous_path": "",
+      "probes": {
+        "MPATH-000001": {
+          "failure_code": "",
+          "health": "HEALTHY",
+          "highest_layer": 6,
+          "passed": true
+        },
+        "MPATH-000002": {
+          "failure_code": "",
+          "health": "HEALTHY",
+          "highest_layer": 6,
+          "passed": true
+        },
+        "MPATH-000003": {
+          "failure_code": "",
+          "health": "HEALTHY",
+          "highest_layer": 6,
+          "passed": true
+        }
+      },
+      "reason": "PATH_VERIFIED",
+      "status": "ACTIVE",
+      "step": "initial"
+    },
+    {
+      "active_path": "MPATH-000001",
+      "at": "18:41:55",
+      "codes": [],
+      "consumer_binding": null,
+      "consumer_reached": "",
+      "decision": "NONE",
+      "device": "DUT1",
+      "endpoint": {
+        "address": "",
+        "class": 0,
+        "codes": [
+          "MGMT_NO_USABLE_PATH"
+        ],
+        "nmas_attachment": "",
+        "path_id": "",
+        "path_type": "",
+        "port": 22,
+        "source": "BLOCKED",
+        "vrf": ""
+      },
+      "previous_path": "MPATH-000001",
+      "probes": {
+        "MPATH-000001": {
+          "failure_code": "L1_LINK_DOWN",
+          "health": "DEGRADED",
+          "highest_layer": 0,
+          "passed": false
+        },
+        "MPATH-000002": {
+          "failure_code": "",
+          "health": "HEALTHY",
+          "highest_layer": 6,
+          "passed": true
+        },
+        "MPATH-000003": {
+          "failure_code": "",
+          "health": "HEALTHY",
+          "highest_layer": 6,
+          "passed": true
+        }
+      },
+      "reason": "",
+      "status": "DEGRADED",
+      "step": "oob down #1"
+    },
+    {
+      "active_path": "MPATH-000001",
+      "at": "18:42:08",
+      "codes": [],
+      "consumer_binding": null,
+      "consumer_reached": "",
+      "decision": "NONE",
+      "device": "DUT1",
+      "endpoint": {
+        "address": "",
+        "class": 0,
+        "codes": [
+          "MGMT_NO_USABLE_PATH"
+        ],
+        "nmas_attachment": "",
+        "path_id": "",
+        "path_type": "",
+        "port": 22,
+        "source": "BLOCKED",
+        "vrf": ""
+      },
+      "previous_path": "MPATH-000001",
+      "probes": {
+        "MPATH-000001": {
+          "failure_code": "L1_LINK_DOWN",
+          "health": "DEGRADED",
+          "highest_layer": 0,
+          "passed": false
+        },
+        "MPATH-000002": {
+          "failure_code": "",
+          "health": "HEALTHY",
+          "highest_layer": 6,
+          "passed": true
+        },
+        "MPATH-000003": {
+          "failure_code": "",
+          "health": "HEALTHY",
+          "highest_layer": 6,
+          "passed": true
+        }
+      },
+      "reason": "",
+      "status": "DEGRADED",
+      "step": "oob down #2"
+    },
+    {
+      "active_path": "MPATH-000002",
+      "at": "18:42:25",
+      "codes": [],
+      "consumer_binding": {
+        "interface": "eth1",
+        "path": "MPATH-000002",
+        "port": 22,
+        "source": "10.254.40.10",
+        "target": "10.254.40.21"
+      },
+      "consumer_reached": "DUT1",
+      "decision": "FAILOVER",
+      "device": "DUT1",
+      "endpoint": {
+        "address": "10.254.40.21",
+        "class": 2,
+        "codes": [],
+        "nmas_attachment": "NMA-000001",
+        "path_id": "MPATH-000002",
+        "path_type": "VLAN_ADJACENT_SWITCH",
+        "port": 22,
+        "source": "PATH",
+        "vrf": ""
+      },
+      "previous_path": "MPATH-000001",
+      "probes": {
+        "MPATH-000001": {
+          "failure_code": "L1_LINK_DOWN",
+          "health": "FAILED",
+          "highest_layer": 0,
+          "passed": false
+        },
+        "MPATH-000002": {
+          "failure_code": "",
+          "health": "HEALTHY",
+          "highest_layer": 6,
+          "passed": true
+        },
+        "MPATH-000003": {
+          "failure_code": "",
+          "health": "HEALTHY",
+          "highest_layer": 6,
+          "passed": true
+        }
+      },
+      "reason": "L1_LINK_DOWN",
+      "status": "ACTIVE",
+      "step": "oob down #3"
+    },
+    {
+      "active_path": "MPATH-000002",
+      "at": "18:42:47",
+      "codes": [],
+      "consumer_binding": null,
+      "consumer_reached": "",
+      "decision": "NONE",
+      "device": "DUT1",
+      "endpoint": {
+        "address": "",
+        "class": 0,
+        "codes": [
+          "MGMT_NO_USABLE_PATH"
+        ],
+        "nmas_attachment": "",
+        "path_id": "",
+        "path_type": "",
+        "port": 22,
+        "source": "BLOCKED",
+        "vrf": ""
+      },
+      "previous_path": "MPATH-000002",
+      "probes": {
+        "MPATH-000001": {
+          "failure_code": "L3_UNREACHABLE",
+          "health": "FAILED",
+          "highest_layer": 1,
+          "passed": false
+        },
+        "MPATH-000002": {
+          "failure_code": "L3_UNREACHABLE",
+          "health": "DEGRADED",
+          "highest_layer": 1,
+          "passed": false
+        },
+        "MPATH-000003": {
+          "failure_code": "",
+          "health": "HEALTHY",
+          "highest_layer": 6,
+          "passed": true
+        }
+      },
+      "reason": "",
+      "status": "DEGRADED",
+      "step": "via-sw1 down #1"
+    },
+    {
+      "active_path": "MPATH-000002",
+      "at": "18:43:02",
+      "codes": [],
+      "consumer_binding": null,
+      "consumer_reached": "",
+      "decision": "NONE",
+      "device": "DUT1",
+      "endpoint": {
+        "address": "",
+        "class": 0,
+        "codes": [
+          "MGMT_NO_USABLE_PATH"
+        ],
+        "nmas_attachment": "",
+        "path_id": "",
+        "path_type": "",
+        "port": 22,
+        "source": "BLOCKED",
+        "vrf": ""
+      },
+      "previous_path": "MPATH-000002",
+      "probes": {
+        "MPATH-000001": {
+          "failure_code": "L3_UNREACHABLE",
+          "health": "FAILED",
+          "highest_layer": 1,
+          "passed": false
+        },
+        "MPATH-000002": {
+          "failure_code": "L3_UNREACHABLE",
+          "health": "DEGRADED",
+          "highest_layer": 1,
+          "passed": false
+        },
+        "MPATH-000003": {
+          "failure_code": "",
+          "health": "HEALTHY",
+          "highest_layer": 6,
+          "passed": true
+        }
+      },
+      "reason": "",
+      "status": "DEGRADED",
+      "step": "via-sw1 down #2"
+    },
+    {
+      "active_path": "MPATH-000003",
+      "at": "18:43:20",
+      "codes": [],
+      "consumer_binding": {
+        "interface": "eth2",
+        "path": "MPATH-000003",
+        "port": 22,
+        "source": "10.254.42.2",
+        "target": "10.254.42.1"
+      },
+      "consumer_reached": "DUT1",
+      "decision": "FAILOVER",
+      "device": "DUT1",
+      "endpoint": {
+        "address": "10.254.42.1",
+        "class": 3,
+        "codes": [],
+        "nmas_attachment": "NMA-000002",
+        "path_id": "MPATH-000003",
+        "path_type": "ROUTED_VRF",
+        "port": 22,
+        "source": "PATH",
+        "vrf": "MGMT"
+      },
+      "previous_path": "MPATH-000002",
+      "probes": {
+        "MPATH-000001": {
+          "failure_code": "L3_UNREACHABLE",
+          "health": "FAILED",
+          "highest_layer": 1,
+          "passed": false
+        },
+        "MPATH-000002": {
+          "failure_code": "L3_UNREACHABLE",
+          "health": "FAILED",
+          "highest_layer": 1,
+          "passed": false
+        },
+        "MPATH-000003": {
+          "failure_code": "",
+          "health": "HEALTHY",
+          "highest_layer": 6,
+          "passed": true
+        }
+      },
+      "reason": "L3_UNREACHABLE",
+      "status": "ACTIVE",
+      "step": "via-sw1 down #3"
+    },
+    {
+      "active_path": "MPATH-000003",
+      "at": "18:43:40",
+      "codes": [],
+      "consumer_binding": {
+        "interface": "eth2",
+        "path": "MPATH-000003",
+        "port": 22,
+        "source": "10.254.42.2",
+        "target": "10.254.42.1"
+      },
+      "consumer_reached": "DUT1",
+      "decision": "NONE",
+      "device": "DUT1",
+      "endpoint": {
+        "address": "10.254.42.1",
+        "class": 3,
+        "codes": [],
+        "nmas_attachment": "NMA-000002",
+        "path_id": "MPATH-000003",
+        "path_type": "ROUTED_VRF",
+        "port": 22,
+        "source": "PATH",
+        "vrf": "MGMT"
+      },
+      "previous_path": "MPATH-000003",
+      "probes": {
+        "MPATH-000001": {
+          "failure_code": "",
+          "health": "FAILED",
+          "highest_layer": 6,
+          "passed": true
+        },
+        "MPATH-000002": {
+          "failure_code": "",
+          "health": "FAILED",
+          "highest_layer": 6,
+          "passed": true
+        },
+        "MPATH-000003": {
+          "failure_code": "",
+          "health": "HEALTHY",
+          "highest_layer": 6,
+          "passed": true
+        }
+      },
+      "reason": "",
+      "status": "ACTIVE",
+      "step": "restored #1"
+    },
+    {
+      "active_path": "MPATH-000003",
+      "at": "18:43:55",
+      "codes": [],
+      "consumer_binding": {
+        "interface": "eth2",
+        "path": "MPATH-000003",
+        "port": 22,
+        "source": "10.254.42.2",
+        "target": "10.254.42.1"
+      },
+      "consumer_reached": "DUT1",
+      "decision": "NONE",
+      "device": "DUT1",
+      "endpoint": {
+        "address": "10.254.42.1",
+        "class": 3,
+        "codes": [],
+        "nmas_attachment": "NMA-000002",
+        "path_id": "MPATH-000003",
+        "path_type": "ROUTED_VRF",
+        "port": 22,
+        "source": "PATH",
+        "vrf": "MGMT"
+      },
+      "previous_path": "MPATH-000003",
+      "probes": {
+        "MPATH-000001": {
+          "failure_code": "",
+          "health": "FAILED",
+          "highest_layer": 6,
+          "passed": true
+        },
+        "MPATH-000002": {
+          "failure_code": "",
+          "health": "FAILED",
+          "highest_layer": 6,
+          "passed": true
+        },
+        "MPATH-000003": {
+          "failure_code": "",
+          "health": "HEALTHY",
+          "highest_layer": 6,
+          "passed": true
+        }
+      },
+      "reason": "",
+      "status": "ACTIVE",
+      "step": "restored #2"
+    },
+    {
+      "active_path": "MPATH-000001",
+      "at": "18:44:10",
+      "codes": [],
+      "consumer_binding": {
+        "interface": "eth1",
+        "path": "MPATH-000001",
+        "port": 22,
+        "source": "10.254.40.10",
+        "target": "10.254.40.21"
+      },
+      "consumer_reached": "DUT1",
+      "decision": "FAILBACK",
+      "device": "DUT1",
+      "endpoint": {
+        "address": "10.254.40.21",
+        "class": 1,
+        "codes": [],
+        "nmas_attachment": "NMA-000001",
+        "path_id": "MPATH-000001",
+        "path_type": "DIRECT_OOB",
+        "port": 22,
+        "source": "PATH",
+        "vrf": ""
+      },
+      "previous_path": "MPATH-000003",
+      "probes": {
+        "MPATH-000001": {
+          "failure_code": "",
+          "health": "HEALTHY",
+          "highest_layer": 6,
+          "passed": true
+        },
+        "MPATH-000002": {
+          "failure_code": "",
+          "health": "HEALTHY",
+          "highest_layer": 6,
+          "passed": true
+        },
+        "MPATH-000003": {
+          "failure_code": "",
+          "health": "HEALTHY",
+          "highest_layer": 6,
+          "passed": true
+        }
+      },
+      "reason": "PREFERRED_PATH_RESTORED",
+      "status": "ACTIVE",
+      "step": "restored #3"
+    },
+    {
+      "active_path": "",
+      "at": "18:44:21",
+      "codes": [
+        "MGMT_NO_USABLE_PATH"
+      ],
+      "consumer_binding": null,
+      "consumer_reached": "",
+      "decision": "NONE",
+      "device": "DUT1",
+      "endpoint": {
+        "address": "",
+        "class": 0,
+        "codes": [
+          "MGMT_NO_USABLE_PATH"
+        ],
+        "nmas_attachment": "",
+        "path_id": "",
+        "path_type": "",
+        "port": 22,
+        "source": "BLOCKED",
+        "vrf": ""
+      },
+      "previous_path": "",
+      "probes": {},
+      "reason": "MGMT_NO_USABLE_PATH",
+      "status": "NO_PATH",
+      "step": "all revoked"
+    }
+  ],
+  "export_after_revocation": [],
+  "generations": [
+    1,
+    2,
+    2,
+    3,
+    4
+  ],
+  "grafana": {
+    "dashboard_status": 200,
+    "editable": false,
+    "frames": 3,
+    "panel_query_series_by_path": [
+      "MPATH-000001",
+      "MPATH-000002",
+      "MPATH-000003"
+    ],
+    "panels": [
+      "Decommission / restore events",
+      "Dynamic collection by management path",
+      "Generation / reconnects",
+      "Lifecycle state",
+      "Management path",
+      "Monitoring state"
+    ],
+    "provisioned": true
+  },
+  "influx_interface_series": 3,
+  "influx_reachable_by_path": [
+    {
+      "": "",
+      "_start": "2026-10-27T16:44:23.540685943Z",
+      "_stop": "2026-10-27T18:44:23.540685943Z",
+      "_value": "1",
+      "error": "CONNECTION_FAILED",
+      "management_path": "MPATH-000001",
+      "result": "_result",
+      "table": "0"
+    },
+    {
+      "": "",
+      "_start": "2026-10-27T16:44:23.540685943Z",
+      "_stop": "2026-10-27T18:44:23.540685943Z",
+      "_value": "1",
+      "error": "MGMT_NO_USABLE_PATH",
+      "management_path": "MPATH-000001",
+      "result": "_result",
+      "table": "1"
+    },
+    {
+      "": "",
+      "_start": "2026-10-27T16:44:23.540685943Z",
+      "_stop": "2026-10-27T18:44:23.540685943Z",
+      "_value": "3",
+      "error": "none",
+      "management_path": "MPATH-000001",
+      "result": "_result",
+      "table": "2"
+    },
+    {
+      "": "",
+      "_start": "2026-10-27T16:44:23.540685943Z",
+      "_stop": "2026-10-27T18:44:23.540685943Z",
+      "_value": "1",
+      "error": "STALE_TARGET",
+      "management_path": "MPATH-000002",
+      "result": "_result",
+      "table": "3"
+    },
+    {
+      "": "",
+      "_start": "2026-10-27T16:44:23.540685943Z",
+      "_stop": "2026-10-27T18:44:23.540685943Z",
+      "_value": "1",
+      "error": "none",
+      "management_path": "MPATH-000002",
+      "result": "_result",
+      "table": "4"
+    },
+    {
+      "": "",
+      "_start": "2026-10-27T16:44:23.540685943Z",
+      "_stop": "2026-10-27T18:44:23.540685943Z",
+      "_value": "1",
+      "error": "none",
+      "management_path": "MPATH-000003",
+      "result": "_result",
+      "table": "5"
+    }
+  ],
+  "links": [
+    {
+      "action": "fail",
+      "at": "18:41:42",
+      "link": "oob"
+    },
+    {
+      "action": "fail",
+      "at": "18:42:33",
+      "link": "via-sw1"
+    },
+    {
+      "action": "restore",
+      "at": "18:43:28",
+      "link": "via-sw1"
+    },
+    {
+      "action": "restore",
+      "at": "18:43:29",
+      "link": "oob"
+    }
+  ],
+  "lldp": {
+    "MSW1": {
+      "Ethernet2": [
+        "DUT1",
+        "Ethernet1"
+      ],
+      "Ethernet3": [
+        "SW1",
+        "Ethernet1"
+      ]
+    },
+    "SW1": {
+      "Ethernet1": [
+        "MSW1",
+        "Ethernet3"
+      ],
+      "Ethernet2": [
+        "DUT1",
+        "Ethernet2"
+      ]
+    }
+  },
+  "nmas_observations": {
+    "fx-direct": {
+      "addresses": [
+        "10.254.42.2/30",
+        "fe80::4871:8fff:fe0d:3d34/64"
+      ],
+      "exists": true,
+      "holds_source": true,
+      "interface": "eth2",
+      "oper_up": true,
+      "source": "sysfs+iproute2 (read-only)"
+    },
+    "fx-oob": {
+      "addresses": [
+        "10.254.40.10/24",
+        "fe80::a432:93ff:fe0e:d38a/64"
+      ],
+      "exists": true,
+      "holds_source": true,
+      "interface": "eth1",
+      "oper_up": true,
+      "source": "sysfs+iproute2 (read-only)"
+    }
+  },
+  "paths": {
+    "oob": {
+      "endpoint": "10.254.40.21",
+      "id": "MPATH-000001",
+      "nmas_interface": "eth1",
+      "type": "DIRECT_OOB"
+    },
+    "via-sw1": {
+      "endpoint": "10.254.40.21",
+      "id": "MPATH-000002",
+      "nmas_interface": "eth1",
+      "type": "VLAN_ADJACENT_SWITCH"
+    },
+    "vrf": {
+      "endpoint": "10.254.42.1",
+      "id": "MPATH-000003",
+      "nmas_interface": "eth2",
+      "type": "ROUTED_VRF"
+    }
+  },
+  "target_after_revocation": "SUSPENDED",
+  "tsdb": true
+}

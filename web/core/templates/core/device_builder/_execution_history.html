@@ -1,0 +1,20 @@
+{% load core_extras %}
+{# runs: ChangeExecutionRun rows of ONE Change.  Links only to server-side UUIDs; nothing here mutates. #}
+<table class="data-table">
+  <thead><tr><th>Started</th><th>Mode</th><th>Outcome</th><th>Plan</th><th>Devices</th><th>By</th><th></th></tr></thead>
+  <tbody>
+  {% for item in runs %}
+    <tr>
+      <td>{{ item.started_at }}</td>
+      <td>{{ item.get_mode_display }}</td>
+      <td>{% if item.outcome %}<span class="badge badge--{{ item.outcome|execution_badge_class }}">{{ item.get_outcome_display }}</span>{% else %}<span class="badge badge--info">{{ item.get_state_display }}</span>{% endif %}</td>
+      <td><code>{{ item.plan.plan_id|stringformat:"s"|slice:":8" }}</code></td>
+      <td>{{ item.devices|join:", "|default:"—" }}</td>
+      <td>{{ item.actor|default:"—" }}</td>
+      <td><a href="{% url 'core:change_execution_detail' item.change.change_id item.run_id %}">Open run</a></td>
+    </tr>
+  {% empty %}
+    <tr><td colspan="7">No execution attempt has been recorded for this Change.</td></tr>
+  {% endfor %}
+  </tbody>
+</table>

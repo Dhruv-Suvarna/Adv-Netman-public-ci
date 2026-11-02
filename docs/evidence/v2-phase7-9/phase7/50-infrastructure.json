@@ -1,0 +1,756 @@
+{
+  "dispatch": {
+    "monitoring": {
+      "consumer": "monitoring",
+      "counts": {
+        "APPLIED": 11
+      },
+      "processed": 11,
+      "results": [
+        {
+          "code": "",
+          "consumer": "monitoring",
+          "device": 5,
+          "event": 3,
+          "result": "APPLIED",
+          "sequence": 1,
+          "topic": "MONITORING_TARGET_STATE"
+        },
+        {
+          "code": "",
+          "consumer": "monitoring",
+          "device": 5,
+          "event": 6,
+          "result": "APPLIED",
+          "sequence": 2,
+          "topic": "MONITORING_TARGET_STATE"
+        },
+        {
+          "code": "",
+          "consumer": "monitoring",
+          "device": 4,
+          "event": 9,
+          "result": "APPLIED",
+          "sequence": 1,
+          "topic": "MONITORING_TARGET_STATE"
+        },
+        {
+          "code": "",
+          "consumer": "monitoring",
+          "device": 6,
+          "event": 12,
+          "result": "APPLIED",
+          "sequence": 1,
+          "topic": "MONITORING_TARGET_STATE"
+        },
+        {
+          "code": "",
+          "consumer": "monitoring",
+          "device": 4,
+          "event": 15,
+          "result": "APPLIED",
+          "sequence": 2,
+          "topic": "MONITORING_TARGET_STATE"
+        },
+        {
+          "code": "",
+          "consumer": "monitoring",
+          "device": 2,
+          "event": 18,
+          "result": "APPLIED",
+          "sequence": 1,
+          "topic": "MONITORING_TARGET_STATE"
+        },
+        {
+          "code": "",
+          "consumer": "monitoring",
+          "device": 2,
+          "event": 21,
+          "result": "APPLIED",
+          "sequence": 2,
+          "topic": "MONITORING_TARGET_STATE"
+        },
+        {
+          "code": "",
+          "consumer": "monitoring",
+          "device": 2,
+          "event": 24,
+          "result": "APPLIED",
+          "sequence": 3,
+          "topic": "MONITORING_TARGET_STATE"
+        },
+        {
+          "code": "",
+          "consumer": "monitoring",
+          "device": 2,
+          "event": 27,
+          "result": "APPLIED",
+          "sequence": 4,
+          "topic": "MONITORING_TARGET_STATE"
+        },
+        {
+          "code": "",
+          "consumer": "monitoring",
+          "device": 7,
+          "event": 30,
+          "result": "APPLIED",
+          "sequence": 1,
+          "topic": "MONITORING_TARGET_STATE"
+        },
+        {
+          "code": "",
+          "consumer": "monitoring",
+          "device": 7,
+          "event": 33,
+          "result": "APPLIED",
+          "sequence": 2,
+          "topic": "MONITORING_TARGET_STATE"
+        }
+      ]
+    },
+    "nsot": {
+      "consumer": "nsot",
+      "counts": {
+        "FAILED": 11
+      },
+      "processed": 11,
+      "results": [
+        {
+          "code": "NSOT_UNAVAILABLE",
+          "consumer": "nsot",
+          "device": 5,
+          "event": 1,
+          "result": "FAILED",
+          "sequence": 1,
+          "topic": "NSOT_DEVICE_STATE"
+        },
+        {
+          "code": "NSOT_UNAVAILABLE",
+          "consumer": "nsot",
+          "device": 5,
+          "event": 4,
+          "result": "FAILED",
+          "sequence": 2,
+          "topic": "NSOT_DEVICE_STATE"
+        },
+        {
+          "code": "NSOT_UNAVAILABLE",
+          "consumer": "nsot",
+          "device": 4,
+          "event": 7,
+          "result": "FAILED",
+          "sequence": 1,
+          "topic": "NSOT_DEVICE_STATE"
+        },
+        {
+          "code": "NSOT_UNAVAILABLE",
+          "consumer": "nsot",
+          "device": 6,
+          "event": 10,
+          "result": "FAILED",
+          "sequence": 1,
+          "topic": "NSOT_DEVICE_STATE"
+        },
+        {
+          "code": "NSOT_UNAVAILABLE",
+          "consumer": "nsot",
+          "device": 4,
+          "event": 13,
+          "result": "FAILED",
+          "sequence": 2,
+          "topic": "NSOT_DEVICE_STATE"
+        },
+        {
+          "code": "NSOT_UNAVAILABLE",
+          "consumer": "nsot",
+          "device": 2,
+          "event": 16,
+          "result": "FAILED",
+          "sequence": 1,
+          "topic": "NSOT_DEVICE_STATE"
+        },
+        {
+          "code": "NSOT_UNAVAILABLE",
+          "consumer": "nsot",
+          "device": 2,
+          "event": 19,
+          "result": "FAILED",
+          "sequence": 2,
+          "topic": "NSOT_DEVICE_STATE"
+        },
+        {
+          "code": "NSOT_UNAVAILABLE",
+          "consumer": "nsot",
+          "device": 2,
+          "event": 22,
+          "result": "FAILED",
+          "sequence": 3,
+          "topic": "NSOT_DEVICE_STATE"
+        },
+        {
+          "code": "NSOT_UNAVAILABLE",
+          "consumer": "nsot",
+          "device": 2,
+          "event": 25,
+          "result": "FAILED",
+          "sequence": 4,
+          "topic": "NSOT_DEVICE_STATE"
+        },
+        {
+          "code": "NSOT_UNAVAILABLE",
+          "consumer": "nsot",
+          "device": 7,
+          "event": 28,
+          "result": "FAILED",
+          "sequence": 1,
+          "topic": "NSOT_DEVICE_STATE"
+        },
+        {
+          "code": "NSOT_UNAVAILABLE",
+          "consumer": "nsot",
+          "device": 7,
+          "event": 31,
+          "result": "FAILED",
+          "sequence": 2,
+          "topic": "NSOT_DEVICE_STATE"
+        }
+      ]
+    },
+    "topology": {
+      "consumer": "topology",
+      "counts": {
+        "APPLIED": 11
+      },
+      "processed": 11,
+      "results": [
+        {
+          "code": "",
+          "consumer": "topology",
+          "device": 5,
+          "event": 2,
+          "result": "APPLIED",
+          "sequence": 1,
+          "topic": "TOPOLOGY_DEVICE_STATE"
+        },
+        {
+          "code": "",
+          "consumer": "topology",
+          "device": 5,
+          "event": 5,
+          "result": "APPLIED",
+          "sequence": 2,
+          "topic": "TOPOLOGY_DEVICE_STATE"
+        },
+        {
+          "code": "",
+          "consumer": "topology",
+          "device": 4,
+          "event": 8,
+          "result": "APPLIED",
+          "sequence": 1,
+          "topic": "TOPOLOGY_DEVICE_STATE"
+        },
+        {
+          "code": "",
+          "consumer": "topology",
+          "device": 6,
+          "event": 11,
+          "result": "APPLIED",
+          "sequence": 1,
+          "topic": "TOPOLOGY_DEVICE_STATE"
+        },
+        {
+          "code": "",
+          "consumer": "topology",
+          "device": 4,
+          "event": 14,
+          "result": "APPLIED",
+          "sequence": 2,
+          "topic": "TOPOLOGY_DEVICE_STATE"
+        },
+        {
+          "code": "",
+          "consumer": "topology",
+          "device": 2,
+          "event": 17,
+          "result": "APPLIED",
+          "sequence": 1,
+          "topic": "TOPOLOGY_DEVICE_STATE"
+        },
+        {
+          "code": "",
+          "consumer": "topology",
+          "device": 2,
+          "event": 20,
+          "result": "APPLIED",
+          "sequence": 2,
+          "topic": "TOPOLOGY_DEVICE_STATE"
+        },
+        {
+          "code": "",
+          "consumer": "topology",
+          "device": 2,
+          "event": 23,
+          "result": "APPLIED",
+          "sequence": 3,
+          "topic": "TOPOLOGY_DEVICE_STATE"
+        },
+        {
+          "code": "",
+          "consumer": "topology",
+          "device": 2,
+          "event": 26,
+          "result": "APPLIED",
+          "sequence": 4,
+          "topic": "TOPOLOGY_DEVICE_STATE"
+        },
+        {
+          "code": "",
+          "consumer": "topology",
+          "device": 7,
+          "event": 29,
+          "result": "APPLIED",
+          "sequence": 1,
+          "topic": "TOPOLOGY_DEVICE_STATE"
+        },
+        {
+          "code": "",
+          "consumer": "topology",
+          "device": 7,
+          "event": 32,
+          "result": "APPLIED",
+          "sequence": 2,
+          "topic": "TOPOLOGY_DEVICE_STATE"
+        }
+      ]
+    }
+  },
+  "monitoring": [
+    {
+      "address": "",
+      "collectors": {
+        "gnmi": {
+          "enabled": true,
+          "reason": "native EOS gNMI (port 6030)"
+        },
+        "snmp": {
+          "enabled": true,
+          "reason": ""
+        },
+        "syslog": {
+          "enabled": true,
+          "reason": ""
+        }
+      },
+      "generation": 0,
+      "name": "E2",
+      "state": "PENDING"
+    },
+    {
+      "address": "",
+      "collectors": {
+        "gnmi": {
+          "enabled": true,
+          "reason": "native EOS gNMI (port 6030)"
+        },
+        "snmp": {
+          "enabled": true,
+          "reason": ""
+        },
+        "syslog": {
+          "enabled": true,
+          "reason": ""
+        }
+      },
+      "generation": 0,
+      "name": "STUB",
+      "state": "RETIRED"
+    },
+    {
+      "address": "",
+      "collectors": {
+        "gnmi": {
+          "enabled": true,
+          "reason": "native EOS gNMI (port 6030)"
+        },
+        "snmp": {
+          "enabled": true,
+          "reason": ""
+        },
+        "syslog": {
+          "enabled": true,
+          "reason": ""
+        }
+      },
+      "generation": 0,
+      "name": "STUB",
+      "state": "PENDING"
+    },
+    {
+      "address": "",
+      "collectors": {
+        "gnmi": {
+          "enabled": true,
+          "reason": "native EOS gNMI (port 6030)"
+        },
+        "snmp": {
+          "enabled": true,
+          "reason": ""
+        },
+        "syslog": {
+          "enabled": true,
+          "reason": ""
+        }
+      },
+      "generation": 0,
+      "name": "T1",
+      "state": "RETIRED"
+    },
+    {
+      "address": "",
+      "collectors": {
+        "gnmi": {
+          "enabled": true,
+          "reason": "native EOS gNMI (port 6030)"
+        },
+        "snmp": {
+          "enabled": true,
+          "reason": ""
+        },
+        "syslog": {
+          "enabled": true,
+          "reason": ""
+        }
+      },
+      "generation": 0,
+      "name": "T1",
+      "state": "PENDING"
+    }
+  ],
+  "nsot": [
+    {
+      "desired": {},
+      "discrepancies": [],
+      "name": "E2",
+      "state": "UNAVAILABLE"
+    },
+    {
+      "desired": {},
+      "discrepancies": [],
+      "name": "STUB",
+      "state": "UNAVAILABLE"
+    },
+    {
+      "desired": {},
+      "discrepancies": [],
+      "name": "STUB",
+      "state": "UNAVAILABLE"
+    },
+    {
+      "desired": {},
+      "discrepancies": [],
+      "name": "T1",
+      "state": "UNAVAILABLE"
+    },
+    {
+      "desired": {},
+      "discrepancies": [],
+      "name": "T1",
+      "state": "UNAVAILABLE"
+    }
+  ],
+  "outbox": [
+    {
+      "attempts": 1,
+      "device__name": "STUB",
+      "last_error": "NSOT_UNAVAILABLE",
+      "sequence": 1,
+      "state": "FAILED",
+      "topic": "NSOT_DEVICE_STATE"
+    },
+    {
+      "attempts": 1,
+      "device__name": "STUB",
+      "last_error": "",
+      "sequence": 1,
+      "state": "DELIVERED",
+      "topic": "TOPOLOGY_DEVICE_STATE"
+    },
+    {
+      "attempts": 1,
+      "device__name": "STUB",
+      "last_error": "",
+      "sequence": 1,
+      "state": "DELIVERED",
+      "topic": "MONITORING_TARGET_STATE"
+    },
+    {
+      "attempts": 1,
+      "device__name": "STUB",
+      "last_error": "NSOT_UNAVAILABLE",
+      "sequence": 2,
+      "state": "FAILED",
+      "topic": "NSOT_DEVICE_STATE"
+    },
+    {
+      "attempts": 1,
+      "device__name": "STUB",
+      "last_error": "",
+      "sequence": 2,
+      "state": "DELIVERED",
+      "topic": "TOPOLOGY_DEVICE_STATE"
+    },
+    {
+      "attempts": 1,
+      "device__name": "STUB",
+      "last_error": "",
+      "sequence": 2,
+      "state": "DELIVERED",
+      "topic": "MONITORING_TARGET_STATE"
+    },
+    {
+      "attempts": 1,
+      "device__name": "E2",
+      "last_error": "NSOT_UNAVAILABLE",
+      "sequence": 1,
+      "state": "FAILED",
+      "topic": "NSOT_DEVICE_STATE"
+    },
+    {
+      "attempts": 1,
+      "device__name": "E2",
+      "last_error": "",
+      "sequence": 1,
+      "state": "DELIVERED",
+      "topic": "TOPOLOGY_DEVICE_STATE"
+    },
+    {
+      "attempts": 1,
+      "device__name": "E2",
+      "last_error": "",
+      "sequence": 1,
+      "state": "DELIVERED",
+      "topic": "MONITORING_TARGET_STATE"
+    },
+    {
+      "attempts": 1,
+      "device__name": "STUB",
+      "last_error": "NSOT_UNAVAILABLE",
+      "sequence": 1,
+      "state": "FAILED",
+      "topic": "NSOT_DEVICE_STATE"
+    },
+    {
+      "attempts": 1,
+      "device__name": "STUB",
+      "last_error": "",
+      "sequence": 1,
+      "state": "DELIVERED",
+      "topic": "TOPOLOGY_DEVICE_STATE"
+    },
+    {
+      "attempts": 1,
+      "device__name": "STUB",
+      "last_error": "",
+      "sequence": 1,
+      "state": "DELIVERED",
+      "topic": "MONITORING_TARGET_STATE"
+    },
+    {
+      "attempts": 1,
+      "device__name": "E2",
+      "last_error": "NSOT_UNAVAILABLE",
+      "sequence": 2,
+      "state": "FAILED",
+      "topic": "NSOT_DEVICE_STATE"
+    },
+    {
+      "attempts": 1,
+      "device__name": "E2",
+      "last_error": "",
+      "sequence": 2,
+      "state": "DELIVERED",
+      "topic": "TOPOLOGY_DEVICE_STATE"
+    },
+    {
+      "attempts": 1,
+      "device__name": "E2",
+      "last_error": "",
+      "sequence": 2,
+      "state": "DELIVERED",
+      "topic": "MONITORING_TARGET_STATE"
+    },
+    {
+      "attempts": 1,
+      "device__name": "T1",
+      "last_error": "NSOT_UNAVAILABLE",
+      "sequence": 1,
+      "state": "FAILED",
+      "topic": "NSOT_DEVICE_STATE"
+    },
+    {
+      "attempts": 1,
+      "device__name": "T1",
+      "last_error": "",
+      "sequence": 1,
+      "state": "DELIVERED",
+      "topic": "TOPOLOGY_DEVICE_STATE"
+    },
+    {
+      "attempts": 1,
+      "device__name": "T1",
+      "last_error": "",
+      "sequence": 1,
+      "state": "DELIVERED",
+      "topic": "MONITORING_TARGET_STATE"
+    },
+    {
+      "attempts": 1,
+      "device__name": "T1",
+      "last_error": "NSOT_UNAVAILABLE",
+      "sequence": 2,
+      "state": "FAILED",
+      "topic": "NSOT_DEVICE_STATE"
+    },
+    {
+      "attempts": 1,
+      "device__name": "T1",
+      "last_error": "",
+      "sequence": 2,
+      "state": "DELIVERED",
+      "topic": "TOPOLOGY_DEVICE_STATE"
+    },
+    {
+      "attempts": 1,
+      "device__name": "T1",
+      "last_error": "",
+      "sequence": 2,
+      "state": "DELIVERED",
+      "topic": "MONITORING_TARGET_STATE"
+    },
+    {
+      "attempts": 1,
+      "device__name": "T1",
+      "last_error": "NSOT_UNAVAILABLE",
+      "sequence": 3,
+      "state": "FAILED",
+      "topic": "NSOT_DEVICE_STATE"
+    },
+    {
+      "attempts": 1,
+      "device__name": "T1",
+      "last_error": "",
+      "sequence": 3,
+      "state": "DELIVERED",
+      "topic": "TOPOLOGY_DEVICE_STATE"
+    },
+    {
+      "attempts": 1,
+      "device__name": "T1",
+      "last_error": "",
+      "sequence": 3,
+      "state": "DELIVERED",
+      "topic": "MONITORING_TARGET_STATE"
+    },
+    {
+      "attempts": 1,
+      "device__name": "T1",
+      "last_error": "NSOT_UNAVAILABLE",
+      "sequence": 4,
+      "state": "FAILED",
+      "topic": "NSOT_DEVICE_STATE"
+    },
+    {
+      "attempts": 1,
+      "device__name": "T1",
+      "last_error": "",
+      "sequence": 4,
+      "state": "DELIVERED",
+      "topic": "TOPOLOGY_DEVICE_STATE"
+    },
+    {
+      "attempts": 1,
+      "device__name": "T1",
+      "last_error": "",
+      "sequence": 4,
+      "state": "DELIVERED",
+      "topic": "MONITORING_TARGET_STATE"
+    },
+    {
+      "attempts": 1,
+      "device__name": "T1",
+      "last_error": "NSOT_UNAVAILABLE",
+      "sequence": 1,
+      "state": "FAILED",
+      "topic": "NSOT_DEVICE_STATE"
+    },
+    {
+      "attempts": 1,
+      "device__name": "T1",
+      "last_error": "",
+      "sequence": 1,
+      "state": "DELIVERED",
+      "topic": "TOPOLOGY_DEVICE_STATE"
+    },
+    {
+      "attempts": 1,
+      "device__name": "T1",
+      "last_error": "",
+      "sequence": 1,
+      "state": "DELIVERED",
+      "topic": "MONITORING_TARGET_STATE"
+    },
+    {
+      "attempts": 1,
+      "device__name": "T1",
+      "last_error": "NSOT_UNAVAILABLE",
+      "sequence": 2,
+      "state": "FAILED",
+      "topic": "NSOT_DEVICE_STATE"
+    },
+    {
+      "attempts": 1,
+      "device__name": "T1",
+      "last_error": "",
+      "sequence": 2,
+      "state": "DELIVERED",
+      "topic": "TOPOLOGY_DEVICE_STATE"
+    },
+    {
+      "attempts": 1,
+      "device__name": "T1",
+      "last_error": "",
+      "sequence": 2,
+      "state": "DELIVERED",
+      "topic": "MONITORING_TARGET_STATE"
+    }
+  ],
+  "topology_edges": [],
+  "topology_nodes": [
+    {
+      "last_sequence": 2,
+      "name": "E2",
+      "state": "IN_SERVICE"
+    },
+    {
+      "last_sequence": 2,
+      "name": "STUB",
+      "state": "DECOMMISSIONED"
+    },
+    {
+      "last_sequence": 1,
+      "name": "STUB",
+      "state": "IN_SERVICE"
+    },
+    {
+      "last_sequence": 4,
+      "name": "T1",
+      "state": "DECOMMISSIONED"
+    },
+    {
+      "last_sequence": 2,
+      "name": "T1",
+      "state": "IN_SERVICE"
+    }
+  ]
+}

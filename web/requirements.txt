@@ -1,0 +1,6 @@
+Django>=5.1,<5.2
+# V2 Phase 1: website MFA (RFC 6238 TOTP), in-memory QR rendering, and the persistent WSGI server.
+pyotp>=2.9,<3
+segno>=1.6,<2
+gunicorn>=23,<27
+cryptography>=42

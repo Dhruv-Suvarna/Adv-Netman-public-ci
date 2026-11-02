@@ -1,0 +1,704 @@
+{
+  "description": "Canonical dashboard for the future Django 'Link State & Traffic' page: interface admin/oper state, ingress/egress traffic rate, errors/discards, and raw counters, all derived from real gnmi_telemetry samples/counters. No packet-counter or utilization-percentage panel is fabricated: interface speed/capacity is not polled by any current collector, so only accurate bits-per-second rates are shown, never a percentage -- see docs/GRAFANA_MONITORING_TAXONOMY.md \"Rate and utilization semantics\".",
+  "editable": false,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 1,
+  "id": null,
+  "links": [],
+  "liveNow": true,
+  "panels": [
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "nmas-influxdb"
+      },
+      "description": "Actual sampled OpenConfig administrative state.",
+      "eventOptional": false,
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 0,
+        "y": 0
+      },
+      "id": 1,
+      "options": {
+        "alignValue": "left",
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "mergeValues": true,
+        "rowHeight": 0.9,
+        "showValue": "auto",
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "nmas-influxdb"
+          },
+          "query": "from(bucket: \"network-monitoring\")\n          |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n          |> filter(fn: (r) => r._measurement == \"gnmi_telemetry\" and r.category == \"interface_state\" and r._field == \"admin_status\")\n          |> filter(fn: (r) => r.device =~ /^${device:regex}$/ and r.platform =~ /^${platform:regex}$/ and r.interface =~ /^${interface:regex}$/ and (\"${include_mgmt}\" == \"true\" or not (r.interface =~ /^(Management|Vlan200)/)) and (\"${include_loopback}\" == \"true\" or not (r.interface == \"lo\" or r.interface =~ /^Loopback/)))\n          |> keep(columns: [\"_time\", \"_value\", \"device\", \"interface\"])\n          |> group(columns: [\"device\", \"interface\"])",
+          "refId": "A"
+        }
+      ],
+      "title": "Interface administrative state",
+      "type": "state-timeline"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "nmas-influxdb"
+      },
+      "description": "Actual sampled OpenConfig operational state.",
+      "eventOptional": false,
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 12,
+        "y": 0
+      },
+      "id": 2,
+      "options": {
+        "alignValue": "left",
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "mergeValues": true,
+        "rowHeight": 0.9,
+        "showValue": "auto",
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "nmas-influxdb"
+          },
+          "query": "from(bucket: \"network-monitoring\")\n          |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n          |> filter(fn: (r) => r._measurement == \"gnmi_telemetry\" and r.category == \"interface_state\" and r._field == \"oper_status\")\n          |> filter(fn: (r) => r.device =~ /^${device:regex}$/ and r.platform =~ /^${platform:regex}$/ and r.interface =~ /^${interface:regex}$/ and (\"${include_mgmt}\" == \"true\" or not (r.interface =~ /^(Management|Vlan200)/)) and (\"${include_loopback}\" == \"true\" or not (r.interface == \"lo\" or r.interface =~ /^Loopback/)))\n          |> keep(columns: [\"_time\", \"_value\", \"device\", \"interface\"])\n          |> group(columns: [\"device\", \"interface\"])",
+          "refId": "A"
+        }
+      ],
+      "title": "Interface operational state",
+      "type": "state-timeline"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "nmas-influxdb"
+      },
+      "description": "Latest observed admin/operational state for every selected interface (not only non-UP, unlike the legacy exception views). 'Active only' = admin UP and oper UP. 'Hide down' removes oper-down interfaces.",
+      "eventOptional": false,
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "filterable": true
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 9
+      },
+      "id": 3,
+      "options": {
+        "cellHeight": "sm",
+        "showHeader": true,
+        "sortBy": []
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "nmas-influxdb"
+          },
+          "query": "from(bucket: \"network-monitoring\")\n          |> range(start: -15m)\n          |> filter(fn: (r) => r._measurement == \"gnmi_telemetry\" and r.category == \"interface_state\" and (r._field == \"admin_status\" or r._field == \"oper_status\"))\n          |> filter(fn: (r) => r.device =~ /^${device:regex}$/ and r.platform =~ /^${platform:regex}$/ and r.interface =~ /^${interface:regex}$/ and (\"${include_mgmt}\" == \"true\" or not (r.interface =~ /^(Management|Vlan200)/)) and (\"${include_loopback}\" == \"true\" or not (r.interface == \"lo\" or r.interface =~ /^Loopback/)))\n          |> group(columns: [\"device\", \"platform\", \"interface\", \"_field\"])\n          |> last()\n          |> group(columns: [\"device\", \"platform\", \"interface\"])\n          |> pivot(rowKey: [\"device\", \"platform\", \"interface\"], columnKey: [\"_field\"], valueColumn: \"_value\")\n          |> filter(fn: (r) => (\"${active_only}\" == \"false\") or (r.admin_status == \"UP\" and r.oper_status == \"UP\"))\n          |> filter(fn: (r) => (\"${hide_down}\" == \"false\") or (r.oper_status == \"UP\"))\n          |> group()\n          |> sort(columns: [\"device\", \"interface\"])",
+          "refId": "A"
+        }
+      ],
+      "title": "Current interface state",
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "nmas-influxdb"
+      },
+      "description": "Non-negative derivative of streamed ingress/egress octet counters, converted to bits per second. Shown for the full selected time range regardless of current down/active state, so history is never retroactively hidden; use the ranking table below for a down/zero/active-filtered current view.",
+      "eventOptional": false,
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "decimals": 1,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "bps"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 17
+      },
+      "id": 4,
+      "options": {
+        "legend": {
+          "calcs": [
+            "lastNotNull",
+            "max"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "nmas-influxdb"
+          },
+          "query": "from(bucket: \"network-monitoring\")\n          |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n          |> filter(fn: (r) => r._measurement == \"gnmi_telemetry\" and r.category == \"interface_counters\" and (r._field == \"in_octets\" or r._field == \"out_octets\"))\n          |> filter(fn: (r) => r.device =~ /^${device:regex}$/ and r.platform =~ /^${platform:regex}$/ and r.interface =~ /^${interface:regex}$/ and (\"${include_mgmt}\" == \"true\" or not (r.interface =~ /^(Management|Vlan200)/)) and (\"${include_loopback}\" == \"true\" or not (r.interface == \"lo\" or r.interface =~ /^Loopback/)))\n          |> group(columns: [\"device\", \"interface\", \"_field\"])\n          |> derivative(unit: 1s, nonNegative: true)\n          |> map(fn: (r) => ({r with _value: r._value * 8.0}))",
+          "refId": "A"
+        }
+      ],
+      "title": "Interface traffic rate",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "nmas-influxdb"
+      },
+      "description": "Counter derivatives; any sustained value above zero deserves investigation.",
+      "eventOptional": false,
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "decimals": 3,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 0.001
+              }
+            ]
+          },
+          "unit": "ops"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 17
+      },
+      "id": 5,
+      "options": {
+        "legend": {
+          "calcs": [
+            "lastNotNull",
+            "max"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "nmas-influxdb"
+          },
+          "query": "from(bucket: \"network-monitoring\")\n          |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n          |> filter(fn: (r) => r._measurement == \"gnmi_telemetry\" and r.category == \"interface_counters\" and (r._field == \"in_errors\" or r._field == \"out_errors\" or r._field == \"in_discards\" or r._field == \"out_discards\"))\n          |> filter(fn: (r) => r.device =~ /^${device:regex}$/ and r.platform =~ /^${platform:regex}$/ and r.interface =~ /^${interface:regex}$/ and (\"${include_mgmt}\" == \"true\" or not (r.interface =~ /^(Management|Vlan200)/)) and (\"${include_loopback}\" == \"true\" or not (r.interface == \"lo\" or r.interface =~ /^Loopback/)))\n          |> group(columns: [\"device\", \"interface\", \"_field\"])\n          |> derivative(unit: 1s, nonNegative: true)",
+          "refId": "A"
+        }
+      ],
+      "title": "Error and discard rate",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "nmas-influxdb"
+      },
+      "description": "Interfaces ranked by mean bits/second (ingress+egress combined series) over the selected range, joined against their latest observed admin/oper state. 'Active' is defined as admin UP and oper UP. This is the one panel where hide_zero_traffic/hide_down/active_only are all honored together, since it is a current ranking rather than a historical chart.",
+      "eventOptional": false,
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "filterable": true
+          },
+          "decimals": 1,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "bps"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 25
+      },
+      "id": 6,
+      "options": {
+        "cellHeight": "sm",
+        "showHeader": true,
+        "sortBy": []
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "nmas-influxdb"
+          },
+          "query": "states = from(bucket: \"network-monitoring\")\n          |> range(start: -15m)\n          |> filter(fn: (r) => r._measurement == \"gnmi_telemetry\" and r.category == \"interface_state\" and (r._field == \"admin_status\" or r._field == \"oper_status\"))\n          |> filter(fn: (r) => r.device =~ /^${device:regex}$/ and r.platform =~ /^${platform:regex}$/ and r.interface =~ /^${interface:regex}$/ and (\"${include_mgmt}\" == \"true\" or not (r.interface =~ /^(Management|Vlan200)/)) and (\"${include_loopback}\" == \"true\" or not (r.interface == \"lo\" or r.interface =~ /^Loopback/)))\n          |> group(columns: [\"device\", \"platform\", \"interface\", \"_field\"])\n          |> last()\n          |> group(columns: [\"device\", \"platform\", \"interface\"])\n          |> pivot(rowKey: [\"device\", \"platform\", \"interface\"], columnKey: [\"_field\"], valueColumn: \"_value\")\n\n        rates = from(bucket: \"network-monitoring\")\n          |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n          |> filter(fn: (r) => r._measurement == \"gnmi_telemetry\" and r.category == \"interface_counters\" and (r._field == \"in_octets\" or r._field == \"out_octets\"))\n          |> filter(fn: (r) => r.device =~ /^${device:regex}$/ and r.platform =~ /^${platform:regex}$/ and r.interface =~ /^${interface:regex}$/ and (\"${include_mgmt}\" == \"true\" or not (r.interface =~ /^(Management|Vlan200)/)) and (\"${include_loopback}\" == \"true\" or not (r.interface == \"lo\" or r.interface =~ /^Loopback/)))\n          |> group(columns: [\"device\", \"interface\", \"_field\"])\n          |> derivative(unit: 1s, nonNegative: true)\n          |> map(fn: (r) => ({r with _value: r._value * 8.0}))\n          |> group(columns: [\"device\", \"interface\"])\n          |> mean()\n\n        join(tables: {s: states, r: rates}, on: [\"device\", \"interface\"])\n          |> filter(fn: (r) => (\"${active_only}\" == \"false\") or (r.admin_status == \"UP\" and r.oper_status == \"UP\"))\n          |> filter(fn: (r) => (\"${hide_down}\" == \"false\") or (r.oper_status == \"UP\"))\n          |> filter(fn: (r) => (\"${hide_zero_traffic}\" == \"false\") or (r._value > 0.0))\n          |> group()\n          |> sort(columns: [\"_value\"], desc: true)\n          |> limit(n: 20)",
+          "refId": "A"
+        }
+      ],
+      "title": "Active / highest-traffic interfaces",
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "nmas-influxdb"
+      },
+      "description": "Latest raw octet/error/discard counters. Packet counters are not stored by the current collector and are intentionally not fabricated.",
+      "eventOptional": false,
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "filterable": true
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 24,
+        "x": 0,
+        "y": 33
+      },
+      "id": 7,
+      "options": {
+        "cellHeight": "sm",
+        "showHeader": true,
+        "sortBy": []
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "nmas-influxdb"
+          },
+          "query": "from(bucket: \"network-monitoring\")\n          |> range(start: -15m)\n          |> filter(fn: (r) => r._measurement == \"gnmi_telemetry\" and r.category == \"interface_counters\")\n          |> filter(fn: (r) => r.device =~ /^${device:regex}$/ and r.platform =~ /^${platform:regex}$/ and r.interface =~ /^${interface:regex}$/ and (\"${include_mgmt}\" == \"true\" or not (r.interface =~ /^(Management|Vlan200)/)) and (\"${include_loopback}\" == \"true\" or not (r.interface == \"lo\" or r.interface =~ /^Loopback/)))\n          |> group(columns: [\"device\", \"platform\", \"interface\", \"_field\"])\n          |> last()\n          |> group(columns: [\"device\", \"platform\", \"interface\"])\n          |> pivot(rowKey: [\"device\", \"platform\", \"interface\"], columnKey: [\"_field\"], valueColumn: \"_value\")\n          |> group()\n          |> sort(columns: [\"device\", \"interface\"])",
+          "refId": "A"
+        }
+      ],
+      "title": "Latest interface counters",
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "nmas-influxdb"
+      },
+      "description": "Discrete read-only NETCONF <get> verification snapshots (device-level interface count), not streaming telemetry and not filtered per-interface.",
+      "eventOptional": false,
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "filterable": true
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 24,
+        "x": 0,
+        "y": 42
+      },
+      "id": 8,
+      "options": {
+        "cellHeight": "sm",
+        "showHeader": true,
+        "sortBy": []
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "nmas-influxdb"
+          },
+          "query": "from(bucket: \"network-monitoring\")\n          |> range(start: -30d)\n          |> filter(fn: (r) => r._measurement == \"netconf_snapshot\" and r._field == \"interface_count\")\n          |> filter(fn: (r) => r.device =~ /^${device:regex}$/ and r.platform =~ /^${platform:regex}$/)\n          |> group(columns: [\"device\", \"platform\"])\n          |> last()\n          |> map(fn: (r) => ({r with snapshot_age_seconds: float(v: int(v: now()) - int(v: r._time)) / 1000000000.0}))\n          |> keep(columns: [\"device\", \"platform\", \"_time\", \"snapshot_age_seconds\", \"_value\"])\n          |> rename(columns: {_value: \"interface_count\"})\n          |> group()\n          |> sort(columns: [\"device\"])",
+          "refId": "A"
+        }
+      ],
+      "title": "Latest NETCONF RPC snapshots",
+      "type": "table"
+    }
+  ],
+  "refresh": "20s",
+  "schemaVersion": 40,
+  "tags": [
+    "nmas",
+    "network-monitoring",
+    "iac",
+    "canonical"
+  ],
+  "templating": {
+    "list": [
+      {
+        "allValue": ".*",
+        "current": {
+          "selected": true,
+          "text": "All",
+          "value": "$__all"
+        },
+        "datasource": {
+          "type": "influxdb",
+          "uid": "nmas-influxdb"
+        },
+        "definition": "from(bucket: \"network-monitoring\")\n      |> range(start: -30d)\n      |> filter(fn: (r) => r._measurement == \"gnmi_telemetry\" and r.category == \"system_identity\" and r._field == \"hostname\")\n      |> keep(columns: [\"device\"])\n      |> group()\n      |> distinct(column: \"device\")\n      |> sort(columns: [\"device\"])",
+        "hide": 0,
+        "includeAll": true,
+        "label": "Device",
+        "multi": true,
+        "name": "device",
+        "query": "from(bucket: \"network-monitoring\")\n      |> range(start: -30d)\n      |> filter(fn: (r) => r._measurement == \"gnmi_telemetry\" and r.category == \"system_identity\" and r._field == \"hostname\")\n      |> keep(columns: [\"device\"])\n      |> group()\n      |> distinct(column: \"device\")\n      |> sort(columns: [\"device\"])",
+        "refresh": 2,
+        "skipUrlSync": false,
+        "sort": 1,
+        "type": "query"
+      },
+      {
+        "allValue": ".*",
+        "current": {
+          "selected": true,
+          "text": "All",
+          "value": "$__all"
+        },
+        "datasource": {
+          "type": "influxdb",
+          "uid": "nmas-influxdb"
+        },
+        "definition": "from(bucket: \"network-monitoring\")\n      |> range(start: -30d)\n      |> filter(fn: (r) => r._measurement == \"gnmi_telemetry\" and r.category == \"system_identity\" and r._field == \"hostname\")\n      |> keep(columns: [\"platform\"])\n      |> group()\n      |> distinct(column: \"platform\")\n      |> sort(columns: [\"platform\"])",
+        "hide": 0,
+        "includeAll": true,
+        "label": "Platform",
+        "multi": true,
+        "name": "platform",
+        "query": "from(bucket: \"network-monitoring\")\n      |> range(start: -30d)\n      |> filter(fn: (r) => r._measurement == \"gnmi_telemetry\" and r.category == \"system_identity\" and r._field == \"hostname\")\n      |> keep(columns: [\"platform\"])\n      |> group()\n      |> distinct(column: \"platform\")\n      |> sort(columns: [\"platform\"])",
+        "refresh": 2,
+        "skipUrlSync": false,
+        "sort": 1,
+        "type": "query"
+      },
+      {
+        "allValue": ".*",
+        "current": {
+          "selected": true,
+          "text": "All",
+          "value": "$__all"
+        },
+        "datasource": {
+          "type": "influxdb",
+          "uid": "nmas-influxdb"
+        },
+        "definition": "from(bucket: \"network-monitoring\")\n      |> range(start: -30d)\n      |> filter(fn: (r) => r._measurement == \"gnmi_telemetry\" and r.category == \"interface_state\")\n      |> filter(fn: (r) => r.device =~ /^${device:regex}$/ and r.platform =~ /^${platform:regex}$/)\n      |> keep(columns: [\"interface\"])\n      |> group()\n      |> distinct(column: \"interface\")\n      |> sort(columns: [\"interface\"])",
+        "hide": 0,
+        "includeAll": true,
+        "label": "Interface",
+        "multi": true,
+        "name": "interface",
+        "query": "from(bucket: \"network-monitoring\")\n      |> range(start: -30d)\n      |> filter(fn: (r) => r._measurement == \"gnmi_telemetry\" and r.category == \"interface_state\")\n      |> filter(fn: (r) => r.device =~ /^${device:regex}$/ and r.platform =~ /^${platform:regex}$/)\n      |> keep(columns: [\"interface\"])\n      |> group()\n      |> distinct(column: \"interface\")\n      |> sort(columns: [\"interface\"])",
+        "refresh": 2,
+        "skipUrlSync": false,
+        "sort": 1,
+        "type": "query"
+      },
+      {
+        "current": {
+          "selected": true,
+          "text": "false",
+          "value": "false"
+        },
+        "hide": 0,
+        "includeAll": false,
+        "label": "Hide zero traffic",
+        "multi": false,
+        "name": "hide_zero_traffic",
+        "options": [
+          {
+            "selected": true,
+            "text": "false",
+            "value": "false"
+          },
+          {
+            "selected": false,
+            "text": "true",
+            "value": "true"
+          }
+        ],
+        "query": "false,true",
+        "skipUrlSync": false,
+        "type": "custom"
+      },
+      {
+        "current": {
+          "selected": true,
+          "text": "false",
+          "value": "false"
+        },
+        "hide": 0,
+        "includeAll": false,
+        "label": "Hide down interfaces",
+        "multi": false,
+        "name": "hide_down",
+        "options": [
+          {
+            "selected": true,
+            "text": "false",
+            "value": "false"
+          },
+          {
+            "selected": false,
+            "text": "true",
+            "value": "true"
+          }
+        ],
+        "query": "false,true",
+        "skipUrlSync": false,
+        "type": "custom"
+      },
+      {
+        "current": {
+          "selected": true,
+          "text": "false",
+          "value": "false"
+        },
+        "hide": 0,
+        "includeAll": false,
+        "label": "Active interfaces only",
+        "multi": false,
+        "name": "active_only",
+        "options": [
+          {
+            "selected": true,
+            "text": "false",
+            "value": "false"
+          },
+          {
+            "selected": false,
+            "text": "true",
+            "value": "true"
+          }
+        ],
+        "query": "false,true",
+        "skipUrlSync": false,
+        "type": "custom"
+      },
+      {
+        "current": {
+          "selected": true,
+          "text": "true",
+          "value": "true"
+        },
+        "hide": 0,
+        "includeAll": false,
+        "label": "Include management interfaces",
+        "multi": false,
+        "name": "include_mgmt",
+        "options": [
+          {
+            "selected": false,
+            "text": "false",
+            "value": "false"
+          },
+          {
+            "selected": true,
+            "text": "true",
+            "value": "true"
+          }
+        ],
+        "query": "false,true",
+        "skipUrlSync": false,
+        "type": "custom"
+      },
+      {
+        "current": {
+          "selected": true,
+          "text": "true",
+          "value": "true"
+        },
+        "hide": 0,
+        "includeAll": false,
+        "label": "Include loopback interfaces",
+        "multi": false,
+        "name": "include_loopback",
+        "options": [
+          {
+            "selected": false,
+            "text": "false",
+            "value": "false"
+          },
+          {
+            "selected": true,
+            "text": "true",
+            "value": "true"
+          }
+        ],
+        "query": "false,true",
+        "skipUrlSync": false,
+        "type": "custom"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-3h",
+    "to": "now"
+  },
+  "timepicker": {
+    "refresh_intervals": [
+      "10s",
+      "20s",
+      "30s",
+      "1m",
+      "5m"
+    ]
+  },
+  "timezone": "browser",
+  "title": "NMAS Link State & Traffic",
+  "uid": "nmas-link-state-traffic",
+  "version": 1,
+  "weekStart": ""
+}

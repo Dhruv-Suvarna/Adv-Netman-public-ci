@@ -1,0 +1,23 @@
+{% extends "core/base.html" %}
+{% block title %}Automation{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>Automation</h1>
+  <p>Navigation shell over the real automation apps: health checks, the configuration-change lifecycle, and soak/Golden management each open on their own page below. No action on THIS page mutates live devices.</p>
+</div>
+<div class="alert alert--not-integrated">
+  <span aria-hidden="true">&#9881;</span>
+  <div><strong>{{ summary.status }}.</strong> {{ summary.message }}</div>
+</div>
+<div class="card-grid" style="margin-top:16px;">
+  {% for section in sections %}
+    <div class="card">
+      {% if section.implemented %}<span class="badge badge--success">Implemented{% if section.read_only %} (read-only){% endif %}</span>{% else %}<span class="badge badge--not-implemented">Not implemented in this phase</span>{% endif %}
+      <h3>{{ section.label }}</h3>
+      <p style="color:var(--text-secondary);">{{ section.description }}</p>
+      {% if section.implemented %}<a class="btn btn--primary" href="{% url section.url_name %}">Open {{ section.label }}</a>
+      {% else %}<a class="btn btn--secondary" href="{% url 'core:automation_section' section.slug %}">View shell</a>{% endif %}
+    </div>
+  {% endfor %}
+</div>
+{% endblock %}

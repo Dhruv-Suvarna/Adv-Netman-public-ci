@@ -1,0 +1,152 @@
+{
+  "cause": "CFG-009 (OSPF binding of Loopback0, passive) refused before sending (lines_sent 0): the executor's apply-time inverse treated 'passive-interface Loopback0' as replacing the sibling 'passive-interface Ethernet2'.  Fixed in the branch (COEXISTING_STEMS).  Every applied Configlet was compensated and digest-verified.",
+  "device": "ISOLATED",
+  "execution": {
+    "compensation": {
+      "attempted": true,
+      "not_compensated": [],
+      "status": "SUCCEEDED"
+    },
+    "outcome": "FAILED_ROLLED_BACK",
+    "state": {
+      "already_satisfied": [
+        "CFG-005"
+      ],
+      "applied": [
+        "CFG-001",
+        "CFG-002",
+        "CFG-003",
+        "CFG-004",
+        "CFG-006",
+        "CFG-007",
+        "CFG-008"
+      ],
+      "compensated": [
+        "CFG-008",
+        "CFG-007",
+        "CFG-006",
+        "CFG-004",
+        "CFG-003",
+        "CFG-002",
+        "CFG-001"
+      ],
+      "failed": [
+        "CFG-009"
+      ],
+      "out_of_scope": [],
+      "unapplied": [
+        "CFG-010",
+        "CFG-011"
+      ]
+    }
+  },
+  "new1_running_after": "\n> show running-config\n! Command: show running-config at line 1\n! device: NEW1 (cEOSLab, EOS-4.36.2F-49692632.4362F.1 (engineering build))\n!\nno aaa root\n!\n!\nno service interface inactive port-id allocation disabled\n!\nservice routing protocols model multi-agent\n!\nhostname NEW1\n!\nspanning-tree mode mstp\n!\nsystem l1\n   unsupported speed action error\n   unsupported error-correction action error\n!\naaa authorization exec default local\n!\ninterface Ethernet1\n   description NMAS bootstrap uplink ZTP-000001\n   no switchport\n   ip address 10.254.60.10/24\n!\ninterface Ethernet2\n!\nip access-list NMAS-BOOTSTRAP-MGMT\n   10 permit tcp host 10.254.61.2 any eq ssh\n!\nno ip routing\n!\nip route 10.254.61.0/30 10.254.60.1\n!\nmanagement ssh\n   ip access-group NMAS-BOOTSTRAP-MGMT in\n!\nend",
+  "record": {
+    "approved_by": "arthur",
+    "candidate_hash": "595ad60395befd7209d6dec5b59bd94bd22264eafa473261f92c6f55628ab9fe",
+    "commissioning": "COM-000003",
+    "dependencies": {
+      "cycles": [],
+      "edges": [],
+      "nodes": []
+    },
+    "device": "DEV-000002",
+    "evidence_digest": "f452da96ab9b02075dfd24bc352baf226d123e80d633d1f0417906974de1b830",
+    "failure": {
+      "code": "COMMISSIONING_CONFIG_NOT_APPLIED",
+      "provisioning": "EXECUTION_FAILED",
+      "restored": true
+    },
+    "isolation_state": "VERIFIED",
+    "policy": "ISO-000001",
+    "provisioning_run": "PROV-000003",
+    "provisioning_status": "ROLLED_BACK",
+    "readiness": {
+      "at": "2026-10-26T14:58:59.924072+00:00",
+      "checks": [
+        {
+          "check": "identity_verified",
+          "code": "",
+          "detail": "VERIFIED",
+          "ok": true
+        },
+        {
+          "check": "host_key_enrolled",
+          "code": "",
+          "detail": "the verified host key is the out-of-band enrolled one",
+          "ok": true
+        },
+        {
+          "check": "attachment_verified",
+          "code": "",
+          "detail": "VERIFIED",
+          "ok": true
+        },
+        {
+          "check": "bootstrap_authorization",
+          "code": "",
+          "detail": "CONSUMED by -",
+          "ok": true
+        },
+        {
+          "check": "native_bootstrap",
+          "code": "",
+          "detail": "ztp_state=DISABLED_VERIFIED (observed; native ZTP completion is never admission)",
+          "ok": true
+        },
+        {
+          "check": "management_transport",
+          "code": "",
+          "detail": "",
+          "ok": true
+        },
+        {
+          "check": "credential_transitioned",
+          "code": "",
+          "detail": "bootstrap credential revoked, proven rejected and retired; the service credential works",
+          "ok": true
+        },
+        {
+          "check": "isolation_verified",
+          "code": "",
+          "detail": "VERIFIED",
+          "ok": true
+        },
+        {
+          "check": "dependencies",
+          "code": "",
+          "detail": "",
+          "ok": true
+        },
+        {
+          "check": "lifecycle",
+          "code": "",
+          "detail": "ISOLATED",
+          "ok": true
+        },
+        {
+          "check": "production_candidate",
+          "code": "",
+          "detail": "PROV-000003 PRECHECKED: validated, planned and prechecked through the ordinary provisioning stages",
+          "ok": true
+        }
+      ],
+      "ready": true
+    },
+    "requested_by": "olivia",
+    "state": "ABORTED"
+  },
+  "record_configuration": {
+    "codes": [
+      "COMMISSIONING_CONFIG_NOT_APPLIED"
+    ],
+    "ok": false
+  },
+  "run": {
+    "device_digest_after": "0d976d89026c7cdba4dad3ea3f205ade1d5b9398493a5d279bfea341e514220d",
+    "device_restored": true,
+    "pre_config_digest": "0d976d89026c7cdba4dad3ea3f205ade1d5b9398493a5d279bfea341e514220d",
+    "prov_id": "PROV-000003",
+    "status": "ROLLED_BACK"
+  }
+}

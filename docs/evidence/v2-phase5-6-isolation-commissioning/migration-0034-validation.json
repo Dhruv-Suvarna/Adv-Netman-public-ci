@@ -1,0 +1,18 @@
+{
+  "recorded": "2026-10-26",
+  "migration": "core.0034_v2_phase5_6_isolation_commissioning",
+  "production_database_touched": false,
+  "databases": {
+    "fresh": {"sequence": ["migrate core 0033 (from empty)", "migrate core 0034", "migrate core 0033 (reverse)", "migrate core 0034 (reapply)", "migrate (all apps)"],
+              "result": "OK at every step; showmigrations ends at 0034 [X]"},
+    "deployed_copy": {"source": "read-only SQLite backup of the deployed NMAS database (opened mode=ro), written to a disposable scratch file and deleted afterwards",
+                      "starting_state": "core at 0030 (0031-0034 unapplied)",
+                      "sequence": ["migrate core 0033 (applies 0031, 0032, 0033)", "migrate core 0034", "migrate core 0033 (reverse)", "migrate core 0034 (reapply)", "check"],
+                      "core_tables": {"before": 47, "at_0033": 64, "at_0034": 70, "after_reverse": 64, "after_reapply": 70},
+                      "core_rows": {"every_step": 19126},
+                      "tables_added_by_0034": ["core_isolationpolicy", "core_isolationcheck", "core_commissioningrecord", "core_productionadmission",
+                                               "core_commissioningdependency", "core_lifecycleoutboxevent"],
+                      "result": "OK; existing rows unchanged by forward, reverse and reapply; system check clean"}
+  },
+  "makemigrations_check": "No changes detected in app 'core'"
+}

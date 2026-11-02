@@ -1,0 +1,10 @@
+{% load core_extras %}
+<a class="notification-item{% if not note.is_read %} notification-item--unread{% endif %}" href="{% url 'core:notification_detail' note.pk %}">
+  <div class="notification-item__meta">
+    <span class="badge badge--{{ note.severity|severity_badge_class }}">{{ note.severity|severity_icon }} {{ note.get_severity_display }}</span>
+    <span class="notification-item__time">{{ note.created_at|timesince }} ago</span>
+    {% if not note.is_read %}<span class="notification-item__unread-dot" title="Unread" aria-label="Unread"></span>{% endif %}
+  </div>
+  <div class="notification-item__title">{{ note.title }}</div>
+  <div>{{ note.message }}</div>
+</a>

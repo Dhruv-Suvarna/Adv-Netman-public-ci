@@ -1,0 +1,77 @@
+{% extends "core/base.html" %}
+{% load core_extras %}
+{% block title %}Health · {{ device.name }}{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>Device Health <span style="font-weight:400;">· {{ device.name }}</span></h1>
+  <p><a href="{% url 'core:health_fleet' %}">&larr; Fleet Health</a></p>
+  <p><strong>Read-only.</strong> The Quick view below is existing telemetry. <em>Deep Health</em> is an explicit action that makes bounded, read-only queries from a fixed server-owned command list; nothing is configured, cleared, saved or restarted.</p>
+</div>
+
+<div class="card-grid">
+  <div class="card"><h3>Overview</h3>
+    <table class="data-table"><tbody>
+      <tr><th>Device</th><td><code>{{ device.name }}</code></td></tr>
+      <tr><th>Platform</th><td>{{ device.platform }}</td></tr>
+      <tr><th>Quick health</th><td><span class="badge badge--{{ quick.health|health_badge_class }}">{{ quick.health }}</span></td></tr>
+      <tr><th>Telemetry</th><td><span class="badge badge--{{ quick.freshness|health_badge_class }}">{{ quick.freshness }}</span>{% if quick.age_seconds is not None %} {{ quick.age_seconds|floatformat:0 }}s old{% endif %}</td></tr>
+      <tr><th>CPU / memory</th><td>{{ quick.cpu_percent|metric:"%" }} / {{ quick.memory_percent|metric:"%" }}</td></tr>
+      <tr><th>Link issues</th><td>{{ quick.link_issues|metric }}</td></tr>
+      <tr><th>Routing</th><td>not available from telemetry (use Deep Health)</td></tr>
+    </tbody></table>
+  </div>
+  <div class="card"><h3>Deep Health</h3>
+    <p>Live read-only capability: <span class="badge badge--{{ capability.status|health_badge_class }}">{{ capability.status }}</span>{% if capability.transport %} ({{ capability.transport }}){% endif %}</p>
+    <p style="font-size:0.85rem;color:var(--text-muted);">{{ capability.evidence }}</p>
+    <form method="post" action="{% url 'core:health_device_deep' device.name %}">{% csrf_token %}
+      <button type="submit" class="btn btn--primary"{% if capability.status != "SUPPORTED" %} disabled aria-disabled="true"{% endif %}>Run Deep Health</button>
+    </form>
+    <p style="font-size:0.85rem;color:var(--text-muted);">One device, on demand. Live evidence takes precedence over older telemetry; a timeout is reported as <code>DEVICE_UNREACHABLE</code> (UNKNOWN), never as a crash.</p>
+  </div>
+  <div class="card"><h3>IP Connectivity</h3>
+    <p style="font-size:0.85rem;color:var(--text-muted);">A read-only ping FROM {{ device.name }} to a destination drawn from the managed inventory (never free text).</p>
+    <form method="post" action="{% url 'core:health_device_connectivity' device.name %}">{% csrf_token %}
+      <label for="connectivity-destination">Destination</label>
+      <select id="connectivity-destination" name="destination">
+        {% for t in ping_targets %}<option value="{{ t.name }}">{{ t.label }}</option>{% endfor %}
+      </select>
+      <label for="connectivity-family">Address family</label>
+      <select id="connectivity-family" name="family">
+        <option value="4">IPv4</option>
+        <option value="6">IPv6</option>
+      </select>
+      <button type="submit" class="btn btn--primary"{% if capability.status != "SUPPORTED" %} disabled aria-disabled="true"{% endif %}>Ping</button>
+    </form>
+    {% if latest_connectivity %}
+      <p style="margin-top:8px;"><span class="badge badge--{{ latest_connectivity.status|health_badge_class }}">{{ latest_connectivity.status }}</span> {{ latest_connectivity.created_at }} · <a href="{% url 'core:health_run' latest_connectivity.run_id %}">Open run</a></p>
+      {% include "core/health/_results.html" with rows=connectivity_report.results %}
+    {% else %}<p>No connectivity check has been recorded for this device.</p>{% endif %}
+  </div>
+</div>
+
+<div class="card" style="margin-top:16px;"><h3>Quick evidence</h3>{% include "core/health/_results.html" with rows=quick.checks %}</div>
+
+<div class="card" style="margin-top:16px;">
+  <h3>Latest Deep Health run</h3>
+  {% if latest %}
+    <p><span class="badge badge--{{ latest.status|health_badge_class }}">{{ latest.status }}</span> {{ latest.created_at }} by {{ latest.created_by|default:"—" }} · <a href="{% url 'core:health_run' latest.run_id %}">Open run</a> · <a href="{% url 'core:health_run_report' latest.run_id %}">JSON</a></p>
+    {% with facts=report.facts %}
+    {% if facts.interfaces %}<h4>Interfaces</h4>
+    <table class="data-table"><thead><tr><th>Interface</th><th>Admin</th><th>Oper</th><th>Addresses</th></tr></thead><tbody>
+      {% for i in facts.interfaces %}<tr><td>{{ i.name }}</td><td>{{ i.admin }}</td><td>{{ i.oper }}</td><td>{{ i.addresses|join:", "|default:"—" }}</td></tr>{% endfor %}
+    </tbody></table>{% endif %}
+    {% if facts.ospf %}<h4>OSPF neighbors</h4><table class="data-table"><thead><tr><th>Family</th><th>Neighbor</th><th>Interface</th><th>State</th></tr></thead><tbody>
+      {% for n in facts.ospf %}<tr><td>{{ n.family }}</td><td>{{ n.neighbor_id }}</td><td>{{ n.interface }}</td><td>{{ n.state }}</td></tr>{% endfor %}</tbody></table>{% endif %}
+    {% if facts.bgp %}<h4>BGP peers</h4><table class="data-table"><thead><tr><th>Peer</th><th>Remote AS</th><th>State</th></tr></thead><tbody>
+      {% for p in facts.bgp %}<tr><td>{{ p.peer }}</td><td>{{ p.remote_as }}</td><td>{{ p.state }}</td></tr>{% endfor %}</tbody></table>{% endif %}
+    {% if facts.routes %}<p>Routes: {{ facts.routes.count }} in the routing table.</p>{% endif %}
+    {% if facts.groups %}<h4>Evidence sources</h4><table class="data-table"><thead><tr><th>Group</th><th>Source</th><th>Observed</th><th>Available</th></tr></thead><tbody>
+      {% for name, g in facts.groups.items %}<tr><td>{{ name }}</td><td>{{ g.source }}</td><td>{{ g.observed_at|default:"—" }}</td><td>{{ g.available }}{% if g.error %} ({{ g.error }}){% endif %}</td></tr>{% endfor %}</tbody></table>{% endif %}
+    {% endwith %}
+    <h4>Findings</h4>{% include "core/health/_results.html" with rows=report.results %}
+  {% else %}
+    <p>No Deep Health run has been recorded for this device.</p>
+  {% endif %}
+</div>
+<div class="card" style="margin-top:16px;"><h3>History</h3>{% include "core/health/_history.html" with runs=history %}</div>
+{% endblock %}

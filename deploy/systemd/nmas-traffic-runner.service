@@ -1,0 +1,51 @@
+# NMAS traffic runner (V2 Phase 5B).  Rendered by deploy/scripts/install_traffic_runner.sh.
+#
+# A small broker between the website and the container runtime, so that nmas-web.service keeps NoNewPrivileges and needs no privilege
+# for a traffic test.  It accepts ONE closed, structured request per connection on its Unix socket (endpoint ids, a test type, bounded
+# integers), revalidates it against its own limits and its own root-owned endpoint catalogue, runs the diagnostic from the pinned tools
+# image inside the endpoint's network namespace, and removes what it started.  It is not a command service.
+#
+# The code and configuration it runs are root-owned copies (/usr/local/lib/nmas-traffic-runner, /etc/nmas/traffic-runner.json), NOT the
+# deployment checkout, so the website's account cannot change what holds the privilege.  It holds no secret and reads no EnvironmentFile.
+[Unit]
+Description=NMAS traffic runner (bounded diagnostics inside lab endpoint namespaces)
+Documentation=file://@DEPLOY_ROOT@/docs/V2_PHASE5_PROVISIONING_TRAFFIC_SOAK.md
+Requires=nmas-traffic-runner.socket
+After=nmas-traffic-runner.socket docker.service
+
+[Service]
+Type=simple
+# A dedicated, unprivileged, transient account: not the website's user and not root.
+DynamicUser=yes
+# The one privilege it needs: the container runtime, to start a tools container that joins an endpoint's network namespace.
+SupplementaryGroups=docker
+WorkingDirectory=/usr/local/lib/nmas-traffic-runner
+ExecStart=/usr/bin/python3 -E -s -B -m nmas_traffic_runner --config /etc/nmas/traffic-runner.json
+Restart=on-failure
+RestartSec=5
+# A stop lets the run in flight finish and remove its containers; a restart removes anything a crash left behind.
+KillMode=mixed
+TimeoutStopSec=90
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+PrivateDevices=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectKernelLogs=true
+ProtectControlGroups=true
+ProtectClock=true
+ProtectHostname=true
+RestrictAddressFamilies=AF_UNIX
+IPAddressDeny=any
+RestrictNamespaces=true
+RestrictRealtime=true
+RestrictSUIDSGID=true
+LockPersonality=true
+MemoryDenyWriteExecute=true
+CapabilityBoundingSet=
+AmbientCapabilities=
+SystemCallArchitectures=native
+SystemCallFilter=@system-service
+UMask=0077

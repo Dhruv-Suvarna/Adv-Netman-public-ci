@@ -1,0 +1,84 @@
+{% extends "core/base.html" %}
+{% load core_extras %}
+{% block title %}Initial Golden Bootstrap{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>Initial Golden Bootstrap <span class="badge badge--warning">ONE-TIME OPERATION</span></h1>
+  <p><a href="{% url 'core:automation_landing' %}">&larr; Automation</a> · <a href="{% url 'core:bundles_list' %}">Configuration bundles</a> · <a href="{% url 'core:soaks_list' %}">Probation soaks</a></p>
+  <p><strong>Why this exists.</strong> Adopts the pre-existing, traditionally configured network as the initial automation baseline. The network was configured before the automation framework existed, so its running configuration cannot honestly be pushed through Change &rarr; validation &rarr; plan &rarr; Partial UAT &rarr; UAT &rarr; Probation &rarr; 7-day soak. This is <strong>not</strong> UAT and it does not pretend to be. Opening this page contacts no device and changes nothing.</p>
+</div>
+
+{% if notice %}<div class="card" style="border-left:6px solid var(--{% if notice.0 == 'success' %}success{% elif notice.0 == 'danger' %}danger{% elif notice.0 == 'warning' %}warning{% else %}text-muted{% endif %});"><p>{{ notice.1 }}</p>
+  {% if refusals %}<ul>{% for b in refusals %}<li><span class="badge badge--danger">{{ b.code }}</span> {{ b.message }} <em>{{ b.remediation }}</em></li>{% endfor %}</ul>{% endif %}</div>{% endif %}
+
+<div class="card-grid">
+  <div class="card"><h3>Two different policies</h3>
+    <table class="data-table"><tbody>
+      <tr><th>Normal future probation soak</th><td><strong>{{ production.duration_seconds|soak_duration }}</strong> <span class="badge badge--success">unchanged</span></td></tr>
+      <tr><th>This initial bootstrap</th><td><strong>{{ policy.duration_seconds|soak_duration }}</strong> <span class="badge badge--warning">one time only</span></td></tr>
+      <tr><th>Sample interval</th><td>{{ policy.sample_interval_seconds|soak_duration }} (T+0 &hellip; T+25 and a closing sample at / after T+30)</td></tr>
+      <tr><th>Coverage / maximum gap</th><td>&ge; {{ policy.min_coverage_percent }}% of intervals / {{ policy.max_gap_seconds|soak_duration }}</td></tr>
+      <tr><th>Policy</th><td><code>{{ policy.version }}</code></td></tr>
+    </tbody></table>
+    <p style="color:var(--text-muted); font-size:0.85rem;">The duration is owned by the server and cannot be chosen, shortened or backdated from this page. After the initial Golden exists this shortcut is refused forever; every future Golden follows the normal lifecycle.</p>
+  </div>
+  <div class="card"><h3>One-time state</h3>
+    {% if golden %}
+      <p><span class="badge badge--danger">LEGACY_BOOTSTRAP_ALREADY_COMPLETED</span></p>
+      <p>The initial Golden <a href="{% url 'core:bundle_detail' golden.bundle_id %}"><code>{{ golden.bundle_id }}</code></a> was created on {{ golden.created_at|date:"Y-m-d H:i:s" }} UTC. This shortcut is permanently unavailable.</p>
+    {% elif gate %}
+      <ul>{% for b in gate %}<li><span class="badge badge--danger">{{ b.code }}</span> {{ b.message }} <em>{{ b.remediation }}</em></li>{% endfor %}</ul>
+    {% else %}
+      <p><span class="badge badge--success">AVAILABLE</span> No Golden bundle exists and the bootstrap has not been used.</p>
+    {% endif %}
+  </div>
+</div>
+
+{% if not golden %}
+<div class="card" style="margin-top:16px;"><h3>1 · Readiness probe (read-only)</h3>
+  <p>Reads every managed device through the existing read-only sessions and reports reachability, capture support, monitoring freshness and every current blocker. Creates nothing and changes nothing.</p>
+  <form method="post" action="{% url 'core:bootstrap_probe' %}">{% csrf_token %}<button class="btn btn--secondary" type="submit">Run read-only readiness probe</button></form>
+</div>
+
+<div class="card" style="margin-top:16px;"><h3>2 · Capture Current Baseline</h3>
+  <p>Reads the <strong>running</strong> configuration of every managed device (read-only; not the YAML, templates or Git files), removes secret-bearing values, and stores an immutable <strong>legacy baseline candidate</strong>. All-or-nothing: an unreachable, unsupported or failing device stops the capture and nothing is created. The candidate is <strong>not</strong> Golden and starts no observation.</p>
+  <form method="post" action="{% url 'core:bootstrap_capture' %}">{% csrf_token %}
+    <p><label><input type="checkbox" name="confirm" required> I understand this reads the live network (read-only) and stores a sanitized baseline.</label></p>
+    <button class="btn btn--primary" type="submit"{% if active %} disabled{% endif %}>Capture Current Baseline</button>
+  </form>
+</div>
+
+{% if latest %}
+<div class="card" style="margin-top:16px;"><h3>3 · Start 30-Minute Observation</h3>
+  <p>Newest baseline: <a href="{% url 'core:bundle_detail' latest.bundle_id %}"><code>{{ latest.bundle_id }}</code></a> · captured {{ latest.payload.baseline.captured_at }} · digest <code>{{ latest.payload_digest }}</code> · integrity <span class="badge badge--{% if integrity.ok %}success{% else %}danger{% endif %}">{{ integrity.state }}</span> · {{ latest.payload.scope.devices|length }} devices.</p>
+  {% if active %}
+    <p><span class="badge badge--info">RUNNING</span> <a href="{% url 'core:bootstrap_run_detail' active.run_id %}"><code>{{ active.run_id }}</code></a> — required end {{ active.required_end_at|date:"Y-m-d H:i:s" }} UTC ({{ progress.remaining_seconds|soak_duration }} remaining as of this page load).</p>
+  {% elif start_check %}
+    <p><strong>Blocked right now:</strong></p><ul>{% for b in start_check %}<li><span class="badge badge--danger">{{ b.code }}</span> {{ b.message }} <em>{{ b.remediation }}</em></li>{% endfor %}</ul>
+  {% else %}
+    <p>The observation re-reads every device every {{ policy.sample_interval_seconds|soak_duration }} for {{ policy.duration_seconds|soak_duration }} (real, elapsed time). Any configuration change, conflicting execution, required-health failure or coverage shortfall stops it; a changed configuration is never adopted automatically. Starting it does not run the collector: the operator's <code>legacy_bootstrap observe</code> command does (see docs/LEGACY_BASELINE_BOOTSTRAP.md).</p>
+    <form method="post" action="{% url 'core:bootstrap_start' latest.bundle_id %}">{% csrf_token %}
+      <p><label><input type="checkbox" name="confirm" required> I understand this starts a real {{ policy.duration_seconds|soak_duration }} observation of <code>{{ latest.bundle_id }}</code>.</label></p>
+      <button class="btn btn--primary" type="submit">Start 30-Minute Observation</button>
+    </form>
+  {% endif %}
+</div>
+{% endif %}
+
+{% if pending %}
+<div class="card" style="margin-top:16px;border-left:6px solid var(--success);"><h3>4 · Approve Initial Golden</h3>
+  <p><span class="badge badge--success">TECHNICAL OBSERVATION PASSED</span> <a href="{% url 'core:bootstrap_run_detail' pending.run_id %}"><code>{{ pending.run_id }}</code></a> — open it to review the evidence and approve. Nothing is promoted until you approve.</p>
+</div>
+{% endif %}
+{% endif %}
+
+<div class="card" style="margin-top:16px;"><h3>Observation history</h3>
+  <table class="data-table"><thead><tr><th>Run</th><th>Candidate</th><th>State</th><th>Result</th><th>Started (UTC)</th><th>Required end (UTC)</th><th>Finished (UTC)</th><th>Reason</th></tr></thead><tbody>
+  {% for r in runs %}<tr>
+    <td><a href="{% url 'core:bootstrap_run_detail' r.run_id %}"><code>{{ r.run_id }}</code></a></td><td><code>{{ r.candidate.bundle_id }}</code></td>
+    <td><span class="badge badge--{{ r.state|bundle_badge_class }}">{{ r.state }}</span></td><td>{% if r.result %}<span class="badge badge--{{ r.result|bundle_badge_class }}">{{ r.result }}</span>{% else %}—{% endif %}</td>
+    <td>{{ r.started_at|date:"Y-m-d H:i:s" }}</td><td>{{ r.required_end_at|date:"Y-m-d H:i:s" }}</td><td>{{ r.finished_at|date:"Y-m-d H:i:s"|default:"—" }}</td><td>{{ r.terminal_reason|default:"—" }}</td>
+  </tr>{% empty %}<tr><td colspan="8">No observation has been started.</td></tr>{% endfor %}
+  </tbody></table>
+</div>
+{% endblock %}

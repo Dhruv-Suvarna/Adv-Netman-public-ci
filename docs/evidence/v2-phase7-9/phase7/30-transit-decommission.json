@@ -1,0 +1,608 @@
+{
+  "after": {
+    "device_lifecycle": "DECOMMISSIONED",
+    "outcome": {
+      "baseline_digest": "c249d56d6ea2cbc8e57d82831c551ab6141b20f9b54f711cf9c0c51275e81b27",
+      "blockers": [],
+      "failure": {},
+      "final_digest": "7abec8e38d12de5e6ddc08f14164969c370feb19e91a9a12a747e4d2eced9fe0",
+      "outcome": "SUCCEEDED",
+      "restored": null,
+      "run": "bc24d5d0-9e0c-4577-bf71-828647f070cd"
+    },
+    "running_after": [
+      "",
+      "> show running-config",
+      "! Command: show running-config at line 1",
+      "! device: P7T1 (cEOSLab, EOS-4.36.2F-49692632.4362F.1 (engineering build))",
+      "!",
+      "no aaa root",
+      "!",
+      "!",
+      "no service interface inactive port-id allocation disabled",
+      "!",
+      "service routing protocols model multi-agent",
+      "!",
+      "hostname P7T1",
+      "!",
+      "spanning-tree mode mstp",
+      "!",
+      "system l1",
+      "   unsupported speed action error",
+      "   unsupported error-correction action error",
+      "!",
+      "aaa authorization exec default local",
+      "!",
+      "interface Ethernet1",
+      "   description to E1",
+      "   shutdown",
+      "   no switchport",
+      "   ip address 10.254.81.1/31",
+      "   ipv6 address 2001:db8:254:81::1/127",
+      "   ipv6 ospf 1 area 0.0.0.0",
+      "!",
+      "interface Ethernet2",
+      "   description to E2",
+      "   shutdown",
+      "   no switchport",
+      "   ip address 10.254.83.0/31",
+      "   ipv6 address 2001:db8:254:83::/127",
+      "   ipv6 ospf 1 area 0.0.0.0",
+      "!",
+      "interface Ethernet5",
+      "   description NMAS management (fixture)",
+      "   no switchport",
+      "   ip address 10.254.70.2/24",
+      "!",
+      "interface Loopback0",
+      "   ip address 10.254.255.2/32",
+      "   ipv6 address 2001:db8:254:255::2/128",
+      "   ipv6 ospf 1 area 0.0.0.0",
+      "!",
+      "ip routing",
+      "!",
+      "ipv6 unicast-routing",
+      "!",
+      "end"
+    ],
+    "running_before_lines": 61,
+    "state": "DECOMMISSIONED",
+    "transition": {
+      "after": {
+        "on_device": [],
+        "paths": {
+          "HA->HB IPV4": {
+            "complete": true,
+            "path": "E1 > T2 > E2"
+          },
+          "HA->HB IPV6": {
+            "complete": true,
+            "path": "E1 > T2 > E2"
+          },
+          "HB->HA IPV4": {
+            "complete": true,
+            "path": "E2 > T2 > E1"
+          },
+          "HB->HA IPV6": {
+            "complete": true,
+            "path": "E2 > T2 > E1"
+          }
+        }
+      },
+      "moves": [
+        {
+          "at": "2026-10-27T00:02:12.183646+00:00",
+          "paths": {
+            "HA->HB IPV4": {
+              "complete": true,
+              "path": "E1 > T2 > E2"
+            },
+            "HA->HB IPV6": {
+              "complete": true,
+              "path": "E1 > T2 > E2"
+            },
+            "HB->HA IPV4": {
+              "complete": true,
+              "path": "E2 > T2 > E1"
+            },
+            "HB->HA IPV6": {
+              "complete": true,
+              "path": "E2 > T2 > E1"
+            }
+          },
+          "still_on_device": []
+        }
+      ],
+      "pre_execution": {
+        "digest": "9c63f162a6dfaa1483826d4da5aa8b44a3ff5df13b43456ffd7adbde6e029606",
+        "verdict": "REDUNDANT_TRANSITION"
+      },
+      "probe": {
+        "HA->HB IPV4": {
+          "received": 3000,
+          "sent": 3000
+        },
+        "HA->HB IPV6": {
+          "received": 3000,
+          "sent": 3000
+        },
+        "_seconds": 152.5
+      },
+      "probe_started": "2026-10-27T00:01:29.053105+00:00"
+    }
+  },
+  "approve": {
+    "codes": [],
+    "ok": true
+  },
+  "baseline": "SNP-000007",
+  "baseline_digest": "c249d56d6ea2cbc8e57d82831c551ab6141b20f9b54f711cf9c0c51275e81b27",
+  "blockers": [],
+  "dependencies": {
+    "blockers": [],
+    "conflicts": [],
+    "downstream": [],
+    "isolation": [],
+    "management": [],
+    "references": {
+      "attachments": 0,
+      "credential_references": 0,
+      "management_paths": 0,
+      "monitoring": null,
+      "netbox_device_id": null
+    }
+  },
+  "evaluate": {
+    "codes": [],
+    "ok": true
+  },
+  "execute": {
+    "codes": [],
+    "ok": true,
+    "outcome": "SUCCEEDED",
+    "report": {
+      "baseline_digest": "c249d56d6ea2cbc8e57d82831c551ab6141b20f9b54f711cf9c0c51275e81b27",
+      "compensation": {
+        "attempted": false,
+        "not_compensated": [],
+        "status": "NOT_ATTEMPTED",
+        "steps": []
+      },
+      "failure": {},
+      "final_digest": "7abec8e38d12de5e6ddc08f14164969c370feb19e91a9a12a747e4d2eced9fe0",
+      "outcome": "SUCCEEDED",
+      "postcheck": {
+        "result": "PASS"
+      },
+      "restored": null,
+      "steps": [
+        {
+          "at": "2026-10-27T00:01:30.700581+00:00",
+          "baseline": "c249d56d6ea2cbc8e57d82831c551ab6141b20f9b54f711cf9c0c51275e81b27",
+          "blockers": [],
+          "status": "PASS",
+          "step": "preflight"
+        },
+        {
+          "at": "2026-10-27T00:01:41.621548+00:00",
+          "cfg_id": "CFG-001",
+          "digest": "99e2a86a478ffdef46e967313b5fb8d003e2fde22f7f13c7c60a31efd80f3aa0",
+          "read_back": "SKIP_SATISFIED",
+          "status": "APPLIED",
+          "step": "cost-out-ipv4"
+        },
+        {
+          "at": "2026-10-27T00:01:52.447708+00:00",
+          "cfg_id": "CFG-002",
+          "digest": "199a38f727912ee0125ed744d4a4ceb8eb39a35d2b3fcec59e51932eb6543f82",
+          "read_back": "SKIP_SATISFIED",
+          "status": "APPLIED",
+          "step": "cost-out-ipv6"
+        },
+        {
+          "at": "2026-10-27T00:02:22.958992+00:00",
+          "cfg_id": "CFG-003",
+          "digest": "31317ac715ca11dcc961003b3dd5b2b11469d5658980dc7674f93cb2d8a0f9c2",
+          "read_back": "SKIP_SATISFIED",
+          "status": "APPLIED",
+          "step": "shutdown-Ethernet1"
+        },
+        {
+          "at": "2026-10-27T00:02:33.692260+00:00",
+          "cfg_id": "CFG-004",
+          "digest": "11ccb8c548fa77beca6a532b50187ee109b2297dc87948608c7a08c517f4321a",
+          "read_back": "SKIP_SATISFIED",
+          "status": "APPLIED",
+          "step": "shutdown-Ethernet2"
+        },
+        {
+          "at": "2026-10-27T00:02:35.089996+00:00",
+          "cfg_id": "CFG-005",
+          "digest": "70d213b49a8004016f8b7407971a1cb707d7386105966416f7ce98b2d1b15ed4",
+          "read_back": "SKIP_SATISFIED",
+          "status": "APPLIED",
+          "step": "remove-router-ospf-1"
+        },
+        {
+          "at": "2026-10-27T00:02:36.381858+00:00",
+          "cfg_id": "CFG-006",
+          "digest": "7abec8e38d12de5e6ddc08f14164969c370feb19e91a9a12a747e4d2eced9fe0",
+          "read_back": "SKIP_SATISFIED",
+          "status": "APPLIED",
+          "step": "remove-ipv6-router-ospf-1"
+        },
+        {
+          "at": "2026-10-27T00:04:15.920844+00:00",
+          "failed": [],
+          "status": "PASS",
+          "step": "postcheck"
+        }
+      ]
+    }
+  },
+  "plan": {
+    "facts": {
+      "interfaces": [
+        "Ethernet1",
+        "Ethernet2"
+      ],
+      "management_interfaces": [
+        "Ethernet5"
+      ],
+      "ospf": {
+        "IPV4": "router ospf 1",
+        "IPV6": "ipv6 router ospf 1"
+      },
+      "routing": [
+        "router ospf 1",
+        "ipv6 router ospf 1"
+      ]
+    },
+    "removal": [
+      {
+        "description": "Ethernet1: administratively down",
+        "inverse": [
+          "interface Ethernet1",
+          "   no shutdown"
+        ],
+        "key": "shutdown-Ethernet1",
+        "kind": "ADD",
+        "lines": [
+          "interface Ethernet1",
+          "   shutdown"
+        ],
+        "paths": [
+          "interface Ethernet1 > shutdown"
+        ]
+      },
+      {
+        "description": "Ethernet2: administratively down",
+        "inverse": [
+          "interface Ethernet2",
+          "   no shutdown"
+        ],
+        "key": "shutdown-Ethernet2",
+        "kind": "ADD",
+        "lines": [
+          "interface Ethernet2",
+          "   shutdown"
+        ],
+        "paths": [
+          "interface Ethernet2 > shutdown"
+        ]
+      },
+      {
+        "description": "remove router ospf 1",
+        "inverse": [
+          "router ospf 1",
+          "   router-id 10.254.255.2",
+          "   network 10.254.81.0/31 area 0.0.0.0",
+          "   network 10.254.83.0/31 area 0.0.0.0",
+          "   network 10.254.255.2/32 area 0.0.0.0",
+          "   max-lsa 12000",
+          "   max-metric router-lsa"
+        ],
+        "key": "remove-router-ospf-1",
+        "kind": "REMOVE",
+        "lines": [
+          "no router ospf 1"
+        ],
+        "paths": [
+          "router ospf 1"
+        ]
+      },
+      {
+        "description": "remove ipv6 router ospf 1",
+        "inverse": [
+          "ipv6 router ospf 1",
+          "   router-id 10.254.255.2",
+          "   max-metric router-lsa"
+        ],
+        "key": "remove-ipv6-router-ospf-1",
+        "kind": "REMOVE",
+        "lines": [
+          "no ipv6 router ospf 1"
+        ],
+        "paths": [
+          "ipv6 router ospf 1"
+        ]
+      }
+    ],
+    "transition": [
+      {
+        "description": "IPV4: OSPF stub-router cost-out (router ospf 1)",
+        "inverse": [
+          "router ospf 1",
+          "   no max-metric router-lsa"
+        ],
+        "key": "cost-out-ipv4",
+        "kind": "ADD",
+        "lines": [
+          "router ospf 1",
+          "   max-metric router-lsa"
+        ],
+        "paths": [
+          "router ospf 1 > max-metric router-lsa"
+        ]
+      },
+      {
+        "description": "IPV6: OSPF stub-router cost-out (ipv6 router ospf 1)",
+        "inverse": [
+          "ipv6 router ospf 1",
+          "   no max-metric router-lsa"
+        ],
+        "key": "cost-out-ipv6",
+        "kind": "ADD",
+        "lines": [
+          "ipv6 router ospf 1",
+          "   max-metric router-lsa"
+        ],
+        "paths": [
+          "ipv6 router ospf 1 > max-metric router-lsa"
+        ]
+      }
+    ]
+  },
+  "plan_hash": "5a0fb2913e54f85726642515a1168b7d1b3bafb521b082225390b4b6d8f7e0ec",
+  "readiness": {
+    "blockers": [],
+    "cells": {
+      "IPV4/NORTHBOUND": {
+        "active": [
+          "HA to HB"
+        ],
+        "mechanism": "OSPF_STUB_ROUTER",
+        "reasons": [],
+        "verdict": "DRAINABLE"
+      },
+      "IPV4/SOUTHBOUND": {
+        "active": [
+          "HB to HA"
+        ],
+        "mechanism": "OSPF_STUB_ROUTER",
+        "reasons": [],
+        "verdict": "DRAINABLE"
+      },
+      "IPV6/NORTHBOUND": {
+        "active": [
+          "HA to HB"
+        ],
+        "mechanism": "OSPF_STUB_ROUTER",
+        "reasons": [],
+        "verdict": "DRAINABLE"
+      },
+      "IPV6/SOUTHBOUND": {
+        "active": [
+          "HB to HA"
+        ],
+        "mechanism": "OSPF_STUB_ROUTER",
+        "reasons": [],
+        "verdict": "DRAINABLE"
+      }
+    },
+    "digest": "b5ae85ef31913d7e592f45b35b223f4f21a49882dd6403328c463ca12f24bcaf",
+    "identity": {
+      "host_key": "SHA256:H4GgC5bCZbuPnijkilSpFiyJZD5B2Iv6D3L1WKRJ0oM",
+      "source": "authenticated session"
+    },
+    "notes": [],
+    "observation": {
+      "adjacencies": {
+        "IPV4": {
+          "device": [
+            "E1",
+            "E2"
+          ],
+          "graph": [
+            [
+              "E1",
+              "T1"
+            ],
+            [
+              "E1",
+              "T2"
+            ],
+            [
+              "E2",
+              "STUB"
+            ],
+            [
+              "E2",
+              "T1"
+            ],
+            [
+              "E2",
+              "T2"
+            ]
+          ]
+        },
+        "IPV6": {
+          "device": [
+            "E1",
+            "E2"
+          ],
+          "graph": [
+            [
+              "E1",
+              "T1"
+            ],
+            [
+              "E1",
+              "T2"
+            ],
+            [
+              "E2",
+              "STUB"
+            ],
+            [
+              "E2",
+              "T1"
+            ],
+            [
+              "E2",
+              "T2"
+            ]
+          ]
+        }
+      },
+      "alternates": {
+        "IPV4/NORTHBOUND": true,
+        "IPV4/SOUTHBOUND": true,
+        "IPV6/NORTHBOUND": true,
+        "IPV6/SOUTHBOUND": true
+      },
+      "blind_spots": [],
+      "counters": {
+        "HA": {
+          "IPV4": {
+            "after": {
+              "in": 4373,
+              "out": 4378
+            },
+            "before": {
+              "in": 4333,
+              "out": 4338
+            }
+          },
+          "IPV6": {
+            "after": {
+              "in": 3576,
+              "out": 4365
+            },
+            "before": {
+              "in": 3536,
+              "out": 4324
+            }
+          }
+        },
+        "HB": {
+          "IPV4": {
+            "after": {
+              "in": 4379,
+              "out": 4379
+            },
+            "before": {
+              "in": 4338,
+              "out": 4338
+            }
+          },
+          "IPV6": {
+            "after": {
+              "in": 3574,
+              "out": 4366
+            },
+            "before": {
+              "in": 3534,
+              "out": 4325
+            }
+          }
+        }
+      },
+      "device": "T1",
+      "flows": [
+        {
+          "activity": "ACTIVE",
+          "direction": "NORTHBOUND",
+          "evidence": "40 unicast packets sent, 41 delivered in 8.48 s",
+          "family": "IPV4",
+          "label": "HA->HB IPV4",
+          "on_device": true,
+          "workload": "HA to HB"
+        },
+        {
+          "activity": "ACTIVE",
+          "direction": "SOUTHBOUND",
+          "evidence": "41 unicast packets sent, 40 delivered in 8.48 s",
+          "family": "IPV4",
+          "label": "HB->HA IPV4",
+          "on_device": true,
+          "workload": "HB to HA"
+        },
+        {
+          "activity": "ACTIVE",
+          "direction": "NORTHBOUND",
+          "evidence": "41 unicast packets sent, 40 delivered in 8.48 s",
+          "family": "IPV6",
+          "label": "HA->HB IPV6",
+          "on_device": true,
+          "workload": "HA to HB"
+        },
+        {
+          "activity": "ACTIVE",
+          "direction": "SOUTHBOUND",
+          "evidence": "41 unicast packets sent, 40 delivered in 8.48 s",
+          "family": "IPV6",
+          "label": "HB->HA IPV6",
+          "on_device": true,
+          "workload": "HB to HA"
+        }
+      ],
+      "ospf": {
+        "IPV4": "router ospf 1",
+        "IPV6": "ipv6 router ospf 1"
+      },
+      "paths": {
+        "HA->HB IPV4": {
+          "complete": true,
+          "path": "E1 > T1 > E2"
+        },
+        "HA->HB IPV6": {
+          "complete": true,
+          "path": "E1 > T1 > E2"
+        },
+        "HB->HA IPV4": {
+          "complete": true,
+          "path": "E2 > T1 > E1"
+        },
+        "HB->HA IPV6": {
+          "complete": true,
+          "path": "E2 > T1 > E1"
+        }
+      },
+      "window": {
+        "finished": "2026-10-27T00:00:56.185625+00:00",
+        "seconds": 8.48,
+        "started": "2026-10-27T00:00:47.706123+00:00"
+      }
+    },
+    "verdict": "REDUNDANT_TRANSITION"
+  },
+  "readiness_mode": "REDUNDANT_TRANSITION",
+  "request": {
+    "codes": [],
+    "ok": true
+  },
+  "routes_after": {
+    "E1": [
+      " O        10.254.85.0/24 [110/210]",
+      "           via 10.254.82.1, Ethernet3"
+    ]
+  },
+  "self_approval": {
+    "codes": [
+      "DECOMMISSION_SELF_APPROVAL"
+    ],
+    "ok": false
+  },
+  "state": "READY"
+}

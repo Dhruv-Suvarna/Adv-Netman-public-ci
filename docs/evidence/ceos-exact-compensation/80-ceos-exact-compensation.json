@@ -1,0 +1,121 @@
+{
+  "A": {
+    "apply": [
+      true,
+      true
+    ],
+    "assess": [
+      [
+        "APPLY",
+        true
+      ],
+      [
+        "APPLY",
+        true
+      ]
+    ],
+    "compensation": [
+      [
+        "COMPENSATED",
+        "",
+        {
+          "action": "INVERSE_APPLIED",
+          "commands": 2,
+          "exact_configuration": true
+        }
+      ],
+      [
+        "COMPENSATED",
+        "",
+        {
+          "action": "INVERSE_APPLIED",
+          "commands": 1,
+          "exact_configuration": true
+        }
+      ]
+    ],
+    "config_mode_left": false,
+    "digest_after": "0522d1ba6061d7952ed963b28a4095a8ce8831e155cbd96000c80eb34324b259",
+    "ethernet9_in_telemetry_after_apply": false,
+    "exact": true,
+    "read_groups_alone_say_restored": [
+      true,
+      true
+    ],
+    "running_holds_ethernet9": true
+  },
+  "B": {
+    "address_on_device": true,
+    "apply": [
+      [
+        true,
+        ""
+      ],
+      [
+        false,
+        "TIMEOUT",
+        true
+      ]
+    ],
+    "compensation": [
+      [
+        "COMPENSATED",
+        "",
+        {
+          "action": "INVERSE_APPLIED",
+          "commands": 2,
+          "exact_configuration": true
+        }
+      ],
+      [
+        "COMPENSATED",
+        "",
+        {
+          "action": "INVERSE_APPLIED",
+          "commands": 1,
+          "exact_configuration": true
+        }
+      ]
+    ],
+    "config_mode_left": false,
+    "digest_after": "0522d1ba6061d7952ed963b28a4095a8ce8831e155cbd96000c80eb34324b259",
+    "exact": true
+  },
+  "C": {
+    "config_mode_left": false,
+    "digest_after": "0522d1ba6061d7952ed963b28a4095a8ce8831e155cbd96000c80eb34324b259",
+    "exact": true,
+    "retry": [
+      "COMPENSATED",
+      "",
+      {
+        "action": "INVERSE_APPLIED",
+        "commands": 1,
+        "exact_configuration": true
+      }
+    ],
+    "running_still_holds_ethernet9": true,
+    "swallowed": [
+      "COMPENSATION_FAILED",
+      "STATE_NOT_RESTORED",
+      {
+        "exact_configuration": false
+      }
+    ]
+  },
+  "D": {
+    "commands_sent": 0,
+    "config_mode_left": false,
+    "repeat": [
+      "COMPENSATED",
+      {
+        "action": "NONE_NEEDED"
+      }
+    ]
+  },
+  "device": "NEW1",
+  "ethernet9_in_telemetry_before": false,
+  "final_exact": true,
+  "original_digest": "0522d1ba6061d7952ed963b28a4095a8ce8831e155cbd96000c80eb34324b259",
+  "transport": "SSH (CeosExecutor / netmiko_connection), reader live.read_device"
+}

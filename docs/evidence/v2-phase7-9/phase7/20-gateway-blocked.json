@@ -1,0 +1,358 @@
+{
+  "baseline": "SNP-000005",
+  "baseline_digest": "a5a44c0f3dd4024d13e767938c7a279d24bfa4c43b91c973f63e30123e1d4bc2",
+  "blockers": [
+    {
+      "code": "DECOMMISSION_TRAFFIC_BLOCKED",
+      "details": {
+        "cause": "ALTERNATE_PATH_UNHEALTHY",
+        "cell": "IPV4/NORTHBOUND",
+        "detail": "the path the traffic would move to is not verified healthy",
+        "instruction": "No healthy alternate path avoids the device for this traffic."
+      },
+      "message": "Traffic readiness is blocked.",
+      "remediation": "Read each blocker's instruction."
+    },
+    {
+      "code": "DECOMMISSION_TRAFFIC_BLOCKED",
+      "details": {
+        "cause": "ALTERNATE_PATH_UNHEALTHY",
+        "cell": "IPV4/SOUTHBOUND",
+        "detail": "the path the traffic would move to is not verified healthy",
+        "instruction": "No healthy alternate path avoids the device for this traffic."
+      },
+      "message": "Traffic readiness is blocked.",
+      "remediation": "Read each blocker's instruction."
+    },
+    {
+      "code": "DECOMMISSION_TRAFFIC_BLOCKED",
+      "details": {
+        "cause": "ALTERNATE_PATH_UNHEALTHY",
+        "cell": "IPV6/NORTHBOUND",
+        "detail": "the path the traffic would move to is not verified healthy",
+        "instruction": "No healthy alternate path avoids the device for this traffic."
+      },
+      "message": "Traffic readiness is blocked.",
+      "remediation": "Read each blocker's instruction."
+    },
+    {
+      "code": "DECOMMISSION_TRAFFIC_BLOCKED",
+      "details": {
+        "cause": "ALTERNATE_PATH_UNHEALTHY",
+        "cell": "IPV6/SOUTHBOUND",
+        "detail": "the path the traffic would move to is not verified healthy",
+        "instruction": "No healthy alternate path avoids the device for this traffic."
+      },
+      "message": "Traffic readiness is blocked.",
+      "remediation": "Read each blocker's instruction."
+    }
+  ],
+  "dependencies": {
+    "blockers": [],
+    "conflicts": [],
+    "downstream": [],
+    "isolation": [],
+    "management": [],
+    "references": {
+      "attachments": 0,
+      "credential_references": 0,
+      "management_paths": 0,
+      "monitoring": null,
+      "netbox_device_id": null
+    }
+  },
+  "evaluate": {
+    "codes": [
+      "DECOMMISSION_TRAFFIC_BLOCKED",
+      "DECOMMISSION_TRAFFIC_BLOCKED",
+      "DECOMMISSION_TRAFFIC_BLOCKED",
+      "DECOMMISSION_TRAFFIC_BLOCKED"
+    ],
+    "ok": false
+  },
+  "plan": {},
+  "plan_hash": "",
+  "readiness": {
+    "blockers": [
+      {
+        "code": "ALTERNATE_PATH_UNHEALTHY",
+        "detail": "the path the traffic would move to is not verified healthy",
+        "direction": "NORTHBOUND",
+        "family": "IPV4",
+        "instruction": "No healthy alternate path avoids the device for this traffic.",
+        "workloads": [
+          "HA to HB"
+        ]
+      },
+      {
+        "code": "ALTERNATE_PATH_UNHEALTHY",
+        "detail": "the path the traffic would move to is not verified healthy",
+        "direction": "SOUTHBOUND",
+        "family": "IPV4",
+        "instruction": "No healthy alternate path avoids the device for this traffic.",
+        "workloads": [
+          "HB to HA"
+        ]
+      },
+      {
+        "code": "ALTERNATE_PATH_UNHEALTHY",
+        "detail": "the path the traffic would move to is not verified healthy",
+        "direction": "NORTHBOUND",
+        "family": "IPV6",
+        "instruction": "No healthy alternate path avoids the device for this traffic.",
+        "workloads": [
+          "HA to HB"
+        ]
+      },
+      {
+        "code": "ALTERNATE_PATH_UNHEALTHY",
+        "detail": "the path the traffic would move to is not verified healthy",
+        "direction": "SOUTHBOUND",
+        "family": "IPV6",
+        "instruction": "No healthy alternate path avoids the device for this traffic.",
+        "workloads": [
+          "HB to HA"
+        ]
+      }
+    ],
+    "cells": {
+      "IPV4/NORTHBOUND": {
+        "active": [
+          "HA to HB"
+        ],
+        "mechanism": "OSPF_STUB_ROUTER",
+        "reasons": [
+          "ALTERNATE_PATH_UNHEALTHY"
+        ],
+        "verdict": "BLOCKED"
+      },
+      "IPV4/SOUTHBOUND": {
+        "active": [
+          "HB to HA"
+        ],
+        "mechanism": "OSPF_STUB_ROUTER",
+        "reasons": [
+          "ALTERNATE_PATH_UNHEALTHY"
+        ],
+        "verdict": "BLOCKED"
+      },
+      "IPV6/NORTHBOUND": {
+        "active": [
+          "HA to HB"
+        ],
+        "mechanism": "OSPF_STUB_ROUTER",
+        "reasons": [
+          "ALTERNATE_PATH_UNHEALTHY"
+        ],
+        "verdict": "BLOCKED"
+      },
+      "IPV6/SOUTHBOUND": {
+        "active": [
+          "HB to HA"
+        ],
+        "mechanism": "OSPF_STUB_ROUTER",
+        "reasons": [
+          "ALTERNATE_PATH_UNHEALTHY"
+        ],
+        "verdict": "BLOCKED"
+      }
+    },
+    "digest": "9f0455ac4ae96e9342248b3cada04a39ba9651b5e45742ea963dbb54fce3918a",
+    "identity": {
+      "host_key": "SHA256:qLZCRh4uwOdqi9Zthpb1e9JACr22kKCdAM8iKFve/V4",
+      "source": "authenticated session"
+    },
+    "notes": [],
+    "observation": {
+      "adjacencies": {
+        "IPV4": {
+          "device": [
+            "STUB",
+            "T1",
+            "T2"
+          ],
+          "graph": [
+            [
+              "E1",
+              "T1"
+            ],
+            [
+              "E1",
+              "T2"
+            ],
+            [
+              "E2",
+              "STUB"
+            ],
+            [
+              "E2",
+              "T1"
+            ],
+            [
+              "E2",
+              "T2"
+            ]
+          ]
+        },
+        "IPV6": {
+          "device": [
+            "STUB",
+            "T1",
+            "T2"
+          ],
+          "graph": [
+            [
+              "E1",
+              "T1"
+            ],
+            [
+              "E1",
+              "T2"
+            ],
+            [
+              "E2",
+              "STUB"
+            ],
+            [
+              "E2",
+              "T1"
+            ],
+            [
+              "E2",
+              "T2"
+            ]
+          ]
+        }
+      },
+      "alternates": {
+        "IPV4/NORTHBOUND": false,
+        "IPV4/SOUTHBOUND": false,
+        "IPV6/NORTHBOUND": false,
+        "IPV6/SOUTHBOUND": false
+      },
+      "blind_spots": [],
+      "counters": {
+        "HA": {
+          "IPV4": {
+            "after": {
+              "in": 200,
+              "out": 200
+            },
+            "before": {
+              "in": 158,
+              "out": 159
+            }
+          },
+          "IPV6": {
+            "after": {
+              "in": -574,
+              "out": 192
+            },
+            "before": {
+              "in": -614,
+              "out": 151
+            }
+          }
+        },
+        "HB": {
+          "IPV4": {
+            "after": {
+              "in": 200,
+              "out": 200
+            },
+            "before": {
+              "in": 159,
+              "out": 159
+            }
+          },
+          "IPV6": {
+            "after": {
+              "in": -575,
+              "out": 194
+            },
+            "before": {
+              "in": -615,
+              "out": 154
+            }
+          }
+        }
+      },
+      "device": "E2",
+      "flows": [
+        {
+          "activity": "ACTIVE",
+          "direction": "NORTHBOUND",
+          "evidence": "41 unicast packets sent, 41 delivered in 8.521 s",
+          "family": "IPV4",
+          "label": "HA->HB IPV4",
+          "on_device": true,
+          "workload": "HA to HB"
+        },
+        {
+          "activity": "ACTIVE",
+          "direction": "SOUTHBOUND",
+          "evidence": "41 unicast packets sent, 42 delivered in 8.521 s",
+          "family": "IPV4",
+          "label": "HB->HA IPV4",
+          "on_device": true,
+          "workload": "HB to HA"
+        },
+        {
+          "activity": "ACTIVE",
+          "direction": "NORTHBOUND",
+          "evidence": "41 unicast packets sent, 40 delivered in 8.521 s",
+          "family": "IPV6",
+          "label": "HA->HB IPV6",
+          "on_device": true,
+          "workload": "HA to HB"
+        },
+        {
+          "activity": "ACTIVE",
+          "direction": "SOUTHBOUND",
+          "evidence": "40 unicast packets sent, 40 delivered in 8.521 s",
+          "family": "IPV6",
+          "label": "HB->HA IPV6",
+          "on_device": true,
+          "workload": "HB to HA"
+        }
+      ],
+      "ospf": {
+        "IPV4": "router ospf 1",
+        "IPV6": "ipv6 router ospf 1"
+      },
+      "paths": {
+        "HA->HB IPV4": {
+          "complete": true,
+          "path": "E1 > T1 > E2"
+        },
+        "HA->HB IPV6": {
+          "complete": true,
+          "path": "E1 > T1 > E2"
+        },
+        "HB->HA IPV4": {
+          "complete": true,
+          "path": "E2 > T1 > E1"
+        },
+        "HB->HA IPV6": {
+          "complete": true,
+          "path": "E2 > T1 > E1"
+        }
+      },
+      "window": {
+        "finished": "2026-10-26T23:56:01.362045+00:00",
+        "seconds": 8.521,
+        "started": "2026-10-26T23:55:52.841447+00:00"
+      }
+    },
+    "verdict": "BLOCKED"
+  },
+  "readiness_mode": "UNKNOWN",
+  "request": {
+    "codes": [
+      "DECOMMISSION_OPEN_EXISTS"
+    ],
+    "ok": false
+  },
+  "running_unchanged": true,
+  "state": "BLOCKED"
+}

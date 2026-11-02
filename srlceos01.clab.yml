@@ -1,0 +1,69 @@
+# Canonical tracked definition of the deployed srlceos01 lab (frozen Lab 1 baseline).
+#
+# This file records the topology that is ACTUALLY deployed from /home/student/clab-quickstart/srlceos01.clab.yml
+# (same nodes, kinds, images and links; the runtime copy only adds comments).  V2 Phase 1 corrected R3/R4 here: they
+# are and always were Ubuntu 24.04 + FRRouting containers in the running lab (inventory.yml monitoring.platform: linux),
+# never cEOS.  Live runtime metadata (topology-data.json) remains the authority for the dynamic topology service.
+#
+#   8 x Arista cEOS 4.36.2F   R1, R2, R5, S1, S2, S3, S4, mgmt_swt
+#   2 x Ubuntu 24.04 + FRR    R3, R4                 (routers)
+#   5 x Ubuntu 24.04          H1, H2, H3, H4, WebServer (end hosts / application; outside NMAS management scope)
+#
+# NMAS-managed infrastructure: R1 R2 R3 R4 S1 S2 S3 S4 mgmt_swt (each has a dedicated mgmt_swt link).
+# R5, WebServer and H1-H4 are NOT managed by NMAS; R5 and WebServer have no management-network link.
+# NMAS itself is the Ubuntu VM hosting Containerlab (host interface nmas-mgmt, VLAN 200 static 192.168.200.100).
+
+name: srlceos01
+
+topology:
+  nodes:
+    R1: {kind: arista_ceos, image: ceos:4.36.2F}
+    R2: {kind: arista_ceos, image: ceos:4.36.2F}
+    R3: {kind: linux, image: ubuntu:24.04, cmd: sleep infinity}
+    R4: {kind: linux, image: ubuntu:24.04, cmd: sleep infinity}
+    R5: {kind: arista_ceos, image: ceos:4.36.2F}
+    S1: {kind: arista_ceos, image: ceos:4.36.2F}
+    S2: {kind: arista_ceos, image: ceos:4.36.2F}
+    S3: {kind: arista_ceos, image: ceos:4.36.2F}
+    S4: {kind: arista_ceos, image: ceos:4.36.2F}
+    mgmt_swt: {kind: arista_ceos, image: ceos:4.36.2F}
+
+    H1: {kind: linux, image: ubuntu:24.04, cmd: sleep infinity}
+    H2: {kind: linux, image: ubuntu:24.04, cmd: sleep infinity}
+    H3: {kind: linux, image: ubuntu:24.04, cmd: sleep infinity}
+    H4: {kind: linux, image: ubuntu:24.04, cmd: sleep infinity}
+    WebServer: {kind: linux, image: ubuntu:24.04, cmd: sleep infinity}
+
+  links:
+    - endpoints: ["R3:eth1", "S3:eth1"]
+    - endpoints: ["R4:eth1", "S4:eth1"]
+    - endpoints: ["S3:eth2", "S4:eth2"]
+    - endpoints: ["S3:eth3", "R1:eth1"]
+    - endpoints: ["S4:eth3", "R2:eth1"]
+
+    - endpoints: ["R3:eth2", "R5:eth1"]
+    - endpoints: ["R4:eth2", "R5:eth2"]
+    - endpoints: ["R5:eth3", "WebServer:eth1"]
+
+    - endpoints: ["R1:eth2", "S1:eth1"]
+    - endpoints: ["R2:eth2", "S2:eth1"]
+    - endpoints: ["S1:eth2", "S2:eth2"]
+    - endpoints: ["S1:eth3", "H1:eth1"]
+    - endpoints: ["S1:eth4", "H2:eth1"]
+    - endpoints: ["S2:eth3", "H3:eth1"]
+    - endpoints: ["S2:eth4", "H4:eth1"]
+
+    - endpoints: ["mgmt_swt:eth1", "R1:eth3"]
+    - endpoints: ["mgmt_swt:eth2", "R2:eth3"]
+    - endpoints: ["mgmt_swt:eth3", "R3:eth3"]
+    - endpoints: ["mgmt_swt:eth4", "R4:eth3"]
+    - endpoints: ["mgmt_swt:eth5", "S1:eth5"]
+    - endpoints: ["mgmt_swt:eth6", "S2:eth5"]
+    - endpoints: ["mgmt_swt:eth7", "S3:eth4"]
+    - endpoints: ["mgmt_swt:eth8", "S4:eth4"]
+
+    - type: host
+      endpoint:
+        node: mgmt_swt
+        interface: eth9
+      host-interface: nmas-mgmt

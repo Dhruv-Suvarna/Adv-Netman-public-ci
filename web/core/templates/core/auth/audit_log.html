@@ -1,0 +1,26 @@
+{% extends "core/base.html" %}
+{% block title %}Audit log{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>Audit log</h1>
+  <p>The single NMAS audit ledger: website identity and request events plus the domain events (validation, plans, execution, bundles, soaks). Metadata is redacted when written.</p>
+</div>
+<div class="card">
+  <form class="filter-bar" method="get">
+    <div class="filter-bar__item"><label for="f-type">Event</label>
+      <select class="form-control" id="f-type" name="type"><option value="">All</option>{% for value, label in event_types %}<option value="{{ value }}" {% if value == type_filter %}selected{% endif %}>{{ label }}</option>{% endfor %}</select></div>
+    <div class="filter-bar__item"><label for="f-actor">Actor</label><input class="form-control" id="f-actor" name="actor" value="{{ actor_filter }}"></div>
+    <div class="filter-bar__item"><button class="btn btn--secondary" type="submit">Filter</button></div>
+  </form>
+  <table class="data-table">
+    <thead><tr><th>Time (UTC)</th><th>Event</th><th>Actor</th><th>Initiated by</th><th>Outcome</th><th>Route</th><th>Request</th><th>Summary</th></tr></thead>
+    <tbody>
+    {% for e in events %}
+      <tr><td>{{ e.created_at|date:"Y-m-d H:i:s" }}</td><td>{{ e.event_type }}</td><td>{{ e.actor }}</td><td>{{ e.actor_user.get_username|default:"" }}</td>
+          <td>{{ e.outcome }}{% if e.status_code %} ({{ e.status_code }}){% endif %}</td><td>{{ e.http_method }} {{ e.route }}</td><td><code>{{ e.request_id|truncatechars:14 }}</code></td><td>{{ e.summary }}</td></tr>
+    {% empty %}<tr><td colspan="8">No audit events match.</td></tr>{% endfor %}
+    </tbody>
+  </table>
+  {% if page_obj.has_other_pages %}<p class="pagination">{% if page_obj.has_previous %}<a href="?type={{ type_filter|urlencode }}&actor={{ actor_filter|urlencode }}&page={{ page_obj.previous_page_number }}">&larr; Newer</a>{% endif %} Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }} {% if page_obj.has_next %}<a href="?type={{ type_filter|urlencode }}&actor={{ actor_filter|urlencode }}&page={{ page_obj.next_page_number }}">Older &rarr;</a>{% endif %}</p>{% endif %}
+</div>
+{% endblock %}

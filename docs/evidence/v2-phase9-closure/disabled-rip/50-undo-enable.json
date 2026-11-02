@@ -1,0 +1,14 @@
+{
+  "compensation": {
+    "error": "",
+    "status": "COMPENSATED"
+  },
+  "equals_baseline_digest": true,
+  "routes": {
+    "E2 learns STUB": "",
+    "STUB learns peer": ""
+  },
+  "seconds_to_withdraw": 0.5,
+  "stub_digest": "bdab9a298a8b5ada20b83e3dd350a8ce4f64dc3a22d31eddacb235c9a3ce752f",
+  "stub_rip_section": []
+}

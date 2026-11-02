@@ -1,0 +1,34 @@
+{
+  "gate_with_option82_off": {
+    "check": "bootstrap_path_option82",
+    "code": "RELAY_UNTRUSTED",
+    "detail": "option 82 (relay agent information) is not enabled on the relay",
+    "ok": false
+  },
+  "gate_without_readback": {
+    "check": "bootstrap_path_option82",
+    "code": "RELAY_READBACK_MISSING",
+    "detail": "no fresh NMAS read-back of UP1's DHCP relay option 82 configuration",
+    "ok": false
+  },
+  "readback": {
+    "enabled": false,
+    "port": {
+      "addresses": [
+        "10.254.60.1"
+      ],
+      "circuit_id": "",
+      "helpers": [
+        "10.254.61.2"
+      ],
+      "remote_id": ""
+    },
+    "source": "READ"
+  },
+  "refresh": {
+    "codes": [],
+    "ok": true
+  },
+  "required_for_UP1": true,
+  "up1_digest_unchanged": true
+}

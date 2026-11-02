@@ -1,0 +1,18 @@
+{% extends "core/auth/auth_base.html" %}
+{% block title %}Verify sign-in · NMAS{% endblock %}
+{% block content %}
+<h1>Authenticator code</h1>
+<p>Enter the current 6-digit code shown for <strong>NMAS ({{ request.user.get_username }})</strong> in Microsoft Authenticator.</p>
+{% if error %}<div class="alert alert--warning" role="alert">{{ error }}</div>{% endif %}
+<form method="post" action="{% url 'core:mfa_verify' %}" autocomplete="off">
+  {% csrf_token %}
+  <input type="hidden" name="next" value="{{ next }}">
+  <div class="form-field">
+    <label for="id_otp_code">Code</label>
+    <input class="form-control" type="text" name="otp_code" id="id_otp_code" inputmode="numeric" pattern="[0-9 ]{6,7}" maxlength="7" autocomplete="one-time-code" required autofocus>
+  </div>
+  <button type="submit" class="btn btn--primary">Verify</button>
+</form>
+<form method="post" action="{% url 'core:logout' %}" style="margin-top:12px;">{% csrf_token %}<button type="submit" class="link-button">Sign out</button></form>
+<p class="wb-muted" style="margin-bottom:0;">Lost the authenticator? An NMAS administrator must reset website MFA (<code>manage.py nmas_app_mfa_reset</code>).</p>
+{% endblock %}

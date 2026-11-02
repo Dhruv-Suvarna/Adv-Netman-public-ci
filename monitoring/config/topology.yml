@@ -1,0 +1,12 @@
+# Declarative topology-service policy; Tier-3 validates this configuration on every PR change.
+lab_name: srlceos01
+runtime_metadata: /home/student/clab-quickstart/clab-srlceos01/topology-data.json
+bind_address: 127.0.0.1
+port: 8050
+browser_refresh_seconds: 20
+backend_cache_seconds: 10
+healthy_seconds: 60
+stale_seconds: 120
+recent_event_window_seconds: 900
+layout_seed: 5840
+grafana_url: http://127.0.0.1:3000/d/nmas-fleet-overview

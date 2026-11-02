@@ -1,0 +1,99 @@
+{% extends "core/base.html" %}
+{% block title %}Device Builder{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>Device Builder</h1>
+  <p>Device Identity plus modular interfaces, IPv4/IPv6 addressing, and WAN metadata are live. All work remains DRAFT and undeployed.</p>
+</div>
+
+<div class="alert alert--info">
+  <div><strong>{{ summary.status }}.</strong> {{ summary.message }}</div>
+</div>
+
+<div class="card-grid" style="margin-top:16px;">
+  <div class="card">
+    <h3>Create Draft Change</h3>
+    <p style="color:var(--text-muted); font-size:0.85rem;">Application state only -- creating a draft Change does not create a NetBox object, configure a device, change topology, or start CI.</p>
+    <form method="post" action="{% url 'core:device_builder_create_change' %}">
+      {% csrf_token %}
+      <div class="field-row">
+        <label class="field-row__label"><span>Title</span></label>
+        <input class="form-control" type="text" name="title" placeholder="Untitled draft" autocomplete="off">
+      </div>
+      <div class="field-row">
+        <label class="field-row__label"><span>Target type</span></label>
+        <select class="form-control" name="target_type" id="create-target-type">
+          <option value="EXISTING_DEVICE">Existing Device</option>
+          <option value="NEW_DEVICE">New Device</option>
+        </select>
+      </div>
+      <div class="field-row">
+        <label class="field-row__label"><span>Device name / hostname</span></label>
+        <input class="form-control" type="text" name="device_name" placeholder="e.g. R1" autocomplete="off">
+      </div>
+      <div class="field-row">
+        <label class="field-row__label"><span>Platform</span></label>
+        <select class="form-control" name="platform">
+          <option value="arista_ceos">Arista cEOS</option>
+          <option value="nokia_srlinux">Nokia SR Linux</option>
+          <option value="ubuntu_frr">Ubuntu / FRR</option>
+          <option value="cisco_c8000v_iosxe">Cisco Catalyst 8000V / IOS XE</option>
+          <option value="cisco_iosxr">Cisco IOS XR</option>
+          <option value="sonic">SONiC</option>
+        </select>
+      </div>
+      <div class="field-row" id="create-image-reference-row" data-show-when="NEW_DEVICE">
+        <label class="field-row__label"><span>Image reference (New Device only)</span></label>
+        <input class="form-control" type="text" name="image_reference" placeholder="e.g. sonic:2024.05" autocomplete="off">
+      </div>
+      <button type="submit" class="btn btn--primary">Create Draft Change</button>
+    </form>
+  </div>
+
+  <div class="card">
+    <h3>Continue Existing Draft</h3>
+    {% if summary.recent_changes %}
+      <table class="data-table">
+        <thead><tr><th>Change</th><th>Title</th><th>State</th></tr></thead>
+        <tbody>
+        {% for change in summary.recent_changes %}
+          <tr>
+            <td><a href="{% url 'core:device_builder_change_detail' change.change_id %}">{{ change.change_id }}</a></td>
+            <td>{{ change.title }}</td>
+            <td><span class="badge badge--info">{{ change.get_lifecycle_state_display }}</span></td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <div class="empty-state">No draft Changes yet.</div>
+    {% endif %}
+    <p style="margin-top:12px;"><a class="btn btn--secondary" href="{% url 'core:device_builder_changes' %}">View all Changes</a></p>
+  </div>
+
+  <div class="card">
+    <h3>Platform Capabilities</h3>
+    <p style="color:var(--text-muted); font-size:0.85rem;">Evidence-backed interface capability states for all five platform identities.</p>
+    <a class="btn btn--secondary" href="{% url 'core:device_builder_capabilities' %}">View Platform Capabilities</a>
+  </div>
+
+  <div class="card">
+    <h3>Configuration Bundles</h3>
+    <p style="color:var(--text-muted); font-size:0.85rem;">Immutable UAT, Probation and Golden artifacts with their lineage and integrity. A Probation bundle is soaked, then promoted to Golden only by your explicit decision.</p>
+    <a class="btn btn--secondary" href="{% url 'core:bundles_list' %}">View Configuration Bundles</a>
+    <a class="btn btn--secondary" href="{% url 'core:soaks_list' %}">View Probation Soaks</a>
+    <a class="btn btn--secondary" href="{% url 'core:bootstrap_home' %}">Initial Golden Bootstrap (one-time)</a>
+  </div>
+</div>
+
+<script>
+(function () {
+  var select = document.getElementById("create-target-type");
+  var row = document.getElementById("create-image-reference-row");
+  if (!select || !row) return;
+  function sync() { row.style.display = select.value === "NEW_DEVICE" ? "" : "none"; }
+  select.addEventListener("change", sync);
+  sync();
+})();
+</script>
+{% endblock %}

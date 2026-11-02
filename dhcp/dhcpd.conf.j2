@@ -1,0 +1,15 @@
+authoritative;
+default-lease-time 28800;
+max-lease-time 28800;
+
+# Local NMAS management segment; no leases are handed out here.
+subnet {{ dhcp.management.v4_network }} netmask {{ dhcp.management.v4_netmask }} {
+}
+{% for subnet in dhcp.ipv4_subnets %}
+
+subnet {{ subnet.network }} netmask {{ subnet.netmask }} {
+  range {{ subnet.start }} {{ subnet.end }};
+  option routers {{ subnet.gateway }};
+  option subnet-mask {{ subnet.netmask }};
+}
+{% endfor %}

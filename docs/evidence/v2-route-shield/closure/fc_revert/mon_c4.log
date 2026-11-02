@@ -1,0 +1,18 @@
+[2026-10-12T06:19:18.880930] 2001:db8:30::/63 metric 1024 pref medium
+	nexthop via fe80::42:aff:fefb:1603 dev eth0 weight 1 
+	nexthop via fe80::42:aff:fefb:1803 dev eth1 weight 1 
+[2026-10-12T06:19:27.041577] 2001:db8:20::/63 metric 1024 pref medium
+	nexthop via fe80::42:aff:fefb:1603 dev eth0 weight 1 
+	nexthop via fe80::42:aff:fefb:1803 dev eth1 weight 1 
+[2026-10-12T06:19:35.726981] 2001:db8:10::/63 metric 1024 pref medium
+	nexthop via fe80::42:aff:fefb:1603 dev eth0 weight 1 
+	nexthop via fe80::42:aff:fefb:1803 dev eth1 weight 1 
+[2026-10-12T06:33:10.553809] Deleted 2001:db8:30::/63 metric 1024 pref medium
+	nexthop via fe80::42:aff:fefb:1603 dev eth0 weight 1 
+	nexthop via fe80::42:aff:fefb:1803 dev eth1 weight 1 
+[2026-10-12T06:33:20.866444] Deleted 2001:db8:20::/63 metric 1024 pref medium
+	nexthop via fe80::42:aff:fefb:1603 dev eth0 weight 1 
+	nexthop via fe80::42:aff:fefb:1803 dev eth1 weight 1 
+[2026-10-12T06:33:30.769447] Deleted 2001:db8:10::/63 metric 1024 pref medium
+	nexthop via fe80::42:aff:fefb:1603 dev eth0 weight 1 
+	nexthop via fe80::42:aff:fefb:1803 dev eth1 weight 1 

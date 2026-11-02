@@ -1,0 +1,6 @@
+{
+  "up1_ospf6_adjacency_gone": true,
+  "up1_ospf6_neighbors_on_port": [],
+  "up1_ospf6_process_after_restore": "ipv6 router ospf 1\n   router-id 10.254.255.1\n   passive-interface Ethernet1\n",
+  "up1_route_to_new1_v6": "\nVRF: default\nRouting entry for 2001:db8:254:255::11\nSource Codes:\n       C - connected, S - static, K - kernel, O3 - OSPFv3,\n       O3 IA - OSPFv3 inter area, O3 E1 - OSPFv3 external type 1,\n       O3 E2 - OSPFv3 external type 2,\n       O3 N1 - OSPFv3 NSSA external type 1\n       O3 N2 - OSPFv3 NSSA external type2, B - Other BGP Routes,\n       A B - BGP Aggregate, R - RIP,\n       I L1 - IS-IS level 1, I L2 - IS-IS level 2, DH - DHCP,\n       NG - Nexthop Group Static Route, M - Martian,\n       DP - Dynamic Policy Route, L - VRF Leaked,\n       G  - gRIBI, RC - Route Cache Route,\n       CL - CBF Leaked Route\n\n\n"
+}

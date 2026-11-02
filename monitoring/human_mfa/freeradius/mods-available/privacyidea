@@ -1,0 +1,28 @@
+rest privacyidea {
+    connect_uri = "https://privacyidea:8443"
+
+    tls {
+        # rlm_rest 3.2.1 maps ca_info_file to libcurl's CA trust bundle.
+        # ca_file is CURLOPT_ISSUERCERT and does not establish trust in the
+        # private runtime CA by itself.
+        ca_info_file = /run/secrets/privacyidea-ca.pem
+        check_cert = yes
+        check_cert_cn = yes
+    }
+
+    authenticate {
+        uri = "${..connect_uri}/validate/radiuscheck"
+        method = "post"
+        body = "post"
+        data = "user=%{urlquote:%{User-Name}}&pass=%{urlquote:%{User-Password}}"
+        force_to = "plain"
+        tls = ${..tls}
+    }
+
+    # Do not make startup depend on privacyIDEA being reachable.  Authentication
+    # still fails closed when the HTTPS request cannot be completed.
+    pool {
+        start = 0
+        min = 0
+    }
+}

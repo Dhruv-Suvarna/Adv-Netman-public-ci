@@ -1,0 +1,192 @@
+{
+  "apply": {
+    "codes": [],
+    "ok": true,
+    "outcome": "SUCCEEDED",
+    "state": "ENFORCED",
+    "steps": [
+      {
+        "at": "2026-10-27T19:12:59.960601+00:00",
+        "baseline": "46765afcfa7540bdd82e260e4b81ce19b30abce58ad386055dff139221cb57ec",
+        "blockers": [],
+        "status": "PASS",
+        "step": "preflight"
+      },
+      {
+        "at": "2026-10-27T19:13:01.126665+00:00",
+        "cfg_id": "CFG-001",
+        "digest": "b01535427310101d625071e4799ee6722cd5edcac8c48f5703a529f47317da52",
+        "read_back": "SKIP_SATISFIED",
+        "status": "APPLIED",
+        "step": "nft-table"
+      },
+      {
+        "at": "2026-10-27T19:13:02.742679+00:00",
+        "failed": [],
+        "status": "PASS",
+        "step": "postcheck"
+      }
+    ]
+  },
+  "change": {
+    "configlets": [
+      {
+        "cfg_id": "CFG-001",
+        "rendered_config": "table inet nmas_iso_dev000002 {\n  chain forward {\n    type filter hook forward priority filter; policy accept;\n    iifname \"eth4\" ip saddr 10.254.90.0/29 ip daddr 10.254.92.2 tcp dport 8080 accept\n    iifname \"eth4\" ip saddr 10.254.90.0/29 ip daddr 10.254.92.2 tcp sport 22 ct state established,related accept\n    iifname \"eth4\" counter drop\n    oifname \"eth4\" ip saddr 10.254.92.2 ip daddr 10.254.90.0/29 tcp sport 8080 accept\n    oifname \"eth4\" ip saddr 10.254.92.2 ip daddr 10.254.90.0/29 tcp dport 22 accept\n    oifname \"eth4\" counter drop\n  }\n  chain input {\n    type filter hook input priority filter; policy accept;\n    iifname \"eth4\" udp sport 68 udp dport 67 accept\n    iifname \"eth4\" ip6 saddr fe80::/10 icmpv6 type { nd-router-solicit, nd-neighbor-solicit, nd-neighbor-advert } accept\n    iifname \"eth4\" counter drop\n  }\n  chain output {\n    type filter hook output priority filter; policy accept;\n    oifname \"eth4\" udp sport 67 udp dport 68 accept\n    oifname \"eth4\" icmpv6 type { nd-router-advert, nd-neighbor-solicit, nd-neighbor-advert } accept\n    oifname \"eth4\" counter drop\n  }\n}",
+        "rollback_config": "delete table inet nmas_iso_dev000002"
+      }
+    ],
+    "id": "CHG-20261027-0001",
+    "lifecycle": "DEPLOYED"
+  },
+  "hooks": [
+    "family ip {",
+    "0000000000 chain inet nmas_iso_dev000002 input [nf_tables]",
+    "0000000000 chain inet nmas_iso_dev000002 forward [nf_tables]",
+    "0000000000 chain inet nmas_iso_dev000002 output [nf_tables]",
+    "family ip6 {",
+    "0000000000 chain inet nmas_iso_dev000002 input [nf_tables]",
+    "0000000000 chain inet nmas_iso_dev000002 forward [nf_tables]",
+    "0000000000 chain inet nmas_iso_dev000002 output [nf_tables]"
+  ],
+  "intent": {
+    "bootstrap": {
+      "http_port": 8080,
+      "prefix": "10.254.90.0/29",
+      "service_address": "10.254.92.2"
+    },
+    "device": "DEV-000002",
+    "elements": {
+      "CONTROL_PLANE": {
+        "filtered_on_port": [
+          "OSPF",
+          "OSPFv3"
+        ],
+        "mode": "PACKET_FILTER"
+      },
+      "IPV4": {
+        "forward": "service HTTP + service SSH only, then drop",
+        "input": "DHCP to the relay only, then drop"
+      },
+      "IPV6": {
+        "forward": "drop",
+        "input": "neighbour discovery from link-local only, then drop"
+      },
+      "L2": {
+        "kind": "veth",
+        "mode": "VERIFY",
+        "routed_port": true
+      },
+      "MANAGEMENT_PLANE": {
+        "mode": "INPUT_FILTER",
+        "nmas_sources": [
+          "10.254.92.2"
+        ]
+      },
+      "PACKET_FILTER": {
+        "chains": [
+          "forward",
+          "input",
+          "output"
+        ],
+        "family": "inet",
+        "hook_families": [
+          "ip",
+          "ip6"
+        ],
+        "table": "nmas_iso_dev000002"
+      }
+    },
+    "schema": 1,
+    "upstream": {
+      "device": "UP4",
+      "interface": "eth4",
+      "platform": "ubuntu_frr",
+      "vrf": ""
+    }
+  },
+  "ops": [
+    {
+      "description": "nftables isolation of eth4 (forward, input, output; IPv4 and IPv6)",
+      "inverse": [
+        "delete table inet nmas_iso_dev000002"
+      ],
+      "key": "nft-table",
+      "kind": "ADD",
+      "lines": [
+        "table inet nmas_iso_dev000002 {",
+        "  chain forward {",
+        "    type filter hook forward priority filter; policy accept;",
+        "    iifname \"eth4\" ip saddr 10.254.90.0/29 ip daddr 10.254.92.2 tcp dport 8080 accept",
+        "    iifname \"eth4\" ip saddr 10.254.90.0/29 ip daddr 10.254.92.2 tcp sport 22 ct state established,related accept",
+        "    iifname \"eth4\" counter drop",
+        "    oifname \"eth4\" ip saddr 10.254.92.2 ip daddr 10.254.90.0/29 tcp sport 8080 accept",
+        "    oifname \"eth4\" ip saddr 10.254.92.2 ip daddr 10.254.90.0/29 tcp dport 22 accept",
+        "    oifname \"eth4\" counter drop",
+        "  }",
+        "  chain input {",
+        "    type filter hook input priority filter; policy accept;",
+        "    iifname \"eth4\" udp sport 68 udp dport 67 accept",
+        "    iifname \"eth4\" ip6 saddr fe80::/10 icmpv6 type { nd-router-solicit, nd-neighbor-solicit, nd-neighbor-advert } accept",
+        "    iifname \"eth4\" counter drop",
+        "  }",
+        "  chain output {",
+        "    type filter hook output priority filter; policy accept;",
+        "    oifname \"eth4\" udp sport 67 udp dport 68 accept",
+        "    oifname \"eth4\" icmpv6 type { nd-router-advert, nd-neighbor-solicit, nd-neighbor-advert } accept",
+        "    oifname \"eth4\" counter drop",
+        "  }",
+        "}"
+      ],
+      "paths": [
+        "nft table inet nmas_iso_dev000002"
+      ],
+      "platform": "ubuntu_frr"
+    }
+  ],
+  "plan": {
+    "codes": [],
+    "detail": {
+      "change": "CHG-20261027-0001",
+      "plan_hash": "9c94f5379cd8ca46f1fac556ab780c1df91e4280e4bf08ffbff701d10ef788fd"
+    },
+    "ok": true
+  },
+  "precheck": {
+    "codes": [],
+    "ok": true
+  },
+  "production_during_apply": {
+    "core_ospf_adjacency": {
+      "after": {
+        "neighbor": "10.254.255.2",
+        "state": "Full/Backup",
+        "up_ms": 103687
+      },
+      "before": {
+        "neighbor": "10.254.255.2",
+        "state": "Full/Backup",
+        "up_ms": 72535
+      },
+      "no_flap": true
+    },
+    "prod->svc v4 (forwarded by up)": {
+      "received": 150,
+      "sent": 150
+    },
+    "prod->up Vlan102 v6 (up's input)": {
+      "received": 150,
+      "sent": 150
+    },
+    "zero_loss": true
+  },
+  "ruleset_after": "table inet nmas_iso_dev000002 {\n\tchain forward {\n\t\ttype filter hook forward priority filter; policy accept;\n\t\tiifname \"eth4\" ip saddr 10.254.90.0/29 ip daddr 10.254.92.2 tcp dport 8080 accept\n\t\tiifname \"eth4\" ip saddr 10.254.90.0/29 ip daddr 10.254.92.2 tcp sport 22 ct state established,related accept\n\t\tiifname \"eth4\" counter packets 0 bytes 0 drop\n\t\toifname \"eth4\" ip saddr 10.254.92.2 ip daddr 10.254.90.0/29 tcp sport 8080 accept\n\t\toifname \"eth4\" ip saddr 10.254.92.2 ip daddr 10.254.90.0/29 tcp dport 22 accept\n\t\toifname \"eth4\" counter packets 0 bytes 0 drop\n\t}\n\n\tchain input {\n\t\ttype filter hook input priority filter; policy accept;\n\t\tiifname \"eth4\" udp sport 68 udp dport 67 accept\n\t\tiifname \"eth4\" ip6 saddr fe80::/10 icmpv6 type { nd-router-solicit, nd-neighbor-solicit, nd-neighbor-advert } accept\n\t\tiifname \"eth4\" counter packets 0 bytes 0 drop\n\t}\n\n\tchain output {\n\t\ttype filter hook output priority filter; policy accept;\n\t\toifname \"eth4\" udp sport 67 udp dport 68 accept\n\t\toifname \"eth4\" icmpv6 type { nd-router-advert, nd-neighbor-solicit, nd-neighbor-advert } accept\n\t\toifname \"eth4\" counter packets 28 bytes 1816 drop\n\t}\n}\n",
+  "ruleset_before": "",
+  "self_approval": [
+    "ISOLATION_SELF_APPROVAL"
+  ],
+  "table": "table inet nmas_iso_dev000002 {\n\tchain forward {\n\t\ttype filter hook forward priority filter; policy accept;\n\t\tiifname \"eth4\" ip saddr 10.254.90.0/29 ip daddr 10.254.92.2 tcp dport 8080 accept\n\t\tiifname \"eth4\" ip saddr 10.254.90.0/29 ip daddr 10.254.92.2 tcp sport 22 ct state established,related accept\n\t\tiifname \"eth4\" counter packets 0 bytes 0 drop\n\t\toifname \"eth4\" ip saddr 10.254.92.2 ip daddr 10.254.90.0/29 tcp sport 8080 accept\n\t\toifname \"eth4\" ip saddr 10.254.92.2 ip daddr 10.254.90.0/29 tcp dport 22 accept\n\t\toifname \"eth4\" counter packets 0 bytes 0 drop\n\t}\n\n\tchain input {\n\t\ttype filter hook input priority filter; policy accept;\n\t\tiifname \"eth4\" udp sport 68 udp dport 67 accept\n\t\tiifname \"eth4\" ip6 saddr fe80::/10 icmpv6 type { nd-router-solicit, nd-neighbor-solicit, nd-neighbor-advert } accept\n\t\tiifname \"eth4\" counter packets 0 bytes 0 drop\n\t}\n\n\tchain output {\n\t\ttype filter hook output priority filter; policy accept;\n\t\toifname \"eth4\" udp sport 67 udp dport 68 accept\n\t\toifname \"eth4\" icmpv6 type { nd-router-advert, nd-neighbor-solicit, nd-neighbor-advert } accept\n\t\toifname \"eth4\" counter packets 28 bytes 1816 drop\n\t}\n}\n",
+  "wrong_hash": [
+    "ISOLATION_CONFIRMATION_MISMATCH"
+  ]
+}

@@ -1,0 +1,26 @@
+{
+ "actions": [
+  {
+   "action": "cancel",
+   "device": "PROVDUP4",
+   "http": 302,
+   "netbox": [],
+   "prov_id": "PROV-000007",
+   "reconciliation": {
+    "clean": true,
+    "netbox": [],
+    "registry": "NONE"
+   },
+   "registry": [],
+   "resolvable": false,
+   "status_after": "CANCELLED",
+   "status_before": "IDENTIFIED"
+  }
+ ],
+ "netbox_tagged_remaining": {
+  "devices": [],
+  "interfaces": [],
+  "ips": [],
+  "prefixes": []
+ }
+}

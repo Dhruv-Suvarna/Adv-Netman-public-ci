@@ -1,0 +1,102 @@
+{
+  "abort": {
+    "codes": [],
+    "ok": true
+  },
+  "record": {
+    "approved_by": "",
+    "candidate_hash": "",
+    "commissioning": "COM-000001",
+    "dependencies": {
+      "cycles": [],
+      "edges": [],
+      "nodes": []
+    },
+    "device": "DEV-000002",
+    "evidence_digest": "",
+    "failure": {
+      "code": "ABORTED",
+      "production_configuration_left_on_isolated_device": false,
+      "reason": "first plan refused CAPABILITY_UNCLASSIFIED (planner never labelled routing / relay Configlets); re-plan after the planner fix"
+    },
+    "isolation_state": "VERIFIED",
+    "policy": "ISO-000001",
+    "provisioning_run": "PROV-000001",
+    "provisioning_status": "CANCELLED",
+    "readiness": {
+      "at": "2026-10-26T14:43:50.181306+00:00",
+      "checks": [
+        {
+          "check": "identity_verified",
+          "code": "",
+          "detail": "VERIFIED",
+          "ok": true
+        },
+        {
+          "check": "host_key_enrolled",
+          "code": "",
+          "detail": "the verified host key is the out-of-band enrolled one",
+          "ok": true
+        },
+        {
+          "check": "attachment_verified",
+          "code": "",
+          "detail": "VERIFIED",
+          "ok": true
+        },
+        {
+          "check": "bootstrap_authorization",
+          "code": "",
+          "detail": "CONSUMED by -",
+          "ok": true
+        },
+        {
+          "check": "native_bootstrap",
+          "code": "",
+          "detail": "ztp_state=DISABLED_VERIFIED (observed; native ZTP completion is never admission)",
+          "ok": true
+        },
+        {
+          "check": "management_transport",
+          "code": "",
+          "detail": "",
+          "ok": true
+        },
+        {
+          "check": "credential_transitioned",
+          "code": "",
+          "detail": "bootstrap credential revoked, proven rejected and retired; the service credential works",
+          "ok": true
+        },
+        {
+          "check": "isolation_verified",
+          "code": "",
+          "detail": "VERIFIED",
+          "ok": true
+        },
+        {
+          "check": "dependencies",
+          "code": "",
+          "detail": "",
+          "ok": true
+        },
+        {
+          "check": "lifecycle",
+          "code": "",
+          "detail": "ISOLATED",
+          "ok": true
+        },
+        {
+          "check": "production_candidate",
+          "code": "COMMISSIONING_CONFIG_NOT_APPLIED",
+          "detail": "PROV-000001 VALIDATED: validated, planned and prechecked through the ordinary provisioning stages",
+          "ok": false
+        }
+      ],
+      "ready": false
+    },
+    "requested_by": "olivia",
+    "state": "ABORTED"
+  },
+  "run_status": "CANCELLED"
+}

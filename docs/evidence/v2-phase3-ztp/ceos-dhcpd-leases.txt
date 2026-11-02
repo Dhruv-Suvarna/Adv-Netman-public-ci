@@ -1,0 +1,27 @@
+
+lease 10.254.30.10 {
+  starts 6 2026/10/24 07:32:30;
+  ends 6 2026/10/24 07:42:30;
+  cltt 6 2026/10/24 07:32:30;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet a2:27:1c:9a:b6:7b;
+  uid "\002Zp\000\000\001";
+  set nmas-circuit-id = "Ethernet1";
+  set nmas-user-class = ";Arista;cEOSLab;4.36.2F-49692632.4362F.1 (engineering build)";
+  set nmas-vendor-class = "Arista;cEOSLab;ZTPP3NEW0001";
+  set nmas-client-id = "2:5a:70:0:0:1";
+  set nmas-giaddr = "10.254.30.1";
+  set vendor-class-identifier = "Arista;cEOSLab;ZTPP3NEW0001";
+  option agent.circuit-id "Ethernet1";
+}
+lease 10.254.30.10 {
+  starts 6 2026/10/24 07:32:30;
+  ends 6 2026/10/24 07:32:50;
+  tstp 6 2026/10/24 07:32:50;
+  cltt 6 2026/10/24 07:32:30;
+  binding state free;
+  hardware ethernet a2:27:1c:9a:b6:7b;
+  uid "\002Zp\000\000\001";
+}

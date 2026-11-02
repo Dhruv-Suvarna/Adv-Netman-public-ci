@@ -1,0 +1,7 @@
+# Security-sensitive automation and CI policy require repository-owner review.
+/.github/workflows/ @Dhruv-Suvarna
+/scripts/ci/ @Dhruv-Suvarna
+/.gitleaks.toml @Dhruv-Suvarna
+/.gitleaksignore @Dhruv-Suvarna
+/.pre-commit-config.yaml @Dhruv-Suvarna
+/modules/device_credentials.py @Dhruv-Suvarna

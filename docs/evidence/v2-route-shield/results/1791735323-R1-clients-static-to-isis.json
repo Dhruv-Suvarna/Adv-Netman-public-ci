@@ -1,0 +1,30 @@
+{
+ "transition": "R1-clients-static-to-isis",
+ "ok": false,
+ "aborted": "NEW_PATH_UNAVAILABLE",
+ "blockers": [
+  {
+   "code": "NEW_PATH_UNAVAILABLE",
+   "device": "R1",
+   "detail": "no IS-IS adjacency is up on Ethernet3"
+  },
+  {
+   "code": "UPSTREAM_COVER_NOT_CONFIRMED",
+   "device": "R1",
+   "detail": "not every one of c3, c4 holds a cover of the protected prefixes"
+  }
+ ],
+ "restored": null,
+ "stages": [
+  {
+   "stage": "precheck",
+   "at": "2026-10-11T16:15:21.388453+00:00",
+   "status": "BLOCKED",
+   "blockers": [
+    "NEW_PATH_UNAVAILABLE",
+    "UPSTREAM_COVER_NOT_CONFIRMED"
+   ]
+  }
+ ],
+ "compensation": []
+}

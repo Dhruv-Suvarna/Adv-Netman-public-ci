@@ -1,0 +1,26 @@
+{% extends "core/base.html" %}
+{% load core_extras %}
+{% block title %}Readiness probe{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>Readiness probe <span class="badge badge--{% if report.ready %}success{% else %}danger{% endif %}">{% if report.ready %}READY{% else %}BLOCKED{% endif %}</span></h1>
+  <p><a href="{% url 'core:bootstrap_home' %}">&larr; Initial Golden Bootstrap</a> · generated {{ report.generated_at }}</p>
+  <p>A read-only dry probe: nothing was created, persisted or changed, and nothing was repaired to make a check pass.</p>
+</div>
+{% if report.blockers %}<div class="card" style="border-left:6px solid var(--danger);"><h3>Blockers</h3><ul>{% for b in report.blockers %}<li><span class="badge badge--danger">{{ b.code }}</span> {{ b.message }} <em>{{ b.remediation }}</em></li>{% endfor %}</ul></div>{% endif %}
+<div class="card-grid" style="margin-top:16px;">
+  <div class="card"><h3>Monitoring</h3><p>Topology service: {{ report.monitoring.topology_available }} · backend {{ report.monitoring.backend_status }} · fresh telemetry on {{ report.monitoring.fresh_devices }} of {{ report.monitoring.total_devices }} devices.</p>
+    <p>Unreachable: {% if report.unreachable %}{{ report.unreachable|join:", " }}{% else %}none{% endif %}</p></div>
+  <div class="card"><h3>Health evaluators</h3><ul>{% for e in report.evaluators %}<li>{{ e }}</li>{% endfor %}</ul>
+    {% if report.assessment %}<p>Current assessment: <span class="badge badge--{{ report.assessment.result|bundle_badge_class }}">{{ report.assessment.result }}</span></p>{% endif %}</div>
+</div>
+<div class="card" style="margin-top:16px;"><h3>Managed devices</h3>
+  <table class="data-table"><thead><tr><th>Device</th><th>Platform</th><th>Capture support</th><th>Method</th><th>Reachable</th><th>Sections (kept / redacted lines)</th><th>Telemetry</th></tr></thead><tbody>
+  {% for d in report.devices %}<tr><td>{{ d.device }}</td><td>{{ d.platform }}</td><td><span class="badge badge--{{ d.capability|bundle_badge_class }}">{{ d.capability }}</span></td><td>{{ d.capture_method }}</td>
+    <td>{% if d.reachable %}<span class="badge badge--success">yes</span>{% else %}<span class="badge badge--danger">{{ d.live_error|default:"no" }}</span>{% endif %}</td>
+    <td>{% for s in d.sections %}{{ s.name }}: {{ s.kept_lines }} / {{ s.redacted_lines }}<br>{% empty %}—{% endfor %}{% if d.section_problems %}<span class="badge badge--danger">{{ d.section_problems|join:", " }}</span>{% endif %}</td>
+    <td><span class="badge badge--{{ d.telemetry_freshness|bundle_badge_class }}">{{ d.telemetry_freshness }}</span></td></tr>{% endfor %}
+  </tbody></table>
+</div>
+{% if report.assessment.findings %}<div class="card" style="margin-top:16px;"><h3>Findings</h3><ul>{% for f in report.assessment.findings %}<li><span class="badge badge--neutral">{{ f.class }}</span> {{ f.device }} <code>{{ f.check_code }}</code> {{ f.subject }}</li>{% endfor %}</ul></div>{% endif %}
+{% endblock %}

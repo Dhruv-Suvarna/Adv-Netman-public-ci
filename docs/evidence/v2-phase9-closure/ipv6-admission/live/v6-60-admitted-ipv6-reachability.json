@@ -1,0 +1,24 @@
+{
+  "core_route_to_new1_v6": "\nVRF: default\nRouting entry for 2001:db8:254:255::11\nSource Codes:\n       C - connected, S - static, K - kernel, O3 - OSPFv3,\n       O3 IA - OSPFv3 inter area, O3 E1 - OSPFv3 external type 1,\n       O3 E2 - OSPFv3 external type 2,\n       O3 N1 - OSPFv3 NSSA external type 1\n       O3 N2 - OSPFv3 NSSA external type2, B - Other BGP Routes,\n       A B - BGP Aggregate, R - RIP,\n       I L1 - IS-IS level 1, I L2 - IS-IS level 2, DH - DHCP,\n       NG - Nexthop Group Static Route, M - Martian,\n       DP - Dynamic Policy Route, L - VRF Leaked,\n       G  - gRIBI, RC - Route Cache Route,\n       CL - CBF Leaked Route\n\n O3       2001:db8:254:255::11/128 [110/30]\n           via fe80::44c8:f3ff:fe58:8395, Ethernet1\n\n",
+  "device": {
+    "admission": "ADMITTED",
+    "lifecycle": "IN_SERVICE"
+  },
+  "new1_ospf6_neighbors": [
+    {
+      "neighbor": "10.254.255.1",
+      "state": "full"
+    }
+  ],
+  "new1_running": "\n> show running-config\n! Command: show running-config at line 1\n! device: NEW1 (cEOSLab, EOS-4.36.2F-49692632.4362F.1 (engineering build))\n!\nno aaa root\n!\n!\nno service interface inactive port-id allocation disabled\n!\nservice routing protocols model multi-agent\n!\nhostname NEW1\n!\nspanning-tree mode mstp\n!\nsystem l1\n   unsupported speed action error\n   unsupported error-correction action error\n!\naaa authorization exec default local\n!\ninterface Ethernet1\n   description NMAS bootstrap uplink ZTP-000001\n   no switchport\n   ip address 10.254.60.10/24\n   ipv6 address 2001:db8:254:60::10/64\n   ip ospf area 0.0.0.0\n   ipv6 ospf 1 area 0.0.0.0\n!\ninterface Ethernet2\n   no switchport\n   ip address 10.254.64.1/24\n   ip helper-address 10.254.61.2\n   ip ospf area 0.0.0.0\n!\ninterface Loopback0\n   ip address 10.254.255.11/32\n   ipv6 address 2001:db8:254:255::11/128\n   ip ospf area 0.0.0.0\n   ipv6 ospf 1 area 0.0.0.0\n!\nip access-list NMAS-BOOTSTRAP-MGMT\n   10 permit tcp host 10.254.61.2 any eq ssh\n!\nip routing\n!\nipv6 unicast-routing\n!\nip route 10.254.61.0/30 10.254.60.1\n!\nrouter ospf 1\n   router-id 10.254.255.11\n   passive-interface Ethernet2\n   passive-interface Loopback0\n   max-lsa 12000\n!\nipv6 router ospf 1\n   router-id 10.254.255.11\n   passive-interface Loopback0\n!\nmanagement ssh\n   ip access-group NMAS-BOOTSTRAP-MGMT in\n!\nend",
+  "production_to_new1_v6_loopback": true,
+  "production_to_new1_v6_uplink": true,
+  "up1_ospf6_neighbors_on_port": [
+    {
+      "neighbor": "10.254.255.11",
+      "state": "full"
+    }
+  ],
+  "up1_ospf6_process": "ipv6 router ospf 1\n   router-id 10.254.255.1\n",
+  "up1_route_to_new1_v6": "\nVRF: default\nRouting entry for 2001:db8:254:255::11\nSource Codes:\n       C - connected, S - static, K - kernel, O3 - OSPFv3,\n       O3 IA - OSPFv3 inter area, O3 E1 - OSPFv3 external type 1,\n       O3 E2 - OSPFv3 external type 2,\n       O3 N1 - OSPFv3 NSSA external type 1\n       O3 N2 - OSPFv3 NSSA external type2, B - Other BGP Routes,\n       A B - BGP Aggregate, R - RIP,\n       I L1 - IS-IS level 1, I L2 - IS-IS level 2, DH - DHCP,\n       NG - Nexthop Group Static Route, M - Martian,\n       DP - Dynamic Policy Route, L - VRF Leaked,\n       G  - gRIBI, RC - Route Cache Route,\n       CL - CBF Leaked Route\n\n O3       2001:db8:254:255::11/128 [110/20]\n           via fe80::7c62:b1ff:fe16:773c, Ethernet1\n\n"
+}

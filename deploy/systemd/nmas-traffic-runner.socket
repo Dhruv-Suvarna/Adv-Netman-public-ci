@@ -1,0 +1,20 @@
+# NMAS traffic runner socket (V2 Phase 5B).  Rendered by deploy/scripts/install_traffic_runner.sh.
+#
+# The ONLY way to ask for a traffic test.  A local Unix socket -- nothing listens on the network.  systemd creates it as
+# root:<website group> 0660, so only the website's service account (and root) can connect; the runner then checks the kernel-reported
+# peer uid of every connection as well.  The runner starts on the first request.
+[Unit]
+Description=NMAS traffic runner socket (local, website only)
+Documentation=file://@DEPLOY_ROOT@/docs/V2_PHASE5_PROVISIONING_TRAFFIC_SOAK.md
+
+[Socket]
+ListenStream=/run/nmas-traffic-runner/runner.sock
+SocketUser=root
+SocketGroup=@RUN_GROUP@
+SocketMode=0660
+DirectoryMode=0755
+RemoveOnStop=true
+Service=nmas-traffic-runner.service
+
+[Install]
+WantedBy=sockets.target

@@ -1,0 +1,30 @@
+# NMAS website: Gunicorn serving Django (V2 Phase 1).  Rendered by deploy/scripts/install_web_stack.sh.
+# Secrets are NOT in this file: they come from the protected EnvironmentFile (outside Git).
+[Unit]
+Description=NMAS website (Gunicorn + Django)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=notify
+NotifyAccess=main
+User=@RUN_USER@
+Group=@RUN_GROUP@
+# docker group: read-only live device sessions use `docker exec` (unchanged behaviour from the runserver deployment).
+SupplementaryGroups=docker
+WorkingDirectory=@DEPLOY_ROOT@/web
+EnvironmentFile=/etc/nmas/nmas-web.env
+Environment=DJANGO_SETTINGS_MODULE=config.settings
+ExecStart=@VENV@/bin/gunicorn --config /etc/nmas/gunicorn.conf.py config.wsgi:application
+ExecReload=/bin/kill -s HUP $MAINPID
+Restart=on-failure
+RestartSec=5
+KillMode=mixed
+TimeoutStopSec=90
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+UMask=0027
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,3609 @@
+{
+ "report_schema_version": 1,
+ "engine_version": "17.0.0",
+ "run_id": "0e46c727-eaae-414c-b01f-549e2e599a56",
+ "change_id": "CHG-20261012-0001",
+ "plan_id": "65848450-4c7e-4c3a-9fe8-add9f79f23b3",
+ "plan_hash": "3866346583ffc46a4c326fbaf8df021ab2588a2d0f95edabfa1aa5469c6b3d17",
+ "validation_run_id": "32e71fed-988e-46c3-b313-8e647b4503e9",
+ "validation_input_hash": "3866346583ffc46a4c326fbaf8df021ab2588a2d0f95edabfa1aa5469c6b3d17",
+ "validation_source_hash": "e4eb70f280ab643bbba3f2d566a07894860370d712821e9fa9bfcf2003cc41e7",
+ "precheck_run_id": "41d2b0c6-a593-4b69-a527-b21d704cdc57",
+ "postcheck_run_id": "",
+ "mode": "COMPLETE",
+ "state": "FINISHED",
+ "outcome": "FAILED_ROLLED_BACK",
+ "outcome_summary": "Execution failed; the work applied by THIS run was compensated and the prior state was verified restored.",
+ "actor": "sandbox-operator",
+ "started_at": "2026-10-12T08:27:04.118538+00:00",
+ "finished_at": "2026-10-12T08:52:12.704702+00:00",
+ "scope": {
+  "mode": "COMPLETE",
+  "through_cfg_id": "",
+  "requested": [
+   "CFG-001",
+   "CFG-002",
+   "CFG-003",
+   "CFG-004",
+   "CFG-005",
+   "CFG-006",
+   "CFG-007",
+   "CFG-008",
+   "CFG-009",
+   "CFG-010",
+   "CFG-011",
+   "CFG-012",
+   "CFG-013",
+   "CFG-014",
+   "CFG-015",
+   "CFG-016",
+   "CFG-017",
+   "CFG-018",
+   "CFG-019",
+   "CFG-020",
+   "CFG-021",
+   "CFG-022",
+   "CFG-023",
+   "CFG-024",
+   "CFG-025",
+   "CFG-026",
+   "CFG-027",
+   "CFG-028",
+   "CFG-029",
+   "CFG-030",
+   "CFG-031",
+   "CFG-032",
+   "CFG-033",
+   "CFG-034",
+   "CFG-035",
+   "CFG-036",
+   "CFG-037",
+   "CFG-038",
+   "CFG-039",
+   "CFG-040",
+   "CFG-041",
+   "CFG-042",
+   "CFG-043",
+   "CFG-044",
+   "CFG-045",
+   "CFG-046",
+   "CFG-047",
+   "CFG-048"
+  ],
+  "plan_order": [
+   "CFG-001",
+   "CFG-002",
+   "CFG-003",
+   "CFG-004",
+   "CFG-005",
+   "CFG-006",
+   "CFG-007",
+   "CFG-008",
+   "CFG-009",
+   "CFG-010",
+   "CFG-011",
+   "CFG-012",
+   "CFG-013",
+   "CFG-014",
+   "CFG-015",
+   "CFG-016",
+   "CFG-017",
+   "CFG-018",
+   "CFG-019",
+   "CFG-020",
+   "CFG-021",
+   "CFG-022",
+   "CFG-023",
+   "CFG-024",
+   "CFG-025",
+   "CFG-026",
+   "CFG-027",
+   "CFG-028",
+   "CFG-029",
+   "CFG-030",
+   "CFG-031",
+   "CFG-032",
+   "CFG-033",
+   "CFG-034",
+   "CFG-035",
+   "CFG-036",
+   "CFG-037",
+   "CFG-038",
+   "CFG-039",
+   "CFG-040",
+   "CFG-041",
+   "CFG-042",
+   "CFG-043",
+   "CFG-044",
+   "CFG-045",
+   "CFG-046",
+   "CFG-047",
+   "CFG-048"
+  ],
+  "unselected": [],
+  "devices": [
+   "R1",
+   "R2",
+   "R3",
+   "R4",
+   "S1",
+   "S2"
+  ]
+ },
+ "devices": [
+  "S1",
+  "S2",
+  "R1",
+  "R2",
+  "R3",
+  "R4"
+ ],
+ "summary": {
+  "outcome": "FAILED_ROLLED_BACK",
+  "applied": 40,
+  "failed": 0,
+  "unapplied": 8,
+  "compensated": 40,
+  "devices": 6,
+  "compensation": "COMPENSATED",
+  "postcheck": "NOT_RUN"
+ },
+ "results": [
+  {
+   "cfg_id": "CFG-001",
+   "sequence": 1,
+   "device": "R3",
+   "object_type": "transition_kernel_cover",
+   "operation": "CREATE_DEFINE",
+   "phase": "APPLY",
+   "status": "APPLIED",
+   "error_code": "",
+   "error": "",
+   "partial_effects": false,
+   "lines_sent": 1,
+   "started_at": "2026-10-12T08:28:10.831774+00:00",
+   "finished_at": "2026-10-12T08:28:11.180415+00:00",
+   "previous_state": {
+    "kind": "kernel_cover",
+    "prefix": "2001:db8:10::/63",
+    "state": "ABSENT",
+    "static_route_digest": "cfc1c90f6851d6ed268de708724e5ebfe83e8e6d9bc70385654abc39b6d01b3e"
+   },
+   "detail": {
+    "operation": "R3-cover-2001:db8:10::/63",
+    "stage": "CORE_COVER_INSTALL",
+    "state": "TEMPORARY",
+    "read_back": "SKIP_SATISFIED"
+   }
+  },
+  {
+   "cfg_id": "CFG-002",
+   "sequence": 2,
+   "device": "R3",
+   "object_type": "transition_kernel_cover",
+   "operation": "CREATE_DEFINE",
+   "phase": "APPLY",
+   "status": "APPLIED",
+   "error_code": "",
+   "error": "",
+   "partial_effects": false,
+   "lines_sent": 1,
+   "started_at": "2026-10-12T08:28:19.586851+00:00",
+   "finished_at": "2026-10-12T08:28:20.029463+00:00",
+   "previous_state": {
+    "kind": "kernel_cover",
+    "prefix": "2001:db8:20::/63",
+    "state": "ABSENT",
+    "static_route_digest": "55609c00cf8c5cfd30d56366a834547eac95fb0170fe5baf16e0c97ea74c6dcb"
+   },
+   "detail": {
+    "operation": "R3-cover-2001:db8:20::/63",
+    "stage": "CORE_COVER_INSTALL",
+    "state": "TEMPORARY",
+    "read_back": "SKIP_SATISFIED"
+   }
+  },
+  {
+   "cfg_id": "CFG-003",
+   "sequence": 3,
+   "device": "R3",
+   "object_type": "transition_kernel_cover",
+   "operation": "CREATE_DEFINE",
+   "phase": "APPLY",
+   "status": "APPLIED",
+   "error_code": "",
+   "error": "",
+   "partial_effects": false,
+   "lines_sent": 1,
+   "started_at": "2026-10-12T08:28:28.567501+00:00",
+   "finished_at": "2026-10-12T08:28:29.033071+00:00",
+   "previous_state": {
+    "kind": "kernel_cover",
+    "prefix": "2001:db8:30::/63",
+    "state": "ABSENT",
+    "static_route_digest": "4c6263b8c996aee95866f5c458dbc8be9efebaa9ad7d2ad2dee7948d0c1f104a"
+   },
+   "detail": {
+    "operation": "R3-cover-2001:db8:30::/63",
+    "stage": "CORE_COVER_INSTALL",
+    "state": "TEMPORARY",
+    "read_back": "SKIP_SATISFIED"
+   }
+  },
+  {
+   "cfg_id": "CFG-004",
+   "sequence": 4,
+   "device": "R4",
+   "object_type": "transition_kernel_cover",
+   "operation": "CREATE_DEFINE",
+   "phase": "APPLY",
+   "status": "APPLIED",
+   "error_code": "",
+   "error": "",
+   "partial_effects": false,
+   "lines_sent": 1,
+   "started_at": "2026-10-12T08:28:39.065852+00:00",
+   "finished_at": "2026-10-12T08:28:39.404655+00:00",
+   "previous_state": {
+    "kind": "kernel_cover",
+    "prefix": "2001:db8:10::/63",
+    "state": "ABSENT",
+    "static_route_digest": "1aee700a76565eb98f38b85f3599a11a663624d570b2d99003535ac354fafc26"
+   },
+   "detail": {
+    "operation": "R4-cover-2001:db8:10::/63",
+    "stage": "CORE_COVER_INSTALL",
+    "state": "TEMPORARY",
+    "read_back": "SKIP_SATISFIED"
+   }
+  },
+  {
+   "cfg_id": "CFG-005",
+   "sequence": 5,
+   "device": "R4",
+   "object_type": "transition_kernel_cover",
+   "operation": "CREATE_DEFINE",
+   "phase": "APPLY",
+   "status": "APPLIED",
+   "error_code": "",
+   "error": "",
+   "partial_effects": false,
+   "lines_sent": 1,
+   "started_at": "2026-10-12T08:28:48.380555+00:00",
+   "finished_at": "2026-10-12T08:28:48.735015+00:00",
+   "previous_state": {
+    "kind": "kernel_cover",
+    "prefix": "2001:db8:20::/63",
+    "state": "ABSENT",
+    "static_route_digest": "ac50b50a4bdaede107e351c0ced7442807b34070c499b7ebb4b6a4f371fcd580"
+   },
+   "detail": {
+    "operation": "R4-cover-2001:db8:20::/63",
+    "stage": "CORE_COVER_INSTALL",
+    "state": "TEMPORARY",
+    "read_back": "SKIP_SATISFIED"
+   }
+  },
+  {
+   "cfg_id": "CFG-006",
+   "sequence": 6,
+   "device": "R4",
+   "object_type": "transition_kernel_cover",
+   "operation": "CREATE_DEFINE",
+   "phase": "APPLY",
+   "status": "APPLIED",
+   "error_code": "",
+   "error": "",
+   "partial_effects": false,
+   "lines_sent": 1,
+   "started_at": "2026-10-12T08:28:57.954029+00:00",
+   "finished_at": "2026-10-12T08:28:58.407877+00:00",
+   "previous_state": {
+    "kind": "kernel_cover",
+    "prefix": "2001:db8:30::/63",
+    "state": "ABSENT",
+    "static_route_digest": "696c187e4c0bb1b219df9e9f571056b101ce8e34ac9cdd46dd803e3ead0fdbc4"
+   },
+   "detail": {
+    "operation": "R4-cover-2001:db8:30::/63",
+    "stage": "CORE_COVER_INSTALL",
+    "state": "TEMPORARY",
+    "read_back": "SKIP_SATISFIED"
+   }
+  },
+  {
+   "cfg_id": "CFG-007",
+   "sequence": 7,
+   "device": "S1",
+   "object_type": "route_shield",
+   "operation": "CREATE_DEFINE",
+   "phase": "APPLY",
+   "status": "APPLIED",
+   "error_code": "",
+   "error": "",
+   "partial_effects": false,
+   "lines_sent": 3,
+   "started_at": "2026-10-12T08:29:26.627749+00:00",
+   "finished_at": "2026-10-12T08:29:35.167557+00:00",
+   "previous_state": {
+    "kind": "config_block",
+    "modelled": false,
+    "config_digest": "f7e4fd4fdee0bb8346329a6add7e553851d7bba67c8a0b02db06e3c4ae6efa31"
+   },
+   "detail": {
+    "operation": "S1-vlan99-ipv6",
+    "stage": "VLAN99_IPV6",
+    "state": "PERMANENT",
+    "read_back": "SKIP_SATISFIED"
+   }
+  },
+  {
+   "cfg_id": "CFG-008",
+   "sequence": 8,
+   "device": "S2",
+   "object_type": "route_shield",
+   "operation": "CREATE_DEFINE",
+   "phase": "APPLY",
+   "status": "APPLIED",
+   "error_code": "",
+   "error": "",
+   "partial_effects": false,
+   "lines_sent": 3,
+   "started_at": "2026-10-12T08:30:04.321592+00:00",
+   "finished_at": "2026-10-12T08:30:13.441261+00:00",
+   "previous_state": {
+    "kind": "config_block",
+    "modelled": false,
+    "config_digest": "ee5f0cb47cb509c8548e6d213cec4d76666ab33768f56cbc53d0889a7b6a4909"
+   },
+   "detail": {
+    "operation": "S2-vlan99-ipv6",
+    "stage": "VLAN99_IPV6",
+    "state": "PERMANENT",
+    "read_back": "SKIP_SATISFIED"
+   }
+  },
+  {
+   "cfg_id": "CFG-009",
+   "sequence": 9,
+   "device": "R1",
+   "object_type": "route_shield",
+   "operation": "CREATE_DEFINE",
+   "phase": "APPLY",
+   "status": "APPLIED",
+   "error_code": "",
+   "error": "",
+   "partial_effects": false,
+   "lines_sent": 6,
+   "started_at": "2026-10-12T08:30:33.908579+00:00",
+   "finished_at": "2026-10-12T08:30:42.633652+00:00",
+   "previous_state": {
+    "kind": "config_block",
+    "modelled": false,
+    "config_digest": "f7e23531997fbe0c2600218ea7c7885f2591e40bad652ec900ac9558e2b0b0db"
+   },
+   "detail": {
+    "operation": "R1-isis-process",
+    "stage": "ISIS_FORMATION",
+    "state": "PERMANENT",
+    "read_back": "SKIP_SATISFIED"
+   }
+  },
+  {
+   "cfg_id": "CFG-010",
+   "sequence": 10,
+   "device": "R2",
+   "object_type": "route_shield",
+   "operation": "CREATE_DEFINE",
+   "phase": "APPLY",
+   "status": "APPLIED",
+   "error_code": "",
+   "error": "",
+   "partial_effects": false,
+   "lines_sent": 6,
+   "started_at": "2026-10-12T08:30:56.931732+00:00",
+   "finished_at": "2026-10-12T08:31:07.419826+00:00",
+   "previous_state": {
+    "kind": "config_block",
+    "modelled": false,
+    "config_digest": "a76c51916fd1da35620973d9cd3e718d0c8bce96e215caf17f158319395beb23"
+   },
+   "detail": {
+    "operation": "R2-isis-process",
+    "stage": "ISIS_FORMATION",
+    "state": "PERMANENT",
+    "read_back": "SKIP_SATISFIED"
+   }
+  },
+  {
+   "cfg_id": "CFG-011",
+   "sequence": 11,
+   "device": "S1",
+   "object_type": "route_shield",
+   "operation": "CREATE_DEFINE",
+   "phase": "APPLY",
+   "status": "APPLIED",
+   "error_code": "",
+   "error": "",
+   "partial_effects": false,
+   "lines_sent": 6,
+   "started_at": "2026-10-12T08:31:23.327899+00:00",
+   "finished_at": "2026-10-12T08:31:33.072479+00:00",
+   "previous_state": {
+    "kind": "config_block",
+    "modelled": false,
+    "config_digest": "2288204ac0b5b48b08fa5e4b8236c5477f442f99da1b59013b3de3042506e3ef"
+   },
+   "detail": {
+    "operation": "S1-isis-process",
+    "stage": "ISIS_FORMATION",
+    "state": "PERMANENT",
+    "read_back": "SKIP_SATISFIED"
+   }
+  },
+  {
+   "cfg_id": "CFG-012",
+   "sequence": 12,
+   "device": "S2",
+   "object_type": "route_shield",
+   "operation": "CREATE_DEFINE",
+   "phase": "APPLY",
+   "status": "APPLIED",
+   "error_code": "",
+   "error": "",
+   "partial_effects": false,
+   "lines_sent": 6,
+   "started_at": "2026-10-12T08:31:49.313467+00:00",
+   "finished_at": "2026-10-12T08:32:00.036680+00:00",
+   "previous_state": {
+    "kind": "config_block",
+    "modelled": false,
+    "config_digest": "0a8b8c855dee3f19ae7a6fd8e420c5864edb609d4255561af59f0d49e3bab01c"
+   },
+   "detail": {
+    "operation": "S2-isis-process",
+    "stage": "ISIS_FORMATION",
+    "state": "PERMANENT",
+    "read_back": "SKIP_SATISFIED"
+   }
+  },
+  {
+   "cfg_id": "CFG-013",
+   "sequence": 13,
+   "device": "R1",
+   "object_type": "route_shield",
+   "operation": "CREATE_DEFINE",
+   "phase": "APPLY",
+   "status": "APPLIED",
+   "error_code": "",
+   "error": "",
+   "partial_effects": false,
+   "lines_sent": 4,
+   "started_at": "2026-10-12T08:32:15.737988+00:00",
+   "finished_at": "2026-10-12T08:32:25.123678+00:00",
+   "previous_state": {
+    "kind": "config_block",
+    "modelled": false,
+    "config_digest": "f1f752b95d1c2ec8dc43fc561dfe37a362e3826345263d05c56635c342b193fb"
+   },
+   "detail": {
+    "operation": "R1-isis-access",
+    "stage": "ISIS_FORMATION",
+    "state": "PERMANENT",
+    "read_back": "SKIP_SATISFIED"
+   }
+  },
+  {
+   "cfg_id": "CFG-014",
+   "sequence": 14,
+   "device": "R2",
+   "object_type": "route_shield",
+   "operation": "CREATE_DEFINE",
+   "phase": "APPLY",
+   "status": "APPLIED",
+   "error_code": "",
+   "error": "",
+   "partial_effects": false,
+   "lines_sent": 4,
+   "started_at": "2026-10-12T08:32:40.740120+00:00",
+   "finished_at": "2026-10-12T08:32:51.041959+00:00",
+   "previous_state": {
+    "kind": "config_block",
+    "modelled": false,
+    "config_digest": "c6118dce5df9346003d338f7497cac363cedd21925b02c494304ab7978f3af10"
+   },
+   "detail": {
+    "operation": "R2-isis-access",
+    "stage": "ISIS_FORMATION",
+    "state": "PERMANENT",
+    "read_back": "SKIP_SATISFIED"
+   }
+  },
+  {
+   "cfg_id": "CFG-015",
+   "sequence": 15,
+   "device": "S1",
+   "object_type": "route_shield",
+   "operation": "CREATE_DEFINE",
+   "phase": "APPLY",
+   "status": "APPLIED",
+   "error_code": "",
+   "error": "",
+   "partial_effects": false,
+   "lines_sent": 8,
+   "started_at": "2026-10-12T08:33:10.054498+00:00",
+   "finished_at": "2026-10-12T08:33:19.862306+00:00",
+   "previous_state": {
+    "kind": "config_block",
+    "modelled": false,
+    "config_digest": "70bdb528c149478303f6c71554df1853a28dc35c1e904990703b640eb10912a2"
+   },
+   "detail": {
+    "operation": "S1-isis-links",
+    "stage": "ISIS_FORMATION",
+    "state": "PERMANENT",
+    "read_back": "SKIP_SATISFIED"
+   }
+  },
+  {
+   "cfg_id": "CFG-016",
+   "sequence": 16,
+   "device": "S2",
+   "object_type": "route_shield",
+   "operation": "CREATE_DEFINE",
+   "phase": "APPLY",
+   "status": "APPLIED",
+   "error_code": "",
+   "error": "",
+   "partial_effects": false,
+   "lines_sent": 8,
+   "started_at": "2026-10-12T08:33:37.340536+00:00",
+   "finished_at": "2026-10-12T08:33:46.833123+00:00",
+   "previous_state": {
+    "kind": "config_block",
+    "modelled": false,
+    "config_digest": "a5064637c953b3017dcc347a453978b507e4382d90d411d67fe5c23d11db1a94"
+   },
+   "detail": {
+    "operation": "S2-isis-links",
+    "stage": "ISIS_FORMATION",
+    "state": "PERMANENT",
+    "read_back": "SKIP_SATISFIED"
+   }
+  },
+  {
+   "cfg_id": "CFG-017",
+   "sequence": 17,
+   "device": "S1",
+   "object_type": "route_shield",
+   "operation": "CREATE_DEFINE",
+   "phase": "APPLY",
+   "status": "APPLIED",
+   "error_code": "",
+   "error": "",
+   "partial_effects": false,
+   "lines_sent": 12,
+   "started_at": "2026-10-12T08:34:23.941650+00:00",
+   "finished_at": "2026-10-12T08:34:32.156016+00:00",
+   "previous_state": {
+    "kind": "config_block",
+    "modelled": false,
+    "config_digest": "abb458b4553893bcce51554fe979901ea5fe4be91e216b19ae8023bdd15dea6c"
+   },
+   "detail": {
+    "operation": "S1-client-svis-passive",
+    "stage": "BOUNDARY_POLICY",
+    "state": "PERMANENT",
+    "read_back": "SKIP_SATISFIED"
+   }
+  },
+  {
+   "cfg_id": "CFG-018",
+   "sequence": 18,
+   "device": "S2",
+   "object_type": "route_shield",
+   "operation": "CREATE_DEFINE",
+   "phase": "APPLY",
+   "status": "APPLIED",
+   "error_code": "",
+   "error": "",
+   "partial_effects": false,
+   "lines_sent": 12,
+   "started_at": "2026-10-12T08:34:45.642018+00:00",
+   "finished_at": "2026-10-12T08:34:54.899814+00:00",
+   "previous_state": {
+    "kind": "config_block",
+    "modelled": false,
+    "config_digest": "6e9fca3c6a279ce2dff9716621bebc366edbc8d7abab24764dd9e65c0eff4098"
+   },
+   "detail": {
+    "operation": "S2-client-svis-passive",
+    "stage": "BOUNDARY_POLICY",
+    "state": "PERMANENT",
+    "read_back": "SKIP_SATISFIED"
+   }
+  },
+  {
+   "cfg_id": "CFG-019",
+   "sequence": 19,
+   "device": "R1",
+   "object_type": "route_shield",
+   "operation": "CREATE_DEFINE",
+   "phase": "APPLY",
+   "status": "APPLIED",
+   "error_code": "",
+   "error": "",
+   "partial_effects": false,
+   "lines_sent": 12,
+   "started_at": "2026-10-12T08:35:09.818571+00:00",
+   "finished_at": "2026-10-12T08:35:19.187094+00:00",
+   "previous_state": {
+    "kind": "config_block",
+    "modelled": false,
+    "config_digest": "3e18afbd78c58c14ddb8969cd0a011fdb591251509334165f918e34704ca657c"
+   },
+   "detail": {
+    "operation": "R1-boundary-policy",
+    "stage": "BOUNDARY_POLICY",
+    "state": "PERMANENT",
+    "read_back": "SKIP_SATISFIED"
+   }
+  },
+  {
+   "cfg_id": "CFG-020",
+   "sequence": 20,
+   "device": "R1",
+   "object_type": "route_shield",
+   "operation": "CREATE_DEFINE",
+   "phase": "APPLY",
+   "status": "APPLIED",
+   "error_code": "",
+   "error": "",
+   "partial_effects": false,
+   "lines_sent": 5,
+   "started_at": "2026-10-12T08:35:34.648146+00:00",
+   "finished_at": "2026-10-12T08:35:42.977156+00:00",
+   "previous_state": {
+    "kind": "config_block",
+    "modelled": false,
+    "config_digest": "01f5eee606c8c4e5671d93dbcd94cc37cbd05b34ee0da58a6672688da91bf8aa"
+   },
+   "detail": {
+    "operation": "R1-aggregate-into-isis",
+    "stage": "BOUNDARY_POLICY",
+    "state": "PERMANENT",
+    "read_back": "SKIP_SATISFIED"
+   }
+  },
+  {
+   "cfg_id": "CFG-021",
+   "sequence": 21,
+   "device": "R1",
+   "object_type": "route_shield",
+   "operation": "CREATE_DEFINE",
+   "phase": "APPLY",
+   "status": "APPLIED",
+   "error_code": "",
+   "error": "",
+   "partial_effects": false,
+   "lines_sent": 4,
+   "started_at": "2026-10-12T08:35:59.123198+00:00",
+   "finished_at": "2026-10-12T08:36:08.561378+00:00",
+   "previous_state": {
+    "kind": "config_block",
+    "modelled": false,
+    "config_digest": "9aab908aea4d70284058807ccac8b54d7d9e03f244f7e1a62c45cce367aba1a5"
+   },
+   "detail": {
+    "operation": "R1-isis-into-ospfv3",
+    "stage": "BOUNDARY_POLICY",
+    "state": "PERMANENT",
+    "read_back": "SKIP_SATISFIED"
+   }
+  },
+  {
+   "cfg_id": "CFG-022",
+   "sequence": 22,
+   "device": "R2",
+   "object_type": "route_shield",
+   "operation": "CREATE_DEFINE",
+   "phase": "APPLY",
+   "status": "APPLIED",
+   "error_code": "",
+   "error": "",
+   "partial_effects": false,
+   "lines_sent": 12,
+   "started_at": "2026-10-12T08:36:25.022485+00:00",
+   "finished_at": "2026-10-12T08:36:33.715645+00:00",
+   "previous_state": {
+    "kind": "config_block",
+    "modelled": false,
+    "config_digest": "9ecaa548eac2594a1d5b2204b6221c5ae434997caea895710d1e5621b9f1a92e"
+   },
+   "detail": {
+    "operation": "R2-boundary-policy",
+    "stage": "BOUNDARY_POLICY",
+    "state": "PERMANENT",
+    "read_back": "SKIP_SATISFIED"
+   }
+  },
+  {
+   "cfg_id": "CFG-023",
+   "sequence": 23,
+   "device": "R2",
+   "object_type": "route_shield",
+   "operation": "CREATE_DEFINE",
+   "phase": "APPLY",
+   "status": "APPLIED",
+   "error_code": "",
+   "error": "",
+   "partial_effects": false,
+   "lines_sent": 5,
+   "started_at": "2026-10-12T08:36:50.613803+00:00",
+   "finished_at": "2026-10-12T08:36:59.358923+00:00",
+   "previous_state": {
+    "kind": "config_block",
+    "modelled": false,
+    "config_digest": "5517413d5053292741ecbe77ea1ab9279b2585b39c12cd64804cbd371606f458"
+   },
+   "detail": {
+    "operation": "R2-aggregate-into-isis",
+    "stage": "BOUNDARY_POLICY",
+    "state": "PERMANENT",
+    "read_back": "SKIP_SATISFIED"
+   }
+  },
+  {
+   "cfg_id": "CFG-024",
+   "sequence": 24,
+   "device": "R2",
+   "object_type": "route_shield",
+   "operation": "CREATE_DEFINE",
+   "phase": "APPLY",
+   "status": "APPLIED",
+   "error_code": "",
+   "error": "",
+   "partial_effects": false,
+   "lines_sent": 4,
+   "started_at": "2026-10-12T08:37:16.480607+00:00",
+   "finished_at": "2026-10-12T08:37:26.109059+00:00",
+   "previous_state": {
+    "kind": "config_block",
+    "modelled": false,
+    "config_digest": "483c2b3b0b415398528573fbf99906f5a46ecd03ac69777e9af654044819e8d6"
+   },
+   "detail": {
+    "operation": "R2-isis-into-ospfv3",
+    "stage": "BOUNDARY_POLICY",
+    "state": "PERMANENT",
+    "read_back": "SKIP_SATISFIED"
+   }
+  },
+  {
+   "cfg_id": "CFG-025",
+   "sequence": 25,
+   "device": "S1",
+   "object_type": "route_shield",
+   "operation": "CREATE_DEFINE",
+   "phase": "APPLY",
+   "status": "APPLIED",
+   "error_code": "",
+   "error": "",
+   "partial_effects": false,
+   "lines_sent": 2,
+   "started_at": "2026-10-12T08:38:04.201699+00:00",
+   "finished_at": "2026-10-12T08:38:13.418770+00:00",
+   "previous_state": {
+    "kind": "config_block",
+    "modelled": false,
+    "config_digest": "866bded2e48283ab109b4233d74bef141e30b5f393068639f210af8e73eda479"
+   },
+   "detail": {
+    "operation": "S1-shield-install",
+    "stage": "SHIELD_INSTALL",
+    "state": "TEMPORARY",
+    "read_back": "SKIP_SATISFIED"
+   }
+  },
+  {
+   "cfg_id": "CFG-026",
+   "sequence": 26,
+   "device": "R1",
+   "object_type": "route_shield",
+   "operation": "CREATE_DEFINE",
+   "phase": "APPLY",
+   "status": "APPLIED",
+   "error_code": "",
+   "error": "",
+   "partial_effects": false,
+   "lines_sent": 3,
+   "started_at": "2026-10-12T08:38:43.592578+00:00",
+   "finished_at": "2026-10-12T08:38:52.846154+00:00",
+   "previous_state": {
+    "kind": "config_block",
+    "modelled": false,
+    "config_digest": "bc9f33386ea6ee415ec8dfcb97788188d170b855272848b2feb22374e548a5f3"
+   },
+   "detail": {
+    "operation": "R1-shield-install",
+    "stage": "SHIELD_INSTALL",
+    "state": "TEMPORARY",
+    "read_back": "SKIP_SATISFIED"
+   }
+  },
+  {
+   "cfg_id": "CFG-027",
+   "sequence": 27,
+   "device": "S1",
+   "object_type": "config_removal_delete",
+   "operation": "REMOVE_DELETE",
+   "phase": "APPLY",
+   "status": "APPLIED",
+   "error_code": "",
+   "error": "",
+   "partial_effects": false,
+   "lines_sent": 1,
+   "started_at": "2026-10-12T08:39:12.144297+00:00",
+   "finished_at": "2026-10-12T08:39:14.124180+00:00",
+   "previous_state": {
+    "kind": "config_removal",
+    "object": "S1-static-aggregate-remove",
+    "present": true,
+    "paths_checked": 1
+   },
+   "detail": {
+    "operation": "S1-static-aggregate-remove",
+    "stage": "PROTECTED_STATIC_REMOVAL",
+    "state": "PERMANENT",
+    "read_back": "SKIP_SATISFIED"
+   }
+  },
+  {
+   "cfg_id": "CFG-028",
+   "sequence": 28,
+   "device": "R1",
+   "object_type": "route_shield",
+   "operation": "CREATE_DEFINE",
+   "phase": "APPLY",
+   "status": "APPLIED",
+   "error_code": "",
+   "error": "",
+   "partial_effects": false,
+   "lines_sent": 3,
+   "started_at": "2026-10-12T08:39:28.580926+00:00",
+   "finished_at": "2026-10-12T08:39:37.132579+00:00",
+   "previous_state": {
+    "kind": "config_block",
+    "modelled": false,
+    "config_digest": "0d4eef4fbcb4cc5e6b799c153ea60b91713c5b73ae8c2deb3b38f76c8a1a1c7a"
+   },
+   "detail": {
+    "operation": "R1-floating-statics-add",
+    "stage": "PROTECTED_STATIC_REMOVAL",
+    "state": "TEMPORARY",
+    "read_back": "SKIP_SATISFIED"
+   }
+  },
+  {
+   "cfg_id": "CFG-029",
+   "sequence": 29,
+   "device": "R1",
+   "object_type": "config_removal_delete",
+   "operation": "REMOVE_DELETE",
+   "phase": "APPLY",
+   "status": "APPLIED",
+   "error_code": "",
+   "error": "",
+   "partial_effects": false,
+   "lines_sent": 3,
+   "started_at": "2026-10-12T08:39:46.951819+00:00",
+   "finished_at": "2026-10-12T08:39:48.829417+00:00",
+   "previous_state": {
+    "kind": "config_removal",
+    "object": "R1-client-statics-remove",
+    "present": true,
+    "paths_checked": 3
+   },
+   "detail": {
+    "operation": "R1-client-statics-remove",
+    "stage": "PROTECTED_STATIC_REMOVAL",
+    "state": "PERMANENT",
+    "read_back": "SKIP_SATISFIED"
+   }
+  },
+  {
+   "cfg_id": "CFG-030",
+   "sequence": 30,
+   "device": "R1",
+   "object_type": "config_removal_delete",
+   "operation": "REMOVE_DELETE",
+   "phase": "APPLY",
+   "status": "APPLIED",
+   "error_code": "",
+   "error": "",
+   "partial_effects": false,
+   "lines_sent": 3,
+   "started_at": "2026-10-12T08:40:01.174658+00:00",
+   "finished_at": "2026-10-12T08:40:04.490274+00:00",
+   "previous_state": {
+    "kind": "config_removal",
+    "object": "R1-floating-statics-remove",
+    "present": true,
+    "paths_checked": 3
+   },
+   "detail": {
+    "operation": "R1-floating-statics-remove",
+    "stage": "PROTECTED_STATIC_REMOVAL",
+    "state": "TEMPORARY",
+    "read_back": "SKIP_SATISFIED"
+   }
+  },
+  {
+   "cfg_id": "CFG-031",
+   "sequence": 31,
+   "device": "R1",
+   "object_type": "config_removal_delete",
+   "operation": "REMOVE_DELETE",
+   "phase": "APPLY",
+   "status": "APPLIED",
+   "error_code": "",
+   "error": "",
+   "partial_effects": false,
+   "lines_sent": 4,
+   "started_at": "2026-10-12T08:40:20.660405+00:00",
+   "finished_at": "2026-10-12T08:40:23.144275+00:00",
+   "previous_state": {
+    "kind": "config_removal",
+    "object": "R1-old-redistribution-remove",
+    "present": true,
+    "paths_checked": 2
+   },
+   "detail": {
+    "operation": "R1-old-redistribution-remove",
+    "stage": "PROTECTED_STATIC_REMOVAL",
+    "state": "PERMANENT",
+    "read_back": "SKIP_SATISFIED"
+   }
+  },
+  {
+   "cfg_id": "CFG-032",
+   "sequence": 32,
+   "device": "R1",
+   "object_type": "config_removal_delete",
+   "operation": "REMOVE_DELETE",
+   "phase": "APPLY",
+   "status": "APPLIED",
+   "error_code": "",
+   "error": "",
+   "partial_effects": false,
+   "lines_sent": 3,
+   "started_at": "2026-10-12T08:40:42.620586+00:00",
+   "finished_at": "2026-10-12T08:40:44.585638+00:00",
+   "previous_state": {
+    "kind": "config_removal",
+    "object": "R1-shield-remove",
+    "present": true,
+    "paths_checked": 3
+   },
+   "detail": {
+    "operation": "R1-shield-remove",
+    "stage": "SHIELD_REMOVE",
+    "state": "TEMPORARY",
+    "read_back": "SKIP_SATISFIED"
+   }
+  },
+  {
+   "cfg_id": "CFG-033",
+   "sequence": 33,
+   "device": "S1",
+   "object_type": "config_removal_delete",
+   "operation": "REMOVE_DELETE",
+   "phase": "APPLY",
+   "status": "APPLIED",
+   "error_code": "",
+   "error": "",
+   "partial_effects": false,
+   "lines_sent": 2,
+   "started_at": "2026-10-12T08:40:57.185242+00:00",
+   "finished_at": "2026-10-12T08:40:59.257668+00:00",
+   "previous_state": {
+    "kind": "config_removal",
+    "object": "S1-shield-remove",
+    "present": true,
+    "paths_checked": 2
+   },
+   "detail": {
+    "operation": "S1-shield-remove",
+    "stage": "SHIELD_REMOVE",
+    "state": "TEMPORARY",
+    "read_back": "SKIP_SATISFIED"
+   }
+  },
+  {
+   "cfg_id": "CFG-034",
+   "sequence": 34,
+   "device": "S2",
+   "object_type": "route_shield",
+   "operation": "CREATE_DEFINE",
+   "phase": "APPLY",
+   "status": "APPLIED",
+   "error_code": "",
+   "error": "",
+   "partial_effects": false,
+   "lines_sent": 2,
+   "started_at": "2026-10-12T08:41:31.436696+00:00",
+   "finished_at": "2026-10-12T08:41:40.628384+00:00",
+   "previous_state": {
+    "kind": "config_block",
+    "modelled": false,
+    "config_digest": "29f6f74171d5c36aeaa30a168c51e09503fe07aa14330b89d9ca016264a4d175"
+   },
+   "detail": {
+    "operation": "S2-shield-install",
+    "stage": "SHIELD_INSTALL",
+    "state": "TEMPORARY",
+    "read_back": "SKIP_SATISFIED"
+   }
+  },
+  {
+   "cfg_id": "CFG-035",
+   "sequence": 35,
+   "device": "R2",
+   "object_type": "route_shield",
+   "operation": "CREATE_DEFINE",
+   "phase": "APPLY",
+   "status": "APPLIED",
+   "error_code": "",
+   "error": "",
+   "partial_effects": false,
+   "lines_sent": 3,
+   "started_at": "2026-10-12T08:42:00.122176+00:00",
+   "finished_at": "2026-10-12T08:42:10.140760+00:00",
+   "previous_state": {
+    "kind": "config_block",
+    "modelled": false,
+    "config_digest": "261ef9b0a0d56c5044e26a6cc95b7849f17290709bc7ff7dd14bb4f5e4241676"
+   },
+   "detail": {
+    "operation": "R2-shield-install",
+    "stage": "SHIELD_INSTALL",
+    "state": "TEMPORARY",
+    "read_back": "SKIP_SATISFIED"
+   }
+  },
+  {
+   "cfg_id": "CFG-036",
+   "sequence": 36,
+   "device": "S2",
+   "object_type": "config_removal_delete",
+   "operation": "REMOVE_DELETE",
+   "phase": "APPLY",
+   "status": "APPLIED",
+   "error_code": "",
+   "error": "",
+   "partial_effects": false,
+   "lines_sent": 1,
+   "started_at": "2026-10-12T08:42:37.923638+00:00",
+   "finished_at": "2026-10-12T08:42:40.460013+00:00",
+   "previous_state": {
+    "kind": "config_removal",
+    "object": "S2-static-aggregate-remove",
+    "present": true,
+    "paths_checked": 1
+   },
+   "detail": {
+    "operation": "S2-static-aggregate-remove",
+    "stage": "PROTECTED_STATIC_REMOVAL",
+    "state": "PERMANENT",
+    "read_back": "SKIP_SATISFIED"
+   }
+  },
+  {
+   "cfg_id": "CFG-037",
+   "sequence": 37,
+   "device": "R2",
+   "object_type": "route_shield",
+   "operation": "CREATE_DEFINE",
+   "phase": "APPLY",
+   "status": "APPLIED",
+   "error_code": "",
+   "error": "",
+   "partial_effects": false,
+   "lines_sent": 3,
+   "started_at": "2026-10-12T08:43:10.618589+00:00",
+   "finished_at": "2026-10-12T08:43:19.388930+00:00",
+   "previous_state": {
+    "kind": "config_block",
+    "modelled": false,
+    "config_digest": "54c506e49c7d25bf879cd8d3c64b98ea903497f43b0e3209455295cdbfa5a3e3"
+   },
+   "detail": {
+    "operation": "R2-floating-statics-add",
+    "stage": "PROTECTED_STATIC_REMOVAL",
+    "state": "TEMPORARY",
+    "read_back": "SKIP_SATISFIED"
+   }
+  },
+  {
+   "cfg_id": "CFG-038",
+   "sequence": 38,
+   "device": "R2",
+   "object_type": "config_removal_delete",
+   "operation": "REMOVE_DELETE",
+   "phase": "APPLY",
+   "status": "APPLIED",
+   "error_code": "",
+   "error": "",
+   "partial_effects": false,
+   "lines_sent": 3,
+   "started_at": "2026-10-12T08:43:28.259529+00:00",
+   "finished_at": "2026-10-12T08:43:30.429850+00:00",
+   "previous_state": {
+    "kind": "config_removal",
+    "object": "R2-client-statics-remove",
+    "present": true,
+    "paths_checked": 3
+   },
+   "detail": {
+    "operation": "R2-client-statics-remove",
+    "stage": "PROTECTED_STATIC_REMOVAL",
+    "state": "PERMANENT",
+    "read_back": "SKIP_SATISFIED"
+   }
+  },
+  {
+   "cfg_id": "CFG-039",
+   "sequence": 39,
+   "device": "R2",
+   "object_type": "config_removal_delete",
+   "operation": "REMOVE_DELETE",
+   "phase": "APPLY",
+   "status": "APPLIED",
+   "error_code": "",
+   "error": "",
+   "partial_effects": false,
+   "lines_sent": 3,
+   "started_at": "2026-10-12T08:43:41.220424+00:00",
+   "finished_at": "2026-10-12T08:43:43.211975+00:00",
+   "previous_state": {
+    "kind": "config_removal",
+    "object": "R2-floating-statics-remove",
+    "present": true,
+    "paths_checked": 3
+   },
+   "detail": {
+    "operation": "R2-floating-statics-remove",
+    "stage": "PROTECTED_STATIC_REMOVAL",
+    "state": "TEMPORARY",
+    "read_back": "SKIP_SATISFIED"
+   }
+  },
+  {
+   "cfg_id": "CFG-040",
+   "sequence": 40,
+   "device": "R2",
+   "object_type": "config_removal_delete",
+   "operation": "REMOVE_DELETE",
+   "phase": "APPLY",
+   "status": "APPLIED",
+   "error_code": "",
+   "error": "",
+   "partial_effects": false,
+   "lines_sent": 4,
+   "started_at": "2026-10-12T08:43:58.125904+00:00",
+   "finished_at": "2026-10-12T08:44:00.367510+00:00",
+   "previous_state": {
+    "kind": "config_removal",
+    "object": "R2-old-redistribution-remove",
+    "present": true,
+    "paths_checked": 2
+   },
+   "detail": {
+    "operation": "R2-old-redistribution-remove",
+    "stage": "PROTECTED_STATIC_REMOVAL",
+    "state": "PERMANENT",
+    "read_back": "SKIP_SATISFIED"
+   }
+  },
+  {
+   "cfg_id": "CFG-041",
+   "sequence": 41,
+   "device": "R2",
+   "object_type": "config_removal_delete",
+   "operation": "REMOVE_DELETE",
+   "phase": "APPLY",
+   "status": "NOT_ATTEMPTED",
+   "error_code": "",
+   "error": "",
+   "partial_effects": false,
+   "lines_sent": 0,
+   "started_at": "2026-10-12T08:44:06.665127+00:00",
+   "finished_at": "2026-10-12T08:44:06.665127+00:00",
+   "previous_state": {},
+   "detail": {}
+  },
+  {
+   "cfg_id": "CFG-042",
+   "sequence": 42,
+   "device": "S2",
+   "object_type": "config_removal_delete",
+   "operation": "REMOVE_DELETE",
+   "phase": "APPLY",
+   "status": "NOT_ATTEMPTED",
+   "error_code": "",
+   "error": "",
+   "partial_effects": false,
+   "lines_sent": 0,
+   "started_at": "2026-10-12T08:44:06.665127+00:00",
+   "finished_at": "2026-10-12T08:44:06.665127+00:00",
+   "previous_state": {},
+   "detail": {}
+  },
+  {
+   "cfg_id": "CFG-043",
+   "sequence": 43,
+   "device": "R3",
+   "object_type": "transition_kernel_cover",
+   "operation": "REMOVE_DELETE",
+   "phase": "APPLY",
+   "status": "NOT_ATTEMPTED",
+   "error_code": "",
+   "error": "",
+   "partial_effects": false,
+   "lines_sent": 0,
+   "started_at": "2026-10-12T08:44:06.665127+00:00",
+   "finished_at": "2026-10-12T08:44:06.665127+00:00",
+   "previous_state": {},
+   "detail": {}
+  },
+  {
+   "cfg_id": "CFG-044",
+   "sequence": 44,
+   "device": "R3",
+   "object_type": "transition_kernel_cover",
+   "operation": "REMOVE_DELETE",
+   "phase": "APPLY",
+   "status": "NOT_ATTEMPTED",
+   "error_code": "",
+   "error": "",
+   "partial_effects": false,
+   "lines_sent": 0,
+   "started_at": "2026-10-12T08:44:06.665127+00:00",
+   "finished_at": "2026-10-12T08:44:06.665127+00:00",
+   "previous_state": {},
+   "detail": {}
+  },
+  {
+   "cfg_id": "CFG-045",
+   "sequence": 45,
+   "device": "R3",
+   "object_type": "transition_kernel_cover",
+   "operation": "REMOVE_DELETE",
+   "phase": "APPLY",
+   "status": "NOT_ATTEMPTED",
+   "error_code": "",
+   "error": "",
+   "partial_effects": false,
+   "lines_sent": 0,
+   "started_at": "2026-10-12T08:44:06.665127+00:00",
+   "finished_at": "2026-10-12T08:44:06.665127+00:00",
+   "previous_state": {},
+   "detail": {}
+  },
+  {
+   "cfg_id": "CFG-046",
+   "sequence": 46,
+   "device": "R4",
+   "object_type": "transition_kernel_cover",
+   "operation": "REMOVE_DELETE",
+   "phase": "APPLY",
+   "status": "NOT_ATTEMPTED",
+   "error_code": "",
+   "error": "",
+   "partial_effects": false,
+   "lines_sent": 0,
+   "started_at": "2026-10-12T08:44:06.665127+00:00",
+   "finished_at": "2026-10-12T08:44:06.665127+00:00",
+   "previous_state": {},
+   "detail": {}
+  },
+  {
+   "cfg_id": "CFG-047",
+   "sequence": 47,
+   "device": "R4",
+   "object_type": "transition_kernel_cover",
+   "operation": "REMOVE_DELETE",
+   "phase": "APPLY",
+   "status": "NOT_ATTEMPTED",
+   "error_code": "",
+   "error": "",
+   "partial_effects": false,
+   "lines_sent": 0,
+   "started_at": "2026-10-12T08:44:06.665127+00:00",
+   "finished_at": "2026-10-12T08:44:06.665127+00:00",
+   "previous_state": {},
+   "detail": {}
+  },
+  {
+   "cfg_id": "CFG-048",
+   "sequence": 48,
+   "device": "R4",
+   "object_type": "transition_kernel_cover",
+   "operation": "REMOVE_DELETE",
+   "phase": "APPLY",
+   "status": "NOT_ATTEMPTED",
+   "error_code": "",
+   "error": "",
+   "partial_effects": false,
+   "lines_sent": 0,
+   "started_at": "2026-10-12T08:44:06.665127+00:00",
+   "finished_at": "2026-10-12T08:44:06.665127+00:00",
+   "previous_state": {},
+   "detail": {}
+  },
+  {
+   "cfg_id": "CFG-001",
+   "sequence": 1,
+   "device": "R3",
+   "object_type": "transition_kernel_cover",
+   "operation": "CREATE_DEFINE",
+   "phase": "COMPENSATE",
+   "status": "COMPENSATED",
+   "error_code": "",
+   "error": "",
+   "partial_effects": false,
+   "lines_sent": 0,
+   "started_at": "2026-10-12T08:51:33.288894+00:00",
+   "finished_at": "2026-10-12T08:51:33.818273+00:00",
+   "previous_state": {
+    "kind": "kernel_cover",
+    "prefix": "2001:db8:10::/63",
+    "state": "ABSENT",
+    "static_route_digest": "cfc1c90f6851d6ed268de708724e5ebfe83e8e6d9bc70385654abc39b6d01b3e"
+   },
+   "detail": {
+    "operation": "R3-cover-2001:db8:10::/63",
+    "action": "INVERSE_APPLIED"
+   }
+  },
+  {
+   "cfg_id": "CFG-002",
+   "sequence": 2,
+   "device": "R3",
+   "object_type": "transition_kernel_cover",
+   "operation": "CREATE_DEFINE",
+   "phase": "COMPENSATE",
+   "status": "COMPENSATED",
+   "error_code": "",
+   "error": "",
+   "partial_effects": false,
+   "lines_sent": 0,
+   "started_at": "2026-10-12T08:51:27.354897+00:00",
+   "finished_at": "2026-10-12T08:51:28.406820+00:00",
+   "previous_state": {
+    "kind": "kernel_cover",
+    "prefix": "2001:db8:20::/63",
+    "state": "ABSENT",
+    "static_route_digest": "55609c00cf8c5cfd30d56366a834547eac95fb0170fe5baf16e0c97ea74c6dcb"
+   },
+   "detail": {
+    "operation": "R3-cover-2001:db8:20::/63",
+    "action": "INVERSE_APPLIED"
+   }
+  },
+  {
+   "cfg_id": "CFG-003",
+   "sequence": 3,
+   "device": "R3",
+   "object_type": "transition_kernel_cover",
+   "operation": "CREATE_DEFINE",
+   "phase": "COMPENSATE",
+   "status": "COMPENSATED",
+   "error_code": "",
+   "error": "",
+   "partial_effects": false,
+   "lines_sent": 0,
+   "started_at": "2026-10-12T08:51:21.339876+00:00",
+   "finished_at": "2026-10-12T08:51:21.799996+00:00",
+   "previous_state": {
+    "kind": "kernel_cover",
+    "prefix": "2001:db8:30::/63",
+    "state": "ABSENT",
+    "static_route_digest": "4c6263b8c996aee95866f5c458dbc8be9efebaa9ad7d2ad2dee7948d0c1f104a"
+   },
+   "detail": {
+    "operation": "R3-cover-2001:db8:30::/63",
+    "action": "INVERSE_APPLIED"
+   }
+  },
+  {
+   "cfg_id": "CFG-004",
+   "sequence": 4,
+   "device": "R4",
+   "object_type": "transition_kernel_cover",
+   "operation": "CREATE_DEFINE",
+   "phase": "COMPENSATE",
+   "status": "COMPENSATED",
+   "error_code": "",
+   "error": "",
+   "partial_effects": false,
+   "lines_sent": 0,
+   "started_at": "2026-10-12T08:51:16.410799+00:00",
+   "finished_at": "2026-10-12T08:51:16.939843+00:00",
+   "previous_state": {
+    "kind": "kernel_cover",
+    "prefix": "2001:db8:10::/63",
+    "state": "ABSENT",
+    "static_route_digest": "1aee700a76565eb98f38b85f3599a11a663624d570b2d99003535ac354fafc26"
+   },
+   "detail": {
+    "operation": "R4-cover-2001:db8:10::/63",
+    "action": "INVERSE_APPLIED"
+   }
+  },
+  {
+   "cfg_id": "CFG-005",
+   "sequence": 5,
+   "device": "R4",
+   "object_type": "transition_kernel_cover",
+   "operation": "CREATE_DEFINE",
+   "phase": "COMPENSATE",
+   "status": "COMPENSATED",
+   "error_code": "",
+   "error": "",
+   "partial_effects": false,
+   "lines_sent": 0,
+   "started_at": "2026-10-12T08:51:11.333835+00:00",
+   "finished_at": "2026-10-12T08:51:11.775235+00:00",
+   "previous_state": {
+    "kind": "kernel_cover",
+    "prefix": "2001:db8:20::/63",
+    "state": "ABSENT",
+    "static_route_digest": "ac50b50a4bdaede107e351c0ced7442807b34070c499b7ebb4b6a4f371fcd580"
+   },
+   "detail": {
+    "operation": "R4-cover-2001:db8:20::/63",
+    "action": "INVERSE_APPLIED"
+   }
+  },
+  {
+   "cfg_id": "CFG-006",
+   "sequence": 6,
+   "device": "R4",
+   "object_type": "transition_kernel_cover",
+   "operation": "CREATE_DEFINE",
+   "phase": "COMPENSATE",
+   "status": "COMPENSATED",
+   "error_code": "",
+   "error": "",
+   "partial_effects": false,
+   "lines_sent": 0,
+   "started_at": "2026-10-12T08:50:49.392697+00:00",
+   "finished_at": "2026-10-12T08:50:49.849739+00:00",
+   "previous_state": {
+    "kind": "kernel_cover",
+    "prefix": "2001:db8:30::/63",
+    "state": "ABSENT",
+    "static_route_digest": "696c187e4c0bb1b219df9e9f571056b101ce8e34ac9cdd46dd803e3ead0fdbc4"
+   },
+   "detail": {
+    "operation": "R4-cover-2001:db8:30::/63",
+    "action": "INVERSE_APPLIED"
+   }
+  },
+  {
+   "cfg_id": "CFG-007",
+   "sequence": 7,
+   "device": "S1",
+   "object_type": "route_shield",
+   "operation": "CREATE_DEFINE",
+   "phase": "COMPENSATE",
+   "status": "COMPENSATED",
+   "error_code": "",
+   "error": "",
+   "partial_effects": false,
+   "lines_sent": 0,
+   "started_at": "2026-10-12T08:48:44.981496+00:00",
+   "finished_at": "2026-10-12T08:48:48.197912+00:00",
+   "previous_state": {
+    "kind": "config_block",
+    "modelled": false,
+    "config_digest": "f7e4fd4fdee0bb8346329a6add7e553851d7bba67c8a0b02db06e3c4ae6efa31"
+   },
+   "detail": {
+    "operation": "S1-vlan99-ipv6",
+    "action": "INVERSE_APPLIED",
+    "commands": 2
+   }
+  },
+  {
+   "cfg_id": "CFG-008",
+   "sequence": 8,
+   "device": "S2",
+   "object_type": "route_shield",
+   "operation": "CREATE_DEFINE",
+   "phase": "COMPENSATE",
+   "status": "COMPENSATED",
+   "error_code": "",
+   "error": "",
+   "partial_effects": false,
+   "lines_sent": 0,
+   "started_at": "2026-10-12T08:48:38.903567+00:00",
+   "finished_at": "2026-10-12T08:48:41.795951+00:00",
+   "previous_state": {
+    "kind": "config_block",
+    "modelled": false,
+    "config_digest": "ee5f0cb47cb509c8548e6d213cec4d76666ab33768f56cbc53d0889a7b6a4909"
+   },
+   "detail": {
+    "operation": "S2-vlan99-ipv6",
+    "action": "INVERSE_APPLIED",
+    "commands": 2
+   }
+  },
+  {
+   "cfg_id": "CFG-009",
+   "sequence": 9,
+   "device": "R1",
+   "object_type": "route_shield",
+   "operation": "CREATE_DEFINE",
+   "phase": "COMPENSATE",
+   "status": "COMPENSATED",
+   "error_code": "",
+   "error": "",
+   "partial_effects": false,
+   "lines_sent": 0,
+   "started_at": "2026-10-12T08:48:32.276518+00:00",
+   "finished_at": "2026-10-12T08:48:35.251728+00:00",
+   "previous_state": {
+    "kind": "config_block",
+    "modelled": false,
+    "config_digest": "f7e23531997fbe0c2600218ea7c7885f2591e40bad652ec900ac9558e2b0b0db"
+   },
+   "detail": {
+    "operation": "R1-isis-process",
+    "action": "INVERSE_APPLIED",
+    "commands": 1
+   }
+  },
+  {
+   "cfg_id": "CFG-010",
+   "sequence": 10,
+   "device": "R2",
+   "object_type": "route_shield",
+   "operation": "CREATE_DEFINE",
+   "phase": "COMPENSATE",
+   "status": "COMPENSATED",
+   "error_code": "",
+   "error": "",
+   "partial_effects": false,
+   "lines_sent": 0,
+   "started_at": "2026-10-12T08:48:25.957132+00:00",
+   "finished_at": "2026-10-12T08:48:28.804967+00:00",
+   "previous_state": {
+    "kind": "config_block",
+    "modelled": false,
+    "config_digest": "a76c51916fd1da35620973d9cd3e718d0c8bce96e215caf17f158319395beb23"
+   },
+   "detail": {
+    "operation": "R2-isis-process",
+    "action": "INVERSE_APPLIED",
+    "commands": 1
+   }
+  },
+  {
+   "cfg_id": "CFG-011",
+   "sequence": 11,
+   "device": "S1",
+   "object_type": "route_shield",
+   "operation": "CREATE_DEFINE",
+   "phase": "COMPENSATE",
+   "status": "COMPENSATED",
+   "error_code": "",
+   "error": "",
+   "partial_effects": false,
+   "lines_sent": 0,
+   "started_at": "2026-10-12T08:48:19.257391+00:00",
+   "finished_at": "2026-10-12T08:48:22.261142+00:00",
+   "previous_state": {
+    "kind": "config_block",
+    "modelled": false,
+    "config_digest": "2288204ac0b5b48b08fa5e4b8236c5477f442f99da1b59013b3de3042506e3ef"
+   },
+   "detail": {
+    "operation": "S1-isis-process",
+    "action": "INVERSE_APPLIED",
+    "commands": 1
+   }
+  },
+  {
+   "cfg_id": "CFG-012",
+   "sequence": 12,
+   "device": "S2",
+   "object_type": "route_shield",
+   "operation": "CREATE_DEFINE",
+   "phase": "COMPENSATE",
+   "status": "COMPENSATED",
+   "error_code": "",
+   "error": "",
+   "partial_effects": false,
+   "lines_sent": 0,
+   "started_at": "2026-10-12T08:48:13.016072+00:00",
+   "finished_at": "2026-10-12T08:48:15.874906+00:00",
+   "previous_state": {
+    "kind": "config_block",
+    "modelled": false,
+    "config_digest": "0a8b8c855dee3f19ae7a6fd8e420c5864edb609d4255561af59f0d49e3bab01c"
+   },
+   "detail": {
+    "operation": "S2-isis-process",
+    "action": "INVERSE_APPLIED",
+    "commands": 1
+   }
+  },
+  {
+   "cfg_id": "CFG-013",
+   "sequence": 13,
+   "device": "R1",
+   "object_type": "route_shield",
+   "operation": "CREATE_DEFINE",
+   "phase": "COMPENSATE",
+   "status": "COMPENSATED",
+   "error_code": "",
+   "error": "",
+   "partial_effects": false,
+   "lines_sent": 0,
+   "started_at": "2026-10-12T08:48:07.324090+00:00",
+   "finished_at": "2026-10-12T08:48:09.921202+00:00",
+   "previous_state": {
+    "kind": "config_block",
+    "modelled": false,
+    "config_digest": "f1f752b95d1c2ec8dc43fc561dfe37a362e3826345263d05c56635c342b193fb"
+   },
+   "detail": {
+    "operation": "R1-isis-access",
+    "action": "INVERSE_APPLIED",
+    "commands": 3
+   }
+  },
+  {
+   "cfg_id": "CFG-014",
+   "sequence": 14,
+   "device": "R2",
+   "object_type": "route_shield",
+   "operation": "CREATE_DEFINE",
+   "phase": "COMPENSATE",
+   "status": "COMPENSATED",
+   "error_code": "",
+   "error": "",
+   "partial_effects": false,
+   "lines_sent": 0,
+   "started_at": "2026-10-12T08:48:00.171980+00:00",
+   "finished_at": "2026-10-12T08:48:04.127103+00:00",
+   "previous_state": {
+    "kind": "config_block",
+    "modelled": false,
+    "config_digest": "c6118dce5df9346003d338f7497cac363cedd21925b02c494304ab7978f3af10"
+   },
+   "detail": {
+    "operation": "R2-isis-access",
+    "action": "INVERSE_APPLIED",
+    "commands": 3
+   }
+  },
+  {
+   "cfg_id": "CFG-015",
+   "sequence": 15,
+   "device": "S1",
+   "object_type": "route_shield",
+   "operation": "CREATE_DEFINE",
+   "phase": "COMPENSATE",
+   "status": "COMPENSATED",
+   "error_code": "",
+   "error": "",
+   "partial_effects": false,
+   "lines_sent": 0,
+   "started_at": "2026-10-12T08:47:54.225656+00:00",
+   "finished_at": "2026-10-12T08:47:57.141879+00:00",
+   "previous_state": {
+    "kind": "config_block",
+    "modelled": false,
+    "config_digest": "70bdb528c149478303f6c71554df1853a28dc35c1e904990703b640eb10912a2"
+   },
+   "detail": {
+    "operation": "S1-isis-links",
+    "action": "INVERSE_APPLIED",
+    "commands": 6
+   }
+  },
+  {
+   "cfg_id": "CFG-016",
+   "sequence": 16,
+   "device": "S2",
+   "object_type": "route_shield",
+   "operation": "CREATE_DEFINE",
+   "phase": "COMPENSATE",
+   "status": "COMPENSATED",
+   "error_code": "",
+   "error": "",
+   "partial_effects": false,
+   "lines_sent": 0,
+   "started_at": "2026-10-12T08:47:48.510241+00:00",
+   "finished_at": "2026-10-12T08:47:51.171735+00:00",
+   "previous_state": {
+    "kind": "config_block",
+    "modelled": false,
+    "config_digest": "a5064637c953b3017dcc347a453978b507e4382d90d411d67fe5c23d11db1a94"
+   },
+   "detail": {
+    "operation": "S2-isis-links",
+    "action": "INVERSE_APPLIED",
+    "commands": 6
+   }
+  },
+  {
+   "cfg_id": "CFG-017",
+   "sequence": 17,
+   "device": "S1",
+   "object_type": "route_shield",
+   "operation": "CREATE_DEFINE",
+   "phase": "COMPENSATE",
+   "status": "COMPENSATED",
+   "error_code": "",
+   "error": "",
+   "partial_effects": false,
+   "lines_sent": 0,
+   "started_at": "2026-10-12T08:47:42.623418+00:00",
+   "finished_at": "2026-10-12T08:47:45.255125+00:00",
+   "previous_state": {
+    "kind": "config_block",
+    "modelled": false,
+    "config_digest": "abb458b4553893bcce51554fe979901ea5fe4be91e216b19ae8023bdd15dea6c"
+   },
+   "detail": {
+    "operation": "S1-client-svis-passive",
+    "action": "INVERSE_APPLIED",
+    "commands": 9
+   }
+  },
+  {
+   "cfg_id": "CFG-018",
+   "sequence": 18,
+   "device": "S2",
+   "object_type": "route_shield",
+   "operation": "CREATE_DEFINE",
+   "phase": "COMPENSATE",
+   "status": "COMPENSATED",
+   "error_code": "",
+   "error": "",
+   "partial_effects": false,
+   "lines_sent": 0,
+   "started_at": "2026-10-12T08:47:36.608380+00:00",
+   "finished_at": "2026-10-12T08:47:39.559810+00:00",
+   "previous_state": {
+    "kind": "config_block",
+    "modelled": false,
+    "config_digest": "6e9fca3c6a279ce2dff9716621bebc366edbc8d7abab24764dd9e65c0eff4098"
+   },
+   "detail": {
+    "operation": "S2-client-svis-passive",
+    "action": "INVERSE_APPLIED",
+    "commands": 9
+   }
+  },
+  {
+   "cfg_id": "CFG-019",
+   "sequence": 19,
+   "device": "R1",
+   "object_type": "route_shield",
+   "operation": "CREATE_DEFINE",
+   "phase": "COMPENSATE",
+   "status": "COMPENSATED",
+   "error_code": "",
+   "error": "",
+   "partial_effects": false,
+   "lines_sent": 0,
+   "started_at": "2026-10-12T08:47:30.741807+00:00",
+   "finished_at": "2026-10-12T08:47:33.839135+00:00",
+   "previous_state": {
+    "kind": "config_block",
+    "modelled": false,
+    "config_digest": "3e18afbd78c58c14ddb8969cd0a011fdb591251509334165f918e34704ca657c"
+   },
+   "detail": {
+    "operation": "R1-boundary-policy",
+    "action": "INVERSE_APPLIED",
+    "commands": 6
+   }
+  },
+  {
+   "cfg_id": "CFG-020",
+   "sequence": 20,
+   "device": "R1",
+   "object_type": "route_shield",
+   "operation": "CREATE_DEFINE",
+   "phase": "COMPENSATE",
+   "status": "COMPENSATED",
+   "error_code": "",
+   "error": "",
+   "partial_effects": false,
+   "lines_sent": 0,
+   "started_at": "2026-10-12T08:47:24.789505+00:00",
+   "finished_at": "2026-10-12T08:47:27.748429+00:00",
+   "previous_state": {
+    "kind": "config_block",
+    "modelled": false,
+    "config_digest": "01f5eee606c8c4e5671d93dbcd94cc37cbd05b34ee0da58a6672688da91bf8aa"
+   },
+   "detail": {
+    "operation": "R1-aggregate-into-isis",
+    "action": "INVERSE_APPLIED",
+    "commands": 3
+   }
+  },
+  {
+   "cfg_id": "CFG-021",
+   "sequence": 21,
+   "device": "R1",
+   "object_type": "route_shield",
+   "operation": "CREATE_DEFINE",
+   "phase": "COMPENSATE",
+   "status": "COMPENSATED",
+   "error_code": "",
+   "error": "",
+   "partial_effects": false,
+   "lines_sent": 0,
+   "started_at": "2026-10-12T08:47:18.615881+00:00",
+   "finished_at": "2026-10-12T08:47:21.714011+00:00",
+   "previous_state": {
+    "kind": "config_block",
+    "modelled": false,
+    "config_digest": "9aab908aea4d70284058807ccac8b54d7d9e03f244f7e1a62c45cce367aba1a5"
+   },
+   "detail": {
+    "operation": "R1-isis-into-ospfv3",
+    "action": "INVERSE_APPLIED",
+    "commands": 3
+   }
+  },
+  {
+   "cfg_id": "CFG-022",
+   "sequence": 22,
+   "device": "R2",
+   "object_type": "route_shield",
+   "operation": "CREATE_DEFINE",
+   "phase": "COMPENSATE",
+   "status": "COMPENSATED",
+   "error_code": "",
+   "error": "",
+   "partial_effects": false,
+   "lines_sent": 0,
+   "started_at": "2026-10-12T08:47:13.137380+00:00",
+   "finished_at": "2026-10-12T08:47:15.905465+00:00",
+   "previous_state": {
+    "kind": "config_block",
+    "modelled": false,
+    "config_digest": "9ecaa548eac2594a1d5b2204b6221c5ae434997caea895710d1e5621b9f1a92e"
+   },
+   "detail": {
+    "operation": "R2-boundary-policy",
+    "action": "INVERSE_APPLIED",
+    "commands": 6
+   }
+  },
+  {
+   "cfg_id": "CFG-023",
+   "sequence": 23,
+   "device": "R2",
+   "object_type": "route_shield",
+   "operation": "CREATE_DEFINE",
+   "phase": "COMPENSATE",
+   "status": "COMPENSATED",
+   "error_code": "",
+   "error": "",
+   "partial_effects": false,
+   "lines_sent": 0,
+   "started_at": "2026-10-12T08:47:07.785488+00:00",
+   "finished_at": "2026-10-12T08:47:10.675758+00:00",
+   "previous_state": {
+    "kind": "config_block",
+    "modelled": false,
+    "config_digest": "5517413d5053292741ecbe77ea1ab9279b2585b39c12cd64804cbd371606f458"
+   },
+   "detail": {
+    "operation": "R2-aggregate-into-isis",
+    "action": "INVERSE_APPLIED",
+    "commands": 3
+   }
+  },
+  {
+   "cfg_id": "CFG-024",
+   "sequence": 24,
+   "device": "R2",
+   "object_type": "route_shield",
+   "operation": "CREATE_DEFINE",
+   "phase": "COMPENSATE",
+   "status": "COMPENSATED",
+   "error_code": "",
+   "error": "",
+   "partial_effects": false,
+   "lines_sent": 0,
+   "started_at": "2026-10-12T08:47:02.455945+00:00",
+   "finished_at": "2026-10-12T08:47:05.354174+00:00",
+   "previous_state": {
+    "kind": "config_block",
+    "modelled": false,
+    "config_digest": "483c2b3b0b415398528573fbf99906f5a46ecd03ac69777e9af654044819e8d6"
+   },
+   "detail": {
+    "operation": "R2-isis-into-ospfv3",
+    "action": "INVERSE_APPLIED",
+    "commands": 3
+   }
+  },
+  {
+   "cfg_id": "CFG-025",
+   "sequence": 25,
+   "device": "S1",
+   "object_type": "route_shield",
+   "operation": "CREATE_DEFINE",
+   "phase": "COMPENSATE",
+   "status": "COMPENSATED",
+   "error_code": "",
+   "error": "",
+   "partial_effects": false,
+   "lines_sent": 0,
+   "started_at": "2026-10-12T08:46:37.893125+00:00",
+   "finished_at": "2026-10-12T08:46:40.617478+00:00",
+   "previous_state": {
+    "kind": "config_block",
+    "modelled": false,
+    "config_digest": "866bded2e48283ab109b4233d74bef141e30b5f393068639f210af8e73eda479"
+   },
+   "detail": {
+    "operation": "S1-shield-install",
+    "action": "INVERSE_APPLIED",
+    "commands": 2
+   }
+  },
+  {
+   "cfg_id": "CFG-026",
+   "sequence": 26,
+   "device": "R1",
+   "object_type": "route_shield",
+   "operation": "CREATE_DEFINE",
+   "phase": "COMPENSATE",
+   "status": "COMPENSATED",
+   "error_code": "",
+   "error": "",
+   "partial_effects": false,
+   "lines_sent": 0,
+   "started_at": "2026-10-12T08:46:27.900190+00:00",
+   "finished_at": "2026-10-12T08:46:30.473504+00:00",
+   "previous_state": {
+    "kind": "config_block",
+    "modelled": false,
+    "config_digest": "bc9f33386ea6ee415ec8dfcb97788188d170b855272848b2feb22374e548a5f3"
+   },
+   "detail": {
+    "operation": "R1-shield-install",
+    "action": "INVERSE_APPLIED",
+    "commands": 3
+   }
+  },
+  {
+   "cfg_id": "CFG-027",
+   "sequence": 27,
+   "device": "S1",
+   "object_type": "config_removal_delete",
+   "operation": "REMOVE_DELETE",
+   "phase": "COMPENSATE",
+   "status": "COMPENSATED",
+   "error_code": "",
+   "error": "",
+   "partial_effects": false,
+   "lines_sent": 0,
+   "started_at": "2026-10-12T08:46:09.353691+00:00",
+   "finished_at": "2026-10-12T08:46:12.912534+00:00",
+   "previous_state": {
+    "kind": "config_removal",
+    "object": "S1-static-aggregate-remove",
+    "present": true,
+    "paths_checked": 1
+   },
+   "detail": {
+    "operation": "S1-static-aggregate-remove",
+    "action": "ORIGINAL_LINES_RESTORED",
+    "commands": 1
+   }
+  },
+  {
+   "cfg_id": "CFG-028",
+   "sequence": 28,
+   "device": "R1",
+   "object_type": "route_shield",
+   "operation": "CREATE_DEFINE",
+   "phase": "COMPENSATE",
+   "status": "COMPENSATED",
+   "error_code": "",
+   "error": "",
+   "partial_effects": false,
+   "lines_sent": 0,
+   "started_at": "2026-10-12T08:46:01.200436+00:00",
+   "finished_at": "2026-10-12T08:46:04.996549+00:00",
+   "previous_state": {
+    "kind": "config_block",
+    "modelled": false,
+    "config_digest": "0d4eef4fbcb4cc5e6b799c153ea60b91713c5b73ae8c2deb3b38f76c8a1a1c7a"
+   },
+   "detail": {
+    "operation": "R1-floating-statics-add",
+    "action": "INVERSE_APPLIED",
+    "commands": 3
+   }
+  },
+  {
+   "cfg_id": "CFG-029",
+   "sequence": 29,
+   "device": "R1",
+   "object_type": "config_removal_delete",
+   "operation": "REMOVE_DELETE",
+   "phase": "COMPENSATE",
+   "status": "COMPENSATED",
+   "error_code": "",
+   "error": "",
+   "partial_effects": false,
+   "lines_sent": 0,
+   "started_at": "2026-10-12T08:45:51.947261+00:00",
+   "finished_at": "2026-10-12T08:45:55.339989+00:00",
+   "previous_state": {
+    "kind": "config_removal",
+    "object": "R1-client-statics-remove",
+    "present": true,
+    "paths_checked": 3
+   },
+   "detail": {
+    "operation": "R1-client-statics-remove",
+    "action": "ORIGINAL_LINES_RESTORED",
+    "commands": 3
+   }
+  },
+  {
+   "cfg_id": "CFG-030",
+   "sequence": 30,
+   "device": "R1",
+   "object_type": "config_removal_delete",
+   "operation": "REMOVE_DELETE",
+   "phase": "COMPENSATE",
+   "status": "COMPENSATED",
+   "error_code": "",
+   "error": "",
+   "partial_effects": false,
+   "lines_sent": 0,
+   "started_at": "2026-10-12T08:45:44.601482+00:00",
+   "finished_at": "2026-10-12T08:45:47.472480+00:00",
+   "previous_state": {
+    "kind": "config_removal",
+    "object": "R1-floating-statics-remove",
+    "present": true,
+    "paths_checked": 3
+   },
+   "detail": {
+    "operation": "R1-floating-statics-remove",
+    "action": "ORIGINAL_LINES_RESTORED",
+    "commands": 3
+   }
+  },
+  {
+   "cfg_id": "CFG-031",
+   "sequence": 31,
+   "device": "R1",
+   "object_type": "config_removal_delete",
+   "operation": "REMOVE_DELETE",
+   "phase": "COMPENSATE",
+   "status": "COMPENSATED",
+   "error_code": "",
+   "error": "",
+   "partial_effects": false,
+   "lines_sent": 0,
+   "started_at": "2026-10-12T08:45:35.750254+00:00",
+   "finished_at": "2026-10-12T08:45:38.397702+00:00",
+   "previous_state": {
+    "kind": "config_removal",
+    "object": "R1-old-redistribution-remove",
+    "present": true,
+    "paths_checked": 2
+   },
+   "detail": {
+    "operation": "R1-old-redistribution-remove",
+    "action": "ORIGINAL_LINES_RESTORED",
+    "commands": 4
+   }
+  },
+  {
+   "cfg_id": "CFG-032",
+   "sequence": 32,
+   "device": "R1",
+   "object_type": "config_removal_delete",
+   "operation": "REMOVE_DELETE",
+   "phase": "COMPENSATE",
+   "status": "COMPENSATED",
+   "error_code": "",
+   "error": "",
+   "partial_effects": false,
+   "lines_sent": 0,
+   "started_at": "2026-10-12T08:45:23.747932+00:00",
+   "finished_at": "2026-10-12T08:45:26.902546+00:00",
+   "previous_state": {
+    "kind": "config_removal",
+    "object": "R1-shield-remove",
+    "present": true,
+    "paths_checked": 3
+   },
+   "detail": {
+    "operation": "R1-shield-remove",
+    "action": "ORIGINAL_LINES_RESTORED",
+    "commands": 3
+   }
+  },
+  {
+   "cfg_id": "CFG-033",
+   "sequence": 33,
+   "device": "S1",
+   "object_type": "config_removal_delete",
+   "operation": "REMOVE_DELETE",
+   "phase": "COMPENSATE",
+   "status": "COMPENSATED",
+   "error_code": "",
+   "error": "",
+   "partial_effects": false,
+   "lines_sent": 0,
+   "started_at": "2026-10-12T08:45:15.135008+00:00",
+   "finished_at": "2026-10-12T08:45:18.450775+00:00",
+   "previous_state": {
+    "kind": "config_removal",
+    "object": "S1-shield-remove",
+    "present": true,
+    "paths_checked": 2
+   },
+   "detail": {
+    "operation": "S1-shield-remove",
+    "action": "ORIGINAL_LINES_RESTORED",
+    "commands": 2
+   }
+  },
+  {
+   "cfg_id": "CFG-034",
+   "sequence": 34,
+   "device": "S2",
+   "object_type": "route_shield",
+   "operation": "CREATE_DEFINE",
+   "phase": "COMPENSATE",
+   "status": "COMPENSATED",
+   "error_code": "",
+   "error": "",
+   "partial_effects": false,
+   "lines_sent": 0,
+   "started_at": "2026-10-12T08:45:03.455586+00:00",
+   "finished_at": "2026-10-12T08:45:06.890362+00:00",
+   "previous_state": {
+    "kind": "config_block",
+    "modelled": false,
+    "config_digest": "29f6f74171d5c36aeaa30a168c51e09503fe07aa14330b89d9ca016264a4d175"
+   },
+   "detail": {
+    "operation": "S2-shield-install",
+    "action": "INVERSE_APPLIED",
+    "commands": 2
+   }
+  },
+  {
+   "cfg_id": "CFG-035",
+   "sequence": 35,
+   "device": "R2",
+   "object_type": "route_shield",
+   "operation": "CREATE_DEFINE",
+   "phase": "COMPENSATE",
+   "status": "COMPENSATED",
+   "error_code": "",
+   "error": "",
+   "partial_effects": false,
+   "lines_sent": 0,
+   "started_at": "2026-10-12T08:44:51.457861+00:00",
+   "finished_at": "2026-10-12T08:44:54.925399+00:00",
+   "previous_state": {
+    "kind": "config_block",
+    "modelled": false,
+    "config_digest": "261ef9b0a0d56c5044e26a6cc95b7849f17290709bc7ff7dd14bb4f5e4241676"
+   },
+   "detail": {
+    "operation": "R2-shield-install",
+    "action": "INVERSE_APPLIED",
+    "commands": 3
+   }
+  },
+  {
+   "cfg_id": "CFG-036",
+   "sequence": 36,
+   "device": "S2",
+   "object_type": "config_removal_delete",
+   "operation": "REMOVE_DELETE",
+   "phase": "COMPENSATE",
+   "status": "COMPENSATED",
+   "error_code": "",
+   "error": "",
+   "partial_effects": false,
+   "lines_sent": 0,
+   "started_at": "2026-10-12T08:44:35.385281+00:00",
+   "finished_at": "2026-10-12T08:44:38.097459+00:00",
+   "previous_state": {
+    "kind": "config_removal",
+    "object": "S2-static-aggregate-remove",
+    "present": true,
+    "paths_checked": 1
+   },
+   "detail": {
+    "operation": "S2-static-aggregate-remove",
+    "action": "ORIGINAL_LINES_RESTORED",
+    "commands": 1
+   }
+  },
+  {
+   "cfg_id": "CFG-037",
+   "sequence": 37,
+   "device": "R2",
+   "object_type": "route_shield",
+   "operation": "CREATE_DEFINE",
+   "phase": "COMPENSATE",
+   "status": "COMPENSATED",
+   "error_code": "",
+   "error": "",
+   "partial_effects": false,
+   "lines_sent": 0,
+   "started_at": "2026-10-12T08:44:29.025957+00:00",
+   "finished_at": "2026-10-12T08:44:31.915146+00:00",
+   "previous_state": {
+    "kind": "config_block",
+    "modelled": false,
+    "config_digest": "54c506e49c7d25bf879cd8d3c64b98ea903497f43b0e3209455295cdbfa5a3e3"
+   },
+   "detail": {
+    "operation": "R2-floating-statics-add",
+    "action": "INVERSE_APPLIED",
+    "commands": 3
+   }
+  },
+  {
+   "cfg_id": "CFG-038",
+   "sequence": 38,
+   "device": "R2",
+   "object_type": "config_removal_delete",
+   "operation": "REMOVE_DELETE",
+   "phase": "COMPENSATE",
+   "status": "COMPENSATED",
+   "error_code": "",
+   "error": "",
+   "partial_effects": false,
+   "lines_sent": 0,
+   "started_at": "2026-10-12T08:44:20.944646+00:00",
+   "finished_at": "2026-10-12T08:44:24.333081+00:00",
+   "previous_state": {
+    "kind": "config_removal",
+    "object": "R2-client-statics-remove",
+    "present": true,
+    "paths_checked": 3
+   },
+   "detail": {
+    "operation": "R2-client-statics-remove",
+    "action": "ORIGINAL_LINES_RESTORED",
+    "commands": 3
+   }
+  },
+  {
+   "cfg_id": "CFG-039",
+   "sequence": 39,
+   "device": "R2",
+   "object_type": "config_removal_delete",
+   "operation": "REMOVE_DELETE",
+   "phase": "COMPENSATE",
+   "status": "COMPENSATED",
+   "error_code": "",
+   "error": "",
+   "partial_effects": false,
+   "lines_sent": 0,
+   "started_at": "2026-10-12T08:44:14.632093+00:00",
+   "finished_at": "2026-10-12T08:44:17.535240+00:00",
+   "previous_state": {
+    "kind": "config_removal",
+    "object": "R2-floating-statics-remove",
+    "present": true,
+    "paths_checked": 3
+   },
+   "detail": {
+    "operation": "R2-floating-statics-remove",
+    "action": "ORIGINAL_LINES_RESTORED",
+    "commands": 3
+   }
+  },
+  {
+   "cfg_id": "CFG-040",
+   "sequence": 40,
+   "device": "R2",
+   "object_type": "config_removal_delete",
+   "operation": "REMOVE_DELETE",
+   "phase": "COMPENSATE",
+   "status": "COMPENSATED",
+   "error_code": "",
+   "error": "",
+   "partial_effects": false,
+   "lines_sent": 0,
+   "started_at": "2026-10-12T08:44:06.725238+00:00",
+   "finished_at": "2026-10-12T08:44:09.718012+00:00",
+   "previous_state": {
+    "kind": "config_removal",
+    "object": "R2-old-redistribution-remove",
+    "present": true,
+    "paths_checked": 2
+   },
+   "detail": {
+    "operation": "R2-old-redistribution-remove",
+    "action": "ORIGINAL_LINES_RESTORED",
+    "commands": 4
+   }
+  }
+ ],
+ "report": {
+  "report_schema_version": 1,
+  "engine_version": "route-shield-lifecycle-3",
+  "mode": "COMPLETE",
+  "outcome": "FAILED_ROLLED_BACK",
+  "transition": {
+   "kind": "BASELINE_STATIC_IPV6_TO_ISIS",
+   "definition": "sandbox",
+   "reverts": null
+  },
+  "persistence": {
+   "status": "NOT_RUN",
+   "command": "copy running-config startup-config",
+   "written": [],
+   "devices": {}
+  },
+  "blockers": [
+   {
+    "code": "WINDOW_CONDITION_LOST",
+    "message": "before SHIELD_REMOVE: INJECTED: host CPU at the critical condition with the probes running",
+    "remediation": "See docs/V2_LOSSLESS_ROUTE_SHIELD.md."
+   }
+  ],
+  "failure": {
+   "code": "WINDOW_CONDITION_LOST",
+   "detail": "before SHIELD_REMOVE: INJECTED: host CPU at the critical condition with the probes running",
+   "operation": "SHIELD_REMOVE"
+  },
+  "state": {
+   "applied": [
+    "CFG-001",
+    "CFG-002",
+    "CFG-003",
+    "CFG-004",
+    "CFG-005",
+    "CFG-006",
+    "CFG-007",
+    "CFG-008",
+    "CFG-009",
+    "CFG-010",
+    "CFG-011",
+    "CFG-012",
+    "CFG-013",
+    "CFG-014",
+    "CFG-015",
+    "CFG-016",
+    "CFG-017",
+    "CFG-018",
+    "CFG-019",
+    "CFG-020",
+    "CFG-021",
+    "CFG-022",
+    "CFG-023",
+    "CFG-024",
+    "CFG-025",
+    "CFG-026",
+    "CFG-027",
+    "CFG-028",
+    "CFG-029",
+    "CFG-030",
+    "CFG-031",
+    "CFG-032",
+    "CFG-033",
+    "CFG-034",
+    "CFG-035",
+    "CFG-036",
+    "CFG-037",
+    "CFG-038",
+    "CFG-039",
+    "CFG-040"
+   ],
+   "failed": [],
+   "compensated": [
+    "CFG-040",
+    "CFG-039",
+    "CFG-038",
+    "CFG-037",
+    "CFG-036",
+    "CFG-035",
+    "CFG-034",
+    "CFG-033",
+    "CFG-032",
+    "CFG-031",
+    "CFG-030",
+    "CFG-029",
+    "CFG-028",
+    "CFG-027",
+    "CFG-026",
+    "CFG-025",
+    "CFG-024",
+    "CFG-023",
+    "CFG-022",
+    "CFG-021",
+    "CFG-020",
+    "CFG-019",
+    "CFG-018",
+    "CFG-017",
+    "CFG-016",
+    "CFG-015",
+    "CFG-014",
+    "CFG-013",
+    "CFG-012",
+    "CFG-011",
+    "CFG-010",
+    "CFG-009",
+    "CFG-008",
+    "CFG-007",
+    "CFG-006",
+    "CFG-005",
+    "CFG-004",
+    "CFG-003",
+    "CFG-002",
+    "CFG-001"
+   ],
+   "unapplied": [
+    "CFG-041",
+    "CFG-042",
+    "CFG-043",
+    "CFG-044",
+    "CFG-045",
+    "CFG-046",
+    "CFG-047",
+    "CFG-048"
+   ]
+  },
+  "compensation": {
+   "attempted": true,
+   "status": "COMPENSATED",
+   "not_compensated": [],
+   "steps": [
+    {
+     "cfg_id": "CFG-040",
+     "operation": "R2-old-redistribution-remove",
+     "device": "R2",
+     "state": "PERMANENT",
+     "status": "COMPENSATED",
+     "error": ""
+    },
+    {
+     "cfg_id": "CFG-039",
+     "operation": "R2-floating-statics-remove",
+     "device": "R2",
+     "state": "TEMPORARY",
+     "status": "COMPENSATED",
+     "error": ""
+    },
+    {
+     "cfg_id": "CFG-038",
+     "operation": "R2-client-statics-remove",
+     "device": "R2",
+     "state": "PERMANENT",
+     "status": "COMPENSATED",
+     "error": ""
+    },
+    {
+     "cfg_id": "CFG-037",
+     "operation": "R2-floating-statics-add",
+     "device": "R2",
+     "state": "TEMPORARY",
+     "status": "COMPENSATED",
+     "error": ""
+    },
+    {
+     "cfg_id": "CFG-036",
+     "operation": "S2-static-aggregate-remove",
+     "device": "S2",
+     "state": "PERMANENT",
+     "status": "COMPENSATED",
+     "error": ""
+    },
+    {
+     "cfg_id": "CFG-035",
+     "operation": "R2-shield-install",
+     "device": "R2",
+     "state": "TEMPORARY",
+     "status": "COMPENSATED",
+     "error": ""
+    },
+    {
+     "cfg_id": "CFG-034",
+     "operation": "S2-shield-install",
+     "device": "S2",
+     "state": "TEMPORARY",
+     "status": "COMPENSATED",
+     "error": ""
+    },
+    {
+     "cfg_id": "CFG-033",
+     "operation": "S1-shield-remove",
+     "device": "S1",
+     "state": "TEMPORARY",
+     "status": "COMPENSATED",
+     "error": ""
+    },
+    {
+     "cfg_id": "CFG-032",
+     "operation": "R1-shield-remove",
+     "device": "R1",
+     "state": "TEMPORARY",
+     "status": "COMPENSATED",
+     "error": ""
+    },
+    {
+     "cfg_id": "CFG-031",
+     "operation": "R1-old-redistribution-remove",
+     "device": "R1",
+     "state": "PERMANENT",
+     "status": "COMPENSATED",
+     "error": ""
+    },
+    {
+     "cfg_id": "CFG-030",
+     "operation": "R1-floating-statics-remove",
+     "device": "R1",
+     "state": "TEMPORARY",
+     "status": "COMPENSATED",
+     "error": ""
+    },
+    {
+     "cfg_id": "CFG-029",
+     "operation": "R1-client-statics-remove",
+     "device": "R1",
+     "state": "PERMANENT",
+     "status": "COMPENSATED",
+     "error": ""
+    },
+    {
+     "cfg_id": "CFG-028",
+     "operation": "R1-floating-statics-add",
+     "device": "R1",
+     "state": "TEMPORARY",
+     "status": "COMPENSATED",
+     "error": ""
+    },
+    {
+     "cfg_id": "CFG-027",
+     "operation": "S1-static-aggregate-remove",
+     "device": "S1",
+     "state": "PERMANENT",
+     "status": "COMPENSATED",
+     "error": ""
+    },
+    {
+     "cfg_id": "CFG-026",
+     "operation": "R1-shield-install",
+     "device": "R1",
+     "state": "TEMPORARY",
+     "status": "COMPENSATED",
+     "error": ""
+    },
+    {
+     "cfg_id": "CFG-025",
+     "operation": "S1-shield-install",
+     "device": "S1",
+     "state": "TEMPORARY",
+     "status": "COMPENSATED",
+     "error": ""
+    },
+    {
+     "cfg_id": "CFG-024",
+     "operation": "R2-isis-into-ospfv3",
+     "device": "R2",
+     "state": "PERMANENT",
+     "status": "COMPENSATED",
+     "error": ""
+    },
+    {
+     "cfg_id": "CFG-023",
+     "operation": "R2-aggregate-into-isis",
+     "device": "R2",
+     "state": "PERMANENT",
+     "status": "COMPENSATED",
+     "error": ""
+    },
+    {
+     "cfg_id": "CFG-022",
+     "operation": "R2-boundary-policy",
+     "device": "R2",
+     "state": "PERMANENT",
+     "status": "COMPENSATED",
+     "error": ""
+    },
+    {
+     "cfg_id": "CFG-021",
+     "operation": "R1-isis-into-ospfv3",
+     "device": "R1",
+     "state": "PERMANENT",
+     "status": "COMPENSATED",
+     "error": ""
+    },
+    {
+     "cfg_id": "CFG-020",
+     "operation": "R1-aggregate-into-isis",
+     "device": "R1",
+     "state": "PERMANENT",
+     "status": "COMPENSATED",
+     "error": ""
+    },
+    {
+     "cfg_id": "CFG-019",
+     "operation": "R1-boundary-policy",
+     "device": "R1",
+     "state": "PERMANENT",
+     "status": "COMPENSATED",
+     "error": ""
+    },
+    {
+     "cfg_id": "CFG-018",
+     "operation": "S2-client-svis-passive",
+     "device": "S2",
+     "state": "PERMANENT",
+     "status": "COMPENSATED",
+     "error": ""
+    },
+    {
+     "cfg_id": "CFG-017",
+     "operation": "S1-client-svis-passive",
+     "device": "S1",
+     "state": "PERMANENT",
+     "status": "COMPENSATED",
+     "error": ""
+    },
+    {
+     "cfg_id": "CFG-016",
+     "operation": "S2-isis-links",
+     "device": "S2",
+     "state": "PERMANENT",
+     "status": "COMPENSATED",
+     "error": ""
+    },
+    {
+     "cfg_id": "CFG-015",
+     "operation": "S1-isis-links",
+     "device": "S1",
+     "state": "PERMANENT",
+     "status": "COMPENSATED",
+     "error": ""
+    },
+    {
+     "cfg_id": "CFG-014",
+     "operation": "R2-isis-access",
+     "device": "R2",
+     "state": "PERMANENT",
+     "status": "COMPENSATED",
+     "error": ""
+    },
+    {
+     "cfg_id": "CFG-013",
+     "operation": "R1-isis-access",
+     "device": "R1",
+     "state": "PERMANENT",
+     "status": "COMPENSATED",
+     "error": ""
+    },
+    {
+     "cfg_id": "CFG-012",
+     "operation": "S2-isis-process",
+     "device": "S2",
+     "state": "PERMANENT",
+     "status": "COMPENSATED",
+     "error": ""
+    },
+    {
+     "cfg_id": "CFG-011",
+     "operation": "S1-isis-process",
+     "device": "S1",
+     "state": "PERMANENT",
+     "status": "COMPENSATED",
+     "error": ""
+    },
+    {
+     "cfg_id": "CFG-010",
+     "operation": "R2-isis-process",
+     "device": "R2",
+     "state": "PERMANENT",
+     "status": "COMPENSATED",
+     "error": ""
+    },
+    {
+     "cfg_id": "CFG-009",
+     "operation": "R1-isis-process",
+     "device": "R1",
+     "state": "PERMANENT",
+     "status": "COMPENSATED",
+     "error": ""
+    },
+    {
+     "cfg_id": "CFG-008",
+     "operation": "S2-vlan99-ipv6",
+     "device": "S2",
+     "state": "PERMANENT",
+     "status": "COMPENSATED",
+     "error": ""
+    },
+    {
+     "cfg_id": "CFG-007",
+     "operation": "S1-vlan99-ipv6",
+     "device": "S1",
+     "state": "PERMANENT",
+     "status": "COMPENSATED",
+     "error": ""
+    },
+    {
+     "cfg_id": "CFG-006",
+     "operation": "R4-cover-2001:db8:30::/63",
+     "device": "R4",
+     "state": "TEMPORARY",
+     "status": "COMPENSATED",
+     "error": ""
+    },
+    {
+     "cfg_id": "CFG-005",
+     "operation": "R4-cover-2001:db8:20::/63",
+     "device": "R4",
+     "state": "TEMPORARY",
+     "status": "COMPENSATED",
+     "error": ""
+    },
+    {
+     "cfg_id": "CFG-004",
+     "operation": "R4-cover-2001:db8:10::/63",
+     "device": "R4",
+     "state": "TEMPORARY",
+     "status": "COMPENSATED",
+     "error": ""
+    },
+    {
+     "cfg_id": "CFG-003",
+     "operation": "R3-cover-2001:db8:30::/63",
+     "device": "R3",
+     "state": "TEMPORARY",
+     "status": "COMPENSATED",
+     "error": ""
+    },
+    {
+     "cfg_id": "CFG-002",
+     "operation": "R3-cover-2001:db8:20::/63",
+     "device": "R3",
+     "state": "TEMPORARY",
+     "status": "COMPENSATED",
+     "error": ""
+    },
+    {
+     "cfg_id": "CFG-001",
+     "operation": "R3-cover-2001:db8:10::/63",
+     "device": "R3",
+     "state": "TEMPORARY",
+     "status": "COMPENSATED",
+     "error": ""
+    }
+   ]
+  },
+  "postcheck": {
+   "result": "NOT_RUN"
+  },
+  "permanent_intent": {
+   "applied": [
+    "S1-vlan99-ipv6",
+    "S2-vlan99-ipv6",
+    "R1-isis-process",
+    "R2-isis-process",
+    "S1-isis-process",
+    "S2-isis-process",
+    "R1-isis-access",
+    "R2-isis-access",
+    "S1-isis-links",
+    "S2-isis-links",
+    "S1-client-svis-passive",
+    "S2-client-svis-passive",
+    "R1-boundary-policy",
+    "R1-aggregate-into-isis",
+    "R1-isis-into-ospfv3",
+    "R2-boundary-policy",
+    "R2-aggregate-into-isis",
+    "R2-isis-into-ospfv3",
+    "S1-static-aggregate-remove",
+    "R1-client-statics-remove",
+    "R1-old-redistribution-remove",
+    "S2-static-aggregate-remove",
+    "R2-client-statics-remove",
+    "R2-old-redistribution-remove"
+   ],
+   "baseline_digests": {}
+  },
+  "temporary_state": {
+   "installed": [
+    "R3-cover-2001:db8:10::/63",
+    "R3-cover-2001:db8:20::/63",
+    "R3-cover-2001:db8:30::/63",
+    "R4-cover-2001:db8:10::/63",
+    "R4-cover-2001:db8:20::/63",
+    "R4-cover-2001:db8:30::/63",
+    "S1-shield-install",
+    "R1-shield-install",
+    "R1-floating-statics-add",
+    "S2-shield-install",
+    "R2-shield-install",
+    "R2-floating-statics-add"
+   ],
+   "removed": [
+    "R1-floating-statics-remove",
+    "R1-shield-remove",
+    "S1-shield-remove",
+    "R2-floating-statics-remove"
+   ],
+   "remaining": []
+  },
+  "baseline_digests": {
+   "R1": {
+    "config": "f7e23531997fbe0c2600218ea7c7885f2591e40bad652ec900ac9558e2b0b0db",
+    "startup": "f7e23531997fbe0c2600218ea7c7885f2591e40bad652ec900ac9558e2b0b0db"
+   },
+   "R2": {
+    "config": "a76c51916fd1da35620973d9cd3e718d0c8bce96e215caf17f158319395beb23",
+    "startup": "a76c51916fd1da35620973d9cd3e718d0c8bce96e215caf17f158319395beb23"
+   },
+   "S1": {
+    "config": "f7e4fd4fdee0bb8346329a6add7e553851d7bba67c8a0b02db06e3c4ae6efa31",
+    "startup": "f7e4fd4fdee0bb8346329a6add7e553851d7bba67c8a0b02db06e3c4ae6efa31"
+   },
+   "S2": {
+    "config": "ee5f0cb47cb509c8548e6d213cec4d76666ab33768f56cbc53d0889a7b6a4909",
+    "startup": "ee5f0cb47cb509c8548e6d213cec4d76666ab33768f56cbc53d0889a7b6a4909"
+   },
+   "R3": {
+    "static_routes": "cfc1c90f6851d6ed268de708724e5ebfe83e8e6d9bc70385654abc39b6d01b3e",
+    "frr_config": "365d779636ea2f6ed76d802cd8217db03610ab3838c562bf56424933ffe3c1aa",
+    "persistent_config": "c779f912a770e264af011bb6d5237a170c770fed01141aa7b5d5d26e0c3360fe",
+    "adjacencies": [
+     [
+      "OSPFV2",
+      "eth0",
+      "192.168.255.1",
+      "FULL"
+     ],
+     [
+      "OSPFV2",
+      "eth1",
+      "192.168.255.2",
+      "FULL"
+     ],
+     [
+      "OSPFV3",
+      "eth0",
+      "192.168.255.1",
+      "FULL"
+     ],
+     [
+      "OSPFV3",
+      "eth1",
+      "192.168.255.2",
+      "FULL"
+     ]
+    ]
+   },
+   "R4": {
+    "static_routes": "1aee700a76565eb98f38b85f3599a11a663624d570b2d99003535ac354fafc26",
+    "frr_config": "1a24a9188b14d336902904b75cf36883ee47a801b802f7a73d3b1ed74379e10e",
+    "persistent_config": "562ad6c9311dfc442dc5cc30aa19c7fe56aa9f4bc900917a2ef99d93abf6e8ac",
+    "adjacencies": [
+     [
+      "OSPFV2",
+      "eth0",
+      "192.168.255.1",
+      "FULL"
+     ],
+     [
+      "OSPFV2",
+      "eth1",
+      "192.168.255.2",
+      "FULL"
+     ],
+     [
+      "OSPFV3",
+      "eth0",
+      "192.168.255.1",
+      "FULL"
+     ],
+     [
+      "OSPFV3",
+      "eth1",
+      "192.168.255.2",
+      "FULL"
+     ]
+    ]
+   }
+  },
+  "restored": true,
+  "probes": {
+   "lost": 0,
+   "flows": [
+    {
+     "flow": "h1-web-v6",
+     "destination": "2001:db8:3050::10",
+     "answered": 129203,
+     "lost": 0
+    },
+    {
+     "flow": "web-h1-v6",
+     "destination": "2001:db8:10::102",
+     "answered": 73185,
+     "lost": 0
+    },
+    {
+     "flow": "h1-web-v4",
+     "destination": "172.30.50.10",
+     "answered": 16123,
+     "lost": 0
+    },
+    {
+     "flow": "web-h1-v4",
+     "destination": "192.168.10.102",
+     "answered": 16092,
+     "lost": 0
+    },
+    {
+     "flow": "h2-web-v6",
+     "destination": "2001:db8:3050::10",
+     "answered": 124572,
+     "lost": 0
+    },
+    {
+     "flow": "web-h2-v6",
+     "destination": "2001:db8:20::101",
+     "answered": 73141,
+     "lost": 0
+    },
+    {
+     "flow": "h2-web-v4",
+     "destination": "172.30.50.10",
+     "answered": 16122,
+     "lost": 0
+    },
+    {
+     "flow": "web-h2-v4",
+     "destination": "192.168.20.101",
+     "answered": 16092,
+     "lost": 0
+    },
+    {
+     "flow": "h3-web-v6",
+     "destination": "2001:db8:3050::10",
+     "answered": 125194,
+     "lost": 0
+    },
+    {
+     "flow": "web-h3-v6",
+     "destination": "2001:db8:10::103",
+     "answered": 73747,
+     "lost": 0
+    },
+    {
+     "flow": "h3-web-v4",
+     "destination": "172.30.50.10",
+     "answered": 16122,
+     "lost": 0
+    },
+    {
+     "flow": "web-h3-v4",
+     "destination": "192.168.10.103",
+     "answered": 16105,
+     "lost": 0
+    },
+    {
+     "flow": "h4-web-v6",
+     "destination": "2001:db8:3050::10",
+     "answered": 126739,
+     "lost": 0
+    },
+    {
+     "flow": "web-h4-v6",
+     "destination": "2001:db8:30::104",
+     "answered": 73819,
+     "lost": 0
+    }
+   ]
+  },
+  "stages": [
+   {
+    "stage": "PRECHECK",
+    "at": "2026-10-12T08:27:59.141821+00:00",
+    "status": "PASS",
+    "blockers": [],
+    "host": {
+     "load1": 23.74,
+     "cpus": 8,
+     "available_mb": 60633,
+     "swap_used_mb": 0
+    }
+   },
+   {
+    "stage": "window",
+    "at": "2026-10-12T08:28:10.579372+00:00",
+    "status": "PASS",
+    "before": "CORE_COVER_INSTALL",
+    "cpu_busy_percent": null,
+    "load1": 22.97,
+    "probes": {
+     "judged": false
+    }
+   },
+   {
+    "stage": "CORE_COVER_INSTALL",
+    "at": "2026-10-12T08:28:11.197222+00:00",
+    "status": "APPLIED",
+    "operation": "R3-cover-2001:db8:10::/63",
+    "device": "R3",
+    "state": "TEMPORARY",
+    "cfg_id": "CFG-001",
+    "read_back": "SKIP_SATISFIED"
+   },
+   {
+    "stage": "CORE_COVER_INSTALL",
+    "at": "2026-10-12T08:28:20.040655+00:00",
+    "status": "APPLIED",
+    "operation": "R3-cover-2001:db8:20::/63",
+    "device": "R3",
+    "state": "TEMPORARY",
+    "cfg_id": "CFG-002",
+    "read_back": "SKIP_SATISFIED"
+   },
+   {
+    "stage": "CORE_COVER_INSTALL",
+    "at": "2026-10-12T08:28:29.042638+00:00",
+    "status": "APPLIED",
+    "operation": "R3-cover-2001:db8:30::/63",
+    "device": "R3",
+    "state": "TEMPORARY",
+    "cfg_id": "CFG-003",
+    "read_back": "SKIP_SATISFIED"
+   },
+   {
+    "stage": "CORE_COVER_INSTALL",
+    "at": "2026-10-12T08:28:39.418740+00:00",
+    "status": "APPLIED",
+    "operation": "R4-cover-2001:db8:10::/63",
+    "device": "R4",
+    "state": "TEMPORARY",
+    "cfg_id": "CFG-004",
+    "read_back": "SKIP_SATISFIED"
+   },
+   {
+    "stage": "CORE_COVER_INSTALL",
+    "at": "2026-10-12T08:28:48.745612+00:00",
+    "status": "APPLIED",
+    "operation": "R4-cover-2001:db8:20::/63",
+    "device": "R4",
+    "state": "TEMPORARY",
+    "cfg_id": "CFG-005",
+    "read_back": "SKIP_SATISFIED"
+   },
+   {
+    "stage": "CORE_COVER_INSTALL",
+    "at": "2026-10-12T08:28:58.441282+00:00",
+    "status": "APPLIED",
+    "operation": "R4-cover-2001:db8:30::/63",
+    "device": "R4",
+    "state": "TEMPORARY",
+    "cfg_id": "CFG-006",
+    "read_back": "SKIP_SATISFIED"
+   },
+   {
+    "stage": "window",
+    "at": "2026-10-12T08:29:18.429673+00:00",
+    "status": "PASS",
+    "before": "VLAN99_IPV6",
+    "cpu_busy_percent": null,
+    "load1": 22.57,
+    "probes": {
+     "judged": true,
+     "elapsed_seconds": 66.2,
+     "stalled_flows": [],
+     "samples_seen_of_expected": {},
+     "errors": []
+    }
+   },
+   {
+    "stage": "VLAN99_IPV6",
+    "at": "2026-10-12T08:29:35.182910+00:00",
+    "status": "APPLIED",
+    "operation": "S1-vlan99-ipv6",
+    "device": "S1",
+    "state": "PERMANENT",
+    "cfg_id": "CFG-007",
+    "read_back": "SKIP_SATISFIED"
+   },
+   {
+    "stage": "VLAN99_IPV6",
+    "at": "2026-10-12T08:30:13.460802+00:00",
+    "status": "APPLIED",
+    "operation": "S2-vlan99-ipv6",
+    "device": "S2",
+    "state": "PERMANENT",
+    "cfg_id": "CFG-008",
+    "read_back": "SKIP_SATISFIED"
+   },
+   {
+    "stage": "window",
+    "at": "2026-10-12T08:30:24.811100+00:00",
+    "status": "PASS",
+    "before": "ISIS_FORMATION",
+    "cpu_busy_percent": null,
+    "load1": 21.87,
+    "probes": {
+     "judged": true,
+     "elapsed_seconds": 69.8,
+     "stalled_flows": [],
+     "samples_seen_of_expected": {},
+     "errors": []
+    }
+   },
+   {
+    "stage": "ISIS_FORMATION",
+    "at": "2026-10-12T08:30:42.649601+00:00",
+    "status": "APPLIED",
+    "operation": "R1-isis-process",
+    "device": "R1",
+    "state": "PERMANENT",
+    "cfg_id": "CFG-009",
+    "read_back": "SKIP_SATISFIED"
+   },
+   {
+    "stage": "ISIS_FORMATION",
+    "at": "2026-10-12T08:31:07.436689+00:00",
+    "status": "APPLIED",
+    "operation": "R2-isis-process",
+    "device": "R2",
+    "state": "PERMANENT",
+    "cfg_id": "CFG-010",
+    "read_back": "SKIP_SATISFIED"
+   },
+   {
+    "stage": "ISIS_FORMATION",
+    "at": "2026-10-12T08:31:33.085397+00:00",
+    "status": "APPLIED",
+    "operation": "S1-isis-process",
+    "device": "S1",
+    "state": "PERMANENT",
+    "cfg_id": "CFG-011",
+    "read_back": "SKIP_SATISFIED"
+   },
+   {
+    "stage": "ISIS_FORMATION",
+    "at": "2026-10-12T08:32:00.054741+00:00",
+    "status": "APPLIED",
+    "operation": "S2-isis-process",
+    "device": "S2",
+    "state": "PERMANENT",
+    "cfg_id": "CFG-012",
+    "read_back": "SKIP_SATISFIED"
+   },
+   {
+    "stage": "ISIS_FORMATION",
+    "at": "2026-10-12T08:32:25.137999+00:00",
+    "status": "APPLIED",
+    "operation": "R1-isis-access",
+    "device": "R1",
+    "state": "PERMANENT",
+    "cfg_id": "CFG-013",
+    "read_back": "SKIP_SATISFIED"
+   },
+   {
+    "stage": "ISIS_FORMATION",
+    "at": "2026-10-12T08:32:51.063825+00:00",
+    "status": "APPLIED",
+    "operation": "R2-isis-access",
+    "device": "R2",
+    "state": "PERMANENT",
+    "cfg_id": "CFG-014",
+    "read_back": "SKIP_SATISFIED"
+   },
+   {
+    "stage": "ISIS_FORMATION",
+    "at": "2026-10-12T08:33:19.876253+00:00",
+    "status": "APPLIED",
+    "operation": "S1-isis-links",
+    "device": "S1",
+    "state": "PERMANENT",
+    "cfg_id": "CFG-015",
+    "read_back": "SKIP_SATISFIED"
+   },
+   {
+    "stage": "ISIS_FORMATION",
+    "at": "2026-10-12T08:33:46.860263+00:00",
+    "status": "APPLIED",
+    "operation": "S2-isis-links",
+    "device": "S2",
+    "state": "PERMANENT",
+    "cfg_id": "CFG-016",
+    "read_back": "SKIP_SATISFIED"
+   },
+   {
+    "stage": "window",
+    "at": "2026-10-12T08:34:14.663974+00:00",
+    "status": "PASS",
+    "before": "BOUNDARY_POLICY",
+    "cpu_busy_percent": null,
+    "load1": 22.42,
+    "probes": {
+     "judged": true,
+     "elapsed_seconds": 231.1,
+     "stalled_flows": [],
+     "samples_seen_of_expected": {},
+     "errors": []
+    }
+   },
+   {
+    "stage": "BOUNDARY_POLICY",
+    "at": "2026-10-12T08:34:32.169986+00:00",
+    "status": "APPLIED",
+    "operation": "S1-client-svis-passive",
+    "device": "S1",
+    "state": "PERMANENT",
+    "cfg_id": "CFG-017",
+    "read_back": "SKIP_SATISFIED"
+   },
+   {
+    "stage": "BOUNDARY_POLICY",
+    "at": "2026-10-12T08:34:54.928193+00:00",
+    "status": "APPLIED",
+    "operation": "S2-client-svis-passive",
+    "device": "S2",
+    "state": "PERMANENT",
+    "cfg_id": "CFG-018",
+    "read_back": "SKIP_SATISFIED"
+   },
+   {
+    "stage": "BOUNDARY_POLICY",
+    "at": "2026-10-12T08:35:19.201373+00:00",
+    "status": "APPLIED",
+    "operation": "R1-boundary-policy",
+    "device": "R1",
+    "state": "PERMANENT",
+    "cfg_id": "CFG-019",
+    "read_back": "SKIP_SATISFIED"
+   },
+   {
+    "stage": "BOUNDARY_POLICY",
+    "at": "2026-10-12T08:35:42.987133+00:00",
+    "status": "APPLIED",
+    "operation": "R1-aggregate-into-isis",
+    "device": "R1",
+    "state": "PERMANENT",
+    "cfg_id": "CFG-020",
+    "read_back": "SKIP_SATISFIED"
+   },
+   {
+    "stage": "BOUNDARY_POLICY",
+    "at": "2026-10-12T08:36:08.576524+00:00",
+    "status": "APPLIED",
+    "operation": "R1-isis-into-ospfv3",
+    "device": "R1",
+    "state": "PERMANENT",
+    "cfg_id": "CFG-021",
+    "read_back": "SKIP_SATISFIED"
+   },
+   {
+    "stage": "BOUNDARY_POLICY",
+    "at": "2026-10-12T08:36:33.738993+00:00",
+    "status": "APPLIED",
+    "operation": "R2-boundary-policy",
+    "device": "R2",
+    "state": "PERMANENT",
+    "cfg_id": "CFG-022",
+    "read_back": "SKIP_SATISFIED"
+   },
+   {
+    "stage": "BOUNDARY_POLICY",
+    "at": "2026-10-12T08:36:59.372426+00:00",
+    "status": "APPLIED",
+    "operation": "R2-aggregate-into-isis",
+    "device": "R2",
+    "state": "PERMANENT",
+    "cfg_id": "CFG-023",
+    "read_back": "SKIP_SATISFIED"
+   },
+   {
+    "stage": "BOUNDARY_POLICY",
+    "at": "2026-10-12T08:37:26.123099+00:00",
+    "status": "APPLIED",
+    "operation": "R2-isis-into-ospfv3",
+    "device": "R2",
+    "state": "PERMANENT",
+    "cfg_id": "CFG-024",
+    "read_back": "SKIP_SATISFIED"
+   },
+   {
+    "stage": "window",
+    "at": "2026-10-12T08:37:54.486169+00:00",
+    "status": "PASS",
+    "before": "SHIELD_INSTALL",
+    "cpu_busy_percent": null,
+    "load1": 28.13,
+    "probes": {
+     "judged": true,
+     "elapsed_seconds": 214.6,
+     "stalled_flows": [],
+     "samples_seen_of_expected": {},
+     "errors": []
+    }
+   },
+   {
+    "stage": "SHIELD_INSTALL",
+    "at": "2026-10-12T08:38:13.436548+00:00",
+    "status": "APPLIED",
+    "operation": "S1-shield-install",
+    "device": "S1",
+    "state": "TEMPORARY",
+    "cfg_id": "CFG-025",
+    "read_back": "SKIP_SATISFIED"
+   },
+   {
+    "stage": "SHIELD_INSTALL",
+    "at": "2026-10-12T08:38:52.859592+00:00",
+    "status": "APPLIED",
+    "operation": "R1-shield-install",
+    "device": "R1",
+    "state": "TEMPORARY",
+    "cfg_id": "CFG-026",
+    "read_back": "SKIP_SATISFIED"
+   },
+   {
+    "stage": "window",
+    "at": "2026-10-12T08:39:10.404865+00:00",
+    "status": "PASS",
+    "before": "PROTECTED_STATIC_REMOVAL",
+    "cpu_busy_percent": null,
+    "load1": 28.42,
+    "probes": {
+     "judged": true,
+     "elapsed_seconds": 80.2,
+     "stalled_flows": [],
+     "samples_seen_of_expected": {},
+     "errors": []
+    }
+   },
+   {
+    "stage": "PROTECTED_STATIC_REMOVAL",
+    "at": "2026-10-12T08:39:14.137908+00:00",
+    "status": "APPLIED",
+    "operation": "S1-static-aggregate-remove",
+    "device": "S1",
+    "state": "PERMANENT",
+    "cfg_id": "CFG-027",
+    "read_back": "SKIP_SATISFIED"
+   },
+   {
+    "stage": "PROTECTED_STATIC_REMOVAL",
+    "at": "2026-10-12T08:39:37.147932+00:00",
+    "status": "APPLIED",
+    "operation": "R1-floating-statics-add",
+    "device": "R1",
+    "state": "TEMPORARY",
+    "cfg_id": "CFG-028",
+    "read_back": "SKIP_SATISFIED"
+   },
+   {
+    "stage": "PROTECTED_STATIC_REMOVAL",
+    "at": "2026-10-12T08:39:48.848880+00:00",
+    "status": "APPLIED",
+    "operation": "R1-client-statics-remove",
+    "device": "R1",
+    "state": "PERMANENT",
+    "cfg_id": "CFG-029",
+    "read_back": "SKIP_SATISFIED"
+   },
+   {
+    "stage": "PROTECTED_STATIC_REMOVAL",
+    "at": "2026-10-12T08:40:04.503107+00:00",
+    "status": "APPLIED",
+    "operation": "R1-floating-statics-remove",
+    "device": "R1",
+    "state": "TEMPORARY",
+    "cfg_id": "CFG-030",
+    "read_back": "SKIP_SATISFIED"
+   },
+   {
+    "stage": "PROTECTED_STATIC_REMOVAL",
+    "at": "2026-10-12T08:40:23.156074+00:00",
+    "status": "APPLIED",
+    "operation": "R1-old-redistribution-remove",
+    "device": "R1",
+    "state": "PERMANENT",
+    "cfg_id": "CFG-031",
+    "read_back": "SKIP_SATISFIED"
+   },
+   {
+    "stage": "window",
+    "at": "2026-10-12T08:40:38.156965+00:00",
+    "status": "PASS",
+    "before": "SHIELD_REMOVE",
+    "cpu_busy_percent": null,
+    "load1": 30.4,
+    "probes": {
+     "judged": true,
+     "elapsed_seconds": 85.9,
+     "stalled_flows": [],
+     "samples_seen_of_expected": {},
+     "errors": []
+    }
+   },
+   {
+    "stage": "SHIELD_REMOVE",
+    "at": "2026-10-12T08:40:44.600710+00:00",
+    "status": "APPLIED",
+    "operation": "R1-shield-remove",
+    "device": "R1",
+    "state": "TEMPORARY",
+    "cfg_id": "CFG-032",
+    "read_back": "SKIP_SATISFIED"
+   },
+   {
+    "stage": "SHIELD_REMOVE",
+    "at": "2026-10-12T08:40:59.274899+00:00",
+    "status": "APPLIED",
+    "operation": "S1-shield-remove",
+    "device": "S1",
+    "state": "TEMPORARY",
+    "cfg_id": "CFG-033",
+    "read_back": "SKIP_SATISFIED"
+   },
+   {
+    "stage": "window",
+    "at": "2026-10-12T08:41:22.116091+00:00",
+    "status": "PASS",
+    "before": "SHIELD_INSTALL",
+    "cpu_busy_percent": null,
+    "load1": 28.51,
+    "probes": {
+     "judged": true,
+     "elapsed_seconds": 42.6,
+     "stalled_flows": [],
+     "samples_seen_of_expected": {},
+     "errors": []
+    }
+   },
+   {
+    "stage": "SHIELD_INSTALL",
+    "at": "2026-10-12T08:41:40.646989+00:00",
+    "status": "APPLIED",
+    "operation": "S2-shield-install",
+    "device": "S2",
+    "state": "TEMPORARY",
+    "cfg_id": "CFG-034",
+    "read_back": "SKIP_SATISFIED"
+   },
+   {
+    "stage": "SHIELD_INSTALL",
+    "at": "2026-10-12T08:42:10.158786+00:00",
+    "status": "APPLIED",
+    "operation": "R2-shield-install",
+    "device": "R2",
+    "state": "TEMPORARY",
+    "cfg_id": "CFG-035",
+    "read_back": "SKIP_SATISFIED"
+   },
+   {
+    "stage": "window",
+    "at": "2026-10-12T08:42:36.054152+00:00",
+    "status": "PASS",
+    "before": "PROTECTED_STATIC_REMOVAL",
+    "cpu_busy_percent": null,
+    "load1": 30.99,
+    "probes": {
+     "judged": true,
+     "elapsed_seconds": 72.8,
+     "stalled_flows": [],
+     "samples_seen_of_expected": {},
+     "errors": []
+    }
+   },
+   {
+    "stage": "PROTECTED_STATIC_REMOVAL",
+    "at": "2026-10-12T08:42:40.471901+00:00",
+    "status": "APPLIED",
+    "operation": "S2-static-aggregate-remove",
+    "device": "S2",
+    "state": "PERMANENT",
+    "cfg_id": "CFG-036",
+    "read_back": "SKIP_SATISFIED"
+   },
+   {
+    "stage": "PROTECTED_STATIC_REMOVAL",
+    "at": "2026-10-12T08:43:19.411202+00:00",
+    "status": "APPLIED",
+    "operation": "R2-floating-statics-add",
+    "device": "R2",
+    "state": "TEMPORARY",
+    "cfg_id": "CFG-037",
+    "read_back": "SKIP_SATISFIED"
+   },
+   {
+    "stage": "PROTECTED_STATIC_REMOVAL",
+    "at": "2026-10-12T08:43:30.441868+00:00",
+    "status": "APPLIED",
+    "operation": "R2-client-statics-remove",
+    "device": "R2",
+    "state": "PERMANENT",
+    "cfg_id": "CFG-038",
+    "read_back": "SKIP_SATISFIED"
+   },
+   {
+    "stage": "PROTECTED_STATIC_REMOVAL",
+    "at": "2026-10-12T08:43:43.229393+00:00",
+    "status": "APPLIED",
+    "operation": "R2-floating-statics-remove",
+    "device": "R2",
+    "state": "TEMPORARY",
+    "cfg_id": "CFG-039",
+    "read_back": "SKIP_SATISFIED"
+   },
+   {
+    "stage": "PROTECTED_STATIC_REMOVAL",
+    "at": "2026-10-12T08:44:00.384204+00:00",
+    "status": "APPLIED",
+    "operation": "R2-old-redistribution-remove",
+    "device": "R2",
+    "state": "PERMANENT",
+    "cfg_id": "CFG-040",
+    "read_back": "SKIP_SATISFIED"
+   },
+   {
+    "stage": "window",
+    "at": "2026-10-12T08:44:06.665028+00:00",
+    "status": "FAIL",
+    "before": "SHIELD_REMOVE",
+    "host": {
+     "load1": 28.05,
+     "cpus": 8,
+     "available_mb": 60597,
+     "swap_used_mb": 0,
+     "failed": [
+      "INJECTED: host CPU at the critical condition with the probes running"
+     ]
+    }
+   },
+   {
+    "stage": "abort",
+    "at": "2026-10-12T08:44:06.665070+00:00",
+    "status": "WINDOW_CONDITION_LOST",
+    "operation": "SHIELD_REMOVE",
+    "detail": "before SHIELD_REMOVE: INJECTED: host CPU at the critical condition with the probes running"
+   },
+   {
+    "stage": "restore",
+    "at": "2026-10-12T08:52:00.682732+00:00",
+    "status": "RESTORED",
+    "compensated": 40,
+    "temporary_remaining": [],
+    "baseline_restored": true,
+    "probes_lost": 0
+   }
+  ]
+ }
+}

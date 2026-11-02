@@ -1,0 +1,19 @@
+{
+  "baseline_digest": "c249d56d6ea2cbc8e57d82831c551ab6141b20f9b54f711cf9c0c51275e81b27",
+  "codes": [],
+  "device_lifecycle": "IN_SERVICE",
+  "ok": true,
+  "reconciled": {
+    "by": "arthur",
+    "digest": "c249d56d6ea2cbc8e57d82831c551ab6141b20f9b54f711cf9c0c51275e81b27",
+    "verdict": "BASELINE"
+  },
+  "routes_to_hb": {
+    "E1": [
+      " O        10.254.85.0/24 [110/210]",
+      "           via 10.254.82.1, Ethernet3"
+    ]
+  },
+  "state_after": "ROLLED_BACK",
+  "state_before": "UNCERTAIN"
+}

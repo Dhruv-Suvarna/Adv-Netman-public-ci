@@ -1,0 +1,62 @@
+{% extends "core/base.html" %}
+{% block title %}{{ row.record_id }} plan{% endblock %}
+{% block content %}
+{% include "core/maintenance/_header.html" %}
+{% if not plan %}
+<div class="card"><p>No plan exists. A plan is built when readiness is evaluated and the device is READY.</p></div>
+{% else %}
+<div class="card" style="border-left:6px solid var(--{% if row.plan_status == 'CURRENT' and not expired %}info{% else %}danger{% endif %});">
+  <h3>Plan <code>{{ row.plan_hash }}</code> <span class="badge badge--{% if row.plan_status == 'CURRENT' and not expired %}info{% else %}danger{% endif %}">{% if expired %}EXPIRED{% else %}{{ row.plan_status }}{% endif %}</span></h3>
+  <p>Built {{ plan.built_at }} from the observation of {{ plan.baseline.observed_at }}; valid until {{ plan.valid_until }}. The plan was built with read-only access only. Entry builds it again from fresh facts and is refused if anything it stands on changed (configuration digests, protocol state, verdicts, operations, the captured pre-state).</p>
+  <p>Target <strong>{{ plan.target.device }}</strong> ({{ plan.target.role }}). Requested duration {{ plan.request.requested_duration_seconds }} s (intent only). Safety deadline: {{ plan.deadline.rule }}.</p>
+</div>
+
+<div class="card" style="margin-top:16px;"><h3>1. Drain — in this order</h3>
+  {% include "core/maintenance/_ops.html" with ops=plan.drain.operations %}
+  <p><strong>Then verified:</strong> {{ plan.drain.final_verification|join:"; "|default:"—" }}; every planned direction proven moved with zero production probes lost and the alternate healthy (a fresh observation). <strong>Startup configuration</strong> of {{ plan.drain.persist|join:", "|default:"no device" }} follows the verified state.</p>
+  <p><strong>Compensation on any failure:</strong> {{ plan.drain.compensation }}.</p>
+</div>
+
+<div class="card" style="margin-top:16px;"><h3>2. Restore — in this order</h3>
+  <p><strong>Before the first write:</strong> {{ plan.restore.guards|join:"; "|default:"—" }}.</p>
+  {% include "core/maintenance/_ops.html" with ops=plan.restore.operations %}
+  <p><strong>Then verified:</strong> {{ plan.restore.final_verification|join:"; "|default:"—" }}; {{ plan.restore.post_verification|join:"; " }}. <strong>Startup configuration</strong> of {{ plan.restore.persist|join:", "|default:"no device" }} follows the verified state.</p>
+  <p>A restore that cannot be done or verified ends <strong>RESTORE_FAILED_ESCALATED</strong> with the drained state kept and listed; it is never called restored.</p>
+</div>
+
+<div class="card-grid" style="margin-top:16px;">
+  <div class="card"><h3>Baseline</h3><table class="data-table"><tbody>
+    {% for name, digest in plan.baseline.digests.items %}<tr><th>{{ name }}</th><td><code>{{ digest|default:"unreadable"|truncatechars:24 }}</code></td></tr>{% endfor %}
+    {% if plan.baseline.prestate.uplink_metric %}<tr><th>Captured uplink metric</th><td>{{ plan.baseline.prestate.uplink_metric }}</td></tr>{% endif %}
+    <tr><th>Leans on</th><td>{{ plan.baseline.intersects|join:", "|default:"—" }}</td></tr>
+  </tbody></table></div>
+  <div class="card"><h3>Protected</h3><p>VLAN {{ plan.protected.management_vlan }} and every management interface are never written; every operation must target the writable managed scope ({{ plan.protected.writable_scope|join:", " }}). Checked when this plan was built and again before every write.</p>
+    <h4>Readiness this plan stands on</h4><ul>{% for key, cell in plan.readiness.cells.items %}<li>{{ key }}: {{ cell.verdict }}{% if cell.mechanism %} by <code>{{ cell.mechanism }}</code>{% endif %}{% if cell.preventive %} (preventive){% endif %}</li>{% endfor %}</ul></div>
+</div>
+
+{% if can.approve and not busy %}
+<div class="card" style="margin-top:16px;border-left:6px solid var(--warning);"><h3>Approve this plan</h3>
+  {% if actions.approve %}
+  <form method="post" action="{% url 'core:maintenance_approve' row.record_id %}">{% csrf_token %}
+    <input type="hidden" name="plan_hash" value="{{ row.plan_hash }}">
+    <p><label><input type="checkbox" name="confirm" required> I reviewed plan <code>{{ row.plan_hash|truncatechars:20 }}</code> above — every drain and restore operation, their checks and the compensation — and approve exactly it.</label></p>
+    <button class="btn btn--primary" type="submit">Approve plan</button>
+  </form>
+  {% else %}<p><em>Approving needs the Approver role.</em></p>{% endif %}
+</div>
+{% endif %}
+{% if can.enter and not busy %}
+<div class="card" style="margin-top:16px;border-left:6px solid var(--danger);"><h3>Enter maintenance</h3>
+  {% if actions.execute %}
+  <p>Queues the entry for the worker. It observes the network again, rebuilds and compares this plan, runs every gate (production probes, host resource gate, startup in sync, core covers, device locks, prior unresolved maintenance) and only then drains {{ row.device_name }}. Any failure is compensated and verified.</p>
+  <form method="post" action="{% url 'core:maintenance_enter' row.record_id %}">{% csrf_token %}
+    <input type="hidden" name="plan_hash" value="{{ row.plan_hash }}">
+    <p><label>Type the maintenance id to confirm<br><input type="text" name="confirm_id" autocomplete="off" required placeholder="{{ row.record_id }}"></label></p>
+    <p><label><input type="checkbox" name="confirm" required> Enter maintenance on {{ row.device_name }} with plan <code>{{ row.plan_hash|truncatechars:20 }}</code>.</label></p>
+    <button class="btn btn--primary" type="submit">Queue entry</button>
+  </form>
+  {% else %}<p><em>Entering maintenance needs the Executor role.</em></p>{% endif %}
+</div>
+{% endif %}
+{% endif %}
+{% endblock %}

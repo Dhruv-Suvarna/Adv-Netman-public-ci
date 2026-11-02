@@ -1,0 +1,216 @@
+{
+ "actions": [
+  {
+   "action": "execute",
+   "codes": [
+    "PROVISIONING_NOT_APPROVED",
+    "PRECHECK_MISSING"
+   ],
+   "device": "PROVGHOST2",
+   "http": 302,
+   "netbox": [
+    {
+     "exists": true,
+     "id": 25,
+     "kind": "device",
+     "name": "PROVGHOST2"
+    },
+    {
+     "exists": true,
+     "id": 85,
+     "kind": "interface",
+     "name": "eth0"
+    },
+    {
+     "exists": true,
+     "id": 171,
+     "kind": "ip_address",
+     "name": "172.31.250.22/24"
+    },
+    {
+     "exists": true,
+     "id": 172,
+     "kind": "ip_address",
+     "name": "fd00:ca:250::22/64"
+    }
+   ],
+   "outcome": "BLOCKED",
+   "prov_id": "PROV-000004",
+   "reconciliation": null,
+   "registry": [
+    "ADMITTED"
+   ],
+   "resolvable": true,
+   "status_after": "PLANNED",
+   "status_before": "PLANNED"
+  },
+  {
+   "action": "cancel",
+   "device": "PROVGHOST2",
+   "http": 302,
+   "netbox": [
+    {
+     "exists": false,
+     "id": 25,
+     "kind": "device",
+     "name": "PROVGHOST2"
+    },
+    {
+     "exists": false,
+     "id": 85,
+     "kind": "interface",
+     "name": "eth0"
+    },
+    {
+     "exists": false,
+     "id": 171,
+     "kind": "ip_address",
+     "name": "172.31.250.22/24"
+    },
+    {
+     "exists": false,
+     "id": 172,
+     "kind": "ip_address",
+     "name": "fd00:ca:250::22/64"
+    }
+   ],
+   "prov_id": "PROV-000004",
+   "reconciliation": {
+    "clean": true,
+    "netbox": [
+     {
+      "id": 172,
+      "kind": "ip_address",
+      "name": "fd00:ca:250::22/64",
+      "released": true
+     },
+     {
+      "id": 171,
+      "kind": "ip_address",
+      "name": "172.31.250.22/24",
+      "released": true
+     },
+     {
+      "id": 85,
+      "kind": "interface",
+      "name": "eth0",
+      "released": true
+     },
+     {
+      "id": 25,
+      "kind": "device",
+      "name": "PROVGHOST2",
+      "released": true
+     }
+    ],
+    "registry": "RETIRED"
+   },
+   "registry": [
+    "RETIRED"
+   ],
+   "resolvable": false,
+   "status_after": "CANCELLED",
+   "status_before": "PLANNED"
+  },
+  {
+   "action": "cancel",
+   "device": "PROVGHOST1",
+   "http": 302,
+   "netbox": [],
+   "prov_id": "PROV-000003",
+   "reconciliation": {
+    "clean": true,
+    "netbox": [],
+    "registry": "NONE"
+   },
+   "registry": [],
+   "resolvable": false,
+   "status_after": "CANCELLED",
+   "status_before": "CAPABILITY_RESOLVED"
+  },
+  {
+   "action": "cancel",
+   "device": "PROVDUP1",
+   "http": 302,
+   "netbox": [
+    {
+     "exists": false,
+     "id": 24,
+     "kind": "device",
+     "name": "PROVDUP1"
+    },
+    {
+     "exists": false,
+     "id": 84,
+     "kind": "interface",
+     "name": "eth0"
+    },
+    {
+     "exists": false,
+     "id": 169,
+     "kind": "ip_address",
+     "name": "172.31.250.21/24"
+    },
+    {
+     "exists": false,
+     "id": 170,
+     "kind": "ip_address",
+     "name": "fd00:ca:250::21/64"
+    }
+   ],
+   "prov_id": "PROV-000002",
+   "reconciliation": {
+    "clean": true,
+    "netbox": [
+     {
+      "id": 170,
+      "kind": "ip_address",
+      "name": "fd00:ca:250::21/64",
+      "released": true
+     },
+     {
+      "id": 169,
+      "kind": "ip_address",
+      "name": "172.31.250.21/24",
+      "released": true
+     },
+     {
+      "id": 84,
+      "kind": "interface",
+      "name": "eth0",
+      "released": true
+     },
+     {
+      "id": 24,
+      "kind": "device",
+      "name": "PROVDUP1",
+      "released": true
+     }
+    ],
+    "registry": "RETIRED"
+   },
+   "registry": [
+    "RETIRED"
+   ],
+   "resolvable": false,
+   "status_after": "CANCELLED",
+   "status_before": "APPROVED"
+  }
+ ],
+ "netbox_tagged_remaining": {
+  "devices": [
+   "PROVEDGE1"
+  ],
+  "interfaces": [
+   "eth0"
+  ],
+  "ips": [
+   "172.31.250.11/24",
+   "fd00:ca:250::11/64"
+  ],
+  "prefixes": [
+   "172.31.250.0/24",
+   "fd00:ca:250::/64"
+  ]
+ }
+}

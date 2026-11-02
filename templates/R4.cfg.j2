@@ -1,0 +1,315 @@
+#!/bin/bash
+set -e
+
+# ============================================================
+# R4 - UBUNTU ROUTER
+#
+# eth1 = VLAN 102,104 trunk toward S4
+# eth2 = routed BGP/NAT outside toward R5
+# eth3 = management access link toward mgmt_swt
+#
+# ============================================================
+
+hostname R4
+
+# ============================================================
+# REQUIRED PACKAGES
+# ============================================================
+
+export DEBIAN_FRONTEND=noninteractive
+
+if ! command -v vtysh >/dev/null 2>&1; then
+    apt-get update
+    apt-get install -y \
+        frr \
+        frr-pythontools \
+        nftables \
+        conntrack \
+        iproute2 \
+        iputils-ping \
+        tcpdump
+fi
+
+# ============================================================
+# ROUTING / KERNEL SETTINGS
+# ============================================================
+
+sysctl -w net.ipv4.ip_forward=1
+sysctl -w net.ipv6.conf.all.forwarding=1
+sysctl -w net.ipv6.conf.default.forwarding=1
+
+# Required because redundant routing may produce asymmetric paths.
+sysctl -w net.ipv4.conf.all.rp_filter=0
+sysctl -w net.ipv4.conf.default.rp_filter=0
+sysctl -w net.ipv4.conf.eth1.rp_filter=0
+sysctl -w net.ipv4.conf.eth2.rp_filter=0
+sysctl -w net.ipv4.conf.eth3.rp_filter=0
+
+# ============================================================
+# CLEAN EXISTING R4 DATA-PLANE CONFIG
+# ============================================================
+
+ip link set eth3 nomaster 2>/dev/null || true
+ip link set eth1.102 nomaster 2>/dev/null || true
+ip link set eth1.104 nomaster 2>/dev/null || true
+
+ip link delete Vlan102 2>/dev/null || true
+ip link delete Vlan104 2>/dev/null || true
+ip link delete Vlan200 2>/dev/null || true
+
+ip link delete eth1.102 2>/dev/null || true
+ip link delete eth1.104 2>/dev/null || true
+
+# Preserve eth2 IPv6 link-local addressing.
+# FRR requires a usable link-local address for directly connected IPv6 BGP.
+ip -4 addr flush dev eth2 2>/dev/null || true
+ip -6 addr flush dev eth2 scope global 2>/dev/null || true
+
+ip addr flush dev eth3 2>/dev/null || true
+
+# eth0 is Containerlab's native management interface.
+# Do not modify eth0.
+
+ip link set eth1 up
+ip link set eth2 up
+ip link set eth3 up
+
+ip link set dev eth1 mtu 1500
+ip link set dev eth2 mtu 1500
+ip link set dev eth3 mtu 1500
+
+# If a previous run removed the automatic IPv6 link-local,
+# provide a deterministic fallback.
+if ! ip -6 addr show dev eth2 scope link | grep -q 'inet6 fe80:'; then
+    ip -6 addr add fe80::4/64 dev eth2
+fi
+
+# ============================================================
+# VLAN 102 / VLAN 104 TRUNK
+#
+# EOS equivalent:
+#
+# interface Ethernet1
+#    switchport mode trunk
+#    switchport trunk allowed vlan 102,104
+# ============================================================
+
+ip link add link eth1 name eth1.102 type vlan id 102
+ip link add link eth1 name eth1.104 type vlan id 104
+
+ip link set dev eth1.102 mtu 1500
+ip link set dev eth1.104 mtu 1500
+
+ip link set eth1.102 up
+ip link set eth1.104 up
+
+# ============================================================
+# SVIs
+#
+# Linux bridge devices are used as the SVI interfaces.
+# STP explicitly disabled.
+# ============================================================
+
+ip link add Vlan102 type bridge
+ip link add Vlan104 type bridge
+ip link add Vlan200 type bridge
+
+ip link set dev Vlan102 mtu 1500
+ip link set dev Vlan104 mtu 1500
+ip link set dev Vlan200 mtu 1500
+
+ip link set dev Vlan102 type bridge stp_state 0
+ip link set dev Vlan104 type bridge stp_state 0
+ip link set dev Vlan200 type bridge stp_state 0
+
+ip link set eth1.102 master Vlan102
+ip link set eth1.104 master Vlan104
+
+# Ethernet3 = access VLAN 200
+ip link set eth3 master Vlan200
+
+ip link set Vlan102 up
+ip link set Vlan104 up
+ip link set Vlan200 up
+
+# ============================================================
+# SVI ADDRESSES
+# ============================================================
+
+ip addr add 192.168.100.3/31 dev Vlan102
+ip -6 addr add 2001:db8:100:102::2/64 dev Vlan102
+
+ip addr add 192.168.100.7/31 dev Vlan104
+ip -6 addr add 2001:db8:100:104::2/64 dev Vlan104
+
+# Management SVI
+ip addr add 192.168.200.4/24 dev Vlan200
+ip -6 addr add 2001:db8:200::4/64 dev Vlan200
+
+# ============================================================
+# LOOPBACK0 EQUIVALENT
+# ============================================================
+
+ip addr replace 192.168.255.4/32 dev lo
+ip -6 addr replace 2001:db8:255::4/128 dev lo
+ip link set lo up
+
+# ============================================================
+# ETH2 - BGP / NAT OUTSIDE TOWARD R5
+# ============================================================
+
+ip addr add 172.20.5.2/31 dev eth2
+ip -6 addr add 2001:db8:205:2::1/64 dev eth2
+
+# ============================================================
+# ENABLE FRR DAEMONS
+# ============================================================
+
+sed -i 's/^zebra=.*/zebra=yes/' /etc/frr/daemons
+sed -i 's/^bgpd=.*/bgpd=yes/' /etc/frr/daemons
+sed -i 's/^ospfd=.*/ospfd=yes/' /etc/frr/daemons
+sed -i 's/^ospf6d=.*/ospf6d=yes/' /etc/frr/daemons
+
+# ============================================================
+# FRR CONFIGURATION
+# ============================================================
+
+cat > /etc/frr/frr.conf <<'EOF'
+frr defaults traditional
+hostname R4
+service integrated-vtysh-config
+!
+ip prefix-list WEB-V4 seq 10 permit 172.30.50.10/32
+!
+ipv6 prefix-list WEB-V6 seq 10 permit 2001:db8:3050::10/128
+!
+route-map BGP4-TO-OSPF permit 10
+ match ip address prefix-list WEB-V4
+!
+route-map BGP6-TO-OSPF permit 10
+ match ipv6 address prefix-list WEB-V6
+!
+interface Vlan102
+ ip ospf area 0.0.0.0
+ ipv6 ospf6 area 0.0.0.0
+!
+interface Vlan104
+ ip ospf area 0.0.0.0
+ ipv6 ospf6 area 0.0.0.0
+!
+router ospf
+ ospf router-id 192.168.255.4
+ redistribute bgp route-map BGP4-TO-OSPF
+!
+router ospf6
+ ospf6 router-id 192.168.255.4
+ redistribute bgp route-map BGP6-TO-OSPF
+!
+router bgp 65004
+ bgp router-id 192.168.255.4
+ no bgp default ipv4-unicast
+ no bgp ebgp-requires-policy
+ !
+ neighbor 172.20.5.3 remote-as 65005
+ neighbor 2001:db8:205:2::2 remote-as 65005
+ !
+ address-family ipv4 unicast
+  neighbor 172.20.5.3 activate
+  network 192.168.10.0/24
+  network 192.168.20.0/24
+ exit-address-family
+ !
+ address-family ipv6 unicast
+  neighbor 2001:db8:205:2::2 activate
+  network 2001:db8:10::/64
+  network 2001:db8:20::/64
+  network 2001:db8:30::/64
+ exit-address-family
+!
+line vty
+!
+EOF
+
+chown frr:frr /etc/frr/frr.conf
+chmod 640 /etc/frr/frr.conf
+
+# ============================================================
+# START / VERIFY FRR DAEMONS
+#
+# Do NOT use pgrep alone here. A zombie process still matches
+# pgrep even though the routing daemon is no longer functional.
+# ============================================================
+
+daemon_alive() {
+    ps -C "$1" -o stat= 2>/dev/null | grep -qv '^Z'
+}
+
+if ! daemon_alive zebra; then
+    nohup /usr/lib/frr/zebra \
+        -d -F traditional -A 127.0.0.1 -s 90000000 \
+        >/tmp/zebra.log 2>&1 &
+    sleep 1
+fi
+
+if ! daemon_alive bgpd; then
+    nohup /usr/lib/frr/bgpd \
+        -d -F traditional -A 127.0.0.1 \
+        >/tmp/bgpd.log 2>&1 &
+    sleep 1
+fi
+
+if ! daemon_alive ospfd; then
+    nohup /usr/lib/frr/ospfd \
+        -d -F traditional -A 127.0.0.1 \
+        >/tmp/ospfd.log 2>&1 &
+    sleep 1
+fi
+
+if ! daemon_alive ospf6d; then
+    nohup /usr/lib/frr/ospf6d \
+        -d -F traditional -A ::1 \
+        >/tmp/ospf6d.log 2>&1 &
+    sleep 1
+fi
+
+for daemon in zebra bgpd ospfd ospf6d; do
+    if ! daemon_alive "$daemon"; then
+        echo "ERROR: FRR daemon $daemon failed to start"
+        cat "/tmp/${daemon}.log" 2>/dev/null || true
+        exit 1
+    fi
+done
+
+vtysh -b
+
+# Force immediate IPv6 BGP reevaluation after the eth2 address refresh.
+vtysh -c 'clear bgp 2001:db8:205:2::2' || true
+
+# ============================================================
+# STATEFUL NAT / PAT
+#
+# Inside:
+#   192.168.10.0/24
+#   192.168.20.0/24
+#
+# Outside:
+#   eth2 = 172.20.5.2/31
+#
+# IPv6 remains native and untranslated.
+# ============================================================
+
+nft delete table ip EDGE_PAT 2>/dev/null || true
+
+nft -f - <<'EOF'
+table ip EDGE_PAT {
+    chain postrouting {
+        type nat hook postrouting priority srcnat;
+        policy accept;
+
+        oifname "eth2" ip saddr 192.168.10.0/24 masquerade
+        oifname "eth2" ip saddr 192.168.20.0/24 masquerade
+    }
+}
+EOF
+
+echo "R4 configuration complete."

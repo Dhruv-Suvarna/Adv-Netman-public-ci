@@ -1,0 +1,44 @@
+{% load core_extras %}
+<div class="card" style="margin-top:16px;" id="soak"><h3>Probation soak</h3>
+  <p>A soak observes <strong>this exact immutable Probation artifact</strong> over real elapsed time ({{ soak_policy.duration_seconds|soak_duration }} under the current server policy), collecting read-only evidence on a schedule.
+    A technical pass does <strong>not</strong> promote anything: only your explicit Golden decision does. Starting a soak contacts no device, locks nothing and changes no configuration.</p>
+  {% if not soak_policy.is_production_duration %}<p><span class="badge badge--danger">NOT A PRODUCTION DURATION</span> The server is configured with a soak shorter than seven days. A soak like this is for automated testing only.</p>{% endif %}
+
+  {% if soak_active %}
+    <p><span class="badge badge--info">RUNNING</span> <a href="{% url 'core:soak_detail' soak_active.soak_id %}"><code>{{ soak_active.soak_id }}</code></a> started {{ soak_active.started_at|date:"Y-m-d H:i:s" }} UTC by {{ soak_active.started_by }}; required end <strong>{{ soak_active.required_end_at|date:"Y-m-d H:i:s" }} UTC</strong>.</p>
+    <table class="data-table"><tbody>
+      <tr><th>Elapsed / remaining (server time when this page loaded)</th><td>{{ soak_progress.elapsed_seconds|soak_duration }} elapsed · {{ soak_progress.remaining_seconds|soak_duration }} remaining ({{ soak_progress.percent_elapsed }}%)</td></tr>
+      <tr><th>Samples / coverage</th><td>{{ soak_progress.stats.samples }} samples · {{ soak_progress.stats.covered_intervals }} of {{ soak_progress.stats.expected_intervals }} intervals covered ({{ soak_progress.stats.coverage_percent }}%) · longest gap {{ soak_progress.stats.max_gap_seconds|soak_duration }}</td></tr>
+      <tr><th>Latest sample</th><td>{% if soak_progress.latest %}{{ soak_progress.latest.sampled_at|date:"Y-m-d H:i:s" }} UTC — <span class="badge badge--{{ soak_progress.latest.result|bundle_badge_class }}">{{ soak_progress.latest.result }}</span>{% else %}none yet (the collector has not run){% endif %}</td></tr>
+      <tr><th>Warnings / incomplete samples</th><td>{{ soak_progress.stats.warning_samples }} with warnings · {{ soak_progress.stats.incomplete_samples }} incomplete</td></tr>
+    </tbody></table>
+  {% elif soak_pending %}
+    <p><span class="badge badge--success">TECHNICAL SOAK PASSED</span> <a href="{% url 'core:soak_detail' soak_pending.soak_id %}"><code>{{ soak_pending.soak_id }}</code></a> — <strong>operator Golden decision required.</strong></p>
+  {% elif soak_start.eligible %}
+    <form method="post" action="{% url 'core:bundle_soak_start' bundle.bundle_id %}">{% csrf_token %}
+      <table class="data-table"><tbody>
+        <tr><th>Observed artifact</th><td><code>{{ bundle.bundle_id }}</code> · bundle digest <code>{{ bundle.bundle_digest }}</code></td></tr>
+        <tr><th>Source UAT / execution</th><td><a href="{% url 'core:bundle_detail' bundle.source_uat.bundle_id %}"><code>{{ bundle.source_uat.bundle_id }}</code></a> / <code>{{ bundle.execution_run.run_id }}</code></td></tr>
+        <tr><th>Targets</th><td>{{ soak_start.devices|join:", " }}</td></tr>
+        <tr><th>Required duration</th><td>{{ soak_policy.duration_seconds|soak_duration }} of elapsed time (fixed by the server; you cannot change it)</td></tr>
+        <tr><th>Evidence policy</th><td>a sample every {{ soak_policy.sample_interval_seconds|soak_duration }} · no unobserved gap over {{ soak_policy.max_gap_seconds|soak_duration }} · at least {{ soak_policy.min_coverage_percent }}% of intervals covered · stale or missing telemetry is never a pass</td></tr>
+        <tr><th>Current integrity / interference</th><td><span class="badge badge--success">INTEGRITY: INTACT</span> · no later execution touched the targets</td></tr>
+      </tbody></table>
+      <p><label><input type="checkbox" name="confirm" required> I understand this starts an observation window only: the soak samples read-only evidence for the full duration, and nothing is promoted without my later explicit decision.</label></p>
+      <button class="btn btn--primary" type="submit">{% if soak_policy.duration_seconds == soak_policy.production_duration_seconds %}Start 7-Day Probation Soak{% else %}Start Probation Soak ({{ soak_policy.duration_seconds|soak_duration }}){% endif %}</button>
+    </form>
+  {% else %}
+    <p><strong>A soak can not start:</strong></p>
+    <ul>{% for b in soak_start.blockers %}<li><span class="badge badge--danger">{{ b.code }}</span> {{ b.message }} <em>{{ b.remediation }}</em></li>{% endfor %}</ul>
+  {% endif %}
+
+  {% if soak_runs %}
+    <h4>Soak history</h4>
+    <table class="data-table"><thead><tr><th>Soak</th><th>State</th><th>Result</th><th>Started (UTC)</th><th>Required end (UTC)</th><th>Finished (UTC)</th><th>Reason</th></tr></thead><tbody>
+    {% for r in soak_runs %}<tr>
+      <td><a href="{% url 'core:soak_detail' r.soak_id %}"><code>{{ r.soak_id }}</code></a></td><td><span class="badge badge--{{ r.state|bundle_badge_class }}">{{ r.state }}</span></td>
+      <td>{% if r.result %}<span class="badge badge--{{ r.result|bundle_badge_class }}">{{ r.result }}</span>{% else %}—{% endif %}</td>
+      <td>{{ r.started_at|date:"Y-m-d H:i" }}</td><td>{{ r.required_end_at|date:"Y-m-d H:i" }}</td><td>{{ r.finished_at|date:"Y-m-d H:i"|default:"—" }}</td><td>{{ r.terminal_reason|default:"—" }}</td>
+    </tr>{% endfor %}</tbody></table>
+  {% endif %}
+</div>

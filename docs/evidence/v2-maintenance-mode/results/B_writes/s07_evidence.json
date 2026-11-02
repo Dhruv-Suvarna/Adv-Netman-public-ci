@@ -1,0 +1,100 @@
+{
+ "record": "MNT-000002",
+ "state": "ENTRY_ABORTED_RESTORED",
+ "escalated": false,
+ "plan_hash": "b81830449e1b0c0e90442a1170d7d2d1305272417fe10f8bdee605b131a28a16",
+ "plan_status": "CURRENT",
+ "findings": [],
+ "maintenance_only_state": [],
+ "chain_ok": true,
+ "entries": [
+  {
+   "seq": 1,
+   "kind": "REQUESTED",
+   "from": "",
+   "to": "REQUESTED",
+   "summary": "requested by sandbox-operator",
+   "actor": "sandbox-operator"
+  },
+  {
+   "seq": 2,
+   "kind": "OBSERVATION",
+   "from": "REQUESTED",
+   "to": "READY",
+   "summary": "readiness READY",
+   "actor": "sandbox-operator"
+  },
+  {
+   "seq": 3,
+   "kind": "PLAN",
+   "from": "READY",
+   "to": "PLANNED",
+   "summary": "plan b81830449e1b: 3 drain / 3 restore operation(s)",
+   "actor": "nmas"
+  },
+  {
+   "seq": 4,
+   "kind": "APPROVAL",
+   "from": "PLANNED",
+   "to": "APPROVED",
+   "summary": "plan b81830449e1b approved by sandbox-approver",
+   "actor": "sandbox-approver"
+  },
+  {
+   "seq": 5,
+   "kind": "TRANSITION",
+   "from": "APPROVED",
+   "to": "ENTERING",
+   "summary": "APPROVED -> ENTERING",
+   "actor": "sandbox-operator"
+  },
+  {
+   "seq": 6,
+   "kind": "STEP",
+   "from": "",
+   "to": "ENTERING",
+   "summary": "before S1-shield-install-drain",
+   "actor": "maintenance-worker"
+  },
+  {
+   "seq": 7,
+   "kind": "STEP",
+   "from": "",
+   "to": "ENTERING",
+   "summary": "after S1-shield-install-drain",
+   "actor": "maintenance-worker"
+  },
+  {
+   "seq": 8,
+   "kind": "STEP",
+   "from": "",
+   "to": "ENTERING",
+   "summary": "before S1-uplink-metric-drain",
+   "actor": "maintenance-worker"
+  },
+  {
+   "seq": 9,
+   "kind": "STEP",
+   "from": "",
+   "to": "ENTERING",
+   "summary": "after S1-uplink-metric-drain",
+   "actor": "maintenance-worker"
+  },
+  {
+   "seq": 10,
+   "kind": "ENTRY_RUN",
+   "from": "",
+   "to": "ENTERING",
+   "summary": "entry aborted",
+   "actor": "nmas"
+  },
+  {
+   "seq": 11,
+   "kind": "RESTORE_RUN",
+   "from": "RESTORING",
+   "to": "ENTRY_ABORTED_RESTORED",
+   "summary": "RESTORING -> ENTRY_ABORTED_RESTORED",
+   "actor": "nmas"
+  }
+ ]
+}

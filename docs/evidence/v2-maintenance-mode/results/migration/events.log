@@ -1,0 +1,13 @@
+1792270254.503 START nmas-lifecycle forward  load 12.83 29.82 21.65
+1792270259.135 STARTUP start {"R1": {"startup": "f7e23531997fbe0c2600218ea7c7885f2591e40bad652ec900ac9558e2b0b0db", "running": "f7e23531997fbe0c2600218ea7c7885f2591e40bad652ec900ac9558e2b0b0db"}, "R2": {"startup": "a76c51916fd1da35620973d9cd3e718d0c8bce96e215caf17f158319395beb23", "running": "a76c51916fd1da35620973d9cd3e718d0c8bce96e215caf17f158319395beb23"}, "S1": {"startup": "f7e4fd4fdee0bb8346329a6add7e553851d7bba67c8a0b02db06e3c4ae6efa31", "running": "f7e4fd4fdee0bb8346329a6add7e553851d7bba67c8a0b02db06e3c4ae6efa31"}, "S2": {"startup": "ee5f0cb47cb509c8548e6d213cec4d76666ab33768f56cbc53d08
+1792270295.739 LIFECYCLE change CHG-20261017-0001 {"transition": {"kind": "BASELINE_STATIC_IPV6_TO_ISIS", "definition": "sandbox", "schema": 1}}
+1792270295.762 LIFECYCLE validation PASS findings=0
+1792270295.854 LIFECYCLE plan 0dc977e8 operations=48 permanent=24 temporary=24
+1792270416.273 LIFECYCLE precheck PASS {"status": "PASS", "blockers": []}
+1792270423.039 LIFECYCLE approved READY_TO_DEPLOY
+1792270429.557 LIFECYCLE execute begin load 32.48 31.44 23.61
+1792271796.488 LIFECYCLE execute SUCCEEDED lifecycle=DEPLOYED probes_lost=0 applied=48 compensated=0 temporary_remaining=[] restored=None
+1792271801.127 CONFIG end {"r1": "5408a3ab57b34d17", "r2": "4d5eb24485271374", "s1": "c14991f826026d59", "s2": "9e1955c8185575b0"} baseline-restored=False covers {"c3": 0, "c4": 0}
+1792271801.127 STARTUP end {"R1": {"startup": "e496c8b4641be1f53c0166a4043e05e327be6a892b0d2dc628cdbc0fc3ba9921", "running": "e496c8b4641be1f53c0166a4043e05e327be6a892b0d2dc628cdbc0fc3ba9921"}, "R2": {"startup": "55f21992ba1908eb09b5410fccf530d3040562b50766f8c802f95b7ebfc685e6", "running": "55f21992ba1908eb09b5410fccf530d3040562b50766f8c802f95b7ebfc685e6"}, "S1": {"startup": "7322233ef4b929928fdb2f48ab62b5748bb394583509164eed7ee9bbeaf0aa57", "running": "7322233ef4b929928fdb2f48ab62b5748bb394583509164eed7ee9bbeaf0aa57"}, "S2": {"startup": "0674eda203dccc8f536b85f6a7ad4e7456e91c24520c3177da203cc
+1792271815.181 PROBES answered=858898 lost=0 errors=[]
+1792271834.855 END ok load 19.90 21.64 24.17

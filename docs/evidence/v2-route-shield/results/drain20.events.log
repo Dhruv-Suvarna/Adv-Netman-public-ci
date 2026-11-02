@@ -1,0 +1,683 @@
+1791726284.454 START drain 20 load 20.45 23.38 24.30
+1791726285.713 CONFIG start r1=5408a3ab57b34d17 r2=4d5eb24485271374 s1=c14991f826026d59 s2=9e1955c8185575b0
+1791726299.938 C1 begin load 22.18 23.61 24.36
+1791726300.450 D1-r1-drain shield-install s1 2001:db8:110:3::2
+1791726303.249 D1-r1-drain shield-verified s1
+1791726306.249 D1-r1-drain metric s1 1000
+1791726308.781 D1-r1-drain path s1 Vlan99
+1791726315.510 D1-r1-drain takeover-nexthop s1 2001:db8::/32 isisL2 fe80::42:aff:febe:c180%vlan99 before=STALE after=DELAY
+1791726315.510 D1-r1-drain shield-remove s1
+1791726317.557 D1-r1-drain shield-removed s1
+1791726318.365 D1-r1-drain verified s1 Vlan99 vlan99
+1791726322.809 D1-r1-restore shield-install s1 2001:db8:110:1::1
+1791726324.326 D1-r1-restore shield-verified s1
+1791726327.326 D1-r1-restore metric s1 10
+1791726329.337 D1-r1-restore path s1 Ethernet1
+1791726335.450 D1-r1-restore takeover-nexthop s1 2001:db8::/32 isisL2 fe80::42:aff:fefb:1b02%eth1 before=DELAY after=DELAY
+1791726335.450 D1-r1-restore shield-remove s1
+1791726337.034 D1-r1-restore shield-removed s1
+1791726337.623 D1-r1-restore verified s1 Ethernet1 eth1
+1791726341.963 D1-r2-drain shield-install s2 2001:db8:110:3::1
+1791726343.558 D1-r2-drain shield-verified s2
+1791726346.558 D1-r2-drain metric s2 1000
+1791726349.314 D1-r2-drain path s2 Vlan99
+1791726355.602 D1-r2-drain takeover-nexthop s2 2001:db8::/32 isisL2 fe80::42:aff:fe02:a881%vlan99 before=DELAY after=DELAY
+1791726355.602 D1-r2-drain shield-remove s2
+1791726357.074 D1-r2-drain shield-removed s2
+1791726357.780 D1-r2-drain verified s2 Vlan99 vlan99
+1791726362.116 D1-r2-restore shield-install s2 2001:db8:110:2::1
+1791726363.645 D1-r2-restore shield-verified s2
+1791726366.645 D1-r2-restore metric s2 10
+1791726368.822 D1-r2-restore path s2 Ethernet1
+1791726374.937 D1-r2-restore takeover-nexthop s2 2001:db8::/32 isisL2 fe80::42:aff:fefb:1c02%eth1 before=REACHABLE after=REACHABLE
+1791726374.937 D1-r2-restore shield-remove s2
+1791726376.652 D1-r2-restore shield-removed s2
+1791726377.375 D1-r2-restore verified s2 Ethernet1 eth1
+1791726386.376 C1 end load 22.82 23.77 24.37
+1791726399.548 C2 begin load 21.75 23.50 24.27
+1791726399.884 D2-r1-drain shield-install s1 2001:db8:110:3::2
+1791726401.522 D2-r1-drain shield-verified s1
+1791726404.523 D2-r1-drain metric s1 1000
+1791726407.273 D2-r1-drain path s1 Vlan99
+1791726413.402 D2-r1-drain takeover-nexthop s1 2001:db8::/32 isisL2 fe80::42:aff:febe:c180%vlan99 before=DELAY after=DELAY
+1791726413.402 D2-r1-drain shield-remove s1
+1791726414.946 D2-r1-drain shield-removed s1
+1791726415.663 D2-r1-drain verified s1 Vlan99 vlan99
+1791726420.058 D2-r1-restore shield-install s1 2001:db8:110:1::1
+1791726421.621 D2-r1-restore shield-verified s1
+1791726424.621 D2-r1-restore metric s1 10
+1791726426.881 D2-r1-restore path s1 Ethernet1
+1791726433.041 D2-r1-restore takeover-nexthop s1 2001:db8::/32 isisL2 fe80::42:aff:fefb:1b02%eth1 before=DELAY after=DELAY
+1791726433.041 D2-r1-restore shield-remove s1
+1791726434.598 D2-r1-restore shield-removed s1
+1791726435.333 D2-r1-restore verified s1 Ethernet1 eth1
+1791726439.751 D2-r2-drain shield-install s2 2001:db8:110:3::1
+1791726441.343 D2-r2-drain shield-verified s2
+1791726444.343 D2-r2-drain metric s2 1000
+1791726446.871 D2-r2-drain path s2 Vlan99
+1791726453.167 D2-r2-drain takeover-nexthop s2 2001:db8::/32 isisL2 fe80::42:aff:fe02:a881%vlan99 before=DELAY after=DELAY
+1791726453.167 D2-r2-drain shield-remove s2
+1791726454.723 D2-r2-drain shield-removed s2
+1791726455.353 D2-r2-drain verified s2 Vlan99 vlan99
+1791726459.773 D2-r2-restore shield-install s2 2001:db8:110:2::1
+1791726461.455 D2-r2-restore shield-verified s2
+1791726464.455 D2-r2-restore metric s2 10
+1791726467.164 D2-r2-restore path s2 Ethernet1
+1791726473.198 D2-r2-restore takeover-nexthop s2 2001:db8::/32 isisL2 fe80::42:aff:fefb:1c02%eth1 before=REACHABLE after=REACHABLE
+1791726473.198 D2-r2-restore shield-remove s2
+1791726474.852 D2-r2-restore shield-removed s2
+1791726475.488 D2-r2-restore verified s2 Ethernet1 eth1
+1791726484.489 C2 end load 18.70 21.94 23.65
+1791726497.708 C3 begin load 19.04 21.86 23.59
+1791726498.072 D3-r1-drain shield-install s1 2001:db8:110:3::2
+1791726499.824 D3-r1-drain shield-verified s1
+1791726502.825 D3-r1-drain metric s1 1000
+1791726505.112 D3-r1-drain path s1 Vlan99
+1791726511.383 D3-r1-drain takeover-nexthop s1 2001:db8::/32 isisL2 fe80::42:aff:febe:c180%vlan99 before=DELAY after=DELAY
+1791726511.383 D3-r1-drain shield-remove s1
+1791726513.081 D3-r1-drain shield-removed s1
+1791726513.574 D3-r1-drain verified s1 Vlan99 vlan99
+1791726517.958 D3-r1-restore shield-install s1 2001:db8:110:1::1
+1791726519.339 D3-r1-restore shield-verified s1
+1791726522.339 D3-r1-restore metric s1 10
+1791726524.369 D3-r1-restore path s1 Ethernet1
+1791726530.427 D3-r1-restore takeover-nexthop s1 2001:db8::/32 isisL2 fe80::42:aff:fefb:1b02%eth1 before=DELAY after=DELAY
+1791726530.427 D3-r1-restore shield-remove s1
+1791726532.062 D3-r1-restore shield-removed s1
+1791726532.794 D3-r1-restore verified s1 Ethernet1 eth1
+1791726537.157 D3-r2-drain shield-install s2 2001:db8:110:3::1
+1791726538.715 D3-r2-drain shield-verified s2
+1791726541.715 D3-r2-drain metric s2 1000
+1791726543.882 D3-r2-drain path s2 Vlan99
+1791726550.110 D3-r2-drain takeover-nexthop s2 2001:db8::/32 isisL2 fe80::42:aff:fe02:a881%vlan99 before=DELAY after=DELAY
+1791726550.110 D3-r2-drain shield-remove s2
+1791726551.907 D3-r2-drain shield-removed s2
+1791726552.604 D3-r2-drain verified s2 Vlan99 vlan99
+1791726556.977 D3-r2-restore shield-install s2 2001:db8:110:2::1
+1791726558.880 D3-r2-restore shield-verified s2
+1791726561.880 D3-r2-restore metric s2 10
+1791726564.405 D3-r2-restore path s2 Ethernet1
+1791726570.395 D3-r2-restore takeover-nexthop s2 2001:db8::/32 isisL2 fe80::42:aff:fefb:1c02%eth1 before=REACHABLE after=REACHABLE
+1791726570.395 D3-r2-restore shield-remove s2
+1791726571.826 D3-r2-restore shield-removed s2
+1791726572.412 D3-r2-restore verified s2 Ethernet1 eth1
+1791726581.413 C3 end load 17.75 20.92 23.12
+1791726595.083 C4 begin load 19.22 21.07 23.14
+1791726595.456 D4-r1-drain shield-install s1 2001:db8:110:3::2
+1791726597.544 D4-r1-drain shield-verified s1
+1791726600.544 D4-r1-drain metric s1 1000
+1791726602.593 D4-r1-drain path s1 Vlan99
+1791726608.668 D4-r1-drain takeover-nexthop s1 2001:db8::/32 isisL2 fe80::42:aff:febe:c180%vlan99 before=DELAY after=DELAY
+1791726608.668 D4-r1-drain shield-remove s1
+1791726610.235 D4-r1-drain shield-removed s1
+1791726610.856 D4-r1-drain verified s1 Vlan99 vlan99
+1791726615.223 D4-r1-restore shield-install s1 2001:db8:110:1::1
+1791726617.230 D4-r1-restore shield-verified s1
+1791726620.230 D4-r1-restore metric s1 10
+1791726622.531 D4-r1-restore path s1 Ethernet1
+1791726628.581 D4-r1-restore takeover-nexthop s1 2001:db8::/32 isisL2 fe80::42:aff:fefb:1b02%eth1 before=DELAY after=DELAY
+1791726628.581 D4-r1-restore shield-remove s1
+1791726630.172 D4-r1-restore shield-removed s1
+1791726630.747 D4-r1-restore verified s1 Ethernet1 eth1
+1791726635.126 D4-r2-drain shield-install s2 2001:db8:110:3::1
+1791726636.698 D4-r2-drain shield-verified s2
+1791726639.699 D4-r2-drain metric s2 1000
+1791726641.856 D4-r2-drain path s2 Vlan99
+1791726648.282 D4-r2-drain takeover-nexthop s2 2001:db8::/32 isisL2 fe80::42:aff:fe02:a881%vlan99 before=DELAY after=DELAY
+1791726648.282 D4-r2-drain shield-remove s2
+1791726650.039 D4-r2-drain shield-removed s2
+1791726650.513 D4-r2-drain verified s2 Vlan99 vlan99
+1791726654.871 D4-r2-restore shield-install s2 2001:db8:110:2::1
+1791726656.603 D4-r2-restore shield-verified s2
+1791726659.603 D4-r2-restore metric s2 10
+1791726661.859 D4-r2-restore path s2 Ethernet1
+1791726668.332 D4-r2-restore takeover-nexthop s2 2001:db8::/32 isisL2 fe80::42:aff:fefb:1c02%eth1 before=REACHABLE after=REACHABLE
+1791726668.332 D4-r2-restore shield-remove s2
+1791726670.176 D4-r2-restore shield-removed s2
+1791726670.891 D4-r2-restore verified s2 Ethernet1 eth1
+1791726679.891 C4 end load 22.21 21.44 23.08
+1791726694.753 C5 begin load 22.04 21.43 23.05
+1791726695.219 D5-r1-drain shield-install s1 2001:db8:110:3::2
+1791726697.575 D5-r1-drain shield-verified s1
+1791726700.575 D5-r1-drain metric s1 1000
+1791726703.356 D5-r1-drain path s1 Vlan99
+1791726709.720 D5-r1-drain takeover-nexthop s1 2001:db8::/32 isisL2 fe80::42:aff:febe:c180%vlan99 before=DELAY after=DELAY
+1791726709.720 D5-r1-drain shield-remove s1
+1791726712.198 D5-r1-drain shield-removed s1
+1791726713.205 D5-r1-drain verified s1 Vlan99 vlan99
+1791726717.657 D5-r1-restore shield-install s1 2001:db8:110:1::1
+1791726719.785 D5-r1-restore shield-verified s1
+1791726722.786 D5-r1-restore metric s1 10
+1791726726.227 D5-r1-restore path s1 Ethernet1
+1791726732.678 D5-r1-restore takeover-nexthop s1 2001:db8::/32 isisL2 fe80::42:aff:fefb:1b02%eth1 before=DELAY after=DELAY
+1791726732.678 D5-r1-restore shield-remove s1
+1791726734.422 D5-r1-restore shield-removed s1
+1791726735.134 D5-r1-restore verified s1 Ethernet1 eth1
+1791726739.597 D5-r2-drain shield-install s2 2001:db8:110:3::1
+1791726741.802 D5-r2-drain shield-verified s2
+1791726744.802 D5-r2-drain metric s2 1000
+1791726747.287 D5-r2-drain path s2 Vlan99
+1791726753.415 D5-r2-drain takeover-nexthop s2 2001:db8::/32 isisL2 fe80::42:aff:fe02:a881%vlan99 before=DELAY after=DELAY
+1791726753.415 D5-r2-drain shield-remove s2
+1791726754.931 D5-r2-drain shield-removed s2
+1791726755.409 D5-r2-drain verified s2 Vlan99 vlan99
+1791726759.794 D5-r2-restore shield-install s2 2001:db8:110:2::1
+1791726761.769 D5-r2-restore shield-verified s2
+1791726764.769 D5-r2-restore metric s2 10
+1791726767.371 D5-r2-restore path s2 Ethernet1
+1791726773.465 D5-r2-restore takeover-nexthop s2 2001:db8::/32 isisL2 fe80::42:aff:fefb:1c02%eth1 before=REACHABLE after=REACHABLE
+1791726773.465 D5-r2-restore shield-remove s2
+1791726775.040 D5-r2-restore shield-removed s2
+1791726775.671 D5-r2-restore verified s2 Ethernet1 eth1
+1791726784.671 C5 end load 25.94 23.25 23.57
+1791726797.973 C6 begin load 27.81 23.76 23.72
+1791726798.377 D6-r1-drain shield-install s1 2001:db8:110:3::2
+1791726800.132 D6-r1-drain shield-verified s1
+1791726803.132 D6-r1-drain metric s1 1000
+1791726805.305 D6-r1-drain path s1 Vlan99
+1791726811.353 D6-r1-drain takeover-nexthop s1 2001:db8::/32 isisL2 fe80::42:aff:febe:c180%vlan99 before=DELAY after=DELAY
+1791726811.353 D6-r1-drain shield-remove s1
+1791726812.886 D6-r1-drain shield-removed s1
+1791726813.399 D6-r1-drain verified s1 Vlan99 vlan99
+1791726817.801 D6-r1-restore shield-install s1 2001:db8:110:1::1
+1791726819.331 D6-r1-restore shield-verified s1
+1791726822.331 D6-r1-restore metric s1 10
+1791726824.434 D6-r1-restore path s1 Ethernet1
+1791726830.528 D6-r1-restore takeover-nexthop s1 2001:db8::/32 isisL2 fe80::42:aff:fefb:1b02%eth1 before=DELAY after=DELAY
+1791726830.528 D6-r1-restore shield-remove s1
+1791726832.091 D6-r1-restore shield-removed s1
+1791726832.711 D6-r1-restore verified s1 Ethernet1 eth1
+1791726837.151 D6-r2-drain shield-install s2 2001:db8:110:3::1
+1791726839.033 D6-r2-drain shield-verified s2
+1791726842.033 D6-r2-drain metric s2 1000
+1791726844.051 D6-r2-drain path s2 Vlan99
+1791726850.499 D6-r2-drain takeover-nexthop s2 2001:db8::/32 isisL2 fe80::42:aff:fe02:a881%vlan99 before=DELAY after=DELAY
+1791726850.499 D6-r2-drain shield-remove s2
+1791726852.058 D6-r2-drain shield-removed s2
+1791726852.559 D6-r2-drain verified s2 Vlan99 vlan99
+1791726857.032 D6-r2-restore shield-install s2 2001:db8:110:2::1
+1791726859.970 D6-r2-restore shield-verified s2
+1791726862.970 D6-r2-restore metric s2 10
+1791726865.647 D6-r2-restore path s2 Ethernet1
+1791726871.778 D6-r2-restore takeover-nexthop s2 2001:db8::/32 isisL2 fe80::42:aff:fefb:1c02%eth1 before=REACHABLE after=REACHABLE
+1791726871.778 D6-r2-restore shield-remove s2
+1791726873.605 D6-r2-restore shield-removed s2
+1791726874.248 D6-r2-restore verified s2 Ethernet1 eth1
+1791726883.248 C6 end load 28.74 24.91 24.13
+1791726897.738 C7 begin load 28.65 25.08 24.19
+1791726898.109 D7-r1-drain shield-install s1 2001:db8:110:3::2
+1791726899.938 D7-r1-drain shield-verified s1
+1791726902.938 D7-r1-drain metric s1 1000
+1791726905.327 D7-r1-drain path s1 Vlan99
+1791726911.483 D7-r1-drain takeover-nexthop s1 2001:db8::/32 isisL2 fe80::42:aff:febe:c180%vlan99 before=DELAY after=DELAY
+1791726911.484 D7-r1-drain shield-remove s1
+1791726913.249 D7-r1-drain shield-removed s1
+1791726914.072 D7-r1-drain verified s1 Vlan99 vlan99
+1791726918.438 D7-r1-restore shield-install s1 2001:db8:110:1::1
+1791726920.495 D7-r1-restore shield-verified s1
+1791726923.495 D7-r1-restore metric s1 10
+1791726925.666 D7-r1-restore path s1 Ethernet1
+1791726931.810 D7-r1-restore takeover-nexthop s1 2001:db8::/32 isisL2 fe80::42:aff:fefb:1b02%eth1 before=DELAY after=DELAY
+1791726931.810 D7-r1-restore shield-remove s1
+1791726933.360 D7-r1-restore shield-removed s1
+1791726933.934 D7-r1-restore verified s1 Ethernet1 eth1
+1791726938.341 D7-r2-drain shield-install s2 2001:db8:110:3::1
+1791726939.754 D7-r2-drain shield-verified s2
+1791726942.754 D7-r2-drain metric s2 1000
+1791726945.714 D7-r2-drain path s2 Vlan99
+1791726951.882 D7-r2-drain takeover-nexthop s2 2001:db8::/32 isisL2 fe80::42:aff:fe02:a881%vlan99 before=DELAY after=DELAY
+1791726951.882 D7-r2-drain shield-remove s2
+1791726953.621 D7-r2-drain shield-removed s2
+1791726954.329 D7-r2-drain verified s2 Vlan99 vlan99
+1791726958.709 D7-r2-restore shield-install s2 2001:db8:110:2::1
+1791726960.244 D7-r2-restore shield-verified s2
+1791726963.244 D7-r2-restore metric s2 10
+1791726965.481 D7-r2-restore path s2 Ethernet1
+1791726971.534 D7-r2-restore takeover-nexthop s2 2001:db8::/32 isisL2 fe80::42:aff:fefb:1c02%eth1 before=REACHABLE after=REACHABLE
+1791726971.534 D7-r2-restore shield-remove s2
+1791726973.265 D7-r2-restore shield-removed s2
+1791726973.809 D7-r2-restore verified s2 Ethernet1 eth1
+1791726982.810 C7 end load 25.63 25.14 24.30
+1791726996.487 C8 begin load 25.84 25.20 24.33
+1791726996.901 D8-r1-drain shield-install s1 2001:db8:110:3::2
+1791726998.710 D8-r1-drain shield-verified s1
+1791727001.710 D8-r1-drain metric s1 1000
+1791727004.129 D8-r1-drain path s1 Vlan99
+1791727010.538 D8-r1-drain takeover-nexthop s1 2001:db8::/32 isisL2 fe80::42:aff:febe:c180%vlan99 before=DELAY after=DELAY
+1791727010.538 D8-r1-drain shield-remove s1
+1791727012.441 D8-r1-drain shield-removed s1
+1791727012.969 D8-r1-drain verified s1 Vlan99 vlan99
+1791727017.421 D8-r1-restore shield-install s1 2001:db8:110:1::1
+1791727019.247 D8-r1-restore shield-verified s1
+1791727022.247 D8-r1-restore metric s1 10
+1791727024.976 D8-r1-restore path s1 Ethernet1
+1791727031.054 D8-r1-restore takeover-nexthop s1 2001:db8::/32 isisL2 fe80::42:aff:fefb:1b02%eth1 before=DELAY after=DELAY
+1791727031.054 D8-r1-restore shield-remove s1
+1791727032.416 D8-r1-restore shield-removed s1
+1791727033.035 D8-r1-restore verified s1 Ethernet1 eth1
+1791727037.393 D8-r2-drain shield-install s2 2001:db8:110:3::1
+1791727039.708 D8-r2-drain shield-verified s2
+1791727042.708 D8-r2-drain metric s2 1000
+1791727045.043 D8-r2-drain path s2 Vlan99
+1791727051.287 D8-r2-drain takeover-nexthop s2 2001:db8::/32 isisL2 fe80::42:aff:fe02:a881%vlan99 before=DELAY after=DELAY
+1791727051.287 D8-r2-drain shield-remove s2
+1791727053.006 D8-r2-drain shield-removed s2
+1791727053.576 D8-r2-drain verified s2 Vlan99 vlan99
+1791727057.957 D8-r2-restore shield-install s2 2001:db8:110:2::1
+1791727059.614 D8-r2-restore shield-verified s2
+1791727062.614 D8-r2-restore metric s2 10
+1791727064.804 D8-r2-restore path s2 Ethernet1
+1791727071.286 D8-r2-restore takeover-nexthop s2 2001:db8::/32 isisL2 fe80::42:aff:fefb:1c02%eth1 before=REACHABLE after=REACHABLE
+1791727071.286 D8-r2-restore shield-remove s2
+1791727073.087 D8-r2-restore shield-removed s2
+1791727073.527 D8-r2-restore verified s2 Ethernet1 eth1
+1791727082.528 C8 end load 24.27 24.91 24.31
+1791727095.520 C9 begin load 24.47 24.93 24.33
+1791727095.927 D9-r1-drain shield-install s1 2001:db8:110:3::2
+1791727097.614 D9-r1-drain shield-verified s1
+1791727100.614 D9-r1-drain metric s1 1000
+1791727103.095 D9-r1-drain path s1 Vlan99
+1791727109.150 D9-r1-drain takeover-nexthop s1 2001:db8::/32 isisL2 fe80::42:aff:febe:c180%vlan99 before=DELAY after=DELAY
+1791727109.151 D9-r1-drain shield-remove s1
+1791727110.851 D9-r1-drain shield-removed s1
+1791727111.511 D9-r1-drain verified s1 Vlan99 vlan99
+1791727115.811 D9-r1-restore shield-install s1 2001:db8:110:1::1
+1791727117.384 D9-r1-restore shield-verified s1
+1791727120.384 D9-r1-restore metric s1 10
+1791727122.449 D9-r1-restore path s1 Ethernet1
+1791727128.513 D9-r1-restore takeover-nexthop s1 2001:db8::/32 isisL2 fe80::42:aff:fefb:1b02%eth1 before=DELAY after=DELAY
+1791727128.513 D9-r1-restore shield-remove s1
+1791727130.308 D9-r1-restore shield-removed s1
+1791727130.861 D9-r1-restore verified s1 Ethernet1 eth1
+1791727135.245 D9-r2-drain shield-install s2 2001:db8:110:3::1
+1791727137.122 D9-r2-drain shield-verified s2
+1791727140.122 D9-r2-drain metric s2 1000
+1791727142.428 D9-r2-drain path s2 Vlan99
+1791727148.516 D9-r2-drain takeover-nexthop s2 2001:db8::/32 isisL2 fe80::42:aff:fe02:a881%vlan99 before=DELAY after=DELAY
+1791727148.517 D9-r2-drain shield-remove s2
+1791727150.066 D9-r2-drain shield-removed s2
+1791727150.681 D9-r2-drain verified s2 Vlan99 vlan99
+1791727155.043 D9-r2-restore shield-install s2 2001:db8:110:2::1
+1791727156.564 D9-r2-restore shield-verified s2
+1791727159.565 D9-r2-restore metric s2 10
+1791727161.776 D9-r2-restore path s2 Ethernet1
+1791727167.758 D9-r2-restore takeover-nexthop s2 2001:db8::/32 isisL2 fe80::42:aff:fefb:1c02%eth1 before=REACHABLE after=REACHABLE
+1791727167.758 D9-r2-restore shield-remove s2
+1791727169.049 D9-r2-restore shield-removed s2
+1791727169.574 D9-r2-restore verified s2 Ethernet1 eth1
+1791727178.575 C9 end load 23.59 24.55 24.24
+1791727192.078 C10 begin load 22.50 24.28 24.16
+1791727192.419 D10-r1-drain shield-install s1 2001:db8:110:3::2
+1791727194.049 D10-r1-drain shield-verified s1
+1791727197.050 D10-r1-drain metric s1 1000
+1791727199.390 D10-r1-drain path s1 Vlan99
+1791727205.684 D10-r1-drain takeover-nexthop s1 2001:db8::/32 isisL2 fe80::42:aff:febe:c180%vlan99 before=DELAY after=DELAY
+1791727205.684 D10-r1-drain shield-remove s1
+1791727207.301 D10-r1-drain shield-removed s1
+1791727207.910 D10-r1-drain verified s1 Vlan99 vlan99
+1791727212.324 D10-r1-restore shield-install s1 2001:db8:110:1::1
+1791727214.101 D10-r1-restore shield-verified s1
+1791727217.102 D10-r1-restore metric s1 10
+1791727219.570 D10-r1-restore path s1 Ethernet1
+1791727225.712 D10-r1-restore takeover-nexthop s1 2001:db8::/32 isisL2 fe80::42:aff:fefb:1b02%eth1 before=DELAY after=DELAY
+1791727225.712 D10-r1-restore shield-remove s1
+1791727227.320 D10-r1-restore shield-removed s1
+1791727227.806 D10-r1-restore verified s1 Ethernet1 eth1
+1791727232.174 D10-r2-drain shield-install s2 2001:db8:110:3::1
+1791727234.013 D10-r2-drain shield-verified s2
+1791727237.014 D10-r2-drain metric s2 1000
+1791727239.265 D10-r2-drain path s2 Vlan99
+1791727245.330 D10-r2-drain takeover-nexthop s2 2001:db8::/32 isisL2 fe80::42:aff:fe02:a881%vlan99 before=DELAY after=DELAY
+1791727245.330 D10-r2-drain shield-remove s2
+1791727247.049 D10-r2-drain shield-removed s2
+1791727247.830 D10-r2-drain verified s2 Vlan99 vlan99
+1791727252.191 D10-r2-restore shield-install s2 2001:db8:110:2::1
+1791727254.038 D10-r2-restore shield-verified s2
+1791727257.038 D10-r2-restore metric s2 10
+1791727259.079 D10-r2-restore path s2 Ethernet1
+1791727265.326 D10-r2-restore takeover-nexthop s2 2001:db8::/32 isisL2 fe80::42:aff:fefb:1c02%eth1 before=REACHABLE after=REACHABLE
+1791727265.326 D10-r2-restore shield-remove s2
+1791727266.889 D10-r2-restore shield-removed s2
+1791727267.490 D10-r2-restore verified s2 Ethernet1 eth1
+1791727276.491 C10 end load 24.23 24.48 24.25
+1791727290.318 C11 begin load 23.60 24.34 24.20
+1791727290.773 D11-r1-drain shield-install s1 2001:db8:110:3::2
+1791727292.458 D11-r1-drain shield-verified s1
+1791727295.458 D11-r1-drain metric s1 1000
+1791727297.765 D11-r1-drain path s1 Vlan99
+1791727304.020 D11-r1-drain takeover-nexthop s1 2001:db8::/32 isisL2 fe80::42:aff:febe:c180%vlan99 before=DELAY after=DELAY
+1791727304.020 D11-r1-drain shield-remove s1
+1791727305.381 D11-r1-drain shield-removed s1
+1791727305.973 D11-r1-drain verified s1 Vlan99 vlan99
+1791727310.441 D11-r1-restore shield-install s1 2001:db8:110:1::1
+1791727312.338 D11-r1-restore shield-verified s1
+1791727315.338 D11-r1-restore metric s1 10
+1791727317.766 D11-r1-restore path s1 Ethernet1
+1791727323.909 D11-r1-restore takeover-nexthop s1 2001:db8::/32 isisL2 fe80::42:aff:fefb:1b02%eth1 before=DELAY after=DELAY
+1791727323.909 D11-r1-restore shield-remove s1
+1791727325.463 D11-r1-restore shield-removed s1
+1791727325.968 D11-r1-restore verified s1 Ethernet1 eth1
+1791727330.371 D11-r2-drain shield-install s2 2001:db8:110:3::1
+1791727331.650 D11-r2-drain shield-verified s2
+1791727334.650 D11-r2-drain metric s2 1000
+1791727337.263 D11-r2-drain path s2 Vlan99
+1791727343.543 D11-r2-drain takeover-nexthop s2 2001:db8::/32 isisL2 fe80::42:aff:fe02:a881%vlan99 before=DELAY after=DELAY
+1791727343.543 D11-r2-drain shield-remove s2
+1791727345.310 D11-r2-drain shield-removed s2
+1791727345.947 D11-r2-drain verified s2 Vlan99 vlan99
+1791727350.305 D11-r2-restore shield-install s2 2001:db8:110:2::1
+1791727352.137 D11-r2-restore shield-verified s2
+1791727355.137 D11-r2-restore metric s2 10
+1791727357.659 D11-r2-restore path s2 Ethernet1
+1791727363.630 D11-r2-restore takeover-nexthop s2 2001:db8::/32 isisL2 fe80::42:aff:fefb:1c02%eth1 before=REACHABLE after=REACHABLE
+1791727363.630 D11-r2-restore shield-remove s2
+1791727365.079 D11-r2-restore shield-removed s2
+1791727365.647 D11-r2-restore verified s2 Ethernet1 eth1
+1791727374.648 C11 end load 24.86 24.50 24.27
+1791727389.081 C12 begin load 22.60 24.02 24.11
+1791727389.506 D12-r1-drain shield-install s1 2001:db8:110:3::2
+1791727391.105 D12-r1-drain shield-verified s1
+1791727394.105 D12-r1-drain metric s1 1000
+1791727396.120 D12-r1-drain path s1 Vlan99
+1791727402.357 D12-r1-drain takeover-nexthop s1 2001:db8::/32 isisL2 fe80::42:aff:febe:c180%vlan99 before=DELAY after=DELAY
+1791727402.357 D12-r1-drain shield-remove s1
+1791727404.070 D12-r1-drain shield-removed s1
+1791727404.586 D12-r1-drain verified s1 Vlan99 vlan99
+1791727409.013 D12-r1-restore shield-install s1 2001:db8:110:1::1
+1791727410.743 D12-r1-restore shield-verified s1
+1791727413.743 D12-r1-restore metric s1 10
+1791727416.052 D12-r1-restore path s1 Ethernet1
+1791727422.043 D12-r1-restore takeover-nexthop s1 2001:db8::/32 isisL2 fe80::42:aff:fefb:1b02%eth1 before=DELAY after=DELAY
+1791727422.043 D12-r1-restore shield-remove s1
+1791727423.582 D12-r1-restore shield-removed s1
+1791727424.105 D12-r1-restore verified s1 Ethernet1 eth1
+1791727428.511 D12-r2-drain shield-install s2 2001:db8:110:3::1
+1791727429.863 D12-r2-drain shield-verified s2
+1791727432.863 D12-r2-drain metric s2 1000
+1791727435.075 D12-r2-drain path s2 Vlan99
+1791727441.286 D12-r2-drain takeover-nexthop s2 2001:db8::/32 isisL2 fe80::42:aff:fe02:a881%vlan99 before=DELAY after=DELAY
+1791727441.286 D12-r2-drain shield-remove s2
+1791727443.042 D12-r2-drain shield-removed s2
+1791727443.633 D12-r2-drain verified s2 Vlan99 vlan99
+1791727447.989 D12-r2-restore shield-install s2 2001:db8:110:2::1
+1791727449.571 D12-r2-restore shield-verified s2
+1791727452.571 D12-r2-restore metric s2 10
+1791727454.851 D12-r2-restore path s2 Ethernet1
+1791727461.088 D12-r2-restore takeover-nexthop s2 2001:db8::/32 isisL2 fe80::42:aff:fefb:1c02%eth1 before=REACHABLE after=REACHABLE
+1791727461.088 D12-r2-restore shield-remove s2
+1791727463.001 D12-r2-restore shield-removed s2
+1791727463.497 D12-r2-restore verified s2 Ethernet1 eth1
+1791727472.498 C12 end load 24.67 24.30 24.20
+1791727485.911 C13 begin load 23.65 24.09 24.14
+1791727486.287 D13-r1-drain shield-install s1 2001:db8:110:3::2
+1791727488.593 D13-r1-drain shield-verified s1
+1791727491.595 D13-r1-drain metric s1 1000
+1791727494.206 D13-r1-drain path s1 Vlan99
+1791727500.387 D13-r1-drain takeover-nexthop s1 2001:db8::/32 isisL2 fe80::42:aff:febe:c180%vlan99 before=DELAY after=DELAY
+1791727500.387 D13-r1-drain shield-remove s1
+1791727502.295 D13-r1-drain shield-removed s1
+1791727502.967 D13-r1-drain verified s1 Vlan99 vlan99
+1791727507.363 D13-r1-restore shield-install s1 2001:db8:110:1::1
+1791727508.947 D13-r1-restore shield-verified s1
+1791727511.947 D13-r1-restore metric s1 10
+1791727513.984 D13-r1-restore path s1 Ethernet1
+1791727520.220 D13-r1-restore takeover-nexthop s1 2001:db8::/32 isisL2 fe80::42:aff:fefb:1b02%eth1 before=DELAY after=DELAY
+1791727520.220 D13-r1-restore shield-remove s1
+1791727522.252 D13-r1-restore shield-removed s1
+1791727523.026 D13-r1-restore verified s1 Ethernet1 eth1
+1791727527.362 D13-r2-drain shield-install s2 2001:db8:110:3::1
+1791727529.205 D13-r2-drain shield-verified s2
+1791727532.205 D13-r2-drain metric s2 1000
+1791727534.196 D13-r2-drain path s2 Vlan99
+1791727540.317 D13-r2-drain takeover-nexthop s2 2001:db8::/32 isisL2 fe80::42:aff:fe02:a881%vlan99 before=DELAY after=DELAY
+1791727540.317 D13-r2-drain shield-remove s2
+1791727541.666 D13-r2-drain shield-removed s2
+1791727542.271 D13-r2-drain verified s2 Vlan99 vlan99
+1791727546.658 D13-r2-restore shield-install s2 2001:db8:110:2::1
+1791727548.296 D13-r2-restore shield-verified s2
+1791727551.296 D13-r2-restore metric s2 10
+1791727554.064 D13-r2-restore path s2 Ethernet1
+1791727560.100 D13-r2-restore takeover-nexthop s2 2001:db8::/32 isisL2 fe80::42:aff:fefb:1c02%eth1 before=REACHABLE after=REACHABLE
+1791727560.100 D13-r2-restore shield-remove s2
+1791727561.703 D13-r2-restore shield-removed s2
+1791727562.700 D13-r2-restore verified s2 Ethernet1 eth1
+1791727571.701 C13 end load 19.51 22.56 23.59
+1791727585.048 C14 begin load 18.83 22.24 23.47
+1791727585.393 D14-r1-drain shield-install s1 2001:db8:110:3::2
+1791727587.105 D14-r1-drain shield-verified s1
+1791727590.106 D14-r1-drain metric s1 1000
+1791727592.658 D14-r1-drain path s1 Vlan99
+1791727598.768 D14-r1-drain takeover-nexthop s1 2001:db8::/32 isisL2 fe80::42:aff:febe:c180%vlan99 before=DELAY after=DELAY
+1791727598.768 D14-r1-drain shield-remove s1
+1791727600.430 D14-r1-drain shield-removed s1
+1791727601.042 D14-r1-drain verified s1 Vlan99 vlan99
+1791727605.397 D14-r1-restore shield-install s1 2001:db8:110:1::1
+1791727607.275 D14-r1-restore shield-verified s1
+1791727610.275 D14-r1-restore metric s1 10
+1791727612.510 D14-r1-restore path s1 Ethernet1
+1791727618.586 D14-r1-restore takeover-nexthop s1 2001:db8::/32 isisL2 fe80::42:aff:fefb:1b02%eth1 before=DELAY after=DELAY
+1791727618.586 D14-r1-restore shield-remove s1
+1791727620.257 D14-r1-restore shield-removed s1
+1791727620.873 D14-r1-restore verified s1 Ethernet1 eth1
+1791727625.332 D14-r2-drain shield-install s2 2001:db8:110:3::1
+1791727626.916 D14-r2-drain shield-verified s2
+1791727629.916 D14-r2-drain metric s2 1000
+1791727632.263 D14-r2-drain path s2 Vlan99
+1791727638.563 D14-r2-drain takeover-nexthop s2 2001:db8::/32 isisL2 fe80::42:aff:fe02:a881%vlan99 before=DELAY after=DELAY
+1791727638.563 D14-r2-drain shield-remove s2
+1791727640.150 D14-r2-drain shield-removed s2
+1791727640.689 D14-r2-drain verified s2 Vlan99 vlan99
+1791727645.070 D14-r2-restore shield-install s2 2001:db8:110:2::1
+1791727646.819 D14-r2-restore shield-verified s2
+1791727649.819 D14-r2-restore metric s2 10
+1791727652.278 D14-r2-restore path s2 Ethernet1
+1791727658.571 D14-r2-restore takeover-nexthop s2 2001:db8::/32 isisL2 fe80::42:aff:fefb:1c02%eth1 before=REACHABLE after=REACHABLE
+1791727658.571 D14-r2-restore shield-remove s2
+1791727660.127 D14-r2-restore shield-removed s2
+1791727660.588 D14-r2-restore verified s2 Ethernet1 eth1
+1791727669.588 C14 end load 16.43 20.71 22.82
+1791727683.552 C15 begin load 16.53 20.54 22.73
+1791727683.895 D15-r1-drain shield-install s1 2001:db8:110:3::2
+1791727685.423 D15-r1-drain shield-verified s1
+1791727688.423 D15-r1-drain metric s1 1000
+1791727690.406 D15-r1-drain path s1 Vlan99
+1791727696.655 D15-r1-drain takeover-nexthop s1 2001:db8::/32 isisL2 fe80::42:aff:febe:c180%vlan99 before=DELAY after=DELAY
+1791727696.655 D15-r1-drain shield-remove s1
+1791727698.282 D15-r1-drain shield-removed s1
+1791727698.845 D15-r1-drain verified s1 Vlan99 vlan99
+1791727703.234 D15-r1-restore shield-install s1 2001:db8:110:1::1
+1791727705.015 D15-r1-restore shield-verified s1
+1791727708.015 D15-r1-restore metric s1 10
+1791727710.306 D15-r1-restore path s1 Ethernet1
+1791727716.303 D15-r1-restore takeover-nexthop s1 2001:db8::/32 isisL2 fe80::42:aff:fefb:1b02%eth1 before=DELAY after=DELAY
+1791727716.303 D15-r1-restore shield-remove s1
+1791727718.060 D15-r1-restore shield-removed s1
+1791727718.574 D15-r1-restore verified s1 Ethernet1 eth1
+1791727722.900 D15-r2-drain shield-install s2 2001:db8:110:3::1
+1791727724.300 D15-r2-drain shield-verified s2
+1791727727.301 D15-r2-drain metric s2 1000
+1791727729.427 D15-r2-drain path s2 Vlan99
+1791727735.577 D15-r2-drain takeover-nexthop s2 2001:db8::/32 isisL2 fe80::42:aff:fe02:a881%vlan99 before=DELAY after=DELAY
+1791727735.577 D15-r2-drain shield-remove s2
+1791727737.268 D15-r2-drain shield-removed s2
+1791727737.879 D15-r2-drain verified s2 Vlan99 vlan99
+1791727742.220 D15-r2-restore shield-install s2 2001:db8:110:2::1
+1791727743.878 D15-r2-restore shield-verified s2
+1791727746.878 D15-r2-restore metric s2 10
+1791727749.183 D15-r2-restore path s2 Ethernet1
+1791727755.327 D15-r2-restore takeover-nexthop s2 2001:db8::/32 isisL2 fe80::42:aff:fefb:1c02%eth1 before=REACHABLE after=REACHABLE
+1791727755.327 D15-r2-restore shield-remove s2
+1791727757.095 D15-r2-restore shield-removed s2
+1791727757.736 D15-r2-restore verified s2 Ethernet1 eth1
+1791727766.736 C15 end load 17.71 19.82 22.29
+1791727780.445 C16 begin load 16.87 19.52 22.15
+1791727780.809 D16-r1-drain shield-install s1 2001:db8:110:3::2
+1791727782.343 D16-r1-drain shield-verified s1
+1791727785.344 D16-r1-drain metric s1 1000
+1791727787.710 D16-r1-drain path s1 Vlan99
+1791727794.323 D16-r1-drain takeover-nexthop s1 2001:db8::/32 isisL2 fe80::42:aff:febe:c180%vlan99 before=DELAY after=DELAY
+1791727794.323 D16-r1-drain shield-remove s1
+1791727796.331 D16-r1-drain shield-removed s1
+1791727797.055 D16-r1-drain verified s1 Vlan99 vlan99
+1791727801.451 D16-r1-restore shield-install s1 2001:db8:110:1::1
+1791727803.602 D16-r1-restore shield-verified s1
+1791727806.602 D16-r1-restore metric s1 10
+1791727809.121 D16-r1-restore path s1 Ethernet1
+1791727815.180 D16-r1-restore takeover-nexthop s1 2001:db8::/32 isisL2 fe80::42:aff:fefb:1b02%eth1 before=DELAY after=DELAY
+1791727815.180 D16-r1-restore shield-remove s1
+1791727816.800 D16-r1-restore shield-removed s1
+1791727817.400 D16-r1-restore verified s1 Ethernet1 eth1
+1791727821.807 D16-r2-drain shield-install s2 2001:db8:110:3::1
+1791727823.821 D16-r2-drain shield-verified s2
+1791727826.822 D16-r2-drain metric s2 1000
+1791727828.816 D16-r2-drain path s2 Vlan99
+1791727834.970 D16-r2-drain takeover-nexthop s2 2001:db8::/32 isisL2 fe80::42:aff:fe02:a881%vlan99 before=DELAY after=DELAY
+1791727834.972 D16-r2-drain shield-remove s2
+1791727836.512 D16-r2-drain shield-removed s2
+1791727836.986 D16-r2-drain verified s2 Vlan99 vlan99
+1791727841.299 D16-r2-restore shield-install s2 2001:db8:110:2::1
+1791727842.837 D16-r2-restore shield-verified s2
+1791727845.837 D16-r2-restore metric s2 10
+1791727848.029 D16-r2-restore path s2 Ethernet1
+1791727854.180 D16-r2-restore takeover-nexthop s2 2001:db8::/32 isisL2 fe80::42:aff:fefb:1c02%eth1 before=REACHABLE after=REACHABLE
+1791727854.181 D16-r2-restore shield-remove s2
+1791727855.811 D16-r2-restore shield-removed s2
+1791727856.652 D16-r2-restore verified s2 Ethernet1 eth1
+1791727865.653 C16 end load 16.47 18.82 21.68
+1791727878.689 C17 begin load 15.58 18.51 21.53
+1791727879.083 D17-r1-drain shield-install s1 2001:db8:110:3::2
+1791727880.556 D17-r1-drain shield-verified s1
+1791727883.557 D17-r1-drain metric s1 1000
+1791727886.957 D17-r1-drain path s1 Vlan99
+1791727893.092 D17-r1-drain takeover-nexthop s1 2001:db8::/32 isisL2 fe80::42:aff:febe:c180%vlan99 before=DELAY after=DELAY
+1791727893.092 D17-r1-drain shield-remove s1
+1791727894.946 D17-r1-drain shield-removed s1
+1791727895.506 D17-r1-drain verified s1 Vlan99 vlan99
+1791727899.838 D17-r1-restore shield-install s1 2001:db8:110:1::1
+1791727901.342 D17-r1-restore shield-verified s1
+1791727904.342 D17-r1-restore metric s1 10
+1791727906.493 D17-r1-restore path s1 Ethernet1
+1791727912.408 D17-r1-restore takeover-nexthop s1 2001:db8::/32 isisL2 fe80::42:aff:fefb:1b02%eth1 before=DELAY after=DELAY
+1791727912.408 D17-r1-restore shield-remove s1
+1791727914.532 D17-r1-restore shield-removed s1
+1791727915.157 D17-r1-restore verified s1 Ethernet1 eth1
+1791727919.530 D17-r2-drain shield-install s2 2001:db8:110:3::1
+1791727921.236 D17-r2-drain shield-verified s2
+1791727924.237 D17-r2-drain metric s2 1000
+1791727926.566 D17-r2-drain path s2 Vlan99
+1791727932.571 D17-r2-drain takeover-nexthop s2 2001:db8::/32 isisL2 fe80::42:aff:fe02:a881%vlan99 before=DELAY after=DELAY
+1791727932.571 D17-r2-drain shield-remove s2
+1791727934.270 D17-r2-drain shield-removed s2
+1791727934.809 D17-r2-drain verified s2 Vlan99 vlan99
+1791727939.155 D17-r2-restore shield-install s2 2001:db8:110:2::1
+1791727940.886 D17-r2-restore shield-verified s2
+1791727943.886 D17-r2-restore metric s2 10
+1791727946.946 D17-r2-restore path s2 Ethernet1
+1791727952.935 D17-r2-restore takeover-nexthop s2 2001:db8::/32 isisL2 fe80::42:aff:fefb:1c02%eth1 before=REACHABLE after=REACHABLE
+1791727952.935 D17-r2-restore shield-remove s2
+1791727954.743 D17-r2-restore shield-removed s2
+1791727955.427 D17-r2-restore verified s2 Ethernet1 eth1
+1791727964.428 C17 end load 16.62 17.95 21.05
+1791727977.531 C18 begin load 20.16 18.66 21.23
+1791727978.049 D18-r1-drain shield-install s1 2001:db8:110:3::2
+1791727979.789 D18-r1-drain shield-verified s1
+1791727982.789 D18-r1-drain metric s1 1000
+1791727985.206 D18-r1-drain path s1 Vlan99
+1791727991.257 D18-r1-drain takeover-nexthop s1 2001:db8::/32 isisL2 fe80::42:aff:febe:c180%vlan99 before=DELAY after=DELAY
+1791727991.257 D18-r1-drain shield-remove s1
+1791727992.816 D18-r1-drain shield-removed s1
+1791727993.334 D18-r1-drain verified s1 Vlan99 vlan99
+1791727997.637 D18-r1-restore shield-install s1 2001:db8:110:1::1
+1791727999.165 D18-r1-restore shield-verified s1
+1791728002.165 D18-r1-restore metric s1 10
+1791728004.690 D18-r1-restore path s1 Ethernet1
+1791728010.695 D18-r1-restore takeover-nexthop s1 2001:db8::/32 isisL2 fe80::42:aff:fefb:1b02%eth1 before=DELAY after=DELAY
+1791728010.695 D18-r1-restore shield-remove s1
+1791728012.390 D18-r1-restore shield-removed s1
+1791728012.904 D18-r1-restore verified s1 Ethernet1 eth1
+1791728017.265 D18-r2-drain shield-install s2 2001:db8:110:3::1
+1791728018.835 D18-r2-drain shield-verified s2
+1791728021.835 D18-r2-drain metric s2 1000
+1791728024.098 D18-r2-drain path s2 Vlan99
+1791728030.128 D18-r2-drain takeover-nexthop s2 2001:db8::/32 isisL2 fe80::42:aff:fe02:a881%vlan99 before=DELAY after=DELAY
+1791728030.128 D18-r2-drain shield-remove s2
+1791728031.866 D18-r2-drain shield-removed s2
+1791728032.470 D18-r2-drain verified s2 Vlan99 vlan99
+1791728036.880 D18-r2-restore shield-install s2 2001:db8:110:2::1
+1791728038.534 D18-r2-restore shield-verified s2
+1791728041.534 D18-r2-restore metric s2 10
+1791728043.564 D18-r2-restore path s2 Ethernet1
+1791728049.558 D18-r2-restore takeover-nexthop s2 2001:db8::/32 isisL2 fe80::42:aff:fefb:1c02%eth1 before=REACHABLE after=REACHABLE
+1791728049.558 D18-r2-restore shield-remove s2
+1791728051.140 D18-r2-restore shield-removed s2
+1791728051.680 D18-r2-restore verified s2 Ethernet1 eth1
+1791728060.681 C18 end load 25.23 20.69 21.74
+1791728074.620 C19 begin load 25.14 20.89 21.79
+1791728074.998 D19-r1-drain shield-install s1 2001:db8:110:3::2
+1791728077.200 D19-r1-drain shield-verified s1
+1791728080.200 D19-r1-drain metric s1 1000
+1791728082.549 D19-r1-drain path s1 Vlan99
+1791728088.969 D19-r1-drain takeover-nexthop s1 2001:db8::/32 isisL2 fe80::42:aff:febe:c180%vlan99 before=DELAY after=DELAY
+1791728088.969 D19-r1-drain shield-remove s1
+1791728090.650 D19-r1-drain shield-removed s1
+1791728091.330 D19-r1-drain verified s1 Vlan99 vlan99
+1791728095.710 D19-r1-restore shield-install s1 2001:db8:110:1::1
+1791728097.633 D19-r1-restore shield-verified s1
+1791728100.633 D19-r1-restore metric s1 10
+1791728102.521 D19-r1-restore path s1 Ethernet1
+1791728108.606 D19-r1-restore takeover-nexthop s1 2001:db8::/32 isisL2 fe80::42:aff:fefb:1b02%eth1 before=DELAY after=DELAY
+1791728108.606 D19-r1-restore shield-remove s1
+1791728110.329 D19-r1-restore shield-removed s1
+1791728110.899 D19-r1-restore verified s1 Ethernet1 eth1
+1791728115.275 D19-r2-drain shield-install s2 2001:db8:110:3::1
+1791728116.900 D19-r2-drain shield-verified s2
+1791728119.900 D19-r2-drain metric s2 1000
+1791728122.062 D19-r2-drain path s2 Vlan99
+1791728128.367 D19-r2-drain takeover-nexthop s2 2001:db8::/32 isisL2 fe80::42:aff:fe02:a881%vlan99 before=DELAY after=DELAY
+1791728128.367 D19-r2-drain shield-remove s2
+1791728130.079 D19-r2-drain shield-removed s2
+1791728130.661 D19-r2-drain verified s2 Vlan99 vlan99
+1791728135.050 D19-r2-restore shield-install s2 2001:db8:110:2::1
+1791728136.753 D19-r2-restore shield-verified s2
+1791728139.753 D19-r2-restore metric s2 10
+1791728142.143 D19-r2-restore path s2 Ethernet1
+1791728148.236 D19-r2-restore takeover-nexthop s2 2001:db8::/32 isisL2 fe80::42:aff:fefb:1c02%eth1 before=REACHABLE after=REACHABLE
+1791728148.236 D19-r2-restore shield-remove s2
+1791728149.848 D19-r2-restore shield-removed s2
+1791728150.331 D19-r2-restore verified s2 Ethernet1 eth1
+1791728159.331 C19 end load 25.92 22.36 22.24
+1791728172.605 C20 begin load 25.21 22.39 22.25
+1791728172.997 D20-r1-drain shield-install s1 2001:db8:110:3::2
+1791728174.628 D20-r1-drain shield-verified s1
+1791728177.629 D20-r1-drain metric s1 1000
+1791728180.048 D20-r1-drain path s1 Vlan99
+1791728186.569 D20-r1-drain takeover-nexthop s1 2001:db8::/32 isisL2 fe80::42:aff:febe:c180%vlan99 before=DELAY after=DELAY
+1791728186.569 D20-r1-drain shield-remove s1
+1791728188.393 D20-r1-drain shield-removed s1
+1791728189.005 D20-r1-drain verified s1 Vlan99 vlan99
+1791728193.339 D20-r1-restore shield-install s1 2001:db8:110:1::1
+1791728194.914 D20-r1-restore shield-verified s1
+1791728197.914 D20-r1-restore metric s1 10
+1791728200.171 D20-r1-restore path s1 Ethernet1
+1791728206.153 D20-r1-restore takeover-nexthop s1 2001:db8::/32 isisL2 fe80::42:aff:fefb:1b02%eth1 before=DELAY after=DELAY
+1791728206.153 D20-r1-restore shield-remove s1
+1791728207.919 D20-r1-restore shield-removed s1
+1791728208.610 D20-r1-restore verified s1 Ethernet1 eth1
+1791728212.968 D20-r2-drain shield-install s2 2001:db8:110:3::1
+1791728214.522 D20-r2-drain shield-verified s2
+1791728217.522 D20-r2-drain metric s2 1000
+1791728219.524 D20-r2-drain path s2 Vlan99
+1791728225.600 D20-r2-drain takeover-nexthop s2 2001:db8::/32 isisL2 fe80::42:aff:fe02:a881%vlan99 before=DELAY after=DELAY
+1791728225.600 D20-r2-drain shield-remove s2
+1791728227.582 D20-r2-drain shield-removed s2
+1791728228.231 D20-r2-drain verified s2 Vlan99 vlan99
+1791728232.606 D20-r2-restore shield-install s2 2001:db8:110:2::1
+1791728234.596 D20-r2-restore shield-verified s2
+1791728237.596 D20-r2-restore metric s2 10
+1791728240.102 D20-r2-restore path s2 Ethernet1
+1791728246.420 D20-r2-restore takeover-nexthop s2 2001:db8::/32 isisL2 fe80::42:aff:fefb:1c02%eth1 before=REACHABLE after=REACHABLE
+1791728246.420 D20-r2-restore shield-remove s2
+1791728248.482 D20-r2-restore shield-removed s2
+1791728249.082 D20-r2-restore verified s2 Ethernet1 eth1
+1791728258.082 C20 end load 26.74 23.71 22.74
+1791728283.845 END ok load 24.53 23.42 22.67

@@ -1,0 +1,474 @@
+{
+  "description": "Centralized critical-or-worse syslog only. Lower-severity data is intentionally absent because it is filtered at the device, not because the dashboard hides it. Legacy/compatibility dashboard: superseded for new (Django) consumers by the syslog panels on NMAS Resources (nmas-resources) and NMAS Link Events (nmas-link-events), retained unchanged for existing links.",
+  "editable": false,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 1,
+  "id": null,
+  "links": [],
+  "liveNow": true,
+  "panels": [
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "nmas-influxdb"
+      },
+      "description": "The deployed policy forwards emergency, alert, and critical only; current stored data is critical severity.",
+      "eventOptional": true,
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 1
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 6,
+        "x": 0,
+        "y": 0
+      },
+      "id": 1,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "nmas-influxdb"
+          },
+          "query": "from(bucket: \"network-monitoring\")\n          |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n          |> filter(fn: (r) => r._measurement == \"syslog_event\" and r._field == \"message\")\n          |> map(fn: (r) => ({r with device: if r.device == \"mgmt-swt\" then \"mgmt_swt\" else r.device, platform: if exists r.platform then r.platform else \"unknown\"}))\n          |> filter(fn: (r) => r.device =~ /^${device:regex}$/ and r.severity =~ /^${severity:regex}$/)\n          |> group()\n          |> count()",
+          "refId": "A"
+        }
+      ],
+      "title": "Critical events",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "nmas-influxdb"
+      },
+      "description": "",
+      "eventOptional": true,
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 1
+              },
+              {
+                "color": "red",
+                "value": 10
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 10,
+        "x": 6,
+        "y": 0
+      },
+      "id": 2,
+      "options": {
+        "displayMode": "gradient",
+        "minVizHeight": 10,
+        "minVizWidth": 0,
+        "namePlacement": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true,
+        "sizing": "auto",
+        "valueMode": "color"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "nmas-influxdb"
+          },
+          "query": "from(bucket: \"network-monitoring\")\n          |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n          |> filter(fn: (r) => r._measurement == \"syslog_event\" and r._field == \"message\")\n          |> map(fn: (r) => ({r with device: if r.device == \"mgmt-swt\" then \"mgmt_swt\" else r.device, platform: if exists r.platform then r.platform else \"unknown\"}))\n          |> filter(fn: (r) => r.device =~ /^${device:regex}$/ and r.severity =~ /^${severity:regex}$/)\n          |> group(columns: [\"device\"])\n          |> count()",
+          "refId": "A"
+        }
+      ],
+      "title": "Events by device",
+      "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "nmas-influxdb"
+      },
+      "description": "Only severities admitted by the centralized critical-event policy can appear.",
+      "eventOptional": true,
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 8,
+        "x": 16,
+        "y": 0
+      },
+      "id": 3,
+      "options": {
+        "displayLabels": [
+          "name",
+          "percent"
+        ],
+        "legend": {
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true,
+          "values": [
+            "value"
+          ]
+        },
+        "pieType": "pie",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "nmas-influxdb"
+          },
+          "query": "from(bucket: \"network-monitoring\")\n          |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n          |> filter(fn: (r) => r._measurement == \"syslog_event\" and r._field == \"message\")\n          |> map(fn: (r) => ({r with device: if r.device == \"mgmt-swt\" then \"mgmt_swt\" else r.device, platform: if exists r.platform then r.platform else \"unknown\"}))\n          |> filter(fn: (r) => r.device =~ /^${device:regex}$/ and r.severity =~ /^${severity:regex}$/)\n          |> group(columns: [\"severity\"])\n          |> count()",
+          "refId": "A"
+        }
+      ],
+      "title": "Severity distribution",
+      "type": "piechart"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "nmas-influxdb"
+      },
+      "description": "Count of stored events by device and time interval.",
+      "eventOptional": true,
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 16,
+        "x": 0,
+        "y": 5
+      },
+      "id": 4,
+      "options": {
+        "legend": {
+          "calcs": [
+            "lastNotNull",
+            "max"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "nmas-influxdb"
+          },
+          "query": "from(bucket: \"network-monitoring\")\n          |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n          |> filter(fn: (r) => r._measurement == \"syslog_event\" and r._field == \"message\")\n          |> map(fn: (r) => ({r with device: if r.device == \"mgmt-swt\" then \"mgmt_swt\" else r.device, platform: if exists r.platform then r.platform else \"unknown\"}))\n          |> filter(fn: (r) => r.device =~ /^${device:regex}$/ and r.severity =~ /^${severity:regex}$/)\n          |> group(columns: [\"device\"])\n          |> aggregateWindow(every: v.windowPeriod, fn: count, createEmpty: false)",
+          "refId": "A"
+        }
+      ],
+      "title": "Critical event volume over time",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "nmas-influxdb"
+      },
+      "description": "",
+      "eventOptional": true,
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 1
+              },
+              {
+                "color": "red",
+                "value": 10
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 8,
+        "x": 16,
+        "y": 5
+      },
+      "id": 5,
+      "options": {
+        "displayMode": "gradient",
+        "minVizHeight": 10,
+        "minVizWidth": 0,
+        "namePlacement": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true,
+        "sizing": "auto",
+        "valueMode": "color"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "nmas-influxdb"
+          },
+          "query": "from(bucket: \"network-monitoring\")\n          |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n          |> filter(fn: (r) => r._measurement == \"syslog_event\" and r._field == \"message\")\n          |> map(fn: (r) => ({r with device: if r.device == \"mgmt-swt\" then \"mgmt_swt\" else r.device, platform: if exists r.platform then r.platform else \"unknown\"}))\n          |> filter(fn: (r) => r.device =~ /^${device:regex}$/ and r.severity =~ /^${severity:regex}$/)\n          |> group(columns: [\"facility\"])\n          |> count()",
+          "refId": "A"
+        }
+      ],
+      "title": "Facilities",
+      "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "nmas-influxdb"
+      },
+      "description": "Search/filter the table by device, source, severity, facility, or message. Historical mgmt-swt records are normalized to the canonical mgmt_swt device name.",
+      "eventOptional": true,
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "filterable": true
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 13,
+        "w": 24,
+        "x": 0,
+        "y": 14
+      },
+      "id": 6,
+      "options": {
+        "cellHeight": "sm",
+        "showHeader": true,
+        "sortBy": []
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "nmas-influxdb"
+          },
+          "query": "from(bucket: \"network-monitoring\")\n          |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n          |> filter(fn: (r) => r._measurement == \"syslog_event\" and r._field == \"message\")\n          |> map(fn: (r) => ({r with device: if r.device == \"mgmt-swt\" then \"mgmt_swt\" else r.device, platform: if exists r.platform then r.platform else \"unknown\"}))\n          |> filter(fn: (r) => r.device =~ /^${device:regex}$/ and r.severity =~ /^${severity:regex}$/)\n          |> keep(columns: [\"_time\", \"device\", \"platform\", \"source_ip\", \"severity\", \"facility\", \"_value\"])\n          |> rename(columns: {_value: \"message\"})\n          |> group()\n          |> sort(columns: [\"_time\"], desc: true)\n          |> limit(n: 500)",
+          "refId": "A"
+        }
+      ],
+      "title": "Recent critical events",
+      "type": "table"
+    }
+  ],
+  "refresh": "20s",
+  "schemaVersion": 40,
+  "tags": [
+    "nmas",
+    "network-monitoring",
+    "iac",
+    "legacy"
+  ],
+  "templating": {
+    "list": [
+      {
+        "allValue": ".*",
+        "current": {
+          "selected": true,
+          "text": "All",
+          "value": "$__all"
+        },
+        "datasource": {
+          "type": "influxdb",
+          "uid": "nmas-influxdb"
+        },
+        "definition": "from(bucket: \"network-monitoring\")\n      |> range(start: -30d)\n      |> filter(fn: (r) => r._measurement == \"syslog_event\" and r._field == \"message\")\n      |> map(fn: (r) => ({r with device: if r.device == \"mgmt-swt\" then \"mgmt_swt\" else r.device}))\n      |> keep(columns: [\"device\"])\n      |> group()\n      |> distinct(column: \"device\")\n      |> sort(columns: [\"device\"])",
+        "hide": 0,
+        "includeAll": true,
+        "label": "Device",
+        "multi": true,
+        "name": "device",
+        "query": "from(bucket: \"network-monitoring\")\n      |> range(start: -30d)\n      |> filter(fn: (r) => r._measurement == \"syslog_event\" and r._field == \"message\")\n      |> map(fn: (r) => ({r with device: if r.device == \"mgmt-swt\" then \"mgmt_swt\" else r.device}))\n      |> keep(columns: [\"device\"])\n      |> group()\n      |> distinct(column: \"device\")\n      |> sort(columns: [\"device\"])",
+        "refresh": 2,
+        "skipUrlSync": false,
+        "sort": 1,
+        "type": "query"
+      },
+      {
+        "allValue": ".*",
+        "current": {
+          "selected": true,
+          "text": "All",
+          "value": "$__all"
+        },
+        "datasource": {
+          "type": "influxdb",
+          "uid": "nmas-influxdb"
+        },
+        "definition": "from(bucket: \"network-monitoring\")\n      |> range(start: -30d)\n      |> filter(fn: (r) => r._measurement == \"syslog_event\" and r._field == \"message\")\n      |> keep(columns: [\"severity\"])\n      |> group()\n      |> distinct(column: \"severity\")\n      |> sort(columns: [\"severity\"])",
+        "hide": 0,
+        "includeAll": true,
+        "label": "Severity",
+        "multi": true,
+        "name": "severity",
+        "query": "from(bucket: \"network-monitoring\")\n      |> range(start: -30d)\n      |> filter(fn: (r) => r._measurement == \"syslog_event\" and r._field == \"message\")\n      |> keep(columns: [\"severity\"])\n      |> group()\n      |> distinct(column: \"severity\")\n      |> sort(columns: [\"severity\"])",
+        "refresh": 2,
+        "skipUrlSync": false,
+        "sort": 1,
+        "type": "query"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-24h",
+    "to": "now"
+  },
+  "timepicker": {
+    "refresh_intervals": [
+      "10s",
+      "20s",
+      "30s",
+      "1m",
+      "5m"
+    ]
+  },
+  "timezone": "browser",
+  "title": "NMAS Critical Syslog",
+  "uid": "nmas-critical-syslog",
+  "version": 1,
+  "weekStart": ""
+}

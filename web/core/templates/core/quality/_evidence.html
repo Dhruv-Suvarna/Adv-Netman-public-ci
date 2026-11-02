@@ -1,0 +1,24 @@
+{# Shared evidence banner: WHICH evidence is shown, for WHICH commit, and whether it is current for the deployed source. #}
+<div class="card" id="evidence-banner" data-freshness="{{ header.freshness }}">
+  <p style="margin:0;">
+    <strong>Evidence:</strong> <span class="badge badge--{{ header.freshness_badge }}" data-testid="freshness">{{ header.freshness }}</span>
+    {% if header.gate %}<span class="badge badge--{% if header.gate == 'PASS' %}success{% elif header.gate == 'FAIL' %}danger{% else %}warning{% endif %}">Closure gate: {{ header.gate }}</span>{% endif %}
+    <span style="color:var(--text-muted);">{{ header.reason }}</span>
+  </p>
+  <p style="margin:6px 0 0 0;font-size:0.88em;">
+    Tested SHA <code data-testid="tested-sha">{{ header.tested_sha|default:"(working tree)"|slice:":12" }}</code>
+    · Deployed SHA <code data-testid="deployed-sha">{{ header.deployed_sha|default:"unknown"|slice:":12" }}</code>
+    · source fingerprint {% if header.fingerprint_match %}<strong>identical</strong>{% else %}differs{% endif %}
+    · generated {{ header.generated_at|default:"-" }} · {{ header.source|default:"no source" }}
+    {% if header.run_url %} · <a href="{{ header.run_url }}" rel="noopener" target="_blank">GitHub Tier-3 run {{ header.run_id }}</a>{% elif header.run_id %} · Tier-3 run {{ header.run_id }}{% endif %}
+    {% if header.payload_sha256 %} · payload <code title="{{ header.payload_sha256 }}">{{ header.payload_sha256|slice:":12" }}</code>{% endif %}
+    · generator {{ header.generator|default:"-" }} / schema {{ header.schema|default:"-" }}
+  </p>
+  {% for refused in header.refused %}<p class="alert alert--warning" style="margin:6px 0 0 0;">Refused evidence from {{ refused.source }}: {{ refused.code }}</p>{% endfor %}
+  {% if refresh_message %}<p class="alert alert--info" style="margin:6px 0 0 0;" data-testid="refresh-message">{{ refresh_message }}</p>{% endif %}
+  <form method="post" action="{% url 'core:quality_refresh' %}" style="margin-top:8px;">
+    {% csrf_token %}<input type="hidden" name="next" value="{{ refresh_next|default:'unit' }}">
+    <button type="submit" class="btn btn--secondary" title="Fetch the Tier-3 test-governance artifact for the deployed commit (read-only)">Refresh from Tier-3</button>
+    <span style="color:var(--text-muted);font-size:0.85em;">Read-only: pages never run tests; they show persisted, hash-verified Tier-3 evidence.</span>
+  </form>
+</div>

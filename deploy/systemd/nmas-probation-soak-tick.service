@@ -1,0 +1,29 @@
+# NMAS probation soak collector: ONE read-only evidence tick (V2 Phase 5C).  Rendered by deploy/scripts/install_soak_timer.sh.
+#
+# Runs against the DEPLOYMENT checkout and its database -- never a development worktree.  The command reads devices and telemetry
+# and writes only soak evidence; it configures nothing, and it is idempotent and restart-safe (one sample per interval, enforced by a
+# database constraint), so a late, repeated or overlapping start is harmless.
+# Secrets are NOT in this file: they come from the same protected EnvironmentFile as the website (outside Git).
+[Unit]
+Description=NMAS probation soak evidence tick (read-only)
+Documentation=file://@DEPLOY_ROOT@/docs/PROBATION_SOAK_AND_PROMOTION.md
+After=network-online.target docker.service
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=@RUN_USER@
+Group=@RUN_GROUP@
+# docker group: read-only live device sessions use `docker exec` (the same access the website has).
+SupplementaryGroups=docker
+WorkingDirectory=@DEPLOY_ROOT@/web
+EnvironmentFile=/etc/nmas/nmas-web.env
+Environment=DJANGO_SETTINGS_MODULE=config.settings
+ExecStart=@VENV@/bin/python manage.py probation_soak_tick
+# A tick reads a handful of devices; it must never run into the next one.
+TimeoutStartSec=240
+Nice=5
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+UMask=0027

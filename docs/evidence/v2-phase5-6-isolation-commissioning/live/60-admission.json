@@ -1,0 +1,251 @@
+{
+  "approve": {
+    "codes": [],
+    "ok": true
+  },
+  "approve_self": [
+    "ADMISSION_SELF_APPROVAL"
+  ],
+  "commissioning": {
+    "approved_by": "arthur",
+    "candidate_hash": "141e38980e73ae4541fc4454d2eaac88323337de34878857812a43456968b394",
+    "commissioning": "COM-000004",
+    "dependencies": {
+      "cycles": [],
+      "edges": [
+        {
+          "device": "NEW2",
+          "kind": "DECLARED",
+          "reason": "admitted by ADM-000002",
+          "satisfied": true,
+          "upstream": "NEW1"
+        }
+      ],
+      "nodes": [
+        {
+          "admission_state": "ADMITTED",
+          "device_id": "DEV-000002",
+          "lifecycle_state": "IN_SERVICE",
+          "name": "NEW1"
+        },
+        {
+          "admission_state": "NOT_ADMITTED",
+          "device_id": "DEV-000003",
+          "lifecycle_state": "REGISTERED",
+          "name": "NEW2"
+        }
+      ]
+    },
+    "device": "DEV-000002",
+    "evidence_digest": "fcfc9fe5c42aaa7fe1e56b0235e6f98195d6434885e505a02926690380a408e8",
+    "failure": {},
+    "isolation_state": "RELEASED",
+    "policy": "ISO-000001",
+    "provisioning_run": "PROV-000004",
+    "provisioning_status": "POSTCHECKED",
+    "readiness": {
+      "at": "2026-10-26T15:01:24.960920+00:00",
+      "checks": [
+        {
+          "check": "identity_verified",
+          "code": "",
+          "detail": "VERIFIED",
+          "ok": true
+        },
+        {
+          "check": "host_key_enrolled",
+          "code": "",
+          "detail": "the verified host key is the out-of-band enrolled one",
+          "ok": true
+        },
+        {
+          "check": "attachment_verified",
+          "code": "",
+          "detail": "VERIFIED",
+          "ok": true
+        },
+        {
+          "check": "bootstrap_authorization",
+          "code": "",
+          "detail": "CONSUMED by -",
+          "ok": true
+        },
+        {
+          "check": "native_bootstrap",
+          "code": "",
+          "detail": "ztp_state=DISABLED_VERIFIED (observed; native ZTP completion is never admission)",
+          "ok": true
+        },
+        {
+          "check": "management_transport",
+          "code": "",
+          "detail": "",
+          "ok": true
+        },
+        {
+          "check": "credential_transitioned",
+          "code": "",
+          "detail": "bootstrap credential revoked, proven rejected and retired; the service credential works",
+          "ok": true
+        },
+        {
+          "check": "isolation_verified",
+          "code": "",
+          "detail": "VERIFIED",
+          "ok": true
+        },
+        {
+          "check": "dependencies",
+          "code": "",
+          "detail": "",
+          "ok": true
+        },
+        {
+          "check": "lifecycle",
+          "code": "",
+          "detail": "ISOLATED",
+          "ok": true
+        },
+        {
+          "check": "production_candidate",
+          "code": "",
+          "detail": "PROV-000004 PRECHECKED: validated, planned and prechecked through the ordinary provisioning stages",
+          "ok": true
+        }
+      ],
+      "ready": true
+    },
+    "requested_by": "olivia",
+    "state": "ADMITTED"
+  },
+  "core_route_to_new1": "\nVRF: default\nSource Codes:\n       C - connected, S - static, K - kernel,\n       O - OSPF, O IA - OSPF inter area, O E1 - OSPF external type 1,\n       O E2 - OSPF external type 2, O N1 - OSPF NSSA external type 1,\n       O N2 - OSPF NSSA external type2, O3 - OSPFv3,\n       O3 IA - OSPFv3 inter area, O3 E1 - OSPFv3 external type 1,\n       O3 E2 - OSPFv3 external type 2,\n       O3 N1 - OSPFv3 NSSA external type 1,\n       O3 N2 - OSPFv3 NSSA external type2, B - Other BGP Routes,\n       B I - iBGP, B E - eBGP, R - RIP, I L1 - IS-IS level 1,\n       I L2 - IS-IS level 2, A B - BGP Aggregate,\n       A O - OSPF Summary, NG - Nexthop Group Static Route,\n       V - VXLAN Control Service, M - Martian,\n       DH - DHCP client installed default route,\n       DP - Dynamic Policy Route, L - VRF Leaked,\n       G  - gRIBI, RC - Route Cache Route,\n       CL - CBF Leaked Route\n\n O        10.254.255.11/32 [110/30]\n           via 10.254.62.1, Ethernet1\n\n",
+  "device_after": {
+    "admission": "ADMITTED",
+    "lifecycle": "IN_SERVICE"
+  },
+  "execute": {
+    "codes": [],
+    "ok": true,
+    "status": {
+      "admission": "ADM-000002",
+      "approved_by": "arthur",
+      "commissioning": "COM-000004",
+      "device": "DEV-000002",
+      "evidence_digest": "2e48370a1912c9a584e184c7e2ee0ac93e116493018f09e21181a367c61c77f6",
+      "expectations": {
+        "ospf_neighbors": [
+          "10.254.255.11"
+        ],
+        "reachable": [
+          "10.254.255.11"
+        ],
+        "routes_v4": [
+          "10.254.255.11/32",
+          "10.254.64.0/24"
+        ],
+        "routes_v6": [],
+        "routing": "OSPF"
+      },
+      "failure": {},
+      "policy": "ISO-000001",
+      "release_change": "CHG-20261026-0007",
+      "requested_by": "olivia",
+      "restoration": {},
+      "state": "ADMITTED",
+      "verification": {
+        "at": "2026-10-26T15:06:19.779580+00:00",
+        "precheck": {
+          "at": "2026-10-26T15:05:41.846693+00:00",
+          "codes": [],
+          "ok": true,
+          "precheck_run": "06538aa8-dc7c-47f7-b98f-a9e3b0e9ef22"
+        },
+        "release": {
+          "compensation": "NOT_ATTEMPTED",
+          "failure": {},
+          "postcheck": {
+            "result": "PASS"
+          },
+          "release_outcome": "SUCCEEDED",
+          "release_run": "7e889d85-b4ac-45d1-ae02-d82e3c9efe78"
+        }
+      }
+    }
+  },
+  "label": "the admission",
+  "netbox_gateway_calls": [
+    [
+      "activate",
+      "True"
+    ]
+  ],
+  "new1_ospf": "Neighbor ID     Instance VRF      Pri State                  Dead Time   Address         Interface\n10.254.255.1    1        default  1   FULL/BDR               00:00:34    10.254.60.1     Ethernet1\n",
+  "outbox": [
+    {
+      "payload": {
+        "admission": "ADM-000002",
+        "admitted_at": "2026-10-26T15:06:19.779695+00:00",
+        "config_digest": "2d257c09bd2c38cb3c5172e10b04de4caaf0f19327cfb60de02b869e4d6b46e2",
+        "device_id": "DEV-000002",
+        "management": {
+          "interface": "Ethernet1",
+          "ipv4": "10.254.60.10/24"
+        },
+        "name": "NEW1",
+        "platform": "arista_ceos",
+        "provisioning_run": "PROV-000004",
+        "role": "router"
+      },
+      "state": "PENDING",
+      "topic": "NSOT_DEVICE_ADMITTED"
+    },
+    {
+      "payload": {
+        "admission": "ADM-000002",
+        "dependencies": [],
+        "device_id": "DEV-000002",
+        "links": [
+          {
+            "local_interface": "Ethernet1",
+            "upstream_device": "UP1",
+            "upstream_interface": "Ethernet1"
+          }
+        ],
+        "name": "NEW1"
+      },
+      "state": "PENDING",
+      "topic": "TOPOLOGY_DEVICE_ADMITTED"
+    },
+    {
+      "payload": {
+        "address": "10.254.60.10",
+        "admission": "ADM-000002",
+        "checks": [
+          "reachability",
+          "ospf_adjacency",
+          "routes"
+        ],
+        "device_id": "DEV-000002",
+        "management_source": "COMMISSIONING",
+        "name": "NEW1",
+        "platform": "arista_ceos"
+      },
+      "state": "PENDING",
+      "topic": "MONITORING_TARGET_ADMITTED"
+    }
+  ],
+  "plan": {
+    "codes": [],
+    "ok": true
+  },
+  "precheck": {
+    "codes": [],
+    "ok": true
+  },
+  "production_to_new1_loopback": true,
+  "production_to_new1_uplink": true,
+  "up1_ospf": "Neighbor ID     Instance VRF      Pri State                  Dead Time   Address         Interface\n10.254.255.2    1        default  1   FULL/BDR               00:00:31    10.254.62.2     Ethernet3\n10.254.255.11   1        default  1   FULL/DR                00:00:34    10.254.60.10    Ethernet1\n",
+  "up1_routes": "\nVRF: default\nSource Codes:\n       C - connected, S - static, K - kernel,\n       O - OSPF, O IA - OSPF inter area, O E1 - OSPF external type 1,\n       O E2 - OSPF external type 2, O N1 - OSPF NSSA external type 1,\n       O N2 - OSPF NSSA external type2, O3 - OSPFv3,\n       O3 IA - OSPFv3 inter area, O3 E1 - OSPFv3 external type 1,\n       O3 E2 - OSPFv3 external type 2,\n       O3 N1 - OSPFv3 NSSA external type 1,\n       O3 N2 - OSPFv3 NSSA external type2, B - Other BGP Routes,\n       B I - iBGP, B E - eBGP, R - RIP, I L1 - IS-IS level 1,\n       I L2 - IS-IS level 2, A B - BGP Aggregate,\n       A O - OSPF Summary, NG - Nexthop Group Static Route,\n       V - VXLAN Control Service, M - Martian,\n       DH - DHCP client installed default route,\n       DP - Dynamic Policy Route, L - VRF Leaked,\n       G  - gRIBI, RC - Route Cache Route,\n       CL - CBF Leaked Route\n\nGateway of last resort is not set\n\n C        10.254.60.0/24\n           directly connected, Ethernet1\n C        10.254.61.0/30\n           directly connected, Ethernet2\n C        10.254.62.0/30\n           directly connected, Ethernet3\n O        10.254.63.0/24 [110/20]\n           via 10.254.62.2, Ethernet3\n O        10.254.64.0/24 [110/20]\n           via 10.254.60.10, Ethernet1\n C        10.254.255.1/32\n           directly connected, Loopback0\n O        10.254.255.2/32 [110/20]\n           via 10.254.62.2, Ethernet3\n O        10.254.255.11/32 [110/20]\n           via 10.254.60.10, Ethernet1\n\n",
+  "upstream_after": "\n> show running-config\n! Command: show running-config at line 1\n! device: ISOUP1 (cEOSLab, EOS-4.36.2F-49692632.4362F.1 (engineering build))\n!\nno aaa root\n!\n!\nip dhcp relay information option\n!\nno service interface inactive port-id allocation disabled\n!\nservice routing protocols model multi-agent\n!\nhostname ISOUP1\n!\nspanning-tree mode mstp\n!\nsystem l1\n   unsupported speed action error\n   unsupported error-correction action error\n!\naaa authorization exec default local\n!\ninterface Ethernet1\n   description bootstrap port A (untrusted device side)\n   no switchport\n   ip address 10.254.60.1/24\n   ip helper-address 10.254.61.2\n   ipv6 address 2001:db8:254:60::1/64\n!\ninterface Ethernet2\n   description NMAS bootstrap service\n   no switchport\n   ip address 10.254.61.1/30\n   ipv6 address 2001:db8:254:61::1/64\n!\ninterface Ethernet3\n   description production core\n   no switchport\n   ip address 10.254.62.1/30\n   ipv6 address 2001:db8:254:62::1/64\n!\ninterface Loopback0\n   ip address 10.254.255.1/32\n!\nip routing\n!\nipv6 unicast-routing\n!\nipv6 route 2001:db8:254:63::/64 2001:db8:254:62::2\n!\nrouter ospf 1\n   router-id 10.254.255.1\n   passive-interface Ethernet2\n   network 10.254.60.0/24 area 0.0.0.0\n   network 10.254.61.0/30 area 0.0.0.0\n   network 10.254.62.0/30 area 0.0.0.0\n   network 10.254.255.1/32 area 0.0.0.0\n   max-lsa 12000\n!\nend",
+  "upstream_before_release": "\n> show running-config\n! Command: show running-config at line 1\n! device: ISOUP1 (cEOSLab, EOS-4.36.2F-49692632.4362F.1 (engineering build))\n!\nno aaa root\n!\n!\nip dhcp relay information option\n!\nno service interface inactive port-id allocation disabled\n!\nservice routing protocols model multi-agent\n!\nhostname ISOUP1\n!\nspanning-tree mode mstp\n!\nsystem l1\n   unsupported speed action error\n   unsupported error-correction action error\n!\naaa authorization exec default local\n!\ninterface Ethernet1\n   description bootstrap port A (untrusted device side)\n   no switchport\n   ip address 10.254.60.1/24\n   ip helper-address 10.254.61.2\n   ipv6 address 2001:db8:254:60::1/64\n   ip access-group NMAS-ISO-DEV-000002-V4 in\n   ip access-group NMAS-ISO-DEV-000002-V4-OUT out\n   ipv6 access-group NMAS-ISO-DEV-000002-V6 in\n   ipv6 access-group NMAS-ISO-DEV-000002-V6-OUT out\n!\ninterface Ethernet2\n   description NMAS bootstrap service\n   no switchport\n   ip address 10.254.61.1/30\n   ipv6 address 2001:db8:254:61::1/64\n!\ninterface Ethernet3\n   description production core\n   no switchport\n   ip address 10.254.62.1/30\n   ipv6 address 2001:db8:254:62::1/64\n!\ninterface Loopback0\n   ip address 10.254.255.1/32\n!\nipv6 access-list NMAS-ISO-DEV-000002-MGMT6\n   counters per-entry\n   10 deny ipv6 2001:db8:254:60::/64 any\n   20 deny ipv6 fe80::/10 any\n   30 permit ipv6 any any\n!\nipv6 access-list NMAS-ISO-DEV-000002-V6\n   counters per-entry\n   10 permit icmpv6 fe80::/10 any\n   1000 deny ipv6 any any\n!\nipv6 access-list NMAS-ISO-DEV-000002-V6-OUT\n   counters per-entry\n   1000 deny ipv6 any any\n!\nip access-list NMAS-ISO-DEV-000002-MGMT4\n   counters per-entry\n   10 deny ip 10.254.60.0/24 any\n   20 permit ip any any\n!\nip access-list NMAS-ISO-DEV-000002-V4\n   counters per-entry\n   10 permit udp any eq bootpc any eq bootps\n   20 permit tcp 10.254.60.0/24 host 10.254.61.2 eq 8080\n   30 permit tcp 10.254.60.0/24 eq ssh host 10.254.61.2\n   1000 deny ip any any\n!\nip access-list NMAS-ISO-DEV-000002-V4-OUT\n   counters per-entry\n   10 permit tcp host 10.254.61.2 eq 8080 10.254.60.0/24\n   20 permit tcp host 10.254.61.2 10.254.60.0/24 eq ssh\n   1000 deny ip any any\n!\nip routing\n!\nipv6 unicast-routing\n!\nipv6 route 2001:db8:254:63::/64 2001:db8:254:62::2\n!\nrouter ospf 1\n   router-id 10.254.255.1\n   passive-interface Ethernet1\n   passive-interface Ethernet2\n   network 10.254.60.0/24 area 0.0.0.0\n   network 10.254.61.0/30 area 0.0.0.0\n   network 10.254.62.0/30 area 0.0.0.0\n   network 10.254.255.1/32 area 0.0.0.0\n   max-lsa 12000\n!\nmanagement ssh\n   ip access-group NMAS-ISO-DEV-000002-MGMT4 in\n   ipv6 access-group NMAS-ISO-DEV-000002-MGMT6 in\n!\nend"
+}

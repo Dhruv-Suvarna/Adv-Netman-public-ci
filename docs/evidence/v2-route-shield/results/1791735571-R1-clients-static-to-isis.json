@@ -1,0 +1,199 @@
+{
+ "transition": "R1-clients-static-to-isis",
+ "ok": false,
+ "aborted": "PRODUCTION_PACKET_LOSS",
+ "blockers": [
+  {
+   "code": "PRODUCTION_PACKET_LOSS",
+   "device": "R1",
+   "detail": "production probes were lost at RS-R1-clients-static-to-isis-11-static-remove"
+  }
+ ],
+ "restored": true,
+ "stages": [
+  {
+   "stage": "precheck",
+   "at": "2026-10-11T16:18:03.949482+00:00",
+   "status": "PASS",
+   "host": {
+    "load1": 18.18,
+    "cpus": 8,
+    "available_mb": 60061,
+    "swap_used_mb": 0
+   },
+   "checks": [
+    {
+     "check": "ROUTE_EXPECTED_PRESENT",
+     "status": "PASS",
+     "subject": "R1 2001:db8:10::/64 static via Ethernet3",
+     "message": "Route 2001:db8:10::/64 is present."
+    },
+    {
+     "check": "ROUTE_EXPECTED_PRESENT",
+     "status": "PASS",
+     "subject": "R1 2001:db8:20::/64 static via Ethernet3",
+     "message": "Route 2001:db8:20::/64 is present."
+    },
+    {
+     "check": "ROUTE_EXPECTED_PRESENT",
+     "status": "PASS",
+     "subject": "R1 2001:db8:30::/64 static via Ethernet3",
+     "message": "Route 2001:db8:30::/64 is present."
+    },
+    {
+     "check": "ISIS_ROUTE_ABSENT",
+     "status": "PASS",
+     "subject": "R1 2001:db8:10::/64 not owned by IS-IS",
+     "message": "No IS-IS route 2001:db8:10::/64 is installed."
+    },
+    {
+     "check": "ISIS_ROUTE_ABSENT",
+     "status": "PASS",
+     "subject": "R1 2001:db8:20::/64 not owned by IS-IS",
+     "message": "No IS-IS route 2001:db8:20::/64 is installed."
+    },
+    {
+     "check": "ISIS_ROUTE_ABSENT",
+     "status": "PASS",
+     "subject": "R1 2001:db8:30::/64 not owned by IS-IS",
+     "message": "No IS-IS route 2001:db8:30::/64 is installed."
+    }
+   ]
+  },
+  {
+   "stage": "shield-install",
+   "at": "2026-10-11T16:18:21.879102+00:00",
+   "status": "APPLIED",
+   "cfg_id": "RS-R1-clients-static-to-isis-1-shield-install",
+   "read_back": "SKIP_SATISFIED",
+   "probes_lost": 0
+  },
+  {
+   "stage": "shield-verify",
+   "at": "2026-10-11T16:18:30.206797+00:00",
+   "status": "PASS",
+   "checks": [
+    {
+     "check": "ROUTE_EXPECTED_PRESENT",
+     "status": "PASS",
+     "subject": "R1 shield 2001:db8:10::/63",
+     "message": "Route 2001:db8:10::/63 is present."
+    },
+    {
+     "check": "ROUTE_EXPECTED_PRESENT",
+     "status": "PASS",
+     "subject": "R1 shield 2001:db8:20::/63",
+     "message": "Route 2001:db8:20::/63 is present."
+    },
+    {
+     "check": "ROUTE_EXPECTED_PRESENT",
+     "status": "PASS",
+     "subject": "R1 shield 2001:db8:30::/63",
+     "message": "Route 2001:db8:30::/63 is present."
+    }
+   ],
+   "probes_lost": 0
+  },
+  {
+   "stage": "transition",
+   "at": "2026-10-11T16:18:52.191247+00:00",
+   "status": "APPLIED",
+   "cfg_id": "RS-R1-clients-static-to-isis-10-floating-add",
+   "read_back": "SKIP_SATISFIED",
+   "probes_lost": 0
+  },
+  {
+   "stage": "transition",
+   "at": "2026-10-11T16:19:03.043168+00:00",
+   "status": "APPLIED",
+   "cfg_id": "RS-R1-clients-static-to-isis-11-static-remove",
+   "read_back": "SKIP_SATISFIED",
+   "probes_lost": 1
+  },
+  {
+   "stage": "abort",
+   "at": "2026-10-11T16:19:13.099186+00:00",
+   "status": "PRODUCTION_PACKET_LOSS",
+   "detail": "production probes were lost at RS-R1-clients-static-to-isis-11-static-remove",
+   "failed": []
+  },
+  {
+   "stage": "restore",
+   "at": "2026-10-11T16:19:28.035382+00:00",
+   "status": "RESTORED",
+   "compensation": [
+    {
+     "cfg_id": "RS-R1-clients-static-to-isis-11-static-remove",
+     "status": "COMPENSATED",
+     "error": ""
+    },
+    {
+     "cfg_id": "RS-R1-clients-static-to-isis-10-floating-add",
+     "status": "COMPENSATED",
+     "error": ""
+    },
+    {
+     "cfg_id": "RS-R1-clients-static-to-isis-1-shield-install",
+     "status": "COMPENSATED",
+     "error": ""
+    }
+   ],
+   "checks": [
+    {
+     "check": "ROUTE_EXPECTED_PRESENT",
+     "status": "PASS",
+     "subject": "R1 2001:db8:10::/64 static via Ethernet3",
+     "message": "Route 2001:db8:10::/64 is present."
+    },
+    {
+     "check": "ROUTE_EXPECTED_PRESENT",
+     "status": "PASS",
+     "subject": "R1 2001:db8:20::/64 static via Ethernet3",
+     "message": "Route 2001:db8:20::/64 is present."
+    },
+    {
+     "check": "ROUTE_EXPECTED_PRESENT",
+     "status": "PASS",
+     "subject": "R1 2001:db8:30::/64 static via Ethernet3",
+     "message": "Route 2001:db8:30::/64 is present."
+    },
+    {
+     "check": "ISIS_ROUTE_ABSENT",
+     "status": "PASS",
+     "subject": "R1 2001:db8:10::/64 not owned by IS-IS",
+     "message": "No IS-IS route 2001:db8:10::/64 is installed."
+    },
+    {
+     "check": "ISIS_ROUTE_ABSENT",
+     "status": "PASS",
+     "subject": "R1 2001:db8:20::/64 not owned by IS-IS",
+     "message": "No IS-IS route 2001:db8:20::/64 is installed."
+    },
+    {
+     "check": "ISIS_ROUTE_ABSENT",
+     "status": "PASS",
+     "subject": "R1 2001:db8:30::/64 not owned by IS-IS",
+     "message": "No IS-IS route 2001:db8:30::/64 is installed."
+    }
+   ],
+   "configuration_restored": true
+  }
+ ],
+ "compensation": [
+  {
+   "cfg_id": "RS-R1-clients-static-to-isis-11-static-remove",
+   "status": "COMPENSATED",
+   "error": ""
+  },
+  {
+   "cfg_id": "RS-R1-clients-static-to-isis-10-floating-add",
+   "status": "COMPENSATED",
+   "error": ""
+  },
+  {
+   "cfg_id": "RS-R1-clients-static-to-isis-1-shield-install",
+   "status": "COMPENSATED",
+   "error": ""
+  }
+ ]
+}

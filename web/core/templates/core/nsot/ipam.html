@@ -1,0 +1,67 @@
+{% extends "core/base.html" %}
+{% load nsot_extras %}
+{% block title %}IPAM · NSOT{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>IPAM</h1>
+  <p><span class="badge NETBOX">NETBOX</span> stored records; <span class="badge badge--warning">derived</span> status is calculated by Python, not a NetBox field.</p>
+</div>
+{% include "core/nsot/_subnav.html" %}
+<div class="filter-bar">
+  <a class="btn btn--secondary" href="?refresh=1">Refresh NSOT</a>
+  {% include "core/nsot/_freshness.html" %}
+</div>
+
+<div class="card" style="margin-top:16px;">
+  <h3>Prefixes</h3>
+  {% if prefixes.status == "available" %}
+    <table class="data-table">
+      <thead><tr><th>Prefix</th><th>Family</th><th>Status</th><th>Role</th><th>VLAN</th><th>Description</th></tr></thead>
+      <tbody>
+      {% for p in prefixes.data %}
+        <tr><td>{{ p.prefix }}</td><td>IPv{{ p.family }}</td><td>{{ p.status|default:"—" }}</td><td>{{ p.role|default:"—" }}</td><td>{{ p.vlan|default:"—" }}</td><td>{{ p.description|default:"—" }}</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <div class="alert alert--warning"><div>{{ prefixes.message }}</div></div>
+  {% endif %}
+</div>
+
+<div class="card" style="margin-top:16px;">
+  <h3>DHCP pools (IP ranges) <span class="badge NETBOX">NETBOX</span></h3>
+  {% if dhcp_ranges.status == "available" %}
+    <table class="data-table">
+      <thead><tr><th>Server</th><th>Start</th><th>End</th><th>Family</th><th>Description</th></tr></thead>
+      <tbody>
+      {% for r in dhcp_ranges.data %}
+        <tr><td>{{ r.server|default:"—" }}</td><td>{{ r.start }}</td><td>{{ r.end }}</td><td>IPv{{ r.family }}</td><td>{{ r.description|default:"—" }}</td></tr>
+      {% empty %}
+        <tr><td colspan="5"><div class="empty-state">No DHCP ranges modeled.</div></td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <div class="alert alert--warning"><div>{{ dhcp_ranges.message }}</div></div>
+  {% endif %}
+</div>
+
+<div class="card" style="margin-top:16px;">
+  <h3>Reservation readiness <span class="badge badge--warning">derived</span></h3>
+  {% if reservations.status == "available" %}
+    <p>Rows checked: {{ reservations.data.rows_checked }} · Overall: <span class="badge {{ reservations.data.overall_status|badge_class }}">{{ reservations.data.overall_status }}</span></p>
+    <p style="color:var(--text-secondary);">VLAN 200 remains fully static management addressing on every managed device — no reservation targets exist for it, and no DHCP/reservation control is offered here.</p>
+  {% else %}
+    <div class="alert alert--warning"><div>{{ reservations.message }}</div></div>
+  {% endif %}
+</div>
+
+<div class="card" style="margin-top:16px;">
+  <h3>Addresses <span class="badge NETBOX">NETBOX</span></h3>
+  {% if addresses.status == "available" %}
+    <p style="color:var(--text-muted);">{{ addresses.data|length }} addresses. <a href="{% url 'core:nsot_interfaces' %}">View by interface</a>.</p>
+  {% else %}
+    <div class="alert alert--warning"><div>{{ addresses.message }}</div></div>
+  {% endif %}
+</div>
+{% endblock %}

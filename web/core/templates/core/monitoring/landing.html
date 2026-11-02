@@ -1,0 +1,36 @@
+{% extends "core/base.html" %}
+{% block title %}Monitoring · NMAS Control Plane{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>Monitoring</h1>
+  <p>Read-only control surfaces for the existing Grafana and InfluxDB monitoring system.</p>
+</div>
+
+{% include "core/components/monitoring_subnav.html" %}
+
+{% if summary.status == "available" %}
+  <div class="alert alert--info" data-monitoring-status="available">
+    <span aria-hidden="true">&#10003;</span>
+    <div><strong>Grafana available.</strong> The monitoring backend is reachable.</div>
+  </div>
+{% else %}
+  <div class="alert alert--warning" data-monitoring-status="unavailable">
+    <span aria-hidden="true">&#9888;</span>
+    <div><strong>Unavailable.</strong> {{ summary.message }}</div>
+  </div>
+{% endif %}
+
+<div class="card-grid monitoring-card-grid">
+  {% for page in pages %}
+    <article class="card monitoring-summary-card">
+      <div class="monitoring-card__meta">
+        <span class="badge badge--neutral">Grafana UID: {{ page.grafana_uid }}</span>
+        <span class="badge {% if page.status == 'available' %}badge--success{% else %}badge--warning{% endif %}">{{ page.status }}</span>
+      </div>
+      <h2>{{ page.label }}</h2>
+      <p>{{ page.description }}</p>
+      <a class="btn btn--primary" href="{% url page.route_name %}">Open {{ page.label }}</a>
+    </article>
+  {% endfor %}
+</div>
+{% endblock %}

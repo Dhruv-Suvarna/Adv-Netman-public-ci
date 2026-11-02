@@ -1,0 +1,95 @@
+{
+ "status": "PASS",
+ "report": {
+  "schema": 1,
+  "engine": "route-shield-lifecycle-1",
+  "blockers": [],
+  "host": {
+   "load1": 16.82,
+   "cpus": 8,
+   "available_mb": 61392,
+   "swap_used_mb": 0
+  },
+  "probes": {
+   "lost": 0,
+   "answered": 17288,
+   "flows": 14,
+   "unanswered_flows": [],
+   "errors": []
+  },
+  "digests": {
+   "R1": {
+    "config": "a1ad9e55481001cc001707597c8025084bf4a1c9f92e6c5718d2d4d8d9f13d9e"
+   },
+   "R2": {
+    "config": "f5520ad75dee4ace70cb11e2aec8b93d0eef5f804e33eb75bc7ace844cf1b646"
+   },
+   "S1": {
+    "config": "8690c2a94fde79531e13e8ca2d7c8f549e85ae460a39c84a4f7b6a3998bfaa16"
+   },
+   "S2": {
+    "config": "a8124bd3118b37ec881a3a6951f3af1f12f8e1b03f65f6a07a5b7495d8b9e986"
+   },
+   "R3": {
+    "static_routes": "cfc1c90f6851d6ed268de708724e5ebfe83e8e6d9bc70385654abc39b6d01b3e",
+    "frr_config": "365d779636ea2f6ed76d802cd8217db03610ab3838c562bf56424933ffe3c1aa",
+    "adjacencies": [
+     [
+      "OSPFV2",
+      "eth0",
+      "192.168.255.1",
+      "FULL"
+     ],
+     [
+      "OSPFV2",
+      "eth1",
+      "192.168.255.2",
+      "FULL"
+     ],
+     [
+      "OSPFV3",
+      "eth0",
+      "192.168.255.1",
+      "FULL"
+     ],
+     [
+      "OSPFV3",
+      "eth1",
+      "192.168.255.2",
+      "FULL"
+     ]
+    ]
+   },
+   "R4": {
+    "static_routes": "1aee700a76565eb98f38b85f3599a11a663624d570b2d99003535ac354fafc26",
+    "frr_config": "1a24a9188b14d336902904b75cf36883ee47a801b802f7a73d3b1ed74379e10e",
+    "adjacencies": [
+     [
+      "OSPFV2",
+      "eth0",
+      "192.168.255.1",
+      "FULL"
+     ],
+     [
+      "OSPFV2",
+      "eth1",
+      "192.168.255.2",
+      "FULL"
+     ],
+     [
+      "OSPFV3",
+      "eth0",
+      "192.168.255.1",
+      "FULL"
+     ],
+     [
+      "OSPFV3",
+      "eth1",
+      "192.168.255.2",
+      "FULL"
+     ]
+    ]
+   }
+  }
+ }
+}

@@ -1,0 +1,870 @@
+{
+ "$id": "https://nmas.local/schemas/test-governance-report/1",
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "properties": {
+  "artifacts": {
+   "items": {
+    "properties": {
+     "coverage": {
+      "type": [
+       "object",
+       "null"
+      ]
+     },
+     "id": {
+      "pattern": "^(PY|JINJA|YAML|JSON|SH|SYSTEMD|CONF|DOCKER):",
+      "type": "string"
+     },
+     "negative": {
+      "properties": {
+       "broken": {
+        "minimum": 0,
+        "type": "integer"
+       },
+       "debt": {
+        "minimum": 0,
+        "type": "integer"
+       },
+       "exempt": {
+        "minimum": 0,
+        "type": "integer"
+       },
+       "fail": {
+        "minimum": 0,
+        "type": "integer"
+       },
+       "missing": {
+        "minimum": 0,
+        "type": "integer"
+       },
+       "not_current": {
+        "minimum": 0,
+        "type": "integer"
+       },
+       "pass": {
+        "minimum": 0,
+        "type": "integer"
+       },
+       "required": {
+        "minimum": 0,
+        "type": "integer"
+       }
+      },
+      "required": [
+       "required",
+       "pass",
+       "fail",
+       "missing",
+       "broken",
+       "exempt",
+       "not_current",
+       "debt"
+      ],
+      "type": "object"
+     },
+     "positive": {
+      "properties": {
+       "broken": {
+        "minimum": 0,
+        "type": "integer"
+       },
+       "debt": {
+        "minimum": 0,
+        "type": "integer"
+       },
+       "exempt": {
+        "minimum": 0,
+        "type": "integer"
+       },
+       "fail": {
+        "minimum": 0,
+        "type": "integer"
+       },
+       "missing": {
+        "minimum": 0,
+        "type": "integer"
+       },
+       "not_current": {
+        "minimum": 0,
+        "type": "integer"
+       },
+       "pass": {
+        "minimum": 0,
+        "type": "integer"
+       },
+       "required": {
+        "minimum": 0,
+        "type": "integer"
+       }
+      },
+      "required": [
+       "required",
+       "pass",
+       "fail",
+       "missing",
+       "broken",
+       "exempt",
+       "not_current",
+       "debt"
+      ],
+      "type": "object"
+     },
+     "pylint": {
+      "properties": {
+       "status": {
+        "enum": [
+         "PASS",
+         "WARN",
+         "FAIL",
+         "NOT_RUN",
+         "N/A"
+        ]
+       }
+      },
+      "required": [
+       "status"
+      ],
+      "type": "object"
+     },
+     "scope": {
+      "enum": [
+       "CURRENT",
+       "NOT_CURRENT_SCOPE",
+       "EXEMPT"
+      ]
+     },
+     "status": {
+      "enum": [
+       "CLOSED_CURRENT_SCOPE",
+       "PARTIAL",
+       "MISSING",
+       "FAILING",
+       "EXEMPT",
+       "NOT_CURRENT_SCOPE",
+       "COVERAGE_ONLY"
+      ]
+     },
+     "symbols": {
+      "items": {
+       "properties": {
+        "disposition": {
+         "enum": [
+          "POSITIVE_AND_NEGATIVE",
+          "POSITIVE",
+          "INTERNAL",
+          "EXEMPT"
+         ]
+        }
+       },
+       "required": [
+        "id",
+        "qualname",
+        "lines",
+        "disposition",
+        "rule"
+       ],
+       "type": "object"
+      },
+      "type": "array"
+     },
+     "type": {
+      "enum": [
+       "PY",
+       "JINJA",
+       "YAML",
+       "JSON",
+       "SH",
+       "SYSTEMD",
+       "CONF",
+       "DOCKER"
+      ]
+     }
+    },
+    "required": [
+     "id",
+     "path",
+     "type",
+     "subsystems",
+     "group",
+     "role",
+     "scope",
+     "status",
+     "positive",
+     "negative",
+     "functions",
+     "symbols",
+     "pylint"
+    ],
+    "type": "object"
+   },
+   "type": "array"
+  },
+  "cases": {
+   "items": {
+    "properties": {
+     "debt": {
+      "type": "boolean"
+     },
+     "evidence": {
+      "items": {
+       "maxItems": 2,
+       "minItems": 2,
+       "type": "array"
+      },
+      "type": "array"
+     },
+     "kind": {
+      "enum": [
+       "SYMBOL",
+       "DECLARED",
+       "TEMPLATE",
+       "STRUCTURED",
+       "EXECUTABLE",
+       "CELL"
+      ]
+     },
+     "polarity": {
+      "enum": [
+       "POSITIVE",
+       "NEGATIVE"
+      ]
+     },
+     "scope": {
+      "enum": [
+       "CURRENT",
+       "NOT_CURRENT_SCOPE",
+       "EXEMPT"
+      ]
+     },
+     "state": {
+      "enum": [
+       "PASS",
+       "FAIL",
+       "MISSING",
+       "BROKEN_REFERENCE",
+       "EXEMPT",
+       "NOT_CURRENT_SCOPE"
+      ]
+     }
+    },
+    "required": [
+     "id",
+     "kind",
+     "artifact",
+     "symbol",
+     "polarity",
+     "state",
+     "scope",
+     "evidence",
+     "debt"
+    ],
+    "type": "object"
+   },
+   "type": "array"
+  },
+  "catalog_errors": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "cells": {
+   "items": {
+    "properties": {
+     "negative": {
+      "properties": {
+       "broken": {
+        "minimum": 0,
+        "type": "integer"
+       },
+       "debt": {
+        "minimum": 0,
+        "type": "integer"
+       },
+       "exempt": {
+        "minimum": 0,
+        "type": "integer"
+       },
+       "fail": {
+        "minimum": 0,
+        "type": "integer"
+       },
+       "missing": {
+        "minimum": 0,
+        "type": "integer"
+       },
+       "not_current": {
+        "minimum": 0,
+        "type": "integer"
+       },
+       "pass": {
+        "minimum": 0,
+        "type": "integer"
+       },
+       "required": {
+        "minimum": 0,
+        "type": "integer"
+       }
+      },
+      "required": [
+       "required",
+       "pass",
+       "fail",
+       "missing",
+       "broken",
+       "exempt",
+       "not_current",
+       "debt"
+      ],
+      "type": "object"
+     },
+     "positive": {
+      "properties": {
+       "broken": {
+        "minimum": 0,
+        "type": "integer"
+       },
+       "debt": {
+        "minimum": 0,
+        "type": "integer"
+       },
+       "exempt": {
+        "minimum": 0,
+        "type": "integer"
+       },
+       "fail": {
+        "minimum": 0,
+        "type": "integer"
+       },
+       "missing": {
+        "minimum": 0,
+        "type": "integer"
+       },
+       "not_current": {
+        "minimum": 0,
+        "type": "integer"
+       },
+       "pass": {
+        "minimum": 0,
+        "type": "integer"
+       },
+       "required": {
+        "minimum": 0,
+        "type": "integer"
+       }
+      },
+      "required": [
+       "required",
+       "pass",
+       "fail",
+       "missing",
+       "broken",
+       "exempt",
+       "not_current",
+       "debt"
+      ],
+      "type": "object"
+     },
+     "status": {
+      "enum": [
+       "CLOSED_CURRENT_SCOPE",
+       "PARTIAL",
+       "MISSING",
+       "FAILING",
+       "NOT_IMPLEMENTED",
+       "UNSUPPORTED"
+      ]
+     }
+    },
+    "required": [
+     "platform",
+     "feature",
+     "final_status",
+     "status",
+     "stages",
+     "positive",
+     "negative"
+    ],
+    "type": "object"
+   },
+   "type": "array"
+  },
+  "examples": {
+   "type": "array"
+  },
+  "gate": {
+   "properties": {
+    "result": {
+     "enum": [
+      "PASS",
+      "PASS_WITH_DEBT",
+      "FAIL"
+     ]
+    }
+   },
+   "required": [
+    "result",
+    "findings"
+   ],
+   "type": "object"
+  },
+  "generated_at": {
+   "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9:]{8}Z$",
+   "type": "string"
+  },
+  "generator_version": {
+   "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$",
+   "type": "string"
+  },
+  "groups": {
+   "items": {
+    "properties": {
+     "coverage": {
+      "properties": {
+       "branch_pct": {
+        "type": [
+         "number",
+         "null"
+        ]
+       },
+       "branches": {
+        "minimum": 0,
+        "type": "integer"
+       },
+       "covered": {
+        "minimum": 0,
+        "type": "integer"
+       },
+       "covered_branches": {
+        "minimum": 0,
+        "type": "integer"
+       },
+       "line_pct": {
+        "type": [
+         "number",
+         "null"
+        ]
+       },
+       "statements": {
+        "minimum": 0,
+        "type": "integer"
+       }
+      },
+      "required": [
+       "statements",
+       "covered",
+       "line_pct",
+       "branches",
+       "covered_branches",
+       "branch_pct"
+      ],
+      "type": [
+       "object",
+       "null"
+      ]
+     },
+     "negative": {
+      "properties": {
+       "broken": {
+        "minimum": 0,
+        "type": "integer"
+       },
+       "debt": {
+        "minimum": 0,
+        "type": "integer"
+       },
+       "exempt": {
+        "minimum": 0,
+        "type": "integer"
+       },
+       "fail": {
+        "minimum": 0,
+        "type": "integer"
+       },
+       "missing": {
+        "minimum": 0,
+        "type": "integer"
+       },
+       "not_current": {
+        "minimum": 0,
+        "type": "integer"
+       },
+       "pass": {
+        "minimum": 0,
+        "type": "integer"
+       },
+       "required": {
+        "minimum": 0,
+        "type": "integer"
+       }
+      },
+      "required": [
+       "required",
+       "pass",
+       "fail",
+       "missing",
+       "broken",
+       "exempt",
+       "not_current",
+       "debt"
+      ],
+      "type": "object"
+     },
+     "positive": {
+      "properties": {
+       "broken": {
+        "minimum": 0,
+        "type": "integer"
+       },
+       "debt": {
+        "minimum": 0,
+        "type": "integer"
+       },
+       "exempt": {
+        "minimum": 0,
+        "type": "integer"
+       },
+       "fail": {
+        "minimum": 0,
+        "type": "integer"
+       },
+       "missing": {
+        "minimum": 0,
+        "type": "integer"
+       },
+       "not_current": {
+        "minimum": 0,
+        "type": "integer"
+       },
+       "pass": {
+        "minimum": 0,
+        "type": "integer"
+       },
+       "required": {
+        "minimum": 0,
+        "type": "integer"
+       }
+      },
+      "required": [
+       "required",
+       "pass",
+       "fail",
+       "missing",
+       "broken",
+       "exempt",
+       "not_current",
+       "debt"
+      ],
+      "type": "object"
+     }
+    },
+    "required": [
+     "id",
+     "title",
+     "artifacts",
+     "artifacts_closed",
+     "functions",
+     "positive",
+     "negative",
+     "coverage"
+    ],
+    "type": "object"
+   },
+   "type": "array"
+  },
+  "inputs": {
+   "type": "object"
+  },
+  "payload_sha256": {
+   "pattern": "^[0-9a-f]{64}$",
+   "type": "string"
+  },
+  "provenance": {
+   "type": "object"
+  },
+  "repository_sha": {
+   "pattern": "^([0-9a-f]{40})?$",
+   "type": "string"
+  },
+  "schema_version": {
+   "const": 1
+  },
+  "sessions": {
+   "type": "array"
+  },
+  "source_fingerprint": {
+   "pattern": "^[0-9a-f]{64}$",
+   "type": "string"
+  },
+  "summary": {
+   "properties": {
+    "artifacts": {
+     "required": [
+      "discovered",
+      "current",
+      "closed",
+      "partial",
+      "missing",
+      "failing",
+      "exempt",
+      "not_current"
+     ],
+     "type": "object"
+    },
+    "cells": {
+     "required": [
+      "total",
+      "supported",
+      "closed",
+      "partial",
+      "missing",
+      "failing",
+      "positive",
+      "negative"
+     ],
+     "type": "object"
+    },
+    "coverage": {
+     "properties": {
+      "branch_pct": {
+       "type": [
+        "number",
+        "null"
+       ]
+      },
+      "branches": {
+       "minimum": 0,
+       "type": "integer"
+      },
+      "covered": {
+       "minimum": 0,
+       "type": "integer"
+      },
+      "covered_branches": {
+       "minimum": 0,
+       "type": "integer"
+      },
+      "line_pct": {
+       "type": [
+        "number",
+        "null"
+       ]
+      },
+      "statements": {
+       "minimum": 0,
+       "type": "integer"
+      }
+     },
+     "required": [
+      "statements",
+      "covered",
+      "line_pct",
+      "branches",
+      "covered_branches",
+      "branch_pct"
+     ],
+     "type": [
+      "object",
+      "null"
+     ]
+    },
+    "functions": {
+     "properties": {
+      "required": {
+       "minimum": 0,
+       "type": "integer"
+      },
+      "tested": {
+       "minimum": 0,
+       "type": "integer"
+      }
+     },
+     "required": [
+      "required",
+      "tested"
+     ],
+     "type": "object"
+    },
+    "negative": {
+     "properties": {
+      "broken": {
+       "minimum": 0,
+       "type": "integer"
+      },
+      "debt": {
+       "minimum": 0,
+       "type": "integer"
+      },
+      "exempt": {
+       "minimum": 0,
+       "type": "integer"
+      },
+      "fail": {
+       "minimum": 0,
+       "type": "integer"
+      },
+      "missing": {
+       "minimum": 0,
+       "type": "integer"
+      },
+      "not_current": {
+       "minimum": 0,
+       "type": "integer"
+      },
+      "pass": {
+       "minimum": 0,
+       "type": "integer"
+      },
+      "required": {
+       "minimum": 0,
+       "type": "integer"
+      }
+     },
+     "required": [
+      "required",
+      "pass",
+      "fail",
+      "missing",
+      "broken",
+      "exempt",
+      "not_current",
+      "debt"
+     ],
+     "type": "object"
+    },
+    "positive": {
+     "properties": {
+      "broken": {
+       "minimum": 0,
+       "type": "integer"
+      },
+      "debt": {
+       "minimum": 0,
+       "type": "integer"
+      },
+      "exempt": {
+       "minimum": 0,
+       "type": "integer"
+      },
+      "fail": {
+       "minimum": 0,
+       "type": "integer"
+      },
+      "missing": {
+       "minimum": 0,
+       "type": "integer"
+      },
+      "not_current": {
+       "minimum": 0,
+       "type": "integer"
+      },
+      "pass": {
+       "minimum": 0,
+       "type": "integer"
+      },
+      "required": {
+       "minimum": 0,
+       "type": "integer"
+      }
+     },
+     "required": [
+      "required",
+      "pass",
+      "fail",
+      "missing",
+      "broken",
+      "exempt",
+      "not_current",
+      "debt"
+     ],
+     "type": "object"
+    },
+    "pylint": {
+     "properties": {
+      "status": {
+       "enum": [
+        "PASS",
+        "WARN",
+        "FAIL",
+        "NOT_RUN"
+       ]
+      }
+     },
+     "required": [
+      "ran",
+      "status"
+     ],
+     "type": "object"
+    },
+    "tests": {
+     "properties": {
+      "total": {
+       "minimum": 0,
+       "type": "integer"
+      }
+     },
+     "required": [
+      "total"
+     ],
+     "type": "object"
+    }
+   },
+   "required": [
+    "tests",
+    "positive",
+    "negative",
+    "artifacts",
+    "functions",
+    "coverage",
+    "cells",
+    "pylint",
+    "catalog_errors"
+   ],
+   "type": "object"
+  },
+  "tests": {
+   "items": {
+    "properties": {
+     "outcome": {
+      "enum": [
+       "PASS",
+       "FAIL",
+       "ERROR",
+       "SKIP",
+       "EXPECTED_FAILURE",
+       "UNEXPECTED_SUCCESS",
+       "NOT_RUN"
+      ]
+     }
+    },
+    "required": [
+     "id",
+     "outcome"
+    ],
+    "type": "object"
+   },
+   "type": "array"
+  }
+ },
+ "required": [
+  "schema_version",
+  "generator_version",
+  "generated_at",
+  "provenance",
+  "repository_sha",
+  "source_fingerprint",
+  "summary",
+  "artifacts",
+  "cases",
+  "tests",
+  "cells",
+  "groups",
+  "examples",
+  "catalog_errors",
+  "sessions",
+  "inputs",
+  "payload_sha256"
+ ],
+ "title": "NMAS test-governance evidence report",
+ "type": "object"
+}

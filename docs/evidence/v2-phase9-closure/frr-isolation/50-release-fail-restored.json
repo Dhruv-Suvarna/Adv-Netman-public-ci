@@ -1,0 +1,142 @@
+{
+  "admission_checks": [
+    [
+      {
+        "check": "ospf_adjacency",
+        "detail": "10.254.255.99 on eth4: absent"
+      },
+      {
+        "check": "routes_v4",
+        "detail": "10.254.255.99/32 not learned through eth4"
+      }
+    ]
+  ],
+  "production_during_release": {
+    "core_ospf_adjacency": {
+      "after": {
+        "neighbor": "10.254.255.2",
+        "state": "Full/Backup",
+        "up_ms": 179750
+      },
+      "before": {
+        "neighbor": "10.254.255.2",
+        "state": "Full/Backup",
+        "up_ms": 153815
+      },
+      "no_flap": true
+    },
+    "prod->svc v4 (forwarded by up)": {
+      "received": 125,
+      "sent": 125
+    },
+    "prod->up Vlan102 v6 (up's input)": {
+      "received": 125,
+      "sent": 125
+    },
+    "zero_loss": true
+  },
+  "release": {
+    "codes": [
+      "ISOLATION_TRAFFIC_UNVERIFIED"
+    ],
+    "compensation": {
+      "attempted": true,
+      "not_compensated": [],
+      "status": "COMPENSATED",
+      "steps": [
+        {
+          "cfg_id": "CFG-001",
+          "error": "",
+          "operation": "release-nft-table",
+          "status": "COMPENSATED"
+        }
+      ]
+    },
+    "ok": false,
+    "outcome": "POSTCHECK_FAILED_ROLLED_BACK",
+    "restored": true,
+    "state": "ENFORCED"
+  },
+  "reverify": {
+    "codes": [],
+    "flows": [
+      {
+        "detail": "OPEN",
+        "expect": "PERMIT",
+        "flow": "dev -> bootstrap HTTP 10.254.92.2:8080",
+        "observed": "PERMIT"
+      },
+      {
+        "detail": "OPEN",
+        "expect": "PERMIT",
+        "flow": "NMAS service 10.254.92.2 -> 10.254.90.2:22 (NMAS management)",
+        "observed": "PERMIT"
+      },
+      {
+        "detail": "",
+        "expect": "DENY",
+        "flow": "dev -> production host 10.254.94.10 (ICMP)",
+        "observed": "DENY"
+      },
+      {
+        "detail": "",
+        "expect": "DENY",
+        "flow": "dev -> production host 2001:db8:fe94::10 (ICMPv6)",
+        "observed": "DENY"
+      },
+      {
+        "detail": "",
+        "expect": "DENY",
+        "flow": "dev -> core loopback 10.254.255.2 (ICMP, lateral)",
+        "observed": "DENY"
+      },
+      {
+        "detail": "TIMEOUT",
+        "expect": "DENY",
+        "flow": "dev -> 10.254.92.2:22 (not a bootstrap flow)",
+        "observed": "DENY"
+      },
+      {
+        "detail": "TIMEOUT; seen at service: 0",
+        "expect": "DENY",
+        "flow": "dev -> 10.254.92.2:22 from forged source port 22 (not an SSH reply)",
+        "observed": "DENY"
+      },
+      {
+        "detail": "TIMEOUT",
+        "expect": "DENY",
+        "flow": "dev -> upstream's own SSH 10.254.90.1:22",
+        "observed": "DENY"
+      },
+      {
+        "detail": "TIMEOUT",
+        "expect": "DENY",
+        "flow": "dev -> upstream's own SSH 10.254.255.4:22",
+        "observed": "DENY"
+      },
+      {
+        "detail": "",
+        "expect": "DENY",
+        "flow": "dev -> upstream 10.254.90.1 (ICMP)",
+        "observed": "DENY"
+      },
+      {
+        "detail": "",
+        "expect": "DENY",
+        "flow": "production host -> 10.254.90.2 (ICMP)",
+        "observed": "DENY"
+      },
+      {
+        "detail": "",
+        "expect": "DENY",
+        "flow": "production host -> 2001:db8:fe90::2 (ICMPv6)",
+        "observed": "DENY"
+      }
+    ],
+    "ok": true,
+    "state": "VERIFIED"
+  },
+  "ruleset_after": "table inet nmas_iso_dev000002 {\n\tchain forward {\n\t\ttype filter hook forward priority filter; policy accept;\n\t\tiifname \"eth4\" ip saddr 10.254.90.0/29 ip daddr 10.254.92.2 tcp dport 8080 accept\n\t\tiifname \"eth4\" ip saddr 10.254.90.0/29 ip daddr 10.254.92.2 tcp sport 22 ct state established,related accept\n\t\tiifname \"eth4\" counter packets 0 bytes 0 drop\n\t\toifname \"eth4\" ip saddr 10.254.92.2 ip daddr 10.254.90.0/29 tcp sport 8080 accept\n\t\toifname \"eth4\" ip saddr 10.254.92.2 ip daddr 10.254.90.0/29 tcp dport 22 accept\n\t\toifname \"eth4\" counter packets 0 bytes 0 drop\n\t}\n\n\tchain input {\n\t\ttype filter hook input priority filter; policy accept;\n\t\tiifname \"eth4\" udp sport 68 udp dport 67 accept\n\t\tiifname \"eth4\" ip6 saddr fe80::/10 icmpv6 type { nd-router-solicit, nd-neighbor-solicit, nd-neighbor-advert } accept\n\t\tiifname \"eth4\" counter packets 11 bytes 720 drop\n\t}\n\n\tchain output {\n\t\ttype filter hook output priority filter; policy accept;\n\t\toifname \"eth4\" udp sport 67 udp dport 68 accept\n\t\toifname \"eth4\" icmpv6 type { nd-router-advert, nd-neighbor-solicit, nd-neighbor-advert } accept\n\t\toifname \"eth4\" counter packets 11 bytes 728 drop\n\t}\n}\n",
+  "ruleset_before": "table inet nmas_iso_dev000002 {\n\tchain forward {\n\t\ttype filter hook forward priority filter; policy accept;\n\t\tiifname \"eth4\" ip saddr 10.254.90.0/29 ip daddr 10.254.92.2 tcp dport 8080 accept\n\t\tiifname \"eth4\" ip saddr 10.254.90.0/29 ip daddr 10.254.92.2 tcp sport 22 ct state established,related accept\n\t\tiifname \"eth4\" counter packets 12 bytes 816 drop\n\t\toifname \"eth4\" ip saddr 10.254.92.2 ip daddr 10.254.90.0/29 tcp sport 8080 accept\n\t\toifname \"eth4\" ip saddr 10.254.92.2 ip daddr 10.254.90.0/29 tcp dport 22 accept\n\t\toifname \"eth4\" counter packets 4 bytes 376 drop\n\t}\n\n\tchain input {\n\t\ttype filter hook input priority filter; policy accept;\n\t\tiifname \"eth4\" udp sport 68 udp dport 67 accept\n\t\tiifname \"eth4\" ip6 saddr fe80::/10 icmpv6 type { nd-router-solicit, nd-neighbor-solicit, nd-neighbor-advert } accept\n\t\tiifname \"eth4\" counter packets 61 bytes 3936 drop\n\t}\n\n\tchain output {\n\t\ttype filter hook output priority filter; policy accept;\n\t\toifname \"eth4\" udp sport 67 udp dport 68 accept\n\t\toifname \"eth4\" icmpv6 type { nd-router-advert, nd-neighbor-solicit, nd-neighbor-advert } accept\n\t\toifname \"eth4\" counter packets 81 bytes 5268 drop\n\t}\n}\n",
+  "ruleset_identical_after_restore": true
+}

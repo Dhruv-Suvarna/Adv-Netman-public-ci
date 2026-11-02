@@ -1,0 +1,212 @@
+{
+  "after_compensation_digest": "ec195cfc4f8f973b9fcc153b2079e95dfd61f8f54d8f1659446cd1d0b2545c14",
+  "applied_digest": "722928c219100e455fedc419ae12abfa03ffe4791c5f93b76f5cafc19eb07812",
+  "before_digest": "ec195cfc4f8f973b9fcc153b2079e95dfd61f8f54d8f1659446cd1d0b2545c14",
+  "binding": {
+    "interface": "eth1",
+    "path": "MPATH-000001",
+    "port": 22,
+    "source": "10.254.40.10",
+    "target": "10.254.40.21"
+  },
+  "compensation": [
+    {
+      "cfg": "CFG-008",
+      "code": "",
+      "detail": {
+        "action": "INVERSE_APPLIED",
+        "commands": 1
+      },
+      "object_type": "mgmt_vrf_service",
+      "status": "COMPENSATED"
+    },
+    {
+      "cfg": "CFG-007",
+      "code": "",
+      "detail": {
+        "action": "INVERSE_APPLIED",
+        "commands": 1
+      },
+      "object_type": "mgmt_vrf_service",
+      "status": "COMPENSATED"
+    },
+    {
+      "cfg": "CFG-006",
+      "code": "",
+      "detail": {
+        "action": "INVERSE_APPLIED",
+        "commands": 1
+      },
+      "object_type": "mgmt_vrf_service",
+      "status": "COMPENSATED"
+    },
+    {
+      "cfg": "CFG-005",
+      "code": "",
+      "detail": {
+        "action": "INVERSE_APPLIED",
+        "commands": 1
+      },
+      "object_type": "mgmt_vrf_route",
+      "status": "COMPENSATED"
+    },
+    {
+      "cfg": "CFG-004",
+      "code": "",
+      "detail": {
+        "action": "INVERSE_APPLIED",
+        "commands": 5
+      },
+      "object_type": "mgmt_vrf_binding",
+      "status": "COMPENSATED"
+    },
+    {
+      "cfg": "CFG-002",
+      "code": "",
+      "detail": {
+        "action": "INVERSE_APPLIED",
+        "commands": 2
+      },
+      "object_type": "mgmt_vrf",
+      "status": "COMPENSATED"
+    }
+  ],
+  "configlets": [
+    {
+      "apply_code": "",
+      "apply_ok": true,
+      "cfg": "CFG-002",
+      "commands_sent": [
+        "vrf instance MGMT",
+        "description NMAS management VRF",
+        "exit",
+        "ip routing vrf MGMT"
+      ],
+      "inverse": [
+        "no ip routing vrf MGMT",
+        "no vrf instance MGMT"
+      ],
+      "lines": [
+        "vrf instance MGMT",
+        "   description NMAS management VRF",
+        "ip routing vrf MGMT"
+      ],
+      "object_type": "mgmt_vrf"
+    },
+    {
+      "apply_code": "",
+      "apply_ok": true,
+      "cfg": "CFG-004",
+      "commands_sent": [
+        "interface Ethernet3",
+        "vrf MGMT",
+        "ip address 10.254.42.1/30",
+        "exit"
+      ],
+      "inverse": [
+        "interface Ethernet3",
+        "   default vrf MGMT",
+        "   description routed management link -> NMAS fixture eth2",
+        "   no switchport",
+        "   ip address 10.254.42.1/30"
+      ],
+      "lines": [
+        "interface Ethernet3",
+        "   vrf MGMT",
+        "   ip address 10.254.42.1/30"
+      ],
+      "object_type": "mgmt_vrf_binding"
+    },
+    {
+      "apply_code": "",
+      "apply_ok": true,
+      "cfg": "CFG-005",
+      "commands_sent": [
+        "ip route vrf MGMT 10.254.43.0/24 10.254.42.2"
+      ],
+      "inverse": [
+        "no ip route vrf MGMT 10.254.43.0/24 10.254.42.2"
+      ],
+      "lines": [
+        "ip route vrf MGMT 10.254.43.0/24 10.254.42.2"
+      ],
+      "object_type": "mgmt_vrf_route"
+    },
+    {
+      "apply_code": "",
+      "apply_ok": true,
+      "cfg": "CFG-006",
+      "commands_sent": [
+        "management api gnmi",
+        "transport grpc MGMT",
+        "vrf MGMT",
+        "exit",
+        "exit"
+      ],
+      "inverse": [
+        "no management api gnmi"
+      ],
+      "lines": [
+        "management api gnmi",
+        "   transport grpc MGMT",
+        "      vrf MGMT"
+      ],
+      "object_type": "mgmt_vrf_service"
+    },
+    {
+      "apply_code": "",
+      "apply_ok": true,
+      "cfg": "CFG-007",
+      "commands_sent": [
+        "management ssh",
+        "vrf MGMT",
+        "no shutdown",
+        "exit",
+        "exit"
+      ],
+      "inverse": [
+        "no management ssh"
+      ],
+      "lines": [
+        "management ssh",
+        "   vrf MGMT",
+        "      no shutdown"
+      ],
+      "object_type": "mgmt_vrf_service"
+    },
+    {
+      "apply_code": "",
+      "apply_ok": true,
+      "cfg": "CFG-008",
+      "commands_sent": [
+        "management api http-commands",
+        "vrf MGMT",
+        "no shutdown",
+        "exit",
+        "exit"
+      ],
+      "inverse": [
+        "no management api http-commands"
+      ],
+      "lines": [
+        "management api http-commands",
+        "   vrf MGMT",
+        "      no shutdown"
+      ],
+      "object_type": "mgmt_vrf_service"
+    }
+  ],
+  "reapplied_digest": "722928c219100e455fedc419ae12abfa03ffe4791c5f93b76f5cafc19eb07812",
+  "show_vrf": "VRF   Protocols State      Interfaces\n----- --------- ---------- ----------\nMGMT  IPv4      routing    Et3       \nMGMT  IPv6      no routing           \n\n",
+  "ssh_in_vrf_hostname": "DUT1",
+  "ssh_in_vrf_start_seconds": 0.0,
+  "transport": "production source/interface-bound cEOS connector",
+  "uncertain_write": {
+    "apply_calls": 1,
+    "code": "TRANSPORT_ERROR",
+    "compensation": "COMPENSATED",
+    "injection": "response lost after real accepted write",
+    "partial_effects": true,
+    "restored_digest": "ec195cfc4f8f973b9fcc153b2079e95dfd61f8f54d8f1659446cd1d0b2545c14"
+  }
+}

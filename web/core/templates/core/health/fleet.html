@@ -1,0 +1,61 @@
+{% extends "core/base.html" %}
+{% load core_extras %}
+{% block title %}Fleet Health{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>Fleet Health <span style="font-weight:400;">· Quick</span></h1>
+  <p><strong>Read-only.</strong> Fleet Quick reads the existing monitoring telemetry (gNMI / SNMP via the topology service and InfluxDB) once. Loading this page never connects to a device, never changes configuration and never writes to NetBox or Git. A metric the telemetry does not carry is shown as <em>not available</em>, never as zero.</p>
+</div>
+{% if recorded %}<div class="card" style="margin-bottom:16px;"><span class="badge badge--success">Recorded</span> The current fleet summary was saved to run history.</div>{% endif %}
+
+<div class="card-grid">
+  <div class="card"><h3>Fleet</h3>
+    <p><span class="badge badge--{{ fleet.overall|health_badge_class }}">{{ fleet.overall }}</span></p>
+    <table class="data-table"><tbody>
+      <tr><th>Healthy</th><td>{{ fleet.counts.healthy }}</td></tr>
+      <tr><th>Degraded</th><td>{{ fleet.counts.degraded }}</td></tr>
+      <tr><th>Unhealthy</th><td>{{ fleet.counts.unhealthy }}</td></tr>
+      <tr><th>Unknown</th><td>{{ fleet.counts.unknown }}</td></tr>
+      <tr><th>Managed devices</th><td>{{ fleet.counts.total }}</td></tr>
+    </tbody></table>
+    <p style="font-size:0.85rem;color:var(--text-muted);">Generated {{ fleet.generated_at }}. Freshness: FRESH ≤ {{ doc.thresholds.freshness.healthy|floatformat:0 }}s, STALE ≤ {{ doc.thresholds.freshness.stale|floatformat:0 }}s, otherwise EXPIRED. CPU warn/critical {{ doc.thresholds.cpu.warning|floatformat:0 }}/{{ doc.thresholds.cpu.critical|floatformat:0 }}%; memory {{ doc.thresholds.memory.warning|floatformat:0 }}/{{ doc.thresholds.memory.critical|floatformat:0 }}%.</p>
+    <form method="post" action="{% url 'core:health_fleet_snapshot' %}">{% csrf_token %}
+      <button type="submit" class="btn btn--secondary">Record snapshot</button>
+    </form>
+  </div>
+  <div class="card"><h3>Source conditions</h3>
+    <table class="data-table"><tbody>
+    {% for c in doc.conditions %}
+      <tr><td><span class="badge badge--{{ c.status|health_badge_class }}">{{ c.status }}</span></td><td><code>{{ c.check_code }}</code><br>{{ c.message }}</td></tr>
+    {% endfor %}
+    </tbody></table>
+    <p style="font-size:0.85rem;color:var(--text-muted);">These describe the monitoring pipeline and read-only sources. They are shown next to, never folded into, the device health below.</p>
+  </div>
+</div>
+
+<div class="card" style="margin-top:16px;">
+  <h3>Managed devices</h3>
+  <table class="data-table">
+    <thead><tr><th>Device</th><th>Platform</th><th>Health</th><th>Telemetry</th><th>CPU</th><th>Memory</th><th>Link issues</th><th>Routing issues</th><th>Last evidence</th><th>Issues</th></tr></thead>
+    <tbody>
+    {% for row in fleet.devices %}
+      <tr>
+        <td><a href="{% url 'core:health_device' row.device %}">{{ row.device }}</a></td>
+        <td>{{ row.platform }}</td>
+        <td><span class="badge badge--{{ row.health|health_badge_class }}">{{ row.health }}</span></td>
+        <td><span class="badge badge--{{ row.freshness|health_badge_class }}">{{ row.freshness }}</span>{% if row.age_seconds is not None %} {{ row.age_seconds|floatformat:0 }}s{% endif %}</td>
+        <td>{{ row.cpu_percent|metric:"%" }}</td>
+        <td>{{ row.memory_percent|metric:"%" }}</td>
+        <td>{{ row.link_issues|metric }}</td>
+        <td>{{ row.routing_issues|metric }}</td>
+        <td>{{ row.last_evidence_at|default:"—" }}</td>
+        <td>{% for code in row.issues %}<code>{{ code }}</code> {% empty %}—{% endfor %}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  <p style="font-size:0.85rem;color:var(--text-muted);">Routing / adjacency state is not part of the stored telemetry schema, so it is <em>not available</em> here; open a device and run Deep Health for a live read-only routing check.</p>
+</div>
+
+<div class="card" style="margin-top:16px;"><h3>Recent runs</h3>{% include "core/health/_history.html" with runs=history %}</div>
+{% endblock %}

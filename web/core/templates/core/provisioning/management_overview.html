@@ -1,0 +1,74 @@
+{% extends "core/base.html" %}
+{% block title %}Management multihoming{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>Management multihoming</h1>
+  <p><a href="{% url 'core:managed_devices' %}">&larr; Managed devices</a> · <a href="{% url 'core:management_spof_json' %}">SPOF report (JSON)</a></p>
+  <p>Where NMAS is attached, which management paths each device has, and what a single failure would take down. Path priority:
+     1 direct out-of-band, 2 VLAN 200 through a connected, authorized adjacent switch (lowest switch first), 3 management VRF on a verified direct NMAS-device link —
+     applied only among usable paths. Viewing this page reads the NMAS database only; nothing contacts a device or changes the host.</p>
+</div>
+
+{% for r in refusals %}<div class="card" style="border-left:6px solid var(--danger);"><p><strong>{{ r.code }}</strong> — {{ r.message }} {{ r.remediation }}</p></div>{% endfor %}
+
+<div class="card" style="margin-top:16px;{% if not spof.management_switch_failure_tolerant %}border-left:6px solid var(--warning);{% endif %}">
+  <h3>Single points of failure</h3>
+  <p><strong>{{ spof.statement }}</strong></p>
+  {% for b in spof.blockers %}<p><code>{{ b.code }}</code></p>{% endfor %}
+  <table class="data-table"><thead><tr><th>Device</th><th>Approved paths</th><th>Usable</th><th>Shared dependencies</th><th>Path-redundant</th><th>Fully redundant</th></tr></thead><tbody>
+    {% for name, row in spof.devices.items %}<tr><td>{{ name }}</td><td>{{ row.approved_paths }}</td><td>{{ row.usable_paths }}</td>
+      <td>{{ row.shared_dependencies|join:", "|default:"—" }}</td><td>{{ row.path_redundant|yesno:"yes,no" }}</td><td>{{ row.fully_redundant|yesno:"yes,no" }}</td></tr>
+    {% empty %}<tr><td colspan="6">No device has an approved management path.</td></tr>{% endfor %}
+  </tbody></table>
+</div>
+
+<div class="card" style="margin-top:16px;">
+  <h3>NMAS attachments</h3>
+  <p>An attachment is an expectation of where the NMAS host is connected. Observing it reads <code>/sys/class/net</code> and
+     <code>ip address</code> for that one interface — NMAS never changes host routing, firewall rules, namespaces or NICs.</p>
+  <table class="data-table"><thead><tr><th>Id</th><th>Interface</th><th>Source</th><th>Upstream</th><th>Failure domain</th><th>Approval</th><th>Verification</th><th></th></tr></thead><tbody>
+  {% for a in attachments %}<tr><td><code>{{ a.attachment_id }}</code> {{ a.name }}</td><td>{{ a.host_interface }}</td><td>{{ a.source_address }} ({{ a.network }})</td>
+    <td>{{ a.upstream_device }}{% if a.upstream_interface %}:{{ a.upstream_interface }}{% endif %}</td><td>{{ a.failure_domain|default:"—" }}</td>
+    <td>{{ a.approval_state }}</td><td>{{ a.verification_state }}</td>
+    <td>{% if a.approval_state == 'PENDING' %}<form method="post" action="{% url 'core:management_attachment_approve' a.attachment_id %}" style="display:inline">{% csrf_token %}<button class="btn" type="submit">Approve</button></form>{% endif %}
+      {% if a.approval_state != 'REVOKED' %}<form method="post" action="{% url 'core:management_attachment_observe' a.attachment_id %}" style="display:inline">{% csrf_token %}<button class="btn" type="submit">Observe (read-only)</button></form>
+      <form method="post" action="{% url 'core:management_attachment_revoke' a.attachment_id %}" style="display:inline">{% csrf_token %}<input class="form-control" name="reason" placeholder="reason" aria-label="Revoke reason" required><button class="btn" type="submit">Revoke</button></form>{% endif %}</td></tr>
+  {% empty %}<tr><td colspan="8">No NMAS attachment is registered.</td></tr>{% endfor %}
+  </tbody></table>
+  <form method="post" action="{% url 'core:management_attachment_register' %}" class="collection-form">{% csrf_token %}
+    <input class="form-control" name="name" placeholder="name" aria-label="Attachment name" required>
+    <input class="form-control" name="host_interface" placeholder="host interface" aria-label="Host interface" required>
+    <input class="form-control" name="source_address" placeholder="source address" aria-label="Source address" required>
+    <input class="form-control" name="network" placeholder="network (CIDR)" aria-label="Network" required>
+    <input class="form-control" name="upstream_device" placeholder="upstream switch" aria-label="Upstream switch" required>
+    <input class="form-control" name="upstream_interface" placeholder="upstream port" aria-label="Upstream port">
+    <input class="form-control" name="failure_domain" placeholder="failure domain" aria-label="Failure domain">
+    <button class="btn btn--primary" type="submit">Register attachment</button>
+  </form>
+</div>
+
+<div class="card" style="margin-top:16px;">
+  <h3>Devices</h3>
+  <table class="data-table"><thead><tr><th>Device</th><th>Status</th><th>Active path</th><th>Approved paths</th><th>Consumers use</th></tr></thead><tbody>
+  {% for row in devices %}<tr><td><a href="{% url 'core:management_device' row.device.device_id %}">{{ row.device.name }}</a></td>
+    <td>{{ row.state.status|default:"LEGACY" }}{% if row.state.reconciliation_required %} · <strong>reconciliation required</strong>{% endif %}</td>
+    <td>{{ row.state.active_path.path_id|default:"—" }}</td><td>{{ row.approved }}</td>
+    <td>{{ row.endpoint.source }}{% if row.endpoint.address %} · {{ row.endpoint.address }}{% endif %}</td></tr>
+  {% empty %}<tr><td colspan="5">No device has a registered management path; every consumer uses the inventory address (LEGACY).</td></tr>{% endfor %}
+  </tbody></table>
+</div>
+
+<div class="card" style="margin-top:16px;">
+  <h3>Telemetry</h3>
+  <p><strong>Telemetry does not follow management failover.</strong> gNMI, syslog and SNMP collectors keep their configured targets; the table shows what they would follow.</p>
+  <table class="data-table"><tbody>{% for t in telemetry %}<tr><td>{{ t.device }}</td><td>{{ t.source }}{% if t.address %} · {{ t.address }}{% endif %}{% if t.path_id %} ({{ t.path_id }}){% endif %}</td><td>{{ t.limitation }}</td></tr>{% empty %}<tr><td>No device has a selected path.</td></tr>{% endfor %}</tbody></table>
+</div>
+
+<div class="card" style="margin-top:16px;">
+  <h3>Capability</h3>
+  {% for row in lifecycle %}<p><strong>{{ row.label }}</strong> <span class="badge badge--{% if row.status == 'SUPPORTED' %}success{% else %}warning{% endif %}">{{ row.status }}</span> {{ row.basis }}</p>{% endfor %}
+  <table class="data-table"><thead><tr><th>Platform</th><th>Feature</th><th>Render</th><th>Validate</th><th>Import</th><th>Execute</th><th>Compensate</th><th>Live</th></tr></thead><tbody>
+  {% for platform, rows in matrix.items %}{% for feature, row in rows.items %}<tr><td>{{ platform }}</td><td>{{ feature }}</td><td>{{ row.render }}</td><td>{{ row.validate }}</td><td>{{ row.import }}</td><td>{{ row.execute }}</td><td>{{ row.compensate }}</td><td>{{ row.live_verified }}</td></tr>{% endfor %}{% endfor %}
+  </tbody></table>
+</div>
+{% endblock %}

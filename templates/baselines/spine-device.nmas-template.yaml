@@ -1,0 +1,402 @@
+compatibility:
+  constraints: {}
+  platforms:
+  - arista_ceos
+  - sonic
+  required_features:
+  - interface.ACCESS
+  - interface.SVI
+  - interface.TRUNK
+  - service_policy.ACL_IPV4_STANDARD
+exclusions:
+- category: UNMODELLED_CONFIGURATION
+  classification: RECOGNIZED_UNSUPPORTED
+  device: S3
+  label: AAA configuration
+  lines: 5
+  reason: Not representable as semantic intent; the raw text is deliberately not carried by the template.
+- category: UNMODELLED_CONFIGURATION
+  classification: RECOGNIZED_UNSUPPORTED
+  device: S3
+  label: Additional interface configuration (Ethernet4)
+  lines: 1
+  reason: Not representable as semantic intent; the raw text is deliberately not carried by the template.
+- category: UNMODELLED_CONFIGURATION
+  classification: RECOGNIZED_UNSUPPORTED
+  device: S3
+  label: Local user account
+  lines: 3
+  reason: Not representable as semantic intent; the raw text is deliberately not carried by the template.
+- category: UNMODELLED_CONFIGURATION
+  classification: RECOGNIZED_UNSUPPORTED
+  device: S3
+  label: Management API / access configuration
+  lines: 12
+  reason: Not representable as semantic intent; the raw text is deliberately not carried by the template.
+- category: UNMODELLED_CONFIGURATION
+  classification: RECOGNIZED_UNSUPPORTED
+  device: S3
+  label: SNMP configuration
+  lines: 9
+  reason: Not representable as semantic intent; the raw text is deliberately not carried by the template.
+- category: UNMODELLED_CONFIGURATION
+  classification: RECOGNIZED_UNSUPPORTED
+  device: S3
+  label: Spanning-tree configuration
+  lines: 1
+  reason: Not representable as semantic intent; the raw text is deliberately not carried by the template.
+- category: UNMODELLED_CONFIGURATION
+  classification: RECOGNIZED_UNSUPPORTED
+  device: S3
+  label: Syslog configuration
+  lines: 3
+  reason: Not representable as semantic intent; the raw text is deliberately not carried by the template.
+- category: UNMODELLED_CONFIGURATION
+  classification: UNKNOWN
+  device: S3
+  label: Unrecognized configuration (end)
+  lines: 1
+  reason: Not representable as semantic intent; the raw text is deliberately not carried by the template.
+- category: UNMODELLED_CONFIGURATION
+  classification: UNKNOWN
+  device: S3
+  label: Unrecognized configuration (ip)
+  lines: 1
+  reason: Not representable as semantic intent; the raw text is deliberately not carried by the template.
+- category: UNMODELLED_CONFIGURATION
+  classification: UNKNOWN
+  device: S3
+  label: Unrecognized configuration (no)
+  lines: 4
+  reason: Not representable as semantic intent; the raw text is deliberately not carried by the template.
+- category: UNMODELLED_CONFIGURATION
+  classification: UNKNOWN
+  device: S3
+  label: Unrecognized configuration (radius-server)
+  lines: 1
+  reason: Not representable as semantic intent; the raw text is deliberately not carried by the template.
+- category: UNMODELLED_CONFIGURATION
+  classification: UNKNOWN
+  device: S3
+  label: Unrecognized configuration (service)
+  lines: 1
+  reason: Not representable as semantic intent; the raw text is deliberately not carried by the template.
+- category: UNMODELLED_CONFIGURATION
+  classification: UNKNOWN
+  device: S3
+  label: Unrecognized configuration (system)
+  lines: 3
+  reason: Not representable as semantic intent; the raw text is deliberately not carried by the template.
+- category: UNMODELLED_CONFIGURATION
+  classification: RECOGNIZED_UNSUPPORTED
+  device: S3
+  label: VLAN definition
+  lines: 8
+  reason: Not representable as semantic intent; the raw text is deliberately not carried by the template.
+- category: NORMALIZED
+  device: S3
+  label: Interface Ethernet4
+  reason: 'Access VLAN without layer-3 addressing: normalized to an ACCESS port (the platform omits its default switchport
+    mode).'
+- category: RUNTIME_MANAGEMENT
+  device: S3
+  label: Interface Management0
+  reason: Containerlab-assigned out-of-band management interface; not reusable intent.
+- category: RUNTIME_MANAGEMENT
+  device: S3
+  label: Static route 0.0.0.0/0
+  reason: Next hop is on the Containerlab management network; not reusable intent.
+- category: RUNTIME_MANAGEMENT
+  device: S3
+  label: Static route ::/0
+  reason: Next hop is on the Containerlab management network; not reusable intent.
+- category: UNMODELLED_CONFIGURATION
+  classification: RECOGNIZED_UNSUPPORTED
+  device: S4
+  label: AAA configuration
+  lines: 5
+  reason: Not representable as semantic intent; the raw text is deliberately not carried by the template.
+- category: UNMODELLED_CONFIGURATION
+  classification: RECOGNIZED_UNSUPPORTED
+  device: S4
+  label: Additional interface configuration (Ethernet4)
+  lines: 1
+  reason: Not representable as semantic intent; the raw text is deliberately not carried by the template.
+- category: UNMODELLED_CONFIGURATION
+  classification: RECOGNIZED_UNSUPPORTED
+  device: S4
+  label: Local user account
+  lines: 3
+  reason: Not representable as semantic intent; the raw text is deliberately not carried by the template.
+- category: UNMODELLED_CONFIGURATION
+  classification: RECOGNIZED_UNSUPPORTED
+  device: S4
+  label: Management API / access configuration
+  lines: 12
+  reason: Not representable as semantic intent; the raw text is deliberately not carried by the template.
+- category: UNMODELLED_CONFIGURATION
+  classification: RECOGNIZED_UNSUPPORTED
+  device: S4
+  label: SNMP configuration
+  lines: 9
+  reason: Not representable as semantic intent; the raw text is deliberately not carried by the template.
+- category: UNMODELLED_CONFIGURATION
+  classification: RECOGNIZED_UNSUPPORTED
+  device: S4
+  label: Spanning-tree configuration
+  lines: 1
+  reason: Not representable as semantic intent; the raw text is deliberately not carried by the template.
+- category: UNMODELLED_CONFIGURATION
+  classification: RECOGNIZED_UNSUPPORTED
+  device: S4
+  label: Syslog configuration
+  lines: 3
+  reason: Not representable as semantic intent; the raw text is deliberately not carried by the template.
+- category: UNMODELLED_CONFIGURATION
+  classification: UNKNOWN
+  device: S4
+  label: Unrecognized configuration (end)
+  lines: 1
+  reason: Not representable as semantic intent; the raw text is deliberately not carried by the template.
+- category: UNMODELLED_CONFIGURATION
+  classification: UNKNOWN
+  device: S4
+  label: Unrecognized configuration (ip)
+  lines: 1
+  reason: Not representable as semantic intent; the raw text is deliberately not carried by the template.
+- category: UNMODELLED_CONFIGURATION
+  classification: UNKNOWN
+  device: S4
+  label: Unrecognized configuration (no)
+  lines: 4
+  reason: Not representable as semantic intent; the raw text is deliberately not carried by the template.
+- category: UNMODELLED_CONFIGURATION
+  classification: UNKNOWN
+  device: S4
+  label: Unrecognized configuration (radius-server)
+  lines: 1
+  reason: Not representable as semantic intent; the raw text is deliberately not carried by the template.
+- category: UNMODELLED_CONFIGURATION
+  classification: UNKNOWN
+  device: S4
+  label: Unrecognized configuration (service)
+  lines: 1
+  reason: Not representable as semantic intent; the raw text is deliberately not carried by the template.
+- category: UNMODELLED_CONFIGURATION
+  classification: UNKNOWN
+  device: S4
+  label: Unrecognized configuration (system)
+  lines: 3
+  reason: Not representable as semantic intent; the raw text is deliberately not carried by the template.
+- category: UNMODELLED_CONFIGURATION
+  classification: RECOGNIZED_UNSUPPORTED
+  device: S4
+  label: VLAN definition
+  lines: 8
+  reason: Not representable as semantic intent; the raw text is deliberately not carried by the template.
+- category: NORMALIZED
+  device: S4
+  label: Interface Ethernet4
+  reason: 'Access VLAN without layer-3 addressing: normalized to an ACCESS port (the platform omits its default switchport
+    mode).'
+- category: RUNTIME_MANAGEMENT
+  device: S4
+  label: Interface Management0
+  reason: Containerlab-assigned out-of-band management interface; not reusable intent.
+- category: RUNTIME_MANAGEMENT
+  device: S4
+  label: Static route 0.0.0.0/0
+  reason: Next hop is on the Containerlab management network; not reusable intent.
+- category: RUNTIME_MANAGEMENT
+  device: S4
+  label: Static route ::/0
+  reason: Next hop is on the Containerlab management network; not reusable intent.
+intent:
+  acls:
+  - acl_type: STANDARD
+    entries:
+    - action: PERMIT
+      destination_type: ANY
+      logging: false
+      protocol: IP
+      sequence: 10
+      source_type: HOST
+      source_value: 192.168.200.100
+    family: IPV4
+    name: NMAS_SNMP
+  device:
+    hostname: '{{ hostname }}'
+  interfaces:
+  - admin_state: ENABLED
+    description: '{{ ethernet1_description }}'
+    kind: TRUNK
+    name: Ethernet1
+    trunk_allowed_vlans: '{{ ethernet1_trunk_allowed_vlans }}'
+  - admin_state: ENABLED
+    description: '{{ ethernet2_description }}'
+    kind: TRUNK
+    name: Ethernet2
+    trunk_allowed_vlans:
+    - 102
+    - 103
+  - admin_state: ENABLED
+    description: '{{ ethernet3_description }}'
+    kind: TRUNK
+    name: Ethernet3
+    trunk_allowed_vlans: '{{ ethernet3_trunk_allowed_vlans }}'
+  - access_vlan: 200
+    admin_state: ENABLED
+    description: MANAGEMENT
+    kind: ACCESS
+    name: Ethernet4
+  - addresses:
+    - cidr: '{{ mgmt_ipv4 }}'
+      family: IPV4
+      role: PRIMARY
+    - cidr: '{{ mgmt_ipv6 }}'
+      family: IPV6
+      role: PRIMARY
+    admin_state: ENABLED
+    kind: SVI
+    name: Vlan200
+    vlan_id: 200
+kind: nmas-configuration-template
+manifest:
+  created_at: '2026-10-03T10:05:39.697739+00:00'
+  created_by: dhruv
+  description: 'Spine role: layer-2 fabric trunks between the gateway routers and the internet uplinks, static management
+    on VLAN 200.'
+  digest: 79df1afe562d26f78194bbf201c6fe3a6cfa8a0c3c03b6d09c3e89fdfe77dec2
+  digest_algorithm: sha256
+  family: SPINE
+  name: Spine Device
+  origin: BASELINE
+  template_id: TPL-BASELINE-SPINE
+  version: 1
+notes: Common spine device behaviour of S3 and S4.  Values the sources share are baseline defaults; values that differ are
+  parameters (see parameter_sets for each source); objects only one source has are optional (_when) and listed under provenance.differences.
+parameter_sets:
+  S3:
+    ethernet1_description: R3_TRUNK
+    ethernet1_trunk_allowed_vlans:
+    - 101
+    - 103
+    ethernet2_description: S3_S4_TRANSIT
+    ethernet3_description: R1_TRUNK
+    ethernet3_trunk_allowed_vlans:
+    - 101
+    - 102
+    hostname: S3
+    mgmt_ipv4: 192.168.200.13/24
+    mgmt_ipv6: 2001:db8:200::13/64
+  S4:
+    ethernet1_description: R4_TRUNK
+    ethernet1_trunk_allowed_vlans:
+    - 102
+    - 104
+    ethernet2_description: S4_S3_TRANSIT
+    ethernet3_description: R2_TRUNK
+    ethernet3_trunk_allowed_vlans:
+    - 103
+    - 104
+    hostname: S4
+    mgmt_ipv4: 192.168.200.14/24
+    mgmt_ipv6: 2001:db8:200::14/64
+parameters:
+  ethernet1_description:
+    description: interfaces / Ethernet1 description
+    required: true
+    type: string
+  ethernet1_trunk_allowed_vlans:
+    description: interfaces / Ethernet1 trunk_allowed_vlans
+    required: true
+    type: vlan_list
+  ethernet2_description:
+    default: ''
+    description: Description of Ethernet2 (names the device)
+    required: false
+    type: string
+  ethernet3_description:
+    description: interfaces / Ethernet3 description
+    required: true
+    type: string
+  ethernet3_trunk_allowed_vlans:
+    description: interfaces / Ethernet3 trunk_allowed_vlans
+    required: true
+    type: vlan_list
+  hostname:
+    description: Device hostname
+    required: true
+    type: hostname
+  mgmt_ipv4:
+    description: Static IPV4 management address on Vlan200 (VLAN 200 stays static)
+    required: true
+    type: ipv4_interface
+  mgmt_ipv6:
+    description: Static IPV6 management address on Vlan200 (VLAN 200 stays static)
+    required: true
+    type: ipv6_interface
+provenance:
+  differences:
+  - kind: VALUE_DIFFERS
+    path: interfaces/Ethernet1/description
+    values:
+      S3: R3_TRUNK
+      S4: R4_TRUNK
+  - kind: VALUE_DIFFERS
+    path: interfaces/Ethernet1/trunk_allowed_vlans
+    values:
+      S3:
+      - 101
+      - 103
+      S4:
+      - 102
+      - 104
+  - kind: VALUE_DIFFERS
+    path: interfaces/Ethernet3/description
+    values:
+      S3: R1_TRUNK
+      S4: R2_TRUNK
+  - kind: VALUE_DIFFERS
+    path: interfaces/Ethernet3/trunk_allowed_vlans
+    values:
+      S3:
+      - 101
+      - 102
+      S4:
+      - 103
+      - 104
+  extracted_at: '2026-10-03T10:05:35.877958+00:00'
+  method: live-read-only-capture
+  platforms:
+  - arista_ceos
+  repository_head: c92f33d
+  source_devices:
+  - S3
+  - S4
+  sources:
+  - captured_at: '2026-10-03T10:05:32.030254+00:00'
+    device: S3
+    parser_version: ceos-2.0
+    platform: arista_ceos
+    redacted_lines: 6
+    running_config_digest: d5054302ef89bc7a5b6a0983b557c0cd6a8d43145c837c16b87487f3747168ee
+    snapshot_id: a0a74317-969f-4676-805d-06340ecd15c1
+    transport: netmiko-ssh (privileged EXEC, show commands only)
+  - captured_at: '2026-10-03T10:05:35.877958+00:00'
+    device: S4
+    parser_version: ceos-2.0
+    platform: arista_ceos
+    redacted_lines: 6
+    running_config_digest: 0f5f03505461809f45354255f6bfd2d1cfd88d1e5d4bd7503665f82b531522c8
+    snapshot_id: a2faef67-9903-40d2-9476-a476b93037ab
+    transport: netmiko-ssh (privileged EXEC, show commands only)
+rendering:
+  engine: jinja2
+  feature_templates:
+  - ceos/acl_ipv4.j2
+  - ceos/interface_access.j2
+  - ceos/interface_svi.j2
+  - ceos/interface_trunk.j2
+  pipeline: template intent -> Device Builder semantic candidate -> platform feature templates
+schema_version: 1

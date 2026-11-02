@@ -1,0 +1,10 @@
+{
+ "measured_at": "2026-10-12T05:06Z",
+ "condition": "Challenge Console stopped, no disposable lab, no test run; ONLY the 14 dedicated production probe flows running (production.flows(): H1-H4 to the service and back, IPv6 at 100/50 packets per second, IPv4 at 10 per second)",
+ "before_probes": {"cpu_busy_percent": 47.6},
+ "with_probes_10s_samples_cpu_busy_percent": [81.1, 82.1, 83.8, 82.4, 83.0, 83.3, 81.2, 81.3, 83.6, 82.9, 82.4, 83.6, 81.7, 80.4, 84.2, 81.5, 81.2, 83.0],
+ "with_probes_load1": [10.95, 11.25, 11.43, 11.58, 11.63, 11.91, 11.77, 11.67, 12.72, 13.68, 15.09, 15.75, 15.33, 16.75, 16.41, 16.67, 16.81, 17.30],
+ "after_probes": {"cpu_busy_percent": 44.1},
+ "probes": {"answered": 112445, "lost": 0, "errors": []},
+ "conclusion": "The probes themselves raise host CPU from about 45 % to 80-84 % (above the 70 % warning threshold, below the 90 % critical threshold) and the load average past 17 and still rising after 3 minutes. The quiet-host gate is therefore evaluated before the probes start; with the probes running CPU is held below the critical threshold and load is reported, not judged."
+}

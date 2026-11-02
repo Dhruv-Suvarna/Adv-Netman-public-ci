@@ -1,0 +1,127 @@
+{% extends "core/base.html" %}
+{% block title %}{{ template.name }} v{{ version.version }}{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>{{ template.name }} <small>v{{ version.version }}</small></h1>
+  <p><a href="{% url 'core:template_library' %}">Template Library</a> · <a href="{% url 'core:template_detail' template.template_id %}">{{ template.template_id }}</a> ·
+     {{ template.get_family_display }} ·
+     {% if version.is_published %}<span class="badge badge--success">Published · immutable</span>{% else %}<span class="badge badge--warning">Draft</span>{% endif %}
+     {% if template.is_baseline %}<span class="badge badge--info">Baseline</span>{% endif %}
+     {% if template.retired_at %}<span class="badge badge--neutral">Retired</span>{% endif %}</p>
+</div>
+{% include "core/templates_library/_flash.html" %}
+
+{% if version.is_published %}
+<div class="alert alert--info"><div><strong>This version cannot be edited.</strong> To change it, use the template (a working copy in Device Builder) or create a new version.
+  The template itself is never pushed to a device.</div></div>
+{% else %}
+<div class="alert alert--warning" data-component="template-draft"><div><strong>Draft.</strong> A draft can only be published or discarded.
+  {% if publication_problems %}It cannot be published yet:<ul>{% for problem in publication_problems %}<li>{{ problem }}</li>{% endfor %}</ul>{% else %}It passes every publication check.{% endif %}</div></div>
+<div class="wb-actions">
+  <form method="post" action="{% url 'core:template_publish' template.template_id version.version %}">{% csrf_token %}
+    <button class="btn btn--primary" type="submit"{% if publication_problems %} disabled{% endif %}>Publish immutable version</button></form>
+  <form method="post" action="{% url 'core:template_discard' template.template_id version.version %}">{% csrf_token %}
+    <button class="btn btn--secondary" type="submit">Discard draft</button></form>
+</div>
+{% endif %}
+
+<div class="card-grid" style="margin-top:16px;">
+  <div class="card" data-component="template-integrity">
+    <h3>Identity and integrity</h3>
+    <table class="data-table"><tbody>
+      <tr><th>Template ID</th><td><code>{{ template.template_id }}</code></td></tr>
+      <tr><th>Version / schema</th><td>v{{ version.version }} / schema {{ version.schema_version }}</td></tr>
+      <tr><th>Digest (sha256)</th><td><code style="word-break:break-all;">{{ version.digest }}</code></td></tr>
+      <tr><th>Created</th><td>{{ version.created_at|date:"Y-m-d H:i" }} UTC · {{ version.created_by|default:"—" }}</td></tr>
+      <tr><th>Published</th><td>{% if version.published_at %}{{ version.published_at|date:"Y-m-d H:i" }} UTC · {{ version.published_by|default:"—" }}{% else %}—{% endif %}</td></tr>
+      {% if version.source_version %}<tr><th>Previous / source version</th><td><a href="{% url 'core:template_version_detail' version.source_version.template.template_id version.source_version.version %}">{{ version.source_version.ref }}</a></td></tr>{% endif %}
+    </tbody></table>
+    {% if version.is_published %}<p style="margin-top:12px;"><a class="btn btn--secondary" href="{% url 'core:template_export' template.template_id version.version %}">Export package (.nmas-template.yaml)</a></p>{% endif %}
+  </div>
+  <div class="card" data-component="template-compatibility">
+    <h3>Compatibility and required capabilities</h3>
+    <p><strong>Platforms:</strong> {% for platform in version.platforms %}<span class="badge badge--neutral">{{ platform }}</span> {% empty %}<span class="badge badge--not-implemented">Not deployable (outside NMAS management)</span>{% endfor %}</p>
+    <p><strong>Required capabilities:</strong></p>
+    <p>{% for feature in version.required_features %}<span class="badge badge--neutral">{{ feature }}</span> {% empty %}—{% endfor %}</p>
+    {% if version.constraints %}<p><strong>Constraints:</strong></p><ul>{% for key, value in version.constraints.items %}<li><code>{{ key }}</code>: {{ value }}</li>{% endfor %}</ul>{% endif %}
+    <p><strong>Rendered through (Jinja2 feature templates):</strong></p>
+    <p>{% for name in feature_templates %}<code>{{ name }}</code> {% empty %}—{% endfor %}</p>
+  </div>
+</div>
+
+<h2>Provenance</h2>
+<div data-component="template-provenance">
+<p>Method: <code>{{ provenance.method|default:"—" }}</code> · extracted {{ provenance.extracted_at|default:"—" }} · repository HEAD <code>{{ provenance.repository_head|default:"—" }}</code></p>
+{% if import_metadata %}<p><span class="badge badge--info">Imported</span> {{ import_metadata.imported_at }} by {{ import_metadata.imported_by|default:"—" }} · original
+  <code>{{ import_metadata.original_template_id }}@v{{ import_metadata.original_version }}</code> ({{ import_metadata.original_origin }}) · package sha256 <code>{{ import_metadata.package_sha256|slice:":16" }}</code> · local identity {{ import_metadata.local_identity }}</p>{% endif %}
+{% if provenance.working_intent %}<p>Working intent: <a href="{% url 'core:device_builder_change_detail' provenance.working_intent.change_id %}">{{ provenance.working_intent.change_id }}</a> · {{ provenance.working_intent.device }} · revision {{ provenance.working_intent.revision }}</p>{% endif %}
+{% if sources %}
+<table class="data-table"><thead><tr><th>Source device</th><th>Platform</th><th>Running-config digest</th><th>Captured</th><th>Transport / source</th><th>Parser</th></tr></thead><tbody>
+{% for source in sources %}<tr><td>{{ source.device }}</td><td>{{ source.platform }}</td><td><code>{{ source.running_config_digest|slice:":16" }}</code>{% if source.snapshot_id %}<br><small>snapshot {{ source.snapshot_id }}</small>{% endif %}</td>
+  <td>{{ source.captured_at }}</td><td>{% if source.transport %}{{ source.transport }}{% else %}{{ source.source }}{% endif %}{% if source.note %}<br><small>{{ source.note }}</small>{% endif %}</td><td>{{ source.parser_version }}</td></tr>{% endfor %}
+</tbody></table>
+{% endif %}
+{% if derived_from %}<h3>Derived from</h3><ul>{% for row in derived_from %}{% if row.template_id %}<li>{{ row.role|default:"source" }}: <a href="{% url 'core:template_version_detail' row.template_id row.version %}">{{ row.template_id }}@v{{ row.version }}</a> <code>{{ row.digest|slice:":12" }}</code></li>{% endif %}{% endfor %}</ul>{% endif %}
+{% if conflicts %}<h3>Semantic combination decisions</h3>
+<table class="data-table"><thead><tr><th>Conflict</th><th>Subject</th><th>Resolution</th></tr></thead><tbody>
+{% for row in conflicts %}<tr><td><code>{{ row.code }}</code></td><td>{{ row.subject }}</td><td>{{ row.resolution }}</td></tr>{% endfor %}</tbody></table>{% endif %}
+{% if differences %}<h3>Differences between the source devices</h3>
+<table class="data-table"><thead><tr><th>Where</th><th>Kind</th><th>Detail</th></tr></thead><tbody>
+{% for row in differences %}<tr><td><code>{{ row.path }}</code></td><td>{{ row.kind }}</td><td>{% if row.present_on %}only on {{ row.present_on|join:", " }}{% else %}{% for device, value in row.values.items %}{{ device }}={{ value }}{% if not forloop.last %}; {% endif %}{% endfor %}{% endif %}</td></tr>{% endfor %}</tbody></table>{% endif %}
+</div>
+{% if version.notes %}<h3>Notes</h3><p>{{ version.notes }}</p>{% endif %}
+
+<h2>Parameters</h2>
+{% if parameter_sets %}<p>Source parameter sets (the values of each source device): {% for name in parameter_sets %}<a class="btn btn--secondary" href="?set={{ name|urlencode }}">{{ name }}</a> {% endfor %}{% if parameter_set %}<a href="?">clear</a>{% endif %}</p>{% endif %}
+<table class="data-table" data-component="template-parameters"><thead><tr><th>Parameter</th><th>Type</th><th>Required</th><th>{% if parameter_set %}{{ parameter_set }}{% else %}Default{% endif %}</th><th>Meaning</th></tr></thead><tbody>
+{% for row in parameters %}<tr><td><code>{{ row.name }}</code></td><td>{{ row.type }}</td><td>{% if row.required %}yes{% else %}no{% endif %}</td><td>{{ row.value }}</td><td>{{ row.description }}</td></tr>{% empty %}<tr><td colspan="5">No parameters.</td></tr>{% endfor %}
+</tbody></table>
+
+<h2>Semantic intent (YAML)</h2>
+<p style="color:var(--text-muted); font-size:0.85rem;">Platform configuration is rendered from this intent by the Device Builder's Jinja2 feature templates only after it is cloned into a Change.</p>
+<pre class="config-preview" data-component="template-intent" style="max-height:480px; overflow:auto;"><code>{{ intent_yaml }}</code></pre>
+
+{% if version.exclusions %}<h2>Exclusions</h2>
+<p style="color:var(--text-muted); font-size:0.85rem;">What was deliberately left out of the template (device identity, lab runtime plumbing, secrets, configuration that is not modelled as intent). Raw text is never carried.</p>
+<table class="data-table"><thead><tr><th>Device</th><th>Category</th><th>What</th><th>Why</th></tr></thead><tbody>
+{% for row in version.exclusions %}<tr><td>{{ row.device }}</td><td><code>{{ row.category }}</code></td><td>{{ row.label }}{% if row.lines %} ({{ row.lines }} line(s)){% endif %}</td><td>{{ row.reason }}</td></tr>{% endfor %}
+</tbody></table>{% endif %}
+
+{% if version.is_published %}
+<h2 id="use">Use template</h2>
+{% if not deployable %}
+<div class="alert alert--not-integrated"><div>This template describes devices <strong>outside NMAS management</strong>. It can be inspected and exported for lab generation, testing and reuse, but it never becomes a managed-device working intent.</div></div>
+{% elif template.retired_at %}
+<div class="alert alert--not-integrated"><div>This template is retired and cannot be used for new work.</div></div>
+{% else %}
+<form method="post" action="{% url 'core:template_clone' template.template_id version.version %}" data-component="template-clone">
+  {% csrf_token %}
+  <p style="color:var(--text-muted); font-size:0.85rem;">Creates a NEW editable working intent in Device Builder. This template version stays unchanged. Nothing is sent to a device:
+     the Change then goes through field validation, network-config validation, Tier-2 validation, plan, precheck, approval and execution.</p>
+  <div class="card-grid">
+    <div class="card">
+      <h3>Target</h3>
+      <div class="form-field"><label for="c-device">Target device name</label><input id="c-device" name="device_name" class="form-control" required maxlength="64" value="{{ parameter_set }}"></div>
+      <div class="form-field"><label for="c-platform">Platform</label><select id="c-platform" name="platform" class="form-control">{% for value, label in platform_choices %}<option value="{{ value }}">{{ label }}</option>{% endfor %}</select></div>
+      <div class="form-field"><label for="c-type">Target type</label><select id="c-type" name="target_type" class="form-control"><option value="EXISTING_DEVICE">Existing managed device</option><option value="NEW_DEVICE">New device (draft only)</option></select></div>
+      <div class="form-field"><label for="c-mode">Clone mode</label><select id="c-mode" name="mode" class="form-control">
+        <option value="INCREMENTAL">Incremental — existing running device: import it as context and add only what the template adds</option>
+        <option value="FULL">Full — the whole template intent becomes the working intent</option></select></div>
+      <div class="form-field"><label for="c-change">Target Change</label><select id="c-change" name="change_id" class="form-control"><option value="">Create a new Draft Change</option>
+        {% for change in draft_changes %}<option value="{{ change.change_id }}">{{ change.change_id }} — {{ change.title }}</option>{% endfor %}</select></div>
+      <div class="form-field"><label for="c-title">Title (new Change)</label><input id="c-title" name="title" class="form-control" maxlength="200"></div>
+    </div>
+    <div class="card">
+      <h3>Parameters{% if parameter_set %} <small>(pre-filled from {{ parameter_set }})</small>{% endif %}</h3>
+      {% for row in parameters %}
+        <div class="form-field"><label for="p-{{ row.name }}">{{ row.name }} <small>({{ row.type }}{% if row.required %}, required{% endif %}) — {{ row.description }}</small></label>
+          {% if row.is_boolean %}<input id="p-{{ row.name }}" type="checkbox" name="p_{{ row.name }}"{% if row.checked %} checked{% endif %}>
+          {% else %}<input id="p-{{ row.name }}" name="p_{{ row.name }}" class="form-control" value="{{ row.value }}" maxlength="300">{% endif %}</div>
+      {% empty %}<p>No parameters.</p>{% endfor %}
+    </div>
+  </div>
+  <div class="wb-actions"><button class="btn btn--primary" type="submit">Clone into Device Builder</button></div>
+</form>
+{% endif %}
+{% endif %}
+{% endblock %}

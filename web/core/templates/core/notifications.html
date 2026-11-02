@@ -1,0 +1,59 @@
+{% extends "core/base.html" %}
+{% block title %}Notifications{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>Notifications</h1>
+  <p>This page is intentionally not present in the sidebar — it is reached only from the header notification control. {{ unread_count }} unread.</p>
+</div>
+
+<form method="get" class="filter-bar">
+  <label class="filter-bar__item">
+    <input type="checkbox" name="unread" value="1" {% if unread_only %}checked{% endif %} onchange="this.form.submit()">
+    Unread only
+  </label>
+  <select name="severity" class="filter-bar__item" onchange="this.form.submit()">
+    <option value="">All severities</option>
+    {% for value, label in severity_choices %}
+      <option value="{{ value }}" {% if value == selected_severity %}selected{% endif %}>{{ label }}</option>
+    {% endfor %}
+  </select>
+  <select name="event_type" class="filter-bar__item" onchange="this.form.submit()">
+    <option value="">All event types</option>
+    {% for value, label in event_type_choices %}
+      <option value="{{ value }}" {% if value == selected_event_type %}selected{% endif %}>{{ label }}</option>
+    {% endfor %}
+  </select>
+  <noscript><button type="submit" class="btn btn--secondary">Apply</button></noscript>
+</form>
+
+{% if notifications %}
+  <form method="post" action="{% url 'core:notification_mark_all_read' %}" class="mark-all-form">
+    {% csrf_token %}
+    <input type="hidden" name="next" value="{{ request.get_full_path }}">
+    <button type="submit" class="btn btn--secondary">Mark all read</button>
+  </form>
+  <div class="card">
+    {% for note in notifications %}
+      {% include "core/components/notification_item.html" %}
+    {% endfor %}
+  </div>
+  {% if page_obj.paginator.num_pages > 1 %}
+    <nav class="pagination" aria-label="Notification pages">
+      {% if page_obj.has_previous %}
+        <a href="?{% if querystring %}{{ querystring }}&{% endif %}page={{ page_obj.previous_page_number }}">&larr; Previous</a>
+      {% endif %}
+      <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+      {% if page_obj.has_next %}
+        <a href="?{% if querystring %}{{ querystring }}&{% endif %}page={{ page_obj.next_page_number }}">Next &rarr;</a>
+      {% endif %}
+    </nav>
+  {% endif %}
+{% else %}
+  <div class="card">
+    <div class="empty-state">
+      <div class="empty-state__icon" aria-hidden="true">&#128276;</div>
+      <div>No notifications yet.</div>
+    </div>
+  </div>
+{% endif %}
+{% endblock %}

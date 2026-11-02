@@ -1,0 +1,15 @@
+# cloudflared named tunnel for the NMAS website only (V2 Phase 1).
+[Unit]
+Description=Cloudflare Tunnel for the NMAS website
+After=network-online.target nmas-web.service
+Wants=network-online.target
+
+[Service]
+Type=notify
+ExecStart=/usr/bin/cloudflared --no-autoupdate --config /etc/cloudflared/config.yml tunnel run
+Restart=on-failure
+RestartSec=5
+NoNewPrivileges=true
+
+[Install]
+WantedBy=multi-user.target

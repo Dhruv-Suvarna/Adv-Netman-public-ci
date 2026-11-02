@@ -1,0 +1,47 @@
+{% extends "core/base.html" %}
+{% block title %}Raw Configlets · {{ change.change_id }}{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1><span class="badge badge--danger">RAW</span> Raw Configlets <span style="font-weight:400;">· {{ change.change_id }}</span></h1>
+  <p><a href="{% url 'core:device_builder_change_detail' change.change_id %}">&larr; Back to {{ change.change_id }}</a> · <a href="{% url 'core:change_validation' change.change_id %}">Validation</a> · <a href="{% url 'core:change_plan' change.change_id %}">Plan</a> · <a href="{% url 'core:change_execute' change.change_id %}">Execution</a></p>
+  <p>{{ change.title }}</p>
+  <p><strong>This page changes nothing.</strong> Raw Configlets are an explicit escape hatch from the structured Device Builder: operator-authored network <em>configuration statements</em> for one device. They are verified in an isolated sandbox (syntax only), then flow through the normal Change validation, plan, precheck and Partial (UAT) execution. They can never run in Complete mode and are never executed from this page.</p>
+</div>
+
+<div class="card">
+  <h3>Raw Configlets in this Change</h3>
+  <table class="data-table">
+    <thead><tr><th>ID</th><th>Name</th><th>Device</th><th>Platform</th><th>Priority</th><th>Revision</th><th>Verification</th><th>In Change</th></tr></thead>
+    <tbody>
+    {% for row in rows %}
+      <tr>
+        <td><a href="{% url 'core:raw_configlet_detail' change.change_id row.raw.raw_id %}"><code>{{ row.raw.raw_id }}</code></a></td>
+        <td>{{ row.revision.name }}</td>
+        <td>{{ row.revision.target_device }}</td>
+        <td>{{ row.revision.platform }}</td>
+        <td>{{ row.revision.priority }}</td>
+        <td>{{ row.revision.revision }}</td>
+        <td><span class="badge badge--{{ row.tone }}">{{ row.label }}</span>{% if row.status.in_progress %} <span class="badge badge--info">running</span>{% endif %}</td>
+        <td>{% if row.raw.enabled %}<span class="badge badge--success">yes</span>{% else %}<span class="badge badge--neutral">removed</span>{% endif %}</td>
+      </tr>
+    {% empty %}
+      <tr><td colspan="8"><div class="empty-state">No Raw Configlets yet.</div></td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  <p><a class="btn btn--secondary" href="{% url 'core:raw_configlet_new' change.change_id %}">New Raw Configlet</a></p>
+</div>
+
+<div class="card" style="margin-top:16px;">
+  <h3>Platform support (evidence-based)</h3>
+  <table class="data-table">
+    <thead><tr><th>Platform</th><th>Verification</th><th>Adapter</th><th>Execution</th><th>Complete (compensation)</th></tr></thead>
+    <tbody>
+    {% for c in capabilities %}
+      <tr><td>{{ c.platform }}</td><td><span class="badge badge--{% if c.verification == 'SUPPORTED' %}success{% else %}neutral{% endif %}">{{ c.verification }}</span>{% if c.privileged_sandbox %} <span class="badge badge--warning">privileged sandbox · opt-in</span>{% endif %}</td><td>{{ c.adapter|default:"—" }}</td><td>{{ c.execution }}</td><td>{{ c.compensation }}</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  <p style="font-size:0.85rem;color:var(--text-muted);">Verification proves only that the platform parser accepts the syntax. Limits: {{ limits.max_bytes }} bytes, {{ limits.max_lines }} lines, {{ limits.max_line_length }} characters per line.</p>
+</div>
+{% endblock %}

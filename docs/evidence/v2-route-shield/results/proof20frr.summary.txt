@@ -1,0 +1,72 @@
+== sequence-numbered probes
+   c01: production 0/135494 lost   diagnostic 0/9483 lost
+   c02: production 0/140938 lost   diagnostic 0/9832 lost
+   c03: production 0/139096 lost   diagnostic 0/9720 lost
+   c04: production 0/139751 lost   diagnostic 0/9741 lost
+   c05: production 0/140010 lost   diagnostic 0/9788 lost
+   c06: production 0/140912 lost   diagnostic 0/9831 lost
+   c07: production 0/137406 lost   diagnostic 0/9570 lost
+   c08: production 0/135916 lost   diagnostic 0/9510 lost
+   c09: production 0/138111 lost   diagnostic 0/9631 lost
+   c10: production 0/148075 lost   diagnostic 0/10379 lost
+   c11: production 0/134982 lost   diagnostic 0/9425 lost
+   c12: production 0/135991 lost   diagnostic 0/9495 lost
+   c13: production 0/135053 lost   diagnostic 0/9425 lost
+   c14: production 0/138364 lost   diagnostic 0/9656 lost
+   c15: production 0/141377 lost   diagnostic 0/9851 lost
+   c16: production 0/134324 lost   diagnostic 0/9360 lost
+   c17: production 0/138095 lost   diagnostic 0/9656 lost
+   c18: production 0/138537 lost   diagnostic 0/9680 lost
+   c19: production 0/135991 lost   diagnostic 0/9500 lost
+   c20: production 0/143492 lost   diagnostic 0/10013 lost
+   PRODUCTION TRANSIT: probes 2771915 lost 0    DIAGNOSTIC (device-originated): probes 193546 lost 0
+== long-lived TCP sessions
+   h1_tcp4: UNINTERRUPTED CLOSE 1791715075.130 50306 50306 953  stalls>250ms: 275 (informational)
+   h1_tcp6: UNINTERRUPTED CLOSE 1791715075.159 50445 50445 1323  stalls>250ms: 172 (informational)
+   h2_tcp4: UNINTERRUPTED CLOSE 1791715079.226 50339 50339 1193  stalls>250ms: 283 (informational)
+   h2_tcp6: UNINTERRUPTED CLOSE 1791715079.294 50458 50458 1308  stalls>250ms: 202 (informational)
+   h3_tcp4: UNINTERRUPTED CLOSE 1791715083.440 50345 50345 1085  stalls>250ms: 273 (informational)
+   h3_tcp6: UNINTERRUPTED CLOSE 1791715083.385 50523 50523 1203  stalls>250ms: 187 (informational)
+   h4_tcp6: UNINTERRUPTED CLOSE 1791715087.532 50639 50639 971  stalls>250ms: 177 (informational)
+== repeated new HTTP sessions
+   h1_http4: ALL OK CLOSE 1791715075.289 20065 0 218 2099  slow>400ms: 218 (informational)
+   h1_http6: ALL OK CLOSE 1791715075.189 20142 0 179 2069  slow>400ms: 179 (informational)
+   h2_http4: ALL OK CLOSE 1791715079.339 20078 0 232 2227  slow>400ms: 232 (informational)
+   h2_http6: ALL OK CLOSE 1791715079.285 20164 0 193 2076  slow>400ms: 193 (informational)
+   h3_http4: ALL OK CLOSE 1791715083.553 20068 0 241 2075  slow>400ms: 241 (informational)
+   h3_http6: ALL OK CLOSE 1791715083.516 20199 0 178 1647  slow>400ms: 178 (informational)
+   h4_http6: ALL OK CLOSE 1791715087.662 20210 0 170 2063  slow>400ms: 170 (informational)
+== completed: forward 20  rollback 20  drains 0  restores 0   failed-events: []
+   flows without evidence: none
+VERDICT: PASS (production transit loss 0, TCP uninterrupted, HTTP all successful)
+== c3
+     3  UNCOVERED | X final-equals-first-final True
+     3  UNCOVERED | X stage2 adjacencies wait
+     3  UNCOVERED | X stage4 isis-available wait (static still owns)
+     3  UNCOVERED | X-r1 shield-remove r1
+     3  UNCOVERED | X-r1 shield-remove s1
+     3  UNCOVERED | X-r2 shield-remove r2
+     3  UNCOVERED | X-r2 shield-removed r2
+     3  UNCOVERED | X-r2 shield-verified r2
+     3  UNCOVERED | X-r2 stage11 final-forwarding verify
+     1  covered   | X-r1 north-cover-verified r1 2001:db8:10::/63 2001:db8:20::/
+     3  covered   | X-r1 rb2 switch-static-restored
+     6  covered   | X-r1 stage7 router-floating-statics-added
+     3  covered   | X-r2 rb2 switch-static-restored
+     5  covered   | X-r2 stage7 router-floating-statics-added
+== c4
+     3  UNCOVERED | X stage2 adjacencies wait
+     3  UNCOVERED | X stage4 isis-available wait (static still owns)
+     3  UNCOVERED | X-r1 rb3 shield-removal
+     3  UNCOVERED | X-r1 shield-remove r1
+     3  UNCOVERED | X-r2 shield-remove r2
+     3  UNCOVERED | X-r2 shield-removed r2
+     3  UNCOVERED | X-r2 shield-verified r2
+     3  UNCOVERED | X-r2 stage6 shield-forwarding verify
+     1  covered   | X-r1 north-cover-verified r1 2001:db8:10::/63 2001:db8:20::/
+     6  covered   | X-r1 stage7 router-floating-statics-added
+     3  covered   | X-r2 rb2 switch-static-restored
+     5  covered   | X-r2 stage7 router-floating-statics-added
+client /64 route replacements on the cores: 84   without a cover: 51
+CORE VERDICT: FAIL
+R5-equivalent (pe) client-route events: 0

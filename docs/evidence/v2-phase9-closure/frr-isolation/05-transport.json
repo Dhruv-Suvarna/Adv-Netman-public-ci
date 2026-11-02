@@ -1,0 +1,30 @@
+{
+  "digest": "46765afcfa7540bdd82e260e4b81ce19b30abce58ad386055dff139221cb57ec",
+  "executor_source_mentions_docker_exec": false,
+  "privileged_nft_version": "nftables v1.0.9 (Old Doc Yak #3)",
+  "privileged_vtysh_rc": 0,
+  "refusals": {
+    "no_pin": "NOT_CONFIGURED",
+    "not_writable": "NOT_CONFIGURED",
+    "wrong_pin": "CONNECTION_FAILED"
+  },
+  "remote_identity": "nmas-svc",
+  "socket": {
+    "local": [
+      "10.254.92.2",
+      38088
+    ],
+    "peer": [
+      "10.254.255.4",
+      22
+    ]
+  },
+  "sudo_other_program_rc": 1,
+  "target": {
+    "address": "10.254.255.4",
+    "host_key": "SHA256:muRAQnjVkj5QywQzQN4Suyn1P+RZEo979Qze0SkjBJw",
+    "port": 22,
+    "username": "nmas-svc"
+  },
+  "upstream_view": "0      0       10.254.255.4:22    10.254.92.2:38088"
+}

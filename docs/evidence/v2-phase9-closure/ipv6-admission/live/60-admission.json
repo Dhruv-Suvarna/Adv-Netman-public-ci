@@ -1,0 +1,867 @@
+{
+  "approve": {
+    "codes": [],
+    "ok": true
+  },
+  "approve_self": [
+    "ADMISSION_SELF_APPROVAL"
+  ],
+  "commissioning": {
+    "approved_by": "arthur",
+    "candidate_hash": "63ed812cff58a83f8b213e2a4e78265e5ffba36d9a2ce9527932f1748d0a88f6",
+    "commissioning": "COM-000001",
+    "dependencies": {
+      "cycles": [],
+      "edges": [],
+      "nodes": []
+    },
+    "device": "DEV-000002",
+    "evidence_digest": "f83a46019d847274395a34bd544a50f8fbfcff064ff7e18bb66df32904a86858",
+    "failure": {},
+    "isolation_state": "RELEASED",
+    "policy": "ISO-000001",
+    "provisioning_run": "PROV-000001",
+    "provisioning_status": "NSOT_SYNCED",
+    "readiness": {
+      "at": "2026-10-27T23:58:17.144513+00:00",
+      "checks": [
+        {
+          "check": "identity_verified",
+          "code": "",
+          "detail": "VERIFIED",
+          "ok": true
+        },
+        {
+          "check": "host_key_enrolled",
+          "code": "",
+          "detail": "the verified host key is the out-of-band enrolled one",
+          "ok": true
+        },
+        {
+          "check": "attachment_verified",
+          "code": "",
+          "detail": "VERIFIED",
+          "ok": true
+        },
+        {
+          "check": "bootstrap_authorization",
+          "code": "",
+          "detail": "CONSUMED by -",
+          "ok": true
+        },
+        {
+          "check": "native_bootstrap",
+          "code": "",
+          "detail": "ztp_state=DISABLED_VERIFIED (observed; native ZTP completion is never admission)",
+          "ok": true
+        },
+        {
+          "check": "management_transport",
+          "code": "",
+          "detail": "",
+          "ok": true
+        },
+        {
+          "check": "credential_transitioned",
+          "code": "",
+          "detail": "bootstrap credential revoked, proven rejected and retired; the service credential works",
+          "ok": true
+        },
+        {
+          "check": "isolation_verified",
+          "code": "",
+          "detail": "VERIFIED",
+          "ok": true
+        },
+        {
+          "check": "dependencies",
+          "code": "",
+          "detail": "",
+          "ok": true
+        },
+        {
+          "check": "lifecycle",
+          "code": "",
+          "detail": "ISOLATED",
+          "ok": true
+        },
+        {
+          "check": "production_candidate",
+          "code": "",
+          "detail": "PROV-000001 PRECHECKED: validated, planned and prechecked through the ordinary provisioning stages",
+          "ok": true
+        }
+      ],
+      "ready": true
+    },
+    "requested_by": "olivia",
+    "state": "ADMITTED"
+  },
+  "core_route_to_new1": "\nVRF: default\nSource Codes:\n       C - connected, S - static, K - kernel,\n       O - OSPF, O IA - OSPF inter area, O E1 - OSPF external type 1,\n       O E2 - OSPF external type 2, O N1 - OSPF NSSA external type 1,\n       O N2 - OSPF NSSA external type2, O3 - OSPFv3,\n       O3 IA - OSPFv3 inter area, O3 E1 - OSPFv3 external type 1,\n       O3 E2 - OSPFv3 external type 2,\n       O3 N1 - OSPFv3 NSSA external type 1,\n       O3 N2 - OSPFv3 NSSA external type2, B - Other BGP Routes,\n       B I - iBGP, B E - eBGP, R - RIP, I L1 - IS-IS level 1,\n       I L2 - IS-IS level 2, A B - BGP Aggregate,\n       A O - OSPF Summary, NG - Nexthop Group Static Route,\n       V - VXLAN Control Service, M - Martian,\n       DH - DHCP client installed default route,\n       DP - Dynamic Policy Route, L - VRF Leaked,\n       G  - gRIBI, RC - Route Cache Route,\n       CL - CBF Leaked Route\n\n O        10.254.255.11/32 [110/30]\n           via 10.254.62.1, Ethernet1\n\n",
+  "device_after": {
+    "admission": "ADMITTED",
+    "lifecycle": "IN_SERVICE"
+  },
+  "execute": {
+    "codes": [],
+    "ok": true,
+    "status": {
+      "admission": "ADM-000002",
+      "approved_by": "arthur",
+      "commissioning": "COM-000001",
+      "device": "DEV-000002",
+      "evidence_digest": "683ce428c3a2ce6b4c8447c2c1fffae5a5d2c8e31086ae7a9b70fea15637b568",
+      "expectations": {
+        "ospf_neighbors": [
+          "10.254.255.11"
+        ],
+        "ospfv3_neighbors": [
+          "10.254.255.11"
+        ],
+        "reachable": [
+          "10.254.255.11",
+          "2001:db8:254:255::11"
+        ],
+        "routes_v4": [
+          "10.254.255.11/32",
+          "10.254.64.0/24"
+        ],
+        "routes_v6": [
+          "2001:db8:254:255::11/128"
+        ],
+        "routing": "OSPF"
+      },
+      "failure": {},
+      "policy": "ISO-000001",
+      "release_change": "CHG-20261028-0002",
+      "requested_by": "olivia",
+      "restoration": {},
+      "state": "ADMITTED",
+      "verification": {
+        "at": "2026-10-28T00:04:18.526008+00:00",
+        "precheck": {
+          "at": "2026-10-28T00:03:42.171993+00:00",
+          "codes": [],
+          "ok": true,
+          "precheck_run": "995a972d-471f-45ff-80e5-8b89165e25b4"
+        },
+        "release": {
+          "compensation": "NOT_ATTEMPTED",
+          "failure": {},
+          "postcheck": {
+            "result": "PASS"
+          },
+          "release_outcome": "SUCCEEDED",
+          "release_run": "c23535cb-6b13-46fb-b403-45e05ee47259"
+        }
+      }
+    }
+  },
+  "label": "the admission",
+  "netbox_gateway_calls": [
+    [
+      "create",
+      "device",
+      "NEW1"
+    ],
+    [
+      "create",
+      "interface",
+      "Ethernet1"
+    ],
+    [
+      "create",
+      "ip_address",
+      "10.254.60.10/24"
+    ],
+    [
+      "activate",
+      "True"
+    ]
+  ],
+  "new1_ospf": "Neighbor ID     Instance VRF      Pri State                  Dead Time   Address         Interface\n10.254.255.1    1        default  1   FULL/BDR               00:00:38    10.254.60.1     Ethernet1\n",
+  "outbox": [
+    {
+      "payload": {
+        "admission_state": "NOT_ADMITTED",
+        "detail": {
+          "action": "ATTACHMENT_APPROVE",
+          "approval_state": "APPROVED"
+        },
+        "device_id": "DEV-000002",
+        "fact": "ATTACHMENT_CHANGED",
+        "lifecycle_state": "REGISTERED",
+        "name": "NEW1",
+        "platform": "arista_ceos",
+        "role": "router",
+        "sequence": 1
+      },
+      "state": "PENDING",
+      "topic": "NSOT_DEVICE_STATE"
+    },
+    {
+      "payload": {
+        "admission_state": "NOT_ADMITTED",
+        "detail": {
+          "action": "ATTACHMENT_APPROVE",
+          "approval_state": "APPROVED"
+        },
+        "device_id": "DEV-000002",
+        "fact": "ATTACHMENT_CHANGED",
+        "lifecycle_state": "REGISTERED",
+        "name": "NEW1",
+        "platform": "arista_ceos",
+        "role": "router",
+        "sequence": 1
+      },
+      "state": "PENDING",
+      "topic": "TOPOLOGY_DEVICE_STATE"
+    },
+    {
+      "payload": {
+        "admission_state": "NOT_ADMITTED",
+        "detail": {
+          "action": "ATTACHMENT_APPROVE",
+          "approval_state": "APPROVED"
+        },
+        "device_id": "DEV-000002",
+        "fact": "ATTACHMENT_CHANGED",
+        "lifecycle_state": "REGISTERED",
+        "name": "NEW1",
+        "platform": "arista_ceos",
+        "role": "router",
+        "sequence": 1
+      },
+      "state": "PENDING",
+      "topic": "MONITORING_TARGET_STATE"
+    },
+    {
+      "payload": {
+        "admission_state": "NOT_ADMITTED",
+        "detail": {
+          "action": "DISCOVER"
+        },
+        "device_id": "DEV-000002",
+        "fact": "DISCOVERED",
+        "lifecycle_state": "DISCOVERED",
+        "name": "NEW1",
+        "platform": "arista_ceos",
+        "role": "router",
+        "sequence": 2
+      },
+      "state": "PENDING",
+      "topic": "NSOT_DEVICE_STATE"
+    },
+    {
+      "payload": {
+        "admission_state": "NOT_ADMITTED",
+        "detail": {
+          "action": "DISCOVER"
+        },
+        "device_id": "DEV-000002",
+        "fact": "DISCOVERED",
+        "lifecycle_state": "DISCOVERED",
+        "name": "NEW1",
+        "platform": "arista_ceos",
+        "role": "router",
+        "sequence": 2
+      },
+      "state": "PENDING",
+      "topic": "TOPOLOGY_DEVICE_STATE"
+    },
+    {
+      "payload": {
+        "admission_state": "NOT_ADMITTED",
+        "detail": {
+          "action": "DISCOVER"
+        },
+        "device_id": "DEV-000002",
+        "fact": "DISCOVERED",
+        "lifecycle_state": "DISCOVERED",
+        "name": "NEW1",
+        "platform": "arista_ceos",
+        "role": "router",
+        "sequence": 2
+      },
+      "state": "PENDING",
+      "topic": "MONITORING_TARGET_STATE"
+    },
+    {
+      "payload": {
+        "admission_state": "NOT_ADMITTED",
+        "detail": {
+          "action": "OBSERVE_ATTACHMENT"
+        },
+        "device_id": "DEV-000002",
+        "fact": "ATTACHMENT_CHANGED",
+        "lifecycle_state": "DISCOVERED",
+        "name": "NEW1",
+        "platform": "arista_ceos",
+        "role": "router",
+        "sequence": 3
+      },
+      "state": "PENDING",
+      "topic": "NSOT_DEVICE_STATE"
+    },
+    {
+      "payload": {
+        "admission_state": "NOT_ADMITTED",
+        "detail": {
+          "action": "OBSERVE_ATTACHMENT"
+        },
+        "device_id": "DEV-000002",
+        "fact": "ATTACHMENT_CHANGED",
+        "lifecycle_state": "DISCOVERED",
+        "name": "NEW1",
+        "platform": "arista_ceos",
+        "role": "router",
+        "sequence": 3
+      },
+      "state": "PENDING",
+      "topic": "TOPOLOGY_DEVICE_STATE"
+    },
+    {
+      "payload": {
+        "admission_state": "NOT_ADMITTED",
+        "detail": {
+          "action": "OBSERVE_ATTACHMENT"
+        },
+        "device_id": "DEV-000002",
+        "fact": "ATTACHMENT_CHANGED",
+        "lifecycle_state": "DISCOVERED",
+        "name": "NEW1",
+        "platform": "arista_ceos",
+        "role": "router",
+        "sequence": 3
+      },
+      "state": "PENDING",
+      "topic": "MONITORING_TARGET_STATE"
+    },
+    {
+      "payload": {
+        "admission_state": "NOT_ADMITTED",
+        "detail": {
+          "action": "BOOTSTRAP"
+        },
+        "device_id": "DEV-000002",
+        "fact": "BOOTSTRAPPED",
+        "lifecycle_state": "BOOTSTRAPPED",
+        "name": "NEW1",
+        "platform": "arista_ceos",
+        "role": "router",
+        "sequence": 4
+      },
+      "state": "PENDING",
+      "topic": "NSOT_DEVICE_STATE"
+    },
+    {
+      "payload": {
+        "admission_state": "NOT_ADMITTED",
+        "detail": {
+          "action": "BOOTSTRAP"
+        },
+        "device_id": "DEV-000002",
+        "fact": "BOOTSTRAPPED",
+        "lifecycle_state": "BOOTSTRAPPED",
+        "name": "NEW1",
+        "platform": "arista_ceos",
+        "role": "router",
+        "sequence": 4
+      },
+      "state": "PENDING",
+      "topic": "TOPOLOGY_DEVICE_STATE"
+    },
+    {
+      "payload": {
+        "admission_state": "NOT_ADMITTED",
+        "detail": {
+          "action": "BOOTSTRAP"
+        },
+        "device_id": "DEV-000002",
+        "fact": "BOOTSTRAPPED",
+        "lifecycle_state": "BOOTSTRAPPED",
+        "name": "NEW1",
+        "platform": "arista_ceos",
+        "role": "router",
+        "sequence": 4
+      },
+      "state": "PENDING",
+      "topic": "MONITORING_TARGET_STATE"
+    },
+    {
+      "payload": {
+        "admission_state": "NOT_ADMITTED",
+        "detail": {
+          "action": "OBSERVE_ATTACHMENT"
+        },
+        "device_id": "DEV-000002",
+        "fact": "ATTACHMENT_CHANGED",
+        "lifecycle_state": "BOOTSTRAPPED",
+        "name": "NEW1",
+        "platform": "arista_ceos",
+        "role": "router",
+        "sequence": 5
+      },
+      "state": "PENDING",
+      "topic": "NSOT_DEVICE_STATE"
+    },
+    {
+      "payload": {
+        "admission_state": "NOT_ADMITTED",
+        "detail": {
+          "action": "OBSERVE_ATTACHMENT"
+        },
+        "device_id": "DEV-000002",
+        "fact": "ATTACHMENT_CHANGED",
+        "lifecycle_state": "BOOTSTRAPPED",
+        "name": "NEW1",
+        "platform": "arista_ceos",
+        "role": "router",
+        "sequence": 5
+      },
+      "state": "PENDING",
+      "topic": "TOPOLOGY_DEVICE_STATE"
+    },
+    {
+      "payload": {
+        "admission_state": "NOT_ADMITTED",
+        "detail": {
+          "action": "OBSERVE_ATTACHMENT"
+        },
+        "device_id": "DEV-000002",
+        "fact": "ATTACHMENT_CHANGED",
+        "lifecycle_state": "BOOTSTRAPPED",
+        "name": "NEW1",
+        "platform": "arista_ceos",
+        "role": "router",
+        "sequence": 5
+      },
+      "state": "PENDING",
+      "topic": "MONITORING_TARGET_STATE"
+    },
+    {
+      "payload": {
+        "admission_state": "NOT_ADMITTED",
+        "detail": {
+          "action": "ISOLATE"
+        },
+        "device_id": "DEV-000002",
+        "fact": "ISOLATED",
+        "lifecycle_state": "ISOLATED",
+        "name": "NEW1",
+        "platform": "arista_ceos",
+        "role": "router",
+        "sequence": 6
+      },
+      "state": "PENDING",
+      "topic": "NSOT_DEVICE_STATE"
+    },
+    {
+      "payload": {
+        "admission_state": "NOT_ADMITTED",
+        "detail": {
+          "action": "ISOLATE"
+        },
+        "device_id": "DEV-000002",
+        "fact": "ISOLATED",
+        "lifecycle_state": "ISOLATED",
+        "name": "NEW1",
+        "platform": "arista_ceos",
+        "role": "router",
+        "sequence": 6
+      },
+      "state": "PENDING",
+      "topic": "TOPOLOGY_DEVICE_STATE"
+    },
+    {
+      "payload": {
+        "admission_state": "NOT_ADMITTED",
+        "detail": {
+          "action": "ISOLATE"
+        },
+        "device_id": "DEV-000002",
+        "fact": "ISOLATED",
+        "lifecycle_state": "ISOLATED",
+        "name": "NEW1",
+        "platform": "arista_ceos",
+        "role": "router",
+        "sequence": 6
+      },
+      "state": "PENDING",
+      "topic": "MONITORING_TARGET_STATE"
+    },
+    {
+      "payload": {
+        "admission_state": "NOT_ADMITTED",
+        "detail": {
+          "action": "VERIFY_IDENTITY"
+        },
+        "device_id": "DEV-000002",
+        "fact": "IDENTITY_VERIFIED",
+        "lifecycle_state": "ISOLATED",
+        "name": "NEW1",
+        "platform": "arista_ceos",
+        "role": "router",
+        "sequence": 7
+      },
+      "state": "PENDING",
+      "topic": "NSOT_DEVICE_STATE"
+    },
+    {
+      "payload": {
+        "admission_state": "NOT_ADMITTED",
+        "detail": {
+          "action": "VERIFY_IDENTITY"
+        },
+        "device_id": "DEV-000002",
+        "fact": "IDENTITY_VERIFIED",
+        "lifecycle_state": "ISOLATED",
+        "name": "NEW1",
+        "platform": "arista_ceos",
+        "role": "router",
+        "sequence": 7
+      },
+      "state": "PENDING",
+      "topic": "TOPOLOGY_DEVICE_STATE"
+    },
+    {
+      "payload": {
+        "admission_state": "NOT_ADMITTED",
+        "detail": {
+          "action": "VERIFY_IDENTITY"
+        },
+        "device_id": "DEV-000002",
+        "fact": "IDENTITY_VERIFIED",
+        "lifecycle_state": "ISOLATED",
+        "name": "NEW1",
+        "platform": "arista_ceos",
+        "role": "router",
+        "sequence": 7
+      },
+      "state": "PENDING",
+      "topic": "MONITORING_TARGET_STATE"
+    },
+    {
+      "payload": {
+        "admission_state": "NOT_ADMITTED",
+        "detail": {
+          "action": "COMMISSION_READY"
+        },
+        "device_id": "DEV-000002",
+        "fact": "COMMISSIONING_READY",
+        "lifecycle_state": "READY_FOR_COMMISSIONING",
+        "name": "NEW1",
+        "platform": "arista_ceos",
+        "role": "router",
+        "sequence": 8
+      },
+      "state": "PENDING",
+      "topic": "NSOT_DEVICE_STATE"
+    },
+    {
+      "payload": {
+        "admission_state": "NOT_ADMITTED",
+        "detail": {
+          "action": "COMMISSION_READY"
+        },
+        "device_id": "DEV-000002",
+        "fact": "COMMISSIONING_READY",
+        "lifecycle_state": "READY_FOR_COMMISSIONING",
+        "name": "NEW1",
+        "platform": "arista_ceos",
+        "role": "router",
+        "sequence": 8
+      },
+      "state": "PENDING",
+      "topic": "TOPOLOGY_DEVICE_STATE"
+    },
+    {
+      "payload": {
+        "admission_state": "NOT_ADMITTED",
+        "detail": {
+          "action": "COMMISSION_READY"
+        },
+        "device_id": "DEV-000002",
+        "fact": "COMMISSIONING_READY",
+        "lifecycle_state": "READY_FOR_COMMISSIONING",
+        "name": "NEW1",
+        "platform": "arista_ceos",
+        "role": "router",
+        "sequence": 8
+      },
+      "state": "PENDING",
+      "topic": "MONITORING_TARGET_STATE"
+    },
+    {
+      "payload": {
+        "admission_state": "NOT_ADMITTED",
+        "detail": {
+          "action": "COMMISSION"
+        },
+        "device_id": "DEV-000002",
+        "fact": "COMMISSIONING_STARTED",
+        "lifecycle_state": "COMMISSIONING",
+        "name": "NEW1",
+        "platform": "arista_ceos",
+        "role": "router",
+        "sequence": 9
+      },
+      "state": "PENDING",
+      "topic": "NSOT_DEVICE_STATE"
+    },
+    {
+      "payload": {
+        "admission_state": "NOT_ADMITTED",
+        "detail": {
+          "action": "COMMISSION"
+        },
+        "device_id": "DEV-000002",
+        "fact": "COMMISSIONING_STARTED",
+        "lifecycle_state": "COMMISSIONING",
+        "name": "NEW1",
+        "platform": "arista_ceos",
+        "role": "router",
+        "sequence": 9
+      },
+      "state": "PENDING",
+      "topic": "TOPOLOGY_DEVICE_STATE"
+    },
+    {
+      "payload": {
+        "admission_state": "NOT_ADMITTED",
+        "detail": {
+          "action": "COMMISSION"
+        },
+        "device_id": "DEV-000002",
+        "fact": "COMMISSIONING_STARTED",
+        "lifecycle_state": "COMMISSIONING",
+        "name": "NEW1",
+        "platform": "arista_ceos",
+        "role": "router",
+        "sequence": 9
+      },
+      "state": "PENDING",
+      "topic": "MONITORING_TARGET_STATE"
+    },
+    {
+      "payload": {
+        "admission_state": "NOT_ADMITTED",
+        "detail": {
+          "action": "OBSERVE_ATTACHMENT"
+        },
+        "device_id": "DEV-000002",
+        "fact": "ATTACHMENT_CHANGED",
+        "lifecycle_state": "COMMISSIONING",
+        "name": "NEW1",
+        "platform": "arista_ceos",
+        "role": "router",
+        "sequence": 10
+      },
+      "state": "PENDING",
+      "topic": "NSOT_DEVICE_STATE"
+    },
+    {
+      "payload": {
+        "admission_state": "NOT_ADMITTED",
+        "detail": {
+          "action": "OBSERVE_ATTACHMENT"
+        },
+        "device_id": "DEV-000002",
+        "fact": "ATTACHMENT_CHANGED",
+        "lifecycle_state": "COMMISSIONING",
+        "name": "NEW1",
+        "platform": "arista_ceos",
+        "role": "router",
+        "sequence": 10
+      },
+      "state": "PENDING",
+      "topic": "TOPOLOGY_DEVICE_STATE"
+    },
+    {
+      "payload": {
+        "admission_state": "NOT_ADMITTED",
+        "detail": {
+          "action": "OBSERVE_ATTACHMENT"
+        },
+        "device_id": "DEV-000002",
+        "fact": "ATTACHMENT_CHANGED",
+        "lifecycle_state": "COMMISSIONING",
+        "name": "NEW1",
+        "platform": "arista_ceos",
+        "role": "router",
+        "sequence": 10
+      },
+      "state": "PENDING",
+      "topic": "MONITORING_TARGET_STATE"
+    },
+    {
+      "payload": {
+        "admission_state": "NOT_ADMITTED",
+        "detail": {
+          "action": "OBSERVE_ATTACHMENT"
+        },
+        "device_id": "DEV-000002",
+        "fact": "ATTACHMENT_CHANGED",
+        "lifecycle_state": "COMMISSIONING",
+        "name": "NEW1",
+        "platform": "arista_ceos",
+        "role": "router",
+        "sequence": 11
+      },
+      "state": "PENDING",
+      "topic": "NSOT_DEVICE_STATE"
+    },
+    {
+      "payload": {
+        "admission_state": "NOT_ADMITTED",
+        "detail": {
+          "action": "OBSERVE_ATTACHMENT"
+        },
+        "device_id": "DEV-000002",
+        "fact": "ATTACHMENT_CHANGED",
+        "lifecycle_state": "COMMISSIONING",
+        "name": "NEW1",
+        "platform": "arista_ceos",
+        "role": "router",
+        "sequence": 11
+      },
+      "state": "PENDING",
+      "topic": "TOPOLOGY_DEVICE_STATE"
+    },
+    {
+      "payload": {
+        "admission_state": "NOT_ADMITTED",
+        "detail": {
+          "action": "OBSERVE_ATTACHMENT"
+        },
+        "device_id": "DEV-000002",
+        "fact": "ATTACHMENT_CHANGED",
+        "lifecycle_state": "COMMISSIONING",
+        "name": "NEW1",
+        "platform": "arista_ceos",
+        "role": "router",
+        "sequence": 11
+      },
+      "state": "PENDING",
+      "topic": "MONITORING_TARGET_STATE"
+    },
+    {
+      "payload": {
+        "admission_state": "ADMITTED",
+        "detail": {
+          "action": "COMMISSION_COMPLETE"
+        },
+        "device_id": "DEV-000002",
+        "fact": "COMMISSIONED",
+        "lifecycle_state": "IN_SERVICE",
+        "name": "NEW1",
+        "platform": "arista_ceos",
+        "role": "router",
+        "sequence": 12
+      },
+      "state": "PENDING",
+      "topic": "NSOT_DEVICE_STATE"
+    },
+    {
+      "payload": {
+        "admission_state": "ADMITTED",
+        "detail": {
+          "action": "COMMISSION_COMPLETE"
+        },
+        "device_id": "DEV-000002",
+        "fact": "COMMISSIONED",
+        "lifecycle_state": "IN_SERVICE",
+        "name": "NEW1",
+        "platform": "arista_ceos",
+        "role": "router",
+        "sequence": 12
+      },
+      "state": "PENDING",
+      "topic": "TOPOLOGY_DEVICE_STATE"
+    },
+    {
+      "payload": {
+        "admission_state": "ADMITTED",
+        "detail": {
+          "action": "COMMISSION_COMPLETE"
+        },
+        "device_id": "DEV-000002",
+        "fact": "COMMISSIONED",
+        "lifecycle_state": "IN_SERVICE",
+        "name": "NEW1",
+        "platform": "arista_ceos",
+        "role": "router",
+        "sequence": 12
+      },
+      "state": "PENDING",
+      "topic": "MONITORING_TARGET_STATE"
+    },
+    {
+      "payload": {
+        "admission": "ADM-000002",
+        "admitted_at": "2026-10-28T00:04:18.526573+00:00",
+        "config_digest": "acf724c231104eb72c0eefd5c900c0d17099736c60bb56f38a1e584fcbeae337",
+        "device_id": "DEV-000002",
+        "management": {
+          "interface": "Ethernet1",
+          "ipv4": "10.254.60.10/24"
+        },
+        "name": "NEW1",
+        "platform": "arista_ceos",
+        "provisioning_run": "PROV-000001",
+        "role": "router"
+      },
+      "state": "PENDING",
+      "topic": "NSOT_DEVICE_ADMITTED"
+    },
+    {
+      "payload": {
+        "admission": "ADM-000002",
+        "dependencies": [],
+        "device_id": "DEV-000002",
+        "links": [
+          {
+            "local_interface": "Ethernet1",
+            "upstream_device": "UP1",
+            "upstream_interface": "Ethernet1"
+          }
+        ],
+        "name": "NEW1"
+      },
+      "state": "PENDING",
+      "topic": "TOPOLOGY_DEVICE_ADMITTED"
+    },
+    {
+      "payload": {
+        "address": "10.254.60.10",
+        "admission": "ADM-000002",
+        "checks": [
+          "reachability",
+          "ospf_adjacency",
+          "ospfv3_adjacency",
+          "routes"
+        ],
+        "device_id": "DEV-000002",
+        "management_source": "COMMISSIONING",
+        "name": "NEW1",
+        "platform": "arista_ceos"
+      },
+      "state": "PENDING",
+      "topic": "MONITORING_TARGET_ADMITTED"
+    }
+  ],
+  "plan": {
+    "codes": [],
+    "ok": true
+  },
+  "precheck": {
+    "codes": [],
+    "ok": true
+  },
+  "production_to_new1_loopback": true,
+  "production_to_new1_uplink": true,
+  "up1_ospf": "Neighbor ID     Instance VRF      Pri State                  Dead Time   Address         Interface\n10.254.255.2    1        default  1   FULL/DR                00:00:37    10.254.62.2     Ethernet3\n10.254.255.11   1        default  1   FULL/DR                00:00:31    10.254.60.10    Ethernet1\n",
+  "up1_routes": "\nVRF: default\nSource Codes:\n       C - connected, S - static, K - kernel,\n       O - OSPF, O IA - OSPF inter area, O E1 - OSPF external type 1,\n       O E2 - OSPF external type 2, O N1 - OSPF NSSA external type 1,\n       O N2 - OSPF NSSA external type2, O3 - OSPFv3,\n       O3 IA - OSPFv3 inter area, O3 E1 - OSPFv3 external type 1,\n       O3 E2 - OSPFv3 external type 2,\n       O3 N1 - OSPFv3 NSSA external type 1,\n       O3 N2 - OSPFv3 NSSA external type2, B - Other BGP Routes,\n       B I - iBGP, B E - eBGP, R - RIP, I L1 - IS-IS level 1,\n       I L2 - IS-IS level 2, A B - BGP Aggregate,\n       A O - OSPF Summary, NG - Nexthop Group Static Route,\n       V - VXLAN Control Service, M - Martian,\n       DH - DHCP client installed default route,\n       DP - Dynamic Policy Route, L - VRF Leaked,\n       G  - gRIBI, RC - Route Cache Route,\n       CL - CBF Leaked Route\n\nGateway of last resort is not set\n\n C        10.254.60.0/24\n           directly connected, Ethernet1\n C        10.254.61.0/30\n           directly connected, Ethernet2\n C        10.254.62.0/30\n           directly connected, Ethernet3\n O        10.254.63.0/24 [110/20]\n           via 10.254.62.2, Ethernet3\n O        10.254.64.0/24 [110/20]\n           via 10.254.60.10, Ethernet1\n C        10.254.255.1/32\n           directly connected, Loopback0\n O        10.254.255.2/32 [110/20]\n           via 10.254.62.2, Ethernet3\n O        10.254.255.11/32 [110/20]\n           via 10.254.60.10, Ethernet1\n\n",
+  "upstream_after": "\n> show running-config\n! Command: show running-config at line 1\n! device: ISOUP1 (cEOSLab, EOS-4.36.2F-49692632.4362F.1 (engineering build))\n!\nno aaa root\n!\n!\nip dhcp relay information option\n!\nno service interface inactive port-id allocation disabled\n!\nservice routing protocols model multi-agent\n!\nhostname ISOUP1\n!\nspanning-tree mode mstp\n!\nsystem l1\n   unsupported speed action error\n   unsupported error-correction action error\n!\naaa authorization exec default local\n!\ninterface Ethernet1\n   description bootstrap port A (untrusted device side)\n   no switchport\n   ip address 10.254.60.1/24\n   ip helper-address 10.254.61.2\n   ipv6 address 2001:db8:254:60::1/64\n   ipv6 ospf 1 area 0.0.0.0\n!\ninterface Ethernet2\n   description NMAS bootstrap service\n   no switchport\n   ip address 10.254.61.1/30\n   ipv6 address 2001:db8:254:61::1/64\n!\ninterface Ethernet3\n   description production core\n   no switchport\n   ip address 10.254.62.1/30\n   ipv6 address 2001:db8:254:62::1/64\n   ipv6 ospf 1 area 0.0.0.0\n!\ninterface Loopback0\n   ip address 10.254.255.1/32\n   ipv6 address 2001:db8:254:255::1/128\n   ipv6 ospf 1 area 0.0.0.0\n!\nip routing\n!\nipv6 unicast-routing\n!\nipv6 route 2001:db8:254:63::/64 2001:db8:254:62::2\n!\nrouter ospf 1\n   router-id 10.254.255.1\n   passive-interface Ethernet2\n   network 10.254.60.0/24 area 0.0.0.0\n   network 10.254.61.0/30 area 0.0.0.0\n   network 10.254.62.0/30 area 0.0.0.0\n   network 10.254.255.1/32 area 0.0.0.0\n   max-lsa 12000\n!\nipv6 router ospf 1\n   router-id 10.254.255.1\n!\nend",
+  "upstream_before_release": "\n> show running-config\n! Command: show running-config at line 1\n! device: ISOUP1 (cEOSLab, EOS-4.36.2F-49692632.4362F.1 (engineering build))\n!\nno aaa root\n!\n!\nip dhcp relay information option\n!\nno service interface inactive port-id allocation disabled\n!\nservice routing protocols model multi-agent\n!\nhostname ISOUP1\n!\nspanning-tree mode mstp\n!\nsystem l1\n   unsupported speed action error\n   unsupported error-correction action error\n!\naaa authorization exec default local\n!\ninterface Ethernet1\n   description bootstrap port A (untrusted device side)\n   no switchport\n   ip address 10.254.60.1/24\n   ip helper-address 10.254.61.2\n   ipv6 address 2001:db8:254:60::1/64\n   ip access-group NMAS-ISO-DEV-000002-V4 in\n   ip access-group NMAS-ISO-DEV-000002-V4-OUT out\n   ipv6 access-group NMAS-ISO-DEV-000002-V6 in\n   ipv6 access-group NMAS-ISO-DEV-000002-V6-OUT out\n   ipv6 ospf 1 area 0.0.0.0\n!\ninterface Ethernet2\n   description NMAS bootstrap service\n   no switchport\n   ip address 10.254.61.1/30\n   ipv6 address 2001:db8:254:61::1/64\n!\ninterface Ethernet3\n   description production core\n   no switchport\n   ip address 10.254.62.1/30\n   ipv6 address 2001:db8:254:62::1/64\n   ipv6 ospf 1 area 0.0.0.0\n!\ninterface Loopback0\n   ip address 10.254.255.1/32\n   ipv6 address 2001:db8:254:255::1/128\n   ipv6 ospf 1 area 0.0.0.0\n!\nipv6 access-list NMAS-ISO-DEV-000002-MGMT6\n   counters per-entry\n   10 deny ipv6 2001:db8:254:60::/64 any\n   20 deny ipv6 fe80::/10 any\n   30 permit ipv6 any any\n!\nipv6 access-list NMAS-ISO-DEV-000002-V6\n   counters per-entry\n   10 permit icmpv6 fe80::/10 any\n   1000 deny ipv6 any any\n!\nipv6 access-list NMAS-ISO-DEV-000002-V6-OUT\n   counters per-entry\n   1000 deny ipv6 any any\n!\nip access-list NMAS-ISO-DEV-000002-MGMT4\n   counters per-entry\n   10 deny ip 10.254.60.0/24 any\n   20 permit ip any any\n!\nip access-list NMAS-ISO-DEV-000002-V4\n   counters per-entry\n   10 permit udp any eq bootpc any eq bootps\n   20 permit tcp 10.254.60.0/24 host 10.254.61.2 eq 8080\n   30 permit tcp 10.254.60.0/24 eq ssh host 10.254.61.2\n   1000 deny ip any any\n!\nip access-list NMAS-ISO-DEV-000002-V4-OUT\n   counters per-entry\n   10 permit tcp host 10.254.61.2 eq 8080 10.254.60.0/24\n   20 permit tcp host 10.254.61.2 10.254.60.0/24 eq ssh\n   1000 deny ip any any\n!\nip routing\n!\nipv6 unicast-routing\n!\nipv6 route 2001:db8:254:63::/64 2001:db8:254:62::2\n!\nrouter ospf 1\n   router-id 10.254.255.1\n   passive-interface Ethernet1\n   passive-interface Ethernet2\n   network 10.254.60.0/24 area 0.0.0.0\n   network 10.254.61.0/30 area 0.0.0.0\n   network 10.254.62.0/30 area 0.0.0.0\n   network 10.254.255.1/32 area 0.0.0.0\n   max-lsa 12000\n!\nipv6 router ospf 1\n   router-id 10.254.255.1\n   passive-interface Ethernet1\n!\nmanagement ssh\n   ip access-group NMAS-ISO-DEV-000002-MGMT4 in\n   ipv6 access-group NMAS-ISO-DEV-000002-MGMT6 in\n!\nend"
+}

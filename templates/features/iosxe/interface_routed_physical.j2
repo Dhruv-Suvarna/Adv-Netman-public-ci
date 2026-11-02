@@ -1,0 +1,6 @@
+interface {{ name }}
+ description {{ description }}
+ mtu {{ mtu }}
+{% if admin_disabled %} shutdown
+{% else %} no shutdown
+{% endif %}

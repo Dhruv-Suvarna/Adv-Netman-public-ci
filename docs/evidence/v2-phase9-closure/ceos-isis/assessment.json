@@ -1,0 +1,145 @@
+{
+  "assessment": {
+    "assessment_basis": "RUNTIME_INVESTIGATION",
+    "assessment_complete": true,
+    "assessment_id": null,
+    "automated_tests": "PASS",
+    "candidate": "PASS",
+    "capability_status": "SUPPORTED",
+    "compensation": "PASS",
+    "device_builder": "PASS",
+    "evidence_ids": [],
+    "evidence_references": [
+      "live:nmas-cap-validation/ceos-isis-ssh/2026-10-29T05:56:01.552700+00:00"
+    ],
+    "executor": "PASS",
+    "feasibility": "PROVEN",
+    "feature": "routing.ISIS",
+    "field_validation": "PASS",
+    "final_status": "SUPPORTED",
+    "live_read": "PASS",
+    "live_write": "PASS",
+    "parser": "PASS",
+    "platform": "arista_ceos",
+    "postcheck": "PASS",
+    "probes": {
+      "automated_tests": {
+        "detail": "Repeated renderer determinism=True; feature-specific valid/invalid field regression=PASS.",
+        "outcome": "PASS",
+        "reason": "",
+        "reference": "",
+        "test_type": "FIXTURE"
+      },
+      "candidate_generation": {
+        "detail": "Real candidate_renderer.render ran; 725 chars; target-rendered=PASS.",
+        "outcome": "PASS",
+        "reason": "",
+        "reference": "",
+        "test_type": "FIXTURE"
+      },
+      "compensation": {
+        "detail": "cEOS 4.36.2F / FRR 8.4.4 Ethernet2\u2194eth2; pinned, source-bound SSH via the verified disposable management bridge; NMAS renderer + CeosExecutor: preflight=['routing_isis:APPLY/True/-', 'routing_binding:APPLY/True/-', 'routing_binding:APPLY/True/-']; compensation=['COMPENSATED', 'COMPENSATED', 'COMPENSATED']; negative control=True; adjacency+routes=True; import=True; postcheck=True; exact pre-apply state=True; full baseline=True; absence after compensation=True; failure=none",
+        "outcome": "PASS",
+        "reason": "",
+        "reference": "live:nmas-cap-validation/ceos-isis-ssh/2026-10-29T05:56:01.552700+00:00",
+        "test_type": "LIVE"
+      },
+      "config_validation": {
+        "detail": "Actual network-config validation=PASS; failing checks=[]; external inputs are OFFLINE_FIXTURE only.",
+        "outcome": "PASS",
+        "reason": "",
+        "reference": "",
+        "test_type": "FIXTURE"
+      },
+      "device_builder_ui": {
+        "detail": "Real Device Builder mutation API accepted the feature.",
+        "outcome": "PASS",
+        "reason": "",
+        "reference": "",
+        "test_type": "FIXTURE"
+      },
+      "executor": {
+        "detail": "Real executor.assess on fixture: action=APPLY; exact inverse present=False; restorable=True; no connection/apply invoked.",
+        "outcome": "PASS",
+        "reason": "",
+        "reference": "",
+        "test_type": "FIXTURE"
+      },
+      "field_validation": {
+        "detail": "Feature field commit: valid sample=VALID; invalid sample=INVALID.",
+        "outcome": "PASS",
+        "reason": "",
+        "reference": "",
+        "test_type": "FIXTURE"
+      },
+      "live_post_write_validation": {
+        "detail": "cEOS 4.36.2F / FRR 8.4.4 Ethernet2\u2194eth2; pinned, source-bound SSH via the verified disposable management bridge; NMAS renderer + CeosExecutor: preflight=['routing_isis:APPLY/True/-', 'routing_binding:APPLY/True/-', 'routing_binding:APPLY/True/-']; compensation=['COMPENSATED', 'COMPENSATED', 'COMPENSATED']; negative control=True; adjacency+routes=True; import=True; postcheck=True; exact pre-apply state=True; full baseline=True; absence after compensation=True; failure=none",
+        "outcome": "PASS",
+        "reason": "",
+        "reference": "live:nmas-cap-validation/ceos-isis-ssh/2026-10-29T05:56:01.552700+00:00",
+        "test_type": "LIVE"
+      },
+      "live_read": {
+        "detail": "cEOS 4.36.2F / FRR 8.4.4 Ethernet2\u2194eth2; pinned, source-bound SSH via the verified disposable management bridge; NMAS renderer + CeosExecutor: preflight=['routing_isis:APPLY/True/-', 'routing_binding:APPLY/True/-', 'routing_binding:APPLY/True/-']; compensation=['COMPENSATED', 'COMPENSATED', 'COMPENSATED']; negative control=True; adjacency+routes=True; import=True; postcheck=True; exact pre-apply state=True; full baseline=True; absence after compensation=True; failure=none",
+        "outcome": "PASS",
+        "reason": "",
+        "reference": "live:nmas-cap-validation/ceos-isis-ssh/2026-10-29T05:56:01.552700+00:00",
+        "test_type": "LIVE"
+      },
+      "live_write": {
+        "detail": "cEOS 4.36.2F / FRR 8.4.4 Ethernet2\u2194eth2; pinned, source-bound SSH via the verified disposable management bridge; NMAS renderer + CeosExecutor: preflight=['routing_isis:APPLY/True/-', 'routing_binding:APPLY/True/-', 'routing_binding:APPLY/True/-']; compensation=['COMPENSATED', 'COMPENSATED', 'COMPENSATED']; negative control=True; adjacency+routes=True; import=True; postcheck=True; exact pre-apply state=True; full baseline=True; absence after compensation=True; failure=none",
+        "outcome": "PASS",
+        "reason": "",
+        "reference": "live:nmas-cap-validation/ceos-isis-ssh/2026-10-29T05:56:01.552700+00:00",
+        "test_type": "LIVE"
+      },
+      "parser_import": {
+        "detail": "cEOS 4.36.2F / FRR 8.4.4 Ethernet2\u2194eth2; pinned, source-bound SSH via the verified disposable management bridge; NMAS renderer + CeosExecutor: preflight=['routing_isis:APPLY/True/-', 'routing_binding:APPLY/True/-', 'routing_binding:APPLY/True/-']; compensation=['COMPENSATED', 'COMPENSATED', 'COMPENSATED']; negative control=True; adjacency+routes=True; import=True; postcheck=True; exact pre-apply state=True; full baseline=True; absence after compensation=True; failure=none",
+        "outcome": "PASS",
+        "reason": "",
+        "reference": "live:nmas-cap-validation/ceos-isis-ssh/2026-10-29T05:56:01.552700+00:00",
+        "test_type": "LIVE"
+      },
+      "renderer": {
+        "detail": "Authoritative renderer differential: 3 target line(s), 0 refusal marker(s); sha256=bae7c0bf2348968d70a5ae0241a8f5d0b94b946baacf9b6f8c8a715701e90d57.",
+        "outcome": "PASS",
+        "reason": "",
+        "reference": "",
+        "test_type": "FIXTURE"
+      },
+      "runtime_validation": {
+        "detail": "cEOS 4.36.2F / FRR 8.4.4 Ethernet2\u2194eth2; pinned, source-bound SSH via the verified disposable management bridge; NMAS renderer + CeosExecutor: preflight=['routing_isis:APPLY/True/-', 'routing_binding:APPLY/True/-', 'routing_binding:APPLY/True/-']; compensation=['COMPENSATED', 'COMPENSATED', 'COMPENSATED']; negative control=True; adjacency+routes=True; import=True; postcheck=True; exact pre-apply state=True; full baseline=True; absence after compensation=True; failure=none",
+        "outcome": "PASS",
+        "reason": "",
+        "reference": "live:nmas-cap-validation/ceos-isis-ssh/2026-10-29T05:56:01.552700+00:00",
+        "test_type": "LIVE"
+      },
+      "semantic_model": {
+        "detail": "Canonical fixture resolves the feature-specific path routing.isis.isis_0000000000000003.net.",
+        "outcome": "PASS",
+        "reason": "",
+        "reference": "",
+        "test_type": "FIXTURE"
+      }
+    },
+    "renderer": "PASS",
+    "repository_head": "d6efab553f0a319cc294894f1c949e2cf8b51329",
+    "runtime_test": "PASS",
+    "runtime_version": "ceos:4.36.2F / FRRouting 8.4.4",
+    "semantic": "PASS",
+    "status": "SUPPORTED",
+    "strongest_test_type": "LIVE",
+    "timestamp": "2026-10-29T05:54:40.865696+00:00",
+    "unsupported_reasons": [],
+    "validator": "PASS"
+  },
+  "ephemeral_database": true,
+  "repository_head": "d6efab553f0a319cc294894f1c949e2cf8b51329",
+  "schema": "nmas.v2.phase9.ceos-isis-live/1",
+  "uncommitted_source_sha256": {
+    "web/core/services/capabilities/batch_ceos_isis.py": "606badb8a43f59e3f5c06a8ce2e541b09d471bb439fce78c0ae15f9543f9a09e",
+    "web/core/services/capabilities/batch_live.py": "ba891aba44c3824f2c94fa6ba3489711c7685d3920fb8ef5195f98d69bbb5d30",
+    "web/core/services/capabilities/fixture_ceos_ssh.py": "cf4158c047e5943fb9455fa08571cc6955bc611fc00aa4a84d47dae36648f078",
+    "web/core/tests/test_ceos_isis_phase9.py": "191a2fbaf5eb8931866a71dbb802237e98f8c8b857740ccb43abc191e5e12895"
+  }
+}

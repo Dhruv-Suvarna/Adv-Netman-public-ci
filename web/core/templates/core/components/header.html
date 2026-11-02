@@ -1,0 +1,36 @@
+{% load core_extras %}
+<header class="top-header">
+  <button type="button" class="sidebar__toggle" data-sidebar-toggle aria-label="Toggle navigation">&#9776;</button>
+  <div class="top-header__title">{{ page_title|default:"NMAS Control Plane" }}</div>
+
+  <div class="top-header__controls">
+    <form class="theme-form" method="post" action="{% url 'core:set_theme' %}">
+      {% csrf_token %}
+      <input type="hidden" name="next" value="{{ request.path }}">
+      <label class="sr-only" for="theme-select" style="position:absolute;left:-9999px;">Theme</label>
+      <select id="theme-select" name="theme" onchange="this.form.submit()">
+        {% for value, label in theme_choices %}
+          <option value="{{ value }}" {% if value == active_theme %}selected{% endif %}>{{ label }}</option>
+        {% endfor %}
+      </select>
+    </form>
+
+    <div class="dropdown-anchor">
+      {% unread_notification_count as unread_count %}
+      <button type="button" class="icon-button" data-dropdown-trigger="notification-dropdown" aria-haspopup="true" aria-label="Notifications{% if unread_count %}, {{ unread_count }} unread{% endif %}">
+        &#128276;
+        {% if unread_count %}<span class="notif-count-badge">{{ unread_count|notification_badge_display }}</span>{% endif %}
+      </button>
+      {% include "core/components/notification_dropdown.html" %}
+    </div>
+
+    {% if request.user.is_authenticated %}
+    <div class="user-menu">
+      <a class="link-button" href="{% url 'core:mfa_status' %}" title="Account security">&#128100; {{ request.user.get_username }}</a>
+      {% if perms.core.nmas_security_admin %}<a class="link-button" href="{% url 'core:audit_log' %}">Audit</a>{% endif %}
+      <form method="post" action="{% url 'core:logout' %}" style="display:inline;">{% csrf_token %}<button class="link-button" type="submit">Sign out</button></form>
+    </div>
+    {% endif %}
+
+  </div>
+</header>

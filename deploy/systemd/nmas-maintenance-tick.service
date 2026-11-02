@@ -1,0 +1,32 @@
+# NMAS Maintenance Mode worker: ONE pass.  Rendered by deploy/scripts/install_maintenance_timer.sh (same placeholders as
+# nmas-probation-soak-tick.service).
+#
+# Runs against the DEPLOYMENT checkout and its database.  A pass with nothing due reads one table and exits.  Otherwise it
+# claims each due record and performs exactly one step on it: recover an interrupted entry or restore, run an operator's
+# queued request (readiness, entry, restore), or start the restore of an ACTIVE maintenance past its 7-day safety deadline.
+# A device is restored only when that is proven safe; otherwise the record is escalated and the drained state is kept.
+# Secrets are NOT in this file: they come from the same protected EnvironmentFile as the website (outside Git).
+[Unit]
+Description=NMAS Maintenance Mode worker (one pass)
+Documentation=file://@DEPLOY_ROOT@/docs/V2_MAINTENANCE_MODE.md
+After=network-online.target docker.service
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=@RUN_USER@
+Group=@RUN_GROUP@
+SupplementaryGroups=docker
+WorkingDirectory=@DEPLOY_ROOT@/web
+EnvironmentFile=/etc/nmas/nmas-web.env
+Environment=DJANGO_SETTINGS_MODULE=config.settings
+ExecStart=@VENV@/bin/python manage.py maintenance_tick
+# A drain or restore runs its steps, read-backs and probe windows to the end; it must be allowed to finish.  Should the
+# process still be stopped, its claim stops beating and the next pass recovers the record (abort-and-restore at a step
+# boundary; escalation with nothing written when a stage was interrupted).
+TimeoutStartSec=3600
+Nice=5
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+UMask=0027

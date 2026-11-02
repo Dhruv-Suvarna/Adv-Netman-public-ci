@@ -1,0 +1,250 @@
+{
+  "uid": "nmas-device-lifecycle",
+  "title": "NMAS Device Lifecycle",
+  "description": "V2 Phase 8: data-driven lifecycle / monitoring-target visibility (measurement nmas_device_lifecycle). The device list comes from the data; no device is hardcoded; collector reachability per management path from nmas_dynamic_device.",
+  "editable": false,
+  "schemaVersion": 40,
+  "version": 1,
+  "tags": [
+    "nmas",
+    "lifecycle",
+    "phase8"
+  ],
+  "time": {
+    "from": "now-24h",
+    "to": "now"
+  },
+  "refresh": "30s",
+  "timezone": "browser",
+  "templating": {
+    "list": [
+      {
+        "name": "device",
+        "label": "Device",
+        "type": "query",
+        "datasource": {
+          "type": "influxdb",
+          "uid": "nmas-influxdb"
+        },
+        "includeAll": true,
+        "multi": true,
+        "allValue": ".*",
+        "current": {
+          "selected": true,
+          "text": "All",
+          "value": "$__all"
+        },
+        "refresh": 2,
+        "sort": 1,
+        "query": "from(bucket: \"network-monitoring\")\n  |> range(start: -30d)\n  |> filter(fn: (r) => r._measurement == \"nmas_device_lifecycle\")\n  |> keep(columns: [\"device\"])\n  |> group()\n  |> distinct(column: \"device\")\n  |> sort(columns: [\"_value\"])",
+        "definition": "from(bucket: \"network-monitoring\")\n  |> range(start: -30d)\n  |> filter(fn: (r) => r._measurement == \"nmas_device_lifecycle\")\n  |> keep(columns: [\"device\"])\n  |> group()\n  |> distinct(column: \"device\")\n  |> sort(columns: [\"_value\"])"
+      }
+    ]
+  },
+  "panels": [
+    {
+      "id": 1,
+      "title": "Lifecycle state",
+      "type": "table",
+      "datasource": {
+        "type": "influxdb",
+        "uid": "nmas-influxdb"
+      },
+      "description": "Last lifecycle state per registered monitoring target (expected-only devices never appear).",
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 0,
+        "y": 0
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "nmas-influxdb"
+          },
+          "query": "from(bucket: \"network-monitoring\")\n  |> range(start: -30d)\n  |> filter(fn: (r) => r._measurement == \"nmas_device_lifecycle\" and r._field == \"generation\")\n  |> filter(fn: (r) => r.device =~ /^${device:regex}$/)\n  |> last()\n  |> keep(columns: [\"device\", \"lifecycle_state\"])\n  |> group()",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "options": {}
+    },
+    {
+      "id": 2,
+      "title": "Monitoring state",
+      "type": "table",
+      "datasource": {
+        "type": "influxdb",
+        "uid": "nmas-influxdb"
+      },
+      "description": "ACTIVE / SUSPENDED / RETIRED per target.",
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 8,
+        "y": 0
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "nmas-influxdb"
+          },
+          "query": "from(bucket: \"network-monitoring\")\n  |> range(start: -30d)\n  |> filter(fn: (r) => r._measurement == \"nmas_device_lifecycle\" and r._field == \"generation\")\n  |> filter(fn: (r) => r.device =~ /^${device:regex}$/)\n  |> last()\n  |> keep(columns: [\"device\", \"monitoring_state\"])\n  |> group()",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "options": {}
+    },
+    {
+      "id": 3,
+      "title": "Management path",
+      "type": "table",
+      "datasource": {
+        "type": "influxdb",
+        "uid": "nmas-influxdb"
+      },
+      "description": "The selector-chosen management path the collectors follow.",
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 16,
+        "y": 0
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "nmas-influxdb"
+          },
+          "query": "from(bucket: \"network-monitoring\")\n  |> range(start: -30d)\n  |> filter(fn: (r) => r._measurement == \"nmas_device_lifecycle\" and r._field == \"generation\")\n  |> filter(fn: (r) => r.device =~ /^${device:regex}$/)\n  |> last()\n  |> keep(columns: [\"device\", \"management_path\"])\n  |> group()",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "options": {}
+    },
+    {
+      "id": 4,
+      "title": "Generation / reconnects",
+      "type": "timeseries",
+      "datasource": {
+        "type": "influxdb",
+        "uid": "nmas-influxdb"
+      },
+      "description": "Collector generation: increments on every management-path change or restore (reconnect required).",
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 8
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "nmas-influxdb"
+          },
+          "query": "from(bucket: \"network-monitoring\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r._measurement == \"nmas_device_lifecycle\" and r._field == \"generation\")\n  |> filter(fn: (r) => r.device =~ /^${device:regex}$/)\n  |> group(columns: [\"device\"])\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "options": {}
+    },
+    {
+      "id": 5,
+      "title": "Decommission / restore events",
+      "type": "table",
+      "datasource": {
+        "type": "influxdb",
+        "uid": "nmas-influxdb"
+      },
+      "description": "Registration, path change, retirement and restoration events from the monitoring target history.",
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 8
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "nmas-influxdb"
+          },
+          "query": "from(bucket: \"network-monitoring\")\n  |> range(start: -30d)\n  |> filter(fn: (r) => r._measurement == \"nmas_device_lifecycle_event\" and r._field == \"generation\")\n  |> filter(fn: (r) => r.device =~ /^${device:regex}$/)\n  |> keep(columns: [\"_time\", \"device\", \"event\", \"_value\"])\n  |> group()\n  |> sort(columns: [\"_time\"], desc: true)",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "options": {}
+    },
+    {
+      "id": 6,
+      "title": "Dynamic collection by management path",
+      "type": "timeseries",
+      "description": "nmas_dynamic_device.reachable from the path-aware collector (core.services.infrastructure.collector): one series per device and management path, so a failover / failback shows as the series moving to the new path; 0 = refused or failed (tag error).",
+      "datasource": {
+        "type": "influxdb",
+        "uid": "nmas-influxdb"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 16
+      },
+      "fieldConfig": {
+        "defaults": {
+          "min": 0,
+          "max": 1,
+          "decimals": 0,
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "stepAfter"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "nmas-influxdb"
+          },
+          "query": "from(bucket: \"network-monitoring\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r._measurement == \"nmas_dynamic_device\" and r._field == \"reachable\")\n  |> filter(fn: (r) => r.device =~ /^${device:regex}$/)\n  |> keep(columns: [\"_time\", \"_value\", \"device\", \"management_path\"])\n  |> group(columns: [\"device\", \"management_path\"])\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)",
+          "refId": "A"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,189 @@
+{% extends "core/base.html" %}
+{% block title %}Plan · {{ change.change_id }}{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>Change Plan <span style="font-weight:400;">· {{ change.change_id }}</span></h1>
+  <p><a href="{% url 'core:device_builder_change_detail' change.change_id %}">&larr; Back to {{ change.change_id }}</a> · <a href="{% url 'core:change_validation' change.change_id %}">Change Validation</a></p>
+  <p>{{ change.title }}</p>
+  <p><strong>A plan is generated from a CURRENT, passing validation and is never executed here.</strong> Nothing on this page deploys, contacts a device, writes NetBox or Git, edits a Configlet, or changes the Change lifecycle. To change a Configlet, edit the Device Intent, re-run validation, then rebuild the plan.</p>
+</div>
+
+{% if refused_code %}
+<div class="card" style="margin-bottom:16px; outline:2px solid var(--danger);">
+  <h3>Plan not built <code>{{ refused_code }}</code></h3>
+  <p>{{ refused_message }}</p>
+</div>
+{% endif %}
+
+<div class="card-grid">
+  <div class="card">
+    <h3>Overview</h3>
+    <table class="data-table">
+      <tbody>
+        <tr><th>Change</th><td><code>{{ change.change_id }}</code></td></tr>
+        <tr><th>Change lifecycle</th><td><span class="badge badge--info">{{ change.get_lifecycle_state_display }}</span> <span style="color:var(--text-muted);">(a plan does not change it)</span></td></tr>
+        <tr><th>Validation</th>
+          <td>
+            {% if validation_currency.state == "CURRENT" %}<span class="badge badge--success">CURRENT</span>
+            {% elif validation_currency.state == "STALE" %}<span class="badge badge--warning">STALE</span>
+            {% else %}<span class="badge badge--neutral">NEVER RUN</span>{% endif %}
+            {% if validation_currency.last_status %}<span class="badge badge--neutral">{{ validation_currency.last_status }}</span>{% endif %}
+          </td></tr>
+        <tr><th>Latest validation run</th><td>{% if validation_run %}<code>{{ validation_run.run_id }}</code>{% else %}—{% endif %}</td></tr>
+        <tr><th>Plan currency</th>
+          <td>
+            {% if not currency %}<span class="badge badge--neutral">NO PLAN</span>
+            {% elif currency.state == "CURRENT" %}<span class="badge badge--success">CURRENT</span>
+            {% else %}<span class="badge badge--warning">STALE</span>{% endif %}
+            {% if historical and not is_latest %}<span style="color:var(--text-muted);"> (historical, read-only)</span>{% endif %}
+          </td></tr>
+        {% if document %}
+        <tr><th>Plan</th><td><code>{{ document.plan.plan_id }}</code></td></tr>
+        <tr><th>Generated</th><td>{{ plan.created_at }} by {{ document.plan.created_by|default:"—" }}</td></tr>
+        <tr><th>Configlets</th><td>{{ document.summary.configlets }}</td></tr>
+        <tr><th>Devices</th><td>{{ document.summary.devices }}</td></tr>
+        <tr><th>Dependencies</th><td>{{ document.summary.dependencies }}</td></tr>
+        <tr><th>Warnings</th><td>{{ document.summary.warnings }}</td></tr>
+        {% endif %}
+      </tbody>
+    </table>
+    {% if currency.state == "STALE" %}
+      <p class="field-row__message"><strong>This plan is STALE and must not be treated as executable.</strong> Re-run Change Validation, then build the plan again.
+        {% for reason in currency.reasons %}<br><code>{{ reason }}</code>{% endfor %}</p>
+    {% endif %}
+    {% if not historical %}
+      <p style="font-size:0.85rem;">
+        {% if sources_checked %}Source freshness was checked just now (read-only).
+        {% else %}Intent currency is checked automatically; <a href="?check_sources=1">check source freshness</a> reads NetBox/topology (read-only) and never persists anything.{% endif %}
+      </p>
+      {% if not eligibility.eligible %}
+        <p class="field-row__message"><code>{{ eligibility.code }}</code> {{ eligibility.reason }}</p>
+      {% endif %}
+      <form method="post" action="{% url 'core:change_plan_build' change.change_id %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn--primary"{% if not eligibility.eligible %} disabled aria-disabled="true"{% endif %}>Build Plan</button>
+      </form>
+      <p style="color:var(--text-muted); font-size:0.85rem;">Building explicitly reads the same read-only sources validation used and never re-runs validation. Repeating it for the same validation run returns the existing plan.</p>
+    {% endif %}
+  </div>
+
+  {% if document %}
+  <div class="card">
+    <h3>Provenance</h3>
+    <table class="data-table">
+      <tbody>
+        <tr><th>Validation run</th><td><code>{{ document.validation.run_id }}</code> (<a href="{% url 'core:change_validation_detail' change.change_id document.validation.run_id %}">open</a>)</td></tr>
+        <tr><th>Validation result</th><td><span class="badge badge--neutral">{{ document.validation.status }}</span></td></tr>
+        <tr><th>Pinned input hash</th><td><code>{{ document.validation.pinned_input_hash|slice:":16" }}</code></td></tr>
+        <tr><th>Pinned source hash</th><td><code>{{ document.validation.pinned_source_hash|slice:":16" }}</code></td></tr>
+        <tr><th>Validation engine</th><td>{{ document.validation.pinned_engine_version }}</td></tr>
+        <tr><th>Carried warnings</th><td>{{ document.validation.warning_count }}{% for code in document.validation.warning_codes %}<br><code>{{ code }}</code>{% endfor %}</td></tr>
+        <tr><th>Planner</th><td>{{ document.plan.planner_version }}</td></tr>
+        <tr><th>Plan fingerprint</th><td><code>{{ document.plan.plan_hash|slice:":16" }}</code></td></tr>
+        <tr><th>Machine-readable</th><td><a href="{% url 'core:change_plan_report' change.change_id document.plan.plan_id %}">Download JSON plan</a></td></tr>
+      </tbody>
+    </table>
+  </div>
+  {% endif %}
+</div>
+
+{% if document %}
+<div class="card" style="margin-top:16px;">
+  <h3>Plan warnings</h3>
+  <table class="data-table">
+    <thead><tr><th>Code</th><th>Detail</th></tr></thead>
+    <tbody>
+    {% for warning in document.warnings %}
+      <tr><td><code>{{ warning.code }}</code></td><td>{{ warning.message }}</td></tr>
+    {% empty %}
+      <tr><td colspan="2"><div class="empty-state">No plan warnings.</div></td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<div class="card" style="margin-top:16px;">
+  <h3>Stages</h3>
+  <p style="color:var(--text-muted); font-size:0.85rem;">A stage is a coarse deployment class for presentation. Dependencies, not stage numbers, define the true order; a Configlet may appear after a lower-numbered stage when it must wait for a dependency.</p>
+  <table class="data-table">
+    <thead><tr><th>Stage</th><th>Configlets</th></tr></thead>
+    <tbody>
+    {% for block in stage_blocks %}
+      <tr>
+        <td>{{ block.stage.priority }} {{ block.stage.label }}</td>
+        <td>{% if block.configlets %}{{ block.configlets|length }}{% else %}<span style="color:var(--text-muted);">none (normal)</span>{% endif %}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% for block in stage_blocks %}{% if block.configlets %}
+<div class="card" style="margin-top:16px;">
+  <h3>Stage {{ block.stage.priority }} — {{ block.stage.label }}</h3>
+  {% for configlet in block.configlets %}
+  <div class="address-card" id="{{ configlet.cfg_id }}">
+    <p>
+      <strong><code>{{ configlet.cfg_id }}</code></strong>
+      · {{ configlet.device }}
+      · <span class="badge badge--{% if configlet.operation == 'ACTIVATE_ATTACH' %}warning{% else %}info{% endif %}">{% if configlet.operation == 'ACTIVATE_ATTACH' %}ACTIVATE / ATTACH{% else %}DEFINE{% endif %}</span>
+      {% for code in configlet.warnings %}<span class="badge badge--warning">{{ code }}</span>{% endfor %}
+    </p>
+    <p>{{ configlet.description }}<br><span style="color:var(--text-muted);">source: <code>{{ configlet.source.object_type }} {{ configlet.source.object_id }}</code> · platform <code>{{ configlet.platform }}</code></span></p>
+    {% if configlet.dependency_rows %}
+    <p><strong>requires:</strong>
+      {% for dep in configlet.dependency_rows %}<br><code>{{ dep.cfg_id }}</code> — {{ dep.what }} <span style="color:var(--text-muted);">({% for t in dep.edge_types %}{{ t }}{% if not forloop.last %}, {% endif %}{% endfor %})</span>{% endfor %}
+    </p>
+    {% endif %}
+    {% if configlet.derived %}
+    <p class="field-row__message"><strong>AUTO address (validation-derived):</strong> <code>{{ configlet.derived.proposed_address }}</code> · <span class="badge badge--warning">PROPOSED</span> <span class="badge badge--neutral">NOT RESERVED</span> · recheck required before deployment.</p>
+    {% endif %}
+    <pre class="code-panel">{{ configlet.rendered_config }}</pre>
+    <p style="font-size:0.85rem;"><strong>Verification requirement (declarative; Phase 15 owns the checks):</strong>
+      {% for req in configlet.verification %}<code>{{ req.requirement }}</code> ({{ req.status }}){% if not forloop.last %}, {% endif %}{% endfor %}
+      · <strong>Previous state:</strong> <code>{{ configlet.previous_state.status }}</code></p>
+  </div>
+  {% endfor %}
+</div>
+{% endif %}{% endfor %}
+
+<div class="card" style="margin-top:16px;">
+  <h3>Dependencies</h3>
+  <table class="data-table">
+    <thead><tr><th>Configlet</th><th>Requires</th></tr></thead>
+    <tbody>
+    {% for block in stage_blocks %}{% for configlet in block.configlets %}{% if configlet.dependency_rows %}
+      <tr>
+        <td><code>{{ configlet.cfg_id }}</code> — {{ configlet.description }}</td>
+        <td>{% for dep in configlet.dependency_rows %}<code>{{ dep.cfg_id }}</code> — {{ dep.what }}{% if not forloop.last %}<br>{% endif %}{% endfor %}</td>
+      </tr>
+    {% endif %}{% endfor %}{% empty %}{% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<div class="card" style="margin-top:16px;">
+  <h3>Limitations of this plan</h3>
+  <ul>{% for item in document.limitations %}<li>{{ item }}</li>{% endfor %}</ul>
+</div>
+{% endif %}
+
+<div class="card" style="margin-top:16px;">
+  <h3>Plan history</h3>
+  <table class="data-table">
+    <thead><tr><th>Plan</th><th>Generated</th><th>By</th><th>Validation run</th><th>Configlets</th><th>Warnings</th></tr></thead>
+    <tbody>
+    {% for item in history %}
+      <tr>
+        <td><a href="{% url 'core:change_plan_detail' change.change_id item.plan_id %}">{{ item.plan_id|stringformat:"s"|slice:":8" }}</a></td>
+        <td>{{ item.created_at }}</td><td>{{ item.created_by|default:"—" }}</td>
+        <td><code>{{ item.validation_run.run_id|stringformat:"s"|slice:":8" }}</code></td>
+        <td>{{ item.summary.configlets }}</td><td>{{ item.summary.warnings }}</td>
+      </tr>
+    {% empty %}
+      <tr><td colspan="6"><div class="empty-state">No plans generated yet.</div></td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

@@ -1,0 +1,4 @@
+router ospf
+   ospf router-id __DB_FIELD_router_id__
+{% for line in passive_lines %}   passive-interface {{ line }}
+{% endfor %}

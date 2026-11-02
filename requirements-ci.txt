@@ -1,0 +1,5 @@
+# Lab 7 quality toolchain for Tier-3 / local evidence runs only (never installed on the NMAS web server):
+# coverage.py (statement + branch coverage) and Pylint with the Django plugin (see .pylintrc).
+coverage==7.16.2
+pylint==4.1.3
+pylint-django==2.8.0

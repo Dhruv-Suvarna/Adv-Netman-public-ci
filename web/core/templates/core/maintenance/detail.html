@@ -1,0 +1,83 @@
+{% extends "core/base.html" %}
+{% block title %}{{ row.record_id }}{% endblock %}
+{% block content %}
+{% include "core/maintenance/_header.html" %}
+
+{% if record.state == 'RESTORE_FAILED_ESCALATED' %}
+<div class="card" style="border-left:6px solid var(--danger);"><h3>Restore not completed — escalated</h3>
+  <p>The restore of {{ row.device_name }} could not be done or verified safely. The maintenance-only state below is still configured and every finding is kept. No Change may run on {{ row.device_name }}{% if intersects %} or on the devices its traffic leans on ({{ intersects|join:", " }}){% endif %} until this is resolved{% if status.restore.baseline_untrusted %}, and because the unresolved state makes the topology baseline untrustworthy, no new maintenance may enter anywhere{% else %}; unrelated devices are not affected{% endif %}.</p>
+  {% if status.restore.remaining %}<p>Still configured: {% for line in status.restore.remaining %}<code>{{ line }}</code>{% if not forloop.last %}, {% endif %}{% endfor %}</p>{% endif %}
+  <ul>{% for reason in status.block_reasons %}<li>{{ reason }}</li>{% endfor %}</ul>
+</div>
+{% elif record.state == 'ACTIVE' %}
+<div class="card" style="border-left:6px solid var(--warning);"><h3>{{ row.device_name }} is in maintenance</h3>
+  <p>Every planned direction was proven drained with zero production loss. {% if status.past_requested_window %}<strong>The requested window has passed</strong> (this ends nothing by itself). {% endif %}The safety deadline is <strong>{{ status.cycle_deadline|date:"Y-m-d H:i:s" }} UTC</strong>; then the worker starts the verified restore.</p>
+</div>
+{% elif record.state == 'READINESS_BLOCKED' %}
+<div class="card" style="border-left:6px solid var(--danger);"><h3>Blocked</h3><ul>{% for reason in status.block_reasons %}<li>{{ reason }}</li>{% endfor %}</ul>
+  <p><a href="{% url 'core:maintenance_readiness' row.record_id %}">Per-flow reasoning</a></p></div>
+{% endif %}
+
+<div class="card-grid" style="margin-top:16px;">
+  <div class="card"><h3>Timing</h3><table class="data-table"><tbody>
+    <tr><th>Requested</th><td>{{ row.requested_at|date:"Y-m-d H:i:s" }} UTC by {{ row.requested_by }}</td></tr>
+    <tr><th>Requested duration</th><td>{% widthratio row.requested_duration_seconds 60 1 %} minutes (operator intent; ends nothing)</td></tr>
+    <tr><th>Approved by</th><td>{{ row.approved_by|default:"—" }}</td></tr>
+    <tr><th>Entered (ACTIVE)</th><td>{{ status.entered_at|date:"Y-m-d H:i:s"|default:"—" }}{% if status.entered_at %} UTC{% endif %}</td></tr>
+    <tr><th>Requested until</th><td>{{ status.requested_until|date:"Y-m-d H:i:s"|default:"—" }}{% if status.requested_until %} UTC{% endif %}</td></tr>
+    <tr><th>Hard safety deadline</th><td>{{ status.cycle_deadline|date:"Y-m-d H:i:s"|default:"— (entry + 7 days)" }}{% if status.cycle_deadline %} UTC{% endif %}{% if status.overdue %} <span class="badge badge--danger">PASSED</span>{% endif %}</td></tr>
+    <tr><th>Restore trigger</th><td>{{ row.restore_trigger|default:"—" }}</td></tr>
+  </tbody></table></div>
+  <div class="card"><h3>State</h3><table class="data-table"><tbody>
+    <tr><th>Lifecycle</th><td><span class="badge badge--{{ tone }}">{{ record.state }}</span></td></tr>
+    <tr><th>Readiness</th><td>{{ status.readiness|default:"not evaluated" }}</td></tr>
+    <tr><th>Plan</th><td>{% if row.plan_hash %}<code>{{ row.plan_hash|truncatechars:20 }}</code> {{ row.plan_status }}{% else %}{{ row.plan_status|default:"none" }}{% endif %}</td></tr>
+    <tr><th>Drain steps</th><td>{% for step in record.steps %}{{ step.family }} {{ step.direction }}: <code>{{ step.mechanism }}</code><br>{% empty %}none (nothing has to move){% endfor %}</td></tr>
+    <tr><th>Device locks held</th><td>{{ locks|join:", "|default:"none" }}</td></tr>
+    <tr><th>Evidence</th><td>{{ evidence_count }} entries, chain {% if chain.0 %}<span class="badge badge--success">INTACT</span>{% else %}<span class="badge badge--danger">BROKEN</span>{% endif %}</td></tr>
+  </tbody></table></div>
+</div>
+
+<div class="card" style="margin-top:16px;"><h3>Affected dependencies</h3>
+  {% if intersects %}<p>Devices this maintenance leans on (their Changes are refused while it is unresolved): {{ intersects|join:", " }}</p>{% endif %}
+  <table class="data-table"><thead><tr><th>Dependency</th><th>Kind</th><th>Stranded</th><th>Detail</th></tr></thead><tbody>
+  {% for d in dependencies %}<tr><td>{{ d.name }}</td><td>{{ d.kind }}</td><td>{% if d.stranded is None %}<span class="badge badge--danger">NOT ESTABLISHED</span>{% elif d.stranded %}<span class="badge badge--danger">YES</span>{% else %}<span class="badge badge--success">no</span>{% endif %}</td><td>{{ d.detail|default:"—" }}</td></tr>
+  {% empty %}<tr><td colspan="4">Not evaluated yet.</td></tr>{% endfor %}
+  </tbody></table>
+</div>
+
+{% if entry %}<div class="card" style="margin-top:16px;"><h3>Entry (drain) run</h3>
+  <p>Outcome <strong>{{ entry.outcome }}</strong> · applied {{ entry.applied|length }} operation(s) · production probes lost {{ entry.probes.lost }}{% if entry.aborted %} · aborted: {{ entry.aborted }}{% endif %}</p>
+  {% if entry.proofs %}<table class="data-table"><thead><tr><th>Family</th><th>Direction</th><th>Moved</th><th>Probes lost</th><th>Alternate healthy</th></tr></thead><tbody>
+  {% for p in entry.proofs %}<tr><td>{{ p.family }}</td><td>{{ p.direction }}</td><td>{{ p.moved }}</td><td>{{ p.probes_lost }}</td><td>{{ p.alternate_healthy }}</td></tr>{% endfor %}</tbody></table>{% endif %}
+</div>{% endif %}
+{% if restore %}<div class="card" style="margin-top:16px;"><h3>Restore run</h3><p>Outcome <strong>{{ restore.outcome }}</strong>{% if restore.blockers %} · blocked: {{ restore.blockers|join:"; " }}{% endif %}</p>
+  {% if verification %}<p>Post-restore verification: {{ verification.attempts }} attempt(s), {% if verification.findings %}{{ verification.findings|length }} finding(s){% else %}baseline back{% endif %}.</p>{% endif %}</div>{% endif %}
+
+<div class="card" style="margin-top:16px;"><h3>Actions</h3>
+  {% if busy %}<p>A step is queued or in progress; no other action can be taken until it finishes.</p>{% endif %}
+  {% if can.evaluate and not busy %}
+    {% if actions.validate %}<form method="post" action="{% url 'core:maintenance_evaluate' row.record_id %}">{% csrf_token %}
+      <p><label><input type="checkbox" name="confirm" required> Observe the network (read-only) and evaluate readiness again. A new evaluation discards the current plan and any approval.</label></p>
+      <button class="btn btn--secondary" type="submit">Queue readiness evaluation</button></form>
+    {% else %}<p><em>Evaluating readiness needs the Operator role.</em></p>{% endif %}
+  {% endif %}
+  {% if can.approve or can.enter %}<p><a class="btn btn--primary" href="{% url 'core:maintenance_plan' row.record_id %}">Review the plan{% if can.approve %} and approve it{% else %} and enter{% endif %}</a></p>{% endif %}
+  {% if can.restore and not busy %}
+    {% if actions.execute %}<form method="post" action="{% url 'core:maintenance_restore' row.record_id %}" style="margin-top:12px;">{% csrf_token %}
+      <p>{% if record.state == 'RESTORE_FAILED_ESCALATED' %}Run the restore again after the cause was resolved.{% else %}Restore the captured pre-maintenance state and verify it. The device is offered traffic again only once it is verified healthy.{% endif %}</p>
+      <p><label>Type the maintenance id to confirm<br><input type="text" name="confirm_id" autocomplete="off" required placeholder="{{ row.record_id }}"></label></p>
+      <p><label><input type="checkbox" name="confirm" required> I want {{ row.device_name }} restored now.</label></p>
+      <button class="btn btn--primary" type="submit">Queue restore</button></form>
+    {% else %}<p><em>Restoring a device needs the Executor role.</em></p>{% endif %}
+  {% endif %}
+  {% if can.cancel and not busy %}
+    {% if actions.edit %}<form method="post" action="{% url 'core:maintenance_cancel' row.record_id %}" style="margin-top:12px;">{% csrf_token %}
+      <p><label>Type the maintenance id to cancel it (before entry only; nothing is written to any device)<br><input type="text" name="confirm_id" autocomplete="off" required placeholder="{{ row.record_id }}"></label></p>
+      <p><label><input type="checkbox" name="confirm" required> Cancel this maintenance.</label></p>
+      <button class="btn btn--secondary" type="submit">Cancel maintenance</button></form>
+    {% endif %}
+  {% endif %}
+  {% if not can.evaluate and not can.approve and not can.enter and not can.restore and not can.cancel %}<p>No action is available in state {{ record.state }}.</p>{% endif %}
+</div>
+{% endblock %}

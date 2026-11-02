@@ -1,0 +1,19 @@
+{
+  "compensation": {
+    "error": "",
+    "status": "COMPENSATED"
+  },
+  "equals_enabled_digest": true,
+  "routes": {
+    "E2 learns STUB": "R        203.0.113.0/24 [120/2]",
+    "STUB learns peer": "R        198.51.100.0/24 [120/2]"
+  },
+  "seconds_to_relearn": 7.6,
+  "stub_digest": "7db996e87e23cdbb961533edc4d843b4c1db5a7472970165136d119cf2bd4010",
+  "stub_rip_section": [
+    "router rip",
+    "   network 10.254.86.0/31",
+    "   network 203.0.113.0/24",
+    "   no shutdown"
+  ]
+}

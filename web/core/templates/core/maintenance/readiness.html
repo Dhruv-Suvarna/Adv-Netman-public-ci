@@ -1,0 +1,57 @@
+{% extends "core/base.html" %}
+{% block title %}{{ row.record_id }} readiness{% endblock %}
+{% block content %}
+{% include "core/maintenance/_header.html" %}
+{% if not record.report %}
+<div class="card"><p>Readiness has not been evaluated yet. Queue an evaluation on the <a href="{% url 'core:maintenance_detail' row.record_id %}">overview</a>.</p></div>
+{% else %}
+<div class="card" style="border-left:6px solid var(--{% if record.report.ready %}success{% else %}danger{% endif %});">
+  <h3>{% if record.report.ready %}Ready{% else %}Blocked{% endif %} — observed {{ observation.at }}</h3>
+  <p>The rule: active production traffic with no proven lossless way to move it blocks. Missing redundancy alone never does: traffic proven quiesced is ready whether or not another path exists. Unknown is never read as quiet.</p>
+  {% if blockers %}<ul>{% for b in blockers %}<li><span class="badge badge--danger">BLOCKER</span> {{ b }}</li>{% endfor %}</ul>{% endif %}
+  {% if notes %}<ul>{% for n in notes %}<li><span class="badge badge--neutral">NOTE</span> {{ n }}</li>{% endfor %}</ul>{% endif %}
+</div>
+
+<div class="card" style="margin-top:16px;"><h3>Per address family and direction</h3>
+  <table class="data-table"><thead><tr><th>Family</th><th>Direction</th><th>Verdict</th><th>Mechanism</th><th>Mechanism state</th><th>Alternate healthy</th><th>Active workloads</th><th>Reasons</th></tr></thead><tbody>
+  {% for c in cells %}<tr><td>{{ c.family }}</td><td>{{ c.direction }}</td><td><span class="badge badge--{{ c.tone }}">{{ c.verdict }}</span>{% if c.preventive %} <span class="badge badge--info">preventive</span>{% endif %}</td>
+    <td>{{ c.mechanism|default:"none" }}</td><td>{% with m=observation.mechanisms %}{% for key, value in m.items %}{% if key == c.key %}{{ value.state }}{% endif %}{% endfor %}{% endwith %}</td>
+    <td>{% for key, value in observation.alternates.items %}{% if key == c.key %}{% if value is None %}not established{% else %}{{ value }}{% endif %}{% endif %}{% endfor %}</td>
+    <td>{{ c.active|join:", "|default:"—" }}</td><td>{{ c.reasons|join:", "|default:"—" }}</td></tr>{% endfor %}
+  </tbody></table>
+</div>
+
+<div class="card" style="margin-top:16px;"><h3>Per flow</h3>
+  <p style="color:var(--text-secondary);">Each production flow the hosts exchange with the service, per family and direction: whether it is active, whether its path passes {{ row.device_name }}, what redundancy exists for it and whether an existing, proven lossless drain mechanism can move it.</p>
+  <table class="data-table"><thead><tr><th>Flow</th><th>AF</th><th>Direction</th><th>Source</th><th>Destination</th><th>Path</th><th>Activity</th><th>Through device</th><th>Redundancy</th><th>Drain mechanism</th><th>Proven drain</th><th>Readiness</th><th>Blocking reason</th></tr></thead><tbody>
+  {% for f in flows %}<tr>
+    <td><code>{{ f.label }}</code></td><td>{{ f.family }}</td><td>{{ f.direction }}</td><td>{{ f.source }}</td><td>{{ f.destination }}</td>
+    <td>{{ f.path|default:"—" }}{% if f.path_complete is False %} <span class="badge badge--danger">incomplete</span>{% endif %}</td>
+    <td><span class="badge badge--{% if f.activity == 'ACTIVE' %}warning{% elif f.activity == 'QUIESCED' %}success{% else %}danger{% endif %}">{{ f.activity }}</span></td>
+    <td>{% if f.on_device is None %}not established{% else %}{{ f.on_device }}{% endif %}</td>
+    <td>{{ f.redundancy }}</td><td><code>{{ f.mechanism }}</code> ({{ f.mechanism_state }})</td><td>{{ f.proven_drain }}</td>
+    <td><span class="badge badge--{{ f.tone }}">{{ f.verdict }}</span></td><td>{{ f.blocking|join:"; "|default:"—" }}</td>
+  </tr><tr><td></td><td colspan="12" style="color:var(--text-secondary);font-size:0.9em;">{{ f.evidence }}</td></tr>{% endfor %}
+  </tbody></table>
+</div>
+
+<div class="card-grid" style="margin-top:16px;">
+  <div class="card"><h3>Protocols and paths</h3><table class="data-table"><thead><tr><th>Device</th><th>Reachable</th><th>IS-IS up</th><th>OSPFv3 full</th><th>OSPFv2 full</th><th>RIP neighbours</th></tr></thead><tbody>
+    {% for name, p in observation.protocols.items %}<tr><td>{{ name }}</td><td>{{ p.reachable }}</td><td>{{ p.isis_up|join:", "|default:"—" }}</td><td>{{ p.ospfv3_full|join:", "|default:"—" }}</td><td>{{ p.ospfv2_full|join:", "|default:"—" }}</td><td>{{ p.rip_neighbors|default:"—" }}</td></tr>{% endfor %}
+  </tbody></table>
+  {% if observation.bgp %}<h4>BGP sessions</h4><ul>{% for name, sessions in observation.bgp.items %}{% if sessions %}<li>{{ name }}: {% for s in sessions %}{{ s.peer }} AS{{ s.remote_as }} {{ s.state }}{% if not forloop.last %}; {% endif %}{% endfor %}</li>{% endif %}{% endfor %}</ul>{% endif %}
+  {% if observation.fhrp %}<h4>Gateway addresses (VARP)</h4><ul>{% for name, addresses in observation.fhrp.items %}{% if addresses %}<li>{{ name }}: {% for address, others in addresses.items %}{{ address }} (also {{ others|join:", "|default:"nobody" }}){% if not forloop.last %}; {% endif %}{% endfor %}</li>{% endif %}{% endfor %}</ul>{% endif %}
+  {% if observation.ecmp %}<h4>Equal-cost fan-out on the flow paths</h4><ul>{% for label, fan in observation.ecmp.items %}{% if fan %}<li><code>{{ label }}</code>: {% for device, count in fan.items %}{{ device }} ×{{ count }}{% if not forloop.last %}, {% endif %}{% endfor %}</li>{% endif %}{% endfor %}</ul>{% endif %}
+  <p>MLAG configured: {% for name, value in observation.mlag.items %}{{ name }} {% if value is None %}unreadable{% else %}{{ value }}{% endif %}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
+  </div>
+  <div class="card"><h3>Observation provenance and freshness</h3>
+    <p style="color:var(--text-secondary);">Every fact group of every device read for this verdict: where it came from, when, and whether it was available. A group that was not available is UNKNOWN and never counts as healthy. Host traffic counters: {{ observation.window_seconds }} s window from the hosts' own unicast IP counters.</p>
+    <table class="data-table"><thead><tr><th>Device</th><th>Reachable</th><th>Freshness</th><th>Unavailable groups</th></tr></thead><tbody>
+    {% for p in provenance %}<tr><td>{{ p.device }}</td><td>{{ p.reachable }}{% if p.live_error %} ({{ p.live_error }}){% endif %}</td><td><span class="badge badge--{% if p.freshness == 'FRESH' %}success{% elif p.freshness == 'STALE' %}warning{% else %}danger{% endif %}">{{ p.freshness }}</span></td>
+      <td>{% for group, g in p.groups.items %}{% if g and not g.available %}{{ group }}{% if g.error %} ({{ g.error }}){% endif %} {% endif %}{% endfor %}</td></tr>{% endfor %}
+    </tbody></table>
+    {% if observation.telemetry.collected %}<p>Topology-service telemetry generated {{ observation.telemetry.generated_at }} (backend {{ observation.telemetry.backend }}). Link utilization is not carried by that source.</p>{% else %}<p>Telemetry: {{ observation.telemetry.reason|default:"not collected" }}.</p>{% endif %}
+  </div>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,1244 @@
+{
+ "what": "V2 Phase 6 real-desktop acceptance pass, 2026-10-06. The console was started on the operator's GNOME desktop session by the supported launchers (no --headless, no virtual display, no unpacked Tk). Its window was closed through the window manager. Views were observed and their controls operated from a second process over Tk `send` on the same X display (widget invoke / event generate), plus window screenshots; no person used the mouse.",
+ "host_tk": {
+  "package": "python3-tk 3.12.3-0ubuntu1",
+  "tkinter.TkVersion": 8.6,
+  "tcl_tk_patchlevel": "8.6.14",
+  "system_python": "/usr/bin/python3 3.12.3: import tkinter OK",
+  "shared_venv": "/home/student/Scripts/.venv/bin/python 3.12.3: import tkinter OK (/usr/lib/python3.12/tkinter, lib-dynload/_tkinter.cpython-312-x86_64-linux-gnu.so)",
+  "PYTHONPATH_or_LD_LIBRARY_PATH_override": false,
+  "tk_library": "/usr/share/tcltk/tk8.6"
+ },
+ "display": {
+  "session": "GNOME on Wayland, seat0 (loginctl session 386, active, not locked)",
+  "DISPLAY": ":0 (the session's Xwayland)",
+  "screen": "1920x860",
+  "window_geometry": "1500x791+0+0"
+ },
+ "session_A": {
+  "launcher": "scripts/run_challenge_console.sh",
+  "session_id": "ebd4c7b7003c",
+  "started": "2026-10-06T16:27:03Z",
+  "ended": "2026-10-06T16:33:00Z",
+  "exit_status": 0,
+  "stderr_bytes": 0,
+  "connectivity": {
+   "rows": [
+    "H1/IPV4",
+    "H1/IPV6",
+    "H2/IPV4",
+    "H2/IPV6",
+    "H3/IPV4",
+    "H3/IPV6",
+    "H4/IPV6"
+   ],
+   "h4_ipv4_row": false,
+   "filters": {
+    "all": 119,
+    "failures_only": 0,
+    "selected_H4_IPV6": 17,
+    "selected_endpoints": [
+     "H4/IPv6"
+    ],
+    "restored": 119
+   }
+  },
+  "telemetry": {
+   "summary": "12 / 12 components UP",
+   "fresh_note": "source: topology service (InfluxDB backend OK), read 16:28:19Z     FRESH <= 60 s < STALE <= 120 s < EXPIRED; no sample = UNKNOWN",
+   "components": [
+    [
+     "NMAS Web",
+     "UP",
+     "16:28:18Z",
+     "16:27:03Z",
+     "16:28:18Z",
+     "48 ms",
+     "systemd: active/running; http: HTTP 200"
+    ],
+    [
+     "NetBox",
+     "UP",
+     "16:28:18Z",
+     "16:27:03Z",
+     "16:28:18Z",
+     "78 ms",
+     "container: running/healthy; http: HTTP 200"
+    ],
+    [
+     "InfluxDB",
+     "UP",
+     "16:28:18Z",
+     "16:27:03Z",
+     "16:28:18Z",
+     "37 ms",
+     "container: running/healthy; http: HTTP 200"
+    ],
+    [
+     "Grafana",
+     "UP",
+     "16:28:18Z",
+     "16:27:03Z",
+     "16:28:18Z",
+     "27 ms",
+     "container: running/healthy; http: HTTP 200"
+    ],
+    [
+     "FreeRADIUS (container health only)",
+     "UP",
+     "16:28:18Z",
+     "16:27:04Z",
+     "16:28:18Z",
+     "-",
+     "container: running/healthy"
+    ],
+    [
+     "privacyIDEA",
+     "UP",
+     "16:28:18Z",
+     "16:27:04Z",
+     "16:28:18Z",
+     "14 ms",
+     "container: running/healthy; http: HTTP 200"
+    ],
+    [
+     "Traffic runner (socket)",
+     "UP",
+     "16:28:18Z",
+     "16:27:04Z",
+     "16:28:18Z",
+     "-",
+     "systemd: active/running; socket: listening socket present"
+    ],
+    [
+     "Probation soak timer",
+     "UP",
+     "16:28:18Z",
+     "16:27:04Z",
+     "16:28:18Z",
+     "-",
+     "last-run: result success, last exit Tue 2026-10-06 10:27:52 MDT; systemd: active/waiting"
+    ],
+    [
+     "Topology / telemetry API",
+     "UP",
+     "16:28:18Z",
+     "16:27:04Z",
+     "16:28:18Z",
+     "447 ms",
+     "systemd: active/running; http: HTTP 200"
+    ],
+    [
+     "gNMI telemetry collector",
+     "UP",
+     "16:28:19Z",
+     "16:27:04Z",
+     "16:28:19Z",
+     "-",
+     "systemd: active/running"
+    ],
+    [
+     "Syslog ingest",
+     "UP",
+     "16:28:19Z",
+     "16:27:04Z",
+     "16:28:19Z",
+     "-",
+     "systemd: active/running"
+    ],
+    [
+     "SNMP trap receiver",
+     "UP",
+     "16:28:19Z",
+     "16:27:04Z",
+     "16:28:19Z",
+     "-",
+     "systemd: active/running"
+    ]
+   ],
+   "freshness": [
+    [
+     "R1",
+     "managed",
+     "FRESH",
+     "22 s",
+     "2026-10-06 16:28:06Z",
+     "HEALTHY",
+     "43",
+     "32.0"
+    ],
+    [
+     "R2",
+     "managed",
+     "FRESH",
+     "22 s",
+     "2026-10-06 16:28:06Z",
+     "HEALTHY",
+     "50",
+     "32.0"
+    ],
+    [
+     "R3",
+     "managed",
+     "FRESH",
+     "17 s",
+     "2026-10-06 16:28:12Z",
+     "HEALTHY",
+     "51",
+     "32.5"
+    ],
+    [
+     "R4",
+     "managed",
+     "FRESH",
+     "11 s",
+     "2026-10-06 16:28:17Z",
+     "HEALTHY",
+     "51",
+     "32.6"
+    ],
+    [
+     "S1",
+     "managed",
+     "FRESH",
+     "22 s",
+     "2026-10-06 16:28:06Z",
+     "HEALTHY",
+     "43",
+     "32.1"
+    ],
+    [
+     "S2",
+     "managed",
+     "FRESH",
+     "22 s",
+     "2026-10-06 16:28:06Z",
+     "HEALTHY",
+     "47",
+     "32.0"
+    ],
+    [
+     "S3",
+     "managed",
+     "FRESH",
+     "22 s",
+     "2026-10-06 16:28:06Z",
+     "HEALTHY",
+     "47",
+     "32.2"
+    ],
+    [
+     "S4",
+     "managed",
+     "FRESH",
+     "17 s",
+     "2026-10-06 16:28:12Z",
+     "HEALTHY",
+     "47",
+     "32.1"
+    ],
+    [
+     "mgmt_swt",
+     "managed",
+     "FRESH",
+     "22 s",
+     "2026-10-06 16:28:06Z",
+     "HEALTHY",
+     "46",
+     "32.1"
+    ],
+    [
+     "R5",
+     "unmanaged",
+     "FRESH",
+     "22 s",
+     "2026-10-06 16:28:06Z",
+     "HEALTHY",
+     "42",
+     "32.1"
+    ]
+   ],
+   "clipped": []
+  },
+  "nsot": {
+   "summary": "NetBox (read-only) refreshed 16:27:03Z: 11 devices, 41 interfaces, 83 addresses, 33 prefixes, 9 VLANs     lab containers running: 15 / 15",
+   "devices": [
+    [
+     "R1",
+     "Router",
+     "cEOS 4.36.2F",
+     "Active",
+     "managed",
+     "192.168.200.1/24",
+     "2001:db8:200::1/64",
+     "5",
+     "10",
+     "MATCH",
+     "MATCH",
+     "RUNNING"
+    ],
+    [
+     "R2",
+     "Router",
+     "cEOS 4.36.2F",
+     "Active",
+     "managed",
+     "192.168.200.2/24",
+     "2001:db8:200::2/64",
+     "5",
+     "10",
+     "MATCH",
+     "MATCH",
+     "RUNNING"
+    ],
+    [
+     "R3",
+     "Router",
+     "Ubuntu 24.04",
+     "Active",
+     "managed",
+     "192.168.200.3/24",
+     "2001:db8:200::3/64",
+     "5",
+     "10",
+     "MATCH",
+     "MATCH",
+     "RUNNING"
+    ],
+    [
+     "R4",
+     "Router",
+     "Ubuntu 24.04",
+     "Active",
+     "managed",
+     "192.168.200.4/24",
+     "2001:db8:200::4/64",
+     "5",
+     "10",
+     "MATCH",
+     "MATCH",
+     "RUNNING"
+    ],
+    [
+     "R5",
+     "External / Unmanaged",
+     "cEOS 4.36.2F",
+     "Active",
+     "unmanaged",
+     "192.168.255.5/32",
+     "2001:db8:255::5/128",
+     "4",
+     "8",
+     "NO_INVENTORY_ADDRESS",
+     "MATCH",
+     "RUNNING"
+    ],
+    [
+     "S1",
+     "Switch",
+     "cEOS 4.36.2F",
+     "Active",
+     "managed",
+     "192.168.200.11/24",
+     "2001:db8:200::11/64",
+     "6",
+     "10",
+     "MATCH",
+     "MATCH",
+     "RUNNING"
+    ],
+    [
+     "S2",
+     "Switch",
+     "cEOS 4.36.2F",
+     "Active",
+     "managed",
+     "192.168.200.12/24",
+     "2001:db8:200::12/64",
+     "6",
+     "10",
+     "MATCH",
+     "MATCH",
+     "RUNNING"
+    ],
+    [
+     "S3",
+     "Switch",
+     "cEOS 4.36.2F",
+     "Active",
+     "managed",
+     "192.168.200.13/24",
+     "2001:db8:200::13/64",
+     "1",
+     "2",
+     "MATCH",
+     "MATCH",
+     "RUNNING"
+    ],
+    [
+     "S4",
+     "Switch",
+     "cEOS 4.36.2F",
+     "Active",
+     "managed",
+     "192.168.200.14/24",
+     "2001:db8:200::14/64",
+     "1",
+     "2",
+     "MATCH",
+     "MATCH",
+     "RUNNING"
+    ],
+    [
+     "WebServer",
+     "External / Unmanaged",
+     "Ubuntu 24.04",
+     "Active",
+     "unmanaged",
+     "172.30.50.10/32",
+     "2001:db8:3050::10/128",
+     "2",
+     "4",
+     "NOT_IN_INVENTORY",
+     "N/A",
+     "RUNNING"
+    ],
+    [
+     "mgmt_swt",
+     "Management Switch",
+     "cEOS 4.36.2F",
+     "Active",
+     "managed",
+     "192.168.200.10/24",
+     "2001:db8:200::10/64",
+     "1",
+     "2",
+     "MATCH",
+     "MATCH",
+     "RUNNING"
+    ]
+   ],
+   "roles": [
+    "All",
+    "External / Unmanaged",
+    "Management Switch",
+    "Router",
+    "Switch"
+   ],
+   "scopes": [
+    "All",
+    "Managed",
+    "Unmanaged"
+   ],
+   "tabs": [
+    "Devices",
+    "Prefixes",
+    "VLANs"
+   ],
+   "filters": {
+    "all": [
+     "R1",
+     "R2",
+     "R3",
+     "R4",
+     "R5",
+     "S1",
+     "S2",
+     "S3",
+     "S4",
+     "WebServer",
+     "mgmt_swt"
+    ],
+    "search 192.168.200.1/": [
+     "R1"
+    ],
+    "search Loopback105": [],
+    "search mgmt": [
+     "mgmt_swt"
+    ],
+    "role Router": [
+     "R1",
+     "R2",
+     "R3",
+     "R4"
+    ],
+    "scope Unmanaged": [
+     "R5",
+     "WebServer"
+    ],
+    "scope Managed": [
+     "R1",
+     "R2",
+     "R3",
+     "R4",
+     "S1",
+     "S2",
+     "S3",
+     "S4",
+     "mgmt_swt"
+    ],
+    "restored": 11
+   },
+   "interface_name_search_Vlan101": [
+    "R1",
+    "R3"
+   ],
+   "R1_detail_rows": 10,
+   "prefixes": 33,
+   "vlans": 9
+  },
+  "automation": {
+   "summary": "NMAS automation records (read-only database, mode=ro) refreshed 16:28:43Z     current Golden: none",
+   "soak_panel": {
+    "Soak": "SOAK-000001  (change CHG-20261006-0002)",
+    "Probation bundle": "BND-PROB-000001  (root BND-DEP-000001)",
+    "Device(s)": "R1",
+    "State": "RUNNING",
+    "Started": "2026-10-06 10:56:22Z",
+    "Due": "2026-10-13 10:56:22Z",
+    "Elapsed": "05:32:34  (3.30 %)",
+    "Remaining": "6d 18:27:25",
+    "Health": "HEALTHY",
+    "Collector freshness": "FRESH  (last sample 2026-10-06 16:27:44Z, expected every 900 s; 23 samples)",
+    "Last sample": "PASS  (bucket 22; expected state PASS; telemetry FRESH; integrity ok)",
+    "Configuration drift": "MATCH   R1 MATCH (9cd6f5a17cf1)",
+    "Golden eligibility": "IN_PROBATION -- In probation. Not eligible for Golden before the full policy period has elapsed."
+   },
+   "tabs": {
+    "Executions": 3,
+    "Changes": 4,
+    "Validation": 3,
+    "Config validation": 5,
+    "Precheck / postcheck": 4,
+    "Bundles": 2,
+    "Traffic runs": 1,
+    "Provisioning": 0,
+    "Credential rotation": 1,
+    "Rotation schedule": 1
+   }
+  },
+  "controls_in_window": {
+   "buttons": [
+    "TButton: 1  Continuous Connectivity",
+    "TButton: 2  NMAS / Telemetry",
+    "TButton: 3  NSOT",
+    "TButton: 4  Automation",
+    "TButton: 5  Interface Counters"
+   ],
+   "menu_bar": ""
+  },
+  "counters": {
+   "summary": "9 / 9 managed devices read     every 10 s; rate = counter delta / time delta",
+   "shown": "showing 84 of 84 interfaces",
+   "per_device": {
+    "R1": 9,
+    "R2": 8,
+    "R3": 10,
+    "R4": 10,
+    "S1": 12,
+    "S2": 12,
+    "S3": 6,
+    "S4": 6,
+    "mgmt_swt": 11
+   },
+   "device_values": [
+    "All",
+    "R1",
+    "R2",
+    "R3",
+    "R4",
+    "S1",
+    "S2",
+    "S3",
+    "S4",
+    "mgmt_swt"
+   ],
+   "state_values": [
+    "All",
+    "Up",
+    "Down",
+    "Admin down",
+    "Errors / drops",
+    "Carrying traffic",
+    "Changed recently"
+   ],
+   "with_rate": 60,
+   "no_rate": 24,
+   "sample_rows": [
+    [
+     "R1",
+     "Ethernet1",
+     "UP",
+     "UP",
+     "1 Gbit/s",
+     "1.28 kbit/s",
+     "307.1 bit/s",
+     "1.4 pkt/s",
+     "0.4 pkt/s",
+     "467,919,802",
+     "153,565,340",
+     "4,287,107",
+     "1,582,028",
+     "0 / 0",
+     "0 / 0",
+     "16:29:13Z",
+     "-",
+     ""
+    ],
+    [
+     "R1",
+     "Loopback105",
+     "UP",
+     "UP",
+     "-",
+     "-",
+     "-",
+     "-",
+     "-",
+     "-",
+     "-",
+     "-",
+     "-",
+     "-",
+     "-",
+     "16:29:13Z",
+     "-",
+     ""
+    ],
+    [
+     "R3",
+     "eth1",
+     "UP",
+     "UP",
+     "-",
+     "1.34 kbit/s",
+     "281.4 bit/s",
+     "1.5 pkt/s",
+     "0.4 pkt/s",
+     "468,994,454",
+     "125,221,816",
+     "4,516,216",
+     "1,379,950",
+     "0 / 0",
+     "197 / 0",
+     "16:29:13Z",
+     "-",
+     ""
+    ],
+    [
+     "S1",
+     "Ethernet1",
+     "UP",
+     "UP",
+     "1 Gbit/s",
+     "0.0 bit/s",
+     "0.0 bit/s",
+     "0.0 pkt/s",
+     "0.0 pkt/s",
+     "61,243,117",
+     "44,089",
+     "224,302",
+     "426",
+     "0 / 0",
+     "0 / 0",
+     "16:29:13Z",
+     "-",
+     ""
+    ],
+    [
+     "mgmt_swt",
+     "Ethernet1",
+     "UP",
+     "UP",
+     "1 Gbit/s",
+     "6.35 kbit/s",
+     "219.9 bit/s",
+     "0.9 pkt/s",
+     "0.3 pkt/s",
+     "1,061,912,285",
+     "163,915,659",
+     "1,481,243",
+     "1,558,084",
+     "0 / 0",
+     "0 / 0",
+     "16:29:13Z",
+     "-",
+     ""
+    ]
+   ],
+   "filters": {
+    "device R3": [
+     [
+      "R3"
+     ],
+     [
+      "Vlan101",
+      "Vlan103",
+      "Vlan200",
+      "eth0",
+      "eth1",
+      "eth1.101",
+      "eth1.103",
+      "eth2",
+      "eth3",
+      "lo"
+     ],
+     "showing 10 of 84 interfaces"
+    ],
+    "name Loopback": [
+     [
+      "R1:Loopback0",
+      "R1:Loopback105",
+      "R2:Loopback0",
+      "S1:Loopback0",
+      "S2:Loopback0"
+     ],
+     "showing 5 of 84 interfaces"
+    ],
+    "state All": [
+     84,
+     [
+      [
+       "UP",
+       "UP"
+      ]
+     ]
+    ],
+    "state Up": [
+     84,
+     [
+      [
+       "UP",
+       "UP"
+      ]
+     ]
+    ],
+    "state Down": [
+     0,
+     []
+    ],
+    "state Admin down": [
+     0,
+     []
+    ],
+    "state Errors / drops": [
+     8,
+     [
+      [
+       "UP",
+       "UP"
+      ]
+     ]
+    ],
+    "state Carrying traffic": [
+     56,
+     [
+      [
+       "UP",
+       "UP"
+      ]
+     ]
+    ],
+    "state Changed recently": [
+     2,
+     [
+      [
+       "UP",
+       "UP"
+      ]
+     ]
+    ]
+   },
+   "raw_counters_changed_after_11s": 56
+  },
+  "hidden_collectors": {
+   "connectivity_hidden": {
+    "t0": "2026-10-06T16:30:00Z",
+    "before": {
+     "H1/IPv4": "0 / 36",
+     "H1/IPv6": "0 / 36",
+     "H2/IPv4": "0 / 36",
+     "H2/IPv6": "0 / 36",
+     "H3/IPv4": "0 / 36",
+     "H3/IPv6": "0 / 36",
+     "H4/IPv6": "0 / 36"
+    },
+    "sidebar_before": [
+     "Connectivity: running  #36",
+     "Telemetry: running  #12",
+     "NSOT: running  #2",
+     "Automation: running  #9",
+     "Counters: running  #18"
+    ],
+    "visible_while_hidden": "nsot",
+    "sidebar_during": [
+     "Connectivity: running  #44",
+     "Telemetry: running  #15",
+     "NSOT: running  #2",
+     "Automation: running  #12",
+     "Counters: running  #22"
+    ],
+    "t1": "2026-10-06T16:30:45Z",
+    "after": {
+     "H1/IPv4": "0 / 45",
+     "H1/IPv6": "0 / 45",
+     "H2/IPv4": "0 / 45",
+     "H2/IPv6": "0 / 45",
+     "H3/IPv4": "0 / 45",
+     "H3/IPv6": "0 / 45",
+     "H4/IPv6": "0 / 45"
+    },
+    "sidebar_after": [
+     "Connectivity: running  #45",
+     "Telemetry: running  #15",
+     "NSOT: running  #2",
+     "Automation: running  #12",
+     "Counters: running  #23"
+    ],
+    "H1_IPv4_history_samples": 45,
+    "largest_gap_s": 6.0,
+    "grew": {
+     "H1/IPv4": [
+      "0 / 36",
+      "0 / 45"
+     ],
+     "H1/IPv6": [
+      "0 / 36",
+      "0 / 45"
+     ],
+     "H2/IPv4": [
+      "0 / 36",
+      "0 / 45"
+     ],
+     "H2/IPv6": [
+      "0 / 36",
+      "0 / 45"
+     ],
+     "H3/IPv4": [
+      "0 / 36",
+      "0 / 45"
+     ],
+     "H3/IPv6": [
+      "0 / 36",
+      "0 / 45"
+     ],
+     "H4/IPv6": [
+      "0 / 36",
+      "0 / 45"
+     ]
+    }
+   },
+   "counters_hidden": {
+    "t0": "2026-10-06T16:30:46Z",
+    "before": {
+     "R1/Ethernet1": [
+      "467,932,651",
+      "153,568,922",
+      "4,287,226",
+      "1,582,065",
+      "0 / 0",
+      "0 / 0",
+      "16:30:43Z"
+     ],
+     "sampled": [
+      "16:30:43Z"
+     ]
+    },
+    "sidebar_before": "Counters: running  #23",
+    "sidebar_during": "Counters: running  #26",
+    "t1": "2026-10-06T16:31:23Z",
+    "after": {
+     "R1/Ethernet1": [
+      "467,936,852",
+      "153,570,074",
+      "4,287,265",
+      "1,582,077",
+      "0 / 0",
+      "0 / 0",
+      "16:31:13Z"
+     ],
+     "sampled": [
+      "16:31:13Z"
+     ]
+    },
+    "sidebar_after": "Counters: running  #26"
+   },
+   "switch_latency_s": {
+    "n": 20,
+    "max": 0.057,
+    "mean": 0.0334
+   },
+   "sidebar_end": [
+    "Connectivity: running  #53",
+    "Telemetry: running  #18",
+    "NSOT: running  #3",
+    "Automation: running  #14",
+    "Counters: running  #27"
+   ],
+   "status": "Session ebd4c7b7003c   up 00:04:24   896 events logged"
+  },
+  "cancel": {
+   "before": {
+    "t": "2026-10-06T16:31:45Z",
+    "samples": {
+     "H1/IPv4": "0 / 57",
+     "H1/IPv6": "0 / 57",
+     "H2/IPv4": "0 / 57",
+     "H2/IPv6": "0 / 57",
+     "H3/IPv4": "0 / 57",
+     "H3/IPv6": "0 / 57",
+     "H4/IPv6": "0 / 57"
+    },
+    "sidebar": [
+     "Connectivity: running  #57",
+     "Telemetry: running  #19",
+     "NSOT: running  #3",
+     "Automation: running  #15",
+     "Counters: running  #29"
+    ],
+    "status": "Session ebd4c7b7003c   up 00:04:41   958 events logged",
+    "toplevels": [
+     ".!frame",
+     ".!frame2",
+     ".!frame3"
+    ]
+   },
+   "dialog": {
+    "exists": "1",
+    "title": "Close the console?",
+    "widgets": [
+     [
+      ".!closedialog.!frame",
+      "TFrame",
+      ""
+     ],
+     [
+      ".!closedialog.!frame.!label",
+      "TLabel",
+      "Save this session before closing?"
+     ],
+     [
+      ".!closedialog.!frame.!label2",
+      "TLabel",
+      "The session log holds 958 recorded events (probes, service and telemetry observations, NSOT and automation snapshots, counters, errors)."
+     ],
+     [
+      ".!closedialog.!frame.!label3",
+      "TLabel",
+      "Save to:"
+     ],
+     [
+      ".!closedialog.!frame.!label4",
+      "TLabel",
+      "/home/student/.local/share/nmas-challenge-console/sessions/nmas-challenge-console-20261006T162703Z-ebd4c7b7003c.jsonl"
+     ],
+     [
+      ".!closedialog.!frame.!button",
+      "TButton",
+      "Change..."
+     ],
+     [
+      ".!closedialog.!frame.!frame",
+      "TFrame",
+      ""
+     ],
+     [
+      ".!closedialog.!frame.!frame.!button",
+      "TButton",
+      "Save"
+     ],
+     [
+      ".!closedialog.!frame.!frame.!button2",
+      "TButton",
+      "Don't Save"
+     ],
+     [
+      ".!closedialog.!frame.!frame.!button3",
+      "TButton",
+      "Cancel"
+     ]
+    ],
+    "grab": ".!closedialog"
+   },
+   "while_dialog_open": {
+    "t": "2026-10-06T16:31:54Z",
+    "sidebar": [
+     "Connectivity: running  #59",
+     "Telemetry: running  #20",
+     "NSOT: running  #3",
+     "Automation: running  #15",
+     "Counters: running  #30"
+    ]
+   },
+   "after_cancel": {
+    "t": "2026-10-06T16:32:06Z",
+    "dialog_exists": "0",
+    "window_mapped": "1",
+    "samples": {
+     "H1/IPv4": "0 / 61",
+     "H1/IPv6": "0 / 61",
+     "H2/IPv4": "0 / 61",
+     "H2/IPv6": "0 / 61",
+     "H3/IPv4": "0 / 61",
+     "H3/IPv6": "0 / 61",
+     "H4/IPv6": "0 / 61"
+    },
+    "sidebar": [
+     "Connectivity: running  #61",
+     "Telemetry: running  #21",
+     "NSOT: running  #3",
+     "Automation: running  #16",
+     "Counters: running  #31"
+    ],
+    "status": "Session ebd4c7b7003c   up 00:05:03   1,031 events logged"
+   }
+  },
+  "save": {
+   "before": {
+    "t": "2026-10-06T16:33:00Z",
+    "sidebar": [
+     "Connectivity: running  #72",
+     "Telemetry: running  #24",
+     "NSOT: running  #3",
+     "Automation: running  #18",
+     "Counters: running  #36"
+    ],
+    "status": "Session ebd4c7b7003c   up 00:05:57   1,198 events logged"
+   },
+   "dialog": ".!closedialog2",
+   "dialog_buttons": [
+    "Save",
+    "Don't Save",
+    "Cancel"
+   ],
+   "destination": "/home/student/.local/share/nmas-challenge-console/sessions/nmas-challenge-console-20261006T162703Z-ebd4c7b7003c.jsonl",
+   "save_pressed": "2026-10-06T16:33:00Z",
+   "saved_file_mode": "0600",
+   "saved_bytes": 578579,
+   "spool_empty_after": true,
+   "process_left": false
+  },
+  "saved_session_inspection": {
+   "file": "nmas-challenge-console-20261006T162703Z-ebd4c7b7003c.jsonl",
+   "mode": "0o600",
+   "bytes": 578579,
+   "records": 1205,
+   "every_line_is_json_object": true,
+   "first": "session.meta",
+   "last": "app.stop",
+   "keys": [
+    "collector",
+    "data",
+    "kind",
+    "outcome",
+    "target",
+    "ts"
+   ],
+   "kinds": {
+    "app.start": 1,
+    "app.stop": 1,
+    "automation.snapshot": 18,
+    "collector.start": 5,
+    "collector.stop": 5,
+    "connectivity.addresses": 4,
+    "connectivity.plan": 1,
+    "connectivity.sample": 504,
+    "counters.change": 24,
+    "counters.plan": 1,
+    "counters.sample": 324,
+    "nsot.snapshot": 3,
+    "service.sample": 288,
+    "session.meta": 1,
+    "session.summary": 1,
+    "telemetry.sample": 24
+   },
+   "collectors": {
+    "app": 4,
+    "automation": 20,
+    "connectivity": 511,
+    "counters": 351,
+    "nsot": 5,
+    "services": 314
+   },
+   "outcomes": {
+    "INFO": 38,
+    "OK": 663,
+    "PASS": 504
+   },
+   "ts_monotonic_by_collector": true,
+   "meta_data_keys": [
+    "app",
+    "config",
+    "schema",
+    "session_id",
+    "started_at",
+    "version"
+   ],
+   "app_stop": {
+    "started_at": "2026-10-06T16:27:03.244Z",
+    "ended_at": "2026-10-06T16:33:00.833Z",
+    "duration_seconds": 357.59,
+    "leftover_workers": []
+   },
+   "summary_keys": [
+    "automation",
+    "collectors",
+    "connectivity",
+    "counters",
+    "nsot",
+    "services",
+    "telemetry"
+   ],
+   "connectivity_targets": {
+    "H1/IPV4": 72,
+    "H1/IPV6": 72,
+    "H2/IPV4": 72,
+    "H2/IPV6": 72,
+    "H3/IPV4": 72,
+    "H3/IPV6": 72,
+    "H4/IPV6": 72
+   },
+   "soak_in_automation_snapshot": [
+    "\"SOAK-000001\""
+   ],
+   "automation_snapshot_sample_keys": [
+    "counts",
+    "latest_execution",
+    "latest_traffic",
+    "soaks"
+   ],
+   "counter_devices": {
+    "R1": 36,
+    "R2": 36,
+    "R3": 36,
+    "R4": 36,
+    "S1": 36,
+    "S2": 36,
+    "S3": 36,
+    "S4": 36,
+    "mgmt_swt": 36
+   },
+   "service_components": [
+    "freeradius",
+    "gnmi-collector",
+    "grafana",
+    "influxdb",
+    "netbox",
+    "nmas-web",
+    "privacyidea",
+    "snmptrapd",
+    "soak-timer",
+    "syslog-ingest",
+    "topology",
+    "traffic-runner"
+   ],
+   "telemetry_devices": [
+    "fleet"
+   ],
+   "error_records": [],
+   "pattern_hits": {
+    "secret-named key": 0,
+    "bearer/basic/token header": 0,
+    "netbox v2 token": 0,
+    "40-hex token": 0,
+    "key=value credential": 0,
+    "url credentials": 0,
+    "crypt hash": 0,
+    "private key block": 0,
+    "otpauth uri": 0,
+    "base32 seed (32+)": 0,
+    "REDACTED marker": 0
+   },
+   "secret_named_keys_found": [],
+   "exact_value_sweep": {
+    "secret_files_read": 6,
+    "candidate_values": 11,
+    "values_found_in_session": 0
+   }
+  }
+ },
+ "session_B": {
+  "launcher": "/home/student/Scripts/.venv/bin/python -m challenge_console",
+  "exit_status": 0,
+  "stderr_bytes": 0,
+  "process_left": false,
+  "saved_file_created": false,
+  "counters_first_reads": [
+   {
+    "t": "2026-10-06T16:33:43Z",
+    "sidebar": "Counters: running  #1",
+    "rows": 84,
+    "rx_rate_shown": 0,
+    "raw_rx_bytes_shown": 60,
+    "sampled": [
+     "16:33:42Z"
+    ]
+   }
+  ],
+  "spool": "/home/student/.local/state/nmas-challenge-console/spool/nmas-challenge-console-20261006T163342Z-b275214f7148.jsonl",
+  "spool_exists_while_running": true,
+  "spool_mode": "0o600",
+  "before_close": {
+   "t": "2026-10-06T16:34:01Z",
+   "sidebar": [
+    "Connectivity: running  #4",
+    "Telemetry: running  #2",
+    "NSOT: running  #1",
+    "Automation: running  #1",
+    "Counters: running  #2"
+   ],
+   "status": "Session b275214f7148   up 00:00:19   89 events logged"
+  },
+  "dialog_buttons": [
+   "Save",
+   "Don't Save",
+   "Cancel"
+  ],
+  "dont_save_pressed": "2026-10-06T16:34:03Z",
+  "spool_exists_after": false
+ },
+ "production": {
+  "before": [
+   "utc: 2026-10-06T16:26:08Z",
+   "srlceos01 running: 15/15",
+   "soak: {'id': 1, 'state': 'RUNNING', 'result': '', 'terminal_reason': '', 'started_at': '2026-10-06 10:56:22.446525', 'required_end_at': '2026-10-13 10:56:22.446525', 'finished_at': None} baseline_sha256: 30188a464f6ad1f6 len 2799",
+   " samples: [('PASS', 22)]",
+   " latest: [('2026-10-06 16:12:21.160734', 'PASS', 'HEALTHY', 'FRESH', 0)]",
+   " non-PASS/drift samples: 0",
+   " core_change: 4",
+   " core_changeexecutionrun: 3",
+   " core_configurationbundle: 2",
+   " core_trafficrun: 1",
+   " core_provisioningrun: 0",
+   " core_goldendecision: 0",
+   "interface Loopback105",
+   "   description FOR-SOAK-TESTING",
+   "   ip address 192.168.255.105/32",
+   "   ipv6 address 2001:db8:255::105/128",
+   "active inactive ",
+   "0",
+   "no challenge_console process"
+  ],
+  "after": [
+   "utc: 2026-10-06T16:34:18Z",
+   "srlceos01 running: 15/15",
+   "soak: {'id': 1, 'state': 'RUNNING', 'result': '', 'terminal_reason': '', 'started_at': '2026-10-06 10:56:22.446525', 'required_end_at': '2026-10-13 10:56:22.446525', 'finished_at': None} baseline_sha256: 30188a464f6ad1f6 len 2799",
+   " samples: [('PASS', 23)]",
+   " latest: [('2026-10-06 16:27:44.592801', 'PASS', 'HEALTHY', 'FRESH', 0)]",
+   " non-PASS/drift samples: 0",
+   " core_change: 4",
+   " core_changeexecutionrun: 3",
+   " core_configurationbundle: 2",
+   " core_trafficrun: 1",
+   " core_provisioningrun: 0",
+   " core_goldendecision: 0",
+   "interface Loopback105",
+   "   description FOR-SOAK-TESTING",
+   "   ip address 192.168.255.105/32",
+   "   ipv6 address 2001:db8:255::105/128",
+   "active active active ",
+   "0",
+   "no challenge_console process"
+  ]
+ }
+}

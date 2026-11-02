@@ -1,0 +1,16 @@
+{
+  "files": [
+    "00-prepare.json",
+    "10-isolation-before-device.json",
+    "20-dhcpd.conf",
+    "20-ztp.json",
+    "o82-10-gate.json",
+    "o82-20-fault-compensated.json",
+    "o82-30-governed-apply.json",
+    "o82-40-forged-option82.json",
+    "o82-50-native-ztp.json"
+  ],
+  "finished": "2026-10-27T23:43:03.312833+00:00",
+  "fixture": "labs/isolation-commissioning-isolated (cEOS 4.36.2F, ISC dhcpd), UP1 started without option 82",
+  "transport": "CeosExecutor over SSH as nmas-svc (key only, pinned host key) from the bootstrap-service namespace"
+}

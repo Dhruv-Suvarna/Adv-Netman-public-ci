@@ -1,0 +1,11 @@
+!
+! parent intent: {{ parent_name }}
+interface {{ name }}
+   description {{ description }}
+   encapsulation dot1q vlan {{ encapsulation_vlan }}
+{% if ceos_subinterface_mtu_requested %}! UNSUPPORTED CANDIDATE OBJECT: cEOS subinterface MTU must be set on the parent; intent preserved
+{% endif %}
+   ! admin intent: {{ admin_state }}
+{% if admin_disabled %}   shutdown
+{% else %}   no shutdown
+{% endif %}

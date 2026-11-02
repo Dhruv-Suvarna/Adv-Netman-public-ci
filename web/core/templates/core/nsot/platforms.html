@@ -1,0 +1,42 @@
+{% extends "core/base.html" %}
+{% load nsot_extras %}
+{% block title %}Platforms · NSOT{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>Platforms / Images</h1>
+</div>
+{% include "core/nsot/_subnav.html" %}
+<div class="filter-bar">
+  <a class="btn btn--secondary" href="?refresh=1">Refresh NSOT</a>
+  {% include "core/nsot/_freshness.html" %}
+</div>
+
+<div class="card" style="margin-top:16px;">
+  <h3>Device types <span class="badge NETBOX">NETBOX</span></h3>
+  {% if device_types.status == "available" %}
+    <table class="data-table">
+      <thead><tr><th>Model</th><th>Manufacturer</th><th>Device count</th></tr></thead>
+      <tbody>
+      {% for dt in device_types.data %}
+        <tr><td>{{ dt.model }}</td><td>{{ dt.manufacturer|default:"—" }}</td><td>{{ dt.device_count }}</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <div class="alert alert--warning"><div>{{ device_types.message }}</div></div>
+  {% endif %}
+</div>
+
+<div class="card" style="margin-top:16px;">
+  <h3>Known images <span class="badge GIT">GIT</span></h3>
+  <p style="color:var(--text-muted);">{{ known_images.note }}</p>
+  <table class="data-table">
+    <thead><tr><th>Platform</th><th>Image</th><th>Devices</th></tr></thead>
+    <tbody>
+    {% for row in known_images.rows %}
+      <tr><td>{{ row.platform }}</td><td>{{ row.image }}</td><td>{{ row.devices }}</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

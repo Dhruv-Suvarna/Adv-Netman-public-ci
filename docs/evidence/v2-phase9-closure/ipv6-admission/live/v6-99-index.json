@@ -1,0 +1,20 @@
+{
+  "files": [
+    "00-prepare.json",
+    "10-isolation-before-device.json",
+    "20-dhcpd.conf",
+    "20-ztp.json",
+    "30-onboard.json",
+    "40-commission.json",
+    "50-admission-injected-failure.json",
+    "60-admission.json",
+    "90-lifecycle-events.json",
+    "99-index.json",
+    "v6-40-commission-ipv6-configlets.json",
+    "v6-45-isolated-ospfv3-suppressed.json",
+    "v6-50-restored-ospfv3-passive.json",
+    "v6-60-admitted-ipv6-reachability.json"
+  ],
+  "fixture": "labs/isolation-commissioning-isolated with NMAS_ISO_FX_OSPF6=on (cEOS 4.36.2F)",
+  "transport": "CeosExecutor over SSH as nmas-svc (key only, pinned host key) from the bootstrap-service namespace; the fixture console (docker exec Cli) only observes"
+}

@@ -1,0 +1,78 @@
+# NMAS Pylint configuration (Lab 7 quality gate) -- deliberate, not "defaults then suppress everything".
+#
+# Priorities: 1 correctness, 2 safety, 3 maintainability, 4 readability, 5 cosmetic style.
+# Everything is disabled first and ONLY the checks below are enabled, so every message that can appear is one we
+# decided matters for this Django / network-automation code base.  Cosmetic conventions (naming, line length,
+# docstrings, import order) are intentionally off: the project's style is consistent and a cosmetic refactor of
+# ~90k lines would add risk without value.
+#
+# CRITICAL (Tier-3 fails on any occurrence; see core/services/test_governance/pylint_data.py CRITICAL_SYMBOLS):
+#   every E (error) and F (fatal) message, plus dangerous-default-value, unreachable, duplicate-key, lost-exception,
+#   return-in-finally, self-assigning-variable.
+# NON-CRITICAL (tracked per artifact; Tier-3 fails only when an artifact exceeds its tracked baseline, so known debt
+#   stays visible and new debt cannot appear silently):  the W / R checks below.
+
+[MAIN]
+# The Django project lives in web/; the legacy automation modules import from the repository root.
+init-hook=import os, sys; root = os.path.dirname(os.path.abspath(os.environ.get("NMAS_PYLINTRC", ".pylintrc"))); sys.path[:0] = [os.path.join(root, "web"), root]; os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings"); os.environ.setdefault("DJANGO_DEBUG", "true")
+load-plugins=pylint_django
+django-settings-module=config.settings
+jobs=0
+persistent=no
+ignore=migrations,tests,__pycache__
+
+[MESSAGES CONTROL]
+disable=all
+enable=
+    # --- correctness / safety: every error and fatal message ---
+    E,
+    F,
+    # --- correctness: obviously broken or dead code ---
+    dangerous-default-value,
+    unreachable,
+    duplicate-key,
+    lost-exception,
+    return-in-finally,
+    self-assigning-variable,
+    undefined-loop-variable,
+    cell-var-from-loop,
+    using-constant-test,
+    pointless-statement,
+    expression-not-assigned,
+    unnecessary-lambda-assignment,
+    broad-exception-caught,
+    # --- exception quality ---
+    bare-except,
+    broad-exception-raised,
+    raise-missing-from,
+    try-except-raise,
+    # --- unused / redundant ---
+    unused-import,
+    unused-variable,
+    reimported,
+    unused-wildcard-import,
+    f-string-without-interpolation,
+    useless-else-on-loop,
+    # --- complexity indicators (thresholds below are high on purpose: they flag outliers, not style) ---
+    too-many-branches,
+    too-many-statements,
+    too-many-nested-blocks,
+    inconsistent-return-statements,
+
+[DESIGN]
+max-branches=30
+max-statements=150
+max-nested-blocks=6
+
+[TYPECHECK]
+# Django model managers / reverse relations are resolved by pylint_django; these generated members are not.
+generated-members=objects,DoesNotExist,MultipleObjectsReturned,_meta,id,pk
+# Two deliberate dynamic patterns that static inference cannot follow (documented, not blanket suppression):
+#   * core.services.validation.findings.Code -- one attribute per finding code, set with setattr() from CODE_CATALOG;
+#   * collaborators injected through dataclass fields annotated ``object`` (executor factories, observers, clocks,
+#     probes): duck-typed by design so tests can inject fakes; inference sees only ``object``.
+ignored-classes=core.services.validation.findings.Code,object
+
+[REPORTS]
+reports=no
+score=no

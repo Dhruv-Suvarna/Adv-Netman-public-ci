@@ -1,0 +1,11 @@
+1791782758.571 START nmas-lifecycle abort R2-client-statics-remove load 15.99 28.32 19.48
+1791782763.651 CONFIG start {"r1": "2bd8c040664c1216", "r2": "6284ec1a7270b9dd", "s1": "7d083ffd40ee3b4f", "s2": "a4f9a4a23f07a916"} covers {"c3": 0, "c4": 0}
+1791782763.651 STARTUP start {"R1": {"startup": "9fbd46ea943dc7de95f2efb13af10cc01b835424c524fef61f35bfa71b27d1ae", "running": "a1ad9e55481001cc001707597c8025084bf4a1c9f92e6c5718d2d4d8d9f13d9e"}, "R2": {"startup": "9bd7d10ba4285c7c5485ac0e037e38988e03f943a04b7328f76c5866c05e76ea", "running": "f5520ad75dee4ace70cb11e2aec8b93d0eef5f804e33eb75bc7ace844cf1b646"}, "S1": {"startup": "0c794e3d9d3afaae7632fb168876d49e69470833267e962c670f18b6c04a6548", "running": "8690c2a94fde79531e13e8ca2d7c8f549e85ae460a39c84a4f7b6a3998bfaa16"}, "S2": {"startup": "1e76c7406d1644f46b09fcd03683e3c1ca5c27c217894ba4e2aa886afa9183e2", "running": "a8124bd3118b37ec881a3a6951f3af1f12f8e1b03f65f6a07a5b7495d8b9e986"}} core-boot {"c3": "c779f912a770e264", "c4": "562ad6c9311dfc44"}
+1791782800.166 LIFECYCLE change CHG-20261012-0001 {"transition": {"kind": "BASELINE_STATIC_IPV6_TO_ISIS", "definition": "sandbox", "schema": 1}}
+1791782800.184 LIFECYCLE validation PASS findings=0
+1791782800.233 LIFECYCLE plan f7bda5c7 operations=48 permanent=24 temporary=24
+1791782800.975 GATE general execution engine -> TRANSITION_CHANGE_NOT_GENERIC
+1791782853.189 LIFECYCLE precheck BLOCKED {"status": "BLOCKED", "blockers": ["STARTUP_NOT_IN_SYNC", "STARTUP_NOT_IN_SYNC", "STARTUP_NOT_IN_SYNC", "STARTUP_NOT_IN_SYNC"]}
+1791782853.189 FAILED RuntimeError precheck: [{"code": "STARTUP_NOT_IN_SYNC", "message": "the startup configuration is not the running configuration", "remediation": "See docs/V2_LOSSLESS_ROUTE_SHIELD.md.", "device": "R1"}, {"code": "STARTUP_NOT_IN_SYNC", "message": "the startup configuration is not the running configuration", "remediation": "See docs/V2_LOSSLESS_ROUTE_SHIELD.md.", "device": "R2"}, {"code": "STARTUP_NOT_IN_SYNC", "message": "the startup configuration is not the running configuration", "remediation": "See docs/V2_LOSSLESS_R
+1791782866.998 PROBES answered=50325 lost=0 errors=[]
+1791782886.732 END failed load 17.78 25.09 19.41

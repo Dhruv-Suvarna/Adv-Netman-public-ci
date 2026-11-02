@@ -1,0 +1,690 @@
+{
+ "runs": [
+  {
+   "case": "icmp-ipv4",
+   "destination_address": "192.168.20.101",
+   "failure_reason": "",
+   "finished_at": "2026-10-06 00:27:26.707013+00:00",
+   "metrics": {
+    "loss_percent": 0.0,
+    "received": 5,
+    "rtt_avg_ms": 4.618,
+    "rtt_max_ms": 9.803,
+    "rtt_mdev_ms": 2.911,
+    "rtt_min_ms": 2.201,
+    "transmitted": 5
+   },
+   "operation": {
+    "arguments": [
+     "-4",
+     "-n",
+     "-c",
+     "5",
+     "-s",
+     "56",
+     "-W",
+     "2",
+     "192.168.20.101"
+    ],
+    "namespace": "H1",
+    "tool": "ping"
+   },
+   "parameters": {
+    "count": 5,
+    "size": 56
+   },
+   "protocol": "ICMP",
+   "repository_head": "f1c4dbe079f12f548965b34fa695c8b48c2956aa",
+   "request": {
+    "address_family": "IPV4",
+    "count": "5",
+    "destination": "H2",
+    "family": "ICMP",
+    "source": "H1"
+   },
+   "run_id": "5a0616d8-b08a-4c58-a513-a7e2a8f78443",
+   "source_address": "192.168.10.102",
+   "started_at": "2026-10-06 00:27:22.563503+00:00",
+   "status": "PASSED"
+  },
+  {
+   "case": "icmp-ipv6",
+   "destination_address": "2001:db8:20::2001",
+   "failure_reason": "",
+   "finished_at": "2026-10-06 00:27:30.906504+00:00",
+   "metrics": {
+    "loss_percent": 0.0,
+    "received": 5,
+    "rtt_avg_ms": 2.309,
+    "rtt_max_ms": 2.761,
+    "rtt_mdev_ms": 0.389,
+    "rtt_min_ms": 1.794,
+    "transmitted": 5
+   },
+   "operation": {
+    "arguments": [
+     "-6",
+     "-n",
+     "-c",
+     "5",
+     "-s",
+     "56",
+     "-W",
+     "2",
+     "2001:db8:20::2001"
+    ],
+    "namespace": "H1",
+    "tool": "ping"
+   },
+   "parameters": {
+    "count": 5,
+    "size": 56
+   },
+   "protocol": "ICMP",
+   "repository_head": "f1c4dbe079f12f548965b34fa695c8b48c2956aa",
+   "request": {
+    "address_family": "IPV6",
+    "count": "5",
+    "destination": "H2",
+    "family": "ICMP",
+    "source": "H1"
+   },
+   "run_id": "b9302271-2f93-4452-9518-fb237ff53ade",
+   "source_address": "2001:db8:10::2001",
+   "started_at": "2026-10-06 00:27:26.775714+00:00",
+   "status": "PASSED"
+  },
+  {
+   "case": "icmp-ipv6-h4",
+   "destination_address": "2001:db8:30::18e5",
+   "failure_reason": "",
+   "finished_at": "2026-10-06 00:27:33.090479+00:00",
+   "metrics": {
+    "loss_percent": 0.0,
+    "received": 3,
+    "rtt_avg_ms": 5.054,
+    "rtt_max_ms": 7.554,
+    "rtt_mdev_ms": 1.778,
+    "rtt_min_ms": 3.559,
+    "transmitted": 3
+   },
+   "operation": {
+    "arguments": [
+     "-6",
+     "-n",
+     "-c",
+     "3",
+     "-s",
+     "56",
+     "-W",
+     "2",
+     "2001:db8:30::18e5"
+    ],
+    "namespace": "H1",
+    "tool": "ping"
+   },
+   "parameters": {
+    "count": 3,
+    "size": 56
+   },
+   "protocol": "ICMP",
+   "repository_head": "f1c4dbe079f12f548965b34fa695c8b48c2956aa",
+   "request": {
+    "address_family": "IPV6",
+    "count": "3",
+    "destination": "H4",
+    "family": "ICMP",
+    "source": "H1"
+   },
+   "run_id": "4947a756-dd72-4457-9597-f89cf1c40364",
+   "source_address": "2001:db8:10::2001",
+   "started_at": "2026-10-06 00:27:30.957518+00:00",
+   "status": "PASSED"
+  },
+  {
+   "case": "traceroute-ipv4",
+   "destination_address": "192.168.20.101",
+   "failure_reason": "",
+   "finished_at": "2026-10-06 00:27:35.288491+00:00",
+   "metrics": {
+    "hop_count": 2,
+    "hops": [
+     {
+      "address": null,
+      "hop": 1,
+      "rtt_ms": null
+     },
+     {
+      "address": "192.168.20.101",
+      "hop": 2,
+      "rtt_ms": 12.916
+     }
+    ],
+    "reached": true,
+    "silent_hops": 1
+   },
+   "operation": {
+    "arguments": [
+     "-4",
+     "-n",
+     "-q",
+     "1",
+     "-w",
+     "2",
+     "-m",
+     "15",
+     "-I",
+     "192.168.20.101"
+    ],
+    "namespace": "H1",
+    "tool": "traceroute"
+   },
+   "parameters": {
+    "max_hops": 15
+   },
+   "protocol": "ICMP",
+   "repository_head": "f1c4dbe079f12f548965b34fa695c8b48c2956aa",
+   "request": {
+    "address_family": "IPV4",
+    "destination": "H2",
+    "family": "TRACEROUTE",
+    "source": "H1"
+   },
+   "run_id": "622f3f66-8e56-4122-a618-5a2a7075681a",
+   "source_address": "192.168.10.102",
+   "started_at": "2026-10-06 00:27:33.139768+00:00",
+   "status": "PASSED"
+  },
+  {
+   "case": "traceroute-ipv6",
+   "destination_address": "2001:db8:20::2001",
+   "failure_reason": "",
+   "finished_at": "2026-10-06 00:27:37.501562+00:00",
+   "metrics": {
+    "hop_count": 2,
+    "hops": [
+     {
+      "address": null,
+      "hop": 1,
+      "rtt_ms": null
+     },
+     {
+      "address": "2001:db8:20::2001",
+      "hop": 2,
+      "rtt_ms": 12.402
+     }
+    ],
+    "reached": true,
+    "silent_hops": 1
+   },
+   "operation": {
+    "arguments": [
+     "-6",
+     "-n",
+     "-q",
+     "1",
+     "-w",
+     "2",
+     "-m",
+     "15",
+     "-I",
+     "2001:db8:20::2001"
+    ],
+    "namespace": "H1",
+    "tool": "traceroute"
+   },
+   "parameters": {
+    "max_hops": 15
+   },
+   "protocol": "ICMP",
+   "repository_head": "f1c4dbe079f12f548965b34fa695c8b48c2956aa",
+   "request": {
+    "address_family": "IPV6",
+    "destination": "H2",
+    "family": "TRACEROUTE",
+    "source": "H1"
+   },
+   "run_id": "fd95ea4d-30da-45f4-9d81-a5c54ee64ff6",
+   "source_address": "2001:db8:10::2001",
+   "started_at": "2026-10-06 00:27:35.347140+00:00",
+   "status": "PASSED"
+  },
+  {
+   "case": "iperf3-tcp-ipv4",
+   "destination_address": "192.168.20.101",
+   "failure_reason": "",
+   "finished_at": "2026-10-06 00:27:43.079063+00:00",
+   "metrics": {
+    "bits_per_second": 2095892.3686864194,
+    "bytes": 1310720,
+    "requested_bits_per_second": 2000000,
+    "retransmits": 0,
+    "seconds": 5.003005,
+    "sent_bits_per_second": 2097021.565258641,
+    "server": {
+     "exit_code": 0,
+     "ready": true,
+     "started": true,
+     "stopped": true,
+     "terminated": false
+    }
+   },
+   "operation": {
+    "client": {
+     "arguments": [
+      "-c",
+      "192.168.20.101",
+      "-4",
+      "-p",
+      "5201",
+      "-t",
+      "5",
+      "-b",
+      "2000K",
+      "-P",
+      "1",
+      "-J",
+      "--connect-timeout",
+      "3000"
+     ],
+     "namespace": "H1"
+    },
+    "server": {
+     "arguments": [
+      "-s",
+      "-1",
+      "-4",
+      "-B",
+      "192.168.20.101",
+      "-p",
+      "5201",
+      "--idle-timeout",
+      "15"
+     ],
+     "namespace": "H2"
+    },
+    "tool": "iperf3"
+   },
+   "parameters": {
+    "bandwidth_kbps": 2000,
+    "duration": 5,
+    "parallel": 1,
+    "port": 5201
+   },
+   "protocol": "TCP",
+   "repository_head": "f1c4dbe079f12f548965b34fa695c8b48c2956aa",
+   "request": {
+    "address_family": "IPV4",
+    "bandwidth_kbps": "2000",
+    "destination": "H2",
+    "duration": "5",
+    "family": "IPERF3",
+    "protocol": "TCP",
+    "source": "H1"
+   },
+   "run_id": "3ab83d49-2dda-4e2c-9e37-6b2c131f4520",
+   "source_address": "192.168.10.102",
+   "started_at": "2026-10-06 00:27:37.552804+00:00",
+   "status": "PASSED"
+  },
+  {
+   "case": "iperf3-udp-ipv4",
+   "destination_address": "192.168.20.101",
+   "failure_reason": "",
+   "finished_at": "2026-10-06 00:27:48.669087+00:00",
+   "metrics": {
+    "bits_per_second": 1000239.9808015359,
+    "bytes": 625200,
+    "jitter_ms": 1.5503500551869107,
+    "loss_percent": 0.0,
+    "lost_packets": 0,
+    "packets": 521,
+    "requested_bits_per_second": 1000000,
+    "seconds": 5.003035,
+    "server": {
+     "exit_code": 0,
+     "ready": true,
+     "started": true,
+     "stopped": true,
+     "terminated": false
+    }
+   },
+   "operation": {
+    "client": {
+     "arguments": [
+      "-c",
+      "192.168.20.101",
+      "-4",
+      "-p",
+      "5201",
+      "-t",
+      "5",
+      "-b",
+      "1000K",
+      "-P",
+      "1",
+      "-J",
+      "--connect-timeout",
+      "3000",
+      "-u",
+      "-l",
+      "1200"
+     ],
+     "namespace": "H1"
+    },
+    "server": {
+     "arguments": [
+      "-s",
+      "-1",
+      "-4",
+      "-B",
+      "192.168.20.101",
+      "-p",
+      "5201",
+      "--idle-timeout",
+      "15"
+     ],
+     "namespace": "H2"
+    },
+    "tool": "iperf3"
+   },
+   "parameters": {
+    "bandwidth_kbps": 1000,
+    "duration": 5,
+    "length": 1200,
+    "parallel": 1,
+    "port": 5201
+   },
+   "protocol": "UDP",
+   "repository_head": "f1c4dbe079f12f548965b34fa695c8b48c2956aa",
+   "request": {
+    "address_family": "IPV4",
+    "bandwidth_kbps": "1000",
+    "destination": "H2",
+    "duration": "5",
+    "family": "IPERF3",
+    "length": "1200",
+    "protocol": "UDP",
+    "source": "H1"
+   },
+   "run_id": "b1f89fd5-7e72-4aa2-95cf-4146a0ac6590",
+   "source_address": "192.168.10.102",
+   "started_at": "2026-10-06 00:27:43.136011+00:00",
+   "status": "PASSED"
+  },
+  {
+   "case": "iperf3-tcp-ipv6",
+   "destination_address": "2001:db8:20::2001",
+   "failure_reason": "",
+   "finished_at": "2026-10-06 00:27:54.013195+00:00",
+   "metrics": {
+    "bits_per_second": 2094412.9267743644,
+    "bytes": 1310720,
+    "requested_bits_per_second": 2000000,
+    "retransmits": 0,
+    "seconds": 5.006539,
+    "sent_bits_per_second": 2096535.6185281526,
+    "server": {
+     "exit_code": 0,
+     "ready": true,
+     "started": true,
+     "stopped": true,
+     "terminated": false
+    }
+   },
+   "operation": {
+    "client": {
+     "arguments": [
+      "-c",
+      "2001:db8:20::2001",
+      "-6",
+      "-p",
+      "5201",
+      "-t",
+      "5",
+      "-b",
+      "2000K",
+      "-P",
+      "1",
+      "-J",
+      "--connect-timeout",
+      "3000"
+     ],
+     "namespace": "H1"
+    },
+    "server": {
+     "arguments": [
+      "-s",
+      "-1",
+      "-6",
+      "-B",
+      "2001:db8:20::2001",
+      "-p",
+      "5201",
+      "--idle-timeout",
+      "15"
+     ],
+     "namespace": "H2"
+    },
+    "tool": "iperf3"
+   },
+   "parameters": {
+    "bandwidth_kbps": 2000,
+    "duration": 5,
+    "parallel": 1,
+    "port": 5201
+   },
+   "protocol": "TCP",
+   "repository_head": "f1c4dbe079f12f548965b34fa695c8b48c2956aa",
+   "request": {
+    "address_family": "IPV6",
+    "bandwidth_kbps": "2000",
+    "destination": "H2",
+    "duration": "5",
+    "family": "IPERF3",
+    "protocol": "TCP",
+    "source": "H1"
+   },
+   "run_id": "c10be373-d2a8-4a07-a395-a0810646675d",
+   "source_address": "2001:db8:10::2001",
+   "started_at": "2026-10-06 00:27:48.726427+00:00",
+   "status": "PASSED"
+  },
+  {
+   "case": "iperf3-udp-ipv6",
+   "destination_address": "2001:db8:30::18e5",
+   "failure_reason": "",
+   "finished_at": "2026-10-06 00:27:57.337577+00:00",
+   "metrics": {
+    "bits_per_second": 502342.56550001114,
+    "bytes": 188400,
+    "jitter_ms": 1.2156099555254518,
+    "loss_percent": 0.0,
+    "lost_packets": 0,
+    "packets": 157,
+    "requested_bits_per_second": 500000,
+    "seconds": 3.005217,
+    "server": {
+     "exit_code": 0,
+     "ready": true,
+     "started": true,
+     "stopped": true,
+     "terminated": false
+    }
+   },
+   "operation": {
+    "client": {
+     "arguments": [
+      "-c",
+      "2001:db8:30::18e5",
+      "-6",
+      "-p",
+      "5201",
+      "-t",
+      "3",
+      "-b",
+      "500K",
+      "-P",
+      "1",
+      "-J",
+      "--connect-timeout",
+      "3000",
+      "-u",
+      "-l",
+      "1200"
+     ],
+     "namespace": "H2"
+    },
+    "server": {
+     "arguments": [
+      "-s",
+      "-1",
+      "-6",
+      "-B",
+      "2001:db8:30::18e5",
+      "-p",
+      "5201",
+      "--idle-timeout",
+      "13"
+     ],
+     "namespace": "H4"
+    },
+    "tool": "iperf3"
+   },
+   "parameters": {
+    "bandwidth_kbps": 500,
+    "duration": 3,
+    "length": 1200,
+    "parallel": 1,
+    "port": 5201
+   },
+   "protocol": "UDP",
+   "repository_head": "f1c4dbe079f12f548965b34fa695c8b48c2956aa",
+   "request": {
+    "address_family": "IPV6",
+    "bandwidth_kbps": "500",
+    "destination": "H4",
+    "duration": "3",
+    "family": "IPERF3",
+    "protocol": "UDP",
+    "source": "H2"
+   },
+   "run_id": "4072314e-5411-4696-8466-1d4b1ba43531",
+   "source_address": "2001:db8:20::2001",
+   "started_at": "2026-10-06 00:27:54.067310+00:00",
+   "status": "PASSED"
+  },
+  {
+   "case": "tcp-connect-closed-port",
+   "destination_address": "192.168.20.101",
+   "failure_reason": "CONNECTION_REFUSED",
+   "finished_at": "2026-10-06 00:27:57.550599+00:00",
+   "metrics": {
+    "elapsed_ms": 2.463,
+    "result": "refused"
+   },
+   "operation": {
+    "arguments": [
+     "192.168.20.101",
+     "81",
+     "3"
+    ],
+    "namespace": "H1",
+    "program": "TCP_CONNECT",
+    "tool": "socket-probe"
+   },
+   "parameters": {
+    "port": 81,
+    "timeout": 3
+   },
+   "protocol": "TCP",
+   "repository_head": "f1c4dbe079f12f548965b34fa695c8b48c2956aa",
+   "request": {
+    "address_family": "IPV4",
+    "destination": "H2",
+    "family": "TCP_CONNECT",
+    "port": "81",
+    "source": "H1",
+    "timeout": "3"
+   },
+   "run_id": "9a7787e1-1fb0-4384-8d0d-2f27b0334fa8",
+   "source_address": "192.168.10.102",
+   "started_at": "2026-10-06 00:27:57.386860+00:00",
+   "status": "FAILED"
+  },
+  {
+   "case": "udp-probe-closed-port",
+   "destination_address": "192.168.20.101",
+   "failure_reason": "CONNECTION_REFUSED",
+   "finished_at": "2026-10-06 00:27:57.772861+00:00",
+   "metrics": {
+    "elapsed_ms": 2.106,
+    "replies": 0,
+    "result": "refused",
+    "sent": 1
+   },
+   "operation": {
+    "arguments": [
+     "192.168.20.101",
+     "5353",
+     "2",
+     "3",
+     "64"
+    ],
+    "namespace": "H1",
+    "program": "UDP_PROBE",
+    "tool": "socket-probe"
+   },
+   "parameters": {
+    "count": 3,
+    "port": 5353,
+    "size": 64,
+    "timeout": 2
+   },
+   "protocol": "UDP",
+   "repository_head": "f1c4dbe079f12f548965b34fa695c8b48c2956aa",
+   "request": {
+    "address_family": "IPV4",
+    "destination": "H2",
+    "family": "UDP_PROBE",
+    "port": "5353",
+    "source": "H1"
+   },
+   "run_id": "110ee4e5-990e-4b75-8a5f-e5f2881a9f02",
+   "source_address": "192.168.10.102",
+   "started_at": "2026-10-06 00:27:57.600411+00:00",
+   "status": "FAILED"
+  },
+  {
+   "case": "refused-ipv4-to-ipv6-only-h4",
+   "refused": "codes=FAMILY_NOT_SUPPORTED_BY_ENDPOINT",
+   "request": {
+    "address_family": "IPV4",
+    "destination": "H4",
+    "family": "ICMP",
+    "source": "H1"
+   }
+  },
+  {
+   "case": "refused-out-of-bounds",
+   "refused": "codes=PARAMETER_OUT_OF_BOUNDS&field=duration",
+   "request": {
+    "address_family": "IPV4",
+    "destination": "H2",
+    "duration": "3600",
+    "family": "IPERF3",
+    "source": "H1"
+   }
+  },
+  {
+   "case": "refused-managed-device-as-endpoint",
+   "refused": "codes=SOURCE_NOT_AN_ENDPOINT",
+   "request": {
+    "address_family": "IPV4",
+    "destination": "H2",
+    "family": "ICMP",
+    "source": "R1"
+   }
+  }
+ ]
+}

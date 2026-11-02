@@ -1,0 +1,113 @@
+1791760015.834 START nmas-lifecycle forward  load 17.70 24.66 26.71
+1791760017.283 CONFIG start {"r1": "2bd8c040664c1216", "r2": "6284ec1a7270b9dd", "s1": "7d083ffd40ee3b4f", "s2": "a4f9a4a23f07a916"} covers {"c3": 0, "c4": 0}
+1791760054.825 LIFECYCLE change CHG-20261011-0002 {"transition": {"kind": "BASELINE_STATIC_IPV6_TO_ISIS", "definition": "sandbox", "schema": 1}}
+1791760054.851 LIFECYCLE validation PASS findings=0
+1791760054.923 LIFECYCLE plan 29b0f742 operations=48 permanent=24 temporary=24
+1791760055.839 GATE general execution engine -> TRANSITION_CHANGE_NOT_GENERIC
+1791760102.145 LIFECYCLE precheck PASS {"status": "PASS", "blockers": []}
+1791760102.171 GATE execution before approval -> BLOCKED NOT_APPROVED,PRECHECK_NOT_PASSED
+1791760103.865 GATE approval without acknowledgements -> ACKNOWLEDGEMENT_MISSING
+1791760103.892 LIFECYCLE approved READY_TO_DEPLOY
+1791760103.892 GATE service entry point execute() -> REFUSED NOT_THIS_TRANSITION
+1791760105.555 LIFECYCLE execute begin load 21.36 23.82 26.20
+1791760157.680 NMAS before R3-cover-2001:db8:10::/63
+1791760158.744 NMAS after R3-cover-2001:db8:10::/63
+1791760166.041 NMAS before R3-cover-2001:db8:20::/63
+1791760166.973 NMAS after R3-cover-2001:db8:20::/63
+1791760175.152 NMAS before R3-cover-2001:db8:30::/63
+1791760177.917 NMAS after R3-cover-2001:db8:30::/63
+1791760186.350 NMAS before R4-cover-2001:db8:10::/63
+1791760187.326 NMAS after R4-cover-2001:db8:10::/63
+1791760194.523 NMAS before R4-cover-2001:db8:20::/63
+1791760195.511 NMAS after R4-cover-2001:db8:20::/63
+1791760203.626 NMAS before R4-cover-2001:db8:30::/63
+1791760206.354 NMAS after R4-cover-2001:db8:30::/63
+1791760214.701 NMAS before S1-vlan99-ipv6
+1791760228.721 NMAS after S1-vlan99-ipv6
+1791760238.185 NMAS before S2-vlan99-ipv6
+1791760253.937 NMAS after S2-vlan99-ipv6
+1791760263.126 NMAS before R1-isis-process
+1791760278.657 NMAS after R1-isis-process
+1791760299.868 NMAS before R2-isis-process
+1791760316.016 NMAS after R2-isis-process
+1791760321.980 NMAS before S1-isis-process
+1791760341.047 NMAS after S1-isis-process
+1791760346.630 NMAS before S2-isis-process
+1791760364.478 NMAS after S2-isis-process
+1791760370.483 NMAS before R1-isis-access
+1791760385.115 NMAS after R1-isis-access
+1791760391.718 NMAS before R2-isis-access
+1791760406.022 NMAS after R2-isis-access
+1791760413.170 NMAS before S1-isis-links
+1791760429.691 NMAS after S1-isis-links
+1791760437.096 NMAS before S2-isis-links
+1791760455.252 NMAS after S2-isis-links
+1791760463.398 NMAS before S1-client-svis-passive
+1791760479.662 NMAS after S1-client-svis-passive
+1791760488.519 NMAS before S2-client-svis-passive
+1791760506.179 NMAS after S2-client-svis-passive
+1791760515.554 NMAS before R1-boundary-policy
+1791760530.649 NMAS after R1-boundary-policy
+1791760551.941 NMAS before R1-aggregate-into-isis
+1791760567.244 NMAS after R1-aggregate-into-isis
+1791760572.808 NMAS before R1-isis-into-ospfv3
+1791760587.508 NMAS after R1-isis-into-ospfv3
+1791760592.972 NMAS before R2-boundary-policy
+1791760609.859 NMAS after R2-boundary-policy
+1791760616.655 NMAS before R2-aggregate-into-isis
+1791760633.255 NMAS after R2-aggregate-into-isis
+1791760640.211 NMAS before R2-isis-into-ospfv3
+1791760661.554 NMAS after R2-isis-into-ospfv3
+1791760671.928 NMAS before S1-shield-install
+1791760689.877 NMAS after S1-shield-install
+1791760698.247 NMAS before R1-shield-install
+1791760716.898 NMAS after R1-shield-install
+1791760728.670 NMAS before S1-static-aggregate-remove
+1791760731.505 NMAS after S1-static-aggregate-remove
+1791760739.834 NMAS before R1-floating-statics-add
+1791760756.568 NMAS after R1-floating-statics-add
+1791760767.843 NMAS before R1-client-statics-remove
+1791760771.822 NMAS after R1-client-statics-remove
+1791760794.679 NMAS before R1-floating-statics-remove
+1791760798.949 NMAS after R1-floating-statics-remove
+1791760809.140 NMAS before R1-old-redistribution-remove
+1791760811.789 NMAS after R1-old-redistribution-remove
+1791760818.013 NMAS before R1-shield-remove
+1791760823.976 NMAS after R1-shield-remove
+1791760829.338 NMAS before S1-shield-remove
+1791760835.063 NMAS after S1-shield-remove
+1791760844.406 NMAS before S2-shield-install
+1791760861.555 NMAS after S2-shield-install
+1791760868.174 NMAS before R2-shield-install
+1791760887.060 NMAS after R2-shield-install
+1791760896.945 NMAS before S2-static-aggregate-remove
+1791760899.638 NMAS after S2-static-aggregate-remove
+1791760907.463 NMAS before R2-floating-statics-add
+1791760924.271 NMAS after R2-floating-statics-add
+1791760934.872 NMAS before R2-client-statics-remove
+1791760939.635 NMAS after R2-client-statics-remove
+1791760949.198 NMAS before R2-floating-statics-remove
+1791760953.788 NMAS after R2-floating-statics-remove
+1791760967.852 NMAS before R2-old-redistribution-remove
+1791760971.173 NMAS after R2-old-redistribution-remove
+1791760980.071 NMAS before R2-shield-remove
+1791760988.074 NMAS after R2-shield-remove
+1791760997.175 NMAS before S2-shield-remove
+1791761003.772 NMAS after S2-shield-remove
+1791761015.246 NMAS before R3-cover-2001:db8:10::/63-remove
+1791761122.978 NMAS after R3-cover-2001:db8:10::/63-remove
+1791761145.901 NMAS before R3-cover-2001:db8:20::/63-remove
+1791761146.800 NMAS after R3-cover-2001:db8:20::/63-remove
+1791761152.252 NMAS before R3-cover-2001:db8:30::/63-remove
+1791761153.074 NMAS after R3-cover-2001:db8:30::/63-remove
+1791761158.073 NMAS before R4-cover-2001:db8:10::/63-remove
+1791761158.971 NMAS after R4-cover-2001:db8:10::/63-remove
+1791761164.164 NMAS before R4-cover-2001:db8:20::/63-remove
+1791761165.008 NMAS after R4-cover-2001:db8:20::/63-remove
+1791761171.047 NMAS before R4-cover-2001:db8:30::/63-remove
+1791761171.830 NMAS after R4-cover-2001:db8:30::/63-remove
+1791761178.067 NMAS before FINAL_VALIDATION
+1791761202.733 LIFECYCLE execute SUCCEEDED lifecycle=DEPLOYED probes_lost=0 applied=48 compensated=0 temporary_remaining=[] restored=None
+1791761202.949 CONFIG end {"r1": "5408a3ab57b34d17", "r2": "4d5eb24485271374", "s1": "c14991f826026d59", "s2": "9e1955c8185575b0"} baseline-restored=False covers {"c3": 0, "c4": 0}
+1791761216.397 PROBES answered=659579 lost=0 errors=[]
+1791761236.325 END ok load 21.29 26.10 26.82

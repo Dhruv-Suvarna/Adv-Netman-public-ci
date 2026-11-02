@@ -1,0 +1,56 @@
+{% extends "core/base.html" %}
+{% block title %}Decommission · {{ device.name }}{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>Decommission {{ device.name }} <small>{{ device.device_id }} · {{ device.lifecycle_state }} · {{ device.admission_state }}</small></h1>
+  <p><a href="{% url 'core:decommission_overview' %}">All decommissioning</a> ·
+     <a href="{% url 'core:managed_device_detail' device.device_id %}">Lifecycle record</a>
+     {% if not runtime_configured %} · <strong>No live runtime configured (DECOMMISSION_RUNTIME_UNAVAILABLE).</strong>{% endif %}</p>
+</div>
+{% for r in refusals %}<div class="card" style="border-left:6px solid var(--danger);"><p><code>{{ r.code }}</code> {{ r.message }} {{ r.remediation }}</p></div>{% endfor %}
+{% if device.lifecycle_state == "IN_SERVICE" or device.lifecycle_state == "FAILED" or device.lifecycle_state == "ISOLATED" or device.lifecycle_state == "BOOTSTRAPPED" or device.lifecycle_state == "READY_FOR_COMMISSIONING" %}
+<div class="card"><h2>Request decommissioning</h2>
+<form method="post" action="{% url 'core:decommission_request' device.device_id %}">{% csrf_token %}
+<label>Reason <input name="reason" maxlength="300" required></label> <button type="submit">Request</button></form></div>
+{% endif %}
+{% for r in records %}
+<div class="card"><h2>{{ r.record_id }} <code>{{ r.state }}</code> · readiness {{ r.readiness_mode }}</h2>
+<p>Requested by {{ r.requested_by }}: {{ r.reason }}{% if r.approved_by %} · approved by {{ r.approved_by }} (expires {{ r.approval_expires_at }}){% endif %}</p>
+{% if r.blockers %}<h3>Blockers</h3><ul>{% for b in r.blockers %}<li><code>{{ b.code }}</code> {{ b.message }}{% if b.details %} — {{ b.details }}{% endif %}</li>{% endfor %}</ul>{% endif %}
+{% if r.readiness.cells %}<h3>Traffic readiness ({{ r.readiness.verdict }})</h3><table class="table"><thead><tr><th>Cell</th><th>Verdict</th><th>Mechanism</th><th>Active workloads</th><th>Reasons</th></tr></thead><tbody>
+{% for key, cell in r.readiness.cells.items %}<tr><td>{{ key }}</td><td>{{ cell.verdict }}</td><td>{{ cell.mechanism|default:"-" }}</td><td>{{ cell.active|join:", " }}</td><td>{{ cell.reasons|join:", " }}</td></tr>{% endfor %}
+</tbody></table>
+{% if r.readiness.observation %}<h4>Measured flows (window {{ r.readiness.observation.window.seconds }} s)</h4><table class="table"><thead><tr><th>Flow</th><th>Activity</th><th>Through device</th><th>Evidence</th></tr></thead><tbody>
+{% for f in r.readiness.observation.flows %}<tr><td>{{ f.label }}</td><td>{{ f.activity }}</td><td>{{ f.on_device }}</td><td>{{ f.evidence }}</td></tr>{% endfor %}</tbody></table>
+{% if r.readiness.observation.blind_spots %}<p>Blind spots: {{ r.readiness.observation.blind_spots|join:"; " }}</p>{% endif %}{% endif %}
+{% for b in r.readiness.blockers %}<p><code>{{ b.code }}</code> {{ b.family }} {{ b.direction }}: {{ b.instruction }}</p>{% endfor %}{% endif %}
+{% if r.dependencies.downstream %}<h3>Downstream dependents</h3><ul>{% for d in r.dependencies.downstream %}<li>{{ d.name }} via {{ d.via }} — {% if d.stranded %}<strong>would be stranded</strong>{% else %}other upstreams {{ d.other_upstreams|join:", " }}{% endif %}</li>{% endfor %}</ul>{% endif %}
+{% if r.plan_hash %}<h3>Plan <code>{{ r.plan_hash }}</code>{% if r.change %} · Change {{ r.change.change_id }}{% endif %}</h3>
+<ol>{% for op in r.plan.transition %}<li>transition: {{ op.description }}</li>{% endfor %}{% for op in r.plan.removal %}<li>{{ op.description }}</li>{% endfor %}</ol>{% endif %}
+{% if r.transition.probe %}<h3>Continuous measurement</h3><pre>{{ r.transition.probe }}</pre>{% endif %}
+{% if r.outcome %}<h3>Outcome</h3><pre>{{ r.outcome.outcome }} {{ r.outcome.failure|default:"" }}</pre>{% endif %}
+<div class="actions">
+{% if r.state == "REQUESTED" or r.state == "BLOCKED" or r.state == "READY" or r.state == "READINESS_CHECKING" %}
+<form method="post" action="{% url 'core:decommission_evaluate' device.device_id r.record_id %}">{% csrf_token %}<button type="submit">Evaluate readiness</button></form>{% endif %}
+{% if r.state == "READY" %}<form method="post" action="{% url 'core:decommission_approve' device.device_id r.record_id %}">{% csrf_token %}
+<label>Confirm plan hash <input name="confirmation" required></label><button type="submit">Approve</button></form>{% endif %}
+{% if r.state == "APPROVED" %}<form method="post" action="{% url 'core:decommission_execute' device.device_id r.record_id %}">{% csrf_token %}
+<label>Confirm plan hash <input name="confirmation" required></label><button type="submit">Execute</button></form>{% endif %}
+{% if r.state == "UNCERTAIN" or r.state == "TRAFFIC_TRANSITION" or r.state == "DECOMMISSIONING" %}<form method="post" action="{% url 'core:decommission_reconcile' device.device_id r.record_id %}">{% csrf_token %}<button type="submit">Reconcile</button></form>{% endif %}
+{% if r.state == "REQUESTED" or r.state == "BLOCKED" or r.state == "READY" or r.state == "APPROVED" or r.state == "READINESS_CHECKING" %}<form method="post" action="{% url 'core:decommission_cancel' device.device_id r.record_id %}">{% csrf_token %}<button type="submit">Cancel</button></form>{% endif %}
+{% if r.state == "DECOMMISSIONED" and r.baseline %}<form method="post" action="{% url 'core:restoration_request' device.device_id r.record_id %}">{% csrf_token %}<button type="submit">Request restoration from {{ r.baseline.snapshot_id }}</button></form>{% endif %}
+</div></div>
+{% endfor %}
+{% for x in restorations %}
+<div class="card"><h2>{{ x.record_id }} <code>{{ x.state }}</code>{% if x.successor %} · successor {{ x.successor.device_id }}{% endif %}</h2>
+{% if x.checks %}<pre>{{ x.checks }}</pre>{% endif %}
+{% if x.blockers %}<ul>{% for b in x.blockers %}<li><code>{{ b.code }}</code> {{ b.message }}</li>{% endfor %}</ul>{% endif %}
+{% if x.plan_hash %}<p>Plan <code>{{ x.plan_hash }}</code>: {% for op in x.plan.operations %}{{ op.description }}{% if not forloop.last %}; {% endif %}{% endfor %}</p>{% endif %}
+<div class="actions">
+{% if x.state == "REQUESTED" or x.state == "BLOCKED" %}<form method="post" action="{% url 'core:restoration_check' device.device_id x.record_id %}">{% csrf_token %}<button type="submit">Check and plan</button></form>{% endif %}
+{% if x.state == "PLANNED" %}<form method="post" action="{% url 'core:restoration_approve' device.device_id x.record_id %}">{% csrf_token %}<label>Confirm plan hash <input name="confirmation" required></label><button type="submit">Approve</button></form>{% endif %}
+{% if x.state == "APPROVED" %}<form method="post" action="{% url 'core:restoration_execute' device.device_id x.record_id %}">{% csrf_token %}<label>Confirm plan hash <input name="confirmation" required></label><button type="submit">Execute</button></form>{% endif %}
+{% if x.state == "REQUESTED" or x.state == "BLOCKED" or x.state == "PLANNED" or x.state == "APPROVED" %}<form method="post" action="{% url 'core:restoration_cancel' device.device_id x.record_id %}">{% csrf_token %}<button type="submit">Cancel</button></form>{% endif %}
+</div></div>
+{% endfor %}
+{% endblock %}

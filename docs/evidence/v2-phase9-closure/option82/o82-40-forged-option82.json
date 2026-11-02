@@ -1,0 +1,57 @@
+{
+  "attempts": {
+    "probe with its own option 82 circuit Ethernet9": {
+      "lease_obtained": false,
+      "output": [
+        "udhcpc: started, v1.37.0",
+        "udhcpc: broadcasting discover",
+        "udhcpc: broadcasting discover",
+        "udhcpc: no lease, failing"
+      ]
+    },
+    "probe without option 82": {
+      "lease_obtained": false,
+      "output": [
+        "udhcpc: started, v1.37.0",
+        "udhcpc: broadcasting discover",
+        "udhcpc: broadcasting discover",
+        "udhcpc: no lease, failing"
+      ]
+    }
+  },
+  "meaning": "the gate is NMAS's discovery check (ztp.discovery.fold -> relay_option82.lease_problem) applied to the giaddr and circuit id that reached the bootstrap service; no lease is offered to the probe (no session reserves its port), so no lease file entry exists to fold",
+  "relayed_requests": [
+    {
+      "agent_information": true,
+      "circuit_id": "Ethernet1",
+      "client_mac": "96:5e:22:4f:d9:97",
+      "giaddr": "10.254.60.1",
+      "message_type": "Discover",
+      "nmas_discovery_gate": "TRUSTED"
+    },
+    {
+      "agent_information": true,
+      "circuit_id": "Ethernet1",
+      "client_mac": "96:5e:22:4f:d9:97",
+      "giaddr": "10.254.60.1",
+      "message_type": "Discover",
+      "nmas_discovery_gate": "TRUSTED"
+    },
+    {
+      "agent_information": true,
+      "circuit_id": "Ethernet9",
+      "client_mac": "96:5e:22:4f:d9:97",
+      "giaddr": "10.254.60.1",
+      "message_type": "Discover",
+      "nmas_discovery_gate": "OPTION82_CIRCUIT_FORGED"
+    },
+    {
+      "agent_information": true,
+      "circuit_id": "Ethernet9",
+      "client_mac": "96:5e:22:4f:d9:97",
+      "giaddr": "10.254.60.1",
+      "message_type": "Discover",
+      "nmas_discovery_gate": "OPTION82_CIRCUIT_FORGED"
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+2026-10-12T08:16:09Z
+--- diffs end
+                                                                        Address
+Interface       IP Address           Status     Protocol         MTU    Owner
+--------------- -------------------- ---------- ------------ ---------- -------
+Ethernet2       192.168.110.0/31     up         up              1500
+Loopback0       192.168.255.1/32     up         up             65535
+Management0     172.20.20.12/24      up         up              1500
+Vlan101         192.168.100.0/31     up         up              1500
+Vlan102         192.168.100.2/31     up         up              1500
+Vlan200         192.168.200.1/24     up         up              1500
+
+Routing Process "ospf 10":
+Neighbor 192.168.255.3 VRF default priority is 1, state is Full
+  In area 0.0.0.0 interface Vlan101
+  Adjacency was established 41d02h ago
+  Current state was established 41d02h ago
+  DR is 192.168.255.1 BDR is 192.168.255.3
+  Options is E R V6
+  Dead timer is due in 37 seconds
+  Graceful-restart-helper mode is Inactive
+  Graceful-restart attempts: 0
+Neighbor 192.168.255.4 VRF default priority is 1, state is Full
+  In area 0.0.0.0 interface Vlan102
+  Adjacency was established 41d02h ago
+  Current state was established 41d02h ago
+  DR is 192.168.255.1 BDR is 192.168.255.4
+  Options is E R V6
+  Dead timer is due in 32 seconds
+  Graceful-restart-helper mode is Inactive
+  Graceful-restart attempts: 0
+Neighbor ID     Instance VRF      Pri State                  Dead Time   Address         Interface
+192.168.255.4   10       default  1   FULL/BDR               00:00:33    192.168.100.3   Vlan102
+192.168.255.3   10       default  1   FULL/BDR               00:00:34    192.168.100.1   Vlan101
+static (persistent)                                                      1
+static (non-persistent)                                                  0
+static nexthop-group                                                     0
+ospf                                                                     3
+ospfv3                                                                   0
+rip                                                                      7
+Total Routes                                                            32
+static (persistent)                                                      4
+static (non-persistent)                                                  0
+static nexthop-group                                                     0
+ospf                                                                     3
+Total Routes                                                           645

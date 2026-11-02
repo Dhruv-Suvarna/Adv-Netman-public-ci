@@ -1,0 +1,93 @@
+{% extends "core/base.html" %}
+{% load core_extras %}
+{% block title %}Home · NMAS Control Plane{% endblock %}
+{% block extra_head %}<link rel="stylesheet" href="{% versioned_static 'core/css/topology.css' %}">{% endblock %}
+{% block content %}
+<div class="page-header home-heading">
+  <h1>NMAS Control Plane</h1>
+  <p>High-level operational view of the dual-stack lab. The topology is read-only; NetBox remains passive storage and automation stays behind explicit Python service boundaries.</p>
+</div>
+
+<section class="card topology-card" aria-labelledby="topology-title">
+  <header class="topology-card__header">
+    <div>
+      <h2 id="topology-title">Live topology</h2>
+      <p id="topology-status" class="topology-status" role="status" aria-live="polite">
+        {% if topology.status == "available" %}
+          Last refreshed {{ topology.generated_at }} · backend {{ topology.backend_status }} · {{ topology.node_count }} nodes / {{ topology.edge_count }} links
+        {% else %}
+          {{ topology.message }}
+        {% endif %}
+      </p>
+    </div>
+    <div class="topology-card__actions">
+      <span id="topology-mode" class="badge {% if topology.status == 'available' %}badge--success{% else %}badge--warning{% endif %}">
+        {% if topology.status == "available" %}LIVE / READ-ONLY{% else %}UNAVAILABLE{% endif %}
+      </span>
+      <button id="topology-reload" class="btn btn--secondary" type="button">Refresh now</button>
+    </div>
+  </header>
+
+  <div id="topology-root"
+       class="topology-shell{% if topology.status != 'available' %} is-unavailable{% endif %}"
+       data-topology-endpoint="{% url 'core:topology_data' %}"
+       data-refresh-seconds="{% if topology.data %}{{ topology.data.refresh_interval_seconds }}{% else %}20{% endif %}">
+    <div class="topology-canvas-wrap">
+      <div id="topology-unavailable" class="topology-unavailable" {% if topology.status == "available" %}hidden{% endif %}>
+        <strong>Topology service temporarily unavailable.</strong>
+        <span>The rest of the Home page remains available. Use Refresh now to retry.</span>
+      </div>
+      <svg id="topology-graph" role="img" aria-label="Live read-only network topology">
+        <rect id="topology-bg" x="0" y="0" width="100%" height="100%" fill="transparent" pointer-events="all"></rect>
+        <g id="topology-viewport">
+          <g id="topology-mgmt-edges"></g>
+          <g id="topology-data-edges"></g>
+          <g id="topology-nodes"></g>
+        </g>
+      </svg>
+      <div class="topology-toolbar" role="toolbar" aria-label="Topology view controls">
+        <button id="topology-zoom-in" type="button" title="Zoom in" aria-label="Zoom in">+</button>
+        <button id="topology-zoom-out" type="button" title="Zoom out" aria-label="Zoom out">&minus;</button>
+        <button id="topology-fit" type="button" class="wide" title="Fit all displayed nodes" aria-label="Fit topology to screen">Fit</button>
+        <button id="topology-reset-view" type="button" class="wide" title="Restore the authoritative layout camera" aria-label="Reset topology view">Reset View</button>
+        <button id="topology-reset-positions" type="button" class="wide" title="Clear presentation-only node offsets" aria-label="Reset presentation-only node positions">Reset Nodes</button>
+        <span class="topology-toolbar__separator" aria-hidden="true"></span>
+        <button id="topology-toggle-addresses" type="button" class="wide" aria-label="Hide addresses" aria-pressed="true">Hide Addresses</button>
+      </div>
+      <div class="topology-legend" aria-label="Topology state legend">
+        <strong>Devices</strong>
+        <span><i class="topology-dot topology-dot--healthy"></i>Healthy</span>
+        <span><i class="topology-dot topology-dot--stale"></i>Stale</span>
+        <span><i class="topology-dot topology-dot--offline"></i>Offline</span>
+        <span><i class="topology-dot topology-dot--unknown"></i>Unknown</span>
+        <strong>Links</strong>
+        <span><i class="topology-line topology-line--up"></i>Up</span>
+        <span><i class="topology-line topology-line--down"></i>Down</span>
+        <span><i class="topology-line topology-line--degraded"></i>Degraded</span>
+        <span><i class="topology-line topology-line--management"></i>Management</span>
+      </div>
+    </div>
+    <aside class="topology-details" aria-labelledby="topology-details-title">
+      <h3 id="topology-details-title">Operational details</h3>
+      <div id="topology-details" class="topology-details__empty">
+        Select a device or link for real API metadata. Drag a node to reposition it in this browser only; drag empty canvas to pan.
+      </div>
+    </aside>
+  </div>
+</section>
+
+{{ topology.data|json_script:"topology-initial-data" }}
+
+<section class="home-capabilities" aria-labelledby="capabilities-title">
+  <h2 id="capabilities-title">Platform capabilities</h2>
+  <div class="card-grid">
+    {% for section in sections %}
+      <a class="card capability-card" href="{% url section.url_name %}">
+        <h3>{{ section.label }}</h3>
+        <p>{{ section.description }}</p>
+      </a>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}
+{% block extra_scripts %}<script src="{% versioned_static 'core/js/topology.js' %}"></script>{% endblock %}

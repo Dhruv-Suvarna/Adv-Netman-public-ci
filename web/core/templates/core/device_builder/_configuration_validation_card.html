@@ -1,0 +1,43 @@
+{# One card for the GitHub Actions Configuration Validation of a Change.  ``cv`` = configuration_validation.service.panel(change). #}
+  <div class="card" id="configuration-validation">
+    <h3>Configuration Validation <span style="font-weight:400; font-size:0.8rem; color:var(--text-muted);">GitHub Actions &middot; separate from Tier-2 Change Validation</span></h3>
+    {% if cv.exempt %}
+      <p style="color:var(--text-muted);">Not applicable: {{ cv.exempt }}.</p>
+    {% elif not cv.row %}
+      <p><span class="badge badge--neutral">NOT TRIGGERED</span></p>
+      <p style="color:var(--text-muted);">GitHub Actions tests a candidate automatically when the Change passes validation (Save Draft / Run Change Validation).</p>
+    {% else %}
+      <p>
+        {% if cv.status == "PASS" %}<span class="badge badge--success">PASS</span>
+        {% elif cv.status == "FAIL" or cv.status == "ERROR" %}<span class="badge badge--danger">{{ cv.status }}</span>
+        {% elif cv.status == "STALE" %}<span class="badge badge--warning">STALE</span> &mdash; {{ cv.stale_note }}
+        {% elif cv.status == "IN_PROGRESS" %}<span class="badge badge--info">IN PROGRESS</span>
+        {% elif cv.status == "QUEUED" %}<span class="badge badge--info">QUEUED</span>
+        {% else %}<span class="badge badge--neutral">NOT TRIGGERED</span>{% endif %}
+      </p>
+      <table class="data-table">
+        <tbody>
+          <tr><th>GitHub run</th><td>{% if cv.row.github_run_id %}#{{ cv.row.github_run_id }}{% else %}&mdash;{% endif %}</td></tr>
+          <tr><th>Candidate</th><td><code>{{ cv.row.candidate_hash|slice:":12"|default:"—" }}</code> (snapshot <code>{{ cv.row.snapshot_hash|slice:":12" }}</code>)</td></tr>
+          <tr><th>Tested against repo</th><td><code>{{ cv.row.tested_sha|slice:":12"|default:"—" }}</code> {{ cv.row.repository }}</td></tr>
+          <tr><th>Triggered</th><td>{{ cv.row.triggered_at|date:"Y-m-d H:i:s T"|default:"—" }}</td></tr>
+          <tr><th>Completed</th><td>{{ cv.row.completed_at|date:"Y-m-d H:i:s T"|default:"—" }}</td></tr>
+          <tr><th>Correlation</th><td><code>{{ cv.row.correlation_id }}</code></td></tr>
+        </tbody>
+      </table>
+      {% if cv.row.failure_summary %}<p class="field-row__message">{{ cv.row.failure_summary }}</p>{% endif %}
+      {% if cv.row.run_url %}<p><a class="btn" href="{{ cv.row.run_url }}" target="_blank" rel="noopener noreferrer">View GitHub Actions Run</a></p>{% endif %}
+    {% endif %}
+    {% if cv.row and not cv.exempt %}
+      <form method="post" action="{% url 'core:change_configuration_validation_refresh' change.change_id %}" style="display:inline;">
+        {% csrf_token %}
+        <button type="submit" class="btn btn--secondary">Refresh from GitHub</button>
+      </form>
+      <a class="btn btn--secondary" href="{% url 'core:change_configuration_validation' change.change_id %}">Configuration Validation evidence</a>
+    {% endif %}
+    {% if cv.demonstration %}
+      <p style="font-size:0.85rem;color:var(--text-muted);">Failure demonstration (deliberately invalid bundle, never counts for execution):
+        {{ cv.demonstration.status }}{% if cv.demonstration.run_url %} &middot; <a href="{{ cv.demonstration.run_url }}" target="_blank" rel="noopener noreferrer">run #{{ cv.demonstration.github_run_id }}</a>{% endif %}</p>
+    {% endif %}
+    {% if not cv.exempt and not cv.configured and cv.enabled %}<p class="field-row__message">No GitHub token is provisioned for this NMAS instance: nothing can be dispatched and execution stays blocked.</p>{% endif %}
+  </div>

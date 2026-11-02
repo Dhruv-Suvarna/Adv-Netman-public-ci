@@ -1,0 +1,9 @@
+set interface {{ name }} admin-state {{ "disable" if admin_disabled else "enable" }}
+{% if description %}set interface {{ accepted_name }} description {{ description | tojson }}
+{% endif %}
+{% if srl_tagged_carrier %}! {{ accepted_name }} carries tagged subinterfaces: SR Linux allows no untagged routed subinterface 0 on a vlan-tagging port
+{% else %}set interface {{ accepted_name }} subinterface 0 type routed
+set interface {{ accepted_name }} subinterface 0 admin-state enable
+set interface {{ accepted_name }} subinterface 0 ip-mtu {{ mtu }}
+set network-instance default interface {{ accepted_name }}.0
+{% endif %}

@@ -1,0 +1,368 @@
+{
+  "checks": [
+    {
+      "code": "",
+      "facts": {
+        "corroborated": true,
+        "deny_counter_delta": {
+          "forward": 16,
+          "input": 43,
+          "output": 34
+        },
+        "flows": [
+          {
+            "detail": "OPEN",
+            "expect": "PERMIT",
+            "flow": "dev -> bootstrap HTTP 10.254.92.2:8080",
+            "observed": "PERMIT"
+          },
+          {
+            "detail": "OPEN",
+            "expect": "PERMIT",
+            "flow": "NMAS service 10.254.92.2 -> 10.254.90.2:22 (NMAS management)",
+            "observed": "PERMIT"
+          },
+          {
+            "detail": "",
+            "expect": "DENY",
+            "flow": "dev -> production host 10.254.94.10 (ICMP)",
+            "observed": "DENY"
+          },
+          {
+            "detail": "",
+            "expect": "DENY",
+            "flow": "dev -> production host 2001:db8:fe94::10 (ICMPv6)",
+            "observed": "DENY"
+          },
+          {
+            "detail": "",
+            "expect": "DENY",
+            "flow": "dev -> core loopback 10.254.255.2 (ICMP, lateral)",
+            "observed": "DENY"
+          },
+          {
+            "detail": "TIMEOUT",
+            "expect": "DENY",
+            "flow": "dev -> 10.254.92.2:22 (not a bootstrap flow)",
+            "observed": "DENY"
+          },
+          {
+            "detail": "TIMEOUT; seen at service: 0",
+            "expect": "DENY",
+            "flow": "dev -> 10.254.92.2:22 from forged source port 22 (not an SSH reply)",
+            "observed": "DENY"
+          },
+          {
+            "detail": "TIMEOUT",
+            "expect": "DENY",
+            "flow": "dev -> upstream's own SSH 10.254.90.1:22",
+            "observed": "DENY"
+          },
+          {
+            "detail": "TIMEOUT",
+            "expect": "DENY",
+            "flow": "dev -> upstream's own SSH 10.254.255.4:22",
+            "observed": "DENY"
+          },
+          {
+            "detail": "",
+            "expect": "DENY",
+            "flow": "dev -> upstream 10.254.90.1 (ICMP)",
+            "observed": "DENY"
+          },
+          {
+            "detail": "",
+            "expect": "DENY",
+            "flow": "production host -> 10.254.90.2 (ICMP)",
+            "observed": "DENY"
+          },
+          {
+            "detail": "",
+            "expect": "DENY",
+            "flow": "production host -> 2001:db8:fe90::2 (ICMPv6)",
+            "observed": "DENY"
+          }
+        ]
+      },
+      "kind": "TRAFFIC",
+      "ok": true
+    },
+    {
+      "code": "",
+      "facts": {
+        "filtered_on_port": [
+          "OSPF",
+          "OSPFv3"
+        ],
+        "leaked": [],
+        "neighbors": [],
+        "unsupported": []
+      },
+      "kind": "ROUTING",
+      "ok": true
+    },
+    {
+      "code": "",
+      "facts": {
+        "input_chain_enforced": true,
+        "nmas_routed_via_port": []
+      },
+      "kind": "MANAGEMENT_PLANE",
+      "ok": true
+    },
+    {
+      "code": "",
+      "facts": {
+        "children": [],
+        "kind": "veth",
+        "master": ""
+      },
+      "kind": "L2",
+      "ok": true
+    },
+    {
+      "code": "",
+      "facts": {
+        "chains": {
+          "forward": {
+            "hook": "forward",
+            "policy": "accept",
+            "prio": 0,
+            "type": "filter"
+          },
+          "input": {
+            "hook": "input",
+            "policy": "accept",
+            "prio": 0,
+            "type": "filter"
+          },
+          "output": {
+            "hook": "output",
+            "policy": "accept",
+            "prio": 0,
+            "type": "filter"
+          }
+        },
+        "exact": true,
+        "extra": [],
+        "foreign": [],
+        "hooks": {
+          "ip": [
+            "forward",
+            "input",
+            "output"
+          ],
+          "ip6": [
+            "forward",
+            "input",
+            "output"
+          ]
+        },
+        "missing": [],
+        "present": true
+      },
+      "kind": "READ_BACK",
+      "ok": true
+    }
+  ],
+  "dhcp_through_relay": {
+    "client_tail": "QUEST for 10.254.90.4 on eth1 to 255.255.255.255 port 67 (xid=0x32f6a8e5)\nDHCPACK of 10.254.90.4 from 10.254.90.1 (xid=0xe5a8f632)\nbound to 10.254.90.4 -- renewal in 192 seconds.\n1982: eth1    inet 10.254.90.4/29 brd 10.254.90.7 scope global dynamic eth1\\       valid_lft 504sec preferred_lft 504sec\n",
+    "expect": "PERMIT",
+    "flow": "dev -> DHCP via relay 10.254.90.1 -> dhcpd 10.254.92.2",
+    "lease": "10.254.90.4",
+    "observed": "PERMIT"
+  },
+  "flows": [
+    {
+      "detail": "OPEN",
+      "expect": "PERMIT",
+      "flow": "dev -> bootstrap HTTP 10.254.92.2:8080",
+      "observed": "PERMIT"
+    },
+    {
+      "detail": "OPEN",
+      "expect": "PERMIT",
+      "flow": "NMAS service 10.254.92.2 -> 10.254.90.2:22 (NMAS management)",
+      "observed": "PERMIT"
+    },
+    {
+      "detail": "",
+      "expect": "DENY",
+      "flow": "dev -> production host 10.254.94.10 (ICMP)",
+      "observed": "DENY"
+    },
+    {
+      "detail": "",
+      "expect": "DENY",
+      "flow": "dev -> production host 2001:db8:fe94::10 (ICMPv6)",
+      "observed": "DENY"
+    },
+    {
+      "detail": "",
+      "expect": "DENY",
+      "flow": "dev -> core loopback 10.254.255.2 (ICMP, lateral)",
+      "observed": "DENY"
+    },
+    {
+      "detail": "TIMEOUT",
+      "expect": "DENY",
+      "flow": "dev -> 10.254.92.2:22 (not a bootstrap flow)",
+      "observed": "DENY"
+    },
+    {
+      "detail": "TIMEOUT; seen at service: 0",
+      "expect": "DENY",
+      "flow": "dev -> 10.254.92.2:22 from forged source port 22 (not an SSH reply)",
+      "observed": "DENY"
+    },
+    {
+      "detail": "TIMEOUT",
+      "expect": "DENY",
+      "flow": "dev -> upstream's own SSH 10.254.90.1:22",
+      "observed": "DENY"
+    },
+    {
+      "detail": "TIMEOUT",
+      "expect": "DENY",
+      "flow": "dev -> upstream's own SSH 10.254.255.4:22",
+      "observed": "DENY"
+    },
+    {
+      "detail": "",
+      "expect": "DENY",
+      "flow": "dev -> upstream 10.254.90.1 (ICMP)",
+      "observed": "DENY"
+    },
+    {
+      "detail": "",
+      "expect": "DENY",
+      "flow": "production host -> 10.254.90.2 (ICMP)",
+      "observed": "DENY"
+    },
+    {
+      "detail": "",
+      "expect": "DENY",
+      "flow": "production host -> 2001:db8:fe90::2 (ICMPv6)",
+      "observed": "DENY"
+    }
+  ],
+  "ospf": {
+    "core_route_to_device_loopback": "",
+    "probe_hellos": {
+      "received": 0,
+      "sent": 44
+    },
+    "probe_neighbors": "\nNeighbor ID     Pri State           Up Time         Dead Time Address         Interface                        RXmtL RqstL DBsmL\n\n",
+    "probe_on_port": [],
+    "probe_ospfd_running": true,
+    "upstream_neighbors": "\nNeighbor ID     Pri State           Up Time         Dead Time Address         Interface                        RXmtL RqstL DBsmL\n10.254.255.2      1 Full/Backup     2m28s             38.823s 10.254.91.2     Vlan102:10.254.91.1                  0     0     0\n\n"
+  },
+  "production_during_verify": {
+    "core_ospf_adjacency": {
+      "after": {
+        "neighbor": "10.254.255.2",
+        "state": "Full/Backup",
+        "up_ms": 151226
+      },
+      "before": {
+        "neighbor": "10.254.255.2",
+        "state": "Full/Backup",
+        "up_ms": 115879
+      },
+      "no_flap": true
+    },
+    "prod->svc v4 (forwarded by up)": {
+      "received": 100,
+      "sent": 100
+    },
+    "prod->up Vlan102 v6 (up's input)": {
+      "received": 100,
+      "sent": 100
+    },
+    "zero_loss": true
+  },
+  "status": {
+    "apply_change": "CHG-20261027-0001",
+    "approved_by": "arthur",
+    "checks": {
+      "ATTACHMENT": null,
+      "DRIFT": null,
+      "L2": {
+        "at": "2026-10-27T19:14:10.992004+00:00",
+        "code": "",
+        "ok": true,
+        "with_device": false
+      },
+      "MANAGEMENT_PLANE": {
+        "at": "2026-10-27T19:14:10.992774+00:00",
+        "code": "",
+        "ok": true,
+        "with_device": false
+      },
+      "READ_BACK": {
+        "at": "2026-10-27T19:14:10.990750+00:00",
+        "code": "",
+        "ok": true,
+        "with_device": false
+      },
+      "RELEASE": null,
+      "ROUTING": {
+        "at": "2026-10-27T19:14:10.993161+00:00",
+        "code": "",
+        "ok": true,
+        "with_device": false
+      },
+      "TRAFFIC": {
+        "at": "2026-10-27T19:14:10.993725+00:00",
+        "code": "",
+        "ok": true,
+        "with_device": false
+      }
+    },
+    "device": "DEV-000002",
+    "failure": {},
+    "limitations": [
+      "NMAS is a single point of failure for re-verification; the upstream keeps enforcing while NMAS is down.",
+      "The upstream is trusted because it is a managed, in-service device; NMAS cannot prove it is uncompromised."
+    ],
+    "plan_hash": "9c94f5379cd8ca46f1fac556ab780c1df91e4280e4bf08ffbff701d10ef788fd",
+    "policy": "ISO-000001",
+    "release_change": "",
+    "requested_by": "olivia",
+    "state": "VERIFIED",
+    "upstream": "UP4:eth4"
+  },
+  "table_with_counters": "table inet nmas_iso_dev000002 {\n\tchain forward {\n\t\ttype filter hook forward priority filter; policy accept;\n\t\tiifname \"eth4\" ip saddr 10.254.90.0/29 ip daddr 10.254.92.2 tcp dport 8080 accept\n\t\tiifname \"eth4\" ip saddr 10.254.90.0/29 ip daddr 10.254.92.2 tcp sport 22 ct state established,related accept\n\t\tiifname \"eth4\" counter packets 12 bytes 816 drop\n\t\toifname \"eth4\" ip saddr 10.254.92.2 ip daddr 10.254.90.0/29 tcp sport 8080 accept\n\t\toifname \"eth4\" ip saddr 10.254.92.2 ip daddr 10.254.90.0/29 tcp dport 22 accept\n\t\toifname \"eth4\" counter packets 4 bytes 376 drop\n\t}\n\n\tchain input {\n\t\ttype filter hook input priority filter; policy accept;\n\t\tiifname \"eth4\" udp sport 68 udp dport 67 accept\n\t\tiifname \"eth4\" ip6 saddr fe80::/10 icmpv6 type { nd-router-solicit, nd-neighbor-solicit, nd-neighbor-advert } accept\n\t\tiifname \"eth4\" counter packets 61 bytes 3936 drop\n\t}\n\n\tchain output {\n\t\ttype filter hook output priority filter; policy accept;\n\t\toifname \"eth4\" udp sport 67 udp dport 68 accept\n\t\toifname \"eth4\" icmpv6 type { nd-router-advert, nd-neighbor-solicit, nd-neighbor-advert } accept\n\t\toifname \"eth4\" counter packets 80 bytes 5204 drop\n\t}\n}\n",
+  "verify": {
+    "codes": [],
+    "ok": true,
+    "summary": {
+      "at": "2026-10-27T19:14:10.989864+00:00",
+      "checks": {
+        "L2": {
+          "code": "",
+          "ok": true
+        },
+        "MANAGEMENT_PLANE": {
+          "code": "",
+          "ok": true
+        },
+        "READ_BACK": {
+          "code": "",
+          "ok": true
+        },
+        "ROUTING": {
+          "code": "",
+          "ok": true
+        },
+        "TRAFFIC": {
+          "code": "",
+          "ok": true
+        }
+      },
+      "correlation_id": "4da3cdd5-a995-41b8-8427-e3b0af519aa4",
+      "with_device": false
+    }
+  },
+  "ztp_gate": []
+}

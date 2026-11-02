@@ -1,0 +1,49 @@
+{
+  "device": "DEV-000002",
+  "ipv6_configlets": [
+    {
+      "cfg_id": "CFG-005",
+      "lines": [
+        "interface Loopback0",
+        "   ipv6 address 2001:db8:254:255::11/128"
+      ],
+      "object_type": "address"
+    },
+    {
+      "cfg_id": "CFG-007",
+      "lines": [
+        "interface Ethernet1",
+        "   ipv6 address 2001:db8:254:60::10/64"
+      ],
+      "object_type": "address"
+    },
+    {
+      "cfg_id": "CFG-010",
+      "lines": [
+        "ipv6 unicast-routing",
+        "ipv6 router ospf 1",
+        "   router-id 10.254.255.11"
+      ],
+      "object_type": "routing_ospf"
+    },
+    {
+      "cfg_id": "CFG-012",
+      "lines": [
+        "interface Ethernet1",
+        "   ipv6 ospf 1 area 0.0.0.0"
+      ],
+      "object_type": "routing_binding"
+    },
+    {
+      "cfg_id": "CFG-013",
+      "lines": [
+        "interface Loopback0",
+        "   ipv6 ospf 1 area 0.0.0.0",
+        "ipv6 router ospf 1",
+        "   passive-interface Loopback0"
+      ],
+      "object_type": "routing_binding"
+    }
+  ],
+  "provisioning_run": "PROV-000001"
+}

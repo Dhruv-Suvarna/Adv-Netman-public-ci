@@ -1,0 +1,104 @@
+{% extends "core/base.html" %}
+{% load core_extras %}
+{% block title %}Traffic / test workbench{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>Traffic / test workbench</h1>
+  <p><a href="{% url 'core:automation_landing' %}">&larr; Automation</a></p>
+  <p>Controlled tests between lab endpoints. Choose endpoints and a test; the server discovers the addresses, applies fixed limits and
+     stores every run as immutable evidence. Endpoints are unmanaged traffic endpoints: running a test never makes one a managed device.</p>
+</div>
+
+{% for r in refusals %}<div class="card" style="border-left:6px solid var(--danger);"><p><strong>{{ r.code }}</strong> — {{ r.message }}{% if refused_field %} (<code>{{ refused_field }}</code>){% endif %} Nothing was run.</p></div>{% endfor %}
+{% if active %}<div class="card" style="border-left:6px solid var(--warning);"><p>A test is running now: <a href="{{ active.get_absolute_url }}"><code>{{ active.run_id }}</code></a> ({{ active.get_family_display }}, {{ active.source }} &rarr; {{ active.destination }}, started {{ active.started_at|date:"H:i:s" }} UTC). Only {{ limits.max_active }} test may run at a time.</p></div>{% endif %}
+
+<div class="card-grid" style="margin-top:16px;">
+  <div class="card">
+    <h3>Run a test</h3>
+    <form method="post" action="{% url 'core:traffic_run_create' %}" data-component="traffic-form">
+      {% csrf_token %}
+      <div class="field-row"><label class="field-row__label" for="t-src"><span>Source</span></label>
+        <select class="form-control" id="t-src" name="source">{% for e in endpoints %}<option value="{{ e.name }}">{{ e.name }} ({{ e.families|join:" + " }})</option>{% endfor %}</select></div>
+      <div class="field-row"><label class="field-row__label" for="t-dst"><span>Destination</span></label>
+        <select class="form-control" id="t-dst" name="destination">{% for e in endpoints %}<option value="{{ e.name }}"{% if forloop.counter == 2 %} selected{% endif %}>{{ e.name }} ({{ e.families|join:" + " }})</option>{% endfor %}</select></div>
+      <div class="field-row"><label class="field-row__label" for="t-af"><span>Address family</span></label>
+        <select class="form-control" id="t-af" name="address_family">{% for value, label in address_families %}<option value="{{ value }}">{{ label }}</option>{% endfor %}</select></div>
+      <div class="field-row"><label class="field-row__label" for="t-family"><span>Test</span></label>
+        <select class="form-control" id="t-family" name="family" data-traffic-family>{% for value, label in families %}<option value="{{ value }}">{{ label }}</option>{% endfor %}</select></div>
+
+      <fieldset data-family="ICMP" style="border:0; padding:0; margin:0;">
+        <div class="field-row"><label class="field-row__label" for="t-count"><span>Packets ({{ limits.ping_count.0 }}–{{ limits.ping_count.1 }})</span></label><input class="form-control" id="t-count" name="count" type="number" min="1" max="{{ limits.ping_count.1 }}" value="3"></div>
+        <div class="field-row"><label class="field-row__label" for="t-size"><span>Payload bytes ({{ limits.ping_size.0 }}–{{ limits.ping_size.1 }})</span></label><input class="form-control" id="t-size" name="size" type="number" min="1" max="{{ limits.ping_size.1 }}" value="56"></div>
+      </fieldset>
+      <fieldset data-family="TRACEROUTE" style="border:0; padding:0; margin:0;">
+        <div class="field-row"><label class="field-row__label" for="t-hops"><span>Maximum hops ({{ limits.max_hops.0 }}–{{ limits.max_hops.1 }})</span></label><input class="form-control" id="t-hops" name="max_hops" type="number" min="{{ limits.max_hops.0 }}" max="{{ limits.max_hops.1 }}" value="15"></div>
+      </fieldset>
+      <fieldset data-family="TCP_CONNECT UDP_PROBE IPERF3" style="border:0; padding:0; margin:0;">
+        <div class="field-row"><label class="field-row__label" for="t-port"><span>Destination port (probes: {{ limits.port.0 }}–{{ limits.port.1 }}; iperf3: {{ limits.iperf_ports.0 }}–{{ limits.iperf_ports.1 }})</span></label><input class="form-control" id="t-port" name="port" type="number" min="1" max="65535" value="5201"></div>
+      </fieldset>
+      <fieldset data-family="TCP_CONNECT UDP_PROBE" style="border:0; padding:0; margin:0;">
+        <div class="field-row"><label class="field-row__label" for="t-timeout"><span>Timeout seconds ({{ limits.probe_timeout.0 }}–{{ limits.probe_timeout.1 }})</span></label><input class="form-control" id="t-timeout" name="timeout" type="number" min="{{ limits.probe_timeout.0 }}" max="{{ limits.probe_timeout.1 }}" value="3"></div>
+      </fieldset>
+      <fieldset data-family="IPERF3" style="border:0; padding:0; margin:0;">
+        <div class="field-row"><label class="field-row__label" for="t-proto"><span>Protocol</span></label><select class="form-control" id="t-proto" name="protocol"><option value="">Default for the test</option><option value="TCP">TCP</option><option value="UDP">UDP</option><option value="ICMP">ICMP (traceroute only)</option></select></div>
+        <div class="field-row"><label class="field-row__label" for="t-duration"><span>Duration seconds ({{ limits.iperf_duration.0 }}–{{ limits.iperf_duration.1 }})</span></label><input class="form-control" id="t-duration" name="duration" type="number" min="{{ limits.iperf_duration.0 }}" max="{{ limits.iperf_duration.1 }}" value="5"></div>
+        <div class="field-row"><label class="field-row__label" for="t-bw"><span>Bitrate kbit/s ({{ limits.iperf_bandwidth_kbps.0 }}–{{ limits.iperf_bandwidth_kbps.1 }})</span></label><input class="form-control" id="t-bw" name="bandwidth_kbps" type="number" min="{{ limits.iperf_bandwidth_kbps.0 }}" max="{{ limits.iperf_bandwidth_kbps.1 }}" value="1000"></div>
+        <div class="field-row"><label class="field-row__label" for="t-par"><span>Parallel streams ({{ limits.iperf_parallel.0 }}–{{ limits.iperf_parallel.1 }})</span></label><input class="form-control" id="t-par" name="parallel" type="number" min="{{ limits.iperf_parallel.0 }}" max="{{ limits.iperf_parallel.1 }}" value="1"></div>
+        <div class="field-row"><label class="field-row__label" for="t-len"><span>UDP datagram bytes ({{ limits.iperf_udp_length.0 }}–{{ limits.iperf_udp_length.1 }})</span></label><input class="form-control" id="t-len" name="length" type="number" min="{{ limits.iperf_udp_length.0 }}" max="{{ limits.iperf_udp_length.1 }}" value="1200"></div>
+      </fieldset>
+      <details style="margin:8px 0;"><summary>Link this run to a Change, provisioning request or soak (optional)</summary>
+        <div class="field-row"><label class="field-row__label" for="t-chg"><span>Change ID</span></label><input class="form-control" id="t-chg" name="change_id" placeholder="CHG-…" autocomplete="off"></div>
+        <div class="field-row"><label class="field-row__label" for="t-prov"><span>Provisioning request</span></label><input class="form-control" id="t-prov" name="prov_id" placeholder="PROV-…" autocomplete="off"></div>
+        <div class="field-row"><label class="field-row__label" for="t-soak"><span>Probation soak</span></label><input class="form-control" id="t-soak" name="soak_id" placeholder="SOAK-…" autocomplete="off"></div>
+      </details>
+      <button type="submit" class="btn btn--primary"{% if active %} disabled{% endif %}>Run test</button>
+    </form>
+  </div>
+
+  <div class="card">
+    <h3>What each test measures</h3>
+    <table class="data-table"><tbody>
+      <tr><th>ICMP ping</th><td>Reachability, loss and round-trip time. Not a throughput test.</td></tr>
+      <tr><th>Traceroute / path</th><td>The hops towards the destination. A hop that does not answer is shown as silent.</td></tr>
+      <tr><th>TCP connectivity</th><td>One connection attempt to one port: connected, refused or timed out.</td></tr>
+      <tr><th>UDP probe</th><td>A few datagrams to one port: refused (ICMP unreachable), or open-or-filtered. UDP cannot tell those two apart.</td></tr>
+      <tr><th>iperf3 throughput</th><td>Measured throughput over TCP or UDP (UDP adds jitter and loss). A temporary one-off server is started on the destination and removed afterwards.</td></tr>
+    </tbody></table>
+    <p style="color:var(--text-muted); font-size:0.85rem;">Limits are enforced by the server, whatever a browser sends. The bitrate is always capped; there is no unlimited mode.</p>
+  </div>
+</div>
+
+<div class="card" style="margin-top:16px;">
+  <h3>Run history</h3>
+  <table class="data-table">
+    <thead><tr><th>Run</th><th>Test</th><th>From</th><th>To</th><th>Family</th><th>Status</th><th>Result</th><th>Operator</th><th>Started (UTC)</th><th>Linked to</th></tr></thead>
+    <tbody>
+    {% for r in runs %}<tr>
+      <td><a href="{{ r.get_absolute_url }}"><code>{{ r.run_id|stringformat:"s"|slice:":8" }}</code></a></td>
+      <td>{{ r.get_family_display }}{% if r.family == "IPERF3" or r.family == "TRACEROUTE" %} · {{ r.protocol }}{% endif %}</td>
+      <td>{{ r.source }}</td><td>{{ r.destination }}</td><td>{{ r.get_address_family_display }}</td>
+      <td><span class="badge badge--{{ r.status|provisioning_badge_class }}">{{ r.get_status_display }}</span></td>
+      <td>{% include "core/traffic/_summary.html" with run=r %}</td>
+      <td>{{ r.operator }}</td><td>{{ r.started_at|date:"Y-m-d H:i:s"|default:"—" }}</td>
+      <td>{% if r.change %}<a href="{{ r.change.get_absolute_url }}">{{ r.change.change_id }}</a> {% endif %}{% if r.provisioning_run %}<a href="{{ r.provisioning_run.get_absolute_url }}">{{ r.provisioning_run.prov_id }}</a> {% endif %}{% if r.soak_run %}<a href="{{ r.soak_run.get_absolute_url }}">{{ r.soak_run.soak_id }}</a>{% endif %}{% if not r.change and not r.provisioning_run and not r.soak_run %}—{% endif %}</td>
+    </tr>{% empty %}<tr><td colspan="10">No test has been run.</td></tr>{% endfor %}
+    </tbody>
+  </table>
+</div>
+<script>
+(function () {
+  var select = document.querySelector("[data-traffic-family]");
+  if (!select) { return; }
+  function sync() {
+    document.querySelectorAll("fieldset[data-family]").forEach(function (set) {
+      var on = set.getAttribute("data-family").split(" ").indexOf(select.value) !== -1;
+      set.style.display = on ? "" : "none";
+      set.querySelectorAll("input, select").forEach(function (el) { el.disabled = !on; });
+    });
+    var proto = document.getElementById("t-proto");
+    if (proto && select.value === "TRACEROUTE") { proto.closest("fieldset").style.display = ""; proto.disabled = false; }
+  }
+  select.addEventListener("change", sync); sync();
+})();
+</script>
+{% endblock %}

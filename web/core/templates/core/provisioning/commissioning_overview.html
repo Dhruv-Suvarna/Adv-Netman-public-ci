@@ -1,0 +1,63 @@
+{% extends "core/base.html" %}
+{% block title %}Isolation and commissioning{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>Isolation and commissioning</h1>
+  <p><a href="{% url 'core:managed_devices' %}">&larr; Managed devices</a></p>
+  <p>New devices stay behind an isolation policy on their trusted upstream until a separately approved commissioning has applied their
+     production configuration and a separately approved admission has released the isolation and verified production connectivity.
+     Viewing this page reads the NMAS database only.</p>
+</div>
+
+{% for r in refusals %}<div class="card" style="border-left:6px solid var(--danger);"><p><strong>{{ r.code }}</strong> — {{ r.message }} {{ r.remediation }}</p></div>{% endfor %}
+
+<div class="card" style="margin-top:16px;">
+  <h3>Capability</h3>
+  <table class="data-table"><thead><tr><th>Capability</th><th>Status</th><th>Feasibility</th><th>Basis</th></tr></thead><tbody>
+  {% for c in capabilities %}<tr><td>{{ c.label }}</td><td>{{ c.status }}</td><td>{{ c.feasibility }}</td><td><small>{{ c.basis }}</small></td></tr>{% endfor %}
+  </tbody></table>
+</div>
+
+<div class="card" style="margin-top:16px;">
+  <h3>Isolation policies</h3>
+  <table class="data-table"><thead><tr><th>Id</th><th>Device</th><th>Upstream</th><th>State</th></tr></thead><tbody>
+  {% for p in policies %}<tr><td><code>{{ p.policy_id }}</code></td><td><a href="{% url 'core:commissioning_device' p.device.device_id %}">{{ p.device.name }}</a></td>
+    <td>{{ p.upstream_device }}:{{ p.upstream_interface }}</td><td>{{ p.state }}</td></tr>
+  {% empty %}<tr><td colspan="4">No isolation policy exists.</td></tr>{% endfor %}
+  </tbody></table>
+</div>
+
+<div class="card" style="margin-top:16px;">
+  <h3>Commissioning</h3>
+  <table class="data-table"><thead><tr><th>Id</th><th>Device</th><th>State</th><th>Requested</th><th>Approved</th></tr></thead><tbody>
+  {% for c in records %}<tr><td><code>{{ c.commissioning_id }}</code></td><td><a href="{% url 'core:commissioning_device' c.device.device_id %}">{{ c.device.name }}</a></td>
+    <td>{{ c.state }}</td><td>{{ c.requested_by }}</td><td>{{ c.approved_by|default:"—" }}</td></tr>
+  {% empty %}<tr><td colspan="5">No commissioning exists.</td></tr>{% endfor %}
+  </tbody></table>
+</div>
+
+<div class="card" style="margin-top:16px;">
+  <h3>Production admissions</h3>
+  <table class="data-table"><thead><tr><th>Id</th><th>Device</th><th>State</th></tr></thead><tbody>
+  {% for a in admissions %}<tr><td><code>{{ a.admission_id }}</code></td><td><a href="{% url 'core:commissioning_device' a.device.device_id %}">{{ a.device.name }}</a></td><td>{{ a.state }}</td></tr>
+  {% empty %}<tr><td colspan="3">No admission exists.</td></tr>{% endfor %}
+  </tbody></table>
+</div>
+
+<div class="card" style="margin-top:16px;">
+  <h3>Dependency graph</h3>
+  {% if graph.cycles %}<p><strong>Cycle detected:</strong> {% for c in graph.cycles %}{{ c|join:" → " }} {% endfor %}</p>{% endif %}
+  <table class="data-table"><thead><tr><th>Device</th><th>Depends on</th><th>Kind</th><th>Satisfied</th></tr></thead><tbody>
+  {% for e in graph.edges %}<tr><td>{{ e.device }}</td><td>{{ e.upstream }}</td><td>{{ e.kind }}</td><td>{{ e.satisfied|yesno:"yes,no" }} — {{ e.reason }}</td></tr>
+  {% empty %}<tr><td colspan="4">No dependency is declared.</td></tr>{% endfor %}
+  </tbody></table>
+</div>
+
+<div class="card" style="margin-top:16px;">
+  <h3>Pending hand-offs</h3>
+  <table class="data-table"><thead><tr><th>Device</th><th>Topic</th><th>Attempts</th><th>Created</th></tr></thead><tbody>
+  {% for e in pending %}<tr><td>{{ e.device.name }}</td><td>{{ e.topic }}</td><td>{{ e.attempts }}</td><td>{{ e.created_at }}</td></tr>
+  {% empty %}<tr><td colspan="4">No hand-off is pending.</td></tr>{% endfor %}
+  </tbody></table>
+</div>
+{% endblock %}

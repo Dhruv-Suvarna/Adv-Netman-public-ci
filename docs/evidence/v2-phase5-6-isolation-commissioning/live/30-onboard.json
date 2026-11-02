@@ -1,0 +1,389 @@
+{
+  "accounts": [
+    "nmas-svc",
+    "nmas-svc"
+  ],
+  "arp": "Legend:\n not learned: Associated MAC address is not present in the MAC address table\n -: Static (configuration or programmed by feature)\nAddress         Age (sec)  Hardware Addr   Interface\n10.254.60.10      0:02:16  c60f.9b1c.a198  Ethernet1\n",
+  "bcred": {
+    "codes": [],
+    "ok": true,
+    "status": {
+      "approved_by": "arthur",
+      "bootstrap_key_fingerprint": "SHA256:olVt0CHGuCFaDFdyWoABWjXR7lRVtN+1X9HPLyCfkhs",
+      "bootstrap_username": "nmas-enroll",
+      "complete": true,
+      "device": "NEW1",
+      "digest": "ebfa4661f17e4cda91428692cee5faa0570ea16f720517d6670767341bead392",
+      "executed_by": "nmas-automation (live harness)",
+      "failure": {},
+      "id": "BCRED-000001",
+      "path": "",
+      "replacement_key_fingerprint": "SHA256:dFjX1O7b9lmDgAjQUIUi81MH8CUjtnJK4aPY2d1VZDo",
+      "replacement_username": "nmas-svc",
+      "requested_by": "olivia",
+      "state": "COMPLETE",
+      "steps": [
+        {
+          "at": "2026-10-26T14:42:14.470786+00:00",
+          "code": "",
+          "facts": {},
+          "ok": true,
+          "step": "execution_started"
+        },
+        {
+          "at": "2026-10-26T14:42:15.205324+00:00",
+          "code": "",
+          "facts": {
+            "bootstrap_account": true,
+            "replacement_account": false
+          },
+          "ok": true,
+          "step": "preflight"
+        },
+        {
+          "at": "2026-10-26T14:42:15.226398+00:00",
+          "code": "",
+          "facts": {},
+          "ok": true,
+          "step": "before_install"
+        },
+        {
+          "at": "2026-10-26T14:42:18.831994+00:00",
+          "code": "",
+          "facts": {
+            "action": "INSTALLED",
+            "username": "nmas-svc"
+          },
+          "ok": true,
+          "step": "install"
+        },
+        {
+          "at": "2026-10-26T14:42:19.868594+00:00",
+          "code": "",
+          "facts": {
+            "host_key_pinned": true,
+            "independent_session": true
+          },
+          "ok": true,
+          "step": "verify_replacement"
+        },
+        {
+          "at": "2026-10-26T14:42:20.091803+00:00",
+          "code": "",
+          "facts": {},
+          "ok": true,
+          "step": "before_revoke"
+        },
+        {
+          "at": "2026-10-26T14:42:23.330007+00:00",
+          "code": "",
+          "facts": {
+            "commit_timer": "00:10:00",
+            "confirmed": false
+          },
+          "ok": true,
+          "step": "revoke"
+        },
+        {
+          "at": "2026-10-26T14:42:26.431684+00:00",
+          "code": "",
+          "facts": {
+            "account_absent": true,
+            "bootstrap_auth": "REJECTED",
+            "confirmed": true
+          },
+          "ok": true,
+          "step": "confirm_revocation"
+        },
+        {
+          "at": "2026-10-26T14:42:26.456010+00:00",
+          "code": "",
+          "facts": {
+            "provider_record": "ABSENT"
+          },
+          "ok": true,
+          "step": "retire_secret"
+        }
+      ]
+    }
+  },
+  "device": {
+    "admission": "NOT_ADMITTED",
+    "identity": "VERIFIED",
+    "lifecycle": "ISOLATED"
+  },
+  "identity": {
+    "codes": [],
+    "ok": true
+  },
+  "isolate_edge": {
+    "codes": [],
+    "ok": true
+  },
+  "new1_kernel_routes": "blackhole 0.0.0.0/8 proto gated scope nowhere \n10.254.60.0/24 dev eth1 proto kernel scope link src 10.254.60.10 \n10.254.61.0/30 via 10.254.60.1 dev eth1 proto gated \nblackhole 127.0.0.0/8 proto gated scope nowhere \n127.254.254.1 dev fwd0 proto gated scope link metric 1024 \n",
+  "verify_with_device": {
+    "codes": [],
+    "flows": [
+      {
+        "detail": "OPEN",
+        "expect": "PERMIT",
+        "flow": "new1 -> NMAS bootstrap HTTP 10.254.61.2:8080",
+        "observed": "PERMIT"
+      },
+      {
+        "detail": "",
+        "expect": "DENY",
+        "flow": "new1 -> NMAS service 10.254.61.2 (ICMP, not a bootstrap flow)",
+        "observed": "DENY"
+      },
+      {
+        "detail": "TIMEOUT",
+        "expect": "DENY",
+        "flow": "new1 -> NMAS service 10.254.61.2:22 (not a bootstrap flow)",
+        "observed": "DENY"
+      },
+      {
+        "detail": "TIMEOUT",
+        "expect": "DENY",
+        "flow": "new1 -> upstream's own SSH 10.254.60.1:22",
+        "observed": "DENY"
+      },
+      {
+        "detail": "",
+        "expect": "DENY",
+        "flow": "production host -> bootstrap side 10.254.60.10 (ICMP)",
+        "observed": "DENY"
+      },
+      {
+        "detail": "OPEN",
+        "expect": "PERMIT",
+        "flow": "NMAS service -> 10.254.60.10:22 (NMAS management)",
+        "observed": "PERMIT"
+      }
+    ],
+    "ok": true,
+    "summary": {
+      "at": "2026-10-26T14:42:13.963053+00:00",
+      "checks": {
+        "ATTACHMENT": {
+          "code": "",
+          "ok": true
+        },
+        "L2": {
+          "code": "",
+          "ok": true
+        },
+        "MANAGEMENT_PLANE": {
+          "code": "",
+          "ok": true
+        },
+        "READ_BACK": {
+          "code": "",
+          "ok": true
+        },
+        "ROUTING": {
+          "code": "",
+          "ok": true
+        },
+        "TRAFFIC": {
+          "code": "",
+          "ok": true
+        }
+      },
+      "correlation_id": "29fbbce1-6738-47a1-929c-ef37f8edd898",
+      "with_device": true
+    }
+  },
+  "ztp_status": {
+    "adapter": "arista_eos",
+    "attempts": 1,
+    "authorization": {
+      "auth_id": "BAUTH-000001",
+      "max_uses": 1,
+      "state": "CONSUMED",
+      "use_count": 1
+    },
+    "delivery": {
+      "refused": 0,
+      "rows": [
+        {
+          "at": "2026-10-26T14:40:01.595372+00:00",
+          "client": "10.254.60.10",
+          "code": "",
+          "counted_use": true,
+          "duplicate": false,
+          "outcome": "SERVED",
+          "transport": "HTTP"
+        }
+      ],
+      "served": 1
+    },
+    "discovery": {
+      "correlated": true,
+      "leases": [
+        {
+          "address": "10.254.60.10",
+          "code": "",
+          "id": 1,
+          "last_seen": "2026-10-26T14:41:38.071793+00:00",
+          "outcome": "CORRELATED",
+          "relay_trusted": true,
+          "seen_count": 4,
+          "upstream": "UP1:Ethernet1"
+        }
+      ]
+    },
+    "evidence_status": "SUPPORTED_AND_LIVE_VERIFIED",
+    "failure": {
+      "code": "MANAGEMENT_AUTH_FAILED",
+      "detail": "",
+      "recorded_at": "2026-10-26T14:40:05.057553+00:00",
+      "recovery": [
+        {
+          "command": "",
+          "key": "WAIT_NATIVE_RETRY",
+          "label": "Let native ZTP retry",
+          "native": true,
+          "requires": "none: ZTP retries until success or cancel"
+        },
+        {
+          "command": "zerotouch cancel",
+          "key": "ZTP_CANCEL",
+          "label": "Cancel ZTP (boots without configuration)",
+          "native": true,
+          "requires": "console access during ZTP"
+        },
+        {
+          "command": "zerotouch enable ; write erase ; reload",
+          "key": "RE_ZTP",
+          "label": "Return the device to ZTP",
+          "native": true,
+          "requires": "an authenticated privilege-15 management session"
+        },
+        {
+          "command": "reload",
+          "key": "RELOAD",
+          "label": "Reload into the saved startup-config",
+          "native": true,
+          "requires": "an authenticated privilege-15 management session"
+        }
+      ],
+      "retry": {
+        "dhcp_retry": "DHCPv4 DISCOVER on every Ethernet/Management interface for each ZTP attempt",
+        "dhcp_retry_interval_seconds": 30,
+        "evidence": "observed on cEOSLab 4.36.2F (attempts 1-4, ~30-60 s apart); a link flap is not needed and is not used",
+        "retries_indefinitely": true,
+        "ztp_retry": "after a failed DHCP or download step the ZeroTouch agent restarts ZTP from the beginning (attempt N)"
+      },
+      "retryable": true,
+      "stage": "MANAGEMENT_REACHED"
+    },
+    "identity_state": "VERIFIED",
+    "lifecycle_state": "ISOLATED",
+    "management": {
+      "enrolled_by": "arthur",
+      "enrolled_host_key": "SHA256:Vbp7603dPMC+aGmniycw8srUDz/Niowxukac/xu48OM",
+      "observed_host_key": "SHA256:Vbp7603dPMC+aGmniycw8srUDz/Niowxukac/xu48OM",
+      "verified": true
+    },
+    "native_execution": {
+      "ztp_disabled": true
+    },
+    "network": "iso-boot-a",
+    "production_admission": {
+      "allowed": false,
+      "owner_phases": [
+        5,
+        6
+      ],
+      "state": "NOT_ADMITTED"
+    },
+    "reserved_address": "10.254.60.10",
+    "session": "ZTP-000001",
+    "stage": "BOOTSTRAPPED",
+    "transport": {
+      "authenticates_device": false,
+      "candidates": [
+        "HTTP",
+        "TFTP"
+      ],
+      "integrity_protected": false,
+      "policy": "ISOLATED_LAB",
+      "reason": "strongest of ['HTTP', 'TFTP'] under ISOLATED_LAB; the platform also supports HTTPS, which NMAS does not serve yet (no trust anchor exists on a factory-default device) -- recorded, not hidden",
+      "selected": "HTTP"
+    },
+    "verification": {
+      "checks": [
+        {
+          "check": "platform",
+          "detail": "Arista cEOSLab",
+          "ok": true
+        },
+        {
+          "check": "version_supported",
+          "detail": "4.36.2F-49692632.4362F.1 (engineering build)",
+          "ok": true
+        },
+        {
+          "check": "native_ztp_completed",
+          "detail": "zerotouch mode disabled",
+          "ok": true
+        },
+        {
+          "check": "hostname",
+          "detail": "NEW1",
+          "ok": true
+        },
+        {
+          "check": "bootstrap_address",
+          "detail": "10.254.60.10/24",
+          "ok": true
+        },
+        {
+          "check": "only_bootstrap_interface_addressed",
+          "detail": "Ethernet1",
+          "ok": true
+        },
+        {
+          "check": "routing_disabled",
+          "detail": "routingDisabled=True",
+          "ok": true
+        },
+        {
+          "check": "only_bootstrap_routes",
+          "detail": "",
+          "ok": true
+        },
+        {
+          "check": "no_production_services",
+          "detail": "",
+          "ok": true
+        },
+        {
+          "check": "enrollment_key_installed",
+          "detail": "nmas-enroll",
+          "ok": true
+        },
+        {
+          "check": "management_acl_applied",
+          "detail": "NMAS-BOOTSTRAP-MGMT",
+          "ok": true
+        }
+      ],
+      "claims": {
+        "base_mac": "02:5a:76:00:00:11",
+        "model": "cEOSLab",
+        "serial": "ISOP56NEW1",
+        "version": "4.36.2F-49692632.4362F.1 (engineering build)"
+      },
+      "digest": "1199d8feb46a3763d14b8fa6fade0b2b0f7f430a04dcd357effa578d09f4f56e",
+      "host_key": "SHA256:Vbp7603dPMC+aGmniycw8srUDz/Niowxukac/xu48OM",
+      "observation": 3,
+      "ok": true,
+      "production_services": [],
+      "verified_at": "2026-10-26T14:41:41.027592+00:00",
+      "ztp_disabled": true
+    },
+    "ztp_state": "DISABLED_VERIFIED"
+  }
+}

@@ -1,0 +1,888 @@
+{
+  "note": "Every commissioning ProvisioningRun of the fixture, in order (failed attempts first).",
+  "runs": [
+    {
+      "executions": [],
+      "failure": {
+        "code": "CANCELLED",
+        "stage": "CANCEL"
+      },
+      "plan": [],
+      "post_config_digest": "",
+      "pre_config_digest": "",
+      "prov_id": "PROV-000001",
+      "status": "CANCELLED"
+    },
+    {
+      "executions": [
+        {
+          "compensation": null,
+          "outcome": "BLOCKED",
+          "postcheck_failures": [],
+          "results": [],
+          "run": "dc981cab-5b69-4608-addf-39637496ce0f",
+          "state": {
+            "applied": [],
+            "compensated": [],
+            "failed": [],
+            "unapplied": []
+          }
+        },
+        {
+          "compensation": {
+            "attempted": true,
+            "not_compensated": [
+              "CFG-011",
+              "CFG-010",
+              "CFG-009",
+              "CFG-008",
+              "CFG-007",
+              "CFG-003",
+              "CFG-002"
+            ],
+            "status": "INCOMPLETE"
+          },
+          "outcome": "POSTCHECK_FAILED_COMPENSATION_INCOMPLETE",
+          "postcheck_failures": [
+            {
+              "cfg_id": "",
+              "check_code": "POSTCHECK_REQUIREMENT_FAILED",
+              "device": "CHG-20261026-0003",
+              "expected": null,
+              "message": "5 verification requirement(s) failed."
+            },
+            {
+              "cfg_id": "CFG-008",
+              "check_code": "OSPF_ADJACENCY_DOWN",
+              "device": "NEW1",
+              "expected": {
+                "family": "OSPFV2",
+                "interface": "Loopback0",
+                "state": "FULL"
+              },
+              "message": "No OSPF neighbor was observed on Loopback0."
+            },
+            {
+              "cfg_id": "CFG-010",
+              "check_code": "OSPF_ADJACENCY_DOWN",
+              "device": "NEW1",
+              "expected": {
+                "family": "OSPFV2",
+                "interface": "Ethernet1",
+                "state": "FULL"
+              },
+              "message": "No OSPF neighbor was observed on Ethernet1."
+            },
+            {
+              "cfg_id": "CFG-008",
+              "check_code": "ROUTING_CONFIG_MISMATCH",
+              "device": "NEW1",
+              "expected": {
+                "area": "0.0.0.0",
+                "interface": "Loopback0",
+                "passive": false,
+                "protocol": "ospf",
+                "version": "OSPFV2"
+              },
+              "message": "Routing interface binding does not match running configuration."
+            },
+            {
+              "cfg_id": "CFG-009",
+              "check_code": "ROUTING_CONFIG_MISMATCH",
+              "device": "NEW1",
+              "expected": {
+                "area": "0.0.0.0",
+                "interface": "Ethernet2",
+                "passive": true,
+                "protocol": "ospf",
+                "version": "OSPFV2"
+              },
+              "message": "Routing interface binding does not match running configuration."
+            },
+            {
+              "cfg_id": "CFG-010",
+              "check_code": "ROUTING_CONFIG_MISMATCH",
+              "device": "NEW1",
+              "expected": {
+                "area": "0.0.0.0",
+                "interface": "Ethernet1",
+                "passive": false,
+                "protocol": "ospf",
+                "version": "OSPFV2"
+              },
+              "message": "Routing interface binding does not match running configuration."
+            }
+          ],
+          "results": [
+            {
+              "cfg_id": "CFG-001",
+              "error": "",
+              "phase": "APPLY",
+              "status": "APPLIED"
+            },
+            {
+              "cfg_id": "CFG-002",
+              "error": "",
+              "phase": "APPLY",
+              "status": "APPLIED"
+            },
+            {
+              "cfg_id": "CFG-003",
+              "error": "",
+              "phase": "APPLY",
+              "status": "APPLIED"
+            },
+            {
+              "cfg_id": "CFG-004",
+              "error": "",
+              "phase": "APPLY",
+              "status": "APPLIED"
+            },
+            {
+              "cfg_id": "CFG-005",
+              "error": "",
+              "phase": "APPLY",
+              "status": "APPLIED"
+            },
+            {
+              "cfg_id": "CFG-006",
+              "error": "",
+              "phase": "APPLY",
+              "status": "ALREADY_SATISFIED"
+            },
+            {
+              "cfg_id": "CFG-007",
+              "error": "",
+              "phase": "APPLY",
+              "status": "APPLIED"
+            },
+            {
+              "cfg_id": "CFG-008",
+              "error": "",
+              "phase": "APPLY",
+              "status": "APPLIED"
+            },
+            {
+              "cfg_id": "CFG-009",
+              "error": "",
+              "phase": "APPLY",
+              "status": "APPLIED"
+            },
+            {
+              "cfg_id": "CFG-010",
+              "error": "",
+              "phase": "APPLY",
+              "status": "APPLIED"
+            },
+            {
+              "cfg_id": "CFG-011",
+              "error": "",
+              "phase": "APPLY",
+              "status": "APPLIED"
+            },
+            {
+              "cfg_id": "CFG-011",
+              "error": "STATE_NOT_RESTORED",
+              "phase": "COMPENSATE",
+              "status": "COMPENSATION_FAILED"
+            },
+            {
+              "cfg_id": "CFG-010",
+              "error": "STATE_NOT_RESTORED",
+              "phase": "COMPENSATE",
+              "status": "COMPENSATION_FAILED"
+            },
+            {
+              "cfg_id": "CFG-009",
+              "error": "STATE_NOT_RESTORED",
+              "phase": "COMPENSATE",
+              "status": "COMPENSATION_FAILED"
+            },
+            {
+              "cfg_id": "CFG-008",
+              "error": "STATE_NOT_RESTORED",
+              "phase": "COMPENSATE",
+              "status": "COMPENSATION_FAILED"
+            },
+            {
+              "cfg_id": "CFG-007",
+              "error": "STATE_NOT_RESTORED",
+              "phase": "COMPENSATE",
+              "status": "COMPENSATION_FAILED"
+            },
+            {
+              "cfg_id": "CFG-005",
+              "error": "",
+              "phase": "COMPENSATE",
+              "status": "COMPENSATED"
+            },
+            {
+              "cfg_id": "CFG-004",
+              "error": "",
+              "phase": "COMPENSATE",
+              "status": "COMPENSATED"
+            },
+            {
+              "cfg_id": "CFG-003",
+              "error": "STATE_NOT_RESTORED",
+              "phase": "COMPENSATE",
+              "status": "COMPENSATION_FAILED"
+            },
+            {
+              "cfg_id": "CFG-002",
+              "error": "STATE_NOT_RESTORED",
+              "phase": "COMPENSATE",
+              "status": "COMPENSATION_FAILED"
+            },
+            {
+              "cfg_id": "CFG-001",
+              "error": "",
+              "phase": "COMPENSATE",
+              "status": "COMPENSATED"
+            }
+          ],
+          "run": "603daf0d-6b09-47d0-b2a7-f5222a525d9c",
+          "state": {
+            "already_satisfied": [
+              "CFG-006"
+            ],
+            "applied": [
+              "CFG-001",
+              "CFG-002",
+              "CFG-003",
+              "CFG-004",
+              "CFG-005",
+              "CFG-007",
+              "CFG-008",
+              "CFG-009",
+              "CFG-010",
+              "CFG-011"
+            ],
+            "compensated": [
+              "CFG-005",
+              "CFG-004",
+              "CFG-001"
+            ],
+            "failed": [],
+            "out_of_scope": [],
+            "unapplied": []
+          }
+        }
+      ],
+      "failure": {
+        "code": "POSTCHECK_NOT_PASSING",
+        "device_digest_after": "0d976d89026c7cdba4dad3ea3f205ade1d5b9398493a5d279bfea341e514220d",
+        "device_restored": false,
+        "stage": "PROVISION"
+      },
+      "plan": [
+        {
+          "capability_feature": "interface.LOOPBACK",
+          "cfg_id": "CFG-001",
+          "lines": [
+            "interface Loopback0",
+            "   ! admin intent: ENABLED",
+            "   no shutdown"
+          ],
+          "object_type": "interface"
+        },
+        {
+          "capability_feature": "interface.ROUTED_PHYSICAL",
+          "cfg_id": "CFG-002",
+          "lines": [
+            "interface Ethernet2",
+            "   no switchport",
+            "   ! admin intent: ENABLED",
+            "   no shutdown"
+          ],
+          "object_type": "interface"
+        },
+        {
+          "capability_feature": "interface.ROUTED_PHYSICAL",
+          "cfg_id": "CFG-003",
+          "lines": [
+            "interface Ethernet1",
+            "   no switchport",
+            "   ! admin intent: ENABLED",
+            "   no shutdown"
+          ],
+          "object_type": "interface"
+        },
+        {
+          "capability_feature": "interface.LOOPBACK",
+          "cfg_id": "CFG-004",
+          "lines": [
+            "interface Loopback0",
+            "   ip address 10.254.255.11/32"
+          ],
+          "object_type": "address"
+        },
+        {
+          "capability_feature": "interface.ROUTED_PHYSICAL",
+          "cfg_id": "CFG-005",
+          "lines": [
+            "interface Ethernet2",
+            "   ip address 10.254.64.1/24"
+          ],
+          "object_type": "address"
+        },
+        {
+          "capability_feature": "interface.ROUTED_PHYSICAL",
+          "cfg_id": "CFG-006",
+          "lines": [
+            "interface Ethernet1",
+            "   ip address 10.254.60.10/24"
+          ],
+          "object_type": "address"
+        },
+        {
+          "capability_feature": "routing.OSPFV2",
+          "cfg_id": "CFG-007",
+          "lines": [
+            "ip routing",
+            "router ospf 1",
+            "   router-id 10.254.255.11"
+          ],
+          "object_type": "routing_ospf"
+        },
+        {
+          "capability_feature": "routing.OSPFV2",
+          "cfg_id": "CFG-008",
+          "lines": [
+            "interface Loopback0",
+            "   ip ospf area 0.0.0.0"
+          ],
+          "object_type": "routing_binding"
+        },
+        {
+          "capability_feature": "routing.OSPFV2",
+          "cfg_id": "CFG-009",
+          "lines": [
+            "interface Ethernet2",
+            "   ip ospf area 0.0.0.0",
+            "router ospf 1",
+            "   passive-interface Ethernet2"
+          ],
+          "object_type": "routing_binding"
+        },
+        {
+          "capability_feature": "routing.OSPFV2",
+          "cfg_id": "CFG-010",
+          "lines": [
+            "interface Ethernet1",
+            "   ip ospf area 0.0.0.0"
+          ],
+          "object_type": "routing_binding"
+        },
+        {
+          "capability_feature": "service_policy.DHCP_RELAY_IPV4",
+          "cfg_id": "CFG-011",
+          "lines": [
+            "interface Ethernet2",
+            "   ip helper-address 10.254.61.2"
+          ],
+          "object_type": "dhcp_relay"
+        }
+      ],
+      "post_config_digest": "",
+      "pre_config_digest": "0d976d89026c7cdba4dad3ea3f205ade1d5b9398493a5d279bfea341e514220d",
+      "prov_id": "PROV-000002",
+      "status": "FAILED"
+    },
+    {
+      "executions": [
+        {
+          "compensation": {
+            "attempted": true,
+            "not_compensated": [],
+            "status": "SUCCEEDED"
+          },
+          "outcome": "FAILED_ROLLED_BACK",
+          "postcheck_failures": [],
+          "results": [
+            {
+              "cfg_id": "CFG-001",
+              "error": "",
+              "phase": "APPLY",
+              "status": "APPLIED"
+            },
+            {
+              "cfg_id": "CFG-002",
+              "error": "",
+              "phase": "APPLY",
+              "status": "APPLIED"
+            },
+            {
+              "cfg_id": "CFG-003",
+              "error": "",
+              "phase": "APPLY",
+              "status": "APPLIED"
+            },
+            {
+              "cfg_id": "CFG-004",
+              "error": "",
+              "phase": "APPLY",
+              "status": "APPLIED"
+            },
+            {
+              "cfg_id": "CFG-005",
+              "error": "",
+              "phase": "APPLY",
+              "status": "ALREADY_SATISFIED"
+            },
+            {
+              "cfg_id": "CFG-006",
+              "error": "",
+              "phase": "APPLY",
+              "status": "APPLIED"
+            },
+            {
+              "cfg_id": "CFG-007",
+              "error": "",
+              "phase": "APPLY",
+              "status": "APPLIED"
+            },
+            {
+              "cfg_id": "CFG-008",
+              "error": "",
+              "phase": "APPLY",
+              "status": "APPLIED"
+            },
+            {
+              "cfg_id": "CFG-009",
+              "error": "COMMAND_REJECTED",
+              "phase": "APPLY",
+              "status": "FAILED"
+            },
+            {
+              "cfg_id": "CFG-010",
+              "error": "",
+              "phase": "APPLY",
+              "status": "NOT_ATTEMPTED"
+            },
+            {
+              "cfg_id": "CFG-011",
+              "error": "",
+              "phase": "APPLY",
+              "status": "NOT_ATTEMPTED"
+            },
+            {
+              "cfg_id": "CFG-008",
+              "error": "",
+              "phase": "COMPENSATE",
+              "status": "COMPENSATED"
+            },
+            {
+              "cfg_id": "CFG-007",
+              "error": "",
+              "phase": "COMPENSATE",
+              "status": "COMPENSATED"
+            },
+            {
+              "cfg_id": "CFG-006",
+              "error": "",
+              "phase": "COMPENSATE",
+              "status": "COMPENSATED"
+            },
+            {
+              "cfg_id": "CFG-004",
+              "error": "",
+              "phase": "COMPENSATE",
+              "status": "COMPENSATED"
+            },
+            {
+              "cfg_id": "CFG-003",
+              "error": "",
+              "phase": "COMPENSATE",
+              "status": "COMPENSATED"
+            },
+            {
+              "cfg_id": "CFG-002",
+              "error": "",
+              "phase": "COMPENSATE",
+              "status": "COMPENSATED"
+            },
+            {
+              "cfg_id": "CFG-001",
+              "error": "",
+              "phase": "COMPENSATE",
+              "status": "COMPENSATED"
+            }
+          ],
+          "run": "dde664a4-d500-4f9d-a57a-c1568498dc72",
+          "state": {
+            "already_satisfied": [
+              "CFG-005"
+            ],
+            "applied": [
+              "CFG-001",
+              "CFG-002",
+              "CFG-003",
+              "CFG-004",
+              "CFG-006",
+              "CFG-007",
+              "CFG-008"
+            ],
+            "compensated": [
+              "CFG-008",
+              "CFG-007",
+              "CFG-006",
+              "CFG-004",
+              "CFG-003",
+              "CFG-002",
+              "CFG-001"
+            ],
+            "failed": [
+              "CFG-009"
+            ],
+            "out_of_scope": [],
+            "unapplied": [
+              "CFG-010",
+              "CFG-011"
+            ]
+          }
+        }
+      ],
+      "failure": {
+        "code": "EXECUTION_FAILED",
+        "device_digest_after": "0d976d89026c7cdba4dad3ea3f205ade1d5b9398493a5d279bfea341e514220d",
+        "device_restored": true,
+        "stage": "PROVISION"
+      },
+      "plan": [
+        {
+          "capability_feature": "interface.ROUTED_PHYSICAL",
+          "cfg_id": "CFG-001",
+          "lines": [
+            "interface Ethernet1",
+            "   no switchport",
+            "   ! admin intent: ENABLED",
+            "   no shutdown"
+          ],
+          "object_type": "interface"
+        },
+        {
+          "capability_feature": "interface.LOOPBACK",
+          "cfg_id": "CFG-002",
+          "lines": [
+            "interface Loopback0",
+            "   ! admin intent: ENABLED",
+            "   no shutdown"
+          ],
+          "object_type": "interface"
+        },
+        {
+          "capability_feature": "interface.ROUTED_PHYSICAL",
+          "cfg_id": "CFG-003",
+          "lines": [
+            "interface Ethernet2",
+            "   no switchport",
+            "   ! admin intent: ENABLED",
+            "   no shutdown"
+          ],
+          "object_type": "interface"
+        },
+        {
+          "capability_feature": "interface.ROUTED_PHYSICAL",
+          "cfg_id": "CFG-004",
+          "lines": [
+            "interface Ethernet2",
+            "   ip address 10.254.64.1/24"
+          ],
+          "object_type": "address"
+        },
+        {
+          "capability_feature": "interface.ROUTED_PHYSICAL",
+          "cfg_id": "CFG-005",
+          "lines": [
+            "interface Ethernet1",
+            "   ip address 10.254.60.10/24"
+          ],
+          "object_type": "address"
+        },
+        {
+          "capability_feature": "interface.LOOPBACK",
+          "cfg_id": "CFG-006",
+          "lines": [
+            "interface Loopback0",
+            "   ip address 10.254.255.11/32"
+          ],
+          "object_type": "address"
+        },
+        {
+          "capability_feature": "routing.OSPFV2",
+          "cfg_id": "CFG-007",
+          "lines": [
+            "ip routing",
+            "router ospf 1",
+            "   router-id 10.254.255.11"
+          ],
+          "object_type": "routing_ospf"
+        },
+        {
+          "capability_feature": "routing.OSPFV2",
+          "cfg_id": "CFG-008",
+          "lines": [
+            "interface Ethernet2",
+            "   ip ospf area 0.0.0.0",
+            "router ospf 1",
+            "   passive-interface Ethernet2"
+          ],
+          "object_type": "routing_binding"
+        },
+        {
+          "capability_feature": "routing.OSPFV2",
+          "cfg_id": "CFG-009",
+          "lines": [
+            "interface Loopback0",
+            "   ip ospf area 0.0.0.0",
+            "router ospf 1",
+            "   passive-interface Loopback0"
+          ],
+          "object_type": "routing_binding"
+        },
+        {
+          "capability_feature": "routing.OSPFV2",
+          "cfg_id": "CFG-010",
+          "lines": [
+            "interface Ethernet1",
+            "   ip ospf area 0.0.0.0"
+          ],
+          "object_type": "routing_binding"
+        },
+        {
+          "capability_feature": "service_policy.DHCP_RELAY_IPV4",
+          "cfg_id": "CFG-011",
+          "lines": [
+            "interface Ethernet2",
+            "   ip helper-address 10.254.61.2"
+          ],
+          "object_type": "dhcp_relay"
+        }
+      ],
+      "post_config_digest": "",
+      "pre_config_digest": "0d976d89026c7cdba4dad3ea3f205ade1d5b9398493a5d279bfea341e514220d",
+      "prov_id": "PROV-000003",
+      "status": "ROLLED_BACK"
+    },
+    {
+      "executions": [
+        {
+          "compensation": {
+            "attempted": false,
+            "not_compensated": [],
+            "status": "NOT_ATTEMPTED"
+          },
+          "outcome": "SUCCEEDED",
+          "postcheck_failures": [],
+          "results": [
+            {
+              "cfg_id": "CFG-001",
+              "error": "",
+              "phase": "APPLY",
+              "status": "APPLIED"
+            },
+            {
+              "cfg_id": "CFG-002",
+              "error": "",
+              "phase": "APPLY",
+              "status": "APPLIED"
+            },
+            {
+              "cfg_id": "CFG-003",
+              "error": "",
+              "phase": "APPLY",
+              "status": "APPLIED"
+            },
+            {
+              "cfg_id": "CFG-004",
+              "error": "",
+              "phase": "APPLY",
+              "status": "APPLIED"
+            },
+            {
+              "cfg_id": "CFG-005",
+              "error": "",
+              "phase": "APPLY",
+              "status": "ALREADY_SATISFIED"
+            },
+            {
+              "cfg_id": "CFG-006",
+              "error": "",
+              "phase": "APPLY",
+              "status": "APPLIED"
+            },
+            {
+              "cfg_id": "CFG-007",
+              "error": "",
+              "phase": "APPLY",
+              "status": "APPLIED"
+            },
+            {
+              "cfg_id": "CFG-008",
+              "error": "",
+              "phase": "APPLY",
+              "status": "APPLIED"
+            },
+            {
+              "cfg_id": "CFG-009",
+              "error": "",
+              "phase": "APPLY",
+              "status": "APPLIED"
+            },
+            {
+              "cfg_id": "CFG-010",
+              "error": "",
+              "phase": "APPLY",
+              "status": "APPLIED"
+            },
+            {
+              "cfg_id": "CFG-011",
+              "error": "",
+              "phase": "APPLY",
+              "status": "APPLIED"
+            }
+          ],
+          "run": "288bbe18-5a4b-4aa7-bec6-eeb200ef5a8c",
+          "state": {
+            "already_satisfied": [
+              "CFG-005"
+            ],
+            "applied": [
+              "CFG-001",
+              "CFG-002",
+              "CFG-003",
+              "CFG-004",
+              "CFG-006",
+              "CFG-007",
+              "CFG-008",
+              "CFG-009",
+              "CFG-010",
+              "CFG-011"
+            ],
+            "compensated": [],
+            "failed": [],
+            "out_of_scope": [],
+            "unapplied": []
+          }
+        }
+      ],
+      "failure": {},
+      "plan": [
+        {
+          "capability_feature": "interface.ROUTED_PHYSICAL",
+          "cfg_id": "CFG-001",
+          "lines": [
+            "interface Ethernet1",
+            "   no switchport",
+            "   ! admin intent: ENABLED",
+            "   no shutdown"
+          ],
+          "object_type": "interface"
+        },
+        {
+          "capability_feature": "interface.ROUTED_PHYSICAL",
+          "cfg_id": "CFG-002",
+          "lines": [
+            "interface Ethernet2",
+            "   no switchport",
+            "   ! admin intent: ENABLED",
+            "   no shutdown"
+          ],
+          "object_type": "interface"
+        },
+        {
+          "capability_feature": "interface.LOOPBACK",
+          "cfg_id": "CFG-003",
+          "lines": [
+            "interface Loopback0",
+            "   ! admin intent: ENABLED",
+            "   no shutdown"
+          ],
+          "object_type": "interface"
+        },
+        {
+          "capability_feature": "interface.LOOPBACK",
+          "cfg_id": "CFG-004",
+          "lines": [
+            "interface Loopback0",
+            "   ip address 10.254.255.11/32"
+          ],
+          "object_type": "address"
+        },
+        {
+          "capability_feature": "interface.ROUTED_PHYSICAL",
+          "cfg_id": "CFG-005",
+          "lines": [
+            "interface Ethernet1",
+            "   ip address 10.254.60.10/24"
+          ],
+          "object_type": "address"
+        },
+        {
+          "capability_feature": "interface.ROUTED_PHYSICAL",
+          "cfg_id": "CFG-006",
+          "lines": [
+            "interface Ethernet2",
+            "   ip address 10.254.64.1/24"
+          ],
+          "object_type": "address"
+        },
+        {
+          "capability_feature": "routing.OSPFV2",
+          "cfg_id": "CFG-007",
+          "lines": [
+            "ip routing",
+            "router ospf 1",
+            "   router-id 10.254.255.11"
+          ],
+          "object_type": "routing_ospf"
+        },
+        {
+          "capability_feature": "routing.OSPFV2",
+          "cfg_id": "CFG-008",
+          "lines": [
+            "interface Loopback0",
+            "   ip ospf area 0.0.0.0",
+            "router ospf 1",
+            "   passive-interface Loopback0"
+          ],
+          "object_type": "routing_binding"
+        },
+        {
+          "capability_feature": "routing.OSPFV2",
+          "cfg_id": "CFG-009",
+          "lines": [
+            "interface Ethernet1",
+            "   ip ospf area 0.0.0.0"
+          ],
+          "object_type": "routing_binding"
+        },
+        {
+          "capability_feature": "routing.OSPFV2",
+          "cfg_id": "CFG-010",
+          "lines": [
+            "interface Ethernet2",
+            "   ip ospf area 0.0.0.0",
+            "router ospf 1",
+            "   passive-interface Ethernet2"
+          ],
+          "object_type": "routing_binding"
+        },
+        {
+          "capability_feature": "service_policy.DHCP_RELAY_IPV4",
+          "cfg_id": "CFG-011",
+          "lines": [
+            "interface Ethernet2",
+            "   ip helper-address 10.254.61.2"
+          ],
+          "object_type": "dhcp_relay"
+        }
+      ],
+      "post_config_digest": "2d257c09bd2c38cb3c5172e10b04de4caaf0f19327cfb60de02b869e4d6b46e2",
+      "pre_config_digest": "0d976d89026c7cdba4dad3ea3f205ade1d5b9398493a5d279bfea341e514220d",
+      "prov_id": "PROV-000004",
+      "status": "POSTCHECKED"
+    }
+  ]
+}

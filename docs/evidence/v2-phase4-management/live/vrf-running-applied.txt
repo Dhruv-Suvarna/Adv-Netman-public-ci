@@ -1,0 +1,43 @@
+no aaa root
+username fixture-admin privilege 15 role network-admin secret <REDACTED>
+username fixture-admin ssh-key ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOmQIyBdQcf4hiptKUSf5oQcZvLD1ox/WZkgikWSqiGF fixture-admin
+username nmas-svc privilege 15 role network-admin secret <REDACTED>
+username nmas-svc ssh-key ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIM3xBF19T3LWN/xDbcuLxUGZf3x4P3KmsvBzSkgx0xRr nmas-svc
+management api http-commands
+   vrf MGMT
+      no shutdown
+no service interface inactive port-id allocation disabled
+service routing protocols model multi-agent
+hostname DUT1
+spanning-tree mode mstp
+system l1
+   unsupported speed action error
+   unsupported error-correction action error
+vlan 200
+   name FIXTURE-MGMT
+vrf instance MGMT
+   description NMAS management VRF
+management api gnmi
+   transport grpc MGMT
+      vrf MGMT
+aaa authorization exec default local
+interface Ethernet1
+   description MSW1 Ethernet2 (direct out-of-band)
+   switchport access vlan 200
+interface Ethernet2
+   description SW1 Ethernet2 (management VLAN via adjacent switch)
+   switchport access vlan 200
+interface Ethernet3
+   description routed management link -> NMAS fixture eth2
+   no switchport
+   vrf MGMT
+   ip address 10.254.42.1/30
+interface Vlan200
+   ip address 10.254.40.21/24
+no ip routing
+ip routing vrf MGMT
+ip route vrf MGMT 10.254.43.0/24 10.254.42.2
+management ssh
+   vrf MGMT
+      no shutdown
+end

@@ -1,0 +1,25 @@
+1792285827.958 START maintenance-sandbox ['11b'] load 24.25 26.64 25.43
+1792285827.958 SCENARIO 11b begin load 24.25 26.64 25.43
+1792286132.902 NMAS before S1-shield-install-restore
+1792286152.641 NMAS after S1-shield-install-restore
+1792286158.347 NMAS before S1-uplink-metric-restore
+1792286177.003 NMAS after S1-uplink-metric-restore
+1792286188.055 NMAS before S1-shield-remove-restore
+1792286196.820 NMAS after S1-shield-remove-restore
+1792286213.533 NMAS before FINAL_VALIDATION
+1792286219.145 NMAS before PERSISTENCE-S1
+1792286220.441 NMAS after PERSISTENCE-S1
+1792286220.460 NMAS before PERSISTENCE-R1
+1792286221.664 NMAS after PERSISTENCE-R1
+1792286624.790 NMAS before S1-shield-install-restore
+1792286646.100 NMAS after S1-shield-install-restore
+1792286655.650 NMAS before S1-uplink-metric-restore
+1792286666.890 NMAS before S1-shield-remove-restore
+1792286674.593 NMAS after S1-shield-remove-restore
+1792286695.702 NMAS before FINAL_VALIDATION
+1792286703.635 NMAS before PERSISTENCE-S1
+1792286704.896 NMAS after PERSISTENCE-S1
+1792286704.911 NMAS before PERSISTENCE-R1
+1792286706.097 NMAS after PERSISTENCE-R1
+1792286762.702 RESULT 11b_worker_crash_recovery PASS {"after_step_boundary": {"killed": {"state": "ENTERING", "claim": true, "locks": ["S1"], "s1_running": "52080846097dc154"}, "tick_while_claim_fresh": [], "recovery": [{"record": "MNT-000001", "item": "RECOVER", "state": "ENTRY_ABORTED_RESTORED", "outcome": "DONE", "escalated": false}], "state": "ENTRY_ABORTED_RESTORED", "escalated": false, "maintenance_only_state": [], "findings": [], "s1_unchanged_by_recovery": false, "baseline_restored": true, "chain_ok": true}, "inside_stage": {"killed": {"state": "ENTERING", "claim": true, "locks": ["S1"], "s1_running": "a36259d6775bf810"}, "tick_while_claim_fresh": [], "recovery": [{"record": "MNT-000002", "item": "RECOVER", "state": "RESTORE_FAILED_ESCALATED", "outcome": "DONE", "escalated": true}], "state": "RESTORE_FAILED_ESCALATED", "escalated": true, "maintenance_only_state": ["S1: interface Ethernet1 > isis metric 1000", "S1: ipv6 route 2001:d
+1792286762.703 END {"11b_worker_crash_recovery": true} load 17.44 20.39 22.85

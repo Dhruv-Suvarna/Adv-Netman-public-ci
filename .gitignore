@@ -1,0 +1,54 @@
+monitoring/runtime/*
+!monitoring/runtime/.gitkeep
+__pycache__/
+*.py[cod]
+Run_Logs.log
+logs/*.log
+
+# Secret-bearing local configuration and key/database material.  Checked-in
+# examples must use the explicit `.env.example` suffix and placeholders only.
+.env
+.env.*
+!.env.example
+!**/.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+*.sqlite3
+*.sqlite3-*
+*.db
+
+# NetBox stack runtime secrets (Phase 1 of the NetBox migration; see
+# docs/NETBOX_IPAM.md). Real values are generated locally by
+# netbox/scripts/bootstrap_netbox.sh; only netbox/.env.example is tracked.
+netbox/.env
+
+# Phase 3A shadow-rendered candidate configs (netbox/scripts/shadow_render.py).
+# Never applied to a device; regenerated on demand, not tracked.
+netbox/runtime/
+
+# Django UI foundation (Phase 3) - local dev database and collectstatic output.
+# Never contains secrets by design (SECRET_KEY/ALLOWED_HOSTS come from env vars).
+web/staticfiles/
+
+# Phase 16 Tier-3 validation: the local/CI report artifact (python tier3.py --json tier3-report.json).
+# Uploaded as a GitHub Actions artifact, never committed.
+tier3-report.json
+
+# Lab 7 test governance: Tier-3 / local evidence output (traces, coverage data, Pylint json, the report) and the
+# website's accepted-evidence cache.  Uploaded as the test-governance artifact / accepted by NMAS, never committed
+# (the reviewed evidence snapshot lives in docs/evidence/lab7/).
+tier3-governance/
+web/var/
+.coverage
+.coverage.*
+# V2 Phase 3 disposable native-ZTP fixture state (flash, isolated DHCP config / leases)
+labs/ztp-isolated/runtime/
+labs/mgmt-multihoming-isolated/runtime/
+labs/isolation-commissioning-isolated/runtime/
+labs/phase9-option82-isolated/runtime/
+labs/decommission-isolated/runtime/
+labs/managed-scope-isolated/runtime/
+labs/frr-isolation-isolated/runtime/

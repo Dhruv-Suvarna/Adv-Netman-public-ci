@@ -1,0 +1,74 @@
+{
+ "11b_worker_crash_recovery": {
+  "ok": true,
+  "after_step_boundary": {
+   "killed": {
+    "state": "ENTERING",
+    "claim": true,
+    "locks": [
+     "S1"
+    ],
+    "s1_running": "52080846097dc154"
+   },
+   "tick_while_claim_fresh": [],
+   "recovery": [
+    {
+     "record": "MNT-000001",
+     "item": "RECOVER",
+     "state": "ENTRY_ABORTED_RESTORED",
+     "outcome": "DONE",
+     "escalated": false
+    }
+   ],
+   "state": "ENTRY_ABORTED_RESTORED",
+   "escalated": false,
+   "maintenance_only_state": [],
+   "findings": [],
+   "s1_unchanged_by_recovery": false,
+   "baseline_restored": true,
+   "chain_ok": true
+  },
+  "inside_stage": {
+   "killed": {
+    "state": "ENTERING",
+    "claim": true,
+    "locks": [
+     "S1"
+    ],
+    "s1_running": "a36259d6775bf810"
+   },
+   "tick_while_claim_fresh": [],
+   "recovery": [
+    {
+     "record": "MNT-000002",
+     "item": "RECOVER",
+     "state": "RESTORE_FAILED_ESCALATED",
+     "outcome": "DONE",
+     "escalated": true
+    }
+   ],
+   "state": "RESTORE_FAILED_ESCALATED",
+   "escalated": true,
+   "maintenance_only_state": [
+    "S1: interface Ethernet1 > isis metric 1000",
+    "S1: ipv6 route 2001:db8:8000::/33 2001:db8:110:3::2",
+    "S1: ipv6 route 2001:db8::/33 2001:db8:110:3::2"
+   ],
+   "findings": [
+    {
+     "code": "INTERRUPTED_STAGE_STATE_PRESENT",
+     "family": "",
+     "direction": "",
+     "traffic_class": "",
+     "workloads": [],
+     "detail": "S1: ipv6 route 2001:db8:8000::/33 2001:db8:110:3::2, ipv6 route 2001:db8::/33 2001:db8:110:3::2; remove it by hand (its exact inverse is in the plan), then restore again"
+    }
+   ],
+   "s1_unchanged_by_recovery": true,
+   "operator_recovery": "configure replace startup-config on S1 (startup is the unpersisted pre-state)",
+   "after_operator_retry": "ENTRY_ABORTED_RESTORED",
+   "baseline_restored": true,
+   "chain_ok": true
+  }
+ }
+}

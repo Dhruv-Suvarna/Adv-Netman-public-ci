@@ -1,0 +1,46 @@
+{% extends "core/base.html" %}
+{% load core_extras %}
+{% block title %}Code Coverage · Automation{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>Code Coverage</h1>
+  <p><a href="{% url 'core:automation_landing' %}">&larr; Automation</a> · <a href="{% url 'core:quality_unit_tests' %}">&larr; Unit Test Matrix</a> · <a href="{% url 'core:device_builder_capabilities' %}">Capability matrix</a></p>
+  <p style="color:var(--text-muted);">Platform x feature <strong>test</strong> coverage for every currently implemented (SUPPORTED) capability cell. NOT_IMPLEMENTED / UNSUPPORTED cells never count against current closure. Generic control-plane coverage is listed separately below.</p>
+  <dl id="coverage-semantics" style="font-size:0.9em;">
+    <dt><strong>Lifecycle closure</strong> (each feature cell)</dt>
+    <dd>whether every required positive / negative lifecycle case for this platform-feature cell passed: passed CELL cases / required CELL cases.</dd>
+    <dt><strong>Platform runtime coverage</strong> (each platform column header)</dt>
+    <dd>function / statement / branch execution aggregated across the platform's production artifacts. It is not a per-feature figure.</dd>
+  </dl>
+</div>
+{% include "core/quality/_evidence.html" with refresh_next="coverage" %}
+{% if not report %}<div class="alert alert--warning">No accepted evidence is available yet.</div>{% else %}
+<div class="card" style="margin-top:12px;">
+  <p><strong>Implemented cells closed: {{ cards.cells.closed }} / {{ cards.cells.supported }}</strong> · POS {{ cards.cells.positive.pass }}/{{ cards.cells.positive.required }} · NEG {{ cards.cells.negative.pass }}/{{ cards.cells.negative.required }}
+   · <span id="overall-runtime-coverage">Overall runtime coverage (all production artifacts): Statements {{ cards.coverage.line_pct|default:"-" }}% · Branches {{ cards.coverage.branch_pct|default:"-" }}% · Functions {{ cards.functions.tested }}/{{ cards.functions.required }}</span>
+   · <a href="?{% if not show_all %}all=1{% endif %}">{% if show_all %}show implemented features only{% else %}show every feature row{% endif %}</a></p>
+  <p class="capability-legend"><span class="badge badge--success">CLOSED_CURRENT_SCOPE</span> <span class="badge badge--warning">PARTIAL</span> <span class="badge badge--danger">MISSING</span> <span class="badge badge--critical">FAILING</span> <span class="badge badge--not-implemented">NOT_IMPLEMENTED</span> <span class="badge badge--neutral">UNSUPPORTED</span></p>
+  <table class="data-table" id="coverage-matrix">
+    <thead><tr><th>Feature</th>{% for col in platform_columns %}<th data-platform="{{ col.platform }}"><code>{{ col.platform }}</code>
+      {% if col.coverage %}<div class="platform-coverage" style="font-size:0.75em;font-weight:normal;" title="{{ platform_scope_note }}">Platform code coverage<br>Functions {{ col.coverage.functions.tested }} / {{ col.coverage.functions.required }}<br>Statements {{ col.coverage.line_pct|default:"-" }}%<br>Branches {{ col.coverage.branch_pct|default:"-" }}%</div>{% endif %}</th>{% endfor %}</tr></thead>
+    <tbody>{% for row in rows %}<tr><th><code style="font-weight:normal;">{{ row.feature }}</code></th>
+      {% for cell in row.cells %}<td data-cell="{{ cell.platform }}|{{ cell.feature }}" data-status="{{ cell.status }}">{% if cell %}
+        {% if cell.final_status == 'SUPPORTED' %}<a href="{% url 'core:quality_cell' cell.platform cell.feature %}" style="text-decoration:none;">
+          <span style="font-size:0.7em;letter-spacing:0.04em;">LIFECYCLE CLOSURE</span><br>
+          <span class="badge badge--{{ cell.badge }}" title="passed / required lifecycle cases of this cell">{{ cell.cases_pct|default:"0" }}%</span><br>
+          <span style="font-size:0.8em;">POS {{ cell.positive.pass }}/{{ cell.positive.required }}<br>NEG {{ cell.negative.pass }}/{{ cell.negative.required }}</span></a>
+        {% else %}<span class="badge badge--{{ cell.badge }}" title="{{ cell.reasons|join:', ' }}">{{ cell.status }}</span>{% endif %}
+      {% else %}—{% endif %}</td>{% endfor %}</tr>{% endfor %}</tbody>
+  </table>
+  <p style="font-size:0.8em;color:var(--text-muted);" id="platform-scope-note">Feature cells show lifecycle closure only (POS / NEG cases are cell-specific). {{ platform_scope_note }}</p>
+</div>
+
+<div class="card" style="margin-top:12px;" id="generic-coverage"><h3>Generic / control-plane coverage</h3>
+  <table class="data-table"><thead><tr><th>Group</th><th>Artifacts closed</th><th>Functions explicitly tested</th><th>Positive</th><th>Negative</th><th>Statements</th><th>Branches</th></tr></thead><tbody>
+  {% for g in groups %}<tr data-group="{{ g.id }}"><th><a href="{% url 'core:quality_unit_tests' %}?group={{ g.id }}">{{ g.title }}</a></th>
+    <td>{{ g.artifacts_closed }} / {{ g.artifacts_counted }}{% if g.artifacts != g.artifacts_counted %} <span style="font-size:0.75em;">(+{{ g.artifacts|add:0 }} total)</span>{% endif %}</td>
+    <td>{{ g.functions.tested }} / {{ g.functions.required }}</td><td>{{ g.positive.pass }} / {{ g.positive.required }}</td><td>{{ g.negative.pass }} / {{ g.negative.required }}</td>
+    <td>{{ g.coverage.line_pct|default:"-" }}%</td><td>{{ g.coverage.branch_pct|default:"-" }}%</td></tr>{% endfor %}
+  </tbody></table></div>
+{% endif %}
+{% endblock %}

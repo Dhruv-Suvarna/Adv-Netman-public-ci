@@ -1,0 +1,8 @@
+!
+interface {{ name }}
+   description {{ description }}
+   mtu {{ mtu }}
+   ! admin intent: {{ admin_state }}
+{% if admin_disabled %}   shutdown
+{% else %}   no shutdown
+{% endif %}

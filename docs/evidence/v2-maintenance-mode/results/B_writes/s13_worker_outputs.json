@@ -1,0 +1,4 @@
+[
+ "1792282036.997 NMAS before S1-shield-install-drain\n1792282059.617 NMAS after S1-shield-install-drain\n1792282066.168 NMAS before S1-uplink-metric-drain\n1792282087.881 NMAS after S1-uplink-metric-drain\n1792282100.620 NMAS before S1-shield-remove-drain\n1792282110.772 NMAS after S1-shield-remove-drain\n1792282129.763 NMAS before FINAL_VALIDATION\n1792282136.344 NMAS before PERSISTENCE-S1\n1792282137.624 NMAS after PERSISTENCE-S1\n[{\"record\": \"MNT-000006\", \"item\": \"ENTER\", \"state\": \"ACTIVE\", \"outcome\": \"DONE\", \"escalated\": false}]\n",
+ "[]\n"
+]

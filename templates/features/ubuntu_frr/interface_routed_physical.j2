@@ -1,0 +1,6 @@
+# routed physical interface
+# interface: {{ name }}
+# description: {{ description }}
+# admin intent: {{ admin_state }}
+ip link set dev {{ accepted_name }} mtu {{ mtu }}
+ip link set dev {{ accepted_name }} {% if admin_disabled %}down{% else %}up{% endif %}

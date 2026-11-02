@@ -1,0 +1,6 @@
+<nav class="subnav" aria-label="Monitoring sections">
+  <a href="{% url 'core:monitoring_landing' %}" class="{% if request.resolver_match.url_name == 'monitoring_landing' %}is-active{% endif %}">Overview</a>
+  <a href="{% url 'core:monitoring_resources' %}" class="{% if request.resolver_match.url_name == 'monitoring_resources' %}is-active{% endif %}">Resources</a>
+  <a href="{% url 'core:monitoring_link_events' %}" class="{% if request.resolver_match.url_name == 'monitoring_link_events' %}is-active{% endif %}">Link Events</a>
+  <a href="{% url 'core:monitoring_link_state_traffic' %}" class="{% if request.resolver_match.url_name == 'monitoring_link_state_traffic' %}is-active{% endif %}">Link State &amp; Traffic</a>
+</nav>

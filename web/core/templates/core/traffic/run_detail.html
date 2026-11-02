@@ -1,0 +1,60 @@
+{% extends "core/base.html" %}
+{% load core_extras %}
+{% block title %}Traffic run{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>Traffic run <code>{{ run.run_id }}</code></h1>
+  <p><a href="{% url 'core:traffic_workbench' %}">&larr; Traffic / test workbench</a></p>
+  <p><span class="badge badge--{{ run.status|provisioning_badge_class }}">{{ run.get_status_display }}</span>
+     {{ run.get_family_display }} · {{ run.protocol }} · {{ run.get_address_family_display }} · {{ run.source }} &rarr; {{ run.destination }}</p>
+</div>
+{% if run.failure_reason %}<div class="card" style="border-left:6px solid var(--danger);"><p><strong>{{ run.failure_reason }}</strong>{% if failure_message %} — {{ failure_message }}{% endif %}</p></div>{% endif %}
+{% if run.is_active %}<div class="card" style="border-left:6px solid var(--warning);"><p>This run has not finished. Reload to see its result. A run still active after {{ run.deadline_at|date:"H:i:s" }} UTC is abandoned and will be marked Interrupted, never Passed.</p></div>{% endif %}
+<div class="card-grid" style="margin-top:16px;">
+  <div class="card">
+    <h3>Run</h3>
+    <table class="data-table"><tbody>
+      <tr><th>Run ID</th><td><code>{{ run.run_id }}</code></td></tr>
+      <tr><th>Operator</th><td>{{ run.operator }}</td></tr>
+      <tr><th>Source</th><td>{{ run.source }} — <code>{{ run.source_address|default:"not resolved" }}</code></td></tr>
+      <tr><th>Destination</th><td>{{ run.destination }} — <code>{{ run.destination_address|default:"not resolved" }}</code></td></tr>
+      <tr><th>Test</th><td>{{ run.get_family_display }} ({{ run.protocol }}, {{ run.get_address_family_display }})</td></tr>
+      <tr><th>Created (UTC)</th><td>{{ run.created_at|date:"Y-m-d H:i:s" }}</td></tr>
+      <tr><th>Started (UTC)</th><td>{{ run.started_at|date:"Y-m-d H:i:s"|default:"—" }}</td></tr>
+      <tr><th>Finished (UTC)</th><td>{{ run.finished_at|date:"Y-m-d H:i:s"|default:"—" }}</td></tr>
+      <tr><th>Linked to</th><td>{% if run.change %}Change <a href="{{ run.change.get_absolute_url }}">{{ run.change.change_id }}</a> {% endif %}{% if run.provisioning_run %}Provisioning <a href="{{ run.provisioning_run.get_absolute_url }}">{{ run.provisioning_run.prov_id }}</a> {% endif %}{% if run.soak_run %}Soak <a href="{{ run.soak_run.get_absolute_url }}">{{ run.soak_run.soak_id }}</a>{% endif %}{% if not run.change and not run.provisioning_run and not run.soak_run %}—{% endif %}</td></tr>
+      <tr><th>Repository HEAD</th><td><code>{{ run.repository_head|default:"—" }}</code></td></tr>
+      <tr><th>Engine</th><td>{{ run.engine_version }}</td></tr>
+    </tbody></table>
+  </div>
+  <div class="card">
+    <h3>Measured result</h3>
+    <p>{% include "core/traffic/_summary.html" with run=run %}</p>
+    <table class="data-table"><tbody>
+      {% for key, value in run.metrics.items %}{% if key != "hops" and key != "server" %}<tr><th>{{ key }}</th><td>{{ value }}</td></tr>{% endif %}{% endfor %}
+      {% if run.metrics.server %}<tr><th>Temporary iperf3 server</th><td>ready: {{ run.metrics.server.ready|yesno:"yes,no" }} · exit code: {{ run.metrics.server.exit_code|default_if_none:"unknown" }} · had to be terminated: {{ run.metrics.server.terminated|yesno:"yes,no" }} · confirmed stopped: {{ run.metrics.server.stopped|yesno:"yes,NO" }}</td></tr>{% endif %}
+    </tbody></table>
+    {% if run.metrics.hops %}<table class="data-table"><thead><tr><th>Hop</th><th>Address</th><th>RTT (ms)</th></tr></thead><tbody>
+      {% for hop in run.metrics.hops %}<tr><td>{{ hop.hop }}</td><td>{{ hop.address|default_if_none:"silent" }}</td><td>{{ hop.rtt_ms|default_if_none:"—" }}</td></tr>{% endfor %}
+    </tbody></table>{% endif %}
+  </div>
+</div>
+<div class="card-grid" style="margin-top:16px;">
+  <div class="card">
+    <h3>Parameters</h3>
+    <table class="data-table"><thead><tr><th>Parameter</th><th>Used by the server</th></tr></thead><tbody>
+      {% for key, value in run.parameters.items %}<tr><th>{{ key }}</th><td>{{ value }}</td></tr>{% endfor %}
+    </tbody></table>
+    <p style="color:var(--text-muted); font-size:0.85rem;">As requested: {% for key, value in run.requested.items %}{{ key }}={{ value }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
+  </div>
+  <div class="card">
+    <h3>Operation</h3>
+    <p style="color:var(--text-muted); font-size:0.85rem;">A structured record of what was run inside the endpoint's network namespace. It is evidence, not an editable command.</p>
+    <pre class="config-preview" style="max-height:260px; overflow:auto;">{{ run.operation|pprint }}</pre>
+  </div>
+</div>
+<div class="card" style="margin-top:16px;">
+  <h3>Raw output (bounded)</h3>
+  <pre class="config-preview" style="max-height:360px; overflow:auto;">{{ run.raw_output|default:"(none)" }}</pre>
+</div>
+{% endblock %}

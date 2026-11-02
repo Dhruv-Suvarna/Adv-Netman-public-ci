@@ -1,0 +1,46 @@
+== sequence-numbered probes
+   c01: production 0/52090 lost   diagnostic 0/3615 lost
+   c02: production 0/50770 lost   diagnostic 0/3555 lost
+   c03: production 0/50373 lost   diagnostic 0/3507 lost
+   c04: production 0/50589 lost   diagnostic 0/3557 lost
+   c05: production 0/53197 lost   diagnostic 0/3739 lost
+   c06: production 0/50924 lost   diagnostic 0/3574 lost
+   c07: production 0/50959 lost   diagnostic 0/3561 lost
+   c08: production 0/51426 lost   diagnostic 0/3595 lost
+   c09: production 0/49806 lost   diagnostic 0/3478 lost
+   c10: production 0/50668 lost   diagnostic 0/3541 lost
+   c11: production 0/50595 lost   diagnostic 0/3535 lost
+   c12: production 0/50338 lost   diagnostic 0/3499 lost
+   c13: production 0/51408 lost   diagnostic 0/3591 lost
+   c14: production 0/50620 lost   diagnostic 0/3548 lost
+   c15: production 0/50072 lost   diagnostic 0/3494 lost
+   c16: production 0/50964 lost   diagnostic 0/3563 lost
+   c17: production 0/51295 lost   diagnostic 0/3585 lost
+   c18: production 0/50088 lost   diagnostic 0/3492 lost
+   c19: production 0/50851 lost   diagnostic 0/3546 lost
+   c20: production 0/51150 lost   diagnostic 0/3580 lost
+   PRODUCTION TRANSIT: probes 1018183 lost 0    DIAGNOSTIC (device-originated): probes 71155 lost 0
+== long-lived TCP sessions
+   h1_tcp4: UNINTERRUPTED CLOSE 1791728264.155 19381 19381 1333  stalls>250ms: 98 (informational)
+   h1_tcp6: UNINTERRUPTED CLOSE 1791728264.131 19380 19380 1069  stalls>250ms: 69 (informational)
+   h2_tcp4: UNINTERRUPTED CLOSE 1791728268.188 19423 19423 1101  stalls>250ms: 93 (informational)
+   h2_tcp6: UNINTERRUPTED CLOSE 1791728268.225 19390 19390 1194  stalls>250ms: 98 (informational)
+   h3_tcp4: UNINTERRUPTED CLOSE 1791728272.320 19442 19442 1313  stalls>250ms: 102 (informational)
+   h3_tcp6: UNINTERRUPTED CLOSE 1791728272.325 19534 19534 1330  stalls>250ms: 49 (informational)
+   h4_tcp6: UNINTERRUPTED CLOSE 1791728276.393 19548 19548 964  stalls>250ms: 62 (informational)
+== repeated new HTTP sessions
+   h1_http4: ALL OK CLOSE 1791728264.236 7738 0 82 2159  slow>400ms: 82 (informational)
+   h1_http6: ALL OK CLOSE 1791728264.318 7728 0 80 2129  slow>400ms: 80 (informational)
+   h2_http4: ALL OK CLOSE 1791728268.235 7752 0 74 2132  slow>400ms: 74 (informational)
+   h2_http6: ALL OK CLOSE 1791728268.273 7750 0 77 2095  slow>400ms: 77 (informational)
+   h3_http4: ALL OK CLOSE 1791728272.346 7736 0 99 1768  slow>400ms: 99 (informational)
+   h3_http6: ALL OK CLOSE 1791728272.382 7756 0 86 2053  slow>400ms: 86 (informational)
+   h4_http6: ALL OK CLOSE 1791728276.574 7766 0 88 1583  slow>400ms: 88 (informational)
+== completed: forward 0  rollback 0  drains 40  restores 40   failed-events: []
+   flows without evidence: none
+VERDICT: PASS (production transit loss 0, TCP uninterrupted, HTTP all successful)
+== c3
+== c4
+client /64 route replacements on the cores: 0   without a cover: 0
+CORE VERDICT: PASS
+edge router (pe) client-route events: 0

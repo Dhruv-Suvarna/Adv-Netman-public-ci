@@ -1,0 +1,7 @@
+# Linux bridge used as SVI
+# interface: {{ name }}
+# VLAN ID: {{ vlan_id }}
+ip link show dev {{ accepted_name }} >/dev/null 2>&1 || ip link add {{ accepted_name }} type bridge
+# description: {{ description }}
+ip link set dev {{ accepted_name }} mtu {{ mtu }}
+ip link set dev {{ accepted_name }} {% if admin_disabled %}down{% else %}up{% endif %}

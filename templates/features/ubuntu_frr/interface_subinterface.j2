@@ -1,0 +1,8 @@
+# VLAN subinterface
+# interface: {{ name }}
+# parent: {{ parent_name }}
+# encapsulation VLAN: {{ encapsulation_vlan }}
+ip link show dev {{ accepted_name }} >/dev/null 2>&1 || ip link add link {{ accepted_parent_name }} name {{ accepted_name }} type vlan id {{ accepted_encapsulation_vlan }}
+# description: {{ description }}
+ip link set dev {{ accepted_name }} mtu {{ mtu }}
+ip link set dev {{ accepted_name }} {% if admin_disabled %}down{% else %}up{% endif %}

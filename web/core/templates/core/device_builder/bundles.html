@@ -1,0 +1,52 @@
+{% extends "core/base.html" %}
+{% load core_extras %}
+{% block title %}Configuration bundles{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>Configuration bundles</h1>
+  <p><a href="{% url 'core:device_builder' %}">&larr; Device Builder</a> · <a href="{% url 'core:device_builder_changes' %}">Changes</a></p>
+  <p>Immutable, content-addressed artifacts. A <strong>UAT</strong> bundle freezes exactly what a Partial (UAT) execution applied; a <strong>Probation</strong> bundle is a NEW artifact sealed from it; a <strong>Golden</strong> bundle is sealed from a Probation bundle only after a technically passed soak and the operator's explicit decision. Nothing on this page changes a bundle or contacts a device.</p>
+</div>
+
+<div class="card">
+  <form method="get" action="{% url 'core:bundles_list' %}">
+    <label>Kind
+      <select name="kind">
+        <option value="">All kinds</option>
+        {% for value, label in kinds %}<option value="{{ value }}"{% if value == kind_filter %} selected{% endif %}>{{ label }}</option>{% endfor %}
+      </select>
+    </label>
+    <label>Change <input type="text" name="change" value="{{ change_filter }}" maxlength="32" placeholder="CHG-YYYYMMDD-NNNN"></label>
+    <button class="btn btn--secondary" type="submit">Filter</button>
+  </form>
+</div>
+
+<div class="card" style="margin-top:16px;">
+  <table class="data-table">
+    <thead><tr><th>Bundle</th><th>Kind</th><th>Verification</th><th>Change</th><th>Source execution</th><th>Created</th><th>By</th><th>Payload digest</th><th>Parent</th><th>Integrity</th></tr></thead>
+    <tbody>
+    {% for b in bundles %}
+      <tr>
+        <td><a href="{% url 'core:bundle_detail' b.bundle_id %}"><code>{{ b.bundle_id }}</code></a></td>
+        <td><span class="badge badge--{{ b.kind|bundle_badge_class }}">{{ b.get_kind_display }}</span></td>
+        <td><span class="badge badge--{{ b.verification_state|bundle_badge_class }}">{{ b.verification_state|default:"—" }}</span></td>
+        {% if b.change %}
+        <td><a href="{% url 'core:device_builder_change_detail' b.change.change_id %}">{{ b.change.change_id }}</a></td>
+        <td><a href="{% url 'core:change_execution_detail' b.change.change_id b.execution_run.run_id %}"><code>{{ b.execution_run.run_id|stringformat:"s"|slice:":8" }}</code></a></td>
+        {% else %}
+        <td colspan="2"><span class="badge badge--warning">LEGACY_BOOTSTRAP</span> predates the automation framework (no Change / execution)</td>
+        {% endif %}
+        <td>{{ b.created_at }}</td>
+        <td>{{ b.created_by|default:"—" }}</td>
+        <td><code>{{ b.payload_digest|slice:":12" }}</code></td>
+        <td>{% if b.parent %}<a href="{% url 'core:bundle_detail' b.parent.bundle_id %}"><code>{{ b.parent.bundle_id }}</code></a>{% else %}—{% endif %}</td>
+        <td><a href="{% url 'core:bundle_detail' b.bundle_id %}">Verify on open</a></td>
+      </tr>
+    {% empty %}
+      <tr><td colspan="10"><div class="empty-state">No bundle matches. A UAT bundle is created explicitly from a finished Partial (UAT) execution run.</div></td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  <p style="color:var(--text-muted); font-size:0.85rem;">Integrity is recomputed from the stored contents when a bundle is opened; it is not computed per row here.</p>
+</div>
+{% endblock %}

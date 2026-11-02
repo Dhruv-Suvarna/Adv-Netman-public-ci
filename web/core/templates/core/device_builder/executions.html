@@ -1,0 +1,10 @@
+{% extends "core/base.html" %}
+{% block title %}Executions · {{ change.change_id }}{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>Execution history <span style="font-weight:400;">· {{ change.change_id }}</span></h1>
+  <p><a href="{% url 'core:change_execute' change.change_id %}">&larr; Back to execution</a> · <a href="{% url 'core:device_builder_change_detail' change.change_id %}">{{ change.change_id }}</a></p>
+  <p>Append-only. A finished run is never modified; opening one is read-only and never contacts a device.</p>
+</div>
+<div class="card">{% include "core/device_builder/_execution_history.html" with runs=history %}</div>
+{% endblock %}

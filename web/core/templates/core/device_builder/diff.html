@@ -1,0 +1,31 @@
+{% extends "core/base.html" %}
+{% block title %}{{ page_title }} · Device Builder{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>Diff: {{ intent.device_name }}</h1>
+  <p><a href="{{ basic_url }}">&larr; Back to editor</a></p>
+  <p style="color:var(--text-muted);">Accepted Candidate vs the last committed-attempt Draft Candidate. Reflects the last Enter/Commit for each field, not unsaved keystrokes still in the browser. Computed once on this page load only -- never automatically while typing, and never against live running configuration.</p>
+</div>
+
+{% if diff.identical %}
+  <div class="alert alert--info"><div>No difference -- the last committed draft attempt matches the accepted candidate.</div></div>
+{% else %}
+  <div class="card">
+    <pre class="code-panel">{% for line in diff.diff_lines %}{% if line|slice:":1" == "+" %}<span class="diff-add">{{ line }}</span>
+{% elif line|slice:":1" == "-" %}<span class="diff-remove">{{ line }}</span>
+{% else %}{{ line }}
+{% endif %}{% endfor %}</pre>
+  </div>
+{% endif %}
+
+<div class="card-grid" style="margin-top:16px;">
+  <div class="card">
+    <h3>Accepted Candidate</h3>
+    <pre class="code-panel">{{ diff.accepted.text }}</pre>
+  </div>
+  <div class="card">
+    <h3>Draft Candidate</h3>
+    <pre class="code-panel">{{ diff.draft.text }}</pre>
+  </div>
+</div>
+{% endblock %}

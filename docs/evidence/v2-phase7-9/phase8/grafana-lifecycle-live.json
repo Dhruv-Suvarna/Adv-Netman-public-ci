@@ -1,0 +1,111 @@
+{
+  "captured_at": "2026-10-26",
+  "expected_only_device_NEW9_present": false,
+  "grafana_query_api": "/api/ds/query (datasource uid nmas-influxdb, Flux), dashboard monitoring/grafana/dashboards-pending/nmas-device-lifecycle.json, ${device:regex} = .*",
+  "kind": "disposable InfluxDB 2.7.11 + Grafana 11.5.2 (docker network nmas-p8-net, removed after)",
+  "panels": {
+    "Decommission / restore events": {
+      "error": "",
+      "rows": [
+        {
+          "_time": 1793058867301,
+          "_value": 3,
+          "device": "R1",
+          "event": "RESTORED"
+        },
+        {
+          "_time": 1793058866961,
+          "_value": 2,
+          "device": "R1",
+          "event": "RETIRED"
+        },
+        {
+          "_time": 1793058866907,
+          "_value": 2,
+          "device": "R1",
+          "event": "PATH_CHANGED"
+        },
+        {
+          "_time": 1793058866488,
+          "_value": 1,
+          "device": "R1",
+          "event": "REGISTERED"
+        }
+      ],
+      "status": 200
+    },
+    "Generation / reconnects": {
+      "error": "",
+      "rows": [
+        {
+          "_field": "generation",
+          "_measurement": "nmas_device_lifecycle",
+          "_start": "2026-09-26 23:54:27.745982994 +0000 UTC",
+          "_stop": "2026-10-26 23:54:27.745982994 +0000 UTC",
+          "_time": 1793058867745,
+          "_value": 3,
+          "device": "R1",
+          "device_id": "DEV-000006",
+          "lifecycle_state": "IN_SERVICE",
+          "maintenance": "false",
+          "management_path": "MPATH-000003",
+          "monitoring_state": "ACTIVE",
+          "platform": "arista_ceos"
+        }
+      ],
+      "status": 200
+    },
+    "Lifecycle state": {
+      "error": "",
+      "rows": [
+        {
+          "device": "R1",
+          "lifecycle_state": "IN_SERVICE"
+        }
+      ],
+      "status": 200
+    },
+    "Management path": {
+      "error": "",
+      "rows": [
+        {
+          "device": "R1",
+          "management_path": "MPATH-000003"
+        }
+      ],
+      "status": 200
+    },
+    "Monitoring state": {
+      "error": "",
+      "rows": [
+        {
+          "device": "R1",
+          "monitoring_state": "ACTIVE"
+        }
+      ],
+      "status": 200
+    }
+  },
+  "phase": "V2 Phase 8",
+  "points": [
+    "nmas_device_lifecycle,device=R1,device_id=DEV-000006,lifecycle_state=IN_SERVICE,maintenance=false,management_path=MPATH-000003,monitoring_state=ACTIVE,platform=arista_ceos admitted=1i,generation=3i,monitored=1i 1793058867344253184",
+    "nmas_device_lifecycle_event,device=R1,device_id=DEV-000006,event=REGISTERED generation=1i 1793058866488603136",
+    "nmas_device_lifecycle_event,device=R1,device_id=DEV-000006,event=PATH_CHANGED generation=2i 1793058866907095808",
+    "nmas_device_lifecycle_event,device=R1,device_id=DEV-000006,event=RETIRED generation=2i 1793058866961510912",
+    "nmas_device_lifecycle_event,device=R1,device_id=DEV-000006,event=RESTORED generation=3i 1793058867301039872"
+  ],
+  "points_pushed": {
+    "points": 5,
+    "status": 204
+  },
+  "scenario": "R1 OOB -> failover to routed VRF -> decommissioned -> restored successor; NEW9 expected-only",
+  "variable_device": {
+    "error": "",
+    "rows": [
+      {
+        "_value": "R1"
+      }
+    ],
+    "status": 200
+  }
+}

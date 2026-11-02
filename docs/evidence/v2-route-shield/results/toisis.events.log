@@ -1,0 +1,55 @@
+1791725986.289 START to-isis 1 load 24.31 25.07 24.88
+1791725987.491 CONFIG start r1=2bd8c040664c1216 r2=6284ec1a7270b9dd s1=7d083ffd40ee3b4f s2=a4f9a4a23f07a916
+1791726004.435 to-isis core-cover-installed 2001:db8:10::/63 2001:db8:20::/63 2001:db8:30::/63
+1791726004.435 F0 stage1 vlan99-ipv6+isis start
+1791726011.019 F0 stage2 adjacencies wait
+1791726034.633 F0 stage3 advertise start
+1791726039.365 F0 stage4 isis-available wait (static still owns)
+1791726047.804 F0-r1 stage5 shield
+1791726048.174 F0-r1 shield-install s1 2001:db8:110:1::1
+1791726049.811 F0-r1 shield-verified s1
+1791726050.157 F0-r1 shield-install r1 2001:db8:110:1::2
+1791726052.321 F0-r1 shield-verified r1
+1791726052.321 F0-r1 stage6 shield-forwarding verify
+1791726058.446 F0-r1 stage7 static-removal start
+1791726058.814 F0-r1 stage7 switch-static-removed
+1791726059.165 F0-r1 stage7 router-floating-statics-added
+1791726061.530 F0-r1 stage7 router-statics-removed
+1791726065.327 F0-r1 stage7 router-floating-statics-removed
+1791726065.327 F0-r1 stage9 isis-ownership wait
+1791726072.812 F0-r1 stage10 shield-removal
+1791726073.820 F0-r1 takeover-nexthop r1 2001:db8:10::/64 isisL2 fe80::42:aff:fefb:1b03%eth3 before=REACHABLE after=REACHABLE
+1791726074.942 F0-r1 takeover-nexthop r1 2001:db8:20::/64 isisL2 fe80::42:aff:fefb:1b03%eth3 before=REACHABLE after=REACHABLE
+1791726076.056 F0-r1 takeover-nexthop r1 2001:db8:30::/64 isisL2 fe80::42:aff:fefb:1b03%eth3 before=REACHABLE after=REACHABLE
+1791726076.056 F0-r1 shield-remove r1
+1791726078.181 F0-r1 shield-removed r1
+1791726079.318 F0-r1 takeover-nexthop s1 2001:db8::/32 isisL2 fe80::42:aff:fefb:1b02%eth1 before=DELAY after=DELAY
+1791726079.318 F0-r1 shield-remove s1
+1791726080.801 F0-r1 shield-removed s1
+1791726080.801 F0-r1 stage11 final-forwarding verify
+1791726085.332 F0-r2 stage5 shield
+1791726085.622 F0-r2 shield-install s2 2001:db8:110:2::1
+1791726087.239 F0-r2 shield-verified s2
+1791726087.612 F0-r2 shield-install r2 2001:db8:110:2::2
+1791726089.857 F0-r2 shield-verified r2
+1791726089.857 F0-r2 stage6 shield-forwarding verify
+1791726095.596 F0-r2 stage7 static-removal start
+1791726096.033 F0-r2 stage7 switch-static-removed
+1791726096.513 F0-r2 stage7 router-floating-statics-added
+1791726099.009 F0-r2 stage7 router-statics-removed
+1791726102.953 F0-r2 stage7 router-floating-statics-removed
+1791726102.953 F0-r2 stage9 isis-ownership wait
+1791726109.969 F0-r2 stage10 shield-removal
+1791726111.098 F0-r2 takeover-nexthop r2 2001:db8:10::/64 isisL2 fe80::42:aff:fefb:1c03%eth3 before=REACHABLE after=REACHABLE
+1791726112.197 F0-r2 takeover-nexthop r2 2001:db8:20::/64 isisL2 fe80::42:aff:fefb:1c03%eth3 before=REACHABLE after=REACHABLE
+1791726113.292 F0-r2 takeover-nexthop r2 2001:db8:30::/64 isisL2 fe80::42:aff:fefb:1c03%eth3 before=REACHABLE after=REACHABLE
+1791726113.292 F0-r2 shield-remove r2
+1791726115.558 F0-r2 shield-removed r2
+1791726116.558 F0-r2 takeover-nexthop s2 2001:db8::/32 isisL2 fe80::42:aff:fefb:1c02%eth1 before=REACHABLE after=REACHABLE
+1791726116.558 F0-r2 shield-remove s2
+1791726118.081 F0-r2 shield-removed s2
+1791726118.081 F0-r2 stage11 final-forwarding verify
+1791726127.181 F0 stage12 final-config r1=5408a3ab57b34d17 r2=4d5eb24485271374 s1=c14991f826026d59 s2=9e1955c8185575b0
+1791726253.359 to-isis core-quiet 499
+1791726254.673 to-isis core-cover-removed
+1791726283.548 END ok load 20.45 23.38 24.30

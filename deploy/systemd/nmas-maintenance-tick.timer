@@ -1,0 +1,18 @@
+# Schedules the NMAS Maintenance Mode worker.  Rendered by deploy/scripts/install_maintenance_timer.sh.
+#
+# Cadence: every minute.  An operator's queued request (readiness, entry, restore) waits at most about a minute, and the
+# lateness of a 7-day safety deadline is bounded by the same minute.  A pass with nothing due is one table read.  A pass that
+# is still running when the next one is due is not started twice (systemd), and records are claimed (database) regardless.
+# Persistent=true: a pass missed while the host was down runs at boot, because an overdue maintenance must not wait.
+[Unit]
+Description=Run the NMAS Maintenance Mode worker every minute
+
+[Timer]
+OnBootSec=2min
+OnUnitActiveSec=1min
+AccuracySec=10s
+Persistent=true
+Unit=nmas-maintenance-tick.service
+
+[Install]
+WantedBy=timers.target

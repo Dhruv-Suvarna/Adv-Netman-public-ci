@@ -1,0 +1,69 @@
+{% extends "core/base.html" %}
+{% block title %}Bootstrap networks{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>Bootstrap networks (native ZTP)</h1>
+  <p><a href="{% url 'core:managed_devices' %}">&larr; Managed devices</a> · <a href="{% url 'core:ztp_adapters_json' %}">Adapter capability (JSON)</a></p>
+  <p>An isolated, relayed DHCP scope that only answers devices with an open ZTP session, matched by trusted relay address,
+     relay circuit id and vendor class. VLAN 200 and the production management, Containerlab and Docker networks are refused.
+     Viewing this page reads the NMAS database only; nothing contacts DHCP, a lease file or a device.</p>
+</div>
+
+{% for r in refusals %}<div class="card" style="border-left:6px solid var(--danger);"><p><strong>{{ r.code }}</strong> — {{ r.message }} {{ r.remediation }}</p></div>{% endfor %}
+
+{% for row in rows %}{% with n=row.network %}
+<div class="card" style="margin-top:16px;">
+  <h3>{{ n.name }} <span class="badge badge--{% if n.state == 'ACTIVE' %}success{% else %}neutral{% endif %}">{{ n.state }}</span></h3>
+  <table class="data-table"><tbody>
+    <tr><th>Provider</th><td>{{ n.get_provider_display }}</td></tr>
+    <tr><th>Prefix / gateway (relay)</th><td>{{ n.ipv4_prefix }} · {{ n.gateway }}{% if n.vlan %} · VLAN {{ n.vlan }}{% endif %}</td></tr>
+    <tr><th>Pool</th><td>{{ n.pool_start }} – {{ n.pool_end }} (one reserved address per open session)</td></tr>
+    <tr><th>Delivery service</th><td>{{ n.service_address }} ({{ n.service_prefix }}) · HTTP {{ n.http_port }} · TFTP {{ n.tftp_port }}</td></tr>
+    <tr><th>Trusted relays</th><td>{% for r in n.trusted_relays %}{{ r.relay_address }} = {{ r.upstream_device }}{% if not forloop.last %}<br>{% endif %}{% empty %}none{% endfor %}</td></tr>
+    <tr><th>Applied policy</th><td>{% if row.last %}{{ row.last.state }} {{ row.last.code }} · <code>{{ row.last.config_sha256|slice:":12" }}</code> by {{ row.last.actor }} {{ row.last.created_at|date:"Y-m-d H:i:s" }} · sessions {{ row.last.sessions|join:", "|default:"none" }}{% else %}never{% endif %}
+      · {% if row.current %}<span class="badge badge--success">current</span>{% else %}<span class="badge badge--warning">differs from open sessions</span>{% endif %}</td></tr>
+  </tbody></table>
+  {% if n.state == 'ACTIVE' %}
+  <form method="post" action="{% url 'core:ztp_network_validate' n.name %}" style="display:inline">{% csrf_token %}<button type="submit" class="btn">Validate DHCP policy</button></form>
+  <form method="post" action="{% url 'core:ztp_network_apply' n.name %}" style="display:inline">{% csrf_token %}<button type="submit" class="btn">Apply to isolated provider</button></form>
+  <form method="post" action="{% url 'core:ztp_network_rollback' n.name %}" style="display:inline">{% csrf_token %}<button type="submit" class="btn">Roll back</button></form>
+  <form method="post" action="{% url 'core:ztp_network_ingest' n.name %}" style="display:inline">{% csrf_token %}<button type="submit" class="btn">Read lease database</button></form>
+  {% endif %}
+  <h4>Recent leases</h4>
+  <table class="data-table"><thead><tr><th>Address</th><th>Client</th><th>Vendor class</th><th>Relay / circuit</th><th>Outcome</th><th>Device</th><th>Seen</th></tr></thead>
+    <tbody>{% for l in row.leases %}<tr><td>{{ l.address }}</td><td><code>{{ l.client_mac }}</code></td><td>{{ l.vendor_class|truncatechars:40 }}</td>
+      <td>{{ l.relay_address|default:"(not relayed)" }} {{ l.circuit_id }}{% if l.upstream_device %} → {{ l.upstream_device }}{% endif %}</td>
+      <td>{{ l.outcome }} {{ l.code }}</td><td>{% if l.device %}<a href="{{ l.device.get_absolute_url }}">{{ l.device.name }}</a>{% else %}—{% endif %}</td>
+      <td>×{{ l.seen_count }} {{ l.last_seen|date:"Y-m-d H:i:s" }}</td></tr>
+    {% empty %}<tr><td colspan="7">No lease has been read.</td></tr>{% endfor %}</tbody></table>
+</div>
+{% endwith %}{% empty %}<div class="card" style="margin-top:16px;"><p>No bootstrap network has been defined.</p></div>{% endfor %}
+
+<div class="card" style="margin-top:16px;">
+  <h3>Define a bootstrap network</h3>
+  <p>Approver decision. The relay must be an adopted or commissioned (IN_SERVICE, ADMITTED) device; the configuration root must be the isolated provider's own directory.</p>
+  <form method="post" action="{% url 'core:ztp_network_create' %}">{% csrf_token %}
+    <input class="form-control" name="name" placeholder="name" aria-label="Name" required>
+    <select class="form-control" name="provider" aria-label="Provider">{% for value, label in providers %}<option value="{{ value }}">{{ label }}</option>{% endfor %}</select>
+    <input class="form-control" name="ipv4_prefix" placeholder="10.254.30.0/24" aria-label="IPv4 prefix" required>
+    <input class="form-control" name="gateway" placeholder="relay gateway" aria-label="Gateway" required>
+    <input class="form-control" name="pool_start" placeholder="pool start" aria-label="Pool start" required>
+    <input class="form-control" name="pool_end" placeholder="pool end" aria-label="Pool end" required>
+    <input class="form-control" name="service_prefix" placeholder="service prefix" aria-label="Service prefix" required>
+    <input class="form-control" name="service_address" placeholder="service address" aria-label="Service address" required>
+    <input class="form-control" name="vlan" placeholder="VLAN (optional)" aria-label="VLAN">
+    <textarea class="form-control" name="trusted_relays" rows="2" placeholder="10.254.30.1=UPSTREAM-DEVICE (one per line)" aria-label="Trusted relays" required></textarea>
+    <input class="form-control" name="config_root" placeholder="isolated provider config directory" aria-label="Configuration root" required>
+    <input class="form-control" name="lease_file" placeholder="lease file (default: config root)" aria-label="Lease file">
+    <button type="submit" class="btn">Record bootstrap network</button>
+  </form>
+</div>
+
+<div class="card" style="margin-top:16px;">
+  <h3>Native ZTP adapters</h3>
+  <table class="data-table"><thead><tr><th>Adapter</th><th>Platform</th><th>Mechanism</th><th>Evidence</th><th>Transport</th><th>Limitations</th></tr></thead>
+    <tbody>{% for a in adapters %}<tr><td><code>{{ a.adapter }}</code></td><td>{{ a.platform|default:"(not catalogued)" }}</td><td>{{ a.mechanism }}</td>
+      <td><span class="badge badge--{% if a.evidence_status == 'SUPPORTED_AND_LIVE_VERIFIED' %}success{% else %}warning{% endif %}">{{ a.evidence_status }}</span></td>
+      <td>{{ a.transport_decision.selected|default:"—" }}</td><td><small>{{ a.limitations|join:"; " }}</small></td></tr>{% endfor %}</tbody></table>
+</div>
+{% endblock %}

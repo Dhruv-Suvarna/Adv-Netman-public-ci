@@ -1,0 +1,25 @@
+== sequence-numbered probes
+   PRODUCTION TRANSIT: probes 0 lost 0    DIAGNOSTIC (device-originated): probes 0 lost 0
+== long-lived TCP sessions
+   h1_tcp4: UNINTERRUPTED CLOSE 1791788706.694 16646 16646 957  stalls>250ms: 324 (informational)
+   h1_tcp6: UNINTERRUPTED CLOSE 1791788706.650 16717 16717 1188  stalls>250ms: 310 (informational)
+   h2_tcp4: UNINTERRUPTED CLOSE 1791788710.776 16689 16689 956  stalls>250ms: 342 (informational)
+   h2_tcp6: UNINTERRUPTED CLOSE 1791788710.760 16755 16755 953  stalls>250ms: 304 (informational)
+   h3_tcp4: UNINTERRUPTED CLOSE 1791788714.917 16822 16822 964  stalls>250ms: 284 (informational)
+   h3_tcp6: UNINTERRUPTED CLOSE 1791788714.914 16810 16810 1088  stalls>250ms: 264 (informational)
+   h4_tcp6: UNINTERRUPTED CLOSE 1791788719.073 16856 16856 831  stalls>250ms: 243 (informational)
+== repeated new HTTP sessions
+   h1_http4: ALL OK CLOSE 1791788706.621 6413 0 267 1838  slow>400ms: 267 (informational)
+   h1_http6: ALL OK CLOSE 1791788706.863 6520 0 222 1737  slow>400ms: 222 (informational)
+   h2_http4: ALL OK CLOSE 1791788710.954 6427 0 269 1729  slow>400ms: 269 (informational)
+   h2_http6: ALL OK CLOSE 1791788710.922 6534 0 219 1787  slow>400ms: 219 (informational)
+   h3_http4: ALL OK CLOSE 1791788715.111 6543 0 225 1678  slow>400ms: 225 (informational)
+   h3_http6: ALL OK CLOSE 1791788714.937 6568 0 207 1617  slow>400ms: 207 (informational)
+   h4_http6: ALL OK CLOSE 1791788719.178 6588 0 206 1669  slow>400ms: 206 (informational)
+== completed: forward 0  rollback 0  drains 0  restores 0   failed-events: []
+   flows without evidence: none
+VERDICT: PASS (production transit loss 0, TCP uninterrupted, HTTP all successful)
+== c3
+== c4
+client /64 route replacements on the cores: 0   without a cover: 0
+CORE VERDICT: PASS

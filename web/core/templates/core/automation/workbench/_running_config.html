@@ -1,0 +1,19 @@
+<div data-component="running-config">
+  <h2>Running configuration</h2>
+  {% if snapshot %}
+    <div class="rc-meta">
+      <span><strong>{{ snapshot.device_name }}</strong> ({{ snapshot.platform }})</span>
+      <span>captured {{ snapshot.captured_at|date:"Y-m-d H:i:s T" }}</span>
+      <span>digest <code title="{{ snapshot.digest }}">{{ snapshot.digest|slice:":16" }}</code></span>
+      <span>{{ snapshot.line_count }} lines{% if snapshot.redacted_lines %}, {{ snapshot.redacted_lines }} redacted{% endif %}</span>
+    </div>
+    <p class="rc-note">Read-only, sanitized (secret values are redacted). Line numbers belong to this snapshot only; execution re-reads the device and refuses to run if it has changed.</p>
+    <ol class="running-config" aria-readonly="true" data-snapshot="{{ snapshot.snapshot_id }}">
+      {% for row in lines %}<li class="rc-line{% if row.highlight %} rc-line--hl{% endif %}{% if row.number in fragment_highlight %} rc-line--hl{% endif %}" id="L{{ row.number }}" data-line="{{ row.number }}"><span class="rc-no" aria-hidden="true">{{ row.number }}</span><code>{{ row.text }}</code></li>{% endfor %}
+    </ol>
+  {% elif device %}
+    <p>No snapshot yet. Use <strong>Refresh running configuration</strong> to read it (read-only; nothing is changed on the device).</p>
+  {% else %}
+    <p>Select a managed device to view its current running configuration.</p>
+  {% endif %}
+</div>

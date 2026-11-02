@@ -1,0 +1,751 @@
+compatibility:
+  constraints: {}
+  platforms:
+  - ubuntu_frr
+  required_features:
+  - interface.LOOPBACK
+  - interface.ROUTED_PHYSICAL
+  - interface.SUBINTERFACE
+  - interface.SVI
+  - routing.BGP_IPV4
+  - routing.BGP_IPV6
+  - routing.OSPFV2
+  - routing.OSPFV3
+  - service_policy.NAT_NAT44_PAT
+exclusions:
+- category: UNMODELLED_CONFIGURATION
+  classification: RECOGNIZED_UNSUPPORTED
+  device: R3
+  label: Additional routing configuration (bgp)
+  lines: 2
+  reason: Not representable as semantic intent; the raw text is deliberately not carried by the template.
+- category: UNMODELLED_CONFIGURATION
+  classification: RECOGNIZED_UNSUPPORTED
+  device: R3
+  label: Additional routing configuration (ospf)
+  lines: 2
+  reason: Not representable as semantic intent; the raw text is deliberately not carried by the template.
+- category: UNMODELLED_CONFIGURATION
+  classification: RECOGNIZED_UNSUPPORTED
+  device: R3
+  label: Complete nftables ruleset (immutable source; recognized PAT rules imported separately)
+  lines: 25
+  reason: Not representable as semantic intent; the raw text is deliberately not carried by the template.
+- category: UNMODELLED_CONFIGURATION
+  classification: UNKNOWN
+  device: R3
+  label: Unmanaged FRR configuration (exit)
+  lines: 7
+  reason: Not representable as semantic intent; the raw text is deliberately not carried by the template.
+- category: UNMODELLED_CONFIGURATION
+  classification: UNKNOWN
+  device: R3
+  label: Unmanaged FRR configuration (frr)
+  lines: 2
+  reason: Not representable as semantic intent; the raw text is deliberately not carried by the template.
+- category: UNMODELLED_CONFIGURATION
+  classification: UNKNOWN
+  device: R3
+  label: Unmanaged FRR configuration (ip)
+  lines: 1
+  reason: Not representable as semantic intent; the raw text is deliberately not carried by the template.
+- category: UNMODELLED_CONFIGURATION
+  classification: UNKNOWN
+  device: R3
+  label: Unmanaged FRR configuration (ipv6)
+  lines: 1
+  reason: Not representable as semantic intent; the raw text is deliberately not carried by the template.
+- category: UNMODELLED_CONFIGURATION
+  classification: UNKNOWN
+  device: R3
+  label: Unmanaged FRR configuration (log)
+  lines: 1
+  reason: Not representable as semantic intent; the raw text is deliberately not carried by the template.
+- category: UNMODELLED_CONFIGURATION
+  classification: UNKNOWN
+  device: R3
+  label: Unmanaged FRR configuration (route-map)
+  lines: 4
+  reason: Not representable as semantic intent; the raw text is deliberately not carried by the template.
+- category: UNMODELLED_CONFIGURATION
+  classification: UNKNOWN
+  device: R3
+  label: Unmanaged FRR configuration (service)
+  lines: 1
+  reason: Not representable as semantic intent; the raw text is deliberately not carried by the template.
+- category: DEVICE_IDENTITY
+  device: R3
+  label: Link-local address on Vlan101
+  reason: Derived from the interface MAC address; never reused on another device.
+- category: DEVICE_IDENTITY
+  device: R3
+  label: Link-local address on Vlan103
+  reason: Derived from the interface MAC address; never reused on another device.
+- category: DEVICE_IDENTITY
+  device: R3
+  label: Link-local address on Vlan200
+  reason: Derived from the interface MAC address; never reused on another device.
+- category: RUNTIME_MANAGEMENT
+  device: R3
+  label: Interface eth0
+  reason: Containerlab-assigned out-of-band management interface; not reusable intent.
+- category: DEVICE_IDENTITY
+  device: R3
+  label: Link-local address on eth1
+  reason: Derived from the interface MAC address; never reused on another device.
+- category: DEVICE_IDENTITY
+  device: R3
+  label: Link-local address on eth1.101
+  reason: Derived from the interface MAC address; never reused on another device.
+- category: DEVICE_IDENTITY
+  device: R3
+  label: Link-local address on eth1.103
+  reason: Derived from the interface MAC address; never reused on another device.
+- category: DEVICE_IDENTITY
+  device: R3
+  label: Link-local address on eth2
+  reason: Derived from the interface MAC address; never reused on another device.
+- category: UNMODELLED_CONFIGURATION
+  classification: RECOGNIZED_UNSUPPORTED
+  device: R4
+  label: Additional routing configuration (bgp)
+  lines: 2
+  reason: Not representable as semantic intent; the raw text is deliberately not carried by the template.
+- category: UNMODELLED_CONFIGURATION
+  classification: RECOGNIZED_UNSUPPORTED
+  device: R4
+  label: Additional routing configuration (ospf)
+  lines: 2
+  reason: Not representable as semantic intent; the raw text is deliberately not carried by the template.
+- category: UNMODELLED_CONFIGURATION
+  classification: RECOGNIZED_UNSUPPORTED
+  device: R4
+  label: Complete nftables ruleset (immutable source; recognized PAT rules imported separately)
+  lines: 25
+  reason: Not representable as semantic intent; the raw text is deliberately not carried by the template.
+- category: UNMODELLED_CONFIGURATION
+  classification: UNKNOWN
+  device: R4
+  label: Unmanaged FRR configuration (exit)
+  lines: 7
+  reason: Not representable as semantic intent; the raw text is deliberately not carried by the template.
+- category: UNMODELLED_CONFIGURATION
+  classification: UNKNOWN
+  device: R4
+  label: Unmanaged FRR configuration (frr)
+  lines: 2
+  reason: Not representable as semantic intent; the raw text is deliberately not carried by the template.
+- category: UNMODELLED_CONFIGURATION
+  classification: UNKNOWN
+  device: R4
+  label: Unmanaged FRR configuration (ip)
+  lines: 1
+  reason: Not representable as semantic intent; the raw text is deliberately not carried by the template.
+- category: UNMODELLED_CONFIGURATION
+  classification: UNKNOWN
+  device: R4
+  label: Unmanaged FRR configuration (ipv6)
+  lines: 1
+  reason: Not representable as semantic intent; the raw text is deliberately not carried by the template.
+- category: UNMODELLED_CONFIGURATION
+  classification: UNKNOWN
+  device: R4
+  label: Unmanaged FRR configuration (route-map)
+  lines: 4
+  reason: Not representable as semantic intent; the raw text is deliberately not carried by the template.
+- category: UNMODELLED_CONFIGURATION
+  classification: UNKNOWN
+  device: R4
+  label: Unmanaged FRR configuration (service)
+  lines: 1
+  reason: Not representable as semantic intent; the raw text is deliberately not carried by the template.
+- category: DEVICE_IDENTITY
+  device: R4
+  label: Link-local address on Vlan102
+  reason: Derived from the interface MAC address; never reused on another device.
+- category: DEVICE_IDENTITY
+  device: R4
+  label: Link-local address on Vlan104
+  reason: Derived from the interface MAC address; never reused on another device.
+- category: DEVICE_IDENTITY
+  device: R4
+  label: Link-local address on Vlan200
+  reason: Derived from the interface MAC address; never reused on another device.
+- category: RUNTIME_MANAGEMENT
+  device: R4
+  label: Interface eth0
+  reason: Containerlab-assigned out-of-band management interface; not reusable intent.
+- category: DEVICE_IDENTITY
+  device: R4
+  label: Link-local address on eth1
+  reason: Derived from the interface MAC address; never reused on another device.
+- category: DEVICE_IDENTITY
+  device: R4
+  label: Link-local address on eth1.102
+  reason: Derived from the interface MAC address; never reused on another device.
+- category: DEVICE_IDENTITY
+  device: R4
+  label: Link-local address on eth1.104
+  reason: Derived from the interface MAC address; never reused on another device.
+- category: DEVICE_IDENTITY
+  device: R4
+  label: Link-local address on eth2
+  reason: Derived from the interface MAC address; never reused on another device.
+intent:
+  device:
+    hostname: '{{ hostname }}'
+  interfaces:
+  - _when: enable_vlan101
+    addresses:
+    - cidr: 192.168.100.1/31
+      family: IPV4
+      role: PRIMARY
+    - cidr: 2001:db8:100:101::2/64
+      family: IPV6
+      role: PRIMARY
+    admin_state: ENABLED
+    kind: SVI
+    mtu: 1500
+    name: Vlan101
+    vlan_id: 101
+  - _when: enable_vlan103
+    addresses:
+    - cidr: 192.168.100.5/31
+      family: IPV4
+      role: PRIMARY
+    - cidr: 2001:db8:100:103::2/64
+      family: IPV6
+      role: PRIMARY
+    admin_state: ENABLED
+    kind: SVI
+    mtu: 1500
+    name: Vlan103
+    vlan_id: 103
+  - addresses:
+    - cidr: '{{ mgmt_ipv4 }}'
+      family: IPV4
+      role: PRIMARY
+    - cidr: '{{ mgmt_ipv6 }}'
+      family: IPV6
+      role: PRIMARY
+    admin_state: ENABLED
+    kind: SVI
+    mtu: 1500
+    name: Vlan200
+    vlan_id: 200
+  - admin_state: ENABLED
+    kind: ROUTED_PHYSICAL
+    mtu: 1500
+    name: eth1
+  - _when: enable_eth1_101
+    admin_state: ENABLED
+    kind: SUBINTERFACE
+    mtu: 1500
+    name: eth1.101
+    parent_name: eth1
+  - _when: enable_eth1_103
+    admin_state: ENABLED
+    kind: SUBINTERFACE
+    mtu: 1500
+    name: eth1.103
+    parent_name: eth1
+  - addresses:
+    - cidr: '{{ eth2_ipv4_1 }}'
+      family: IPV4
+      role: PRIMARY
+    - cidr: '{{ eth2_ipv6_1 }}'
+      family: IPV6
+      role: PRIMARY
+    admin_state: ENABLED
+    kind: ROUTED_PHYSICAL
+    mtu: 1500
+    name: eth2
+  - admin_state: ENABLED
+    kind: ROUTED_PHYSICAL
+    mtu: 1500
+    name: eth3
+  - addresses:
+    - cidr: '{{ loopback_ipv4 }}'
+      family: IPV4
+      role: PRIMARY
+    - cidr: '{{ loopback_ipv4_2 }}'
+      family: IPV4
+      role: PRIMARY
+    - cidr: '{{ loopback_ipv6 }}'
+      family: IPV6
+      role: PRIMARY
+    - cidr: '{{ loopback_ipv6_2 }}'
+      family: IPV6
+      role: PRIMARY
+    admin_state: ENABLED
+    kind: LOOPBACK
+    mtu: 65536
+    name: lo
+  - _when: enable_vlan102
+    addresses:
+    - cidr: 192.168.100.3/31
+      family: IPV4
+      role: PRIMARY
+    - cidr: 2001:db8:100:102::2/64
+      family: IPV6
+      role: PRIMARY
+    admin_state: ENABLED
+    kind: SVI
+    mtu: 1500
+    name: Vlan102
+    vlan_id: 102
+  - _when: enable_vlan104
+    addresses:
+    - cidr: 192.168.100.7/31
+      family: IPV4
+      role: PRIMARY
+    - cidr: 2001:db8:100:104::2/64
+      family: IPV6
+      role: PRIMARY
+    admin_state: ENABLED
+    kind: SVI
+    mtu: 1500
+    name: Vlan104
+    vlan_id: 104
+  - _when: enable_eth1_102
+    admin_state: ENABLED
+    kind: SUBINTERFACE
+    mtu: 1500
+    name: eth1.102
+    parent_name: eth1
+  - _when: enable_eth1_104
+    admin_state: ENABLED
+    kind: SUBINTERFACE
+    mtu: 1500
+    name: eth1.104
+    parent_name: eth1
+  nat_rules:
+  - family: NAT44
+    mode: PAT
+    original_source: 192.168.10.0/24
+    outside_interface: eth2
+  - family: NAT44
+    mode: PAT
+    original_source: 192.168.20.0/24
+    outside_interface: eth2
+  routing:
+  - family: bgp
+    fields:
+      local_asn: '{{ bgp_asn }}'
+      router_id: '{{ bgp_router_id }}'
+    neighbors:
+    - activate_ipv4: true
+      activate_ipv6: false
+      next_hop_self: false
+      peer_address: '{{ bgp_peer_ip_1_address }}'
+      remote_asn: '{{ bgp_peer_ip_1_asn }}'
+      route_reflector_client: false
+      shutdown: false
+    - activate_ipv4: false
+      activate_ipv6: true
+      next_hop_self: false
+      peer_address: '{{ bgp_peer_ip_2_address }}'
+      remote_asn: '{{ bgp_peer_ip_2_asn }}'
+      route_reflector_client: false
+      shutdown: false
+    networks:
+    - cidr: 192.168.10.0/24
+      family: IPV4
+    - cidr: 192.168.20.0/24
+      family: IPV4
+    - cidr: 2001:db8:10::/64
+      family: IPV6
+    - cidr: 2001:db8:20::/64
+      family: IPV6
+    - cidr: 2001:db8:30::/64
+      family: IPV6
+  - bindings:
+    - _when: enable_ospf_bindings_vlan101
+      area: 0.0.0.0
+      interface_name: Vlan101
+      version: OSPFV2
+    - _when: enable_ospf_bindings_vlan103
+      area: 0.0.0.0
+      interface_name: Vlan103
+      version: OSPFV2
+    - _when: enable_ospf_bindings_vlan102
+      area: 0.0.0.0
+      interface_name: Vlan102
+      version: OSPFV2
+    - _when: enable_ospf_bindings_vlan104
+      area: 0.0.0.0
+      interface_name: Vlan104
+      version: OSPFV2
+    family: ospf
+    fields:
+      router_id: '{{ ospf_router_id }}'
+      version: OSPFV2
+  - bindings:
+    - _when: enable_ospf_2_bindings_vlan101
+      area: 0.0.0.0
+      interface_name: Vlan101
+      version: OSPFV3
+    - _when: enable_ospf_2_bindings_vlan103
+      area: 0.0.0.0
+      interface_name: Vlan103
+      version: OSPFV3
+    - _when: enable_ospf_2_bindings_vlan102
+      area: 0.0.0.0
+      interface_name: Vlan102
+      version: OSPFV3
+    - _when: enable_ospf_2_bindings_vlan104
+      area: 0.0.0.0
+      interface_name: Vlan104
+      version: OSPFV3
+    family: ospf
+    fields:
+      router_id: '{{ ospf_2_router_id }}'
+      version: OSPFV3
+kind: nmas-configuration-template
+manifest:
+  created_at: '2026-10-03T10:05:41.426453+00:00'
+  created_by: dhruv
+  description: 'Internet-uplink role on Ubuntu/FRR: fabric transit SVIs in OSPF, eBGP to the provider edge, source NAT (PAT)
+    for the client networks, static management on VLAN 200.'
+  digest: 1a78381b2bf56b1a0d3ddb6c1cf09e63520e325f5465295763849f69fe0b70cd
+  digest_algorithm: sha256
+  family: INTERNET_UPLINK
+  name: Internet Uplink Device
+  origin: BASELINE
+  template_id: TPL-BASELINE-INTERNET-UPLINK
+  version: 1
+notes: Common internet uplink device behaviour of R3 and R4.  Values the sources share are baseline defaults; values that
+  differ are parameters (see parameter_sets for each source); objects only one source has are optional (_when) and listed
+  under provenance.differences.
+parameter_sets:
+  R3:
+    bgp_asn: 65003
+    bgp_peer_ip_1_address: 172.20.5.1
+    bgp_peer_ip_1_asn: 65005
+    bgp_peer_ip_2_address: 2001:db8:205:1::2
+    bgp_peer_ip_2_asn: 65005
+    bgp_router_id: 192.168.255.3
+    enable_eth1_101: true
+    enable_eth1_102: false
+    enable_eth1_103: true
+    enable_eth1_104: false
+    enable_ospf_2_bindings_vlan101: true
+    enable_ospf_2_bindings_vlan102: false
+    enable_ospf_2_bindings_vlan103: true
+    enable_ospf_2_bindings_vlan104: false
+    enable_ospf_bindings_vlan101: true
+    enable_ospf_bindings_vlan102: false
+    enable_ospf_bindings_vlan103: true
+    enable_ospf_bindings_vlan104: false
+    enable_vlan101: true
+    enable_vlan102: false
+    enable_vlan103: true
+    enable_vlan104: false
+    eth2_ipv4_1: 172.20.5.0/31
+    eth2_ipv6_1: 2001:db8:205:1::1/64
+    hostname: R3
+    loopback_ipv4: 127.0.0.1/8
+    loopback_ipv4_2: 192.168.255.3/32
+    loopback_ipv6: 2001:db8:255::3/128
+    loopback_ipv6_2: ::1/128
+    mgmt_ipv4: 192.168.200.3/24
+    mgmt_ipv6: 2001:db8:200::3/64
+    ospf_2_router_id: 192.168.255.3
+    ospf_router_id: 192.168.255.3
+  R4:
+    bgp_asn: 65004
+    bgp_peer_ip_1_address: 172.20.5.3
+    bgp_peer_ip_1_asn: 65005
+    bgp_peer_ip_2_address: 2001:db8:205:2::2
+    bgp_peer_ip_2_asn: 65005
+    bgp_router_id: 192.168.255.4
+    enable_eth1_101: false
+    enable_eth1_102: true
+    enable_eth1_103: false
+    enable_eth1_104: true
+    enable_ospf_2_bindings_vlan101: false
+    enable_ospf_2_bindings_vlan102: true
+    enable_ospf_2_bindings_vlan103: false
+    enable_ospf_2_bindings_vlan104: true
+    enable_ospf_bindings_vlan101: false
+    enable_ospf_bindings_vlan102: true
+    enable_ospf_bindings_vlan103: false
+    enable_ospf_bindings_vlan104: true
+    enable_vlan101: false
+    enable_vlan102: true
+    enable_vlan103: false
+    enable_vlan104: true
+    eth2_ipv4_1: 172.20.5.2/31
+    eth2_ipv6_1: 2001:db8:205:2::1/64
+    hostname: R4
+    loopback_ipv4: 127.0.0.1/8
+    loopback_ipv4_2: 192.168.255.4/32
+    loopback_ipv6: 2001:db8:255::4/128
+    loopback_ipv6_2: ::1/128
+    mgmt_ipv4: 192.168.200.4/24
+    mgmt_ipv6: 2001:db8:200::4/64
+    ospf_2_router_id: 192.168.255.4
+    ospf_router_id: 192.168.255.4
+parameters:
+  bgp_asn:
+    description: Local BGP autonomous system number
+    required: true
+    type: asn
+  bgp_peer_ip_1_address:
+    description: BGP peer ip 1 peer address
+    required: true
+    type: ipv4_address
+  bgp_peer_ip_1_asn:
+    description: BGP peer ip 1 remote asn
+    required: true
+    type: asn
+  bgp_peer_ip_2_address:
+    description: BGP peer ip 2 peer address
+    required: true
+    type: ipv6_address
+  bgp_peer_ip_2_asn:
+    description: BGP peer ip 2 remote asn
+    required: true
+    type: asn
+  bgp_router_id:
+    description: BGP router ID
+    required: true
+    type: ipv4_address
+  enable_eth1_101:
+    default: false
+    description: Include interfaces / eth1.101 (present only on R3)
+    required: false
+    type: boolean
+  enable_eth1_102:
+    default: false
+    description: Include interfaces / eth1.102 (present only on R4)
+    required: false
+    type: boolean
+  enable_eth1_103:
+    default: false
+    description: Include interfaces / eth1.103 (present only on R3)
+    required: false
+    type: boolean
+  enable_eth1_104:
+    default: false
+    description: Include interfaces / eth1.104 (present only on R4)
+    required: false
+    type: boolean
+  enable_ospf_2_bindings_vlan101:
+    default: false
+    description: Include routing / ospf_2 / bindings / Vlan101 (present only on R3)
+    required: false
+    type: boolean
+  enable_ospf_2_bindings_vlan102:
+    default: false
+    description: Include routing / ospf_2 / bindings / Vlan102 (present only on R4)
+    required: false
+    type: boolean
+  enable_ospf_2_bindings_vlan103:
+    default: false
+    description: Include routing / ospf_2 / bindings / Vlan103 (present only on R3)
+    required: false
+    type: boolean
+  enable_ospf_2_bindings_vlan104:
+    default: false
+    description: Include routing / ospf_2 / bindings / Vlan104 (present only on R4)
+    required: false
+    type: boolean
+  enable_ospf_bindings_vlan101:
+    default: false
+    description: Include routing / ospf / bindings / Vlan101 (present only on R3)
+    required: false
+    type: boolean
+  enable_ospf_bindings_vlan102:
+    default: false
+    description: Include routing / ospf / bindings / Vlan102 (present only on R4)
+    required: false
+    type: boolean
+  enable_ospf_bindings_vlan103:
+    default: false
+    description: Include routing / ospf / bindings / Vlan103 (present only on R3)
+    required: false
+    type: boolean
+  enable_ospf_bindings_vlan104:
+    default: false
+    description: Include routing / ospf / bindings / Vlan104 (present only on R4)
+    required: false
+    type: boolean
+  enable_vlan101:
+    default: false
+    description: Include interfaces / Vlan101 (present only on R3)
+    required: false
+    type: boolean
+  enable_vlan102:
+    default: false
+    description: Include interfaces / Vlan102 (present only on R4)
+    required: false
+    type: boolean
+  enable_vlan103:
+    default: false
+    description: Include interfaces / Vlan103 (present only on R3)
+    required: false
+    type: boolean
+  enable_vlan104:
+    default: false
+    description: Include interfaces / Vlan104 (present only on R4)
+    required: false
+    type: boolean
+  eth2_ipv4_1:
+    description: interfaces / eth2 / addresses / ipv4_1 cidr
+    required: true
+    type: ipv4_interface
+  eth2_ipv6_1:
+    description: interfaces / eth2 / addresses / ipv6_1 cidr
+    required: true
+    type: ipv6_interface
+  hostname:
+    description: Device hostname
+    required: true
+    type: hostname
+  loopback_ipv4:
+    description: Loopback IPV4 address
+    required: true
+    type: ipv4_interface
+  loopback_ipv4_2:
+    description: Loopback IPV4 address
+    required: true
+    type: ipv4_interface
+  loopback_ipv6:
+    description: Loopback IPV6 address
+    required: true
+    type: ipv6_interface
+  loopback_ipv6_2:
+    description: Loopback IPV6 address
+    required: true
+    type: ipv6_interface
+  mgmt_ipv4:
+    description: Static IPV4 management address on Vlan200 (VLAN 200 stays static)
+    required: true
+    type: ipv4_interface
+  mgmt_ipv6:
+    description: Static IPV6 management address on Vlan200 (VLAN 200 stays static)
+    required: true
+    type: ipv6_interface
+  ospf_2_router_id:
+    description: OSPF_2 router ID
+    required: true
+    type: ipv4_address
+  ospf_router_id:
+    description: OSPF router ID
+    required: true
+    type: ipv4_address
+provenance:
+  differences:
+  - kind: ONLY_ON_SOME_SOURCES
+    path: interfaces/Vlan101
+    present_on:
+    - R3
+  - kind: ONLY_ON_SOME_SOURCES
+    path: interfaces/Vlan103
+    present_on:
+    - R3
+  - kind: ONLY_ON_SOME_SOURCES
+    path: interfaces/eth1.101
+    present_on:
+    - R3
+  - kind: ONLY_ON_SOME_SOURCES
+    path: interfaces/eth1.103
+    present_on:
+    - R3
+  - kind: VALUE_DIFFERS
+    path: interfaces/eth2/addresses/ipv4_1/cidr
+    values:
+      R3: 172.20.5.0/31
+      R4: 172.20.5.2/31
+  - kind: VALUE_DIFFERS
+    path: interfaces/eth2/addresses/ipv6_1/cidr
+    values:
+      R3: 2001:db8:205:1::1/64
+      R4: 2001:db8:205:2::1/64
+  - kind: ONLY_ON_SOME_SOURCES
+    path: interfaces/Vlan102
+    present_on:
+    - R4
+  - kind: ONLY_ON_SOME_SOURCES
+    path: interfaces/Vlan104
+    present_on:
+    - R4
+  - kind: ONLY_ON_SOME_SOURCES
+    path: interfaces/eth1.102
+    present_on:
+    - R4
+  - kind: ONLY_ON_SOME_SOURCES
+    path: interfaces/eth1.104
+    present_on:
+    - R4
+  - kind: ONLY_ON_SOME_SOURCES
+    path: routing/ospf/bindings/Vlan101
+    present_on:
+    - R3
+  - kind: ONLY_ON_SOME_SOURCES
+    path: routing/ospf/bindings/Vlan103
+    present_on:
+    - R3
+  - kind: ONLY_ON_SOME_SOURCES
+    path: routing/ospf/bindings/Vlan102
+    present_on:
+    - R4
+  - kind: ONLY_ON_SOME_SOURCES
+    path: routing/ospf/bindings/Vlan104
+    present_on:
+    - R4
+  - kind: ONLY_ON_SOME_SOURCES
+    path: routing/ospf_2/bindings/Vlan101
+    present_on:
+    - R3
+  - kind: ONLY_ON_SOME_SOURCES
+    path: routing/ospf_2/bindings/Vlan103
+    present_on:
+    - R3
+  - kind: ONLY_ON_SOME_SOURCES
+    path: routing/ospf_2/bindings/Vlan102
+    present_on:
+    - R4
+  - kind: ONLY_ON_SOME_SOURCES
+    path: routing/ospf_2/bindings/Vlan104
+    present_on:
+    - R4
+  extracted_at: '2026-10-03T10:05:40.564661+00:00'
+  method: live-read-only-capture
+  platforms:
+  - ubuntu_frr
+  repository_head: c92f33d
+  source_devices:
+  - R3
+  - R4
+  sources:
+  - captured_at: '2026-10-03T10:05:39.816208+00:00'
+    device: R3
+    parser_version: ubuntu-frr-1.0
+    platform: ubuntu_frr
+    redacted_lines: 0
+    running_config_digest: e26fb8213a7ff8a2a5bbc9f663fa90bb208e47728215f08dfb2286d58b05eea4
+    snapshot_id: 89bc2d3b-edc0-4f53-8f0a-68add8ac9dbb
+    transport: docker-exec (fixed read-only argv, no shell)
+  - captured_at: '2026-10-03T10:05:40.564661+00:00'
+    device: R4
+    parser_version: ubuntu-frr-1.0
+    platform: ubuntu_frr
+    redacted_lines: 0
+    running_config_digest: 53c242cc511ab14d75455c0a5983a629b84a00a1f93e6d4df2cda4a623c801a0
+    snapshot_id: 45be3584-884a-4817-bf3a-458bc2cb8f71
+    transport: docker-exec (fixed read-only argv, no shell)
+rendering:
+  engine: jinja2
+  feature_templates:
+  - ubuntu_frr/interface_loopback.j2
+  - ubuntu_frr/interface_routed_physical.j2
+  - ubuntu_frr/interface_subinterface.j2
+  - ubuntu_frr/interface_svi.j2
+  - ubuntu_frr/nat_pat.j2
+  - ubuntu_frr/routing_bgp.j2
+  - ubuntu_frr/routing_ospfv2.j2
+  - ubuntu_frr/routing_ospfv3.j2
+  pipeline: template intent -> Device Builder semantic candidate -> platform feature templates
+schema_version: 1

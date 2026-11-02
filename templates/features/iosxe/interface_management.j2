@@ -1,0 +1,6 @@
+! MANAGEMENT / STATIC - AUTO and DHCP are prohibited
+interface {{ name }}
+ description {{ description }}
+{% if admin_disabled %} shutdown
+{% else %} no shutdown
+{% endif %}

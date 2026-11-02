@@ -1,0 +1,2170 @@
+{
+ "plan_hash": "f9b64784b7833abd7e3c3ef54628cf090b20868848ec750f81013c6072f6449c",
+ "summary": {
+  "kind": "REVERT_COMPLETED_BASELINE_MIGRATION",
+  "definition": "sandbox",
+  "operations": 48,
+  "devices": [
+   "S1",
+   "S2",
+   "R1",
+   "R2",
+   "R3",
+   "R4"
+  ],
+  "persistence": {
+   "stage": "PERSISTENCE",
+   "devices": [
+    "R1",
+    "R2",
+    "S1",
+    "S2"
+   ],
+   "command": "copy running-config startup-config",
+   "not_persisted": {
+    "R3": "temporary kernel covers; the boot configuration must stay unchanged",
+    "R4": "temporary kernel covers; the boot configuration must stay unchanged"
+   }
+  },
+  "stages": [
+   "CORE_COVER_INSTALL",
+   "VLAN99_IPV6",
+   "ISIS_FORMATION",
+   "BOUNDARY_POLICY",
+   "SHIELD_INSTALL",
+   "PROTECTED_STATIC_REMOVAL",
+   "SHIELD_REMOVE",
+   "CORE_COVER_REMOVE"
+  ],
+  "permanent": [
+   "revert-R2-old-redistribution-remove",
+   "revert-R2-client-statics-remove",
+   "revert-S2-static-aggregate-remove",
+   "revert-R1-old-redistribution-remove",
+   "revert-R1-client-statics-remove",
+   "revert-S1-static-aggregate-remove",
+   "revert-R2-isis-into-ospfv3",
+   "revert-R2-aggregate-into-isis",
+   "revert-R2-boundary-policy",
+   "revert-R1-isis-into-ospfv3",
+   "revert-R1-aggregate-into-isis",
+   "revert-R1-boundary-policy",
+   "revert-S2-client-svis-passive",
+   "revert-S1-client-svis-passive",
+   "revert-S2-isis-links",
+   "revert-S1-isis-links",
+   "revert-R2-isis-access",
+   "revert-R1-isis-access",
+   "revert-S2-isis-process",
+   "revert-S1-isis-process",
+   "revert-R2-isis-process",
+   "revert-R1-isis-process",
+   "revert-S2-vlan99-ipv6",
+   "revert-S1-vlan99-ipv6"
+  ],
+  "temporary": [
+   "revert-R4-cover-2001:db8:30::/63-remove",
+   "revert-R4-cover-2001:db8:20::/63-remove",
+   "revert-R4-cover-2001:db8:10::/63-remove",
+   "revert-R3-cover-2001:db8:30::/63-remove",
+   "revert-R3-cover-2001:db8:20::/63-remove",
+   "revert-R3-cover-2001:db8:10::/63-remove",
+   "revert-S2-shield-remove",
+   "revert-R2-shield-remove",
+   "revert-R2-floating-statics-remove",
+   "revert-R2-floating-statics-add",
+   "revert-R2-shield-install",
+   "revert-S2-shield-install",
+   "revert-S1-shield-remove",
+   "revert-R1-shield-remove",
+   "revert-R1-floating-statics-remove",
+   "revert-R1-floating-statics-add",
+   "revert-R1-shield-install",
+   "revert-S1-shield-install",
+   "revert-R4-cover-2001:db8:30::/63",
+   "revert-R4-cover-2001:db8:20::/63",
+   "revert-R4-cover-2001:db8:10::/63",
+   "revert-R3-cover-2001:db8:30::/63",
+   "revert-R3-cover-2001:db8:20::/63",
+   "revert-R3-cover-2001:db8:10::/63"
+  ],
+  "permanent_intent": {
+   "R2": [
+    "route-map STATIC6-TO-OSPF permit 10",
+    "   match ipv6 address prefix-list CLIENT-V6",
+    "ipv6 router ospf 10",
+    "   redistribute static route-map STATIC6-TO-OSPF",
+    "ipv6 route 2001:db8:10::/64 2001:db8:110:2::2",
+    "ipv6 route 2001:db8:20::/64 2001:db8:110:2::2",
+    "ipv6 route 2001:db8:30::/64 2001:db8:110:2::2"
+   ],
+   "S2": [
+    "ipv6 route 2001:db8::/32 2001:db8:110:2::1"
+   ],
+   "R1": [
+    "route-map STATIC6-TO-OSPF permit 10",
+    "   match ipv6 address prefix-list CLIENT-V6",
+    "ipv6 router ospf 10",
+    "   redistribute static route-map STATIC6-TO-OSPF",
+    "ipv6 route 2001:db8:10::/64 2001:db8:110:1::2",
+    "ipv6 route 2001:db8:20::/64 2001:db8:110:1::2",
+    "ipv6 route 2001:db8:30::/64 2001:db8:110:1::2"
+   ],
+   "S1": [
+    "ipv6 route 2001:db8::/32 2001:db8:110:1::1"
+   ]
+  },
+  "cover_inventory": [
+   {
+    "core": "R3",
+    "prefix": "2001:db8:10::/63",
+    "protects": "2001:db8:10::/64",
+    "next_hops": [
+     [
+      "fe80::42:aff:fefb:1703",
+      "eth1"
+     ],
+     [
+      "fe80::42:aff:fefb:1503",
+      "eth0"
+     ]
+    ]
+   },
+   {
+    "core": "R3",
+    "prefix": "2001:db8:20::/63",
+    "protects": "2001:db8:20::/64",
+    "next_hops": [
+     [
+      "fe80::42:aff:fefb:1703",
+      "eth1"
+     ],
+     [
+      "fe80::42:aff:fefb:1503",
+      "eth0"
+     ]
+    ]
+   },
+   {
+    "core": "R3",
+    "prefix": "2001:db8:30::/63",
+    "protects": "2001:db8:30::/64",
+    "next_hops": [
+     [
+      "fe80::42:aff:fefb:1703",
+      "eth1"
+     ],
+     [
+      "fe80::42:aff:fefb:1503",
+      "eth0"
+     ]
+    ]
+   },
+   {
+    "core": "R4",
+    "prefix": "2001:db8:10::/63",
+    "protects": "2001:db8:10::/64",
+    "next_hops": [
+     [
+      "fe80::42:aff:fefb:1603",
+      "eth0"
+     ],
+     [
+      "fe80::42:aff:fefb:1803",
+      "eth1"
+     ]
+    ]
+   },
+   {
+    "core": "R4",
+    "prefix": "2001:db8:20::/63",
+    "protects": "2001:db8:20::/64",
+    "next_hops": [
+     [
+      "fe80::42:aff:fefb:1603",
+      "eth0"
+     ],
+     [
+      "fe80::42:aff:fefb:1803",
+      "eth1"
+     ]
+    ]
+   },
+   {
+    "core": "R4",
+    "prefix": "2001:db8:30::/63",
+    "protects": "2001:db8:30::/64",
+    "next_hops": [
+     [
+      "fe80::42:aff:fefb:1603",
+      "eth0"
+     ],
+     [
+      "fe80::42:aff:fefb:1803",
+      "eth1"
+     ]
+    ]
+   }
+  ]
+ },
+ "configlets": [
+  {
+   "cfg_id": "CFG-001",
+   "device": "R4",
+   "description": "[TEMPORARY] CORE_COVER_REMOVE: revert: temporary kernel cover of 2001:db8:30::/64 removed",
+   "operation": "CREATE_DEFINE",
+   "origin": "STRUCTURED",
+   "rendered_config": "ip -6 route add 2001:db8:30::/63 nexthop via fe80::42:aff:fefb:1603 dev eth0 nexthop via fe80::42:aff:fefb:1803 dev eth1",
+   "rollback_config": "ip -6 route del 2001:db8:30::/63",
+   "transition": {
+    "key": "revert-R4-cover-2001:db8:30::/63-remove",
+    "stage": "CORE_COVER_REMOVE",
+    "state": "TEMPORARY",
+    "action": "COVER_INSTALL"
+   },
+   "verification": {
+    "requirements": [
+     {
+      "expected": {
+       "core": "R4",
+       "prefix": "2001:db8:30::/63",
+       "protects": "2001:db8:30::/64",
+       "next_hops": [
+        [
+         "fe80::42:aff:fefb:1603",
+         "eth0"
+        ],
+        [
+         "fe80::42:aff:fefb:1803",
+         "eth1"
+        ]
+       ]
+      }
+     }
+    ],
+    "before": [],
+    "after": [
+     "R4 2001:db8:30::/63 is the approved cover again"
+    ],
+    "undo_before": [],
+    "undo_after": [
+     "R4 2001:db8:30::/63 is gone"
+    ]
+   },
+   "execution_status": "DEPLOYED"
+  },
+  {
+   "cfg_id": "CFG-002",
+   "device": "R4",
+   "description": "[TEMPORARY] CORE_COVER_REMOVE: revert: temporary kernel cover of 2001:db8:20::/64 removed",
+   "operation": "CREATE_DEFINE",
+   "origin": "STRUCTURED",
+   "rendered_config": "ip -6 route add 2001:db8:20::/63 nexthop via fe80::42:aff:fefb:1603 dev eth0 nexthop via fe80::42:aff:fefb:1803 dev eth1",
+   "rollback_config": "ip -6 route del 2001:db8:20::/63",
+   "transition": {
+    "key": "revert-R4-cover-2001:db8:20::/63-remove",
+    "stage": "CORE_COVER_REMOVE",
+    "state": "TEMPORARY",
+    "action": "COVER_INSTALL"
+   },
+   "verification": {
+    "requirements": [
+     {
+      "expected": {
+       "core": "R4",
+       "prefix": "2001:db8:20::/63",
+       "protects": "2001:db8:20::/64",
+       "next_hops": [
+        [
+         "fe80::42:aff:fefb:1603",
+         "eth0"
+        ],
+        [
+         "fe80::42:aff:fefb:1803",
+         "eth1"
+        ]
+       ]
+      }
+     }
+    ],
+    "before": [],
+    "after": [
+     "R4 2001:db8:20::/63 is the approved cover again"
+    ],
+    "undo_before": [],
+    "undo_after": [
+     "R4 2001:db8:20::/63 is gone"
+    ]
+   },
+   "execution_status": "DEPLOYED"
+  },
+  {
+   "cfg_id": "CFG-003",
+   "device": "R4",
+   "description": "[TEMPORARY] CORE_COVER_REMOVE: revert: temporary kernel cover of 2001:db8:10::/64 removed",
+   "operation": "CREATE_DEFINE",
+   "origin": "STRUCTURED",
+   "rendered_config": "ip -6 route add 2001:db8:10::/63 nexthop via fe80::42:aff:fefb:1603 dev eth0 nexthop via fe80::42:aff:fefb:1803 dev eth1",
+   "rollback_config": "ip -6 route del 2001:db8:10::/63",
+   "transition": {
+    "key": "revert-R4-cover-2001:db8:10::/63-remove",
+    "stage": "CORE_COVER_REMOVE",
+    "state": "TEMPORARY",
+    "action": "COVER_INSTALL"
+   },
+   "verification": {
+    "requirements": [
+     {
+      "expected": {
+       "core": "R4",
+       "prefix": "2001:db8:10::/63",
+       "protects": "2001:db8:10::/64",
+       "next_hops": [
+        [
+         "fe80::42:aff:fefb:1603",
+         "eth0"
+        ],
+        [
+         "fe80::42:aff:fefb:1803",
+         "eth1"
+        ]
+       ]
+      }
+     }
+    ],
+    "before": [],
+    "after": [
+     "R4 2001:db8:10::/63 is the approved cover again"
+    ],
+    "undo_before": [],
+    "undo_after": [
+     "R4 2001:db8:10::/63 is gone"
+    ]
+   },
+   "execution_status": "DEPLOYED"
+  },
+  {
+   "cfg_id": "CFG-004",
+   "device": "R3",
+   "description": "[TEMPORARY] CORE_COVER_REMOVE: revert: temporary kernel cover of 2001:db8:30::/64 removed",
+   "operation": "CREATE_DEFINE",
+   "origin": "STRUCTURED",
+   "rendered_config": "ip -6 route add 2001:db8:30::/63 nexthop via fe80::42:aff:fefb:1703 dev eth1 nexthop via fe80::42:aff:fefb:1503 dev eth0",
+   "rollback_config": "ip -6 route del 2001:db8:30::/63",
+   "transition": {
+    "key": "revert-R3-cover-2001:db8:30::/63-remove",
+    "stage": "CORE_COVER_REMOVE",
+    "state": "TEMPORARY",
+    "action": "COVER_INSTALL"
+   },
+   "verification": {
+    "requirements": [
+     {
+      "expected": {
+       "core": "R3",
+       "prefix": "2001:db8:30::/63",
+       "protects": "2001:db8:30::/64",
+       "next_hops": [
+        [
+         "fe80::42:aff:fefb:1703",
+         "eth1"
+        ],
+        [
+         "fe80::42:aff:fefb:1503",
+         "eth0"
+        ]
+       ]
+      }
+     }
+    ],
+    "before": [],
+    "after": [
+     "R3 2001:db8:30::/63 is the approved cover again"
+    ],
+    "undo_before": [],
+    "undo_after": [
+     "R3 2001:db8:30::/63 is gone"
+    ]
+   },
+   "execution_status": "DEPLOYED"
+  },
+  {
+   "cfg_id": "CFG-005",
+   "device": "R3",
+   "description": "[TEMPORARY] CORE_COVER_REMOVE: revert: temporary kernel cover of 2001:db8:20::/64 removed",
+   "operation": "CREATE_DEFINE",
+   "origin": "STRUCTURED",
+   "rendered_config": "ip -6 route add 2001:db8:20::/63 nexthop via fe80::42:aff:fefb:1703 dev eth1 nexthop via fe80::42:aff:fefb:1503 dev eth0",
+   "rollback_config": "ip -6 route del 2001:db8:20::/63",
+   "transition": {
+    "key": "revert-R3-cover-2001:db8:20::/63-remove",
+    "stage": "CORE_COVER_REMOVE",
+    "state": "TEMPORARY",
+    "action": "COVER_INSTALL"
+   },
+   "verification": {
+    "requirements": [
+     {
+      "expected": {
+       "core": "R3",
+       "prefix": "2001:db8:20::/63",
+       "protects": "2001:db8:20::/64",
+       "next_hops": [
+        [
+         "fe80::42:aff:fefb:1703",
+         "eth1"
+        ],
+        [
+         "fe80::42:aff:fefb:1503",
+         "eth0"
+        ]
+       ]
+      }
+     }
+    ],
+    "before": [],
+    "after": [
+     "R3 2001:db8:20::/63 is the approved cover again"
+    ],
+    "undo_before": [],
+    "undo_after": [
+     "R3 2001:db8:20::/63 is gone"
+    ]
+   },
+   "execution_status": "DEPLOYED"
+  },
+  {
+   "cfg_id": "CFG-006",
+   "device": "R3",
+   "description": "[TEMPORARY] CORE_COVER_REMOVE: revert: temporary kernel cover of 2001:db8:10::/64 removed",
+   "operation": "CREATE_DEFINE",
+   "origin": "STRUCTURED",
+   "rendered_config": "ip -6 route add 2001:db8:10::/63 nexthop via fe80::42:aff:fefb:1703 dev eth1 nexthop via fe80::42:aff:fefb:1503 dev eth0",
+   "rollback_config": "ip -6 route del 2001:db8:10::/63",
+   "transition": {
+    "key": "revert-R3-cover-2001:db8:10::/63-remove",
+    "stage": "CORE_COVER_REMOVE",
+    "state": "TEMPORARY",
+    "action": "COVER_INSTALL"
+   },
+   "verification": {
+    "requirements": [
+     {
+      "expected": {
+       "core": "R3",
+       "prefix": "2001:db8:10::/63",
+       "protects": "2001:db8:10::/64",
+       "next_hops": [
+        [
+         "fe80::42:aff:fefb:1703",
+         "eth1"
+        ],
+        [
+         "fe80::42:aff:fefb:1503",
+         "eth0"
+        ]
+       ]
+      }
+     }
+    ],
+    "before": [],
+    "after": [
+     "R3 2001:db8:10::/63 is the approved cover again",
+     "R3 OSPF adjacencies unchanged by the covers",
+     "R4 OSPF adjacencies unchanged by the covers"
+    ],
+    "undo_before": [
+     "no temporary migration line on any access device",
+     "cores left every client route alone for 120 s"
+    ],
+    "undo_after": [
+     "R3 2001:db8:10::/63 is gone"
+    ]
+   },
+   "execution_status": "DEPLOYED"
+  },
+  {
+   "cfg_id": "CFG-007",
+   "device": "S2",
+   "description": "[TEMPORARY] SHIELD_REMOVE: revert: switch shield removed",
+   "operation": "CREATE_DEFINE",
+   "origin": "STRUCTURED",
+   "rendered_config": "ipv6 route 2001:db8::/33 2001:db8:110:2::1\nipv6 route 2001:db8:8000::/33 2001:db8:110:2::1",
+   "rollback_config": "no ipv6 route 2001:db8::/33 2001:db8:110:2::1\nno ipv6 route 2001:db8:8000::/33 2001:db8:110:2::1",
+   "transition": {
+    "key": "revert-S2-shield-remove",
+    "stage": "SHIELD_REMOVE",
+    "state": "TEMPORARY",
+    "action": "ADD"
+   },
+   "verification": {
+    "requirements": [
+     {
+      "expected": {
+       "present_paths": [
+        "ipv6 route 2001:db8:8000::/33 2001:db8:110:2::1",
+        "ipv6 route 2001:db8::/33 2001:db8:110:2::1"
+       ],
+       "inverse_lines": [
+        "no ipv6 route 2001:db8::/33 2001:db8:110:2::1",
+        "no ipv6 route 2001:db8:8000::/33 2001:db8:110:2::1"
+       ]
+      }
+     }
+    ],
+    "before": [
+     "S2 shield next hop 2001:db8:110:2::1 answers"
+    ],
+    "after": [
+     "S2 shield 2001:db8::/33 programmed via Ethernet1",
+     "S2 shield 2001:db8:8000::/33 programmed via Ethernet1"
+    ],
+    "undo_before": [
+     "S2 take-over next hop of 2001:db8::/32 resolved"
+    ],
+    "undo_after": [
+     "S2 shield 2001:db8::/33 gone",
+     "S2 shield 2001:db8:8000::/33 gone",
+     "S2 forwards the service by IS-IS",
+     "R2 forwards 2001:db8:10::100 by IS-IS",
+     "R2 forwards 2001:db8:20::100 by IS-IS",
+     "R2 forwards 2001:db8:30::100 by IS-IS"
+    ]
+   },
+   "execution_status": "DEPLOYED"
+  },
+  {
+   "cfg_id": "CFG-008",
+   "device": "R2",
+   "description": "[TEMPORARY] SHIELD_REMOVE: revert: router shield removed",
+   "operation": "CREATE_DEFINE",
+   "origin": "STRUCTURED",
+   "rendered_config": "ipv6 route 2001:db8:10::/63 2001:db8:110:2::2\nipv6 route 2001:db8:20::/63 2001:db8:110:2::2\nipv6 route 2001:db8:30::/63 2001:db8:110:2::2",
+   "rollback_config": "no ipv6 route 2001:db8:10::/63 2001:db8:110:2::2\nno ipv6 route 2001:db8:20::/63 2001:db8:110:2::2\nno ipv6 route 2001:db8:30::/63 2001:db8:110:2::2",
+   "transition": {
+    "key": "revert-R2-shield-remove",
+    "stage": "SHIELD_REMOVE",
+    "state": "TEMPORARY",
+    "action": "ADD"
+   },
+   "verification": {
+    "requirements": [
+     {
+      "expected": {
+       "present_paths": [
+        "ipv6 route 2001:db8:10::/63 2001:db8:110:2::2",
+        "ipv6 route 2001:db8:20::/63 2001:db8:110:2::2",
+        "ipv6 route 2001:db8:30::/63 2001:db8:110:2::2"
+       ],
+       "inverse_lines": [
+        "no ipv6 route 2001:db8:10::/63 2001:db8:110:2::2",
+        "no ipv6 route 2001:db8:20::/63 2001:db8:110:2::2",
+        "no ipv6 route 2001:db8:30::/63 2001:db8:110:2::2"
+       ]
+      }
+     }
+    ],
+    "before": [
+     "R2 shield next hop 2001:db8:110:2::2 answers"
+    ],
+    "after": [
+     "R2 shield 2001:db8:10::/63 programmed via Ethernet3",
+     "R2 shield 2001:db8:20::/63 programmed via Ethernet3",
+     "R2 shield 2001:db8:30::/63 programmed via Ethernet3"
+    ],
+    "undo_before": [
+     "R2 take-over next hops of the client prefixes resolved"
+    ],
+    "undo_after": [
+     "R2 shield 2001:db8:10::/63 gone",
+     "R2 shield 2001:db8:20::/63 gone",
+     "R2 shield 2001:db8:30::/63 gone"
+    ]
+   },
+   "execution_status": "DEPLOYED"
+  },
+  {
+   "cfg_id": "CFG-009",
+   "device": "R2",
+   "description": "[PERMANENT] PROTECTED_STATIC_REMOVAL: revert: superseded static-to-OSPFv3 redistribution",
+   "operation": "CREATE_DEFINE",
+   "origin": "STRUCTURED",
+   "rendered_config": "route-map STATIC6-TO-OSPF permit 10\n   match ipv6 address prefix-list CLIENT-V6\nipv6 router ospf 10\n   redistribute static route-map STATIC6-TO-OSPF",
+   "rollback_config": "ipv6 router ospf 10\n   no redistribute static route-map STATIC6-TO-OSPF\nno route-map STATIC6-TO-OSPF permit 10",
+   "transition": {
+    "key": "revert-R2-old-redistribution-remove",
+    "stage": "PROTECTED_STATIC_REMOVAL",
+    "state": "PERMANENT",
+    "action": "ADD"
+   },
+   "verification": {
+    "requirements": [
+     {
+      "expected": {
+       "present_paths": [
+        "ipv6 router ospf 10 > redistribute static route-map STATIC6-TO-OSPF",
+        "route-map STATIC6-TO-OSPF permit 10 > match ipv6 address prefix-list CLIENT-V6"
+       ],
+       "inverse_lines": [
+        "ipv6 router ospf 10",
+        "   no redistribute static route-map STATIC6-TO-OSPF",
+        "no route-map STATIC6-TO-OSPF permit 10"
+       ]
+      }
+     }
+    ],
+    "before": [],
+    "after": [],
+    "undo_before": [],
+    "undo_after": []
+   },
+   "execution_status": "DEPLOYED"
+  },
+  {
+   "cfg_id": "CFG-010",
+   "device": "R2",
+   "description": "[TEMPORARY] PROTECTED_STATIC_REMOVAL: revert: floating copies removed once IS-IS owns the routes",
+   "operation": "CREATE_DEFINE",
+   "origin": "STRUCTURED",
+   "rendered_config": "ipv6 route 2001:db8:10::/64 2001:db8:110:2::2 250\nipv6 route 2001:db8:20::/64 2001:db8:110:2::2 250\nipv6 route 2001:db8:30::/64 2001:db8:110:2::2 250",
+   "rollback_config": "no ipv6 route 2001:db8:10::/64 2001:db8:110:2::2 250\nno ipv6 route 2001:db8:20::/64 2001:db8:110:2::2 250\nno ipv6 route 2001:db8:30::/64 2001:db8:110:2::2 250",
+   "transition": {
+    "key": "revert-R2-floating-statics-remove",
+    "stage": "PROTECTED_STATIC_REMOVAL",
+    "state": "TEMPORARY",
+    "action": "ADD"
+   },
+   "verification": {
+    "requirements": [
+     {
+      "expected": {
+       "present_paths": [
+        "ipv6 route 2001:db8:10::/64 2001:db8:110:2::2 250",
+        "ipv6 route 2001:db8:20::/64 2001:db8:110:2::2 250",
+        "ipv6 route 2001:db8:30::/64 2001:db8:110:2::2 250"
+       ],
+       "inverse_lines": [
+        "no ipv6 route 2001:db8:10::/64 2001:db8:110:2::2 250",
+        "no ipv6 route 2001:db8:20::/64 2001:db8:110:2::2 250",
+        "no ipv6 route 2001:db8:30::/64 2001:db8:110:2::2 250"
+       ]
+      }
+     }
+    ],
+    "before": [],
+    "after": [],
+    "undo_before": [],
+    "undo_after": [
+     "S2 2001:db8::/32 owned by isis via Ethernet1",
+     "R2 2001:db8:10::/64 owned by isis via Ethernet3",
+     "R2 2001:db8:20::/64 owned by isis via Ethernet3",
+     "R2 2001:db8:30::/64 owned by isis via Ethernet3"
+    ]
+   },
+   "execution_status": "DEPLOYED"
+  },
+  {
+   "cfg_id": "CFG-011",
+   "device": "R2",
+   "description": "[PERMANENT] PROTECTED_STATIC_REMOVAL: revert: superseded client static routes",
+   "operation": "CREATE_DEFINE",
+   "origin": "STRUCTURED",
+   "rendered_config": "ipv6 route 2001:db8:10::/64 2001:db8:110:2::2\nipv6 route 2001:db8:20::/64 2001:db8:110:2::2\nipv6 route 2001:db8:30::/64 2001:db8:110:2::2",
+   "rollback_config": "no ipv6 route 2001:db8:10::/64 2001:db8:110:2::2 1\nno ipv6 route 2001:db8:20::/64 2001:db8:110:2::2 1\nno ipv6 route 2001:db8:30::/64 2001:db8:110:2::2 1",
+   "transition": {
+    "key": "revert-R2-client-statics-remove",
+    "stage": "PROTECTED_STATIC_REMOVAL",
+    "state": "PERMANENT",
+    "action": "ADD"
+   },
+   "verification": {
+    "requirements": [
+     {
+      "expected": {
+       "present_paths": [
+        "ipv6 route 2001:db8:10::/64 2001:db8:110:2::2",
+        "ipv6 route 2001:db8:20::/64 2001:db8:110:2::2",
+        "ipv6 route 2001:db8:30::/64 2001:db8:110:2::2"
+       ],
+       "inverse_lines": [
+        "no ipv6 route 2001:db8:10::/64 2001:db8:110:2::2 1",
+        "no ipv6 route 2001:db8:20::/64 2001:db8:110:2::2 1",
+        "no ipv6 route 2001:db8:30::/64 2001:db8:110:2::2 1"
+       ]
+      }
+     }
+    ],
+    "before": [],
+    "after": [
+     "R2 2001:db8:10::/64 owned by static via Ethernet3",
+     "R2 2001:db8:20::/64 owned by static via Ethernet3",
+     "R2 2001:db8:30::/64 owned by static via Ethernet3"
+    ],
+    "undo_before": [],
+    "undo_after": [
+     "R2 2001:db8:10::/64 owned by isis via Ethernet3",
+     "R2 2001:db8:20::/64 owned by isis via Ethernet3",
+     "R2 2001:db8:30::/64 owned by isis via Ethernet3"
+    ]
+   },
+   "execution_status": "DEPLOYED"
+  },
+  {
+   "cfg_id": "CFG-012",
+   "device": "R2",
+   "description": "[TEMPORARY] PROTECTED_STATIC_REMOVAL: revert: floating copies keep the OSPFv3 external LSAs from being withdrawn",
+   "operation": "REMOVE_DELETE",
+   "origin": "REMOVAL",
+   "rendered_config": "no ipv6 route 2001:db8:10::/64 2001:db8:110:2::2 250\nno ipv6 route 2001:db8:20::/64 2001:db8:110:2::2 250\nno ipv6 route 2001:db8:30::/64 2001:db8:110:2::2 250",
+   "rollback_config": "ipv6 route 2001:db8:10::/64 2001:db8:110:2::2 250\nipv6 route 2001:db8:20::/64 2001:db8:110:2::2 250\nipv6 route 2001:db8:30::/64 2001:db8:110:2::2 250",
+   "transition": {
+    "key": "revert-R2-floating-statics-add",
+    "stage": "PROTECTED_STATIC_REMOVAL",
+    "state": "TEMPORARY",
+    "action": "REMOVE"
+   },
+   "verification": {
+    "requirements": [
+     {
+      "expected": {
+       "absent_paths": [
+        "ipv6 route 2001:db8:10::/64 2001:db8:110:2::2 250",
+        "ipv6 route 2001:db8:20::/64 2001:db8:110:2::2 250",
+        "ipv6 route 2001:db8:30::/64 2001:db8:110:2::2 250"
+       ]
+      }
+     }
+    ],
+    "before": [],
+    "after": [],
+    "undo_before": [],
+    "undo_after": []
+   },
+   "execution_status": "DEPLOYED"
+  },
+  {
+   "cfg_id": "CFG-013",
+   "device": "S2",
+   "description": "[PERMANENT] PROTECTED_STATIC_REMOVAL: revert: superseded static aggregate",
+   "operation": "CREATE_DEFINE",
+   "origin": "STRUCTURED",
+   "rendered_config": "ipv6 route 2001:db8::/32 2001:db8:110:2::1",
+   "rollback_config": "no ipv6 route 2001:db8::/32 2001:db8:110:2::1",
+   "transition": {
+    "key": "revert-S2-static-aggregate-remove",
+    "stage": "PROTECTED_STATIC_REMOVAL",
+    "state": "PERMANENT",
+    "action": "ADD"
+   },
+   "verification": {
+    "requirements": [
+     {
+      "expected": {
+       "present_paths": [
+        "ipv6 route 2001:db8::/32 2001:db8:110:2::1"
+       ],
+       "inverse_lines": [
+        "no ipv6 route 2001:db8::/32 2001:db8:110:2::1"
+       ]
+      }
+     }
+    ],
+    "before": [],
+    "after": [
+     "S2 2001:db8::/32 owned by static via Ethernet1"
+    ],
+    "undo_before": [],
+    "undo_after": []
+   },
+   "execution_status": "DEPLOYED"
+  },
+  {
+   "cfg_id": "CFG-014",
+   "device": "R2",
+   "description": "[TEMPORARY] SHIELD_INSTALL: revert: temporary /63 under each client prefix",
+   "operation": "REMOVE_DELETE",
+   "origin": "REMOVAL",
+   "rendered_config": "no ipv6 route 2001:db8:10::/63 2001:db8:110:2::2\nno ipv6 route 2001:db8:20::/63 2001:db8:110:2::2\nno ipv6 route 2001:db8:30::/63 2001:db8:110:2::2",
+   "rollback_config": "ipv6 route 2001:db8:10::/63 2001:db8:110:2::2\nipv6 route 2001:db8:20::/63 2001:db8:110:2::2\nipv6 route 2001:db8:30::/63 2001:db8:110:2::2",
+   "transition": {
+    "key": "revert-R2-shield-install",
+    "stage": "SHIELD_INSTALL",
+    "state": "TEMPORARY",
+    "action": "REMOVE"
+   },
+   "verification": {
+    "requirements": [
+     {
+      "expected": {
+       "absent_paths": [
+        "ipv6 route 2001:db8:10::/63 2001:db8:110:2::2",
+        "ipv6 route 2001:db8:20::/63 2001:db8:110:2::2",
+        "ipv6 route 2001:db8:30::/63 2001:db8:110:2::2"
+       ]
+      }
+     }
+    ],
+    "before": [
+     "R2 2001:db8:10::/64 owned by static via Ethernet3",
+     "R2 2001:db8:20::/64 owned by static via Ethernet3",
+     "R2 2001:db8:30::/64 owned by static via Ethernet3",
+     "R2 take-over next hops of the client prefixes resolved"
+    ],
+    "after": [
+     "R2 shield 2001:db8:10::/63 gone",
+     "R2 shield 2001:db8:20::/63 gone",
+     "R2 shield 2001:db8:30::/63 gone"
+    ],
+    "undo_before": [
+     "R2 shield next hop 2001:db8:110:2::2 answers"
+    ],
+    "undo_after": [
+     "R2 shield 2001:db8:10::/63 programmed via Ethernet3",
+     "R2 shield 2001:db8:20::/63 programmed via Ethernet3",
+     "R2 shield 2001:db8:30::/63 programmed via Ethernet3",
+     "S2 forwards the service through the shield",
+     "R2 forwards 2001:db8:10::100 toward its switch",
+     "R2 forwards 2001:db8:20::100 toward its switch",
+     "R2 forwards 2001:db8:30::100 toward its switch"
+    ]
+   },
+   "execution_status": "DEPLOYED"
+  },
+  {
+   "cfg_id": "CFG-015",
+   "device": "S2",
+   "description": "[TEMPORARY] SHIELD_INSTALL: revert: temporary /33 pair around the aggregate",
+   "operation": "REMOVE_DELETE",
+   "origin": "REMOVAL",
+   "rendered_config": "no ipv6 route 2001:db8::/33 2001:db8:110:2::1\nno ipv6 route 2001:db8:8000::/33 2001:db8:110:2::1",
+   "rollback_config": "ipv6 route 2001:db8::/33 2001:db8:110:2::1\nipv6 route 2001:db8:8000::/33 2001:db8:110:2::1",
+   "transition": {
+    "key": "revert-S2-shield-install",
+    "stage": "SHIELD_INSTALL",
+    "state": "TEMPORARY",
+    "action": "REMOVE"
+   },
+   "verification": {
+    "requirements": [
+     {
+      "expected": {
+       "absent_paths": [
+        "ipv6 route 2001:db8:8000::/33 2001:db8:110:2::1",
+        "ipv6 route 2001:db8::/33 2001:db8:110:2::1"
+       ]
+      }
+     }
+    ],
+    "before": [
+     "S2 2001:db8::/32 owned by static via Ethernet1",
+     "S2 take-over next hop of 2001:db8::/32 resolved"
+    ],
+    "after": [
+     "S2 shield 2001:db8::/33 gone",
+     "S2 shield 2001:db8:8000::/33 gone"
+    ],
+    "undo_before": [
+     "S2 shield next hop 2001:db8:110:2::1 answers"
+    ],
+    "undo_after": [
+     "S2 shield 2001:db8::/33 programmed via Ethernet1",
+     "S2 shield 2001:db8:8000::/33 programmed via Ethernet1"
+    ]
+   },
+   "execution_status": "DEPLOYED"
+  },
+  {
+   "cfg_id": "CFG-016",
+   "device": "S1",
+   "description": "[TEMPORARY] SHIELD_REMOVE: revert: switch shield removed",
+   "operation": "CREATE_DEFINE",
+   "origin": "STRUCTURED",
+   "rendered_config": "ipv6 route 2001:db8::/33 2001:db8:110:1::1\nipv6 route 2001:db8:8000::/33 2001:db8:110:1::1",
+   "rollback_config": "no ipv6 route 2001:db8::/33 2001:db8:110:1::1\nno ipv6 route 2001:db8:8000::/33 2001:db8:110:1::1",
+   "transition": {
+    "key": "revert-S1-shield-remove",
+    "stage": "SHIELD_REMOVE",
+    "state": "TEMPORARY",
+    "action": "ADD"
+   },
+   "verification": {
+    "requirements": [
+     {
+      "expected": {
+       "present_paths": [
+        "ipv6 route 2001:db8:8000::/33 2001:db8:110:1::1",
+        "ipv6 route 2001:db8::/33 2001:db8:110:1::1"
+       ],
+       "inverse_lines": [
+        "no ipv6 route 2001:db8::/33 2001:db8:110:1::1",
+        "no ipv6 route 2001:db8:8000::/33 2001:db8:110:1::1"
+       ]
+      }
+     }
+    ],
+    "before": [
+     "S1 shield next hop 2001:db8:110:1::1 answers"
+    ],
+    "after": [
+     "S1 shield 2001:db8::/33 programmed via Ethernet1",
+     "S1 shield 2001:db8:8000::/33 programmed via Ethernet1"
+    ],
+    "undo_before": [
+     "S1 take-over next hop of 2001:db8::/32 resolved"
+    ],
+    "undo_after": [
+     "S1 shield 2001:db8::/33 gone",
+     "S1 shield 2001:db8:8000::/33 gone",
+     "S1 forwards the service by IS-IS",
+     "R1 forwards 2001:db8:10::100 by IS-IS",
+     "R1 forwards 2001:db8:20::100 by IS-IS",
+     "R1 forwards 2001:db8:30::100 by IS-IS"
+    ]
+   },
+   "execution_status": "DEPLOYED"
+  },
+  {
+   "cfg_id": "CFG-017",
+   "device": "R1",
+   "description": "[TEMPORARY] SHIELD_REMOVE: revert: router shield removed",
+   "operation": "CREATE_DEFINE",
+   "origin": "STRUCTURED",
+   "rendered_config": "ipv6 route 2001:db8:10::/63 2001:db8:110:1::2\nipv6 route 2001:db8:20::/63 2001:db8:110:1::2\nipv6 route 2001:db8:30::/63 2001:db8:110:1::2",
+   "rollback_config": "no ipv6 route 2001:db8:10::/63 2001:db8:110:1::2\nno ipv6 route 2001:db8:20::/63 2001:db8:110:1::2\nno ipv6 route 2001:db8:30::/63 2001:db8:110:1::2",
+   "transition": {
+    "key": "revert-R1-shield-remove",
+    "stage": "SHIELD_REMOVE",
+    "state": "TEMPORARY",
+    "action": "ADD"
+   },
+   "verification": {
+    "requirements": [
+     {
+      "expected": {
+       "present_paths": [
+        "ipv6 route 2001:db8:10::/63 2001:db8:110:1::2",
+        "ipv6 route 2001:db8:20::/63 2001:db8:110:1::2",
+        "ipv6 route 2001:db8:30::/63 2001:db8:110:1::2"
+       ],
+       "inverse_lines": [
+        "no ipv6 route 2001:db8:10::/63 2001:db8:110:1::2",
+        "no ipv6 route 2001:db8:20::/63 2001:db8:110:1::2",
+        "no ipv6 route 2001:db8:30::/63 2001:db8:110:1::2"
+       ]
+      }
+     }
+    ],
+    "before": [
+     "R1 shield next hop 2001:db8:110:1::2 answers"
+    ],
+    "after": [
+     "R1 shield 2001:db8:10::/63 programmed via Ethernet3",
+     "R1 shield 2001:db8:20::/63 programmed via Ethernet3",
+     "R1 shield 2001:db8:30::/63 programmed via Ethernet3"
+    ],
+    "undo_before": [
+     "R1 take-over next hops of the client prefixes resolved"
+    ],
+    "undo_after": [
+     "R1 shield 2001:db8:10::/63 gone",
+     "R1 shield 2001:db8:20::/63 gone",
+     "R1 shield 2001:db8:30::/63 gone"
+    ]
+   },
+   "execution_status": "DEPLOYED"
+  },
+  {
+   "cfg_id": "CFG-018",
+   "device": "R1",
+   "description": "[PERMANENT] PROTECTED_STATIC_REMOVAL: revert: superseded static-to-OSPFv3 redistribution",
+   "operation": "CREATE_DEFINE",
+   "origin": "STRUCTURED",
+   "rendered_config": "route-map STATIC6-TO-OSPF permit 10\n   match ipv6 address prefix-list CLIENT-V6\nipv6 router ospf 10\n   redistribute static route-map STATIC6-TO-OSPF",
+   "rollback_config": "ipv6 router ospf 10\n   no redistribute static route-map STATIC6-TO-OSPF\nno route-map STATIC6-TO-OSPF permit 10",
+   "transition": {
+    "key": "revert-R1-old-redistribution-remove",
+    "stage": "PROTECTED_STATIC_REMOVAL",
+    "state": "PERMANENT",
+    "action": "ADD"
+   },
+   "verification": {
+    "requirements": [
+     {
+      "expected": {
+       "present_paths": [
+        "ipv6 router ospf 10 > redistribute static route-map STATIC6-TO-OSPF",
+        "route-map STATIC6-TO-OSPF permit 10 > match ipv6 address prefix-list CLIENT-V6"
+       ],
+       "inverse_lines": [
+        "ipv6 router ospf 10",
+        "   no redistribute static route-map STATIC6-TO-OSPF",
+        "no route-map STATIC6-TO-OSPF permit 10"
+       ]
+      }
+     }
+    ],
+    "before": [],
+    "after": [],
+    "undo_before": [],
+    "undo_after": []
+   },
+   "execution_status": "DEPLOYED"
+  },
+  {
+   "cfg_id": "CFG-019",
+   "device": "R1",
+   "description": "[TEMPORARY] PROTECTED_STATIC_REMOVAL: revert: floating copies removed once IS-IS owns the routes",
+   "operation": "CREATE_DEFINE",
+   "origin": "STRUCTURED",
+   "rendered_config": "ipv6 route 2001:db8:10::/64 2001:db8:110:1::2 250\nipv6 route 2001:db8:20::/64 2001:db8:110:1::2 250\nipv6 route 2001:db8:30::/64 2001:db8:110:1::2 250",
+   "rollback_config": "no ipv6 route 2001:db8:10::/64 2001:db8:110:1::2 250\nno ipv6 route 2001:db8:20::/64 2001:db8:110:1::2 250\nno ipv6 route 2001:db8:30::/64 2001:db8:110:1::2 250",
+   "transition": {
+    "key": "revert-R1-floating-statics-remove",
+    "stage": "PROTECTED_STATIC_REMOVAL",
+    "state": "TEMPORARY",
+    "action": "ADD"
+   },
+   "verification": {
+    "requirements": [
+     {
+      "expected": {
+       "present_paths": [
+        "ipv6 route 2001:db8:10::/64 2001:db8:110:1::2 250",
+        "ipv6 route 2001:db8:20::/64 2001:db8:110:1::2 250",
+        "ipv6 route 2001:db8:30::/64 2001:db8:110:1::2 250"
+       ],
+       "inverse_lines": [
+        "no ipv6 route 2001:db8:10::/64 2001:db8:110:1::2 250",
+        "no ipv6 route 2001:db8:20::/64 2001:db8:110:1::2 250",
+        "no ipv6 route 2001:db8:30::/64 2001:db8:110:1::2 250"
+       ]
+      }
+     }
+    ],
+    "before": [],
+    "after": [],
+    "undo_before": [],
+    "undo_after": [
+     "S1 2001:db8::/32 owned by isis via Ethernet1",
+     "R1 2001:db8:10::/64 owned by isis via Ethernet3",
+     "R1 2001:db8:20::/64 owned by isis via Ethernet3",
+     "R1 2001:db8:30::/64 owned by isis via Ethernet3"
+    ]
+   },
+   "execution_status": "DEPLOYED"
+  },
+  {
+   "cfg_id": "CFG-020",
+   "device": "R1",
+   "description": "[PERMANENT] PROTECTED_STATIC_REMOVAL: revert: superseded client static routes",
+   "operation": "CREATE_DEFINE",
+   "origin": "STRUCTURED",
+   "rendered_config": "ipv6 route 2001:db8:10::/64 2001:db8:110:1::2\nipv6 route 2001:db8:20::/64 2001:db8:110:1::2\nipv6 route 2001:db8:30::/64 2001:db8:110:1::2",
+   "rollback_config": "no ipv6 route 2001:db8:10::/64 2001:db8:110:1::2 1\nno ipv6 route 2001:db8:20::/64 2001:db8:110:1::2 1\nno ipv6 route 2001:db8:30::/64 2001:db8:110:1::2 1",
+   "transition": {
+    "key": "revert-R1-client-statics-remove",
+    "stage": "PROTECTED_STATIC_REMOVAL",
+    "state": "PERMANENT",
+    "action": "ADD"
+   },
+   "verification": {
+    "requirements": [
+     {
+      "expected": {
+       "present_paths": [
+        "ipv6 route 2001:db8:10::/64 2001:db8:110:1::2",
+        "ipv6 route 2001:db8:20::/64 2001:db8:110:1::2",
+        "ipv6 route 2001:db8:30::/64 2001:db8:110:1::2"
+       ],
+       "inverse_lines": [
+        "no ipv6 route 2001:db8:10::/64 2001:db8:110:1::2 1",
+        "no ipv6 route 2001:db8:20::/64 2001:db8:110:1::2 1",
+        "no ipv6 route 2001:db8:30::/64 2001:db8:110:1::2 1"
+       ]
+      }
+     }
+    ],
+    "before": [],
+    "after": [
+     "R1 2001:db8:10::/64 owned by static via Ethernet3",
+     "R1 2001:db8:20::/64 owned by static via Ethernet3",
+     "R1 2001:db8:30::/64 owned by static via Ethernet3"
+    ],
+    "undo_before": [],
+    "undo_after": [
+     "R1 2001:db8:10::/64 owned by isis via Ethernet3",
+     "R1 2001:db8:20::/64 owned by isis via Ethernet3",
+     "R1 2001:db8:30::/64 owned by isis via Ethernet3"
+    ]
+   },
+   "execution_status": "DEPLOYED"
+  },
+  {
+   "cfg_id": "CFG-021",
+   "device": "R1",
+   "description": "[TEMPORARY] PROTECTED_STATIC_REMOVAL: revert: floating copies keep the OSPFv3 external LSAs from being withdrawn",
+   "operation": "REMOVE_DELETE",
+   "origin": "REMOVAL",
+   "rendered_config": "no ipv6 route 2001:db8:10::/64 2001:db8:110:1::2 250\nno ipv6 route 2001:db8:20::/64 2001:db8:110:1::2 250\nno ipv6 route 2001:db8:30::/64 2001:db8:110:1::2 250",
+   "rollback_config": "ipv6 route 2001:db8:10::/64 2001:db8:110:1::2 250\nipv6 route 2001:db8:20::/64 2001:db8:110:1::2 250\nipv6 route 2001:db8:30::/64 2001:db8:110:1::2 250",
+   "transition": {
+    "key": "revert-R1-floating-statics-add",
+    "stage": "PROTECTED_STATIC_REMOVAL",
+    "state": "TEMPORARY",
+    "action": "REMOVE"
+   },
+   "verification": {
+    "requirements": [
+     {
+      "expected": {
+       "absent_paths": [
+        "ipv6 route 2001:db8:10::/64 2001:db8:110:1::2 250",
+        "ipv6 route 2001:db8:20::/64 2001:db8:110:1::2 250",
+        "ipv6 route 2001:db8:30::/64 2001:db8:110:1::2 250"
+       ]
+      }
+     }
+    ],
+    "before": [],
+    "after": [],
+    "undo_before": [],
+    "undo_after": []
+   },
+   "execution_status": "DEPLOYED"
+  },
+  {
+   "cfg_id": "CFG-022",
+   "device": "S1",
+   "description": "[PERMANENT] PROTECTED_STATIC_REMOVAL: revert: superseded static aggregate",
+   "operation": "CREATE_DEFINE",
+   "origin": "STRUCTURED",
+   "rendered_config": "ipv6 route 2001:db8::/32 2001:db8:110:1::1",
+   "rollback_config": "no ipv6 route 2001:db8::/32 2001:db8:110:1::1",
+   "transition": {
+    "key": "revert-S1-static-aggregate-remove",
+    "stage": "PROTECTED_STATIC_REMOVAL",
+    "state": "PERMANENT",
+    "action": "ADD"
+   },
+   "verification": {
+    "requirements": [
+     {
+      "expected": {
+       "present_paths": [
+        "ipv6 route 2001:db8::/32 2001:db8:110:1::1"
+       ],
+       "inverse_lines": [
+        "no ipv6 route 2001:db8::/32 2001:db8:110:1::1"
+       ]
+      }
+     }
+    ],
+    "before": [],
+    "after": [
+     "S1 2001:db8::/32 owned by static via Ethernet1"
+    ],
+    "undo_before": [],
+    "undo_after": []
+   },
+   "execution_status": "DEPLOYED"
+  },
+  {
+   "cfg_id": "CFG-023",
+   "device": "R1",
+   "description": "[TEMPORARY] SHIELD_INSTALL: revert: temporary /63 under each client prefix",
+   "operation": "REMOVE_DELETE",
+   "origin": "REMOVAL",
+   "rendered_config": "no ipv6 route 2001:db8:10::/63 2001:db8:110:1::2\nno ipv6 route 2001:db8:20::/63 2001:db8:110:1::2\nno ipv6 route 2001:db8:30::/63 2001:db8:110:1::2",
+   "rollback_config": "ipv6 route 2001:db8:10::/63 2001:db8:110:1::2\nipv6 route 2001:db8:20::/63 2001:db8:110:1::2\nipv6 route 2001:db8:30::/63 2001:db8:110:1::2",
+   "transition": {
+    "key": "revert-R1-shield-install",
+    "stage": "SHIELD_INSTALL",
+    "state": "TEMPORARY",
+    "action": "REMOVE"
+   },
+   "verification": {
+    "requirements": [
+     {
+      "expected": {
+       "absent_paths": [
+        "ipv6 route 2001:db8:10::/63 2001:db8:110:1::2",
+        "ipv6 route 2001:db8:20::/63 2001:db8:110:1::2",
+        "ipv6 route 2001:db8:30::/63 2001:db8:110:1::2"
+       ]
+      }
+     }
+    ],
+    "before": [
+     "R1 2001:db8:10::/64 owned by static via Ethernet3",
+     "R1 2001:db8:20::/64 owned by static via Ethernet3",
+     "R1 2001:db8:30::/64 owned by static via Ethernet3",
+     "R1 take-over next hops of the client prefixes resolved"
+    ],
+    "after": [
+     "R1 shield 2001:db8:10::/63 gone",
+     "R1 shield 2001:db8:20::/63 gone",
+     "R1 shield 2001:db8:30::/63 gone"
+    ],
+    "undo_before": [
+     "R1 shield next hop 2001:db8:110:1::2 answers"
+    ],
+    "undo_after": [
+     "R1 shield 2001:db8:10::/63 programmed via Ethernet3",
+     "R1 shield 2001:db8:20::/63 programmed via Ethernet3",
+     "R1 shield 2001:db8:30::/63 programmed via Ethernet3",
+     "S1 forwards the service through the shield",
+     "R1 forwards 2001:db8:10::100 toward its switch",
+     "R1 forwards 2001:db8:20::100 toward its switch",
+     "R1 forwards 2001:db8:30::100 toward its switch"
+    ]
+   },
+   "execution_status": "DEPLOYED"
+  },
+  {
+   "cfg_id": "CFG-024",
+   "device": "S1",
+   "description": "[TEMPORARY] SHIELD_INSTALL: revert: temporary /33 pair around the aggregate",
+   "operation": "REMOVE_DELETE",
+   "origin": "REMOVAL",
+   "rendered_config": "no ipv6 route 2001:db8::/33 2001:db8:110:1::1\nno ipv6 route 2001:db8:8000::/33 2001:db8:110:1::1",
+   "rollback_config": "ipv6 route 2001:db8::/33 2001:db8:110:1::1\nipv6 route 2001:db8:8000::/33 2001:db8:110:1::1",
+   "transition": {
+    "key": "revert-S1-shield-install",
+    "stage": "SHIELD_INSTALL",
+    "state": "TEMPORARY",
+    "action": "REMOVE"
+   },
+   "verification": {
+    "requirements": [
+     {
+      "expected": {
+       "absent_paths": [
+        "ipv6 route 2001:db8:8000::/33 2001:db8:110:1::1",
+        "ipv6 route 2001:db8::/33 2001:db8:110:1::1"
+       ]
+      }
+     }
+    ],
+    "before": [
+     "S1 2001:db8::/32 owned by static via Ethernet1",
+     "S1 take-over next hop of 2001:db8::/32 resolved"
+    ],
+    "after": [
+     "S1 shield 2001:db8::/33 gone",
+     "S1 shield 2001:db8:8000::/33 gone"
+    ],
+    "undo_before": [
+     "S1 shield next hop 2001:db8:110:1::1 answers"
+    ],
+    "undo_after": [
+     "S1 shield 2001:db8::/33 programmed via Ethernet1",
+     "S1 shield 2001:db8:8000::/33 programmed via Ethernet1"
+    ]
+   },
+   "execution_status": "DEPLOYED"
+  },
+  {
+   "cfg_id": "CFG-025",
+   "device": "R2",
+   "description": "[PERMANENT] BOUNDARY_POLICY: revert: client prefixes from IS-IS into OSPFv3",
+   "operation": "REMOVE_DELETE",
+   "origin": "REMOVAL",
+   "rendered_config": "ipv6 router ospf 10\n   no redistribute isis level-2 route-map ISIS6-TO-OSPF3\n   no distance ospf external 130",
+   "rollback_config": "ipv6 router ospf 10\n   distance ospf external 130\n   redistribute isis level-2 route-map ISIS6-TO-OSPF3",
+   "transition": {
+    "key": "revert-R2-isis-into-ospfv3",
+    "stage": "BOUNDARY_POLICY",
+    "state": "PERMANENT",
+    "action": "REMOVE"
+   },
+   "verification": {
+    "requirements": [
+     {
+      "expected": {
+       "absent_paths": [
+        "ipv6 router ospf 10 > distance ospf external 130",
+        "ipv6 router ospf 10 > redistribute isis level-2 route-map ISIS6-TO-OSPF3"
+       ]
+      }
+     }
+    ],
+    "before": [],
+    "after": [],
+    "undo_before": [],
+    "undo_after": [
+     "S1 IS-IS database holds 2001:db8::/32",
+     "R1 IS-IS database holds the client prefixes",
+     "S1 static still owns 2001:db8::/32",
+     "R1 static still owns 2001:db8:10::/64",
+     "R1 static still owns 2001:db8:20::/64",
+     "R1 static still owns 2001:db8:30::/64",
+     "S2 IS-IS database holds 2001:db8::/32",
+     "R2 IS-IS database holds the client prefixes",
+     "S2 static still owns 2001:db8::/32",
+     "R2 static still owns 2001:db8:10::/64",
+     "R2 static still owns 2001:db8:20::/64",
+     "R2 static still owns 2001:db8:30::/64"
+    ]
+   },
+   "execution_status": "DEPLOYED"
+  },
+  {
+   "cfg_id": "CFG-026",
+   "device": "R2",
+   "description": "[PERMANENT] BOUNDARY_POLICY: revert: aggregate advertised into IS-IS",
+   "operation": "REMOVE_DELETE",
+   "origin": "REMOVAL",
+   "rendered_config": "router isis NMAS\n   address-family ipv6 unicast\n      no redistribute static route-map STATIC6-TO-ISIS6",
+   "rollback_config": "router isis NMAS\n   address-family ipv6 unicast\n      redistribute static route-map STATIC6-TO-ISIS6",
+   "transition": {
+    "key": "revert-R2-aggregate-into-isis",
+    "stage": "BOUNDARY_POLICY",
+    "state": "PERMANENT",
+    "action": "REMOVE"
+   },
+   "verification": {
+    "requirements": [
+     {
+      "expected": {
+       "absent_paths": [
+        "router isis NMAS > address-family ipv6 unicast > redistribute static route-map STATIC6-TO-ISIS6"
+       ]
+      }
+     }
+    ],
+    "before": [],
+    "after": [],
+    "undo_before": [],
+    "undo_after": []
+   },
+   "execution_status": "DEPLOYED"
+  },
+  {
+   "cfg_id": "CFG-027",
+   "device": "R2",
+   "description": "[PERMANENT] BOUNDARY_POLICY: revert: northbound policy and the multi-anchor aggregate",
+   "operation": "REMOVE_DELETE",
+   "origin": "REMOVAL",
+   "rendered_config": "no ipv6 route 2001:db8::/32 2001:db8:100:101::2\nno ipv6 route 2001:db8::/32 2001:db8:100:102::2\nno ipv6 route 2001:db8::/32 2001:db8:3050::10\nno route-map STATIC6-TO-ISIS6 permit 10\nno route-map ISIS6-TO-OSPF3 permit 10\nno ipv6 prefix-list ACCESS6-NORTHBOUND-AGG",
+   "rollback_config": "ipv6 prefix-list ACCESS6-NORTHBOUND-AGG\n   seq 10 permit 2001:db8::/32\nroute-map ISIS6-TO-OSPF3 permit 10\n   match ipv6 address prefix-list CLIENT-V6\nroute-map STATIC6-TO-ISIS6 permit 10\n   match ipv6 address prefix-list ACCESS6-NORTHBOUND-AGG\nipv6 route 2001:db8::/32 2001:db8:100:101::2\nipv6 route 2001:db8::/32 2001:db8:100:102::2\nipv6 route 2001:db8::/32 2001:db8:3050::10",
+   "transition": {
+    "key": "revert-R2-boundary-policy",
+    "stage": "BOUNDARY_POLICY",
+    "state": "PERMANENT",
+    "action": "REMOVE"
+   },
+   "verification": {
+    "requirements": [
+     {
+      "expected": {
+       "absent_paths": [
+        "ipv6 prefix-list ACCESS6-NORTHBOUND-AGG > seq 10 permit 2001:db8::/32",
+        "ipv6 route 2001:db8::/32 2001:db8:100:101::2",
+        "ipv6 route 2001:db8::/32 2001:db8:100:102::2",
+        "ipv6 route 2001:db8::/32 2001:db8:3050::10",
+        "route-map ISIS6-TO-OSPF3 permit 10 > match ipv6 address prefix-list CLIENT-V6",
+        "route-map STATIC6-TO-ISIS6 permit 10 > match ipv6 address prefix-list ACCESS6-NORTHBOUND-AGG"
+       ]
+      }
+     }
+    ],
+    "before": [],
+    "after": [],
+    "undo_before": [],
+    "undo_after": [
+     "R2 holds 2001:db8::/32 as a static route"
+    ]
+   },
+   "execution_status": "DEPLOYED"
+  },
+  {
+   "cfg_id": "CFG-028",
+   "device": "R1",
+   "description": "[PERMANENT] BOUNDARY_POLICY: revert: client prefixes from IS-IS into OSPFv3",
+   "operation": "REMOVE_DELETE",
+   "origin": "REMOVAL",
+   "rendered_config": "ipv6 router ospf 10\n   no redistribute isis level-2 route-map ISIS6-TO-OSPF3\n   no distance ospf external 130",
+   "rollback_config": "ipv6 router ospf 10\n   distance ospf external 130\n   redistribute isis level-2 route-map ISIS6-TO-OSPF3",
+   "transition": {
+    "key": "revert-R1-isis-into-ospfv3",
+    "stage": "BOUNDARY_POLICY",
+    "state": "PERMANENT",
+    "action": "REMOVE"
+   },
+   "verification": {
+    "requirements": [
+     {
+      "expected": {
+       "absent_paths": [
+        "ipv6 router ospf 10 > distance ospf external 130",
+        "ipv6 router ospf 10 > redistribute isis level-2 route-map ISIS6-TO-OSPF3"
+       ]
+      }
+     }
+    ],
+    "before": [],
+    "after": [],
+    "undo_before": [],
+    "undo_after": []
+   },
+   "execution_status": "DEPLOYED"
+  },
+  {
+   "cfg_id": "CFG-029",
+   "device": "R1",
+   "description": "[PERMANENT] BOUNDARY_POLICY: revert: aggregate advertised into IS-IS",
+   "operation": "REMOVE_DELETE",
+   "origin": "REMOVAL",
+   "rendered_config": "router isis NMAS\n   address-family ipv6 unicast\n      no redistribute static route-map STATIC6-TO-ISIS6",
+   "rollback_config": "router isis NMAS\n   address-family ipv6 unicast\n      redistribute static route-map STATIC6-TO-ISIS6",
+   "transition": {
+    "key": "revert-R1-aggregate-into-isis",
+    "stage": "BOUNDARY_POLICY",
+    "state": "PERMANENT",
+    "action": "REMOVE"
+   },
+   "verification": {
+    "requirements": [
+     {
+      "expected": {
+       "absent_paths": [
+        "router isis NMAS > address-family ipv6 unicast > redistribute static route-map STATIC6-TO-ISIS6"
+       ]
+      }
+     }
+    ],
+    "before": [],
+    "after": [],
+    "undo_before": [],
+    "undo_after": []
+   },
+   "execution_status": "DEPLOYED"
+  },
+  {
+   "cfg_id": "CFG-030",
+   "device": "R1",
+   "description": "[PERMANENT] BOUNDARY_POLICY: revert: northbound policy and the multi-anchor aggregate",
+   "operation": "REMOVE_DELETE",
+   "origin": "REMOVAL",
+   "rendered_config": "no ipv6 route 2001:db8::/32 2001:db8:100:103::2\nno ipv6 route 2001:db8::/32 2001:db8:100:104::2\nno ipv6 route 2001:db8::/32 2001:db8:3050::10\nno route-map STATIC6-TO-ISIS6 permit 10\nno route-map ISIS6-TO-OSPF3 permit 10\nno ipv6 prefix-list ACCESS6-NORTHBOUND-AGG",
+   "rollback_config": "ipv6 prefix-list ACCESS6-NORTHBOUND-AGG\n   seq 10 permit 2001:db8::/32\nroute-map ISIS6-TO-OSPF3 permit 10\n   match ipv6 address prefix-list CLIENT-V6\nroute-map STATIC6-TO-ISIS6 permit 10\n   match ipv6 address prefix-list ACCESS6-NORTHBOUND-AGG\nipv6 route 2001:db8::/32 2001:db8:100:103::2\nipv6 route 2001:db8::/32 2001:db8:100:104::2\nipv6 route 2001:db8::/32 2001:db8:3050::10",
+   "transition": {
+    "key": "revert-R1-boundary-policy",
+    "stage": "BOUNDARY_POLICY",
+    "state": "PERMANENT",
+    "action": "REMOVE"
+   },
+   "verification": {
+    "requirements": [
+     {
+      "expected": {
+       "absent_paths": [
+        "ipv6 prefix-list ACCESS6-NORTHBOUND-AGG > seq 10 permit 2001:db8::/32",
+        "ipv6 route 2001:db8::/32 2001:db8:100:103::2",
+        "ipv6 route 2001:db8::/32 2001:db8:100:104::2",
+        "ipv6 route 2001:db8::/32 2001:db8:3050::10",
+        "route-map ISIS6-TO-OSPF3 permit 10 > match ipv6 address prefix-list CLIENT-V6",
+        "route-map STATIC6-TO-ISIS6 permit 10 > match ipv6 address prefix-list ACCESS6-NORTHBOUND-AGG"
+       ]
+      }
+     }
+    ],
+    "before": [],
+    "after": [],
+    "undo_before": [],
+    "undo_after": [
+     "R1 holds 2001:db8::/32 as a static route"
+    ]
+   },
+   "execution_status": "DEPLOYED"
+  },
+  {
+   "cfg_id": "CFG-031",
+   "device": "S2",
+   "description": "[PERMANENT] BOUNDARY_POLICY: revert: client SVIs passive in IS-IS",
+   "operation": "REMOVE_DELETE",
+   "origin": "REMOVAL",
+   "rendered_config": "interface Vlan10\n   no isis passive\n   no isis enable\ninterface Vlan20\n   no isis passive\n   no isis enable\ninterface Vlan30\n   no isis passive\n   no isis enable",
+   "rollback_config": "interface Vlan10\n   isis enable NMAS\n   isis passive\ninterface Vlan20\n   isis enable NMAS\n   isis passive\ninterface Vlan30\n   isis enable NMAS\n   isis passive",
+   "transition": {
+    "key": "revert-S2-client-svis-passive",
+    "stage": "BOUNDARY_POLICY",
+    "state": "PERMANENT",
+    "action": "REMOVE"
+   },
+   "verification": {
+    "requirements": [
+     {
+      "expected": {
+       "absent_paths": [
+        "interface Vlan10 > isis enable NMAS",
+        "interface Vlan10 > isis passive",
+        "interface Vlan20 > isis enable NMAS",
+        "interface Vlan20 > isis passive",
+        "interface Vlan30 > isis enable NMAS",
+        "interface Vlan30 > isis passive"
+       ]
+      }
+     }
+    ],
+    "before": [],
+    "after": [],
+    "undo_before": [],
+    "undo_after": []
+   },
+   "execution_status": "DEPLOYED"
+  },
+  {
+   "cfg_id": "CFG-032",
+   "device": "S1",
+   "description": "[PERMANENT] BOUNDARY_POLICY: revert: client SVIs passive in IS-IS",
+   "operation": "REMOVE_DELETE",
+   "origin": "REMOVAL",
+   "rendered_config": "interface Vlan10\n   no isis passive\n   no isis enable\ninterface Vlan20\n   no isis passive\n   no isis enable\ninterface Vlan30\n   no isis passive\n   no isis enable",
+   "rollback_config": "interface Vlan10\n   isis enable NMAS\n   isis passive\ninterface Vlan20\n   isis enable NMAS\n   isis passive\ninterface Vlan30\n   isis enable NMAS\n   isis passive",
+   "transition": {
+    "key": "revert-S1-client-svis-passive",
+    "stage": "BOUNDARY_POLICY",
+    "state": "PERMANENT",
+    "action": "REMOVE"
+   },
+   "verification": {
+    "requirements": [
+     {
+      "expected": {
+       "absent_paths": [
+        "interface Vlan10 > isis enable NMAS",
+        "interface Vlan10 > isis passive",
+        "interface Vlan20 > isis enable NMAS",
+        "interface Vlan20 > isis passive",
+        "interface Vlan30 > isis enable NMAS",
+        "interface Vlan30 > isis passive"
+       ]
+      }
+     }
+    ],
+    "before": [],
+    "after": [],
+    "undo_before": [],
+    "undo_after": []
+   },
+   "execution_status": "DEPLOYED"
+  },
+  {
+   "cfg_id": "CFG-033",
+   "device": "S2",
+   "description": "[PERMANENT] ISIS_FORMATION: revert: IS-IS on the uplink and VLAN99",
+   "operation": "REMOVE_DELETE",
+   "origin": "REMOVAL",
+   "rendered_config": "interface Ethernet1\n   no isis metric\n   no isis enable\ninterface Vlan99\n   no isis metric\n   no isis enable",
+   "rollback_config": "interface Ethernet1\n   isis enable NMAS\n   isis metric 10\ninterface Vlan99\n   isis enable NMAS\n   isis metric 10",
+   "transition": {
+    "key": "revert-S2-isis-links",
+    "stage": "ISIS_FORMATION",
+    "state": "PERMANENT",
+    "action": "REMOVE"
+   },
+   "verification": {
+    "requirements": [
+     {
+      "expected": {
+       "absent_paths": [
+        "interface Ethernet1 > isis enable NMAS",
+        "interface Ethernet1 > isis metric 10",
+        "interface Vlan99 > isis enable NMAS",
+        "interface Vlan99 > isis metric 10"
+       ]
+      }
+     }
+    ],
+    "before": [],
+    "after": [],
+    "undo_before": [],
+    "undo_after": [
+     "R1 IS-IS adjacency up on Ethernet3",
+     "R2 IS-IS adjacency up on Ethernet3",
+     "S1 IS-IS adjacency up on Ethernet1, Vlan99",
+     "S2 IS-IS adjacency up on Ethernet1, Vlan99"
+    ]
+   },
+   "execution_status": "DEPLOYED"
+  },
+  {
+   "cfg_id": "CFG-034",
+   "device": "S1",
+   "description": "[PERMANENT] ISIS_FORMATION: revert: IS-IS on the uplink and VLAN99",
+   "operation": "REMOVE_DELETE",
+   "origin": "REMOVAL",
+   "rendered_config": "interface Ethernet1\n   no isis metric\n   no isis enable\ninterface Vlan99\n   no isis metric\n   no isis enable",
+   "rollback_config": "interface Ethernet1\n   isis enable NMAS\n   isis metric 10\ninterface Vlan99\n   isis enable NMAS\n   isis metric 10",
+   "transition": {
+    "key": "revert-S1-isis-links",
+    "stage": "ISIS_FORMATION",
+    "state": "PERMANENT",
+    "action": "REMOVE"
+   },
+   "verification": {
+    "requirements": [
+     {
+      "expected": {
+       "absent_paths": [
+        "interface Ethernet1 > isis enable NMAS",
+        "interface Ethernet1 > isis metric 10",
+        "interface Vlan99 > isis enable NMAS",
+        "interface Vlan99 > isis metric 10"
+       ]
+      }
+     }
+    ],
+    "before": [],
+    "after": [],
+    "undo_before": [],
+    "undo_after": []
+   },
+   "execution_status": "DEPLOYED"
+  },
+  {
+   "cfg_id": "CFG-035",
+   "device": "R2",
+   "description": "[PERMANENT] ISIS_FORMATION: revert: IS-IS on the access link",
+   "operation": "REMOVE_DELETE",
+   "origin": "REMOVAL",
+   "rendered_config": "interface Ethernet3\n   no isis metric\n   no isis enable",
+   "rollback_config": "interface Ethernet3\n   isis enable NMAS\n   isis metric 10",
+   "transition": {
+    "key": "revert-R2-isis-access",
+    "stage": "ISIS_FORMATION",
+    "state": "PERMANENT",
+    "action": "REMOVE"
+   },
+   "verification": {
+    "requirements": [
+     {
+      "expected": {
+       "absent_paths": [
+        "interface Ethernet3 > isis enable NMAS",
+        "interface Ethernet3 > isis metric 10"
+       ]
+      }
+     }
+    ],
+    "before": [],
+    "after": [],
+    "undo_before": [],
+    "undo_after": []
+   },
+   "execution_status": "DEPLOYED"
+  },
+  {
+   "cfg_id": "CFG-036",
+   "device": "R1",
+   "description": "[PERMANENT] ISIS_FORMATION: revert: IS-IS on the access link",
+   "operation": "REMOVE_DELETE",
+   "origin": "REMOVAL",
+   "rendered_config": "interface Ethernet3\n   no isis metric\n   no isis enable",
+   "rollback_config": "interface Ethernet3\n   isis enable NMAS\n   isis metric 10",
+   "transition": {
+    "key": "revert-R1-isis-access",
+    "stage": "ISIS_FORMATION",
+    "state": "PERMANENT",
+    "action": "REMOVE"
+   },
+   "verification": {
+    "requirements": [
+     {
+      "expected": {
+       "absent_paths": [
+        "interface Ethernet3 > isis enable NMAS",
+        "interface Ethernet3 > isis metric 10"
+       ]
+      }
+     }
+    ],
+    "before": [],
+    "after": [],
+    "undo_before": [],
+    "undo_after": []
+   },
+   "execution_status": "DEPLOYED"
+  },
+  {
+   "cfg_id": "CFG-037",
+   "device": "S2",
+   "description": "[PERMANENT] ISIS_FORMATION: revert: IS-IS Level-2 process",
+   "operation": "REMOVE_DELETE",
+   "origin": "REMOVAL",
+   "rendered_config": "no router isis NMAS",
+   "rollback_config": "router isis NMAS\n   net 49.0110.1921.6825.5012.00\n   is-type level-2\n   address-family ipv6 unicast",
+   "transition": {
+    "key": "revert-S2-isis-process",
+    "stage": "ISIS_FORMATION",
+    "state": "PERMANENT",
+    "action": "REMOVE"
+   },
+   "verification": {
+    "requirements": [
+     {
+      "expected": {
+       "absent_paths": [
+        "router isis NMAS > address-family ipv6 unicast",
+        "router isis NMAS > is-type level-2",
+        "router isis NMAS > net 49.0110.1921.6825.5012.00"
+       ]
+      }
+     }
+    ],
+    "before": [],
+    "after": [],
+    "undo_before": [],
+    "undo_after": []
+   },
+   "execution_status": "DEPLOYED"
+  },
+  {
+   "cfg_id": "CFG-038",
+   "device": "S1",
+   "description": "[PERMANENT] ISIS_FORMATION: revert: IS-IS Level-2 process",
+   "operation": "REMOVE_DELETE",
+   "origin": "REMOVAL",
+   "rendered_config": "no router isis NMAS",
+   "rollback_config": "router isis NMAS\n   net 49.0110.1921.6825.5011.00\n   is-type level-2\n   address-family ipv6 unicast",
+   "transition": {
+    "key": "revert-S1-isis-process",
+    "stage": "ISIS_FORMATION",
+    "state": "PERMANENT",
+    "action": "REMOVE"
+   },
+   "verification": {
+    "requirements": [
+     {
+      "expected": {
+       "absent_paths": [
+        "router isis NMAS > address-family ipv6 unicast",
+        "router isis NMAS > is-type level-2",
+        "router isis NMAS > net 49.0110.1921.6825.5011.00"
+       ]
+      }
+     }
+    ],
+    "before": [],
+    "after": [],
+    "undo_before": [],
+    "undo_after": []
+   },
+   "execution_status": "DEPLOYED"
+  },
+  {
+   "cfg_id": "CFG-039",
+   "device": "R2",
+   "description": "[PERMANENT] ISIS_FORMATION: revert: IS-IS Level-2 process",
+   "operation": "REMOVE_DELETE",
+   "origin": "REMOVAL",
+   "rendered_config": "no router isis NMAS",
+   "rollback_config": "router isis NMAS\n   net 49.0110.1921.6825.5002.00\n   is-type level-2\n   address-family ipv6 unicast",
+   "transition": {
+    "key": "revert-R2-isis-process",
+    "stage": "ISIS_FORMATION",
+    "state": "PERMANENT",
+    "action": "REMOVE"
+   },
+   "verification": {
+    "requirements": [
+     {
+      "expected": {
+       "absent_paths": [
+        "router isis NMAS > address-family ipv6 unicast",
+        "router isis NMAS > is-type level-2",
+        "router isis NMAS > net 49.0110.1921.6825.5002.00"
+       ]
+      }
+     }
+    ],
+    "before": [],
+    "after": [],
+    "undo_before": [],
+    "undo_after": []
+   },
+   "execution_status": "DEPLOYED"
+  },
+  {
+   "cfg_id": "CFG-040",
+   "device": "R1",
+   "description": "[PERMANENT] ISIS_FORMATION: revert: IS-IS Level-2 process",
+   "operation": "REMOVE_DELETE",
+   "origin": "REMOVAL",
+   "rendered_config": "no router isis NMAS",
+   "rollback_config": "router isis NMAS\n   net 49.0110.1921.6825.5001.00\n   is-type level-2\n   address-family ipv6 unicast",
+   "transition": {
+    "key": "revert-R1-isis-process",
+    "stage": "ISIS_FORMATION",
+    "state": "PERMANENT",
+    "action": "REMOVE"
+   },
+   "verification": {
+    "requirements": [
+     {
+      "expected": {
+       "absent_paths": [
+        "router isis NMAS > address-family ipv6 unicast",
+        "router isis NMAS > is-type level-2",
+        "router isis NMAS > net 49.0110.1921.6825.5001.00"
+       ]
+      }
+     }
+    ],
+    "before": [],
+    "after": [],
+    "undo_before": [],
+    "undo_after": []
+   },
+   "execution_status": "DEPLOYED"
+  },
+  {
+   "cfg_id": "CFG-041",
+   "device": "S2",
+   "description": "[PERMANENT] VLAN99_IPV6: revert: VLAN99 IPv6 transit address",
+   "operation": "REMOVE_DELETE",
+   "origin": "REMOVAL",
+   "rendered_config": "interface Vlan99\n   no ipv6 address 2001:db8:110:3::2/64",
+   "rollback_config": "interface Vlan99\n   ipv6 address 2001:db8:110:3::2/64",
+   "transition": {
+    "key": "revert-S2-vlan99-ipv6",
+    "stage": "VLAN99_IPV6",
+    "state": "PERMANENT",
+    "action": "REMOVE"
+   },
+   "verification": {
+    "requirements": [
+     {
+      "expected": {
+       "absent_paths": [
+        "interface Vlan99 > ipv6 address 2001:db8:110:3::2/64"
+       ]
+      }
+     }
+    ],
+    "before": [],
+    "after": [],
+    "undo_before": [],
+    "undo_after": []
+   },
+   "execution_status": "DEPLOYED"
+  },
+  {
+   "cfg_id": "CFG-042",
+   "device": "S1",
+   "description": "[PERMANENT] VLAN99_IPV6: revert: VLAN99 IPv6 transit address",
+   "operation": "REMOVE_DELETE",
+   "origin": "REMOVAL",
+   "rendered_config": "interface Vlan99\n   no ipv6 address 2001:db8:110:3::1/64",
+   "rollback_config": "interface Vlan99\n   ipv6 address 2001:db8:110:3::1/64",
+   "transition": {
+    "key": "revert-S1-vlan99-ipv6",
+    "stage": "VLAN99_IPV6",
+    "state": "PERMANENT",
+    "action": "REMOVE"
+   },
+   "verification": {
+    "requirements": [
+     {
+      "expected": {
+       "absent_paths": [
+        "interface Vlan99 > ipv6 address 2001:db8:110:3::1/64"
+       ]
+      }
+     }
+    ],
+    "before": [],
+    "after": [],
+    "undo_before": [],
+    "undo_after": []
+   },
+   "execution_status": "DEPLOYED"
+  },
+  {
+   "cfg_id": "CFG-043",
+   "device": "R4",
+   "description": "[TEMPORARY] CORE_COVER_INSTALL: revert: temporary kernel cover of 2001:db8:30::/64",
+   "operation": "REMOVE_DELETE",
+   "origin": "STRUCTURED",
+   "rendered_config": "ip -6 route del 2001:db8:30::/63",
+   "rollback_config": "ip -6 route add 2001:db8:30::/63 nexthop via fe80::42:aff:fefb:1603 dev eth0 nexthop via fe80::42:aff:fefb:1803 dev eth1",
+   "transition": {
+    "key": "revert-R4-cover-2001:db8:30::/63",
+    "stage": "CORE_COVER_INSTALL",
+    "state": "TEMPORARY",
+    "action": "COVER_REMOVE"
+   },
+   "verification": {
+    "requirements": [
+     {
+      "expected": {
+       "core": "R4",
+       "prefix": "2001:db8:30::/63",
+       "protects": "2001:db8:30::/64",
+       "next_hops": [
+        [
+         "fe80::42:aff:fefb:1603",
+         "eth0"
+        ],
+        [
+         "fe80::42:aff:fefb:1803",
+         "eth1"
+        ]
+       ]
+      }
+     }
+    ],
+    "before": [
+     "no temporary migration line on any access device",
+     "cores left every client route alone for 120 s"
+    ],
+    "after": [
+     "R4 2001:db8:30::/63 is gone"
+    ],
+    "undo_before": [],
+    "undo_after": [
+     "R4 2001:db8:30::/63 is the approved cover and forwards",
+     "R4 OSPF adjacencies unchanged by the covers"
+    ]
+   },
+   "execution_status": "DEPLOYED"
+  },
+  {
+   "cfg_id": "CFG-044",
+   "device": "R4",
+   "description": "[TEMPORARY] CORE_COVER_INSTALL: revert: temporary kernel cover of 2001:db8:20::/64",
+   "operation": "REMOVE_DELETE",
+   "origin": "STRUCTURED",
+   "rendered_config": "ip -6 route del 2001:db8:20::/63",
+   "rollback_config": "ip -6 route add 2001:db8:20::/63 nexthop via fe80::42:aff:fefb:1603 dev eth0 nexthop via fe80::42:aff:fefb:1803 dev eth1",
+   "transition": {
+    "key": "revert-R4-cover-2001:db8:20::/63",
+    "stage": "CORE_COVER_INSTALL",
+    "state": "TEMPORARY",
+    "action": "COVER_REMOVE"
+   },
+   "verification": {
+    "requirements": [
+     {
+      "expected": {
+       "core": "R4",
+       "prefix": "2001:db8:20::/63",
+       "protects": "2001:db8:20::/64",
+       "next_hops": [
+        [
+         "fe80::42:aff:fefb:1603",
+         "eth0"
+        ],
+        [
+         "fe80::42:aff:fefb:1803",
+         "eth1"
+        ]
+       ]
+      }
+     }
+    ],
+    "before": [
+     "cores left every client route alone for 120 s"
+    ],
+    "after": [
+     "R4 2001:db8:20::/63 is gone"
+    ],
+    "undo_before": [],
+    "undo_after": [
+     "R4 2001:db8:20::/63 is the approved cover and forwards"
+    ]
+   },
+   "execution_status": "DEPLOYED"
+  },
+  {
+   "cfg_id": "CFG-045",
+   "device": "R4",
+   "description": "[TEMPORARY] CORE_COVER_INSTALL: revert: temporary kernel cover of 2001:db8:10::/64",
+   "operation": "REMOVE_DELETE",
+   "origin": "STRUCTURED",
+   "rendered_config": "ip -6 route del 2001:db8:10::/63",
+   "rollback_config": "ip -6 route add 2001:db8:10::/63 nexthop via fe80::42:aff:fefb:1603 dev eth0 nexthop via fe80::42:aff:fefb:1803 dev eth1",
+   "transition": {
+    "key": "revert-R4-cover-2001:db8:10::/63",
+    "stage": "CORE_COVER_INSTALL",
+    "state": "TEMPORARY",
+    "action": "COVER_REMOVE"
+   },
+   "verification": {
+    "requirements": [
+     {
+      "expected": {
+       "core": "R4",
+       "prefix": "2001:db8:10::/63",
+       "protects": "2001:db8:10::/64",
+       "next_hops": [
+        [
+         "fe80::42:aff:fefb:1603",
+         "eth0"
+        ],
+        [
+         "fe80::42:aff:fefb:1803",
+         "eth1"
+        ]
+       ]
+      }
+     }
+    ],
+    "before": [
+     "cores left every client route alone for 120 s"
+    ],
+    "after": [
+     "R4 2001:db8:10::/63 is gone"
+    ],
+    "undo_before": [],
+    "undo_after": [
+     "R4 2001:db8:10::/63 is the approved cover and forwards"
+    ]
+   },
+   "execution_status": "DEPLOYED"
+  },
+  {
+   "cfg_id": "CFG-046",
+   "device": "R3",
+   "description": "[TEMPORARY] CORE_COVER_INSTALL: revert: temporary kernel cover of 2001:db8:30::/64",
+   "operation": "REMOVE_DELETE",
+   "origin": "STRUCTURED",
+   "rendered_config": "ip -6 route del 2001:db8:30::/63",
+   "rollback_config": "ip -6 route add 2001:db8:30::/63 nexthop via fe80::42:aff:fefb:1703 dev eth1 nexthop via fe80::42:aff:fefb:1503 dev eth0",
+   "transition": {
+    "key": "revert-R3-cover-2001:db8:30::/63",
+    "stage": "CORE_COVER_INSTALL",
+    "state": "TEMPORARY",
+    "action": "COVER_REMOVE"
+   },
+   "verification": {
+    "requirements": [
+     {
+      "expected": {
+       "core": "R3",
+       "prefix": "2001:db8:30::/63",
+       "protects": "2001:db8:30::/64",
+       "next_hops": [
+        [
+         "fe80::42:aff:fefb:1703",
+         "eth1"
+        ],
+        [
+         "fe80::42:aff:fefb:1503",
+         "eth0"
+        ]
+       ]
+      }
+     }
+    ],
+    "before": [
+     "cores left every client route alone for 120 s"
+    ],
+    "after": [
+     "R3 2001:db8:30::/63 is gone"
+    ],
+    "undo_before": [],
+    "undo_after": [
+     "R3 2001:db8:30::/63 is the approved cover and forwards",
+     "R3 OSPF adjacencies unchanged by the covers"
+    ]
+   },
+   "execution_status": "DEPLOYED"
+  },
+  {
+   "cfg_id": "CFG-047",
+   "device": "R3",
+   "description": "[TEMPORARY] CORE_COVER_INSTALL: revert: temporary kernel cover of 2001:db8:20::/64",
+   "operation": "REMOVE_DELETE",
+   "origin": "STRUCTURED",
+   "rendered_config": "ip -6 route del 2001:db8:20::/63",
+   "rollback_config": "ip -6 route add 2001:db8:20::/63 nexthop via fe80::42:aff:fefb:1703 dev eth1 nexthop via fe80::42:aff:fefb:1503 dev eth0",
+   "transition": {
+    "key": "revert-R3-cover-2001:db8:20::/63",
+    "stage": "CORE_COVER_INSTALL",
+    "state": "TEMPORARY",
+    "action": "COVER_REMOVE"
+   },
+   "verification": {
+    "requirements": [
+     {
+      "expected": {
+       "core": "R3",
+       "prefix": "2001:db8:20::/63",
+       "protects": "2001:db8:20::/64",
+       "next_hops": [
+        [
+         "fe80::42:aff:fefb:1703",
+         "eth1"
+        ],
+        [
+         "fe80::42:aff:fefb:1503",
+         "eth0"
+        ]
+       ]
+      }
+     }
+    ],
+    "before": [
+     "cores left every client route alone for 120 s"
+    ],
+    "after": [
+     "R3 2001:db8:20::/63 is gone"
+    ],
+    "undo_before": [],
+    "undo_after": [
+     "R3 2001:db8:20::/63 is the approved cover and forwards"
+    ]
+   },
+   "execution_status": "DEPLOYED"
+  },
+  {
+   "cfg_id": "CFG-048",
+   "device": "R3",
+   "description": "[TEMPORARY] CORE_COVER_INSTALL: revert: temporary kernel cover of 2001:db8:10::/64",
+   "operation": "REMOVE_DELETE",
+   "origin": "STRUCTURED",
+   "rendered_config": "ip -6 route del 2001:db8:10::/63",
+   "rollback_config": "ip -6 route add 2001:db8:10::/63 nexthop via fe80::42:aff:fefb:1703 dev eth1 nexthop via fe80::42:aff:fefb:1503 dev eth0",
+   "transition": {
+    "key": "revert-R3-cover-2001:db8:10::/63",
+    "stage": "CORE_COVER_INSTALL",
+    "state": "TEMPORARY",
+    "action": "COVER_REMOVE"
+   },
+   "verification": {
+    "requirements": [
+     {
+      "expected": {
+       "core": "R3",
+       "prefix": "2001:db8:10::/63",
+       "protects": "2001:db8:10::/64",
+       "next_hops": [
+        [
+         "fe80::42:aff:fefb:1703",
+         "eth1"
+        ],
+        [
+         "fe80::42:aff:fefb:1503",
+         "eth0"
+        ]
+       ]
+      }
+     }
+    ],
+    "before": [
+     "cores left every client route alone for 120 s"
+    ],
+    "after": [
+     "R3 2001:db8:10::/63 is gone"
+    ],
+    "undo_before": [],
+    "undo_after": [
+     "R3 2001:db8:10::/63 is the approved cover and forwards"
+    ]
+   },
+   "execution_status": "DEPLOYED"
+  }
+ ]
+}

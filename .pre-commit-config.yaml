@@ -1,0 +1,20 @@
+minimum_pre_commit_version: "3.5.0"
+
+repos:
+  - repo: local
+    hooks:
+      - id: nmas-tracked-secret-scan
+        name: NMAS tracked secret scan
+        entry: python scripts/ci/scan_tracked_secrets.py
+        language: system
+        pass_filenames: false
+        always_run: true
+        stages: [pre-commit, pre-push]
+
+      - id: nmas-new-commit-gitleaks
+        name: NMAS redacted Gitleaks commit-range scan
+        entry: python scripts/ci/run_gitleaks_range.py
+        language: system
+        pass_filenames: false
+        always_run: true
+        stages: [pre-push]

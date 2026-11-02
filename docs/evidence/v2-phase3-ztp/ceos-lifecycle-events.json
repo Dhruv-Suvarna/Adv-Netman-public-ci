@@ -1,0 +1,268 @@
+{
+ "device": "DEV-000002",
+ "chain_verified": true,
+ "lifecycle_state": "BOOTSTRAPPED",
+ "admission_state": "NOT_ADMITTED",
+ "ztp_state": "DISABLED_VERIFIED",
+ "events": [
+  {
+   "seq": 1,
+   "action": "REGISTER",
+   "outcome": "ADVANCED",
+   "from": "",
+   "to": "REGISTERED",
+   "actor": "olivia",
+   "actor_kind": "HUMAN",
+   "blockers": [],
+   "entry_digest": "3a14756c29fe45eaed2fb5c414e6564d59623b66a106c23ef6216f3da1f6d395"
+  },
+  {
+   "seq": 2,
+   "action": "ATTACHMENT_REGISTER",
+   "outcome": "RECORDED",
+   "from": "REGISTERED",
+   "to": "REGISTERED",
+   "actor": "olivia",
+   "actor_kind": "HUMAN",
+   "blockers": [],
+   "entry_digest": "384f505a06e2b34df59683f864cf4174ff4f02af077e0cc0021641574af25c20"
+  },
+  {
+   "seq": 3,
+   "action": "ATTACHMENT_APPROVE",
+   "outcome": "RECORDED",
+   "from": "REGISTERED",
+   "to": "REGISTERED",
+   "actor": "arthur",
+   "actor_kind": "HUMAN",
+   "blockers": [],
+   "entry_digest": "63c518c9cc193d384e34cefb11aad68cabe923dac002d7bdd8bc5c786abe2993"
+  },
+  {
+   "seq": 4,
+   "action": "BOOTSTRAP_AUTH_REQUEST",
+   "outcome": "RECORDED",
+   "from": "REGISTERED",
+   "to": "REGISTERED",
+   "actor": "olivia",
+   "actor_kind": "HUMAN",
+   "blockers": [],
+   "entry_digest": "d9690e110d415a3d9509a79d65a9c979a71e3433bfdc11d93b504c315847ea08"
+  },
+  {
+   "seq": 5,
+   "action": "BOOTSTRAP_AUTH_APPROVE",
+   "outcome": "RECORDED",
+   "from": "REGISTERED",
+   "to": "REGISTERED",
+   "actor": "arthur",
+   "actor_kind": "HUMAN",
+   "blockers": [],
+   "entry_digest": "e894f148d9fb71fbb7554c2379a808447da3a161d38731716f655c6a7b0599e3"
+  },
+  {
+   "seq": 6,
+   "action": "ZTP_SESSION_OPEN",
+   "outcome": "RECORDED",
+   "from": "REGISTERED",
+   "to": "REGISTERED",
+   "actor": "olivia",
+   "actor_kind": "HUMAN",
+   "blockers": [],
+   "entry_digest": "3ded59e3313a96e3d02e150dddee47e9391f830c9e384e769723ba4469b426de"
+  },
+  {
+   "seq": 7,
+   "action": "ZTP_DHCP_POLICY",
+   "outcome": "RECORDED",
+   "from": "REGISTERED",
+   "to": "REGISTERED",
+   "actor": "olivia",
+   "actor_kind": "AUTOMATION",
+   "blockers": [],
+   "entry_digest": "575fc784fc914245c0e2959232f1b4e40371dc93cb945dcc9026aaccde8f75ad"
+  },
+  {
+   "seq": 8,
+   "action": "ZTP_DHCP_POLICY",
+   "outcome": "RECORDED",
+   "from": "REGISTERED",
+   "to": "REGISTERED",
+   "actor": "erin",
+   "actor_kind": "AUTOMATION",
+   "blockers": [],
+   "entry_digest": "09ba61bb125f6b9ad56952162c1953fb307cee4f6cfeacf65ab5ccfc84989733"
+  },
+  {
+   "seq": 9,
+   "action": "OBSERVE_IDENTITY",
+   "outcome": "RECORDED",
+   "from": "REGISTERED",
+   "to": "REGISTERED",
+   "actor": "system:ztp-dhcp-ingest",
+   "actor_kind": "AUTOMATION",
+   "blockers": [],
+   "entry_digest": "281c27b4d0fbdf7492125c17ce177b525a54e50d340e65b9c4f12224256613de"
+  },
+  {
+   "seq": 10,
+   "action": "DISCOVER",
+   "outcome": "ADVANCED",
+   "from": "REGISTERED",
+   "to": "DISCOVERED",
+   "actor": "system:ztp-dhcp-ingest",
+   "actor_kind": "AUTOMATION",
+   "blockers": [],
+   "entry_digest": "4e12bab601efd71df799ca9488790e060d2b23b07efbf1512cff5858e2cfc58f"
+  },
+  {
+   "seq": 11,
+   "action": "OBSERVE_ATTACHMENT",
+   "outcome": "RECORDED",
+   "from": "DISCOVERED",
+   "to": "DISCOVERED",
+   "actor": "system:ztp-dhcp-ingest",
+   "actor_kind": "AUTOMATION",
+   "blockers": [],
+   "entry_digest": "1031a5e0a1935375839acd2e0a7c221b13b4962cdf5d623afaaa134734f2cbb2"
+  },
+  {
+   "seq": 12,
+   "action": "ZTP_DISCOVERY",
+   "outcome": "RECORDED",
+   "from": "DISCOVERED",
+   "to": "DISCOVERED",
+   "actor": "system:ztp-dhcp-ingest",
+   "actor_kind": "AUTOMATION",
+   "blockers": [],
+   "entry_digest": "5812c012b83df677fc98130f69a9fc3362ab005d6fc95d6548e7f25d69c37a3d"
+  },
+  {
+   "seq": 13,
+   "action": "ZTP_STATE",
+   "outcome": "RECORDED",
+   "from": "DISCOVERED",
+   "to": "DISCOVERED",
+   "actor": "system:ztp-dhcp-ingest",
+   "actor_kind": "AUTOMATION",
+   "blockers": [],
+   "entry_digest": "af23eff5accb6cff5abded5c2b5bf26a71f207e8d89401abd1eb2a19353be89e"
+  },
+  {
+   "seq": 14,
+   "action": "BOOTSTRAP_AUTH_CONSUME",
+   "outcome": "RECORDED",
+   "from": "DISCOVERED",
+   "to": "DISCOVERED",
+   "actor": "system:ztp-artifact-service",
+   "actor_kind": "AUTOMATION",
+   "blockers": [],
+   "entry_digest": "6ed2ea61ecb3c5d3f7ea7d3cad8a4cc2d172830df187779ff296ff939969fc25"
+  },
+  {
+   "seq": 15,
+   "action": "ZTP_ARTIFACT_DELIVERED",
+   "outcome": "RECORDED",
+   "from": "DISCOVERED",
+   "to": "DISCOVERED",
+   "actor": "system:ztp-artifact-service",
+   "actor_kind": "AUTOMATION",
+   "blockers": [],
+   "entry_digest": "9e86dacb000030eae7c4a33bcc955ee4a6e07252862cc5ab13aa74c79ae1e012"
+  },
+  {
+   "seq": 16,
+   "action": "ZTP_MANAGEMENT_CONTACT",
+   "outcome": "RECORDED",
+   "from": "DISCOVERED",
+   "to": "DISCOVERED",
+   "actor": "olivia",
+   "actor_kind": "AUTOMATION",
+   "blockers": [],
+   "entry_digest": "0a050bfb13676a454e8bebe7af208c42311123637437161090ef7a0899d0f5df"
+  },
+  {
+   "seq": 17,
+   "action": "ZTP_MANAGEMENT_VERIFY",
+   "outcome": "REFUSED",
+   "from": "DISCOVERED",
+   "to": "DISCOVERED",
+   "actor": "erin",
+   "actor_kind": "HUMAN",
+   "blockers": [
+    "HOST_KEY_NOT_ENROLLED"
+   ],
+   "entry_digest": "fd81f8281f79584502468aac6a9d348a0cb05942f210f85a34e986d9c2affeef"
+  },
+  {
+   "seq": 18,
+   "action": "ZTP_HOST_KEY_ENROLL",
+   "outcome": "REFUSED",
+   "from": "DISCOVERED",
+   "to": "DISCOVERED",
+   "actor": "arthur",
+   "actor_kind": "HUMAN",
+   "blockers": [
+    "HOST_KEY_MISMATCH"
+   ],
+   "entry_digest": "ce7a3e52bc314df05ad813245341d48a5b69f800f75fbb424a19cd00d627fc8b"
+  },
+  {
+   "seq": 19,
+   "action": "ZTP_MANAGEMENT_VERIFY",
+   "outcome": "REFUSED",
+   "from": "DISCOVERED",
+   "to": "DISCOVERED",
+   "actor": "erin",
+   "actor_kind": "HUMAN",
+   "blockers": [
+    "HOST_KEY_NOT_ENROLLED"
+   ],
+   "entry_digest": "b9a68dfbca9c6cfaaa276018d91073fa08b8078668adede5f67239d126f9546a"
+  },
+  {
+   "seq": 20,
+   "action": "ZTP_HOST_KEY_ENROLL",
+   "outcome": "RECORDED",
+   "from": "DISCOVERED",
+   "to": "DISCOVERED",
+   "actor": "arthur",
+   "actor_kind": "HUMAN",
+   "blockers": [],
+   "entry_digest": "fbf0ada1d5ec4b63a4058d4c4ddcbdf145309508c09f12192dbfe70441493e36"
+  },
+  {
+   "seq": 21,
+   "action": "OBSERVE_IDENTITY",
+   "outcome": "RECORDED",
+   "from": "DISCOVERED",
+   "to": "DISCOVERED",
+   "actor": "system:ztp-workflow",
+   "actor_kind": "AUTOMATION",
+   "blockers": [],
+   "entry_digest": "f09bd739a6eca8ce28fba832c79af3c7a261113e4b6d19af30ddcc90c11321ca"
+  },
+  {
+   "seq": 22,
+   "action": "ZTP_MANAGEMENT_VERIFY",
+   "outcome": "RECORDED",
+   "from": "DISCOVERED",
+   "to": "DISCOVERED",
+   "actor": "erin",
+   "actor_kind": "AUTOMATION",
+   "blockers": [],
+   "entry_digest": "b04dfe304ea56859a63d2b300cf71a9375223ef0ec777aeaa88ea190d752550d"
+  },
+  {
+   "seq": 23,
+   "action": "BOOTSTRAP",
+   "outcome": "ADVANCED",
+   "from": "DISCOVERED",
+   "to": "BOOTSTRAPPED",
+   "actor": "system:ztp-workflow (requested by erin)",
+   "actor_kind": "AUTOMATION",
+   "blockers": [],
+   "entry_digest": "a4cf258e7d6191455a65a3c429bc1a6f7cbfd24713e10759a9d43fcddde535f5"
+  }
+ ]
+}

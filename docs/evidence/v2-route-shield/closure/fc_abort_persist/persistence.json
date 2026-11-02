@@ -1,0 +1,72 @@
+{
+ "report": {
+  "status": "RECOVERED",
+  "command": "copy running-config startup-config",
+  "written": [
+   "R1",
+   "R2"
+  ],
+  "devices": {
+   "R1": {
+    "command": "copy running-config startup-config",
+    "status": "VERIFIED",
+    "startup_digest": "e496c8b4641be1f53c0166a4043e05e327be6a892b0d2dc628cdbc0fc3ba9921",
+    "running_digest": "e496c8b4641be1f53c0166a4043e05e327be6a892b0d2dc628cdbc0fc3ba9921",
+    "intended_digest": "e496c8b4641be1f53c0166a4043e05e327be6a892b0d2dc628cdbc0fc3ba9921",
+    "recovery": "STARTUP_RESTORED"
+   },
+   "R2": {
+    "command": "copy running-config startup-config",
+    "status": "VERIFIED",
+    "startup_digest": "55f21992ba1908eb09b5410fccf530d3040562b50766f8c802f95b7ebfc685e6",
+    "running_digest": "55f21992ba1908eb09b5410fccf530d3040562b50766f8c802f95b7ebfc685e6",
+    "intended_digest": "55f21992ba1908eb09b5410fccf530d3040562b50766f8c802f95b7ebfc685e6",
+    "recovery": "STARTUP_RESTORED"
+   }
+  }
+ },
+ "startup_start": {
+  "R1": {
+   "startup": "f7e23531997fbe0c2600218ea7c7885f2591e40bad652ec900ac9558e2b0b0db",
+   "running": "f7e23531997fbe0c2600218ea7c7885f2591e40bad652ec900ac9558e2b0b0db"
+  },
+  "R2": {
+   "startup": "a76c51916fd1da35620973d9cd3e718d0c8bce96e215caf17f158319395beb23",
+   "running": "a76c51916fd1da35620973d9cd3e718d0c8bce96e215caf17f158319395beb23"
+  },
+  "S1": {
+   "startup": "f7e4fd4fdee0bb8346329a6add7e553851d7bba67c8a0b02db06e3c4ae6efa31",
+   "running": "f7e4fd4fdee0bb8346329a6add7e553851d7bba67c8a0b02db06e3c4ae6efa31"
+  },
+  "S2": {
+   "startup": "ee5f0cb47cb509c8548e6d213cec4d76666ab33768f56cbc53d0889a7b6a4909",
+   "running": "ee5f0cb47cb509c8548e6d213cec4d76666ab33768f56cbc53d0889a7b6a4909"
+  }
+ },
+ "startup_end": {
+  "R1": {
+   "startup": "f7e23531997fbe0c2600218ea7c7885f2591e40bad652ec900ac9558e2b0b0db",
+   "running": "f7e23531997fbe0c2600218ea7c7885f2591e40bad652ec900ac9558e2b0b0db"
+  },
+  "R2": {
+   "startup": "a76c51916fd1da35620973d9cd3e718d0c8bce96e215caf17f158319395beb23",
+   "running": "a76c51916fd1da35620973d9cd3e718d0c8bce96e215caf17f158319395beb23"
+  },
+  "S1": {
+   "startup": "f7e4fd4fdee0bb8346329a6add7e553851d7bba67c8a0b02db06e3c4ae6efa31",
+   "running": "f7e4fd4fdee0bb8346329a6add7e553851d7bba67c8a0b02db06e3c4ae6efa31"
+  },
+  "S2": {
+   "startup": "ee5f0cb47cb509c8548e6d213cec4d76666ab33768f56cbc53d0889a7b6a4909",
+   "running": "ee5f0cb47cb509c8548e6d213cec4d76666ab33768f56cbc53d0889a7b6a4909"
+  }
+ },
+ "core_boot_start": {
+  "c3": "c779f912a770e264",
+  "c4": "562ad6c9311dfc44"
+ },
+ "core_boot_end": {
+  "c3": "c779f912a770e264",
+  "c4": "562ad6c9311dfc44"
+ }
+}

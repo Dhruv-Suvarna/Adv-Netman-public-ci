@@ -1,0 +1,51 @@
+{% extends "core/base.html" %}
+{% load core_extras %}
+{% block title %}{{ bundle.bundle_id }}{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1><code>{{ bundle.bundle_id }}</code> <span class="badge badge--{{ kind_badge }}">{{ bundle.get_kind_display }}</span> <span class="badge badge--warning">PROVENANCE: {{ bundle.provenance }}</span></h1>
+  <p><a href="{% url 'core:bundles_list' %}">&larr; All bundles</a> · <a href="{% url 'core:bootstrap_home' %}">Initial Golden Bootstrap</a> · <a href="{% url 'core:bundle_manifest' bundle.bundle_id %}">Download manifest.json</a></p>
+  <p>Immutable, content-addressed. Opening this page contacts no device and changes nothing. Integrity is recomputed from the stored contents.</p>
+</div>
+{% if notice %}<div class="card" style="border-left:6px solid var(--{% if notice.0 == 'success' %}success{% elif notice.0 == 'danger' %}danger{% else %}text-muted{% endif %});"><p>{{ notice.1 }}</p></div>{% endif %}
+
+{% if bundle.kind == 'GOLDEN' %}
+<div class="card" style="border-left:6px solid var(--success);"><h3><span class="badge badge--success">INITIAL GOLDEN</span> — source: <strong>LEGACY_BOOTSTRAP</strong></h3>
+  <p>The pre-existing, traditionally configured network adopted after a real {{ prov.observation_duration_seconds|soak_duration }} observation and the operator's explicit approval. It did <strong>not</strong> pass a {{ production.duration_seconds|soak_duration }} probation soak and has no Change, plan, UAT bundle or Probation bundle; none was fabricated. Normal future Golden bundles still require the full lifecycle.</p>
+  <table class="data-table"><tbody>
+    <tr><th>Golden ID</th><td><code>{{ bundle.bundle_id }}</code></td></tr>
+    <tr><th>Created</th><td>{{ bundle.created_at|date:"Y-m-d H:i:s" }} UTC</td></tr>
+    <tr><th>Approved</th><td>{{ prov.decided_at }} by {{ prov.decided_by }}</td></tr>
+    <tr><th>Baseline captured</th><td>{{ baseline.captured_at }}</td></tr>
+    <tr><th>Bootstrap observation</th><td>{{ prov.observation_started_at }} &rarr; {{ prov.observation_completed_at }} (required end {{ prov.observation_required_end_at }}) · <a href="{% url 'core:bootstrap_run_detail' prov.observation_run_id %}"><code>{{ prov.observation_run_id }}</code></a> · policy <code>{{ prov.policy_version }}</code></td></tr>
+    <tr><th>Decision-time configuration re-check</th><td>{{ prov.config_recheck_result }} at {{ prov.config_recheck_at }}</td></tr>
+    <tr><th>Baseline digest</th><td><code>{{ bundle.payload_digest }}</code></td></tr>
+    <tr><th>Bundle digest</th><td><code>{{ bundle.bundle_digest }}</code></td></tr>
+    <tr><th>Evidence digest</th><td><code>{{ prov.evidence_digest }}</code></td></tr>
+  </tbody></table></div>
+{% else %}
+<div class="card" style="border-left:6px solid var(--warning);"><h3><span class="badge badge--warning">LEGACY BASELINE CANDIDATE</span> — not Golden</h3>
+  <p>The sanitized running configuration of every managed device as it was captured, read-only. It only records what was seen; it becomes Golden solely through the one-time bootstrap observation and the operator's explicit approval.</p>
+  <table class="data-table"><tbody>
+    <tr><th>Captured</th><td>{{ baseline.captured_at }} (started {{ baseline.capture_started_at }})</td></tr>
+    <tr><th>Created</th><td>{{ bundle.created_at|date:"Y-m-d H:i:s" }} UTC by {{ bundle.created_by }}</td></tr>
+    <tr><th>Baseline digest</th><td><code>{{ bundle.payload_digest }}</code></td></tr>
+    <tr><th>Bundle digest</th><td><code>{{ bundle.bundle_digest }}</code></td></tr>
+    <tr><th>Golden</th><td>{% if lineage.golden %}<a href="{% url 'core:bundle_detail' lineage.golden.bundle_id %}"><code>{{ lineage.golden.bundle_id }}</code></a>{% else %}none{% endif %}</td></tr>
+  </tbody></table></div>
+{% endif %}
+
+<div class="card" style="margin-top:16px;"><h3>Integrity</h3><p><span class="badge badge--{% if integrity.ok %}success{% else %}danger{% endif %}">{{ integrity.state }}</span>
+  {% if not integrity.ok %}{% for f in integrity.findings %}<br><span class="badge badge--danger">{{ f.code }}</span> {{ f.message }}{% endfor %}{% endif %}</p></div>
+
+<div class="card" style="margin-top:16px;"><h3>Secret handling</h3>
+  <p>Stored configuration is <strong>{{ sanitization.stored_text }}</strong>. {{ sanitization.redacted_lines }} secret-bearing line(s) were redacted (<code>&lt;REDACTED&gt;</code>) before anything was stored; no credential, key, community string or token is in this artifact, its database rows, its audit events or its export. {{ sanitization.note }}</p></div>
+
+<div class="card" style="margin-top:16px;"><h3>Captured devices ({{ devices|length }})</h3>
+  <table class="data-table"><thead><tr><th>Device</th><th>Platform</th><th>Captured (UTC)</th><th>Method</th><th>Sections</th><th>Config digest</th></tr></thead><tbody>
+  {% for d in devices %}<tr><td>{{ d.device }}</td><td>{{ d.platform }}</td><td>{{ d.captured_at }}</td><td>{{ d.capture_method }}</td>
+    <td>{% for s in d.sections %}<details><summary>{{ s.name }} · {{ s.kept_lines }} lines · {{ s.redacted_lines }} redacted · <code>{{ s.sha256|slice:":12" }}</code></summary><pre style="max-height:260px;overflow:auto;">{{ s.sanitized }}</pre></details>{% endfor %}</td>
+    <td><code>{{ d.config_digest|slice:":16" }}</code></td></tr>{% endfor %}
+  </tbody></table>
+</div>
+{% endblock %}

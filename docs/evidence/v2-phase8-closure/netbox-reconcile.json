@@ -1,0 +1,281 @@
+{
+  "networkx": {
+    "after_rebuild": {
+      "edges": [
+        [
+          "NEW1",
+          "S1",
+          "PRODUCTION"
+        ],
+        [
+          "R1",
+          "mgmt_swt",
+          "MANAGEMENT"
+        ],
+        [
+          "R1",
+          "nmas:nmas-vrf-R1-1",
+          "MANAGEMENT"
+        ]
+      ],
+      "nodes": [
+        [
+          "NEW1",
+          "IN_SERVICE"
+        ],
+        [
+          "R1",
+          "IN_SERVICE"
+        ],
+        [
+          "S1",
+          "IN_SERVICE"
+        ],
+        [
+          "S3",
+          "IN_SERVICE"
+        ],
+        [
+          "mgmt_swt",
+          "IN_SERVICE"
+        ],
+        [
+          "nmas:nmas-vrf-R1-1",
+          "UNMANAGED"
+        ]
+      ]
+    },
+    "before": {
+      "edges": [
+        [
+          "NEW1",
+          "S1",
+          "PRODUCTION"
+        ],
+        [
+          "R1",
+          "mgmt_swt",
+          "MANAGEMENT"
+        ],
+        [
+          "R1",
+          "nmas:nmas-vrf-R1-1",
+          "MANAGEMENT"
+        ]
+      ],
+      "nodes": [
+        [
+          "NEW1",
+          "IN_SERVICE"
+        ],
+        [
+          "R1",
+          "IN_SERVICE"
+        ],
+        [
+          "S1",
+          "IN_SERVICE"
+        ],
+        [
+          "S3",
+          "IN_SERVICE"
+        ],
+        [
+          "mgmt_swt",
+          "IN_SERVICE"
+        ],
+        [
+          "nmas:nmas-vrf-R1-1",
+          "UNMANAGED"
+        ]
+      ]
+    },
+    "equal_after_rebuild": true,
+    "equal_after_replay": true,
+    "rebuilt_devices": 6
+  },
+  "result": "PASS",
+  "seed": {
+    "ips": [
+      "10.254.99.1/30",
+      "10.254.99.5/30"
+    ],
+    "new1_ethernet1": "virtual",
+    "r2": "R2",
+    "s1_ethernet7": {
+      "mode": "access",
+      "type": "1000base-t",
+      "untagged": 30
+    },
+    "vrf": "MGMT"
+  },
+  "steps": [
+    {
+      "at": "2026-10-27T17:25:55.337135+00:00",
+      "netbox_status": "active",
+      "projection": {
+        "applied": 0,
+        "codes": [
+          "CABLE_ENDPOINT_NOT_CONNECTABLE"
+        ],
+        "planned": [
+          "set_status"
+        ],
+        "state": "PLANNED"
+      },
+      "step": "write disabled"
+    },
+    {
+      "at": "2026-10-27T17:26:00.429438+00:00",
+      "netbox_status": "planned",
+      "new1_ethernet1": {
+        "cable": null,
+        "peer": null,
+        "type": "virtual"
+      },
+      "projection": {
+        "applied": 1,
+        "codes": [
+          "CABLE_ENDPOINT_NOT_CONNECTABLE"
+        ],
+        "planned": [
+          "set_status"
+        ],
+        "state": "DISCREPANCY"
+      },
+      "step": "virtual endpoint"
+    },
+    {
+      "at": "2026-10-27T17:26:06.649757+00:00",
+      "new1_ethernet1": {
+        "cable": 2,
+        "peer": "S1:Ethernet7",
+        "type": "1000base-t"
+      },
+      "projection": {
+        "applied": 2,
+        "codes": [],
+        "planned": [
+          "create_cable"
+        ],
+        "state": "IN_SYNC"
+      },
+      "s1_ethernet7": {
+        "cable": 2,
+        "peer": "NEW1:Ethernet1",
+        "type": "1000base-t"
+      },
+      "step": "cable created"
+    },
+    {
+      "at": "2026-10-27T17:26:09.090159+00:00",
+      "cables": 1,
+      "projection": {
+        "applied": 2,
+        "codes": [],
+        "planned": [],
+        "state": "IN_SYNC"
+      },
+      "step": "replay"
+    },
+    {
+      "at": "2026-10-27T17:26:12.388678+00:00",
+      "projection": {
+        "applied": 2,
+        "codes": [
+          "VLAN_MISMATCH"
+        ],
+        "planned": [],
+        "state": "DISCREPANCY"
+      },
+      "step": "vlan drift"
+    },
+    {
+      "address": {
+        "device": "R1",
+        "interface": "Ethernet3",
+        "vrf": "MGMT"
+      },
+      "at": "2026-10-27T17:26:23.958856+00:00",
+      "projection": {
+        "applied": 3,
+        "codes": [],
+        "planned": [],
+        "state": "IN_SYNC"
+      },
+      "step": "admission + VRF"
+    },
+    {
+      "at": "2026-10-27T17:26:25.425643+00:00",
+      "held_by": "R2",
+      "projection": {
+        "applied": 0,
+        "codes": [
+          "MGMT_IP_ASSIGNED_ELSEWHERE"
+        ],
+        "planned": [],
+        "state": "DISCREPANCY"
+      },
+      "step": "address held elsewhere"
+    },
+    {
+      "at": "2026-10-27T17:26:27.885717+00:00",
+      "desired_maintenance": true,
+      "netbox_status": "planned",
+      "step": "maintenance"
+    },
+    {
+      "at": "2026-10-27T17:26:33.073132+00:00",
+      "attempts": 1,
+      "next_attempt_in_s": -0.096268,
+      "projection": "UNAVAILABLE",
+      "results": [
+        "NSOT_UNAVAILABLE"
+      ],
+      "step": "netbox paused"
+    },
+    {
+      "at": "2026-10-27T17:26:35.319174+00:00",
+      "cables": 1,
+      "projection": {
+        "applied": 2,
+        "codes": [],
+        "planned": [],
+        "state": "IN_SYNC"
+      },
+      "step": "after restart"
+    },
+    {
+      "at": "2026-10-27T17:26:38.109179+00:00",
+      "netbox_status": "offline",
+      "projection": {
+        "applied": 3,
+        "codes": [],
+        "planned": [
+          "set_status"
+        ],
+        "state": "IN_SYNC"
+      },
+      "step": "decommissioned"
+    },
+    {
+      "at": "2026-10-27T17:26:40.423624+00:00",
+      "netbox_status": "active",
+      "step": "restored",
+      "successor": {
+        "applied": 1,
+        "codes": [],
+        "planned": [
+          "set_status"
+        ],
+        "state": "IN_SYNC"
+      }
+    },
+    {
+      "at": "2026-10-27T17:26:41.238115+00:00",
+      "netbox_status": "active",
+      "step": "replay of the old registration",
+      "superseded_by": "DEV-000006"
+    }
+  ]
+}

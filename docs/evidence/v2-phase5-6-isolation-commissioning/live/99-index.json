@@ -1,0 +1,39 @@
+{
+  "devices": {
+    "NEW1": [
+      "DEV-000002",
+      "IN_SERVICE",
+      "ADMITTED",
+      "VERIFIED"
+    ],
+    "NEW2": [
+      "DEV-000003",
+      "REGISTERED",
+      "NOT_ADMITTED",
+      "UNVERIFIED"
+    ],
+    "UP1": [
+      "DEV-000001",
+      "IN_SERVICE",
+      "LEGACY_PREEXISTING",
+      "UNVERIFIED"
+    ]
+  },
+  "files": [
+    "00-prepare.json",
+    "10-isolation-before-device.json",
+    "20-dhcpd.conf",
+    "20-ztp.json",
+    "30-onboard.json",
+    "39-commissioning-aborted-first-attempt.json",
+    "40-commission.json",
+    "41-commissioning-failed-run-reconciled.json",
+    "42-commissioning-uncertain-reconciled-with-proof.json",
+    "43-fixture-capability-evidence-removed.json",
+    "44-commissioning-rolled-back-run.json",
+    "45-downstream-before-upstream-admission.json",
+    "50-admission-injected-failure.json",
+    "60-admission.json",
+    "70-downstream-rehearsal.json"
+  ]
+}

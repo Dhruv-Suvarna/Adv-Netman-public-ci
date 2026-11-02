@@ -1,0 +1,11 @@
+ip access-list standard NMAS_SNMP
+   10 permit host {{ receiver }}
+exit
+snmp-server ipv4 access-list NMAS_SNMP
+snmp-server view NMAS_READ iso included
+snmp-server group NMAS_MONITOR v3 priv read NMAS_READ
+snmp-server user {{ username }} NMAS_MONITOR v3 auth sha256 {{ auth_password }} priv aes {{ privacy_password }}
+snmp-server host {{ receiver }} traps version 3 priv {{ username }}
+snmp-server local-interface {{ source_interface }}
+snmp-server enable traps snmp link-down
+snmp-server enable traps snmp link-up

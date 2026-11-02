@@ -1,0 +1,30 @@
+{% extends "core/base.html" %}
+{% block title %}{{ cell.platform }} · {{ cell.feature }} · Code Coverage{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>{{ cell.feature }} on <code>{{ cell.platform }}</code></h1>
+  <p><a href="{% url 'core:quality_coverage' %}">&larr; Code Coverage</a> · capability status <strong>{{ cell.final_status }}</strong> · test coverage <span class="badge badge--{{ badge }}">{{ cell.status }}</span></p>
+</div>
+{% include "core/quality/_evidence.html" with refresh_next="coverage" %}
+<div class="card" style="margin-top:12px;" id="feature-lifecycle"><h3>Feature lifecycle test closure</h3>
+  <p>Lifecycle closure <strong>{{ closure_pct|default:"0" }}%</strong> · POS <strong>{{ cell.positive.pass }} / {{ cell.positive.required }}</strong> · NEG <strong>{{ cell.negative.pass }} / {{ cell.negative.required }}</strong></p>
+  <table class="data-table" id="cell-stages"><thead><tr><th>Lifecycle stage</th><th>Negative</th><th>Positive</th></tr></thead><tbody>
+  {% for s in stages %}<tr><th>{{ s.title }}</th>
+    {% if not s.implemented %}<td colspan="2"><span class="badge badge--not-implemented">NOT_CURRENT_SCOPE</span> the capability evidence does not show this stage implemented for the cell</td>
+      <td>{% with c=s.negative %}{% if c %}<span class="badge badge--{{ c.badge }}">{{ c.state }}</span> {{ c.condition }} → {{ c.expected }}{% if c.reason %}<br><em style="font-size:0.85em;">{{ c.reason }}</em>{% endif %}{% for t in c.tests %}<br><code style="font-size:0.75em;">{{ t.id }}</code> ({{ t.outcome }}){% endfor %}{% endif %}{% endwith %}</td>
+      <td>{% with c=s.positive %}{% if c %}<span class="badge badge--{{ c.badge }}">{{ c.state }}</span> {{ c.condition }} → {{ c.expected }}{% if c.reason %}<br><em style="font-size:0.85em;">{{ c.reason }}</em>{% endif %}{% for t in c.tests %}<br><code style="font-size:0.75em;">{{ t.id }}</code> ({{ t.outcome }}){% endfor %}{% endif %}{% endwith %}</td>
+    {% endif %}</tr>{% endfor %}
+  </tbody></table>
+</div>
+<div class="card" style="margin-top:12px;" id="platform-runtime-coverage"><h3>Platform aggregate runtime coverage</h3>
+  <p style="color:var(--text-muted);">{{ platform_scope_note }}</p>
+  {% if platform_coverage %}<p>Platform <code>{{ cell.platform }}</code>: functions <strong>{{ platform_coverage.functions.tested }} / {{ platform_coverage.functions.required }}</strong> · statements <strong>{{ platform_coverage.line_pct|default:"-" }}%</strong> · branches <strong>{{ platform_coverage.branch_pct|default:"-" }}%</strong></p>{% endif %}
+  {% if cell.coverage %}<p style="font-size:0.85em;">This cell's recorded artifacts (below), together: functions {{ cell.functions.tested }}/{{ cell.functions.required }} · statements {{ cell.coverage.line_pct|default:"-" }}% · branches {{ cell.coverage.branch_pct|default:"-" }}%</p>{% endif %}
+</div>
+<div class="card" style="margin-top:12px;"><h3>Source artifacts</h3>
+  <table class="data-table"><thead><tr><th>Artifact</th><th>Status</th><th>Functions</th><th>Statements</th><th>Branches</th><th>Uncovered lines</th></tr></thead><tbody>
+  {% for a in artifacts %}<tr><td><a href="{% url 'core:quality_artifact' a.type a.path %}"><code>{{ a.path }}</code></a></td><td>{{ a.status }}</td><td>{% if a.functions.required %}{{ a.functions.tested }}/{{ a.functions.required }}{% else %}—{% endif %}</td>
+    <td>{% if a.coverage %}{{ a.coverage.line_pct|default:"-" }}%{% else %}—{% endif %}</td><td>{% if a.coverage %}{{ a.coverage.branch_pct|default:"-" }}%{% else %}—{% endif %}</td>
+    <td style="font-size:0.75em;">{% if a.coverage %}{{ a.coverage.missing_lines|slice:":12"|join:", " }}{% endif %}</td></tr>{% empty %}<tr><td colspan="6">No source artifact recorded.</td></tr>{% endfor %}
+  </tbody></table></div>
+{% endblock %}

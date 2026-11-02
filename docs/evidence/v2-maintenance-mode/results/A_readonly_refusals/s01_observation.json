@@ -1,0 +1,1306 @@
+{
+ "at": "2026-10-17T23:07:30.266682+00:00",
+ "role": "BOUNDARY_ROUTER",
+ "intersects": [
+  "R2",
+  "R3",
+  "R4",
+  "S1",
+  "S2"
+ ],
+ "access": {
+  "router": "R1",
+  "access_interface": "Ethernet3",
+  "router_v6": "2001:db8:110:1::1",
+  "switch": "S1",
+  "uplink": "Ethernet1",
+  "switch_v6": "2001:db8:110:1::2",
+  "transit": "Vlan99",
+  "far_switch": "S2",
+  "far_switch_v6": "2001:db8:110:3::2",
+  "peer_router": "R2",
+  "peer_access_interface": "Ethernet3",
+  "far_uplink": "Ethernet1",
+  "cores": [
+   "R3",
+   "R4"
+  ]
+ },
+ "alternates": {
+  "IPV6/NORTHBOUND": true,
+  "IPV6/SOUTHBOUND": true
+ },
+ "mechanisms": {
+  "IPV6/NORTHBOUND": {
+   "key": "ISIS_ACCESS_METRIC_STEER",
+   "state": "PROVEN_NOT_AUTHORIZED"
+  },
+  "IPV6/SOUTHBOUND": {
+   "key": "OSPFV3_CORE_STEER",
+   "state": "NOT_READY"
+  },
+  "IPV4/NORTHBOUND": {
+   "key": "RIP_IPV4_DRAIN",
+   "state": "NOT_READY"
+  },
+  "IPV4/SOUTHBOUND": {
+   "key": "RIP_IPV4_DRAIN",
+   "state": "NOT_READY"
+  }
+ },
+ "flows": [
+  {
+   "label": "h1-v4-north",
+   "workload": "H1 to WebServer",
+   "family": "IPV4",
+   "direction": "NORTHBOUND",
+   "activity": "QUIESCED",
+   "on_device": true,
+   "evidence": "0 unicast IPv4 packets sent by H1 in 20 s; path S1 > R1 > R3|R4 > R5"
+  },
+  {
+   "label": "h1-v4-south",
+   "workload": "WebServer to H1",
+   "family": "IPV4",
+   "direction": "SOUTHBOUND",
+   "activity": "QUIESCED",
+   "on_device": true,
+   "evidence": "0 unicast IPv4 packets received by H1 in 20 s; path R5 > R3 > R1|R2 > S1|S2"
+  },
+  {
+   "label": "h1-v6-north",
+   "workload": "H1 to WebServer",
+   "family": "IPV6",
+   "direction": "NORTHBOUND",
+   "activity": "ACTIVE",
+   "on_device": true,
+   "evidence": "911 unicast IPv6 packets sent by H1 in 20 s; path S1 > R1 > R3|R4 > R5"
+  },
+  {
+   "label": "h1-v6-south",
+   "workload": "WebServer to H1",
+   "family": "IPV6",
+   "direction": "SOUTHBOUND",
+   "activity": "ACTIVE",
+   "on_device": true,
+   "evidence": "684 unicast IPv6 packets received by H1 in 20 s; path R5 > R3 > R1|R2 > S1|S2"
+  },
+  {
+   "label": "h2-v4-north",
+   "workload": "H2 to WebServer",
+   "family": "IPV4",
+   "direction": "NORTHBOUND",
+   "activity": "QUIESCED",
+   "on_device": true,
+   "evidence": "0 unicast IPv4 packets sent by H2 in 20 s; path S1 > R1 > R3|R4 > R5"
+  },
+  {
+   "label": "h2-v4-south",
+   "workload": "WebServer to H2",
+   "family": "IPV4",
+   "direction": "SOUTHBOUND",
+   "activity": "QUIESCED",
+   "on_device": true,
+   "evidence": "0 unicast IPv4 packets received by H2 in 20 s; path R5 > R3 > R1|R2 > S1|S2"
+  },
+  {
+   "label": "h2-v6-north",
+   "workload": "H2 to WebServer",
+   "family": "IPV6",
+   "direction": "NORTHBOUND",
+   "activity": "ACTIVE",
+   "on_device": true,
+   "evidence": "908 unicast IPv6 packets sent by H2 in 20 s; path S1 > R1 > R3|R4 > R5"
+  },
+  {
+   "label": "h2-v6-south",
+   "workload": "WebServer to H2",
+   "family": "IPV6",
+   "direction": "SOUTHBOUND",
+   "activity": "ACTIVE",
+   "on_device": true,
+   "evidence": "684 unicast IPv6 packets received by H2 in 20 s; path R5 > R3 > R1|R2 > S1|S2"
+  },
+  {
+   "label": "h3-v4-north",
+   "workload": "H3 to WebServer",
+   "family": "IPV4",
+   "direction": "NORTHBOUND",
+   "activity": "QUIESCED",
+   "on_device": false,
+   "evidence": "0 unicast IPv4 packets sent by H3 in 20 s; path S2 > R2 > R3|R4 > R5"
+  },
+  {
+   "label": "h3-v4-south",
+   "workload": "WebServer to H3",
+   "family": "IPV4",
+   "direction": "SOUTHBOUND",
+   "activity": "QUIESCED",
+   "on_device": true,
+   "evidence": "0 unicast IPv4 packets received by H3 in 20 s; path R5 > R3 > R1|R2 > S1|S2"
+  },
+  {
+   "label": "h3-v6-north",
+   "workload": "H3 to WebServer",
+   "family": "IPV6",
+   "direction": "NORTHBOUND",
+   "activity": "ACTIVE",
+   "on_device": false,
+   "evidence": "890 unicast IPv6 packets sent by H3 in 20 s; path S2 > R2 > R3|R4 > R5"
+  },
+  {
+   "label": "h3-v6-south",
+   "workload": "WebServer to H3",
+   "family": "IPV6",
+   "direction": "SOUTHBOUND",
+   "activity": "ACTIVE",
+   "on_device": true,
+   "evidence": "668 unicast IPv6 packets received by H3 in 20 s; path R5 > R3 > R1|R2 > S1|S2"
+  },
+  {
+   "label": "h4-v6-north",
+   "workload": "H4 to WebServer",
+   "family": "IPV6",
+   "direction": "NORTHBOUND",
+   "activity": "ACTIVE",
+   "on_device": false,
+   "evidence": "884 unicast IPv6 packets sent by H4 in 20 s; path S2 > R2 > R3|R4 > R5"
+  },
+  {
+   "label": "h4-v6-south",
+   "workload": "WebServer to H4",
+   "family": "IPV6",
+   "direction": "SOUTHBOUND",
+   "activity": "ACTIVE",
+   "on_device": true,
+   "evidence": "667 unicast IPv6 packets received by H4 in 20 s; path R5 > R3 > R1|R2 > S1|S2"
+  }
+ ],
+ "dependencies": [
+  {
+   "name": "management reachability of the other devices",
+   "kind": "MANAGEMENT",
+   "stranded": false,
+   "detail": ""
+  }
+ ],
+ "protocols": {
+  "R1": {
+   "reachable": true,
+   "isis_up": [
+    "Ethernet3:s1"
+   ],
+   "ospfv3_full": [
+    "Ethernet1:192.168.255.3",
+    "Ethernet2:192.168.255.4"
+   ],
+   "ospfv2_full": [
+    "Ethernet1:192.168.255.3",
+    "Ethernet2:192.168.255.4"
+   ],
+   "rip_neighbors": 1
+  },
+  "R2": {
+   "reachable": true,
+   "isis_up": [
+    "Ethernet3:s2"
+   ],
+   "ospfv3_full": [
+    "Ethernet1:192.168.255.3",
+    "Ethernet2:192.168.255.4"
+   ],
+   "ospfv2_full": [
+    "Ethernet1:192.168.255.3",
+    "Ethernet2:192.168.255.4"
+   ],
+   "rip_neighbors": 1
+  },
+  "R3": {
+   "reachable": true,
+   "isis_up": null,
+   "ospfv3_full": [
+    "eth0:192.168.255.1",
+    "eth1:192.168.255.2"
+   ],
+   "ospfv2_full": [
+    "eth0:192.168.255.1",
+    "eth1:192.168.255.2"
+   ],
+   "rip_neighbors": null
+  },
+  "R4": {
+   "reachable": true,
+   "isis_up": null,
+   "ospfv3_full": [
+    "eth0:192.168.255.1",
+    "eth1:192.168.255.2"
+   ],
+   "ospfv2_full": [
+    "eth0:192.168.255.1",
+    "eth1:192.168.255.2"
+   ],
+   "rip_neighbors": null
+  },
+  "S1": {
+   "reachable": true,
+   "isis_up": [
+    "Ethernet1:r1",
+    "Vlan99:s2"
+   ],
+   "ospfv3_full": [],
+   "ospfv2_full": [],
+   "rip_neighbors": 3
+  },
+  "S2": {
+   "reachable": true,
+   "isis_up": [
+    "Ethernet1:r2",
+    "Vlan99:s1"
+   ],
+   "ospfv3_full": [],
+   "ospfv2_full": [],
+   "rip_neighbors": 3
+  }
+ },
+ "paths": {
+  "h1-v4-north": {
+   "path": "S1 > R1 > R3|R4 > R5",
+   "complete": true,
+   "on_device": true,
+   "hops": {
+    "R1": [
+     "R3",
+     "R4"
+    ],
+    "R3": [
+     "R5"
+    ],
+    "R4": [
+     "R5"
+    ],
+    "S1": [
+     "R1"
+    ]
+   }
+  },
+  "h1-v4-south": {
+   "path": "R5 > R3 > R1|R2 > S1|S2",
+   "complete": true,
+   "on_device": true,
+   "hops": {
+    "R1": [
+     "S1"
+    ],
+    "R2": [
+     "S2"
+    ],
+    "R3": [
+     "R1",
+     "R2"
+    ],
+    "R5": [
+     "R3"
+    ]
+   }
+  },
+  "h1-v6-north": {
+   "path": "S1 > R1 > R3|R4 > R5",
+   "complete": true,
+   "on_device": true,
+   "hops": {
+    "R1": [
+     "R3",
+     "R4"
+    ],
+    "R3": [
+     "R5"
+    ],
+    "R4": [
+     "R5"
+    ],
+    "S1": [
+     "R1"
+    ]
+   }
+  },
+  "h1-v6-south": {
+   "path": "R5 > R3 > R1|R2 > S1|S2",
+   "complete": true,
+   "on_device": true,
+   "hops": {
+    "R1": [
+     "S1"
+    ],
+    "R2": [
+     "S2"
+    ],
+    "R3": [
+     "R1",
+     "R2"
+    ],
+    "R5": [
+     "R3"
+    ]
+   }
+  },
+  "h2-v4-north": {
+   "path": "S1 > R1 > R3|R4 > R5",
+   "complete": true,
+   "on_device": true,
+   "hops": {
+    "R1": [
+     "R3",
+     "R4"
+    ],
+    "R3": [
+     "R5"
+    ],
+    "R4": [
+     "R5"
+    ],
+    "S1": [
+     "R1"
+    ]
+   }
+  },
+  "h2-v4-south": {
+   "path": "R5 > R3 > R1|R2 > S1|S2",
+   "complete": true,
+   "on_device": true,
+   "hops": {
+    "R1": [
+     "S1"
+    ],
+    "R2": [
+     "S2"
+    ],
+    "R3": [
+     "R1",
+     "R2"
+    ],
+    "R5": [
+     "R3"
+    ]
+   }
+  },
+  "h2-v6-north": {
+   "path": "S1 > R1 > R3|R4 > R5",
+   "complete": true,
+   "on_device": true,
+   "hops": {
+    "R1": [
+     "R3",
+     "R4"
+    ],
+    "R3": [
+     "R5"
+    ],
+    "R4": [
+     "R5"
+    ],
+    "S1": [
+     "R1"
+    ]
+   }
+  },
+  "h2-v6-south": {
+   "path": "R5 > R3 > R1|R2 > S1|S2",
+   "complete": true,
+   "on_device": true,
+   "hops": {
+    "R1": [
+     "S1"
+    ],
+    "R2": [
+     "S2"
+    ],
+    "R3": [
+     "R1",
+     "R2"
+    ],
+    "R5": [
+     "R3"
+    ]
+   }
+  },
+  "h3-v4-north": {
+   "path": "S2 > R2 > R3|R4 > R5",
+   "complete": true,
+   "on_device": false,
+   "hops": {
+    "R2": [
+     "R3",
+     "R4"
+    ],
+    "R3": [
+     "R5"
+    ],
+    "R4": [
+     "R5"
+    ],
+    "S2": [
+     "R2"
+    ]
+   }
+  },
+  "h3-v4-south": {
+   "path": "R5 > R3 > R1|R2 > S1|S2",
+   "complete": true,
+   "on_device": true,
+   "hops": {
+    "R1": [
+     "S1"
+    ],
+    "R2": [
+     "S2"
+    ],
+    "R3": [
+     "R1",
+     "R2"
+    ],
+    "R5": [
+     "R3"
+    ]
+   }
+  },
+  "h3-v6-north": {
+   "path": "S2 > R2 > R3|R4 > R5",
+   "complete": true,
+   "on_device": false,
+   "hops": {
+    "R2": [
+     "R3",
+     "R4"
+    ],
+    "R3": [
+     "R5"
+    ],
+    "R4": [
+     "R5"
+    ],
+    "S2": [
+     "R2"
+    ]
+   }
+  },
+  "h3-v6-south": {
+   "path": "R5 > R3 > R1|R2 > S1|S2",
+   "complete": true,
+   "on_device": true,
+   "hops": {
+    "R1": [
+     "S1"
+    ],
+    "R2": [
+     "S2"
+    ],
+    "R3": [
+     "R1",
+     "R2"
+    ],
+    "R5": [
+     "R3"
+    ]
+   }
+  },
+  "h4-v6-north": {
+   "path": "S2 > R2 > R3|R4 > R5",
+   "complete": true,
+   "on_device": false,
+   "hops": {
+    "R2": [
+     "R3",
+     "R4"
+    ],
+    "R3": [
+     "R5"
+    ],
+    "R4": [
+     "R5"
+    ],
+    "S2": [
+     "R2"
+    ]
+   }
+  },
+  "h4-v6-south": {
+   "path": "R5 > R3 > R1|R2 > S1|S2",
+   "complete": true,
+   "on_device": true,
+   "hops": {
+    "R1": [
+     "S1"
+    ],
+    "R2": [
+     "S2"
+    ],
+    "R3": [
+     "R1",
+     "R2"
+    ],
+    "R5": [
+     "R3"
+    ]
+   }
+  }
+ },
+ "digests": {
+  "R1": "22b27b238b3e1f9b3a8b0b0b0802fed2004d3bffdc79d040be0775125089878f",
+  "R2": "77f2c1891b100927fb931e872ff7718134e3438e19a59938b3258ad3318d06f1",
+  "S1": "ec910cefb91b800a7f43d2ba03977b24b43a017aeab94285d86c498bb34a20ad",
+  "S2": "324199aece8e9e10f7a3c80f4fcbe1a03fa37bb2021b1371b42a712424212947"
+ },
+ "hosts": {
+  "H1": {
+   "addresses": {
+    "4": [
+     "192.168.10.102"
+    ],
+    "6": [
+     "2001:db8:10::102"
+    ]
+   },
+   "gateways": {
+    "4": [
+     "192.168.10.1"
+    ],
+    "6": [
+     "2001:db8:10::1"
+    ]
+   },
+   "error": "",
+   "source": "HOST_COUNTERS",
+   "read_at": [
+    "2026-10-17T23:07:43.550647+00:00",
+    "2026-10-17T23:08:06.588794+00:00"
+   ],
+   "packets": {
+    "v6/SOUTHBOUND": 684,
+    "v6/NORTHBOUND": 911,
+    "v4/SOUTHBOUND": 0,
+    "v4/NORTHBOUND": 0
+   }
+  },
+  "H2": {
+   "addresses": {
+    "4": [
+     "192.168.20.101"
+    ],
+    "6": [
+     "2001:db8:20::101"
+    ]
+   },
+   "gateways": {
+    "4": [
+     "192.168.20.1"
+    ],
+    "6": [
+     "2001:db8:20::1"
+    ]
+   },
+   "error": "",
+   "source": "HOST_COUNTERS",
+   "read_at": [
+    "2026-10-17T23:07:44.330890+00:00",
+    "2026-10-17T23:08:07.143867+00:00"
+   ],
+   "packets": {
+    "v6/SOUTHBOUND": 684,
+    "v6/NORTHBOUND": 908,
+    "v4/SOUTHBOUND": 0,
+    "v4/NORTHBOUND": 0
+   }
+  },
+  "H3": {
+   "addresses": {
+    "4": [
+     "192.168.10.103"
+    ],
+    "6": [
+     "2001:db8:10::103"
+    ]
+   },
+   "gateways": {
+    "4": [
+     "192.168.10.1"
+    ],
+    "6": [
+     "2001:db8:10::1"
+    ]
+   },
+   "error": "",
+   "source": "HOST_COUNTERS",
+   "read_at": [
+    "2026-10-17T23:07:45.156713+00:00",
+    "2026-10-17T23:08:07.623744+00:00"
+   ],
+   "packets": {
+    "v6/SOUTHBOUND": 668,
+    "v6/NORTHBOUND": 890,
+    "v4/SOUTHBOUND": 0,
+    "v4/NORTHBOUND": 0
+   }
+  },
+  "H4": {
+   "addresses": {
+    "4": [],
+    "6": [
+     "2001:db8:30::104"
+    ]
+   },
+   "gateways": {
+    "4": [],
+    "6": [
+     "2001:db8:30::1"
+    ]
+   },
+   "error": "",
+   "source": "HOST_COUNTERS",
+   "read_at": [
+    "2026-10-17T23:07:46.153999+00:00",
+    "2026-10-17T23:08:08.047880+00:00"
+   ],
+   "packets": {
+    "v6/SOUTHBOUND": 667,
+    "v6/NORTHBOUND": 884,
+    "v4/SOUTHBOUND": 0,
+    "v4/NORTHBOUND": 0
+   }
+  }
+ },
+ "single_homed": [],
+ "window_seconds": 20.0,
+ "access_not_derived": "",
+ "provenance": {
+  "R1": {
+   "platform": "ceos",
+   "reachable": true,
+   "live_error": "",
+   "groups": {
+    "interfaces": {
+     "source": "LIVE",
+     "observed_at": "2026-10-17T23:07:30.269618+00:00",
+     "available": true,
+     "complete": true,
+     "error": ""
+    },
+    "addresses": {
+     "source": "LIVE",
+     "observed_at": "2026-10-17T23:07:30.269618+00:00",
+     "available": true,
+     "complete": true,
+     "error": ""
+    },
+    "virtual_addresses": {
+     "source": "LIVE",
+     "observed_at": "2026-10-17T23:07:30.269618+00:00",
+     "available": true,
+     "complete": true,
+     "error": ""
+    },
+    "routes": {
+     "source": "LIVE",
+     "observed_at": "2026-10-17T23:07:30.269618+00:00",
+     "available": true,
+     "complete": true,
+     "error": ""
+    },
+    "ospf": {
+     "source": "LIVE",
+     "observed_at": "2026-10-17T23:07:30.269618+00:00",
+     "available": true,
+     "complete": true,
+     "error": ""
+    },
+    "isis": {
+     "source": "LIVE",
+     "observed_at": "2026-10-17T23:07:30.269618+00:00",
+     "available": true,
+     "complete": true,
+     "error": ""
+    },
+    "bgp": {
+     "source": "LIVE",
+     "observed_at": "2026-10-17T23:07:30.269618+00:00",
+     "available": true,
+     "complete": true,
+     "error": ""
+    },
+    "rip_neighbors": {
+     "source": "LIVE",
+     "observed_at": "2026-10-17T23:07:30.269618+00:00",
+     "available": true,
+     "complete": true,
+     "error": ""
+    },
+    "config_paths": {
+     "source": "LIVE",
+     "observed_at": "2026-10-17T23:07:30.269618+00:00",
+     "available": true,
+     "complete": true,
+     "error": ""
+    }
+   }
+  },
+  "R2": {
+   "platform": "ceos",
+   "reachable": true,
+   "live_error": "",
+   "groups": {
+    "interfaces": {
+     "source": "LIVE",
+     "observed_at": "2026-10-17T23:07:30.270232+00:00",
+     "available": true,
+     "complete": true,
+     "error": ""
+    },
+    "addresses": {
+     "source": "LIVE",
+     "observed_at": "2026-10-17T23:07:30.270232+00:00",
+     "available": true,
+     "complete": true,
+     "error": ""
+    },
+    "virtual_addresses": {
+     "source": "LIVE",
+     "observed_at": "2026-10-17T23:07:30.270232+00:00",
+     "available": true,
+     "complete": true,
+     "error": ""
+    },
+    "routes": {
+     "source": "LIVE",
+     "observed_at": "2026-10-17T23:07:30.270232+00:00",
+     "available": true,
+     "complete": true,
+     "error": ""
+    },
+    "ospf": {
+     "source": "LIVE",
+     "observed_at": "2026-10-17T23:07:30.270232+00:00",
+     "available": true,
+     "complete": true,
+     "error": ""
+    },
+    "isis": {
+     "source": "LIVE",
+     "observed_at": "2026-10-17T23:07:30.270232+00:00",
+     "available": true,
+     "complete": true,
+     "error": ""
+    },
+    "bgp": {
+     "source": "LIVE",
+     "observed_at": "2026-10-17T23:07:30.270232+00:00",
+     "available": true,
+     "complete": true,
+     "error": ""
+    },
+    "rip_neighbors": {
+     "source": "LIVE",
+     "observed_at": "2026-10-17T23:07:30.270232+00:00",
+     "available": true,
+     "complete": true,
+     "error": ""
+    },
+    "config_paths": {
+     "source": "LIVE",
+     "observed_at": "2026-10-17T23:07:30.270232+00:00",
+     "available": true,
+     "complete": true,
+     "error": ""
+    }
+   }
+  },
+  "R3": {
+   "platform": "linux",
+   "reachable": true,
+   "live_error": "",
+   "groups": {
+    "interfaces": {
+     "source": "LIVE",
+     "observed_at": "2026-10-17T23:07:36.926120+00:00",
+     "available": true,
+     "complete": true,
+     "error": ""
+    },
+    "addresses": {
+     "source": "LIVE",
+     "observed_at": "2026-10-17T23:07:36.926120+00:00",
+     "available": true,
+     "complete": true,
+     "error": ""
+    },
+    "virtual_addresses": null,
+    "routes": {
+     "source": "LIVE",
+     "observed_at": "2026-10-17T23:07:36.926120+00:00",
+     "available": true,
+     "complete": true,
+     "error": ""
+    },
+    "ospf": {
+     "source": "LIVE",
+     "observed_at": "2026-10-17T23:07:36.926120+00:00",
+     "available": true,
+     "complete": true,
+     "error": ""
+    },
+    "isis": null,
+    "bgp": {
+     "source": "LIVE",
+     "observed_at": "2026-10-17T23:07:36.926120+00:00",
+     "available": true,
+     "complete": true,
+     "error": ""
+    },
+    "rip_neighbors": null,
+    "config_paths": null
+   }
+  },
+  "R4": {
+   "platform": "linux",
+   "reachable": true,
+   "live_error": "",
+   "groups": {
+    "interfaces": {
+     "source": "LIVE",
+     "observed_at": "2026-10-17T23:07:37.114485+00:00",
+     "available": true,
+     "complete": true,
+     "error": ""
+    },
+    "addresses": {
+     "source": "LIVE",
+     "observed_at": "2026-10-17T23:07:37.114485+00:00",
+     "available": true,
+     "complete": true,
+     "error": ""
+    },
+    "virtual_addresses": null,
+    "routes": {
+     "source": "LIVE",
+     "observed_at": "2026-10-17T23:07:37.114485+00:00",
+     "available": true,
+     "complete": true,
+     "error": ""
+    },
+    "ospf": {
+     "source": "LIVE",
+     "observed_at": "2026-10-17T23:07:37.114485+00:00",
+     "available": true,
+     "complete": true,
+     "error": ""
+    },
+    "isis": null,
+    "bgp": {
+     "source": "LIVE",
+     "observed_at": "2026-10-17T23:07:37.114485+00:00",
+     "available": true,
+     "complete": true,
+     "error": ""
+    },
+    "rip_neighbors": null,
+    "config_paths": null
+   }
+  },
+  "R5": {
+   "platform": "ceos",
+   "reachable": true,
+   "live_error": "",
+   "groups": {
+    "interfaces": {
+     "source": "LIVE",
+     "observed_at": "2026-10-17T23:07:37.539790+00:00",
+     "available": true,
+     "complete": true,
+     "error": ""
+    },
+    "addresses": {
+     "source": "LIVE",
+     "observed_at": "2026-10-17T23:07:37.539790+00:00",
+     "available": true,
+     "complete": true,
+     "error": ""
+    },
+    "virtual_addresses": {
+     "source": "LIVE",
+     "observed_at": "2026-10-17T23:07:37.539790+00:00",
+     "available": true,
+     "complete": true,
+     "error": ""
+    },
+    "routes": {
+     "source": "LIVE",
+     "observed_at": "2026-10-17T23:07:37.539790+00:00",
+     "available": true,
+     "complete": true,
+     "error": ""
+    },
+    "ospf": {
+     "source": "LIVE",
+     "observed_at": "2026-10-17T23:07:37.539790+00:00",
+     "available": true,
+     "complete": true,
+     "error": ""
+    },
+    "isis": {
+     "source": "LIVE",
+     "observed_at": "2026-10-17T23:07:37.539790+00:00",
+     "available": true,
+     "complete": true,
+     "error": ""
+    },
+    "bgp": {
+     "source": "LIVE",
+     "observed_at": "2026-10-17T23:07:37.539790+00:00",
+     "available": true,
+     "complete": true,
+     "error": ""
+    },
+    "rip_neighbors": {
+     "source": "LIVE",
+     "observed_at": "2026-10-17T23:07:37.539790+00:00",
+     "available": true,
+     "complete": true,
+     "error": ""
+    },
+    "config_paths": {
+     "source": "LIVE",
+     "observed_at": "2026-10-17T23:07:37.539790+00:00",
+     "available": true,
+     "complete": true,
+     "error": ""
+    }
+   }
+  },
+  "S1": {
+   "platform": "ceos",
+   "reachable": true,
+   "live_error": "",
+   "groups": {
+    "interfaces": {
+     "source": "LIVE",
+     "observed_at": "2026-10-17T23:07:30.271050+00:00",
+     "available": true,
+     "complete": true,
+     "error": ""
+    },
+    "addresses": {
+     "source": "LIVE",
+     "observed_at": "2026-10-17T23:07:30.271050+00:00",
+     "available": true,
+     "complete": true,
+     "error": ""
+    },
+    "virtual_addresses": {
+     "source": "LIVE",
+     "observed_at": "2026-10-17T23:07:30.271050+00:00",
+     "available": true,
+     "complete": true,
+     "error": ""
+    },
+    "routes": {
+     "source": "LIVE",
+     "observed_at": "2026-10-17T23:07:30.271050+00:00",
+     "available": true,
+     "complete": true,
+     "error": ""
+    },
+    "ospf": {
+     "source": "LIVE",
+     "observed_at": "2026-10-17T23:07:30.271050+00:00",
+     "available": true,
+     "complete": true,
+     "error": ""
+    },
+    "isis": {
+     "source": "LIVE",
+     "observed_at": "2026-10-17T23:07:30.271050+00:00",
+     "available": true,
+     "complete": true,
+     "error": ""
+    },
+    "bgp": {
+     "source": "LIVE",
+     "observed_at": "2026-10-17T23:07:30.271050+00:00",
+     "available": true,
+     "complete": true,
+     "error": ""
+    },
+    "rip_neighbors": {
+     "source": "LIVE",
+     "observed_at": "2026-10-17T23:07:30.271050+00:00",
+     "available": true,
+     "complete": true,
+     "error": ""
+    },
+    "config_paths": {
+     "source": "LIVE",
+     "observed_at": "2026-10-17T23:07:30.271050+00:00",
+     "available": true,
+     "complete": true,
+     "error": ""
+    }
+   }
+  },
+  "S2": {
+   "platform": "ceos",
+   "reachable": true,
+   "live_error": "",
+   "groups": {
+    "interfaces": {
+     "source": "LIVE",
+     "observed_at": "2026-10-17T23:07:30.272827+00:00",
+     "available": true,
+     "complete": true,
+     "error": ""
+    },
+    "addresses": {
+     "source": "LIVE",
+     "observed_at": "2026-10-17T23:07:30.272827+00:00",
+     "available": true,
+     "complete": true,
+     "error": ""
+    },
+    "virtual_addresses": {
+     "source": "LIVE",
+     "observed_at": "2026-10-17T23:07:30.272827+00:00",
+     "available": true,
+     "complete": true,
+     "error": ""
+    },
+    "routes": {
+     "source": "LIVE",
+     "observed_at": "2026-10-17T23:07:30.272827+00:00",
+     "available": true,
+     "complete": true,
+     "error": ""
+    },
+    "ospf": {
+     "source": "LIVE",
+     "observed_at": "2026-10-17T23:07:30.272827+00:00",
+     "available": true,
+     "complete": true,
+     "error": ""
+    },
+    "isis": {
+     "source": "LIVE",
+     "observed_at": "2026-10-17T23:07:30.272827+00:00",
+     "available": true,
+     "complete": true,
+     "error": ""
+    },
+    "bgp": {
+     "source": "LIVE",
+     "observed_at": "2026-10-17T23:07:30.272827+00:00",
+     "available": true,
+     "complete": true,
+     "error": ""
+    },
+    "rip_neighbors": {
+     "source": "LIVE",
+     "observed_at": "2026-10-17T23:07:30.272827+00:00",
+     "available": true,
+     "complete": true,
+     "error": ""
+    },
+    "config_paths": {
+     "source": "LIVE",
+     "observed_at": "2026-10-17T23:07:30.272827+00:00",
+     "available": true,
+     "complete": true,
+     "error": ""
+    }
+   }
+  }
+ },
+ "bgp": {
+  "R1": [],
+  "R2": [],
+  "R3": [
+   {
+    "peer": "10.3.0.1",
+    "remote_as": "65005",
+    "state": "ESTABLISHED",
+    "family": 4
+   },
+   {
+    "peer": "2001:db8:205:1::2",
+    "remote_as": "65005",
+    "state": "ESTABLISHED",
+    "family": 6
+   }
+  ],
+  "R4": [
+   {
+    "peer": "10.4.0.1",
+    "remote_as": "65005",
+    "state": "ESTABLISHED",
+    "family": 4
+   },
+   {
+    "peer": "2001:db8:205:2::2",
+    "remote_as": "65005",
+    "state": "ESTABLISHED",
+    "family": 6
+   }
+  ],
+  "S1": [],
+  "S2": []
+ },
+ "interfaces": {
+  "R1": {
+   "Ethernet1": "UP",
+   "Ethernet2": "UP",
+   "Ethernet3": "UP"
+  },
+  "R2": {
+   "Ethernet1": "UP",
+   "Ethernet2": "UP",
+   "Ethernet3": "UP"
+  },
+  "R3": {
+   "eth0": "UP",
+   "eth1": "UP",
+   "eth2": "UP"
+  },
+  "R4": {
+   "eth0": "UP",
+   "eth1": "UP",
+   "eth2": "UP"
+  },
+  "S1": {
+   "Ethernet1": "UP",
+   "Ethernet2": "UP",
+   "Ethernet3": "UP",
+   "Ethernet4": "UP",
+   "Vlan10": "UP",
+   "Vlan20": "UP",
+   "Vlan30": "UP",
+   "Vlan99": "UP"
+  },
+  "S2": {
+   "Ethernet1": "UP",
+   "Ethernet2": "UP",
+   "Ethernet3": "UP",
+   "Ethernet4": "UP",
+   "Vlan10": "UP",
+   "Vlan20": "UP",
+   "Vlan30": "UP",
+   "Vlan99": "UP"
+  }
+ },
+ "fhrp": {
+  "R1": {},
+  "R2": {},
+  "R3": null,
+  "R4": null,
+  "S1": {
+   "192.168.10.1": [
+    "S2"
+   ],
+   "192.168.20.1": [
+    "S2"
+   ],
+   "2001:db8:10::1": [
+    "S2"
+   ],
+   "2001:db8:20::1": [
+    "S2"
+   ],
+   "2001:db8:30::1": [
+    "S2"
+   ]
+  },
+  "S2": {
+   "192.168.10.1": [
+    "S1"
+   ],
+   "192.168.20.1": [
+    "S1"
+   ],
+   "2001:db8:10::1": [
+    "S1"
+   ],
+   "2001:db8:20::1": [
+    "S1"
+   ],
+   "2001:db8:30::1": [
+    "S1"
+   ]
+  }
+ },
+ "mlag": {
+  "R1": false,
+  "R2": false,
+  "R3": null,
+  "R4": null,
+  "S1": false,
+  "S2": false
+ },
+ "ecmp": {
+  "h1-v4-north": {
+   "R1": 2
+  },
+  "h1-v4-south": {
+   "R3": 2
+  },
+  "h1-v6-north": {
+   "R1": 2
+  },
+  "h1-v6-south": {
+   "R3": 2
+  },
+  "h2-v4-north": {
+   "R1": 2
+  },
+  "h2-v4-south": {
+   "R3": 2
+  },
+  "h2-v6-north": {
+   "R1": 2
+  },
+  "h2-v6-south": {
+   "R3": 2
+  },
+  "h3-v4-north": {
+   "R2": 2
+  },
+  "h3-v4-south": {
+   "R3": 2
+  },
+  "h3-v6-north": {
+   "R2": 2
+  },
+  "h3-v6-south": {
+   "R3": 2
+  },
+  "h4-v6-north": {
+   "R2": 2
+  },
+  "h4-v6-south": {
+   "R3": 2
+  }
+ },
+ "telemetry": {
+  "collected": false,
+  "reason": "not collected"
+ },
+ "scope": {
+  "read": [
+   "R1",
+   "R2",
+   "R3",
+   "R4",
+   "R5",
+   "S1",
+   "S2"
+  ],
+  "management": [],
+  "service": {
+   "name": "WebServer",
+   "gateway": "R5"
+  }
+ }
+}

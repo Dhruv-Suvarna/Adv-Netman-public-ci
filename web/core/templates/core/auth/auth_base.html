@@ -1,0 +1,29 @@
+{% load static core_extras %}<!doctype html>
+<html lang="en" data-theme="{{ active_theme }}" data-theme-context="{{ active_theme_context }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>{% block title %}NMAS sign-in{% endblock %}</title>
+  <link rel="stylesheet" href="{% versioned_static 'core/css/tokens.css' %}">
+  <link rel="stylesheet" href="{% versioned_static 'core/css/base.css' %}">
+  <style>
+    .auth-shell { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 16px; }
+    .auth-card { width: 100%; max-width: 440px; }
+    .auth-card h1 { margin-top: 0; font-size: 1.4rem; }
+    .auth-card .form-field { margin-bottom: 12px; }
+    .auth-card .form-control { width: 100%; box-sizing: border-box; }
+    .auth-qr { display: block; margin: 12px auto; width: 220px; height: 220px; background: #fff; padding: 6px; }
+    .auth-key { font-family: monospace; font-size: 1.05rem; letter-spacing: 1px; word-break: break-all; }
+  </style>
+</head>
+<body>
+<main class="auth-shell">
+  <div class="card auth-card">
+    <p class="wb-muted" style="margin-top:0;">NMAS Control Plane</p>
+    {% if messages %}{% for message in messages %}<div class="alert alert--{% if message.tags == 'error' %}warning{% else %}info{% endif %}">{{ message }}</div>{% endfor %}{% endif %}
+    {% block content %}{% endblock %}
+  </div>
+</main>
+</body>
+</html>

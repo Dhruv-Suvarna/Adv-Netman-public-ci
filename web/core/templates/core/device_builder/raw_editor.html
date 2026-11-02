@@ -1,0 +1,98 @@
+{% extends "core/base.html" %}
+{% block title %}{% if raw %}{{ raw.raw_id }}{% else %}New Raw Configlet{% endif %} · {{ change.change_id }}{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1><span class="badge badge--danger">RAW</span> {% if raw %}<code>{{ raw.raw_id }}</code> {{ revision.name }}{% else %}New Raw Configlet{% endif %} <span style="font-weight:400;">· {{ change.change_id }}</span></h1>
+  <p><a href="{% url 'core:raw_configlets' change.change_id %}">&larr; Back to Raw Configlets</a> · <a href="{% url 'core:change_validation' change.change_id %}">Validation</a> · <a href="{% url 'core:change_plan' change.change_id %}">Plan</a></p>
+  <p><strong>Typing here changes nothing.</strong> Text stays in your browser until you press <em>Save Revision</em>; saving never verifies, plans or configures a device. Verification is a separate, explicit button and runs only in an isolated sandbox — never on a managed device.</p>
+  {% if notice %}<p class="field-row__message">{{ notice }}</p>{% endif %}
+  {% if error %}<p class="field-row__message"><span class="badge badge--danger">{{ error }}</span> The request was not performed.</p>{% endif %}
+</div>
+
+{% if raw %}
+<div class="card-grid">
+  <div class="card">
+    <h3>Verification status</h3>
+    <table class="data-table"><tbody>
+      <tr><th>Status</th><td><span class="badge badge--{{ status_tone }}">{{ status_label }}</span>{% if status.in_progress %} <span class="badge badge--info">verification running</span>{% endif %}</td></tr>
+      <tr><th>Target / platform</th><td>{{ revision.target_device }} · {{ revision.platform }}</td></tr>
+      <tr><th>Revision</th><td>{{ revision.revision }} (immutable; editing saves a new revision)</td></tr>
+      <tr><th>Content hash</th><td><code>{{ revision.content_hash }}</code></td></tr>
+      <tr><th>Priority</th><td>{{ revision.priority }}</td></tr>
+      <tr><th>In effective Change</th><td>{% if raw.enabled %}<span class="badge badge--success">yes</span>{% else %}<span class="badge badge--neutral">removed</span>{% endif %}</td></tr>
+      <tr><th>Latest verification</th><td>{% if status.run %}<a href="{% url 'core:raw_configlet_verification' change.change_id raw.raw_id status.run.run_id %}">{{ status.run.result }}</a> · {{ status.run.adapter_id }} · {{ status.run.finished_at }}{% else %}—{% endif %}</td></tr>
+      {% if status.reasons %}<tr><th>Stale because</th><td>{{ status.reasons|join:", " }}</td></tr>{% endif %}
+    </tbody></table>
+    <form method="post" action="{% url 'core:raw_configlet_verify' change.change_id raw.raw_id %}" style="display:inline;">{% csrf_token %}
+      <input type="hidden" name="revision" value="{{ revision.revision }}">
+      <button type="submit" class="btn btn--primary">Verify revision {{ revision.revision }}</button>
+    </form>
+    <form method="post" action="{% url 'core:raw_configlet_toggle' change.change_id raw.raw_id %}" style="display:inline;">{% csrf_token %}
+      <input type="hidden" name="enabled" value="{% if raw.enabled %}0{% else %}1{% endif %}">
+      <button type="submit" class="btn btn--secondary">{% if raw.enabled %}Remove from Change{% else %}Add back to Change{% endif %}</button>
+    </form>
+    <p style="font-size:0.85rem;color:var(--text-muted);">Verify starts a disposable sandbox and may take up to a minute or more. It checks syntax only: PASS is not deployment success and does not replace validation, the precheck or the postcheck. Removing is soft: history is preserved, but the Change's validation and plan become STALE.</p>
+  </div>
+  <div class="card">
+    <h3>Latest verification findings</h3>
+    {% include "core/device_builder/_raw_findings.html" with findings=status.run.findings %}
+  </div>
+</div>
+{% endif %}
+
+<div class="card" style="margin-top:16px;">
+  <h3>{% if raw %}Edit (saves a new revision){% else %}Author{% endif %}</h3>
+  {% if findings %}<h4>The save was refused — nothing was stored</h4>{% include "core/device_builder/_raw_findings.html" with findings=findings %}{% endif %}
+  <form method="post" action="{% if raw %}{% url 'core:raw_configlet_save' change.change_id raw.raw_id %}{% else %}{% url 'core:raw_configlet_create' change.change_id %}{% endif %}">{% csrf_token %}
+    <div class="field-row"><label class="field-row__label" for="rc-target"><span>Target device</span></label>
+      <select class="form-control" name="target_device" id="rc-target" required>
+        <option value="">— choose a device with a Device Intent —</option>
+        {% for i in intents %}<option value="{{ i.device_name }}"{% if i.device_name == form.target_device %} selected{% endif %}>{{ i.device_name }} ({{ i.get_platform_display }})</option>{% endfor %}
+      </select></div>
+    <div class="field-row"><label class="field-row__label" for="rc-name"><span>Name</span></label>
+      <input class="form-control" type="text" name="name" id="rc-name" maxlength="120" value="{{ form.name }}" required></div>
+    <div class="field-row"><label class="field-row__label" for="rc-desc"><span>Description</span></label>
+      <textarea class="form-control" name="description" id="rc-desc" rows="2" maxlength="1000">{{ form.description }}</textarea></div>
+    <div class="field-row"><label class="field-row__label" for="rc-priority"><span>Priority</span></label>
+      <select class="form-control" name="priority" id="rc-priority">
+        {% for value, text in priorities %}<option value="{{ value }}"{% if value|stringformat:"s" == form.priority|stringformat:"s" %} selected{% endif %}>{{ value }} · {{ text }}</option>{% endfor %}
+      </select>
+      <span style="font-size:0.85rem;color:var(--text-muted);">Declared by you — never inferred from the text. Dependencies override priority.</span></div>
+    <div class="field-row"><label class="field-row__label" for="rc-content"><span>Configuration statements</span></label>
+      <textarea class="form-control" name="content" id="rc-content" rows="18" spellcheck="false" autocomplete="off" autocapitalize="off" style="font-family:monospace;width:100%;">{{ form.content }}</textarea>
+      <span style="font-size:0.85rem;color:var(--text-muted);">Configuration-mode statements only: no prompts, no <code>enable</code>/<code>configure</code>/<code>exit</code>/<code>end</code> (express nesting with 3-space indentation), no shell or exec-mode commands, no secrets. ASCII, at most {{ limits.max_bytes }} bytes / {{ limits.max_lines }} lines. Static policy <code>{{ policy_version }}</code> is applied on the server.</span></div>
+    <div class="field-row"><label class="field-row__label" for="rc-deps"><span>Dependencies</span></label>
+      <textarea class="form-control" name="dependencies" id="rc-deps" rows="3" spellcheck="false" style="font-family:monospace;width:100%;">{{ form.dependencies_text }}</textarea>
+      <span style="font-size:0.85rem;color:var(--text-muted);">One stable reference per line, e.g. <code>R1/interface/&lt;id&gt;</code> or <code>R1/raw_configlet/RAW-001</code>. Raw text is opaque: dependencies are never inferred, so declare them explicitly.</span></div>
+    <div class="field-row"><label class="field-row__label" for="rc-assert"><span>Postcheck assertions (optional)</span></label>
+      <textarea class="form-control" name="assertions" id="rc-assert" rows="3" spellcheck="false" style="font-family:monospace;width:100%;">{{ form.assertions_text }}</textarea>
+      <span style="font-size:0.85rem;color:var(--text-muted);">Closed catalogue, one per line: {% for k in assertion_kinds %}<code>{{ k }}</code> {% endfor %}, as <code>KIND key=value</code> (for example <code>ADDRESS_PRESENT interface=Loopback99 address=192.0.2.99/32</code>). They confirm only the declared facts, never that the whole configuration applied. With none, a Partial (UAT) run ends <em>unverified</em>.</span></div>
+    {% if parse_errors %}<ul>{% for e in parse_errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+    <button type="submit" class="btn btn--primary">Save Revision</button>
+  </form>
+</div>
+
+{% if raw %}
+<div class="card-grid" style="margin-top:16px;">
+  <div class="card"><h3>Revision history (read-only)</h3>
+    <table class="data-table"><thead><tr><th>Rev</th><th>Saved</th><th>Hash</th><th>Verifications</th></tr></thead><tbody>
+    {% for r in revisions %}<tr><td><a href="{% url 'core:raw_configlet_revision' change.change_id raw.raw_id r.revision %}">{{ r.revision }}</a></td><td>{{ r.created_at }}</td><td><code>{{ r.content_hash|slice:":12" }}</code></td><td>{{ r.verification_runs.count }}</td></tr>{% endfor %}
+    </tbody></table></div>
+  <div class="card"><h3>Verification history</h3>
+    <table class="data-table"><thead><tr><th>Run</th><th>Rev</th><th>Result</th><th>Adapter</th><th>Started</th></tr></thead><tbody>
+    {% for run in runs %}<tr><td><a href="{% url 'core:raw_configlet_verification' change.change_id raw.raw_id run.run_id %}"><code>{{ run.run_id|slice:":8" }}</code></a></td><td>{{ run.revision.revision }}</td><td>{{ run.result|default:run.state }}</td><td>{{ run.adapter_id|default:"—" }}</td><td>{{ run.started_at }}</td></tr>
+    {% empty %}<tr><td colspan="5"><div class="empty-state">Never verified.</div></td></tr>{% endfor %}
+    </tbody></table></div>
+</div>
+{% endif %}
+
+<div class="card" style="margin-top:16px;">
+  <h3>Dependency targets (from the latest validation)</h3>
+  {% if dependency_targets %}
+  <details><summary>{{ dependency_targets|length }} objects — copy a reference into <em>Dependencies</em></summary>
+    <table class="data-table"><thead><tr><th>Reference</th><th>Object</th></tr></thead><tbody>
+    {% for n in dependency_targets %}<tr><td><code>{{ n.id }}</code></td><td>{{ n.label }}</td></tr>{% endfor %}
+    </tbody></table></details>
+  {% else %}<p style="color:var(--text-muted);">Run Change Validation once to list the structured objects you can depend on. Other Raw Configlets are referenced as <code>&lt;device&gt;/raw_configlet/&lt;RAW-id&gt;</code>.</p>{% endif %}
+</div>
+{% endblock %}

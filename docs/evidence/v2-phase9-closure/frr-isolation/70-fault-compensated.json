@@ -1,0 +1,157 @@
+{
+  "apply": {
+    "baseline_digest": "46765afcfa7540bdd82e260e4b81ce19b30abce58ad386055dff139221cb57ec",
+    "compensation": {
+      "attempted": true,
+      "not_compensated": [],
+      "status": "COMPENSATED",
+      "steps": [
+        {
+          "cfg_id": "CFG-001",
+          "error": "",
+          "operation": "nft-table",
+          "status": "COMPENSATED"
+        }
+      ]
+    },
+    "ok": false,
+    "outcome": "FAILED_ROLLED_BACK",
+    "restored": true,
+    "state": "REQUIRED"
+  },
+  "intent": {
+    "bootstrap": {
+      "http_port": 8080,
+      "prefix": "10.254.90.0/29",
+      "service_address": "10.254.92.2"
+    },
+    "device": "DEV-000002",
+    "elements": {
+      "CONTROL_PLANE": {
+        "filtered_on_port": [
+          "OSPF",
+          "OSPFv3"
+        ],
+        "mode": "PACKET_FILTER"
+      },
+      "IPV4": {
+        "forward": "service HTTP + service SSH only, then drop",
+        "input": "DHCP to the relay only, then drop"
+      },
+      "IPV6": {
+        "forward": "drop",
+        "input": "neighbour discovery from link-local only, then drop"
+      },
+      "L2": {
+        "kind": "veth",
+        "mode": "VERIFY",
+        "routed_port": true
+      },
+      "MANAGEMENT_PLANE": {
+        "mode": "INPUT_FILTER",
+        "nmas_sources": [
+          "10.254.92.2"
+        ]
+      },
+      "PACKET_FILTER": {
+        "chains": [
+          "forward",
+          "input",
+          "output"
+        ],
+        "family": "inet",
+        "hook_families": [
+          "ip",
+          "ip6"
+        ],
+        "table": "nmas_iso_dev000002"
+      }
+    },
+    "schema": 1,
+    "upstream": {
+      "device": "UP4",
+      "interface": "eth4",
+      "platform": "ubuntu_frr",
+      "vrf": ""
+    }
+  },
+  "observed": [
+    [
+      "before",
+      "nft-table"
+    ],
+    [
+      "after",
+      "nft-table"
+    ],
+    [
+      "before",
+      "compensate"
+    ],
+    [
+      "after",
+      "compensate"
+    ]
+  ],
+  "ops": [
+    {
+      "description": "nftables isolation of eth4 (forward, input, output; IPv4 and IPv6)",
+      "inverse": [
+        "delete table inet nmas_iso_dev000002"
+      ],
+      "key": "nft-table",
+      "kind": "ADD",
+      "lines": [
+        "table inet nmas_iso_dev000002 {",
+        "  chain forward {",
+        "    type filter hook forward priority filter; policy accept;",
+        "    iifname \"eth4\" ip saddr 10.254.90.0/29 ip daddr 10.254.92.2 tcp dport 8080 accept",
+        "    iifname \"eth4\" ip saddr 10.254.90.0/29 ip daddr 10.254.92.2 tcp sport 22 ct state established,related accept",
+        "    iifname \"eth4\" counter drop",
+        "    oifname \"eth4\" ip saddr 10.254.92.2 ip daddr 10.254.90.0/29 tcp sport 8080 accept",
+        "    oifname \"eth4\" ip saddr 10.254.92.2 ip daddr 10.254.90.0/29 tcp dport 22 accept",
+        "    oifname \"eth4\" counter drop",
+        "  }",
+        "  chain input {",
+        "    type filter hook input priority filter; policy accept;",
+        "    iifname \"eth4\" udp sport 68 udp dport 67 accept",
+        "    iifname \"eth4\" ip6 saddr fe80::/10 icmpv6 type { nd-router-solicit, nd-neighbor-solicit, nd-neighbor-advert } accept",
+        "    iifname \"eth4\" counter drop",
+        "  }",
+        "  chain output {",
+        "    type filter hook output priority filter; policy accept;",
+        "    oifname \"eth4\" udp sport 67 udp dport 68 accept",
+        "    oifname \"eth4\" icmpv6 type { nd-router-advert, nd-neighbor-solicit, nd-neighbor-advert } accept",
+        "    oifname \"eth4\" counter drop",
+        "  }",
+        "}"
+      ],
+      "paths": [
+        "nft table inet nmas_iso_dev000002"
+      ],
+      "platform": "ubuntu_frr"
+    }
+  ],
+  "plan": {
+    "codes": [],
+    "detail": {
+      "change": "CHG-20261027-0004",
+      "plan_hash": "9c94f5379cd8ca46f1fac556ab780c1df91e4280e4bf08ffbff701d10ef788fd"
+    },
+    "ok": true
+  },
+  "precheck": {
+    "codes": [],
+    "ok": true
+  },
+  "ruleset_after": "",
+  "ruleset_before": "",
+  "ruleset_identical": true,
+  "self_approval": [
+    "ISOLATION_SELF_APPROVAL"
+  ],
+  "table_present_at_fault": true,
+  "wrong_hash": [
+    "ISOLATION_CONFIRMATION_MISMATCH"
+  ]
+}

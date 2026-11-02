@@ -1,0 +1,147 @@
+{
+  "new1_ipv6_routing": "> show running-config | include ipv6 unicast-routing\nipv6 unicast-routing\n",
+  "new1_ospf6_interface": "Ethernet1 is up\n  Interface Address fe80::7c62:b1ff:fe16:773c, VRF default, Area 0.0.0.0 \n  Network Type Broadcast, Cost 10 \n  Transmit Delay is 1 sec, State Waiting, Priority 1\n  Designated Router is 0.0.0.0 \n  Backup Designated Router is 0.0.0.0 \n  Timer intervals configured, Hello 10, Dead 40, Retransmit 5 \n  Neighbor Count is 0\n  Options are E R V6\n",
+  "new1_runs_ospf6_on_uplink": true,
+  "policy": {
+    "apply_change": "CHG-20261027-0001",
+    "approved_by": "arthur",
+    "checks": {
+      "ATTACHMENT": {
+        "at": "2026-10-27T23:57:52.799584+00:00",
+        "code": "",
+        "ok": true,
+        "with_device": true
+      },
+      "DRIFT": {
+        "at": "2026-10-28T00:00:22.010171+00:00",
+        "code": "",
+        "ok": true,
+        "with_device": false
+      },
+      "L2": {
+        "at": "2026-10-27T23:57:52.797153+00:00",
+        "code": "",
+        "ok": true,
+        "with_device": true
+      },
+      "MANAGEMENT_PLANE": {
+        "at": "2026-10-27T23:57:52.798815+00:00",
+        "code": "",
+        "ok": true,
+        "with_device": true
+      },
+      "READ_BACK": {
+        "at": "2026-10-27T23:57:52.795600+00:00",
+        "code": "",
+        "ok": true,
+        "with_device": true
+      },
+      "RELEASE": null,
+      "ROUTING": {
+        "at": "2026-10-27T23:57:52.799190+00:00",
+        "code": "",
+        "ok": true,
+        "with_device": true
+      },
+      "TRAFFIC": {
+        "at": "2026-10-27T23:57:52.799897+00:00",
+        "code": "",
+        "ok": true,
+        "with_device": true
+      }
+    },
+    "device": "DEV-000002",
+    "failure": {},
+    "limitations": [
+      "NMAS is a single point of failure for re-verification; the upstream keeps enforcing while NMAS is down.",
+      "The upstream is trusted because it is a managed, in-service device; NMAS cannot prove it is uncompromised."
+    ],
+    "plan_hash": "175164d35eb2af892ade0b935ab888b8fc88370e9d62fcb6b59439ce0aefec28",
+    "policy": "ISO-000001",
+    "release_change": "",
+    "requested_by": "olivia",
+    "state": "VERIFIED",
+    "upstream": "UP1:Ethernet1"
+  },
+  "reverified": {
+    "codes": [],
+    "flows": [
+      {
+        "detail": "OPEN",
+        "expect": "PERMIT",
+        "flow": "new1 -> NMAS bootstrap HTTP 10.254.61.2:8080",
+        "observed": "PERMIT"
+      },
+      {
+        "detail": "",
+        "expect": "DENY",
+        "flow": "new1 -> NMAS service 10.254.61.2 (ICMP, not a bootstrap flow)",
+        "observed": "DENY"
+      },
+      {
+        "detail": "TIMEOUT",
+        "expect": "DENY",
+        "flow": "new1 -> NMAS service 10.254.61.2:22 (not a bootstrap flow)",
+        "observed": "DENY"
+      },
+      {
+        "detail": "TIMEOUT",
+        "expect": "DENY",
+        "flow": "new1 -> upstream's own SSH 10.254.60.1:22",
+        "observed": "DENY"
+      },
+      {
+        "detail": "",
+        "expect": "DENY",
+        "flow": "production host -> bootstrap side 10.254.60.10 (ICMP)",
+        "observed": "DENY"
+      },
+      {
+        "detail": "OPEN",
+        "expect": "PERMIT",
+        "flow": "NMAS service -> 10.254.60.10:22 (NMAS management)",
+        "observed": "PERMIT"
+      }
+    ],
+    "ok": true
+  },
+  "up1_ospf6_neighbors_json": {
+    "vrfs": {
+      "default": {
+        "instList": {
+          "1": {
+            "ospf3NeighborEntries": [
+              {
+                "adjacencyState": "full",
+                "areaId": "0.0.0.0",
+                "backupDesignatedRouter": "10.254.255.1",
+                "designatedRouter": "10.254.255.2",
+                "details": {
+                  "bfdRequestSent": false,
+                  "bfdState": "adminDown",
+                  "grNumAttempts": 0,
+                  "stateTime": 1793145036.0985136
+                },
+                "inactivity": 1793145662.0985005,
+                "interfaceName": "Ethernet3",
+                "options": {
+                  "activeRouter": true,
+                  "demandCircuitsSupport": false,
+                  "doNotUseInRouteCalc": true,
+                  "externalRoutingCapability": true,
+                  "multicastCapability": false,
+                  "nssaCapability": false
+                },
+                "priority": 1,
+                "routerId": "10.254.255.2"
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "up1_ospf6_neighbors_on_port": [],
+  "up1_ospf6_process": "ipv6 router ospf 1\n   router-id 10.254.255.1\n   passive-interface Ethernet1\n",
+  "up1_route_to_new1_v6": "\nVRF: default\nRouting entry for 2001:db8:254:255::11\nSource Codes:\n       C - connected, S - static, K - kernel, O3 - OSPFv3,\n       O3 IA - OSPFv3 inter area, O3 E1 - OSPFv3 external type 1,\n       O3 E2 - OSPFv3 external type 2,\n       O3 N1 - OSPFv3 NSSA external type 1\n       O3 N2 - OSPFv3 NSSA external type2, B - Other BGP Routes,\n       A B - BGP Aggregate, R - RIP,\n       I L1 - IS-IS level 1, I L2 - IS-IS level 2, DH - DHCP,\n       NG - Nexthop Group Static Route, M - Martian,\n       DP - Dynamic Policy Route, L - VRF Leaked,\n       G  - gRIBI, RC - Route Cache Route,\n       CL - CBF Leaked Route\n\n\n"
+}

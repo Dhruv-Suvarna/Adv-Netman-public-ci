@@ -1,0 +1,72 @@
+{% extends "core/base.html" %}
+{% load nsot_extras %}
+{% block title %}NSOT{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>NSOT</h1>
+  <p>Read-only network source-of-truth aggregation across NetBox, Git, live devices, and topology. NetBox is passive storage — Django never queries it directly from a view, and nothing on this page writes to any source.</p>
+</div>
+{% include "core/nsot/_subnav.html" %}
+
+<div class="filter-bar">
+  <a class="btn btn--secondary" href="?refresh=1">Refresh NSOT</a>
+  {% include "core/nsot/_freshness.html" %}
+</div>
+
+<div class="card-grid" style="margin-top:16px;">
+  <div class="card">
+    <span class="badge {{ netbox.source|badge_class }}">{{ netbox.source }}</span>
+    <span class="badge {{ netbox.status|badge_class }}">{{ netbox.status }}</span>
+    <h3>Devices</h3>
+    <p style="font-size:1.6rem;margin:4px 0;">{{ netbox.device_count|default:"—" }}</p>
+    <p style="color:var(--text-secondary);">Interfaces: {{ netbox.interface_count|default:"—" }} · Addresses: {{ netbox.address_count|default:"—" }}</p>
+  </div>
+  <div class="card">
+    <span class="badge {{ netbox.source|badge_class }}">{{ netbox.source }}</span>
+    <h3>Prefixes / VLANs</h3>
+    <p style="font-size:1.6rem;margin:4px 0;">{{ netbox.prefix_count|default:"—" }} / {{ netbox.vlan_count|default:"—" }}</p>
+  </div>
+  <div class="card">
+    <span class="badge GIT">GIT</span>
+    <span class="badge {% if git.status == 'available' %}{{ git.dirty|yesno:'DRIFT,IN_SYNC'|badge_class }}{% else %}{{ git.status|badge_class }}{% endif %}">
+      {% if git.status == 'available' %}{{ git.dirty|yesno:"dirty,clean" }}{% else %}{{ git.status }}{% endif %}
+    </span>
+    <h3>Git</h3>
+    {% if git.status == "available" %}
+      <p style="font-size:1.3rem;margin:4px 0;font-family:monospace;">{{ git.head_commit }}</p>
+      <p style="color:var(--text-secondary);">Branch {{ git.branch }} · {{ git.head_message }}</p>
+      <p style="color:var(--text-muted);font-size:0.85rem;">Commit time: {{ git.head_commit_time|default:"unknown" }}</p>
+      {% if git.known_runtime_log_modifications %}
+        <p style="color:var(--text-muted);font-size:0.85rem;">Known runtime log modifications: {{ git.known_runtime_log_modifications|join:", " }}</p>
+      {% endif %}
+      {% if git.project_source_drift %}
+        <p style="color:var(--warning);font-size:0.85rem;">Project source drift: {{ git.project_source_drift|length }} file(s)</p>
+      {% endif %}
+    {% else %}
+      <p style="color:var(--text-muted);">{{ git.message }}</p>
+    {% endif %}
+  </div>
+  <div class="card">
+    <span class="badge TOPOLOGY">TOPOLOGY</span>
+    <span class="badge {{ topology.status|badge_class }}">{{ topology.status }}</span>
+    <h3>Topology</h3>
+    <p style="font-size:1.6rem;margin:4px 0;">{{ topology.node_count|default:"—" }} nodes / {{ topology.edge_count|default:"—" }} links</p>
+    <a class="btn btn--secondary" href="{% url 'core:home' %}">View on Home</a>
+  </div>
+</div>
+
+<div class="card" style="margin-top:16px;">
+  <h3>Source ownership</h3>
+  <table class="data-table">
+    <thead><tr><th>Category</th><th>Owner</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td>Device / interface / VLAN / prefix / DHCP-pool inventory</td><td><span class="badge NETBOX">NETBOX</span></td><td>Live, read via modules/netbox_ipam.py</td></tr>
+      <tr><td>VLAN 200 management addressing</td><td><span class="badge GIT">GIT</span></td><td>Always static, never DHCP</td></tr>
+      <tr><td>Templates / rendering logic</td><td><span class="badge GIT">GIT</span></td><td>templates/*.cfg.j2, dhcp/*.j2</td></tr>
+      <tr><td>Live running configuration</td><td><span class="badge LIVE">LIVE</span></td><td>Explicit, bounded, redacted, cEOS only</td></tr>
+      <tr><td>Topology / neighbor state</td><td><span class="badge TOPOLOGY">TOPOLOGY</span></td><td>Existing /api/topology service</td></tr>
+      <tr><td>Candidate / Golden / Probation / UAT state</td><td>—</td><td>Not implemented yet — Phase 8+</td></tr>
+    </tbody>
+  </table>
+</div>
+{% endblock %}

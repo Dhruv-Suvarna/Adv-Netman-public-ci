@@ -1,0 +1,12 @@
+<div class="page-header">
+  <h1><code>{{ row.record_id }}</code> {{ row.device_name }} <span class="badge badge--{{ tone }}">{{ record.state }}</span>{% if row.escalated %} <span class="badge badge--danger">ESCALATED</span>{% endif %}</h1>
+  <p><a href="{% url 'core:maintenance_list' %}">&larr; All maintenance</a> ·
+    <a href="{% url 'core:maintenance_detail' row.record_id %}">Overview</a> ·
+    <a href="{% url 'core:maintenance_readiness' row.record_id %}">Readiness</a> ·
+    <a href="{% url 'core:maintenance_plan' row.record_id %}">Plan</a> ·
+    <a href="{% url 'core:maintenance_history' row.record_id %}">History and evidence</a></p>
+  <p>Requested by <strong>{{ row.requested_by }}</strong> on {{ row.requested_at|date:"Y-m-d H:i" }} UTC: {{ row.reason }}. Opening this page contacts no device and changes nothing.</p>
+</div>
+{% if notice %}<div class="card" style="border-left:6px solid var(--{{ notice.tone }});"><p>{{ notice.text }}</p>{% if notice.code %}<p><span class="badge badge--danger">{{ notice.code }}</span>{% if status.block_reasons %} Latest findings: {{ status.block_reasons|join:"; " }}{% endif %}</p>{% endif %}</div>{% endif %}
+{% if row.queued_action %}<div class="card" style="border-left:6px solid var(--info);"><p><span class="badge badge--info">QUEUED</span> {{ row.queued_action }} requested by {{ row.queued_by }} at {{ row.queued_at|date:"Y-m-d H:i:s" }} UTC. The maintenance worker runs it within about a minute (<code>manage.py maintenance_tick</code>); reload this page.</p></div>{% endif %}
+{% if row.claim_token %}<div class="card" style="border-left:6px solid var(--warning);"><p><span class="badge badge--warning">IN PROGRESS</span> The worker holds this record for {{ row.claim_action }} since {{ row.claimed_at|date:"Y-m-d H:i:s" }} UTC (last heartbeat {{ row.heartbeat_at|date:"H:i:s" }}). No other step can run until it finishes.</p></div>{% endif %}

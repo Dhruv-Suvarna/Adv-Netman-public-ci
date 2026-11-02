@@ -1,0 +1,141 @@
+compatibility:
+  constraints:
+    deployable: false
+    managed_scope: false
+    purpose:
+    - lab-generation
+    - testing
+    - workload-reuse
+    - exchange
+  platforms: []
+  required_features:
+  - interface.ROUTED_PHYSICAL
+exclusions: []
+intent:
+  device:
+    hostname: '{{ hostname }}'
+  host:
+    access_interface: eth1
+    default_route_source: dhcp
+    image: ubuntu:24.04
+    ipv4_dhcp_client: '{{ ipv4_enabled }}'
+    ipv6_dhcp_client: '{{ ipv6_enabled }}'
+  interfaces:
+  - admin_state: ENABLED
+    description: '{{ uplink_description }}'
+    kind: ROUTED_PHYSICAL
+    mtu: 1500
+    name: eth1
+kind: nmas-configuration-template
+manifest:
+  created_at: '2026-10-03T10:05:41.736588+00:00'
+  created_by: dhruv
+  description: 'Workload host attached to an access port.  OUTSIDE NMAS management: this template exists for lab generation,
+    testing, topology/workload reuse and exchange -- it never onboards a host as managed infrastructure.'
+  digest: dd1837375424f3b97b5cfbe2e662bb37d23023db51ea9d872d024f8db45e0283
+  digest_algorithm: sha256
+  family: END_DEVICE
+  name: End Device
+  origin: BASELINE
+  template_id: TPL-BASELINE-END-DEVICE
+  version: 1
+notes: H1-H4 are outside NMAS management scope and stay unmanaged; they were not logged into for this template.  Addresses
+  are DHCP-assigned and therefore not template values.  MAC addresses / DUIDs / leases are device identity and are excluded.
+parameter_sets:
+  H1:
+    hostname: H1
+    ipv4_enabled: true
+    ipv6_enabled: true
+    uplink_description: S1:eth3
+  H2:
+    hostname: H2
+    ipv4_enabled: true
+    ipv6_enabled: true
+    uplink_description: S1:eth4
+  H3:
+    hostname: H3
+    ipv4_enabled: true
+    ipv6_enabled: true
+    uplink_description: S2:eth3
+  H4:
+    hostname: H4
+    ipv4_enabled: false
+    ipv6_enabled: true
+    uplink_description: S2:eth4
+parameters:
+  hostname:
+    description: Host name
+    required: true
+    type: hostname
+  ipv4_enabled:
+    default: true
+    description: Run a DHCPv4 client on eth1
+    required: false
+    type: boolean
+  ipv6_enabled:
+    default: true
+    description: Run a DHCPv6 client on eth1
+    required: false
+    type: boolean
+  uplink_description:
+    default: ''
+    description: Where eth1 attaches (access switch and port)
+    required: false
+    type: string
+provenance:
+  differences:
+  - kind: VALUE_DIFFERS
+    path: host/ipv4_dhcp_client
+    values:
+      H1: true
+      H2: true
+      H3: true
+      H4: false
+  extracted_at: ''
+  method: repository-lab-definition
+  platforms:
+  - linux-host
+  repository_head: c92f33d
+  source_devices:
+  - H1
+  - H2
+  - H3
+  - H4
+  source_files:
+  - inventory.yml
+  - srlceos01.clab.yml
+  - hostserv.py#configure_host
+  sources:
+  - attachment:
+      access_port: eth3
+      access_switch: S1
+      interface: eth1
+    device: H1
+    image: ubuntu:24.04
+    source: inventory.yml#hosts
+  - attachment:
+      access_port: eth4
+      access_switch: S1
+      interface: eth1
+    device: H2
+    image: ubuntu:24.04
+    source: inventory.yml#hosts
+  - attachment:
+      access_port: eth3
+      access_switch: S2
+      interface: eth1
+    device: H3
+    image: ubuntu:24.04
+    source: inventory.yml#hosts
+  - attachment:
+      access_port: eth4
+      access_switch: S2
+      interface: eth1
+    device: H4
+    image: ubuntu:24.04
+    source: inventory.yml#hosts
+rendering:
+  engine: jinja2
+  feature_templates: []
+  pipeline: template intent -> Device Builder semantic candidate -> platform feature templates
+schema_version: 1

@@ -1,0 +1,6 @@
+ C        2001:db8:254:255::11/128 [0/0]
+           via Loopback0, directly connected
+
+
+> show ipv6 route 2001:db8:254:255::/64 longer-prefixes
+! IPv6 routing not enabled at line 1

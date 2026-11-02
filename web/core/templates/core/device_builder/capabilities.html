@@ -1,0 +1,76 @@
+{% extends "core/base.html" %}
+{% load core_extras %}
+{% block title %}Platform Capabilities · Device Builder{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>Platform Capabilities</h1>
+  <p><a href="{% url 'core:device_builder' %}">&larr; Back to Device Builder</a></p>
+  <p style="color:var(--text-muted);">The operator matrix is deliberately binary and fails closed. A feature is green only when every mandatory implementation, test, live-write, read-back, and restoration criterion is satisfied.</p>
+</div>
+
+<div class="card" id="evidence-matrix">
+  <div class="capability-legend">
+    <span class="badge badge--success">SUPPORTED</span>
+    <span class="badge badge--danger">UNSUPPORTED</span>
+  </div>
+  <p>
+    {% for status, count in evidence_matrix.summary_counts.items %}
+      <span class="badge {% if status == 'SUPPORTED' %}badge--success{% else %}badge--danger{% endif %}">{{ status }}: {{ count }}</span>
+    {% endfor %}
+    <span style="color:var(--text-muted);">{{ evidence_matrix.evidence_rows }} effective evidence record{{ evidence_matrix.evidence_rows|pluralize }}</span>
+  </p>
+  <p>Exhaustive assessment: {{ evidence_matrix.assessment_counts.assessed }}/{{ evidence_matrix.assessment_counts.total }} complete;
+    {{ evidence_matrix.assessment_counts.unassessed }} outstanding.</p>
+  <table class="data-table">
+    <thead>
+      <tr><th>Feature</th>{% for platform in evidence_matrix.platforms %}<th>{{ evidence_matrix.platform_labels|get_item:platform }}<br><code>{{ platform }}</code></th>{% endfor %}</tr>
+    </thead>
+    <tbody>
+    {% for row in evidence_matrix.rows %}
+      <tr>
+        <th>{{ row.feature.label }}<br><code style="font-weight:normal;">{{ row.feature.key }}</code></th>
+        {% for cell in row.cells %}
+        <td data-status="{{ cell.status }}">
+          <details>
+            <summary><span class="badge {% if cell.status == 'SUPPORTED' %}badge--success{% else %}badge--danger{% endif %}">{{ cell.status_label }}</span></summary>
+            <p style="font-size:0.85em;"><strong>Resolution:</strong> {{ cell.unsupported_reason }}</p>
+            {% if cell.assessment %}
+            <p style="font-size:0.85em;"><strong>Assessment complete:</strong> {{ cell.assessment.complete|yesno:"YES,NO" }}
+              · strongest attempted: {{ cell.assessment.as_dict.strongest_test_type }}
+              · assessment #{{ cell.assessment.assessment_id }}
+              · {{ cell.assessment.assessed_at }}
+              · runtime: {{ cell.assessment.runtime_version|default:"no runtime version recorded" }}
+              · repository: <code>{{ cell.assessment.repository_head|slice:':12' }}</code></p>
+            {% if cell.assessment.reasons %}<p style="font-size:0.85em;"><strong>Unsupported reasons:</strong>
+              {{ cell.assessment.reasons|join:", " }}</p>{% endif %}
+            <ul style="font-size:0.85em;">
+              {% for name, result in cell.assessment.probes.items %}
+                <li>{{ name }}: {{ result.outcome }} · {{ result.detail }}
+                  {% if result.reference %} · {{ result.reference }}{% endif %}</li>
+              {% endfor %}
+            </ul>
+            {% else %}
+            <p style="font-size:0.85em;"><strong>Assessment complete:</strong> NO · no deliberate cell probe has been recorded.</p>
+            {% endif %}
+            <ul style="margin:4px 0 0 0;padding-left:16px;font-size:0.85em;">
+            {% for axis, ev in cell.axes.items %}
+              <li title="{{ ev.detail }}">
+                {{ ev.label }}: <strong>{{ ev.status }}</strong>
+                {% if ev.kind == 'EMPIRICAL' and ev.evidence_type %}
+                  · {{ ev.evidence_type }}{% if ev.source %} · {{ ev.source }}{% endif %}
+                  {% if ev.runtime_version %} · {{ ev.runtime_version }}{% endif %}
+                  {% if ev.repository_head %} · <code>{{ ev.repository_head|slice:':12' }}</code>{% endif %}
+                  {% if ev.recorded_at %} · {{ ev.recorded_at|date:'c' }}{% endif %}
+                {% endif %}
+              </li>
+            {% endfor %}
+            </ul>
+          </details>
+        </td>
+        {% endfor %}
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

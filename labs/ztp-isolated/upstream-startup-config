@@ -1,0 +1,21 @@
+! NMAS V2 Phase 3 isolated ZTP fixture -- trusted upstream relay ZTPUP1 (fixture infrastructure, not the device under test).
+! Relays DHCP from the isolated bootstrap subnet to the NMAS bootstrap service and inserts option 82 (circuit-id = ingress
+! interface), the trusted attachment evidence NMAS correlates.  No production routing protocol is configured.
+hostname ZTPUP1
+!
+ip routing
+!
+ip dhcp relay information option
+!
+interface Ethernet1
+   description ZTP bootstrap port -> expected new device
+   no switchport
+   ip address 10.254.30.1/24
+   ip helper-address 10.254.31.2
+!
+interface Ethernet2
+   description NMAS bootstrap service
+   no switchport
+   ip address 10.254.31.1/30
+!
+end

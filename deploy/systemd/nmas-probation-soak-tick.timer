@@ -1,0 +1,17 @@
+# Schedules the NMAS probation soak collector (V2 Phase 5C).  Rendered by deploy/scripts/install_soak_timer.sh.
+#
+# Cadence: every 5 minutes.  A soak takes one sample per 900-second interval; ticking at one third of that keeps scheduler jitter or a
+# single failed start from ever skipping an interval, and extra ticks are no-ops ("NOT_DUE").  Nothing more aggressive is needed.
+# Persistent=false on purpose: time the host was down is a real evidence gap and is NEVER back-filled.
+[Unit]
+Description=Run the NMAS probation soak evidence tick every 5 minutes
+
+[Timer]
+OnBootSec=2min
+OnUnitActiveSec=5min
+AccuracySec=30s
+Persistent=false
+Unit=nmas-probation-soak-tick.service
+
+[Install]
+WantedBy=timers.target

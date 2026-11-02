@@ -1,0 +1,752 @@
+compatibility:
+  constraints: {}
+  platforms:
+  - arista_ceos
+  required_features:
+  - interface.ACCESS
+  - interface.LOOPBACK
+  - interface.ROUTED_PHYSICAL
+  - interface.SVI
+  - interface.TRUNK
+  - routing.RIPV2
+  - routing.STATIC_IPV6
+  - service_policy.ACL_IPV4_STANDARD
+  - service_policy.DHCP_RELAY_IPV4
+  - service_policy.DHCP_RELAY_IPV6
+  - service_policy.FHRP_VARP_IPV4
+  - service_policy.FHRP_VARP_IPV6
+exclusions:
+- category: UNMODELLED_CONFIGURATION
+  classification: RECOGNIZED_UNSUPPORTED
+  device: S1
+  label: AAA configuration
+  lines: 5
+  reason: Not representable as semantic intent; the raw text is deliberately not carried by the template.
+- category: UNMODELLED_CONFIGURATION
+  classification: RECOGNIZED_UNSUPPORTED
+  device: S1
+  label: Additional interface configuration (Ethernet1)
+  lines: 1
+  reason: Not representable as semantic intent; the raw text is deliberately not carried by the template.
+- category: UNMODELLED_CONFIGURATION
+  classification: RECOGNIZED_UNSUPPORTED
+  device: S1
+  label: Additional interface configuration (Ethernet3)
+  lines: 1
+  reason: Not representable as semantic intent; the raw text is deliberately not carried by the template.
+- category: UNMODELLED_CONFIGURATION
+  classification: RECOGNIZED_UNSUPPORTED
+  device: S1
+  label: Additional interface configuration (Ethernet4)
+  lines: 1
+  reason: Not representable as semantic intent; the raw text is deliberately not carried by the template.
+- category: UNMODELLED_CONFIGURATION
+  classification: RECOGNIZED_UNSUPPORTED
+  device: S1
+  label: Additional interface configuration (Ethernet5)
+  lines: 1
+  reason: Not representable as semantic intent; the raw text is deliberately not carried by the template.
+- category: UNMODELLED_CONFIGURATION
+  classification: RECOGNIZED_UNSUPPORTED
+  device: S1
+  label: Additional interface configuration (Vlan10)
+  lines: 3
+  reason: Not representable as semantic intent; the raw text is deliberately not carried by the template.
+- category: UNMODELLED_CONFIGURATION
+  classification: RECOGNIZED_UNSUPPORTED
+  device: S1
+  label: Additional interface configuration (Vlan20)
+  lines: 3
+  reason: Not representable as semantic intent; the raw text is deliberately not carried by the template.
+- category: UNMODELLED_CONFIGURATION
+  classification: RECOGNIZED_UNSUPPORTED
+  device: S1
+  label: Additional interface configuration (Vlan30)
+  lines: 3
+  reason: Not representable as semantic intent; the raw text is deliberately not carried by the template.
+- category: UNMODELLED_CONFIGURATION
+  classification: RECOGNIZED_UNSUPPORTED
+  device: S1
+  label: Local user account
+  lines: 3
+  reason: Not representable as semantic intent; the raw text is deliberately not carried by the template.
+- category: UNMODELLED_CONFIGURATION
+  classification: RECOGNIZED_UNSUPPORTED
+  device: S1
+  label: Management API / access configuration
+  lines: 12
+  reason: Not representable as semantic intent; the raw text is deliberately not carried by the template.
+- category: UNMODELLED_CONFIGURATION
+  classification: RECOGNIZED_UNSUPPORTED
+  device: S1
+  label: SNMP configuration
+  lines: 9
+  reason: Not representable as semantic intent; the raw text is deliberately not carried by the template.
+- category: UNMODELLED_CONFIGURATION
+  classification: RECOGNIZED_UNSUPPORTED
+  device: S1
+  label: Spanning-tree configuration
+  lines: 1
+  reason: Not representable as semantic intent; the raw text is deliberately not carried by the template.
+- category: UNMODELLED_CONFIGURATION
+  classification: RECOGNIZED_UNSUPPORTED
+  device: S1
+  label: Syslog configuration
+  lines: 3
+  reason: Not representable as semantic intent; the raw text is deliberately not carried by the template.
+- category: UNMODELLED_CONFIGURATION
+  classification: UNKNOWN
+  device: S1
+  label: Unrecognized configuration (end)
+  lines: 1
+  reason: Not representable as semantic intent; the raw text is deliberately not carried by the template.
+- category: UNMODELLED_CONFIGURATION
+  classification: UNKNOWN
+  device: S1
+  label: Unrecognized configuration (ip)
+  lines: 2
+  reason: Not representable as semantic intent; the raw text is deliberately not carried by the template.
+- category: UNMODELLED_CONFIGURATION
+  classification: UNKNOWN
+  device: S1
+  label: Unrecognized configuration (ipv6)
+  lines: 1
+  reason: Not representable as semantic intent; the raw text is deliberately not carried by the template.
+- category: UNMODELLED_CONFIGURATION
+  classification: UNKNOWN
+  device: S1
+  label: Unrecognized configuration (no)
+  lines: 3
+  reason: Not representable as semantic intent; the raw text is deliberately not carried by the template.
+- category: UNMODELLED_CONFIGURATION
+  classification: UNKNOWN
+  device: S1
+  label: Unrecognized configuration (radius-server)
+  lines: 1
+  reason: Not representable as semantic intent; the raw text is deliberately not carried by the template.
+- category: UNMODELLED_CONFIGURATION
+  classification: UNKNOWN
+  device: S1
+  label: Unrecognized configuration (router)
+  lines: 2
+  reason: Not representable as semantic intent; the raw text is deliberately not carried by the template.
+- category: UNMODELLED_CONFIGURATION
+  classification: UNKNOWN
+  device: S1
+  label: Unrecognized configuration (service)
+  lines: 1
+  reason: Not representable as semantic intent; the raw text is deliberately not carried by the template.
+- category: UNMODELLED_CONFIGURATION
+  classification: UNKNOWN
+  device: S1
+  label: Unrecognized configuration (system)
+  lines: 3
+  reason: Not representable as semantic intent; the raw text is deliberately not carried by the template.
+- category: UNMODELLED_CONFIGURATION
+  classification: RECOGNIZED_UNSUPPORTED
+  device: S1
+  label: VLAN definition
+  lines: 10
+  reason: Not representable as semantic intent; the raw text is deliberately not carried by the template.
+- category: NORMALIZED
+  device: S1
+  label: Interface Ethernet3
+  reason: 'Access VLAN without layer-3 addressing: normalized to an ACCESS port (the platform omits its default switchport
+    mode).'
+- category: NORMALIZED
+  device: S1
+  label: Interface Ethernet4
+  reason: 'Access VLAN without layer-3 addressing: normalized to an ACCESS port (the platform omits its default switchport
+    mode).'
+- category: NORMALIZED
+  device: S1
+  label: Interface Ethernet5
+  reason: 'Access VLAN without layer-3 addressing: normalized to an ACCESS port (the platform omits its default switchport
+    mode).'
+- category: RUNTIME_MANAGEMENT
+  device: S1
+  label: Interface Management0
+  reason: Containerlab-assigned out-of-band management interface; not reusable intent.
+- category: RUNTIME_MANAGEMENT
+  device: S1
+  label: Static route 0.0.0.0/0
+  reason: Next hop is on the Containerlab management network; not reusable intent.
+- category: RUNTIME_MANAGEMENT
+  device: S1
+  label: Static route ::/0
+  reason: Next hop is on the Containerlab management network; not reusable intent.
+- category: UNMODELLED_CONFIGURATION
+  classification: RECOGNIZED_UNSUPPORTED
+  device: S2
+  label: AAA configuration
+  lines: 5
+  reason: Not representable as semantic intent; the raw text is deliberately not carried by the template.
+- category: UNMODELLED_CONFIGURATION
+  classification: RECOGNIZED_UNSUPPORTED
+  device: S2
+  label: Additional interface configuration (Ethernet1)
+  lines: 1
+  reason: Not representable as semantic intent; the raw text is deliberately not carried by the template.
+- category: UNMODELLED_CONFIGURATION
+  classification: RECOGNIZED_UNSUPPORTED
+  device: S2
+  label: Additional interface configuration (Ethernet3)
+  lines: 1
+  reason: Not representable as semantic intent; the raw text is deliberately not carried by the template.
+- category: UNMODELLED_CONFIGURATION
+  classification: RECOGNIZED_UNSUPPORTED
+  device: S2
+  label: Additional interface configuration (Ethernet4)
+  lines: 1
+  reason: Not representable as semantic intent; the raw text is deliberately not carried by the template.
+- category: UNMODELLED_CONFIGURATION
+  classification: RECOGNIZED_UNSUPPORTED
+  device: S2
+  label: Additional interface configuration (Ethernet5)
+  lines: 1
+  reason: Not representable as semantic intent; the raw text is deliberately not carried by the template.
+- category: UNMODELLED_CONFIGURATION
+  classification: RECOGNIZED_UNSUPPORTED
+  device: S2
+  label: Additional interface configuration (Vlan10)
+  lines: 3
+  reason: Not representable as semantic intent; the raw text is deliberately not carried by the template.
+- category: UNMODELLED_CONFIGURATION
+  classification: RECOGNIZED_UNSUPPORTED
+  device: S2
+  label: Additional interface configuration (Vlan20)
+  lines: 3
+  reason: Not representable as semantic intent; the raw text is deliberately not carried by the template.
+- category: UNMODELLED_CONFIGURATION
+  classification: RECOGNIZED_UNSUPPORTED
+  device: S2
+  label: Additional interface configuration (Vlan30)
+  lines: 3
+  reason: Not representable as semantic intent; the raw text is deliberately not carried by the template.
+- category: UNMODELLED_CONFIGURATION
+  classification: RECOGNIZED_UNSUPPORTED
+  device: S2
+  label: Local user account
+  lines: 3
+  reason: Not representable as semantic intent; the raw text is deliberately not carried by the template.
+- category: UNMODELLED_CONFIGURATION
+  classification: RECOGNIZED_UNSUPPORTED
+  device: S2
+  label: Management API / access configuration
+  lines: 12
+  reason: Not representable as semantic intent; the raw text is deliberately not carried by the template.
+- category: UNMODELLED_CONFIGURATION
+  classification: RECOGNIZED_UNSUPPORTED
+  device: S2
+  label: SNMP configuration
+  lines: 9
+  reason: Not representable as semantic intent; the raw text is deliberately not carried by the template.
+- category: UNMODELLED_CONFIGURATION
+  classification: RECOGNIZED_UNSUPPORTED
+  device: S2
+  label: Spanning-tree configuration
+  lines: 1
+  reason: Not representable as semantic intent; the raw text is deliberately not carried by the template.
+- category: UNMODELLED_CONFIGURATION
+  classification: RECOGNIZED_UNSUPPORTED
+  device: S2
+  label: Syslog configuration
+  lines: 3
+  reason: Not representable as semantic intent; the raw text is deliberately not carried by the template.
+- category: UNMODELLED_CONFIGURATION
+  classification: UNKNOWN
+  device: S2
+  label: Unrecognized configuration (end)
+  lines: 1
+  reason: Not representable as semantic intent; the raw text is deliberately not carried by the template.
+- category: UNMODELLED_CONFIGURATION
+  classification: UNKNOWN
+  device: S2
+  label: Unrecognized configuration (ip)
+  lines: 2
+  reason: Not representable as semantic intent; the raw text is deliberately not carried by the template.
+- category: UNMODELLED_CONFIGURATION
+  classification: UNKNOWN
+  device: S2
+  label: Unrecognized configuration (ipv6)
+  lines: 1
+  reason: Not representable as semantic intent; the raw text is deliberately not carried by the template.
+- category: UNMODELLED_CONFIGURATION
+  classification: UNKNOWN
+  device: S2
+  label: Unrecognized configuration (no)
+  lines: 3
+  reason: Not representable as semantic intent; the raw text is deliberately not carried by the template.
+- category: UNMODELLED_CONFIGURATION
+  classification: UNKNOWN
+  device: S2
+  label: Unrecognized configuration (radius-server)
+  lines: 1
+  reason: Not representable as semantic intent; the raw text is deliberately not carried by the template.
+- category: UNMODELLED_CONFIGURATION
+  classification: UNKNOWN
+  device: S2
+  label: Unrecognized configuration (router)
+  lines: 2
+  reason: Not representable as semantic intent; the raw text is deliberately not carried by the template.
+- category: UNMODELLED_CONFIGURATION
+  classification: UNKNOWN
+  device: S2
+  label: Unrecognized configuration (service)
+  lines: 1
+  reason: Not representable as semantic intent; the raw text is deliberately not carried by the template.
+- category: UNMODELLED_CONFIGURATION
+  classification: UNKNOWN
+  device: S2
+  label: Unrecognized configuration (system)
+  lines: 3
+  reason: Not representable as semantic intent; the raw text is deliberately not carried by the template.
+- category: UNMODELLED_CONFIGURATION
+  classification: RECOGNIZED_UNSUPPORTED
+  device: S2
+  label: VLAN definition
+  lines: 10
+  reason: Not representable as semantic intent; the raw text is deliberately not carried by the template.
+- category: NORMALIZED
+  device: S2
+  label: Interface Ethernet3
+  reason: 'Access VLAN without layer-3 addressing: normalized to an ACCESS port (the platform omits its default switchport
+    mode).'
+- category: NORMALIZED
+  device: S2
+  label: Interface Ethernet4
+  reason: 'Access VLAN without layer-3 addressing: normalized to an ACCESS port (the platform omits its default switchport
+    mode).'
+- category: NORMALIZED
+  device: S2
+  label: Interface Ethernet5
+  reason: 'Access VLAN without layer-3 addressing: normalized to an ACCESS port (the platform omits its default switchport
+    mode).'
+- category: RUNTIME_MANAGEMENT
+  device: S2
+  label: Interface Management0
+  reason: Containerlab-assigned out-of-band management interface; not reusable intent.
+- category: RUNTIME_MANAGEMENT
+  device: S2
+  label: Static route 0.0.0.0/0
+  reason: Next hop is on the Containerlab management network; not reusable intent.
+- category: RUNTIME_MANAGEMENT
+  device: S2
+  label: Static route ::/0
+  reason: Next hop is on the Containerlab management network; not reusable intent.
+intent:
+  acls:
+  - acl_type: STANDARD
+    entries:
+    - action: PERMIT
+      destination_type: ANY
+      logging: false
+      protocol: IP
+      sequence: 10
+      source_type: HOST
+      source_value: 192.168.200.100
+    family: IPV4
+    name: NMAS_SNMP
+  device:
+    hostname: '{{ hostname }}'
+  interfaces:
+  - addresses:
+    - cidr: '{{ ethernet1_ipv4_1 }}'
+      family: IPV4
+      role: PRIMARY
+    - cidr: '{{ ethernet1_ipv6_1 }}'
+      family: IPV6
+      role: PRIMARY
+    admin_state: ENABLED
+    description: '{{ ethernet1_description }}'
+    kind: ROUTED_PHYSICAL
+    name: Ethernet1
+  - admin_state: ENABLED
+    description: '{{ ethernet2_description }}'
+    kind: TRUNK
+    name: Ethernet2
+    trunk_allowed_vlans:
+    - 10
+    - 20
+    - 30
+    - 99
+  - access_vlan: 10
+    admin_state: ENABLED
+    description: '{{ ethernet3_description }}'
+    kind: ACCESS
+    name: Ethernet3
+  - access_vlan: '{{ ethernet4_access_vlan }}'
+    admin_state: ENABLED
+    description: '{{ ethernet4_description }}'
+    kind: ACCESS
+    name: Ethernet4
+  - access_vlan: 200
+    admin_state: ENABLED
+    description: MANAGEMENT
+    kind: ACCESS
+    name: Ethernet5
+  - addresses:
+    - cidr: '{{ loopback_ipv4 }}'
+      family: IPV4
+      role: PRIMARY
+    admin_state: ENABLED
+    description: ROUTER-ID
+    kind: LOOPBACK
+    name: Loopback0
+  - addresses:
+    - cidr: '{{ vlan10_ipv4_1 }}'
+      family: IPV4
+      role: PRIMARY
+    - cidr: '{{ vlan10_ipv6_1 }}'
+      family: IPV6
+      role: PRIMARY
+    admin_state: ENABLED
+    dhcp_relays:
+    - destination: 192.168.200.2
+      family: IPV4
+    - destination: 192.168.200.100
+      family: IPV4
+    - destination: 2001:db8:200::2
+      family: IPV6
+    - destination: 2001:db8:200::100
+      family: IPV6
+    fhrp:
+    - address: 192.168.10.1
+      address_family: IPV4
+      protocol: VARP
+      virtual_mac: 00:1c:73:00:00:99
+    - address: 2001:db8:10::1
+      address_family: IPV6
+      protocol: VARP
+      virtual_mac: 00:1c:73:00:00:99
+    kind: SVI
+    name: Vlan10
+    vlan_id: 10
+  - addresses:
+    - cidr: '{{ vlan20_ipv4_1 }}'
+      family: IPV4
+      role: PRIMARY
+    - cidr: '{{ vlan20_ipv6_1 }}'
+      family: IPV6
+      role: PRIMARY
+    admin_state: ENABLED
+    dhcp_relays:
+    - destination: 192.168.200.2
+      family: IPV4
+    - destination: 192.168.200.100
+      family: IPV4
+    - destination: 2001:db8:200::2
+      family: IPV6
+    - destination: 2001:db8:200::100
+      family: IPV6
+    fhrp:
+    - address: 192.168.20.1
+      address_family: IPV4
+      protocol: VARP
+      virtual_mac: 00:1c:73:00:00:99
+    - address: 2001:db8:20::1
+      address_family: IPV6
+      protocol: VARP
+      virtual_mac: 00:1c:73:00:00:99
+    kind: SVI
+    name: Vlan20
+    vlan_id: 20
+  - addresses:
+    - cidr: '{{ vlan30_ipv6_1 }}'
+      family: IPV6
+      role: PRIMARY
+    admin_state: ENABLED
+    dhcp_relays:
+    - destination: 2001:db8:200::2
+      family: IPV6
+    - destination: 2001:db8:200::100
+      family: IPV6
+    fhrp:
+    - address: 2001:db8:30::1
+      address_family: IPV6
+      protocol: VARP
+      virtual_mac: 00:1c:73:00:00:99
+    kind: SVI
+    name: Vlan30
+    vlan_id: 30
+  - addresses:
+    - cidr: '{{ vlan99_ipv4_1 }}'
+      family: IPV4
+      role: PRIMARY
+    admin_state: ENABLED
+    description: '{{ vlan99_description }}'
+    kind: SVI
+    name: Vlan99
+    vlan_id: 99
+  - addresses:
+    - cidr: '{{ mgmt_ipv4 }}'
+      family: IPV4
+      role: PRIMARY
+    - cidr: '{{ mgmt_ipv6 }}'
+      family: IPV6
+      role: PRIMARY
+    admin_state: ENABLED
+    kind: SVI
+    name: Vlan200
+    vlan_id: 200
+  routing:
+  - bindings:
+    - interface_name: Vlan10
+      passive: false
+    - interface_name: Vlan20
+      passive: false
+    - interface_name: Ethernet1
+      passive: false
+    - interface_name: Vlan99
+      passive: false
+    - interface_name: Loopback0
+      passive: false
+    family: rip
+    fields:
+      address_family: IPV4
+      enabled: true
+  static_routes:
+  - destination: 2001:db8::/32
+    family: IPV6
+    next_hop_address: '{{ static_routes_ipv6_2001_db8_32_next_hop_address }}'
+kind: nmas-configuration-template
+manifest:
+  created_at: '2026-10-03T10:05:23.892742+00:00'
+  created_by: dhruv
+  description: 'Access-layer switching role: edge access ports, inter-switch trunk, client VLAN SVIs with first-hop redundancy
+    and DHCP relay, routed uplink to the gateway router, static management on VLAN 200.'
+  digest: 206713cb661ddc203a16fce7be76af1e42cf6b13251f61efd6fcb90ad1743ad7
+  digest_algorithm: sha256
+  family: ACCESS_SWITCH
+  name: Access Layer Switch
+  origin: BASELINE
+  template_id: TPL-BASELINE-ACCESS-SWITCH
+  version: 1
+notes: Common access layer switch behaviour of S1 and S2.  Values the sources share are baseline defaults; values that differ
+  are parameters (see parameter_sets for each source); objects only one source has are optional (_when) and listed under provenance.differences.
+parameter_sets:
+  S1:
+    ethernet1_description: RIP_IPV4_STATIC_IPV6_TO_R1
+    ethernet1_ipv4_1: 192.168.110.1/31
+    ethernet1_ipv6_1: 2001:db8:110:1::2/64
+    ethernet2_description: S1_S2_TRUNK
+    ethernet3_description: H1_VLAN10
+    ethernet4_access_vlan: 20
+    ethernet4_description: H2_VLAN20
+    hostname: S1
+    loopback_ipv4: 192.168.255.11/32
+    mgmt_ipv4: 192.168.200.11/24
+    mgmt_ipv6: 2001:db8:200::11/64
+    static_routes_ipv6_2001_db8_32_next_hop_address: 2001:db8:110:1::1
+    vlan10_ipv4_1: 192.168.10.2/24
+    vlan10_ipv6_1: 2001:db8:10::2/64
+    vlan20_ipv4_1: 192.168.20.2/24
+    vlan20_ipv6_1: 2001:db8:20::2/64
+    vlan30_ipv6_1: 2001:db8:30::2/64
+    vlan99_description: S1-S2-routing-transit
+    vlan99_ipv4_1: 192.168.110.4/31
+  S2:
+    ethernet1_description: RIP_IPV4_STATIC_IPV6_TO_R2
+    ethernet1_ipv4_1: 192.168.110.3/31
+    ethernet1_ipv6_1: 2001:db8:110:2::2/64
+    ethernet2_description: S2_S1_TRUNK
+    ethernet3_description: H3_VLAN10
+    ethernet4_access_vlan: 30
+    ethernet4_description: H4_VLAN30
+    hostname: S2
+    loopback_ipv4: 192.168.255.12/32
+    mgmt_ipv4: 192.168.200.12/24
+    mgmt_ipv6: 2001:db8:200::12/64
+    static_routes_ipv6_2001_db8_32_next_hop_address: 2001:db8:110:2::1
+    vlan10_ipv4_1: 192.168.10.3/24
+    vlan10_ipv6_1: 2001:db8:10::3/64
+    vlan20_ipv4_1: 192.168.20.3/24
+    vlan20_ipv6_1: 2001:db8:20::3/64
+    vlan30_ipv6_1: 2001:db8:30::3/64
+    vlan99_description: S1-S2-routing-transit
+    vlan99_ipv4_1: 192.168.110.5/31
+parameters:
+  ethernet1_description:
+    description: interfaces / Ethernet1 description
+    required: true
+    type: string
+  ethernet1_ipv4_1:
+    description: interfaces / Ethernet1 / addresses / ipv4_1 cidr
+    required: true
+    type: ipv4_interface
+  ethernet1_ipv6_1:
+    description: interfaces / Ethernet1 / addresses / ipv6_1 cidr
+    required: true
+    type: ipv6_interface
+  ethernet2_description:
+    default: ''
+    description: Description of Ethernet2 (names the device)
+    required: false
+    type: string
+  ethernet3_description:
+    description: interfaces / Ethernet3 description
+    required: true
+    type: string
+  ethernet4_access_vlan:
+    description: interfaces / Ethernet4 access_vlan
+    required: true
+    type: vlan_id
+  ethernet4_description:
+    description: interfaces / Ethernet4 description
+    required: true
+    type: string
+  hostname:
+    description: Device hostname
+    required: true
+    type: hostname
+  loopback_ipv4:
+    description: Loopback IPV4 address
+    required: true
+    type: ipv4_interface
+  mgmt_ipv4:
+    description: Static IPV4 management address on Vlan200 (VLAN 200 stays static)
+    required: true
+    type: ipv4_interface
+  mgmt_ipv6:
+    description: Static IPV6 management address on Vlan200 (VLAN 200 stays static)
+    required: true
+    type: ipv6_interface
+  static_routes_ipv6_2001_db8_32_next_hop_address:
+    description: static_routes / ipv6_2001:db8::/32 next_hop_address
+    required: true
+    type: ipv6_address
+  vlan10_ipv4_1:
+    description: interfaces / Vlan10 / addresses / ipv4_1 cidr
+    required: true
+    type: ipv4_interface
+  vlan10_ipv6_1:
+    description: interfaces / Vlan10 / addresses / ipv6_1 cidr
+    required: true
+    type: ipv6_interface
+  vlan20_ipv4_1:
+    description: interfaces / Vlan20 / addresses / ipv4_1 cidr
+    required: true
+    type: ipv4_interface
+  vlan20_ipv6_1:
+    description: interfaces / Vlan20 / addresses / ipv6_1 cidr
+    required: true
+    type: ipv6_interface
+  vlan30_ipv6_1:
+    description: interfaces / Vlan30 / addresses / ipv6_1 cidr
+    required: true
+    type: ipv6_interface
+  vlan99_description:
+    default: ''
+    description: Description of Vlan99 (names the device)
+    required: false
+    type: string
+  vlan99_ipv4_1:
+    description: interfaces / Vlan99 / addresses / ipv4_1 cidr
+    required: true
+    type: ipv4_interface
+provenance:
+  differences:
+  - kind: VALUE_DIFFERS
+    path: interfaces/Ethernet1/description
+    values:
+      S1: RIP_IPV4_STATIC_IPV6_TO_R1
+      S2: RIP_IPV4_STATIC_IPV6_TO_R2
+  - kind: VALUE_DIFFERS
+    path: interfaces/Ethernet1/addresses/ipv4_1/cidr
+    values:
+      S1: 192.168.110.1/31
+      S2: 192.168.110.3/31
+  - kind: VALUE_DIFFERS
+    path: interfaces/Ethernet1/addresses/ipv6_1/cidr
+    values:
+      S1: 2001:db8:110:1::2/64
+      S2: 2001:db8:110:2::2/64
+  - kind: VALUE_DIFFERS
+    path: interfaces/Ethernet3/description
+    values:
+      S1: H1_VLAN10
+      S2: H3_VLAN10
+  - kind: VALUE_DIFFERS
+    path: interfaces/Ethernet4/description
+    values:
+      S1: H2_VLAN20
+      S2: H4_VLAN30
+  - kind: VALUE_DIFFERS
+    path: interfaces/Ethernet4/access_vlan
+    values:
+      S1: 20
+      S2: 30
+  - kind: VALUE_DIFFERS
+    path: interfaces/Vlan10/addresses/ipv4_1/cidr
+    values:
+      S1: 192.168.10.2/24
+      S2: 192.168.10.3/24
+  - kind: VALUE_DIFFERS
+    path: interfaces/Vlan10/addresses/ipv6_1/cidr
+    values:
+      S1: 2001:db8:10::2/64
+      S2: 2001:db8:10::3/64
+  - kind: VALUE_DIFFERS
+    path: interfaces/Vlan20/addresses/ipv4_1/cidr
+    values:
+      S1: 192.168.20.2/24
+      S2: 192.168.20.3/24
+  - kind: VALUE_DIFFERS
+    path: interfaces/Vlan20/addresses/ipv6_1/cidr
+    values:
+      S1: 2001:db8:20::2/64
+      S2: 2001:db8:20::3/64
+  - kind: VALUE_DIFFERS
+    path: interfaces/Vlan30/addresses/ipv6_1/cidr
+    values:
+      S1: 2001:db8:30::2/64
+      S2: 2001:db8:30::3/64
+  - kind: VALUE_DIFFERS
+    path: interfaces/Vlan99/addresses/ipv4_1/cidr
+    values:
+      S1: 192.168.110.4/31
+      S2: 192.168.110.5/31
+  - kind: VALUE_DIFFERS
+    path: static_routes/ipv6_2001:db8::/32/next_hop_address
+    values:
+      S1: 2001:db8:110:1::1
+      S2: 2001:db8:110:2::1
+  extracted_at: '2026-10-03T10:05:19.985271+00:00'
+  method: live-read-only-capture
+  platforms:
+  - arista_ceos
+  repository_head: c92f33d
+  source_devices:
+  - S1
+  - S2
+  sources:
+  - captured_at: '2026-10-03T10:05:16.012937+00:00'
+    device: S1
+    parser_version: ceos-2.0
+    platform: arista_ceos
+    redacted_lines: 6
+    running_config_digest: bbe7d3587f69508c69e64fff1af80a5818769b6e70eb4f2a154185ef77e7dd86
+    snapshot_id: 662c4ced-8310-4616-9737-4a87cc6a7f97
+    transport: netmiko-ssh (privileged EXEC, show commands only)
+  - captured_at: '2026-10-03T10:05:19.985271+00:00'
+    device: S2
+    parser_version: ceos-2.0
+    platform: arista_ceos
+    redacted_lines: 6
+    running_config_digest: 87bb23094157a35b40dc3205ee5df82823c3757b58f0d5bc7b6e71f99ac11a0c
+    snapshot_id: e869e057-c76d-4f1c-8a32-315e1e99c005
+    transport: netmiko-ssh (privileged EXEC, show commands only)
+rendering:
+  engine: jinja2
+  feature_templates:
+  - ceos/acl_ipv4.j2
+  - ceos/fhrp_varp.j2
+  - ceos/interface_access.j2
+  - ceos/interface_loopback.j2
+  - ceos/interface_routed_physical.j2
+  - ceos/interface_svi.j2
+  - ceos/interface_trunk.j2
+  - ceos/routing_rip.j2
+  - ceos/routing_static_route.j2
+  pipeline: template intent -> Device Builder semantic candidate -> platform feature templates
+schema_version: 1

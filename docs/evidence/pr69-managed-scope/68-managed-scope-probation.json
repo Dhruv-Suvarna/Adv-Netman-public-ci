@@ -1,0 +1,75 @@
+{
+  "after_drift": {
+    "active_managed": false,
+    "config_validation": {
+      "evidence": {
+        "outside_scope": [
+          "NEW1"
+        ]
+      },
+      "status": "BLOCKED"
+    },
+    "execution_gate": [
+      "TARGET_DEVICE_OUTSIDE_MANAGED_SCOPE"
+    ],
+    "refusal": "PROBATION_UNTRUSTED"
+  },
+  "drift_tick": [
+    {
+      "action": "FINALIZED",
+      "detail": "CONFIGURATION_DRIFT",
+      "state": "INVALIDATED"
+    }
+  ],
+  "during_probation": {
+    "active_managed": true,
+    "config_validation": {
+      "evidence": {
+        "nmas_active": [
+          "NEW1"
+        ],
+        "outside_scope": []
+      },
+      "status": "PASS"
+    },
+    "execution_gate": [],
+    "refusal": ""
+  },
+  "notifications_recorded_not_sent": 2,
+  "probation": {
+    "baseline_devices": [
+      "NEW1"
+    ],
+    "bundle": "BND-PROB-000001",
+    "required_end_at": "2026-11-03T12:48:17.134421+00:00",
+    "run_status": "PROBATION",
+    "soak": "SOAK-000001",
+    "soak_bundle_matches": true,
+    "soak_state": "RUNNING"
+  },
+  "probation_negative": [
+    {
+      "case": "identity MISMATCH in probation",
+      "expected": "IDENTITY_NOT_VERIFIED",
+      "refusal": "IDENTITY_NOT_VERIFIED"
+    },
+    {
+      "case": "aborted commissioning in probation",
+      "expected": "COMMISSIONING_NOT_BOUND",
+      "refusal": "COMMISSIONING_NOT_BOUND"
+    },
+    {
+      "case": "unbound probation (no soak)",
+      "expected": "PROBATION_UNBOUND",
+      "refusal": "PROBATION_UNBOUND"
+    }
+  ],
+  "soak_after_drift": {
+    "state": "INVALIDATED",
+    "terminal_reason": "CONFIGURATION_DRIFT"
+  },
+  "start_probation": {
+    "codes": [],
+    "ok": true
+  }
+}

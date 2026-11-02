@@ -1,0 +1,6 @@
+router isis {{ tag }}
+   net __DB_FIELD_net__
+   is-type {{ level }}
+{% if af_ipv4 %}   address-family ipv4 unicast
+{% endif %}{% if af_ipv6 %}   address-family ipv6 unicast
+{% endif %}

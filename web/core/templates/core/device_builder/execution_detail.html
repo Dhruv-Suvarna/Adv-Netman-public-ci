@@ -1,0 +1,68 @@
+{% extends "core/base.html" %}
+{% load core_extras %}
+{% block title %}Execution {{ run.run_id|stringformat:"s"|slice:":8" }} · {{ change.change_id }}{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>Execution run <span style="font-weight:400;">· {{ change.change_id }}</span></h1>
+  <p><a href="{% url 'core:change_execute' change.change_id %}">&larr; Back to execution</a> · <a href="{% url 'core:change_executions' change.change_id %}">Execution history</a> · <a href="{% url 'core:change_execution_report' change.change_id run.run_id %}">Download report.json</a></p>
+  <p>Read-only record. Opening it never contacts a device.</p>
+</div>
+
+<div class="card" style="border-left:6px solid var(--{% if tone == 'success' %}success{% elif tone == 'warning' %}warning{% elif tone == 'danger' %}danger{% else %}text-muted{% endif %});">
+  <h3><span class="badge badge--{{ run.outcome|execution_badge_class }}">{{ run.get_outcome_display|default:run.get_state_display }}</span></h3>
+  <p>{{ explanation }}</p>
+  {% if report.compensation.attempted %}<p><strong>Compensation:</strong> {{ report.compensation.status }}{% if report.compensation.not_compensated %} — NOT restored: {{ report.compensation.not_compensated|join:", " }}{% endif %}</p>{% endif %}
+</div>
+
+<div class="card-grid" style="margin-top:16px;">
+  <div class="card"><h3>Run</h3>
+    <table class="data-table"><tbody>
+      <tr><th>Mode</th><td>{{ run.get_mode_display }}</td></tr>
+      <tr><th>Started / finished</th><td>{{ run.started_at }} / {{ run.finished_at|default:"—" }}</td></tr>
+      <tr><th>Operator</th><td>{{ run.actor|default:"—" }}</td></tr>
+      <tr><th>Devices</th><td>{{ run.devices|join:", "|default:"—" }}</td></tr>
+      <tr><th>Plan</th><td><a href="{% url 'core:change_plan_detail' change.change_id run.plan.plan_id %}"><code>{{ run.plan.plan_id }}</code></a></td></tr>
+      <tr><th>Plan hash</th><td><code>{{ run.plan_hash }}</code></td></tr>
+      <tr><th>Validation run</th><td><a href="{% url 'core:change_validation_detail' change.change_id run.validation_run.run_id %}"><code>{{ run.validation_run.run_id }}</code></a> (input <code>{{ run.validation_input_hash|slice:":12" }}</code>)</td></tr>
+      <tr><th>Precheck</th><td>{% if run.precheck_run %}<a href="{% url 'core:change_precheck_detail' change.change_id run.precheck_run.run_id %}">{{ run.precheck_run.status }}</a>{% else %}—{% endif %}</td></tr>
+      <tr><th>Engine</th><td>{{ run.engine_version }} · configuration scope: {{ report.persistence }}</td></tr>
+    </tbody></table>
+  </div>
+  <div class="card"><h3>Resulting network state</h3>
+    <table class="data-table"><tbody>
+      <tr><th>Applied</th><td>{{ report.state.applied|join:", "|default:"—" }}</td></tr>
+      <tr><th>Already satisfied (nothing sent)</th><td>{{ report.state.already_satisfied|join:", "|default:"—" }}</td></tr>
+      <tr><th>Failed</th><td>{{ report.state.failed|join:", "|default:"—" }}</td></tr>
+      <tr><th>Unapplied (in scope)</th><td>{{ report.state.unapplied|join:", "|default:"—" }}</td></tr>
+      <tr><th>Outside the requested scope</th><td>{{ report.state.out_of_scope|join:", "|default:"—" }}</td></tr>
+      <tr><th>Compensated</th><td>{{ report.state.compensated|join:", "|default:"—" }}</td></tr>
+      <tr><th>Postcheck</th><td>{{ report.postcheck.result|default:"NOT_RUN" }}{% if report.postcheck.settle %} (polled {{ report.postcheck.settle.attempts }}× within {{ report.postcheck.settle.timeout_seconds }}s){% endif %}</td></tr>
+    </tbody></table>
+    {% if report.scope.through_cfg_id %}<p>Requested UAT scope: through <code>{{ report.scope.through_cfg_id }}</code> ({{ report.scope.requested|length }} Configlet{{ report.scope.requested|length|pluralize }}).</p>{% endif %}
+  </div>
+</div>
+
+{% if uat_bundle %}{% include "core/device_builder/_bundle_execution_card.html" %}{% endif %}
+{% if deployed_bundle %}{% include "core/device_builder/_deployed_bundle_execution_card.html" %}{% endif %}
+
+{% if report.blockers %}<div class="card" style="margin-top:16px;"><h3>Blockers</h3><ul>{% for b in report.blockers %}<li><span class="badge badge--danger">{{ b.code }}</span> {{ b.message }} <em>{{ b.remediation }}</em></li>{% endfor %}</ul></div>{% endif %}
+
+<div class="card" style="margin-top:16px;"><h3>Per-Configlet results</h3>
+  <table class="data-table"><thead><tr><th>#</th><th>Configlet</th><th>Device</th><th>Object</th><th>Result</th><th>Error</th><th>Partial effects</th><th>Lines sent</th></tr></thead><tbody>
+    {% for r in apply_results %}<tr><td>{{ r.sequence }}</td><td><code>{{ r.cfg_id }}</code></td><td>{{ r.device }}</td><td>{{ r.object_type }}</td><td><span class="badge badge--{{ r.status|execution_badge_class }}">{{ r.status }}</span></td><td>{% if r.error_code %}<code>{{ r.error_code }}</code> {{ r.error }}{% else %}—{% endif %}</td><td>{% if r.partial_effects %}<span class="badge badge--danger">may remain</span>{% else %}—{% endif %}</td><td>{{ r.lines_sent }}</td></tr>{% empty %}<tr><td colspan="8">No Configlet was attempted.</td></tr>{% endfor %}
+  </tbody></table>
+</div>
+
+{% if compensation_results %}
+<div class="card" style="margin-top:16px;"><h3>Compensation (reverse order)</h3>
+  <table class="data-table"><thead><tr><th>Configlet</th><th>Device</th><th>Result</th><th>Error</th></tr></thead><tbody>
+    {% for r in compensation_results %}<tr><td><code>{{ r.cfg_id }}</code></td><td>{{ r.device }}</td><td><span class="badge badge--{{ r.status|execution_badge_class }}">{{ r.status }}</span></td><td>{% if r.error_code %}<code>{{ r.error_code }}</code> {{ r.error }}{% else %}—{% endif %}</td></tr>{% endfor %}
+  </tbody></table>
+</div>
+{% endif %}
+
+{% if postcheck_rows %}<div class="card" style="margin-top:16px;"><h3>Postcheck evidence</h3>{% include "core/health/_results.html" with rows=postcheck_rows %}</div>{% endif %}
+
+{% if report.warnings %}<div class="card" style="margin-top:16px;"><h3>Warnings</h3><ul>{% for w in report.warnings %}<li><span class="badge badge--warning">{{ w.code }}</span> {{ w.message }}</li>{% endfor %}</ul></div>{% endif %}
+<div class="card" style="margin-top:16px;"><h3>Limitations of this record</h3><ul>{% for item in report.limitations %}<li>{{ item }}</li>{% endfor %}</ul></div>
+{% endblock %}

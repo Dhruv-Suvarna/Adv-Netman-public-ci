@@ -1,0 +1,14 @@
+# NMAS_IAC: repository-owned rsyslog config for the R3/R4 Ubuntu/FRR routers.
+# No systemd inside these containers -- started/stopped directly by
+# provision_linux_syslog.py (see monitoring/scripts/), mirroring the
+# start-stop-daemon-free snmpd pattern already used for Linux SNMP.
+#
+# Local reception (imuxsock/kernel) lets anything on this host that calls the
+# standard syslog(3) API -- including `logger` -- reach this daemon, which
+# then forwards only critical-or-worse severities to NMAS.
+module(load="imuxsock")
+$MainMsgQueueTimeoutEnqueue 0
+
+if $syslogseverity <= {{ max_severity }} then {
+  action(type="omfwd" target="{{ receiver }}" port="{{ port }}" protocol="udp" template="RSYSLOG_SyslogProtocol23Format")
+}

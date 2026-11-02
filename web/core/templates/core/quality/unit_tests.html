@@ -1,0 +1,97 @@
+{% extends "core/base.html" %}
+{% block title %}Unit Test Matrix · Automation{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>Unit Test Matrix</h1>
+  <p><a href="{% url 'core:automation_landing' %}">&larr; Automation</a> · <a href="{% url 'core:quality_coverage' %}">Code Coverage &rarr;</a></p>
+  <p style="color:var(--text-muted);">Every deployed automation artifact with its <strong>required</strong> negative and positive test cases. Y (required) comes from the code and the capability matrix, never from the tests that exist; X counts a case only when its test ran in the evidence run and passed. Missing cases are listed, never hidden. <strong>Current closure</strong> covers the deployed backend and the currently implemented features; <strong>final closure</strong> follows Platform x Feature capability closure.</p>
+</div>
+{% include "core/quality/_evidence.html" with refresh_next="unit" %}
+{% if not report %}
+<div class="alert alert--warning">No accepted evidence is available yet. Run Tier-3 in full mode (push to main, or a manual full run) and press Refresh, or run <code>manage.py nmas_test_governance run --out DIR</code> and <code>accept</code>.</div>
+{% else %}
+<div class="card-grid" style="margin-top:12px;" id="summary-cards">
+  <div class="card"><h3>Unit testing</h3>
+    <p data-testid="card-positive">Positive: <strong>{{ cards.positive.pass }} / {{ cards.positive.required }}</strong> PASS{% if cards.positive.pct is not None %} ({{ cards.positive.pct }}%){% endif %}</p>
+    <p data-testid="card-negative">Negative: <strong>{{ cards.negative.pass }} / {{ cards.negative.required }}</strong> PASS{% if cards.negative.pct is not None %} ({{ cards.negative.pct }}%){% endif %}</p>
+    <p style="font-size:0.85em;color:var(--text-muted);">missing +{{ cards.positive.missing }} / -{{ cards.negative.missing }} · failing {{ cards.positive.fail|add:cards.negative.fail }} · exempt {{ cards.positive.exempt|add:cards.negative.exempt }} · tracked debt {{ cards.debt }}</p></div>
+  <div class="card"><h3>Artifacts</h3>
+    <p data-testid="card-artifacts">Closed: <strong>{{ cards.artifacts.closed }} / {{ cards.artifacts.counted }}</strong>{% if cards.artifacts.pct is not None %} ({{ cards.artifacts.pct }}%){% endif %}</p>
+    <p style="font-size:0.85em;">partial {{ cards.artifacts.partial }} · missing {{ cards.artifacts.missing }} · failing {{ cards.artifacts.failing }} · coverage-only {{ cards.artifacts.coverage_only }} · exempt {{ cards.artifacts.exempt }} · not current {{ cards.artifacts.not_current }} · discovered {{ cards.artifacts.discovered }}</p></div>
+  <div class="card"><h3>Code coverage</h3>
+    <p data-testid="card-functions">Functions explicitly tested: <strong>{{ cards.functions.tested }} / {{ cards.functions.required }}</strong>{% if cards.functions.pct is not None %} ({{ cards.functions.pct }}%){% endif %}</p>
+    <p>Statements: <strong>{{ cards.coverage.line_pct|default:"-" }}%</strong> · Branches: <strong>{{ cards.coverage.branch_pct|default:"-" }}%</strong></p>
+    <p style="font-size:0.85em;">{{ cards.functions.internal }} private helpers are proven through their public boundary (line / branch coverage shown per symbol).</p></div>
+  <div class="card"><h3>Platform x feature</h3>
+    <p data-testid="card-cells">Implemented cells closed: <strong>{{ cards.cells.closed }} / {{ cards.cells.supported }}</strong></p>
+    <p style="font-size:0.85em;">POS {{ cards.cells.positive.pass }}/{{ cards.cells.positive.required }} · NEG {{ cards.cells.negative.pass }}/{{ cards.cells.negative.required }} · {{ cards.cells.total }} cells assessed</p></div>
+  <div class="card"><h3>Quality</h3>
+    <p data-testid="card-pylint">Pylint: <span class="badge badge--{% if cards.pylint.status == 'PASS' %}success{% elif cards.pylint.status == 'FAIL' %}danger{% else %}warning{% endif %}">{{ cards.pylint.status }}</span></p>
+    <p style="font-size:0.85em;">{{ cards.pylint.critical }} critical · {{ cards.pylint.messages }} tracked non-critical · {% for k, v in cards.pylint.artifacts.items %}{{ k }} {{ v }}{% if not forloop.last %} · {% endif %}{% endfor %}</p>
+    <p style="font-size:0.85em;">Tests in evidence run: {{ cards.tests.total }}{% for k, v in cards.tests.items %}{% if k != 'total' %} · {{ k }} {{ v }}{% endif %}{% endfor %}</p></div>
+</div>
+
+{% if gate.findings %}
+<details class="card" style="margin-top:12px;"><summary><strong>Closure gate findings ({{ gate.findings|length }})</strong></summary>
+  <ul>{% for f in gate.findings %}<li><span class="badge badge--{% if f.severity == 'FAIL' %}danger{% else %}warning{% endif %}">{{ f.severity }}</span> <code>{{ f.code }}</code> {{ f.message }}{% if f.ids %}<br><span style="font-size:0.8em;color:var(--text-muted);">{{ f.ids|slice:":8"|join:", " }}{% if f.count > 8 %} … (+{{ f.count|add:"-8" }}){% endif %}</span>{% endif %}</li>{% endfor %}</ul>
+</details>{% endif %}
+
+<details class="card" style="margin-top:12px;" id="lab7-examples"><summary><strong>Lab 7 assignment examples mapped to NMAS</strong></summary>
+  <table class="data-table"><thead><tr><th>Requirement</th><th>NMAS function</th><th>Negative</th><th>Positive</th></tr></thead><tbody>
+  {% for ex in examples %}{% for t in ex.targets %}<tr>
+    {% if forloop.first %}<th rowspan="{{ ex.targets|length }}">{{ ex.requirement }}<br><span style="font-weight:normal;font-size:0.8em;">{{ ex.description }}</span></th>{% endif %}
+    <td><code>{{ t.target }}</code></td>
+    <td><span class="badge badge--{{ t.negative_badge }}">{{ t.negative|default:"n/a" }}</span></td>
+    <td><span class="badge badge--{{ t.positive_badge }}">{{ t.positive|default:"n/a" }}</span></td></tr>{% endfor %}{% endfor %}
+  </tbody></table>
+</details>
+
+<form method="get" class="filter-bar" style="margin-top:12px;" id="filters">
+  <select name="group" class="filter-bar__item" onchange="this.form.submit()"><option value="">All subsystems / groups</option>{% for gid, gtitle in options.groups %}<option value="{{ gid }}" {% if filters.group == gid %}selected{% endif %}>{{ gtitle }}</option>{% endfor %}</select>
+  <select name="subsystem" class="filter-bar__item" onchange="this.form.submit()"><option value="">All Tier-3 subsystems</option>{% for s in options.subsystems %}<option value="{{ s }}" {% if filters.subsystem == s %}selected{% endif %}>{{ s }}</option>{% endfor %}</select>
+  <select name="type" class="filter-bar__item" onchange="this.form.submit()"><option value="">All artifact types</option>{% for t in options.types %}<option value="{{ t }}" {% if filters.type == t %}selected{% endif %}>{{ t }}</option>{% endfor %}</select>
+  <select name="platform" class="filter-bar__item" onchange="this.form.submit()"><option value="">All platforms</option>{% for p in options.platforms %}<option value="{{ p }}" {% if filters.platform == p %}selected{% endif %}>{{ p }}</option>{% endfor %}</select>
+  <select name="feature" class="filter-bar__item" onchange="this.form.submit()"><option value="">All features</option>{% for f in options.features %}<option value="{{ f }}" {% if filters.feature == f %}selected{% endif %}>{{ f }}</option>{% endfor %}</select>
+  <select name="status" class="filter-bar__item" onchange="this.form.submit()"><option value="">Any status</option><option value="INCOMPLETE" {% if filters.status == 'INCOMPLETE' %}selected{% endif %}>Incomplete (partial / missing / failing)</option>{% for s in options.statuses %}<option value="{{ s }}" {% if filters.status == s %}selected{% endif %}>{{ s }}</option>{% endfor %}</select>
+  <select name="polarity_missing" class="filter-bar__item" onchange="this.form.submit()"><option value="">Any cases</option><option value="positive" {% if filters.polarity_missing == 'positive' %}selected{% endif %}>Positive missing</option><option value="negative" {% if filters.polarity_missing == 'negative' %}selected{% endif %}>Negative missing</option></select>
+  <select name="pylint" class="filter-bar__item" onchange="this.form.submit()"><option value="">Any Pylint</option><option value="PASS" {% if filters.pylint == 'PASS' %}selected{% endif %}>Pylint PASS</option><option value="WARN" {% if filters.pylint == 'WARN' %}selected{% endif %}>Pylint WARN</option><option value="FAIL" {% if filters.pylint == 'FAIL' %}selected{% endif %}>Pylint FAIL</option></select>
+  <select name="scope" class="filter-bar__item" onchange="this.form.submit()"><option value="current" {% if filters.scope == 'current' %}selected{% endif %}>Current scope only</option><option value="all" {% if filters.scope == 'all' %}selected{% endif %}>All (incl. exempt / not current)</option></select>
+  <input type="search" name="q" value="{{ filters.q|default:'' }}" placeholder="path contains…" class="filter-bar__item">
+  <button type="submit" class="btn btn--secondary">Apply</button>
+  <span style="color:var(--text-muted);">{{ rows_total }} artifact{{ rows_total|pluralize }}{% if truncated %} (first {{ rows|length }} shown){% endif %}</span>
+</form>
+
+<table class="data-table" id="unit-matrix">
+  <thead><tr><th style="width:42%;">Deployed file / artifact</th><th>Negative test cases</th><th>Positive test cases</th></tr></thead>
+  <tbody>
+  {% for row in rows %}
+    <tr data-artifact="{{ row.artifact.id }}" data-status="{{ row.artifact.status }}">
+      <td>
+        <a href="{% url 'core:quality_artifact' row.artifact.type row.artifact.path %}"><code>{{ row.artifact.path }}</code></a><br>
+        <span class="badge badge--{{ row.status_badge }}">{{ row.artifact.status }}</span>
+        <span style="font-size:0.8em;color:var(--text-muted);">{{ row.artifact.type }} · {{ row.artifact.group_title }}{% if row.artifact.platform %} · {{ row.artifact.platform }}{% endif %}</span>
+        <div style="font-size:0.8em;">
+          {% if row.artifact.pylint.status and row.artifact.pylint.status != 'N/A' %}Pylint: <span class="badge badge--{% if row.artifact.pylint.status == 'PASS' %}success{% elif row.artifact.pylint.status == 'FAIL' %}danger{% else %}warning{% endif %}">{{ row.artifact.pylint.status }}</span>{% endif %}
+          {% if row.artifact.coverage %} · Lines {{ row.artifact.coverage.line_pct|default:"-" }}% · Branches {{ row.artifact.coverage.branch_pct|default:"-" }}%{% endif %}
+          {% if row.artifact.functions.required %} · Functions {{ row.artifact.functions.tested }}/{{ row.artifact.functions.required }}{% endif %}
+          {% if row.artifact.scope_reason %}<br><span style="color:var(--text-muted);">{{ row.artifact.scope_reason }}</span>{% endif %}
+        </div>
+      </td>
+      <td data-polarity="NEGATIVE">
+        {% if row.artifact.status == 'EXEMPT' %}<span class="badge badge--neutral">EXEMPT</span>
+        {% else %}<details><summary><strong>{{ row.neg.pass }} / {{ row.neg.required }}</strong> {% if row.neg.required and row.neg.pass == row.neg.required %}PASS{% elif row.neg.fail or row.neg.broken %}FAILING{% elif row.neg.required %}PARTIAL{% else %}none required{% endif %}{% if row.neg.exempt %} · {{ row.neg.exempt }} exempt{% endif %} · Expand</summary>
+          <ul style="font-size:0.85em;padding-left:16px;">{% for c in row.negative %}<li><span class="badge badge--{{ c.badge }}">{{ c.state }}</span> {{ c.title }}{% if c.reason %} <em style="color:var(--text-muted);">— {{ c.reason }}</em>{% endif %}{% for t in c.tests|slice:":2" %}<br><code style="font-size:0.85em;">{{ t.id }}</code> <span style="color:var(--text-muted);">({{ t.outcome }}, {{ t.basis }})</span>{% endfor %}</li>{% empty %}<li>No negative case is required (no exposed input boundary).</li>{% endfor %}</ul>
+        </details>{% endif %}
+      </td>
+      <td data-polarity="POSITIVE">
+        {% if row.artifact.status == 'EXEMPT' %}<span class="badge badge--neutral">EXEMPT</span>
+        {% else %}<details><summary><strong>{{ row.pos.pass }} / {{ row.pos.required }}</strong> {% if row.pos.required and row.pos.pass == row.pos.required %}PASS{% elif row.pos.fail or row.pos.broken %}FAILING{% elif row.pos.required %}PARTIAL{% else %}none required{% endif %}{% if row.pos.exempt %} · {{ row.pos.exempt }} exempt{% endif %} · Expand</summary>
+          <ul style="font-size:0.85em;padding-left:16px;">{% for c in row.positive %}<li><span class="badge badge--{{ c.badge }}">{{ c.state }}</span> {{ c.title }}{% if c.reason %} <em style="color:var(--text-muted);">— {{ c.reason }}</em>{% endif %}{% for t in c.tests|slice:":2" %}<br><code style="font-size:0.85em;">{{ t.id }}</code> <span style="color:var(--text-muted);">({{ t.outcome }}, {{ t.basis }})</span>{% endfor %}</li>{% empty %}<li>No positive case is required.</li>{% endfor %}</ul>
+        </details>{% endif %}
+      </td>
+    </tr>
+  {% empty %}<tr><td colspan="3">No artifact matches the filters.</td></tr>{% endfor %}
+  </tbody>
+</table>
+{% endif %}
+{% endblock %}

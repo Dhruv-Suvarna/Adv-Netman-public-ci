@@ -1,0 +1,66 @@
+{% extends "core/base.html" %}
+{% load static %}
+{% block title %}{{ heading }} · Automation{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>{{ heading }}</h1>
+  <p>{{ intro }}</p>
+</div>
+<p><a href="{% url 'core:automation_landing' %}">&larr; Automation</a></p>
+
+{# ---- shared device / platform / refresh bar ---- #}
+<div class="workbench-bar card" data-component="workbench-bar">
+  <form method="get" action="{{ page_url }}" class="workbench-bar__device">
+    <div class="form-field">
+      <label for="wb-device">Device</label>
+      <select id="wb-device" name="device" class="form-control" data-autosubmit>
+        <option value="">Select a managed device…</option>
+        {% for d in devices %}<option value="{{ d.name }}"{% if device and device.name == d.name %} selected{% endif %}>{{ d.name }}</option>{% endfor %}
+      </select>
+    </div>
+    <noscript><button class="btn btn--secondary" type="submit">Open</button></noscript>
+  </form>
+  {% if device %}
+    <div class="workbench-bar__meta">
+      <span class="badge badge--info" data-platform="{{ device.platform }}">{{ device.platform }}</span>
+      {% if snapshot %}<span class="badge badge--neutral">snapshot {{ snapshot.digest|slice:":12" }}</span>{% else %}<span class="badge badge--warning">no running configuration captured yet</span>{% endif %}
+    </div>
+    <form method="post" action="{% url 'core:workbench_snapshot' %}" class="workbench-bar__refresh">
+      {% csrf_token %}
+      <input type="hidden" name="device" value="{{ device.name }}">
+      <input type="hidden" name="workflow" value="{{ workflow }}">
+      <button class="btn btn--secondary" type="submit" title="Read-only: show running-config through the existing sanitized transport">Refresh running configuration</button>
+    </form>
+    {% if snapshot %}
+    <form method="post" action="{% url 'core:workbench_validate_running' snapshot.snapshot_id %}" class="workbench-bar__refresh">
+      {% csrf_token %}<input type="hidden" name="workflow" value="{{ workflow }}">
+      <button class="btn btn--secondary" type="submit">Validate Existing Configuration</button>
+    </form>
+    {% endif %}
+  {% endif %}
+</div>
+{% if running_validation %}<p><strong>Existing config:</strong> <span class="badge {% if running_validation.status == 'PASS' %}badge--success{% elif running_validation.status == 'WARNING' %}badge--warning{% else %}badge--danger{% endif %}">{{ running_validation.status }}</span> · {{ running_validation.created_at }} · no auto-remediation</p>{% endif %}
+{% if scope_unavailable %}<div class="alert alert--warning" role="alert" data-component="scope-unavailable"><div><strong>No device is selectable.</strong> {{ scope_unavailable }}</div></div>{% endif %}
+{% if error %}<div class="alert alert--warning" role="alert"><div><strong>Not saved.</strong> {{ error }}</div></div>{% endif %}
+
+<div class="workbench" data-workbench="{{ workflow }}">
+  <section class="workbench__pane card" data-workbench-pane="left" aria-label="{{ left_label }}">
+    {% block left %}{% endblock %}
+    {% if change %}{% include "core/automation/workbench/_change_panel.html" %}{% endif %}
+  </section>
+  <section class="workbench__pane card" data-workbench-pane="right" aria-label="Current running configuration">
+    {% include "core/automation/workbench/_running_config.html" %}
+  </section>
+</div>
+
+{% if recent_changes %}
+<div class="card" style="margin-top:16px;">
+  <h2>Recent {{ heading }} drafts{% if device %} for {{ device.name }}{% endif %}</h2>
+  <table class="data-table"><thead><tr><th>Change</th><th>Title</th><th>State</th><th>Validation</th><th>Created</th></tr></thead><tbody>
+  {% for c in recent_changes %}<tr><td><a href="{{ page_url }}?device={{ c.metadata.workflow_snapshot.device|urlencode }}&snapshot={{ c.metadata.workflow_snapshot.snapshot_id|urlencode }}&change={{ c.change_id|urlencode }}">{{ c.change_id }}</a></td>
+  <td>{{ c.title }}</td><td>{{ c.lifecycle_state }}</td><td>{{ c.validation_state }}</td><td>{{ c.created_at|date:"Y-m-d H:i" }}</td></tr>{% endfor %}
+  </tbody></table>
+</div>
+{% endif %}
+{% endblock %}
+{% block extra_scripts %}<script src="{% static 'core/js/workbench.js' %}"></script>{% endblock %}

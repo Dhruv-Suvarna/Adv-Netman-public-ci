@@ -1,0 +1,42 @@
+{% extends "core/base.html" %}
+{% load nsot_extras %}
+{% block title %}Drift / Consistency · NSOT{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>Drift / Consistency</h1>
+  <p>Read-only consistency checks between sources this project can currently compare reliably. A domain this project cannot yet compare reliably is marked NOT_COMPARABLE rather than falsely reported IN_SYNC.</p>
+</div>
+{% include "core/nsot/_subnav.html" %}
+<div class="filter-bar">
+  <a class="btn btn--secondary" href="?refresh=1">Refresh NSOT</a>
+  {% include "core/nsot/_freshness.html" %}
+</div>
+
+<div class="card" style="margin-top:16px;">
+  <table class="data-table">
+    <thead><tr><th>Check</th><th>Status</th><th>Detail</th></tr></thead>
+    <tbody>
+    {% for check in checks %}
+      <tr>
+        <td>{{ check.label }}</td>
+        <td><span class="badge {{ check.status|badge_class }}">{{ check.status }}</span></td>
+        <td>{{ check.detail }}</td>
+      </tr>
+    {% empty %}
+      <tr><td colspan="3"><div class="empty-state">No checks available.</div></td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<div class="card" style="margin-top:16px;">
+  <h3>Status vocabulary</h3>
+  <ul>
+    <li><span class="badge IN_SYNC">IN_SYNC</span> — the compared sources agree.</li>
+    <li><span class="badge DRIFT">DRIFT</span> — the compared sources disagree on at least one field.</li>
+    <li><span class="badge UNMANAGED">UNMANAGED</span> — this device/domain is intentionally out of scope for the comparison (e.g. R5/WebServer).</li>
+    <li><span class="badge UNAVAILABLE">UNAVAILABLE</span> — a source needed for the comparison could not be reached right now (not the same as drift).</li>
+    <li><span class="badge NOT_COMPARABLE">NOT_COMPARABLE</span> — no reliable automated comparison exists yet for this domain.</li>
+  </ul>
+</div>
+{% endblock %}

@@ -1,0 +1,19 @@
+{% load core_extras %}
+{# rows: serialized CheckResult dicts.  Everything is auto-escaped; nothing here is marked safe. #}
+<table class="data-table">
+  <thead><tr><th>Status</th><th>Check</th><th>Device / subject</th><th>Message</th><th>Source · observed · freshness</th><th>Blocking</th></tr></thead>
+  <tbody>
+  {% for row in rows %}
+    <tr>
+      <td><span class="badge badge--{{ row.status|health_badge_class }}">{{ row.status }}</span></td>
+      <td><code>{{ row.check_code }}</code>{% if row.requirement %}<br><span style="color:var(--text-muted);">{{ row.requirement }}{% if row.cfg_id %} · {{ row.cfg_id }}{% endif %}</span>{% endif %}</td>
+      <td>{{ row.device }}{% if row.subject %}<br><span style="color:var(--text-muted);">{{ row.subject }}</span>{% endif %}{% if row.role and row.role != "FLEET" %}<br><span class="badge badge--neutral">{{ row.role }}</span>{% endif %}</td>
+      <td>{{ row.message }}{% if row.status != "PASS" and row.status != "NOT_APPLICABLE" %}<br><span style="color:var(--text-muted);">{{ row.remediation }}</span>{% endif %}</td>
+      <td>{{ row.source }}{% if row.observed_at %} · {{ row.observed_at }}{% endif %} · <span class="badge badge--{{ row.freshness|health_badge_class }}">{{ row.freshness }}</span></td>
+      <td>{% if row.blocking %}<span class="badge badge--danger">BLOCKING</span>{% else %}—{% endif %}</td>
+    </tr>
+  {% empty %}
+    <tr><td colspan="6">No results.</td></tr>
+  {% endfor %}
+  </tbody>
+</table>

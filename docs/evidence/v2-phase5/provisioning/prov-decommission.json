@@ -1,0 +1,61 @@
+{
+ "actions": [
+  {
+   "action": "decommission",
+   "device": "PROVEDGE1",
+   "http": 302,
+   "netbox": [
+    {
+     "exists": false,
+     "id": 67,
+     "kind": "prefix",
+     "name": "172.31.250.0/24"
+    },
+    {
+     "exists": false,
+     "id": 68,
+     "kind": "prefix",
+     "name": "fd00:ca:250::/64"
+    },
+    {
+     "exists": false,
+     "id": 23,
+     "kind": "device",
+     "name": "PROVEDGE1"
+    },
+    {
+     "exists": false,
+     "id": 83,
+     "kind": "interface",
+     "name": "eth0"
+    },
+    {
+     "exists": false,
+     "id": 167,
+     "kind": "ip_address",
+     "name": "172.31.250.11/24"
+    },
+    {
+     "exists": false,
+     "id": 168,
+     "kind": "ip_address",
+     "name": "fd00:ca:250::11/64"
+    }
+   ],
+   "prov_id": "PROV-000001",
+   "reconciliation": null,
+   "registry": [
+    "RETIRED"
+   ],
+   "resolvable": false,
+   "status_after": "DECOMMISSIONED",
+   "status_before": "NSOT_SYNCED"
+  }
+ ],
+ "netbox_tagged_remaining": {
+  "devices": [],
+  "interfaces": [],
+  "ips": [],
+  "prefixes": []
+ }
+}

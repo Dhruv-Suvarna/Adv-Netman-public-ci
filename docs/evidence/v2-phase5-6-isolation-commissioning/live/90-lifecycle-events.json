@@ -1,0 +1,1383 @@
+[
+  {
+    "action": "ADOPT",
+    "actor": "arthur",
+    "blockers": [],
+    "device": "UP1",
+    "from": "",
+    "outcome": "ADVANCED",
+    "to": "IN_SERVICE"
+  },
+  {
+    "action": "REGISTER",
+    "actor": "olivia",
+    "blockers": [],
+    "device": "NEW1",
+    "from": "",
+    "outcome": "ADVANCED",
+    "to": "REGISTERED"
+  },
+  {
+    "action": "ATTACHMENT_REGISTER",
+    "actor": "olivia",
+    "blockers": [],
+    "device": "NEW1",
+    "from": "REGISTERED",
+    "outcome": "RECORDED",
+    "to": "REGISTERED"
+  },
+  {
+    "action": "ATTACHMENT_APPROVE",
+    "actor": "arthur",
+    "blockers": [],
+    "device": "NEW1",
+    "from": "REGISTERED",
+    "outcome": "RECORDED",
+    "to": "REGISTERED"
+  },
+  {
+    "action": "ISO_REQUIRE",
+    "actor": "olivia",
+    "blockers": [],
+    "device": "NEW1",
+    "from": "REGISTERED",
+    "outcome": "RECORDED",
+    "to": "REGISTERED"
+  },
+  {
+    "action": "ISO_PLAN",
+    "actor": "olivia",
+    "blockers": [
+      {
+        "code": "ISOLATION_UPSTREAM_UNREADABLE",
+        "details": {
+          "reason": "NOT_CONFIGURED"
+        },
+        "message": "The upstream's configuration could not be read.",
+        "remediation": "Nothing was changed; restore read access and plan again."
+      }
+    ],
+    "device": "NEW1",
+    "from": "REGISTERED",
+    "outcome": "REFUSED",
+    "to": "REGISTERED"
+  },
+  {
+    "action": "ISO_PLAN",
+    "actor": "olivia",
+    "blockers": [
+      {
+        "code": "ISOLATION_UPSTREAM_UNREADABLE",
+        "details": {
+          "reason": "CONNECTION_FAILED"
+        },
+        "message": "The upstream's configuration could not be read.",
+        "remediation": "Nothing was changed; restore read access and plan again."
+      }
+    ],
+    "device": "NEW1",
+    "from": "REGISTERED",
+    "outcome": "REFUSED",
+    "to": "REGISTERED"
+  },
+  {
+    "action": "ISO_PLAN",
+    "actor": "olivia",
+    "blockers": [],
+    "device": "NEW1",
+    "from": "REGISTERED",
+    "outcome": "RECORDED",
+    "to": "REGISTERED"
+  },
+  {
+    "action": "ISO_PRECHECK",
+    "actor": "olivia",
+    "blockers": [],
+    "device": "NEW1",
+    "from": "REGISTERED",
+    "outcome": "RECORDED",
+    "to": "REGISTERED"
+  },
+  {
+    "action": "ISO_APPROVE",
+    "actor": "olivia",
+    "blockers": [
+      {
+        "code": "ISOLATION_SELF_APPROVAL",
+        "message": "The requester cannot approve their own isolation policy.",
+        "remediation": "A different authorized operator must approve."
+      }
+    ],
+    "device": "NEW1",
+    "from": "REGISTERED",
+    "outcome": "REFUSED",
+    "to": "REGISTERED"
+  },
+  {
+    "action": "ISO_APPROVE",
+    "actor": "arthur",
+    "blockers": [
+      {
+        "code": "ISOLATION_CONFIRMATION_MISMATCH",
+        "details": {
+          "detail": "approve the plan hash shown"
+        },
+        "message": "The approval does not name the current plan.",
+        "remediation": "Reload and approve the plan hash shown."
+      }
+    ],
+    "device": "NEW1",
+    "from": "REGISTERED",
+    "outcome": "REFUSED",
+    "to": "REGISTERED"
+  },
+  {
+    "action": "ISO_APPROVE",
+    "actor": "arthur",
+    "blockers": [],
+    "device": "NEW1",
+    "from": "REGISTERED",
+    "outcome": "RECORDED",
+    "to": "REGISTERED"
+  },
+  {
+    "action": "ISO_APPLY",
+    "actor": "erin",
+    "blockers": [],
+    "device": "NEW1",
+    "from": "REGISTERED",
+    "outcome": "RECORDED",
+    "to": "REGISTERED"
+  },
+  {
+    "action": "ISO_VERIFY",
+    "actor": "arthur",
+    "blockers": [],
+    "device": "NEW1",
+    "from": "REGISTERED",
+    "outcome": "RECORDED",
+    "to": "REGISTERED"
+  },
+  {
+    "action": "BOOTSTRAP_AUTH_REQUEST",
+    "actor": "olivia",
+    "blockers": [],
+    "device": "NEW1",
+    "from": "REGISTERED",
+    "outcome": "RECORDED",
+    "to": "REGISTERED"
+  },
+  {
+    "action": "BOOTSTRAP_AUTH_APPROVE",
+    "actor": "olivia",
+    "blockers": [
+      {
+        "code": "APPROVAL_SELF",
+        "message": "The requester cannot approve their own bootstrap authorization.",
+        "remediation": "Another authorised operator must approve."
+      }
+    ],
+    "device": "NEW1",
+    "from": "REGISTERED",
+    "outcome": "REFUSED",
+    "to": ""
+  },
+  {
+    "action": "BOOTSTRAP_AUTH_APPROVE",
+    "actor": "arthur",
+    "blockers": [],
+    "device": "NEW1",
+    "from": "REGISTERED",
+    "outcome": "RECORDED",
+    "to": "REGISTERED"
+  },
+  {
+    "action": "ZTP_SESSION_OPEN",
+    "actor": "olivia",
+    "blockers": [],
+    "device": "NEW1",
+    "from": "REGISTERED",
+    "outcome": "RECORDED",
+    "to": "REGISTERED"
+  },
+  {
+    "action": "ZTP_DHCP_POLICY",
+    "actor": "olivia",
+    "blockers": [],
+    "device": "NEW1",
+    "from": "REGISTERED",
+    "outcome": "RECORDED",
+    "to": "REGISTERED"
+  },
+  {
+    "action": "ZTP_DHCP_POLICY",
+    "actor": "erin",
+    "blockers": [],
+    "device": "NEW1",
+    "from": "REGISTERED",
+    "outcome": "RECORDED",
+    "to": "REGISTERED"
+  },
+  {
+    "action": "OBSERVE_IDENTITY",
+    "actor": "system:ztp-dhcp-ingest",
+    "blockers": [],
+    "device": "NEW1",
+    "from": "REGISTERED",
+    "outcome": "RECORDED",
+    "to": "REGISTERED"
+  },
+  {
+    "action": "DISCOVER",
+    "actor": "system:ztp-dhcp-ingest",
+    "blockers": [],
+    "device": "NEW1",
+    "from": "REGISTERED",
+    "outcome": "ADVANCED",
+    "to": "DISCOVERED"
+  },
+  {
+    "action": "OBSERVE_ATTACHMENT",
+    "actor": "system:ztp-dhcp-ingest",
+    "blockers": [],
+    "device": "NEW1",
+    "from": "DISCOVERED",
+    "outcome": "RECORDED",
+    "to": "DISCOVERED"
+  },
+  {
+    "action": "ZTP_DISCOVERY",
+    "actor": "system:ztp-dhcp-ingest",
+    "blockers": [],
+    "device": "NEW1",
+    "from": "DISCOVERED",
+    "outcome": "RECORDED",
+    "to": "DISCOVERED"
+  },
+  {
+    "action": "ZTP_STATE",
+    "actor": "system:ztp-dhcp-ingest",
+    "blockers": [],
+    "device": "NEW1",
+    "from": "DISCOVERED",
+    "outcome": "RECORDED",
+    "to": "DISCOVERED"
+  },
+  {
+    "action": "BOOTSTRAP_AUTH_CONSUME",
+    "actor": "system:ztp-artifact-service",
+    "blockers": [],
+    "device": "NEW1",
+    "from": "DISCOVERED",
+    "outcome": "RECORDED",
+    "to": "DISCOVERED"
+  },
+  {
+    "action": "ZTP_ARTIFACT_DELIVERED",
+    "actor": "system:ztp-artifact-service",
+    "blockers": [],
+    "device": "NEW1",
+    "from": "DISCOVERED",
+    "outcome": "RECORDED",
+    "to": "DISCOVERED"
+  },
+  {
+    "action": "ZTP_MANAGEMENT_CONTACT",
+    "actor": "olivia",
+    "blockers": [],
+    "device": "NEW1",
+    "from": "DISCOVERED",
+    "outcome": "RECORDED",
+    "to": "DISCOVERED"
+  },
+  {
+    "action": "ZTP_HOST_KEY_ENROLL",
+    "actor": "olivia",
+    "blockers": [
+      {
+        "code": "APPROVAL_SELF",
+        "message": "The requester cannot approve their own bootstrap authorization.",
+        "remediation": "Another authorised operator must approve."
+      }
+    ],
+    "device": "NEW1",
+    "from": "DISCOVERED",
+    "outcome": "REFUSED",
+    "to": "DISCOVERED"
+  },
+  {
+    "action": "ZTP_HOST_KEY_ENROLL",
+    "actor": "arthur",
+    "blockers": [],
+    "device": "NEW1",
+    "from": "DISCOVERED",
+    "outcome": "RECORDED",
+    "to": "DISCOVERED"
+  },
+  {
+    "action": "ZTP_FAILURE",
+    "actor": "erin",
+    "blockers": [
+      {
+        "code": "MANAGEMENT_AUTH_FAILED",
+        "message": "The enrollment key was not accepted.",
+        "remediation": "The bootstrap was not applied, or another device answers at the address."
+      }
+    ],
+    "device": "NEW1",
+    "from": "DISCOVERED",
+    "outcome": "RECORDED",
+    "to": "DISCOVERED"
+  },
+  {
+    "action": "OBSERVE_IDENTITY",
+    "actor": "system:ztp-workflow",
+    "blockers": [],
+    "device": "NEW1",
+    "from": "DISCOVERED",
+    "outcome": "RECORDED",
+    "to": "DISCOVERED"
+  },
+  {
+    "action": "ZTP_MANAGEMENT_VERIFY",
+    "actor": "erin",
+    "blockers": [],
+    "device": "NEW1",
+    "from": "DISCOVERED",
+    "outcome": "RECORDED",
+    "to": "DISCOVERED"
+  },
+  {
+    "action": "BOOTSTRAP",
+    "actor": "system:ztp-workflow (requested by erin)",
+    "blockers": [],
+    "device": "NEW1",
+    "from": "DISCOVERED",
+    "outcome": "ADVANCED",
+    "to": "BOOTSTRAPPED"
+  },
+  {
+    "action": "OBSERVE_ATTACHMENT",
+    "actor": "arthur",
+    "blockers": [],
+    "device": "NEW1",
+    "from": "BOOTSTRAPPED",
+    "outcome": "RECORDED",
+    "to": "BOOTSTRAPPED"
+  },
+  {
+    "action": "ISO_VERIFY",
+    "actor": "arthur",
+    "blockers": [],
+    "device": "NEW1",
+    "from": "BOOTSTRAPPED",
+    "outcome": "RECORDED",
+    "to": "BOOTSTRAPPED"
+  },
+  {
+    "action": "ISOLATE",
+    "actor": "arthur",
+    "blockers": [],
+    "device": "NEW1",
+    "from": "BOOTSTRAPPED",
+    "outcome": "ADVANCED",
+    "to": "ISOLATED"
+  },
+  {
+    "action": "VERIFY_IDENTITY",
+    "actor": "arthur",
+    "blockers": [],
+    "device": "NEW1",
+    "from": "ISOLATED",
+    "outcome": "ADVANCED",
+    "to": "ISOLATED"
+  },
+  {
+    "action": "BCRED_PLAN",
+    "actor": "olivia",
+    "blockers": [],
+    "device": "NEW1",
+    "from": "ISOLATED",
+    "outcome": "RECORDED",
+    "to": "ISOLATED"
+  },
+  {
+    "action": "BCRED_APPROVE",
+    "actor": "arthur",
+    "blockers": [],
+    "device": "NEW1",
+    "from": "ISOLATED",
+    "outcome": "RECORDED",
+    "to": "ISOLATED"
+  },
+  {
+    "action": "BCRED_STEP",
+    "actor": "nmas-automation (live harness)",
+    "blockers": [],
+    "device": "NEW1",
+    "from": "ISOLATED",
+    "outcome": "RECORDED",
+    "to": "ISOLATED"
+  },
+  {
+    "action": "BCRED_STEP",
+    "actor": "nmas-automation (live harness)",
+    "blockers": [],
+    "device": "NEW1",
+    "from": "ISOLATED",
+    "outcome": "RECORDED",
+    "to": "ISOLATED"
+  },
+  {
+    "action": "BCRED_STEP",
+    "actor": "nmas-automation (live harness)",
+    "blockers": [],
+    "device": "NEW1",
+    "from": "ISOLATED",
+    "outcome": "RECORDED",
+    "to": "ISOLATED"
+  },
+  {
+    "action": "BCRED_STEP",
+    "actor": "nmas-automation (live harness)",
+    "blockers": [],
+    "device": "NEW1",
+    "from": "ISOLATED",
+    "outcome": "RECORDED",
+    "to": "ISOLATED"
+  },
+  {
+    "action": "BCRED_STEP",
+    "actor": "nmas-automation (live harness)",
+    "blockers": [],
+    "device": "NEW1",
+    "from": "ISOLATED",
+    "outcome": "RECORDED",
+    "to": "ISOLATED"
+  },
+  {
+    "action": "BCRED_STEP",
+    "actor": "nmas-automation (live harness)",
+    "blockers": [],
+    "device": "NEW1",
+    "from": "ISOLATED",
+    "outcome": "RECORDED",
+    "to": "ISOLATED"
+  },
+  {
+    "action": "BCRED_STEP",
+    "actor": "nmas-automation (live harness)",
+    "blockers": [],
+    "device": "NEW1",
+    "from": "ISOLATED",
+    "outcome": "RECORDED",
+    "to": "ISOLATED"
+  },
+  {
+    "action": "BCRED_STEP",
+    "actor": "nmas-automation (live harness)",
+    "blockers": [],
+    "device": "NEW1",
+    "from": "ISOLATED",
+    "outcome": "RECORDED",
+    "to": "ISOLATED"
+  },
+  {
+    "action": "BCRED_COMPLETE",
+    "actor": "nmas-automation (live harness)",
+    "blockers": [],
+    "device": "NEW1",
+    "from": "ISOLATED",
+    "outcome": "RECORDED",
+    "to": "ISOLATED"
+  },
+  {
+    "action": "COM_OPEN",
+    "actor": "olivia",
+    "blockers": [],
+    "device": "NEW1",
+    "from": "ISOLATED",
+    "outcome": "RECORDED",
+    "to": "ISOLATED"
+  },
+  {
+    "action": "COM_READINESS",
+    "actor": "olivia",
+    "blockers": [
+      {
+        "code": "COMMISSIONING_CONFIG_NOT_APPLIED",
+        "details": {
+          "check": "production_candidate"
+        },
+        "message": "The production configuration is not applied and postchecked.",
+        "remediation": "Execute the commissioning Change first."
+      }
+    ],
+    "device": "NEW1",
+    "from": "ISOLATED",
+    "outcome": "REFUSED",
+    "to": "ISOLATED"
+  },
+  {
+    "action": "COM_READINESS",
+    "actor": "olivia",
+    "blockers": [
+      {
+        "code": "COMMISSIONING_CONFIG_NOT_APPLIED",
+        "details": {
+          "check": "production_candidate"
+        },
+        "message": "The production configuration is not applied and postchecked.",
+        "remediation": "Execute the commissioning Change first."
+      }
+    ],
+    "device": "NEW1",
+    "from": "ISOLATED",
+    "outcome": "REFUSED",
+    "to": "ISOLATED"
+  },
+  {
+    "action": "COM_ABORT",
+    "actor": "arthur",
+    "blockers": [],
+    "device": "NEW1",
+    "from": "ISOLATED",
+    "outcome": "RECORDED",
+    "to": "ISOLATED"
+  },
+  {
+    "action": "COM_OPEN",
+    "actor": "olivia",
+    "blockers": [],
+    "device": "NEW1",
+    "from": "ISOLATED",
+    "outcome": "RECORDED",
+    "to": "ISOLATED"
+  },
+  {
+    "action": "COM_READINESS",
+    "actor": "olivia",
+    "blockers": [
+      {
+        "code": "COMMISSIONING_CONFIG_NOT_APPLIED",
+        "details": {
+          "check": "production_candidate"
+        },
+        "message": "The production configuration is not applied and postchecked.",
+        "remediation": "Execute the commissioning Change first."
+      }
+    ],
+    "device": "NEW1",
+    "from": "ISOLATED",
+    "outcome": "REFUSED",
+    "to": "ISOLATED"
+  },
+  {
+    "action": "COMMISSION_READY",
+    "actor": "olivia",
+    "blockers": [],
+    "device": "NEW1",
+    "from": "ISOLATED",
+    "outcome": "ADVANCED",
+    "to": "READY_FOR_COMMISSIONING"
+  },
+  {
+    "action": "COM_READINESS",
+    "actor": "olivia",
+    "blockers": [],
+    "device": "NEW1",
+    "from": "READY_FOR_COMMISSIONING",
+    "outcome": "RECORDED",
+    "to": "READY_FOR_COMMISSIONING"
+  },
+  {
+    "action": "COM_APPROVE",
+    "actor": "olivia",
+    "blockers": [
+      {
+        "code": "COMMISSIONING_SELF_APPROVAL",
+        "message": "The requester cannot approve their own commissioning.",
+        "remediation": "A different authorized operator must approve."
+      }
+    ],
+    "device": "NEW1",
+    "from": "READY_FOR_COMMISSIONING",
+    "outcome": "REFUSED",
+    "to": "READY_FOR_COMMISSIONING"
+  },
+  {
+    "action": "COM_APPROVE",
+    "actor": "arthur",
+    "blockers": [
+      {
+        "code": "COMMISSIONING_CONFIRMATION_MISMATCH",
+        "message": "The approval does not name the current evidence digest.",
+        "remediation": "Reload and approve the digest shown."
+      }
+    ],
+    "device": "NEW1",
+    "from": "READY_FOR_COMMISSIONING",
+    "outcome": "REFUSED",
+    "to": "READY_FOR_COMMISSIONING"
+  },
+  {
+    "action": "COMMISSION",
+    "actor": "arthur",
+    "blockers": [],
+    "device": "NEW1",
+    "from": "READY_FOR_COMMISSIONING",
+    "outcome": "ADVANCED",
+    "to": "COMMISSIONING"
+  },
+  {
+    "action": "COM_APPROVE",
+    "actor": "arthur",
+    "blockers": [],
+    "device": "NEW1",
+    "from": "COMMISSIONING",
+    "outcome": "RECORDED",
+    "to": "COMMISSIONING"
+  },
+  {
+    "action": "COM_READINESS",
+    "actor": "olivia",
+    "blockers": [
+      {
+        "code": "COMMISSIONING_STATE_INVALID",
+        "details": {
+          "state": "APPROVED"
+        },
+        "message": "The commissioning is not in a state this action applies to.",
+        "remediation": "Follow the documented order."
+      }
+    ],
+    "device": "NEW1",
+    "from": "COMMISSIONING",
+    "outcome": "REFUSED",
+    "to": "COMMISSIONING"
+  },
+  {
+    "action": "COM_CONFIGURE",
+    "actor": "arthur",
+    "blockers": [],
+    "device": "NEW1",
+    "from": "COMMISSIONING",
+    "outcome": "RECORDED",
+    "to": "COMMISSIONING"
+  },
+  {
+    "action": "COM_CONFIGURE",
+    "actor": "arthur",
+    "blockers": [
+      {
+        "code": "COMMISSIONING_CONFIG_NOT_APPLIED",
+        "details": {
+          "restored": false,
+          "status": "FAILED"
+        },
+        "message": "The production configuration is not applied and postchecked.",
+        "remediation": "Execute the commissioning Change first."
+      }
+    ],
+    "device": "NEW1",
+    "from": "COMMISSIONING",
+    "outcome": "REFUSED",
+    "to": "COMMISSIONING"
+  },
+  {
+    "action": "COMMISSION_ABORT",
+    "actor": "arthur",
+    "blockers": [],
+    "device": "NEW1",
+    "from": "COMMISSIONING",
+    "outcome": "ADVANCED",
+    "to": "ISOLATED"
+  },
+  {
+    "action": "COM_RECONCILE",
+    "actor": "arthur",
+    "blockers": [],
+    "device": "NEW1",
+    "from": "ISOLATED",
+    "outcome": "RECORDED",
+    "to": "ISOLATED"
+  },
+  {
+    "action": "COM_OPEN",
+    "actor": "olivia",
+    "blockers": [],
+    "device": "NEW1",
+    "from": "ISOLATED",
+    "outcome": "RECORDED",
+    "to": "ISOLATED"
+  },
+  {
+    "action": "COM_READINESS",
+    "actor": "olivia",
+    "blockers": [
+      {
+        "code": "COMMISSIONING_CONFIG_NOT_APPLIED",
+        "details": {
+          "check": "production_candidate"
+        },
+        "message": "The production configuration is not applied and postchecked.",
+        "remediation": "Execute the commissioning Change first."
+      }
+    ],
+    "device": "NEW1",
+    "from": "ISOLATED",
+    "outcome": "REFUSED",
+    "to": "ISOLATED"
+  },
+  {
+    "action": "COM_READINESS",
+    "actor": "olivia",
+    "blockers": [
+      {
+        "code": "COMMISSIONING_CONFIG_NOT_APPLIED",
+        "details": {
+          "check": "production_candidate"
+        },
+        "message": "The production configuration is not applied and postchecked.",
+        "remediation": "Execute the commissioning Change first."
+      }
+    ],
+    "device": "NEW1",
+    "from": "ISOLATED",
+    "outcome": "REFUSED",
+    "to": "ISOLATED"
+  },
+  {
+    "action": "COMMISSION_READY",
+    "actor": "olivia",
+    "blockers": [],
+    "device": "NEW1",
+    "from": "ISOLATED",
+    "outcome": "ADVANCED",
+    "to": "READY_FOR_COMMISSIONING"
+  },
+  {
+    "action": "COM_READINESS",
+    "actor": "olivia",
+    "blockers": [],
+    "device": "NEW1",
+    "from": "READY_FOR_COMMISSIONING",
+    "outcome": "RECORDED",
+    "to": "READY_FOR_COMMISSIONING"
+  },
+  {
+    "action": "COM_APPROVE",
+    "actor": "olivia",
+    "blockers": [
+      {
+        "code": "COMMISSIONING_SELF_APPROVAL",
+        "message": "The requester cannot approve their own commissioning.",
+        "remediation": "A different authorized operator must approve."
+      }
+    ],
+    "device": "NEW1",
+    "from": "READY_FOR_COMMISSIONING",
+    "outcome": "REFUSED",
+    "to": "READY_FOR_COMMISSIONING"
+  },
+  {
+    "action": "COM_APPROVE",
+    "actor": "arthur",
+    "blockers": [
+      {
+        "code": "COMMISSIONING_CONFIRMATION_MISMATCH",
+        "message": "The approval does not name the current evidence digest.",
+        "remediation": "Reload and approve the digest shown."
+      }
+    ],
+    "device": "NEW1",
+    "from": "READY_FOR_COMMISSIONING",
+    "outcome": "REFUSED",
+    "to": "READY_FOR_COMMISSIONING"
+  },
+  {
+    "action": "COMMISSION",
+    "actor": "arthur",
+    "blockers": [],
+    "device": "NEW1",
+    "from": "READY_FOR_COMMISSIONING",
+    "outcome": "ADVANCED",
+    "to": "COMMISSIONING"
+  },
+  {
+    "action": "COM_APPROVE",
+    "actor": "arthur",
+    "blockers": [],
+    "device": "NEW1",
+    "from": "COMMISSIONING",
+    "outcome": "RECORDED",
+    "to": "COMMISSIONING"
+  },
+  {
+    "action": "COM_CONFIGURE",
+    "actor": "arthur",
+    "blockers": [],
+    "device": "NEW1",
+    "from": "COMMISSIONING",
+    "outcome": "RECORDED",
+    "to": "COMMISSIONING"
+  },
+  {
+    "action": "COMMISSION_ABORT",
+    "actor": "arthur",
+    "blockers": [],
+    "device": "NEW1",
+    "from": "COMMISSIONING",
+    "outcome": "ADVANCED",
+    "to": "ISOLATED"
+  },
+  {
+    "action": "COM_CONFIGURE",
+    "actor": "arthur",
+    "blockers": [
+      {
+        "code": "COMMISSIONING_CONFIG_NOT_APPLIED",
+        "details": {
+          "restored": true
+        },
+        "message": "The production configuration is not applied and postchecked.",
+        "remediation": "Execute the commissioning Change first."
+      }
+    ],
+    "device": "NEW1",
+    "from": "ISOLATED",
+    "outcome": "REFUSED",
+    "to": "ISOLATED"
+  },
+  {
+    "action": "COM_OPEN",
+    "actor": "olivia",
+    "blockers": [],
+    "device": "NEW1",
+    "from": "ISOLATED",
+    "outcome": "RECORDED",
+    "to": "ISOLATED"
+  },
+  {
+    "action": "COM_READINESS",
+    "actor": "olivia",
+    "blockers": [
+      {
+        "code": "COMMISSIONING_CONFIG_NOT_APPLIED",
+        "details": {
+          "check": "production_candidate"
+        },
+        "message": "The production configuration is not applied and postchecked.",
+        "remediation": "Execute the commissioning Change first."
+      }
+    ],
+    "device": "NEW1",
+    "from": "ISOLATED",
+    "outcome": "REFUSED",
+    "to": "ISOLATED"
+  },
+  {
+    "action": "COMMISSION_READY",
+    "actor": "olivia",
+    "blockers": [],
+    "device": "NEW1",
+    "from": "ISOLATED",
+    "outcome": "ADVANCED",
+    "to": "READY_FOR_COMMISSIONING"
+  },
+  {
+    "action": "COM_READINESS",
+    "actor": "olivia",
+    "blockers": [],
+    "device": "NEW1",
+    "from": "READY_FOR_COMMISSIONING",
+    "outcome": "RECORDED",
+    "to": "READY_FOR_COMMISSIONING"
+  },
+  {
+    "action": "COM_APPROVE",
+    "actor": "olivia",
+    "blockers": [
+      {
+        "code": "COMMISSIONING_SELF_APPROVAL",
+        "message": "The requester cannot approve their own commissioning.",
+        "remediation": "A different authorized operator must approve."
+      }
+    ],
+    "device": "NEW1",
+    "from": "READY_FOR_COMMISSIONING",
+    "outcome": "REFUSED",
+    "to": "READY_FOR_COMMISSIONING"
+  },
+  {
+    "action": "COM_APPROVE",
+    "actor": "arthur",
+    "blockers": [
+      {
+        "code": "COMMISSIONING_CONFIRMATION_MISMATCH",
+        "message": "The approval does not name the current evidence digest.",
+        "remediation": "Reload and approve the digest shown."
+      }
+    ],
+    "device": "NEW1",
+    "from": "READY_FOR_COMMISSIONING",
+    "outcome": "REFUSED",
+    "to": "READY_FOR_COMMISSIONING"
+  },
+  {
+    "action": "COMMISSION",
+    "actor": "arthur",
+    "blockers": [],
+    "device": "NEW1",
+    "from": "READY_FOR_COMMISSIONING",
+    "outcome": "ADVANCED",
+    "to": "COMMISSIONING"
+  },
+  {
+    "action": "COM_APPROVE",
+    "actor": "arthur",
+    "blockers": [],
+    "device": "NEW1",
+    "from": "COMMISSIONING",
+    "outcome": "RECORDED",
+    "to": "COMMISSIONING"
+  },
+  {
+    "action": "COM_CONFIGURE",
+    "actor": "arthur",
+    "blockers": [],
+    "device": "NEW1",
+    "from": "COMMISSIONING",
+    "outcome": "RECORDED",
+    "to": "COMMISSIONING"
+  },
+  {
+    "action": "ISO_DRIFT",
+    "actor": "arthur",
+    "blockers": [],
+    "device": "NEW1",
+    "from": "COMMISSIONING",
+    "outcome": "RECORDED",
+    "to": "COMMISSIONING"
+  },
+  {
+    "action": "COM_CONFIGURE",
+    "actor": "arthur",
+    "blockers": [],
+    "device": "NEW1",
+    "from": "COMMISSIONING",
+    "outcome": "RECORDED",
+    "to": "COMMISSIONING"
+  },
+  {
+    "action": "ISO_DRIFT",
+    "actor": "arthur",
+    "blockers": [],
+    "device": "NEW1",
+    "from": "COMMISSIONING",
+    "outcome": "RECORDED",
+    "to": "COMMISSIONING"
+  },
+  {
+    "action": "REGISTER",
+    "actor": "olivia",
+    "blockers": [],
+    "device": "NEW2",
+    "from": "",
+    "outcome": "ADVANCED",
+    "to": "REGISTERED"
+  },
+  {
+    "action": "ATTACHMENT_REGISTER",
+    "actor": "olivia",
+    "blockers": [
+      {
+        "code": "UPSTREAM_NOT_TRUSTED",
+        "details": {
+          "admission_state": "NOT_ADMITTED",
+          "dependency": "DEV-000002",
+          "lifecycle_state": "COMMISSIONING"
+        },
+        "message": "The upstream device cannot enforce trusted attachment.",
+        "remediation": "The upstream must be writable, in service and not the device itself."
+      }
+    ],
+    "device": "NEW2",
+    "from": "REGISTERED",
+    "outcome": "REFUSED",
+    "to": ""
+  },
+  {
+    "action": "COM_DEPENDENCY_ADD",
+    "actor": "olivia",
+    "blockers": [],
+    "device": "NEW2",
+    "from": "REGISTERED",
+    "outcome": "RECORDED",
+    "to": "REGISTERED"
+  },
+  {
+    "action": "COM_DEPENDENCY_ADD",
+    "actor": "olivia",
+    "blockers": [
+      {
+        "code": "COMMISSIONING_DEPENDENCY_CYCLE",
+        "details": {
+          "device": "NEW1",
+          "upstream": "NEW2"
+        },
+        "message": "The dependency would create a cycle.",
+        "remediation": "Dependencies form a directed acyclic graph."
+      }
+    ],
+    "device": "NEW1",
+    "from": "COMMISSIONING",
+    "outcome": "REFUSED",
+    "to": "COMMISSIONING"
+  },
+  {
+    "action": "ISO_RELEASE_PLAN",
+    "actor": "olivia",
+    "blockers": [],
+    "device": "NEW1",
+    "from": "COMMISSIONING",
+    "outcome": "RECORDED",
+    "to": "COMMISSIONING"
+  },
+  {
+    "action": "ADM_PLAN",
+    "actor": "olivia",
+    "blockers": [],
+    "device": "NEW1",
+    "from": "COMMISSIONING",
+    "outcome": "RECORDED",
+    "to": "COMMISSIONING"
+  },
+  {
+    "action": "ISO_RELEASE_PRECHECK",
+    "actor": "olivia",
+    "blockers": [],
+    "device": "NEW1",
+    "from": "COMMISSIONING",
+    "outcome": "RECORDED",
+    "to": "COMMISSIONING"
+  },
+  {
+    "action": "ADM_PRECHECK",
+    "actor": "olivia",
+    "blockers": [],
+    "device": "NEW1",
+    "from": "COMMISSIONING",
+    "outcome": "RECORDED",
+    "to": "COMMISSIONING"
+  },
+  {
+    "action": "ADM_APPROVE",
+    "actor": "olivia",
+    "blockers": [
+      {
+        "code": "ADMISSION_SELF_APPROVAL",
+        "message": "The requester cannot approve their own admission.",
+        "remediation": "A different authorized operator must approve."
+      }
+    ],
+    "device": "NEW1",
+    "from": "COMMISSIONING",
+    "outcome": "REFUSED",
+    "to": "COMMISSIONING"
+  },
+  {
+    "action": "ISO_RELEASE_APPROVE",
+    "actor": "arthur",
+    "blockers": [],
+    "device": "NEW1",
+    "from": "COMMISSIONING",
+    "outcome": "RECORDED",
+    "to": "COMMISSIONING"
+  },
+  {
+    "action": "ADM_APPROVE",
+    "actor": "arthur",
+    "blockers": [],
+    "device": "NEW1",
+    "from": "COMMISSIONING",
+    "outcome": "RECORDED",
+    "to": "COMMISSIONING"
+  },
+  {
+    "action": "ADM_EXECUTE",
+    "actor": "erin",
+    "blockers": [],
+    "device": "NEW1",
+    "from": "COMMISSIONING",
+    "outcome": "RECORDED",
+    "to": "COMMISSIONING"
+  },
+  {
+    "action": "ISO_RELEASE",
+    "actor": "erin",
+    "blockers": [
+      {
+        "code": "ISOLATION_TRAFFIC_UNVERIFIED",
+        "details": {
+          "outcome": "POSTCHECK_FAILED_ROLLED_BACK"
+        },
+        "message": "No traffic evidence proves enforcement at the upstream port.",
+        "remediation": "Run the verification with a traffic probe source; read-back alone never verifies isolation."
+      }
+    ],
+    "device": "NEW1",
+    "from": "COMMISSIONING",
+    "outcome": "REFUSED",
+    "to": "COMMISSIONING"
+  },
+  {
+    "action": "ADM_EXECUTE",
+    "actor": "erin",
+    "blockers": [
+      {
+        "code": "ADMISSION_VERIFICATION_FAILED",
+        "details": {
+          "outcome": "POSTCHECK_FAILED_ROLLED_BACK"
+        },
+        "message": "Production connectivity was not verified after the release.",
+        "remediation": "Isolation was restored; read the verification."
+      }
+    ],
+    "device": "NEW1",
+    "from": "COMMISSIONING",
+    "outcome": "REFUSED",
+    "to": "COMMISSIONING"
+  },
+  {
+    "action": "OBSERVE_ATTACHMENT",
+    "actor": "arthur",
+    "blockers": [],
+    "device": "NEW1",
+    "from": "COMMISSIONING",
+    "outcome": "RECORDED",
+    "to": "COMMISSIONING"
+  },
+  {
+    "action": "ISO_VERIFY",
+    "actor": "arthur",
+    "blockers": [],
+    "device": "NEW1",
+    "from": "COMMISSIONING",
+    "outcome": "RECORDED",
+    "to": "COMMISSIONING"
+  },
+  {
+    "action": "ISO_RELEASE_PLAN",
+    "actor": "olivia",
+    "blockers": [],
+    "device": "NEW1",
+    "from": "COMMISSIONING",
+    "outcome": "RECORDED",
+    "to": "COMMISSIONING"
+  },
+  {
+    "action": "ADM_PLAN",
+    "actor": "olivia",
+    "blockers": [],
+    "device": "NEW1",
+    "from": "COMMISSIONING",
+    "outcome": "RECORDED",
+    "to": "COMMISSIONING"
+  },
+  {
+    "action": "ISO_RELEASE_PRECHECK",
+    "actor": "olivia",
+    "blockers": [],
+    "device": "NEW1",
+    "from": "COMMISSIONING",
+    "outcome": "RECORDED",
+    "to": "COMMISSIONING"
+  },
+  {
+    "action": "ADM_PRECHECK",
+    "actor": "olivia",
+    "blockers": [],
+    "device": "NEW1",
+    "from": "COMMISSIONING",
+    "outcome": "RECORDED",
+    "to": "COMMISSIONING"
+  },
+  {
+    "action": "ADM_APPROVE",
+    "actor": "olivia",
+    "blockers": [
+      {
+        "code": "ADMISSION_SELF_APPROVAL",
+        "message": "The requester cannot approve their own admission.",
+        "remediation": "A different authorized operator must approve."
+      }
+    ],
+    "device": "NEW1",
+    "from": "COMMISSIONING",
+    "outcome": "REFUSED",
+    "to": "COMMISSIONING"
+  },
+  {
+    "action": "ISO_RELEASE_APPROVE",
+    "actor": "arthur",
+    "blockers": [],
+    "device": "NEW1",
+    "from": "COMMISSIONING",
+    "outcome": "RECORDED",
+    "to": "COMMISSIONING"
+  },
+  {
+    "action": "ADM_APPROVE",
+    "actor": "arthur",
+    "blockers": [],
+    "device": "NEW1",
+    "from": "COMMISSIONING",
+    "outcome": "RECORDED",
+    "to": "COMMISSIONING"
+  },
+  {
+    "action": "ADM_EXECUTE",
+    "actor": "erin",
+    "blockers": [],
+    "device": "NEW1",
+    "from": "COMMISSIONING",
+    "outcome": "RECORDED",
+    "to": "COMMISSIONING"
+  },
+  {
+    "action": "ISO_RELEASE",
+    "actor": "erin",
+    "blockers": [],
+    "device": "NEW1",
+    "from": "COMMISSIONING",
+    "outcome": "RECORDED",
+    "to": "COMMISSIONING"
+  },
+  {
+    "action": "COMMISSION_COMPLETE",
+    "actor": "erin",
+    "blockers": [],
+    "device": "NEW1",
+    "from": "COMMISSIONING",
+    "outcome": "ADVANCED",
+    "to": "IN_SERVICE"
+  },
+  {
+    "action": "OUTBOX_RECORD",
+    "actor": "erin",
+    "blockers": [],
+    "device": "NEW1",
+    "from": "IN_SERVICE",
+    "outcome": "RECORDED",
+    "to": "IN_SERVICE"
+  },
+  {
+    "action": "OUTBOX_RECORD",
+    "actor": "erin",
+    "blockers": [],
+    "device": "NEW1",
+    "from": "IN_SERVICE",
+    "outcome": "RECORDED",
+    "to": "IN_SERVICE"
+  },
+  {
+    "action": "OUTBOX_RECORD",
+    "actor": "erin",
+    "blockers": [],
+    "device": "NEW1",
+    "from": "IN_SERVICE",
+    "outcome": "RECORDED",
+    "to": "IN_SERVICE"
+  },
+  {
+    "action": "ADM_EXECUTE",
+    "actor": "erin",
+    "blockers": [],
+    "device": "NEW1",
+    "from": "IN_SERVICE",
+    "outcome": "RECORDED",
+    "to": "IN_SERVICE"
+  },
+  {
+    "action": "ATTACHMENT_REGISTER",
+    "actor": "olivia",
+    "blockers": [],
+    "device": "NEW2",
+    "from": "REGISTERED",
+    "outcome": "RECORDED",
+    "to": "REGISTERED"
+  },
+  {
+    "action": "ATTACHMENT_APPROVE",
+    "actor": "arthur",
+    "blockers": [],
+    "device": "NEW2",
+    "from": "REGISTERED",
+    "outcome": "RECORDED",
+    "to": "REGISTERED"
+  },
+  {
+    "action": "ISO_REQUIRE",
+    "actor": "olivia",
+    "blockers": [],
+    "device": "NEW2",
+    "from": "REGISTERED",
+    "outcome": "RECORDED",
+    "to": "REGISTERED"
+  },
+  {
+    "action": "ISO_PLAN",
+    "actor": "olivia",
+    "blockers": [],
+    "device": "NEW2",
+    "from": "REGISTERED",
+    "outcome": "RECORDED",
+    "to": "REGISTERED"
+  },
+  {
+    "action": "ISO_PRECHECK",
+    "actor": "olivia",
+    "blockers": [],
+    "device": "NEW2",
+    "from": "REGISTERED",
+    "outcome": "RECORDED",
+    "to": "REGISTERED"
+  },
+  {
+    "action": "ISO_APPROVE",
+    "actor": "arthur",
+    "blockers": [],
+    "device": "NEW2",
+    "from": "REGISTERED",
+    "outcome": "RECORDED",
+    "to": "REGISTERED"
+  },
+  {
+    "action": "ISO_APPLY",
+    "actor": "erin",
+    "blockers": [],
+    "device": "NEW2",
+    "from": "REGISTERED",
+    "outcome": "RECORDED",
+    "to": "REGISTERED"
+  },
+  {
+    "action": "ISO_VERIFY",
+    "actor": "arthur",
+    "blockers": [],
+    "device": "NEW2",
+    "from": "REGISTERED",
+    "outcome": "RECORDED",
+    "to": "REGISTERED"
+  },
+  {
+    "action": "BOOTSTRAP_AUTH_REQUEST",
+    "actor": "olivia",
+    "blockers": [],
+    "device": "NEW2",
+    "from": "REGISTERED",
+    "outcome": "RECORDED",
+    "to": "REGISTERED"
+  }
+]

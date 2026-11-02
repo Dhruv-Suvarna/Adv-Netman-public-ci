@@ -1,0 +1,20 @@
+{% extends "core/auth/auth_base.html" %}
+{% block title %}Sign in · NMAS{% endblock %}
+{% block content %}
+<h1>Sign in</h1>
+{% if form.non_field_errors %}<div class="alert alert--warning" role="alert">{% for e in form.non_field_errors %}{{ e }}{% endfor %}</div>{% endif %}
+<form method="post" action="{% url 'core:login' %}" autocomplete="on">
+  {% csrf_token %}
+  <input type="hidden" name="next" value="{{ next }}">
+  <div class="form-field">
+    <label for="id_username">Username</label>
+    <input class="form-control" type="text" name="username" id="id_username" autocomplete="username" required autofocus value="{{ form.username.value|default:'' }}">
+  </div>
+  <div class="form-field">
+    <label for="id_password">Password</label>
+    <input class="form-control" type="password" name="password" id="id_password" autocomplete="current-password" required>
+  </div>
+  <button type="submit" class="btn btn--primary">Sign in</button>
+</form>
+<p class="wb-muted" style="margin-bottom:0;">A Microsoft Authenticator code is required after the password. This website sign-in is separate from network-device logins.</p>
+{% endblock %}

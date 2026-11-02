@@ -1,0 +1,38 @@
+== sequence-numbered probes
+   c01: production 0/481115 lost   diagnostic 0/8318 lost
+   c02: production 0/446258 lost   diagnostic 0/8318 lost
+   c03: production 0/478545 lost   diagnostic 0/8318 lost
+   c04: production 0/435803 lost   diagnostic 0/8318 lost
+   c05: production 0/476593 lost   diagnostic 0/8318 lost
+   c06: production 0/438096 lost   diagnostic 0/8318 lost
+   PRODUCTION TRANSIT: probes 2756410 lost 0    DIAGNOSTIC (device-originated): probes 49908 lost 0
+== long-lived TCP sessions
+   h1_tcp4: UNINTERRUPTED CLOSE 1791733734.537 50401 50401 1432  stalls>250ms: 211 (informational)
+   h1_tcp6: UNINTERRUPTED CLOSE 1791733734.460 50548 50548 1446  stalls>250ms: 145 (informational)
+   h2_tcp4: UNINTERRUPTED CLOSE 1791733738.694 50496 50496 1192  stalls>250ms: 207 (informational)
+   h2_tcp6: UNINTERRUPTED CLOSE 1791733738.653 50582 50582 1311  stalls>250ms: 141 (informational)
+   h3_tcp4: UNINTERRUPTED CLOSE 1791733742.864 50459 50459 1310  stalls>250ms: 226 (informational)
+   h3_tcp6: UNINTERRUPTED CLOSE 1791733742.858 50713 50713 1310  stalls>250ms: 127 (informational)
+   h4_tcp6: UNINTERRUPTED CLOSE 1791733746.965 50766 50766 1195  stalls>250ms: 131 (informational)
+== repeated new HTTP sessions
+   h1_http4: ALL OK CLOSE 1791733734.555 20203 0 168 2268  slow>400ms: 168 (informational)
+   h1_http6: ALL OK CLOSE 1791733734.584 20261 0 141 2217  slow>400ms: 141 (informational)
+   h2_http4: ALL OK CLOSE 1791733738.767 20212 0 169 2335  slow>400ms: 169 (informational)
+   h2_http6: ALL OK CLOSE 1791733738.881 20284 0 133 1938  slow>400ms: 133 (informational)
+   h3_http4: ALL OK CLOSE 1791733742.895 20215 0 170 1964  slow>400ms: 170 (informational)
+   h3_http6: ALL OK CLOSE 1791733742.822 20326 0 124 1811  slow>400ms: 124 (informational)
+   h4_http6: ALL OK CLOSE 1791733747.136 20332 0 127 2316  slow>400ms: 127 (informational)
+== completed: forward 3  rollback 3  drains 0  restores 0   failed-events: []
+   flows without evidence: ['c01 h1_fwd6: sequence wrapped, shorten the cycle', 'c01 h2_fwd6: sequence wrapped, shorten the cycle', 'c01 h3_fwd6: sequence wrapped, shorten the cycle', 'c01 h4_fwd6: sequence wrapped, shorten the cycle', 'c02 h1_fwd6: sequence wrapped, shorten the cycle', 'c02 h2_fwd6: sequence wrapped, shorten the cycle', 'c02 h3_fwd6: sequence wrapped, shorten the cycle', 'c02 h4_fwd6: sequence wrapped, shorten the cycle', 'c03 h1_fwd6: sequence wrapped, shorten the cycle', 'c03 h2_fwd6: sequence wrapped, shorten the cycle', 'c03 h3_fwd6: sequence wrapped, shorten the cycle', 'c03 h4_fwd6: sequence wrapped, shorten the cycle', 'c04 h1_fwd6: sequence wrapped, shorten the cycle', 'c04 h2_fwd6: sequence wrapped, shorten the cycle', 'c04 h3_fwd6: sequence wrapped, shorten the cycle', 'c04 h4_fwd6: sequence wrapped, shorten the cycle', 'c05 h1_fwd6: sequence wrapped, shorten the cycle', 'c05 h2_fwd6: sequence wrapped, shorten the cycle', 'c05 h3_fwd6: sequence wrapped, shorten the cycle', 'c05 h4_fwd6: sequence wrapped, shorten the cycle', 'c06 h1_fwd6: sequence wrapped, shorten the cycle', 'c06 h2_fwd6: sequence wrapped, shorten the cycle', 'c06 h3_fwd6: sequence wrapped, shorten the cycle', 'c06 h4_fwd6: sequence wrapped, shorten the cycle']
+VERDICT: FAIL
+== c3
+     2  covered   | NMAS plan R1-clients-isis-to-static LESS_SPECIFIC_COVER spec
+     1  covered   | NMAS plan R1-clients-static-to-isis LESS_SPECIFIC_COVER spec
+     1  covered   | NMAS plan R2-clients-static-to-isis LESS_SPECIFIC_COVER spec
+== c4
+     2  covered   | NMAS plan R1-clients-isis-to-static LESS_SPECIFIC_COVER spec
+     1  covered   | NMAS plan R1-clients-static-to-isis LESS_SPECIFIC_COVER spec
+     1  covered   | NMAS plan R2-clients-static-to-isis LESS_SPECIFIC_COVER spec
+client /64 route replacements on the cores: 8   without a cover: 0
+CORE VERDICT: PASS
+edge router (pe) client-route events: 0

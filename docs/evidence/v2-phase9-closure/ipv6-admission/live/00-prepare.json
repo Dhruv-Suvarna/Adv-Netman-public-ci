@@ -1,0 +1,15 @@
+{
+  "NEW1": [
+    "DEV-000002",
+    "REGISTERED",
+    "NOT_ADMITTED"
+  ],
+  "UP1": [
+    "DEV-000001",
+    "IN_SERVICE",
+    "LEGACY_PREEXISTING"
+  ],
+  "attachment": "NEW1 -> UP1:Ethernet1 (PRODUCTION)",
+  "capability_rows": 1028,
+  "upstream_before": "\n> show running-config\n! Command: show running-config at line 1\n! device: ISOUP1 (cEOSLab, EOS-4.36.2F-49692632.4362F.1 (engineering build))\n!\nno aaa root\n!\n!\nip dhcp relay information option\n!\nno service interface inactive port-id allocation disabled\n!\nservice routing protocols model multi-agent\n!\nhostname ISOUP1\n!\nspanning-tree mode mstp\n!\nsystem l1\n   unsupported speed action error\n   unsupported error-correction action error\n!\naaa authorization exec default local\n!\ninterface Ethernet1\n   description bootstrap port A (untrusted device side)\n   no switchport\n   ip address 10.254.60.1/24\n   ip helper-address 10.254.61.2\n   ipv6 address 2001:db8:254:60::1/64\n   ipv6 ospf 1 area 0.0.0.0\n!\ninterface Ethernet2\n   description NMAS bootstrap service\n   no switchport\n   ip address 10.254.61.1/30\n   ipv6 address 2001:db8:254:61::1/64\n!\ninterface Ethernet3\n   description production core\n   no switchport\n   ip address 10.254.62.1/30\n   ipv6 address 2001:db8:254:62::1/64\n   ipv6 ospf 1 area 0.0.0.0\n!\ninterface Loopback0\n   ip address 10.254.255.1/32\n   ipv6 address 2001:db8:254:255::1/128\n   ipv6 ospf 1 area 0.0.0.0\n!\nip routing\n!\nipv6 unicast-routing\n!\nipv6 route 2001:db8:254:63::/64 2001:db8:254:62::2\n!\nrouter ospf 1\n   router-id 10.254.255.1\n   passive-interface Ethernet2\n   network 10.254.60.0/24 area 0.0.0.0\n   network 10.254.61.0/30 area 0.0.0.0\n   network 10.254.62.0/30 area 0.0.0.0\n   network 10.254.255.1/32 area 0.0.0.0\n   max-lsa 12000\n!\nipv6 router ospf 1\n   router-id 10.254.255.1\n!\nend"
+}

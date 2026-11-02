@@ -1,0 +1,635 @@
+{% extends "core/base.html" %}
+{% load static %}
+{% load core_extras %}
+{% block title %}{{ page_title }} · Device Builder{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>{{ intent.device_name }}</h1>
+  <p>
+    <a href="{% url 'core:device_builder_change_detail' change.change_id %}">&larr; {{ change.change_id }}</a>
+    &middot;
+    <span class="badge badge--neutral">{{ intent.get_target_type_display }}</span>
+    <span class="badge badge--info">{{ intent.get_platform_display }}</span>
+  </p>
+  <p style="color:var(--text-muted);">Change remains <strong>{{ change.get_lifecycle_state_display }}</strong>. Tier-1 field validation only -- no project/network-semantic validation has run, and nothing here deploys anything.</p>
+  <p>
+    {% if mode == "advanced" %}
+      <a href="{{ basic_url }}">Basic</a> &middot; <strong>Advanced</strong>
+    {% else %}
+      <strong>Basic</strong> &middot; <a href="{{ advanced_url }}">Advanced</a>
+    {% endif %}
+  </p>
+  {% if import_notice %}<div class="alert alert--success">{{ import_notice }}</div>{% endif %}
+  {% if import_error %}<div class="alert alert--warning">Import failed: {{ import_error }}</div>{% endif %}
+</div>
+
+<div class="module-card" data-component="template-source">
+  <div class="module-card__title">Template</div>
+  {% if template_clone %}
+  <p>This working intent was cloned from template
+     <a href="{% url 'core:template_version_detail' template_clone.template_id template_clone.version %}">{{ template_clone.template_id }}@v{{ template_clone.version }}</a>
+     (<code>{{ template_clone.digest|slice:":12" }}</code>, {{ template_clone.mode }}) on {{ template_clone.cloned_at }} by {{ template_clone.cloned_by|default:"—" }}.
+     It is an independent editable copy: the template version is immutable and is not affected by edits here.</p>
+  {% else %}
+  <p style="color:var(--text-muted); font-size:0.85rem;">Not cloned from a template. <a href="{% url 'core:template_library' %}">Open the Template Library</a> to use one.</p>
+  {% endif %}
+  <form method="post" action="{% url 'core:template_version_from_change' change.change_id intent.pk %}">
+    {% csrf_token %}
+    <input class="form-control" type="text" name="name" maxlength="120" placeholder="Template name (new templates only)" style="max-width:360px; display:inline-block;">
+    <button type="submit" class="btn btn--secondary">Save working intent as template draft</button>
+  </form>
+  <p style="color:var(--text-muted); font-size:0.85rem;">Creates a DRAFT version from the accepted intent (device-specific values become parameters; secrets never enter a template). A baseline template is never altered: a new derived template is created instead.</p>
+</div>
+
+{% if can_import_existing_config %}
+<div class="module-card">
+  <div class="module-card__title">Existing-Device Import</div>
+  <p style="color:var(--text-muted); font-size:0.85rem;">Read-only. Fetches this device's complete running configuration over the same trusted transport as the legacy baseline capture, and never mutates the device. Recognized features (hostname, interface name/description/MTU/admin state/IPv4/IPv6 addresses) become normal editable draft fields, exactly as if entered here by hand. Everything else is preserved below, unchanged and read-only.</p>
+  <form method="post" action="{% url 'core:device_builder_import_existing_config' change.change_id intent.pk %}">
+    {% csrf_token %}
+    <button type="submit" class="btn btn--primary">Import Live Configuration</button>
+  </form>
+  {% if import_provenance %}
+  <table class="data-table" style="margin-top:12px;">
+    <tbody>
+      <tr><th>Captured at</th><td>{{ import_provenance.captured_at }}</td></tr>
+      <tr><th>Source / transport</th><td>{{ import_provenance.source }}</td></tr>
+      <tr><th>Config digest</th><td><code>{{ import_provenance.config_digest }}</code></td></tr>
+      <tr><th>Parser version</th><td>{{ import_provenance.parser_version }}</td></tr>
+    </tbody>
+  </table>
+  {% endif %}
+  {% if import_unmanaged_blocks %}
+  <h4 style="margin-top:12px;">Preserved / Unmanaged Configuration</h4>
+  <p style="color:var(--text-muted); font-size:0.85rem;">This configuration was found on the device but is not yet editable through NMAS. It is preserved immutably and will NOT be removed by rendering or deploying this draft. To change it: implement/support the feature in NMAS, or make an immediate direct device CLI change outside this managed workflow (a subsequent import will rediscover it -- a direct CLI change does not become managed automatically).</p>
+  {% for block in import_unmanaged_blocks %}
+  <div class="address-card">
+    <p><span class="badge badge--warning" title="Preserved but cannot currently be modified through NMAS.">{{ block.classification }}</span> {{ block.label }}</p>
+    <pre class="code-panel" style="max-height:160px;overflow:auto;">{{ block.text }}</pre>
+  </div>
+  {% endfor %}
+  {% endif %}
+</div>
+{% endif %}
+
+<div id="device-builder-csrf" hidden>{% csrf_token %}</div>
+{{ bootstrap|json_script:"device-builder-bootstrap" }}
+
+<div class="device-builder-editor" data-device-builder-root>
+  <div class="device-builder-editor__left">
+
+    <div class="module-card">
+      <div class="module-card__title">Device Identity</div>
+      <div class="field-row" data-field-row="device.target_type">
+        <div class="field-row__label">
+          <span>Target type</span>
+          <span class="badge field-status" data-field-status></span>
+        </div>
+        <select class="form-control" data-field-path="device.target_type">
+          {% for value, label in target_type_choices %}
+            <option value="{{ value }}" {% if value == intent.target_type %}selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+        <div class="field-row__message" data-field-message></div>
+      </div>
+
+      <div class="field-row" data-field-row="device.hostname">
+        <div class="field-row__label">
+          <span>Hostname</span>
+          <span class="badge field-status" data-field-status></span>
+        </div>
+        <input class="form-control" type="text" data-field-path="device.hostname" value="{{ field_initial.device_hostname }}" autocomplete="off">
+        <div class="field-row__message" data-field-message></div>
+      </div>
+
+      {% if mode == "advanced" %}
+      <div class="field-row" data-field-row="device.description">
+        <div class="field-row__label">
+          <span>Description <span style="color:var(--text-muted);">(Ctrl+Enter or Commit to save)</span></span>
+          <span class="badge field-status" data-field-status></span>
+        </div>
+        <textarea class="form-control" rows="3" data-field-path="device.description">{{ field_initial.device_description }}</textarea>
+        <button type="button" class="btn btn--secondary" data-commit-field="device.description" style="margin-top:6px;">Commit description</button>
+        <div class="field-row__message" data-field-message></div>
+      </div>
+      {% endif %}
+    </div>
+
+    <div class="module-card">
+      <div class="module-card__title">Platform</div>
+      <div class="field-row" data-field-row="device.platform">
+        <div class="field-row__label">
+          <span>Platform</span>
+          <span class="badge field-status" data-field-status></span>
+        </div>
+        <select class="form-control" data-field-path="device.platform">
+          {% for value, label in platform_choices %}
+            <option value="{{ value }}" {% if value == intent.platform %}selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+        <div class="field-row__message" data-field-message></div>
+      </div>
+      <p style="color:var(--text-muted); font-size:0.85rem;">Changing platform preserves all interface intent. The type selector offers only project-implemented combinations.</p>
+      <div class="alert alert--warning" data-platform-warning {% if not has_incompatible_interfaces %}hidden{% endif %}>
+        Existing interface intent has been preserved. Some features are not supported by the selected platform and require review.
+      </div>
+    </div>
+
+    {% if mode == "advanced" %}
+    <div class="module-card">
+      <div class="module-card__title">Image / Deployment Metadata</div>
+      <div class="field-row" data-field-row="device.image_reference">
+        <div class="field-row__label">
+          <span>Image reference {% if intent.target_type == "NEW_DEVICE" %}(New Device){% else %}(unused for Existing Device){% endif %}</span>
+          <span class="badge field-status" data-field-status></span>
+        </div>
+        <input class="form-control" type="text" data-field-path="device.image_reference" value="{{ field_initial.device_image_reference }}" autocomplete="off">
+        <div class="field-row__message" data-field-message></div>
+      </div>
+      <p style="color:var(--text-muted); font-size:0.85rem;">Reference/tag only -- no image binary is stored or inspected here.</p>
+    </div>
+    {% endif %}
+
+    <div class="module-card" data-interface-module>
+      <div class="module-card__title">Interfaces &amp; Addressing</div>
+      <p style="color:var(--text-muted); font-size:0.85rem;">Stable IDs identify objects independently of display order. Accepted fields are <strong>SYNTAX ACCEPTED</strong>; Phase-13 project validation remains pending.</p>
+
+      {% if collection_error %}<div class="alert alert--danger">{{ collection_error }}</div>{% endif %}
+
+      <form method="post" action="{% url 'core:device_builder_interface_add' change.change_id intent.pk %}" class="collection-form">
+        {% csrf_token %}
+        <label class="field-row__label"><span>Add Interface</span></label>
+        <input class="form-control" type="text" name="name" placeholder="e.g. Ethernet1" autocomplete="off" required>
+        <select class="form-control" name="kind" data-new-interface-kind-select required>
+          {% for choice in implemented_interface_choices %}<option value="{{ choice.value }}">{{ choice.label }}</option>{% endfor %}
+        </select>
+        <button type="submit" class="btn btn--primary">Add Interface</button>
+      </form>
+
+      {% if interfaces %}
+      <nav class="interface-selector" aria-label="Candidate interfaces">
+        {% for iface in interfaces %}
+          <a class="btn btn--secondary{% if selected_interface.id == iface.id %} is-active{% endif %}" href="?interface={{ iface.id }}">{{ iface.name|default:iface.id }}</a>
+        {% endfor %}
+      </nav>
+      {% else %}
+        <div class="empty-state">No interface intent yet.</div>
+      {% endif %}
+
+      {% if selected_interface %}
+      <section data-interface-id="{{ selected_interface.id }}">
+        <p><code>{{ selected_interface.id }}</code> · sequence {{ selected_interface.sequence }} · <span class="badge {% if selected_interface.is_compatible %}badge--success{% else %}badge--danger{% endif %}">{{ selected_interface.capability_label }}</span></p>
+
+        <div class="field-row" data-field-row="{{ selected_interface.paths.name }}">
+          <div class="field-row__label"><span>Interface name</span><span class="badge field-status" data-field-status></span></div>
+          <input class="form-control" type="text" data-field-path="{{ selected_interface.paths.name }}" value="{{ selected_interface.values.name }}" autocomplete="off">
+          <div class="field-row__message" data-field-message></div>
+        </div>
+        <div class="field-row" data-field-row="{{ selected_interface.paths.kind }}">
+          <div class="field-row__label"><span>Interface type</span><span class="badge field-status" data-field-status></span></div>
+          <select class="form-control" data-interface-kind-select="{{ selected_interface.id }}" data-field-path="{{ selected_interface.paths.kind }}">
+            {% for choice in selected_interface.type_choices %}<option value="{{ choice.value }}" {% if choice.value == selected_interface.kind %}selected{% endif %}>{{ choice.label }}</option>{% endfor %}
+          </select>
+          <div class="field-row__message" data-field-message></div>
+        </div>
+        <div class="field-row" data-field-row="{{ selected_interface.paths.description }}">
+          <div class="field-row__label"><span>Description</span><span class="badge field-status" data-field-status></span></div>
+          <input class="form-control" type="text" data-field-path="{{ selected_interface.paths.description }}" value="{{ selected_interface.values.description }}" autocomplete="off">
+          <div class="field-row__message" data-field-message></div>
+        </div>
+        <div class="field-row" data-field-row="{{ selected_interface.paths.admin_state }}">
+          <div class="field-row__label"><span>Admin intent</span><span class="badge field-status" data-field-status></span></div>
+          <select class="form-control" data-field-path="{{ selected_interface.paths.admin_state }}"><option value="ENABLED" {% if selected_interface.admin_state == 'ENABLED' %}selected{% endif %}>Enabled</option><option value="DISABLED" {% if selected_interface.admin_state == 'DISABLED' %}selected{% endif %}>Disabled</option></select>
+          <div class="field-row__message" data-field-message></div>
+        </div>
+        <div class="field-row" data-field-row="{{ selected_interface.paths.mtu }}">
+          <div class="field-row__label"><span>MTU (576-9216, optional)</span><span class="badge field-status" data-field-status></span></div>
+          <input class="form-control" type="number" min="576" max="9216" data-field-path="{{ selected_interface.paths.mtu }}" value="{{ selected_interface.values.mtu }}">
+          <div class="field-row__message" data-field-message></div>
+        </div>
+
+        {% if selected_interface.kind == 'ACCESS' %}
+        <div class="field-row" data-field-row="{{ selected_interface.paths.access_vlan }}">
+          <div class="field-row__label"><span>Access VLAN</span><span class="badge field-status" data-field-status></span></div>
+          <input class="form-control" type="number" min="1" max="4094" data-field-path="{{ selected_interface.paths.access_vlan }}" value="{{ selected_interface.values.access_vlan }}">
+          <div class="field-row__message" data-field-message></div>
+        </div>
+        {% elif selected_interface.kind == 'TRUNK' %}
+        <div class="field-row" data-field-row="{{ selected_interface.paths.trunk_allowed_vlans }}">
+          <div class="field-row__label"><span>Allowed VLANs</span><span class="badge field-status" data-field-status></span></div>
+          <input class="form-control" type="text" data-field-path="{{ selected_interface.paths.trunk_allowed_vlans }}" value="{{ selected_interface.values.trunk_allowed_vlans }}" placeholder="10,20,30-32">
+          <div class="field-row__message" data-field-message></div>
+        </div>
+        <div class="field-row" data-field-row="{{ selected_interface.paths.native_vlan }}">
+          <div class="field-row__label"><span>Native VLAN (optional)</span><span class="badge field-status" data-field-status></span></div>
+          <input class="form-control" type="number" min="1" max="4094" data-field-path="{{ selected_interface.paths.native_vlan }}" value="{{ selected_interface.values.native_vlan }}">
+          <div class="field-row__message" data-field-message></div>
+        </div>
+        {% elif selected_interface.kind == 'SUBINTERFACE' %}
+        <div class="field-row" data-field-row="{{ selected_interface.paths.parent_id }}">
+          <div class="field-row__label"><span>Parent interface</span><span class="badge field-status" data-field-status></span></div>
+          <select class="form-control" data-field-path="{{ selected_interface.paths.parent_id }}"><option value="">Select parent</option>{% for parent in selected_interface.parent_choices %}<option value="{{ parent.id }}" {% if parent.id == selected_interface.parent_id %}selected{% endif %}>{{ parent.name|default:parent.id }}</option>{% endfor %}</select>
+          <div class="field-row__message" data-field-message></div>
+        </div>
+        <div class="field-row" data-field-row="{{ selected_interface.paths.encapsulation_vlan }}">
+          <div class="field-row__label"><span>802.1Q tag</span><span class="badge field-status" data-field-status></span></div>
+          <input class="form-control" type="number" min="1" max="4094" data-field-path="{{ selected_interface.paths.encapsulation_vlan }}" value="{{ selected_interface.values.encapsulation_vlan }}">
+          <div class="field-row__message" data-field-message></div>
+        </div>
+        {% elif selected_interface.kind == 'SVI' %}
+        <div class="field-row" data-field-row="{{ selected_interface.paths.vlan_id }}">
+          <div class="field-row__label"><span>SVI VLAN ID</span><span class="badge field-status" data-field-status></span></div>
+          <input class="form-control" type="number" min="1" max="4094" data-field-path="{{ selected_interface.paths.vlan_id }}" value="{{ selected_interface.values.vlan_id }}">
+          <div class="field-row__message" data-field-message></div>
+        </div>
+        {% endif %}
+
+        <div class="address-summary"><strong>Addressing:</strong> {% if selected_interface.address_summary %}{{ selected_interface.address_summary|join:', ' }}{% else %}none{% endif %}{% if selected_interface.is_static_management %} · <span class="badge badge--warning">MANAGEMENT · STATIC</span>{% endif %}</div>
+
+        {% if mode == 'advanced' %}
+        <hr>
+        <h4>Detailed Addressing</h4>
+        {% for address in selected_interface.addresses %}
+        <div class="address-card" data-address-id="{{ address.id }}" data-address-source="{{ address.source }}">
+          <p><code>{{ address.id }}</code> · {{ address.family }} · {% if address.source == 'AUTO' %}UNRESOLVED / UNRESERVED{% else %}MANUAL{% endif %}</p>
+          <div class="field-row" data-field-row="{{ address.paths.family }}"><div class="field-row__label"><span>Family</span><span class="badge field-status" data-field-status></span></div><select class="form-control" data-field-path="{{ address.paths.family }}"><option value="IPV4" {% if address.family == 'IPV4' %}selected{% endif %}>IPv4</option><option value="IPV6" {% if address.family == 'IPV6' %}selected{% endif %}>IPv6</option></select><div class="field-row__message" data-field-message></div></div>
+          <div class="field-row" data-field-row="{{ address.paths.source }}"><div class="field-row__label"><span>Source</span><span class="badge field-status" data-field-status></span></div><select class="form-control" data-address-source-select data-field-path="{{ address.paths.source }}"><option value="MANUAL" {% if address.source == 'MANUAL' %}selected{% endif %}>MANUAL</option>{% if not address.is_static_management %}<option value="AUTO" {% if address.source == 'AUTO' %}selected{% endif %}>AUTO (IPAM-assisted)</option>{% endif %}</select><div class="field-row__message" data-field-message></div></div>
+          <div data-address-manual {% if address.source == 'AUTO' %}hidden{% endif %}>
+            <div class="field-row" data-field-row="{{ address.paths.cidr }}"><div class="field-row__label"><span>Host CIDR</span><span class="badge field-status" data-field-status></span></div><input class="form-control" type="text" data-field-path="{{ address.paths.cidr }}" value="{{ address.cidr }}" placeholder="192.0.2.1/31 or 2001:db8::1/64"><div class="field-row__message" data-field-message></div><small>Syntax accepted does not mean collision-free.</small></div>
+            <div class="field-row" data-field-row="{{ address.paths.role }}"><div class="field-row__label"><span>Role</span><span class="badge field-status" data-field-status></span></div><select class="form-control" data-field-path="{{ address.paths.role }}"><option value="PRIMARY" {% if address.role == 'PRIMARY' %}selected{% endif %}>Primary</option><option value="SECONDARY" {% if address.role == 'SECONDARY' %}selected{% endif %}>Secondary</option></select><div class="field-row__message" data-field-message></div></div>
+          </div>
+          <div data-address-auto {% if address.source != 'AUTO' %}hidden{% endif %}>
+            <div class="field-row" data-field-row="{{ address.paths.ipam_prefix }}"><div class="field-row__label"><span>NetBox prefix/pool</span><span class="badge field-status" data-field-status></span></div><input class="form-control" type="text" list="prefixes-{{ address.id }}" data-ipam-prefix-input data-field-path="{{ address.paths.ipam_prefix }}" value="{{ address.ipam_prefix }}"><datalist id="prefixes-{{ address.id }}"></datalist><button type="button" class="btn btn--secondary" data-ipam-prefixes data-ipam-url="{{ address.ipam_url }}">Refresh Prefixes (read-only)</button><div data-ipam-message>Allocation resolves during Phase 13 validation. No reservation exists.</div><div class="field-row__message" data-field-message></div></div>
+          </div>
+          <form method="post" action="{% url 'core:device_builder_address_remove' change.change_id intent.pk selected_interface.id address.id %}" class="collection-form collection-form--remove">{% csrf_token %}<label><input type="checkbox" name="confirmation" value="REMOVE" required> Confirm draft-only address removal</label><button type="submit" class="btn btn--secondary">Remove Address</button></form>
+        </div>
+        {% endfor %}
+        <form method="post" action="{% url 'core:device_builder_address_add' change.change_id intent.pk selected_interface.id %}" class="collection-form">{% csrf_token %}<select class="form-control" name="family"><option value="IPV4">IPv4</option><option value="IPV6">IPv6</option></select><select class="form-control" name="source"><option value="MANUAL">MANUAL</option>{% if not selected_interface.is_static_management %}<option value="AUTO">AUTO (unresolved)</option>{% endif %}</select><button type="submit" class="btn btn--primary">Add Address</button></form>
+
+        <hr>
+        <h4>WAN / Peer Metadata</h4>
+        {% else %}
+        <hr>
+        <h4>Addressing (IPv4 / IPv6)</h4>
+        <p style="color:var(--text-muted); font-size:0.85rem;">Manual addresses only. The same canonical address objects Advanced edits -- switch to Advanced for AUTO/IPAM-assisted addressing, address family editing, or the Primary/Secondary role.</p>
+        {% for address in selected_interface.addresses %}
+        <div class="address-card" data-address-id="{{ address.id }}" data-address-source="{{ address.source }}">
+          <p><code>{{ address.id }}</code> · {{ address.family }}{% if address.source == 'AUTO' %} · UNRESOLVED / UNRESERVED (AUTO -- manage from Advanced){% endif %}</p>
+          {% if address.source == 'MANUAL' %}
+          <div class="field-row" data-field-row="{{ address.paths.cidr }}"><div class="field-row__label"><span>Address / CIDR</span><span class="badge field-status" data-field-status></span></div><input class="form-control" type="text" data-field-path="{{ address.paths.cidr }}" value="{{ address.cidr }}" placeholder="192.168.100.20/31 or 2001:db8:100:20::1/64"><div class="field-row__message" data-field-message></div></div>
+          {% endif %}
+          <form method="post" action="{% url 'core:device_builder_address_remove' change.change_id intent.pk selected_interface.id address.id %}" class="collection-form collection-form--remove">{% csrf_token %}<label><input type="checkbox" name="confirmation" value="REMOVE" required> Confirm draft-only address removal</label><button type="submit" class="btn btn--secondary">Remove Address</button></form>
+        </div>
+        {% empty %}
+        <div class="empty-state">No addresses yet.</div>
+        {% endfor %}
+        <form method="post" action="{% url 'core:device_builder_address_add' change.change_id intent.pk selected_interface.id %}" class="collection-form">{% csrf_token %}<input type="hidden" name="source" value="MANUAL"><select class="form-control" name="family"><option value="IPV4">IPv4</option><option value="IPV6">IPv6</option></select><button type="submit" class="btn btn--primary">Add Address</button></form>
+        {% endif %}
+
+        {% if mode == 'advanced' %}
+        <p style="color:var(--text-muted);">Metadata only. No BGP, static route, NAT, IPsec, or GRE configuration is generated.</p>
+        <div class="field-row" data-field-row="{{ selected_interface.wan_paths.state }}"><div class="field-row__label"><span>WAN metadata</span><span class="badge field-status" data-field-status></span></div><select class="form-control" data-field-path="{{ selected_interface.wan_paths.state }}"><option value="DISABLED" {% if selected_interface.wan.state == 'DISABLED' %}selected{% endif %}>Disabled</option><option value="ENABLED" {% if selected_interface.wan.state == 'ENABLED' %}selected{% endif %}>Enabled</option></select><div class="field-row__message" data-field-message></div></div>
+        <div class="field-row" data-field-row="{{ selected_interface.wan_paths.provider_name }}"><div class="field-row__label"><span>Provider name</span><span class="badge field-status" data-field-status></span></div><input class="form-control" data-field-path="{{ selected_interface.wan_paths.provider_name }}" value="{{ selected_interface.wan.provider_name }}"><div class="field-row__message" data-field-message></div></div>
+        <div class="field-row" data-field-row="{{ selected_interface.wan_paths.peer_label }}"><div class="field-row__label"><span>Peer label</span><span class="badge field-status" data-field-status></span></div><input class="form-control" data-field-path="{{ selected_interface.wan_paths.peer_label }}" value="{{ selected_interface.wan.peer_label }}"><div class="field-row__message" data-field-message></div></div>
+        <div class="field-row" data-field-row="{{ selected_interface.wan_paths.peer_ipv4 }}"><div class="field-row__label"><span>Peer IPv4</span><span class="badge field-status" data-field-status></span></div><input class="form-control" data-field-path="{{ selected_interface.wan_paths.peer_ipv4 }}" value="{{ selected_interface.wan.peer_ipv4 }}"><div class="field-row__message" data-field-message></div></div>
+        <div class="field-row" data-field-row="{{ selected_interface.wan_paths.peer_ipv6 }}"><div class="field-row__label"><span>Peer IPv6</span><span class="badge field-status" data-field-status></span></div><input class="form-control" data-field-path="{{ selected_interface.wan_paths.peer_ipv6 }}" value="{{ selected_interface.wan.peer_ipv6 }}"><div class="field-row__message" data-field-message></div></div>
+        <div class="field-row" data-field-row="{{ selected_interface.wan_paths.gateway_ipv4 }}"><div class="field-row__label"><span>Next-hop / gateway IPv4</span><span class="badge field-status" data-field-status></span></div><input class="form-control" data-field-path="{{ selected_interface.wan_paths.gateway_ipv4 }}" value="{{ selected_interface.wan.gateway_ipv4 }}"><div class="field-row__message" data-field-message></div></div>
+        <div class="field-row" data-field-row="{{ selected_interface.wan_paths.gateway_ipv6 }}"><div class="field-row__label"><span>Next-hop / gateway IPv6</span><span class="badge field-status" data-field-status></span></div><input class="form-control" data-field-path="{{ selected_interface.wan_paths.gateway_ipv6 }}" value="{{ selected_interface.wan.gateway_ipv6 }}"><div class="field-row__message" data-field-message></div></div>
+        <div class="field-row" data-field-row="{{ selected_interface.wan_paths.mtu }}"><div class="field-row__label"><span>WAN MTU</span><span class="badge field-status" data-field-status></span></div><input class="form-control" type="number" min="576" max="9216" data-field-path="{{ selected_interface.wan_paths.mtu }}" value="{{ selected_interface.wan.mtu|default_if_none:'' }}"><div class="field-row__message" data-field-message></div></div>
+        <div class="field-row" data-field-row="{{ selected_interface.wan_paths.description }}"><div class="field-row__label"><span>WAN description</span><span class="badge field-status" data-field-status></span></div><input class="form-control" data-field-path="{{ selected_interface.wan_paths.description }}" value="{{ selected_interface.wan.description }}"><div class="field-row__message" data-field-message></div></div>
+        {% endif %}
+
+        <form method="post" action="{% url 'core:device_builder_interface_remove' change.change_id intent.pk selected_interface.id %}" class="collection-form collection-form--remove">{% csrf_token %}<label><input type="checkbox" name="confirmation" value="REMOVE" required> Confirm draft-only interface removal</label><button type="submit" class="btn btn--secondary">Remove Interface</button></form>
+      </section>
+      {% endif %}
+    </div>
+
+    <div class="module-card" data-routing-module>
+      <div class="module-card__title">Routing</div>
+      <p style="color:var(--text-muted); font-size:0.85rem;">Structured routing intent, versioned in the same candidate revision as Interfaces &amp; Addressing. Accepted fields are <strong>SYNTAX ACCEPTED</strong>; Phase-13 project/topology validation remains pending -- no adjacency, reachability, or peer-consistency claim is made here.</p>
+
+      <nav class="interface-selector" aria-label="Routing protocol families">
+        {% for value, label in routing_family_labels %}
+          <a class="btn btn--secondary{% if selected_routing_family == value %} is-active{% endif %}" href="?routing_family={{ value }}">{{ label }} ({{ routing_summary.counts|get_item:value }})</a>
+        {% endfor %}
+      </nav>
+
+      {% if selected_routing_family == 'static_routes' %}
+        <p><span class="badge {% if routing_family_selectable.static_routes %}badge--success{% else %}badge--danger{% endif %}">{% if routing_family_selectable.static_routes %}Implemented{% else %}Not implemented for this platform{% endif %}</span></p>
+        {% if routing_family_selectable.static_routes %}
+        <form method="post" action="{{ static_route_add_url }}" class="collection-form">
+          {% csrf_token %}
+          <select class="form-control" name="family"><option value="IPV4">IPv4</option><option value="IPV6">IPv6</option></select>
+          <button type="submit" class="btn btn--primary">Add Static Route</button>
+        </form>
+        {% endif %}
+        {% if not routing_summary.static_routes %}
+          <div class="empty-state">No static routes yet.</div>
+        {% endif %}
+        {% for route in routing_summary.static_routes %}
+        <div class="address-card" data-route-id="{{ route.id }}">
+          <p><code>{{ route.id }}</code> &middot; {{ route.family }} &middot; <span class="badge {% if route.is_compatible %}badge--success{% else %}badge--danger{% endif %}">{{ route.capability_label }}</span></p>
+          <div class="field-row" data-field-row="{{ route.paths.destination }}"><div class="field-row__label"><span>Destination prefix</span><span class="badge field-status" data-field-status></span></div><input class="form-control" type="text" data-field-path="{{ route.paths.destination }}" value="{{ route.destination }}" placeholder="192.0.2.0/24 or 2001:db8::/64"><div class="field-row__message" data-field-message></div></div>
+          <div class="field-row" data-field-row="{{ route.paths.next_hop_type }}"><div class="field-row__label"><span>Next hop</span><span class="badge field-status" data-field-status></span></div><select class="form-control" data-field-path="{{ route.paths.next_hop_type }}"><option value="ADDRESS" {% if route.next_hop_type == 'ADDRESS' %}selected{% endif %}>Address</option><option value="INTERFACE" {% if route.next_hop_type == 'INTERFACE' %}selected{% endif %}>Candidate interface</option></select><div class="field-row__message" data-field-message></div></div>
+          <div class="field-row" data-field-row="{{ route.paths.next_hop_address }}"><div class="field-row__label"><span>Next-hop address</span><span class="badge field-status" data-field-status></span></div><input class="form-control" type="text" data-field-path="{{ route.paths.next_hop_address }}" value="{{ route.next_hop_address }}"><div class="field-row__message" data-field-message></div></div>
+          <div class="field-row" data-field-row="{{ route.paths.next_hop_interface_id }}"><div class="field-row__label"><span>Next-hop interface</span><span class="badge field-status" data-field-status></span></div><select class="form-control" data-field-path="{{ route.paths.next_hop_interface_id }}"><option value="">Select interface</option>{% for iface in interfaces %}<option value="{{ iface.id }}" {% if iface.id == route.next_hop_interface_id %}selected{% endif %}>{{ iface.name|default:iface.id }}</option>{% endfor %}</select><div class="field-row__message" data-field-message></div></div>
+          {% if mode == 'advanced' %}
+          <div class="field-row" data-field-row="{{ route.paths.distance }}"><div class="field-row__label"><span>Administrative distance (1-255, optional)</span><span class="badge field-status" data-field-status></span></div><input class="form-control" type="number" min="1" max="255" data-field-path="{{ route.paths.distance }}" value="{{ route.distance|default_if_none:'' }}"><div class="field-row__message" data-field-message></div></div>
+          <div class="field-row" data-field-row="{{ route.paths.tag }}"><div class="field-row__label"><span>Tag (optional)</span><span class="badge field-status" data-field-status></span></div><input class="form-control" type="number" min="0" data-field-path="{{ route.paths.tag }}" value="{{ route.tag|default_if_none:'' }}"><div class="field-row__message" data-field-message></div></div>
+          <div class="field-row" data-field-row="{{ route.paths.description }}"><div class="field-row__label"><span>Description</span><span class="badge field-status" data-field-status></span></div><input class="form-control" type="text" data-field-path="{{ route.paths.description }}" value="{{ route.description }}"><div class="field-row__message" data-field-message></div></div>
+          <div class="field-row" data-field-row="{{ route.paths.enabled }}"><div class="field-row__label"><span>Enabled</span><span class="badge field-status" data-field-status></span></div><select class="form-control" data-field-path="{{ route.paths.enabled }}"><option value="true" {% if route.enabled %}selected{% endif %}>Enabled</option><option value="false" {% if not route.enabled %}selected{% endif %}>Disabled (preserved, not rendered)</option></select><div class="field-row__message" data-field-message></div></div>
+          {% endif %}
+          <form method="post" action="{% url 'core:device_builder_static_route_remove' change.change_id intent.pk route.id %}" class="collection-form collection-form--remove">{% csrf_token %}<label><input type="checkbox" name="confirmation" value="REMOVE" required> Confirm draft-only route removal</label><button type="submit" class="btn btn--secondary">Remove Route</button></form>
+        </div>
+        {% endfor %}
+
+      {% elif selected_routing_family == 'bgp' %}
+        <p><span class="badge {% if routing_family_selectable.bgp %}badge--success{% else %}badge--danger{% endif %}">{% if routing_family_selectable.bgp %}Implemented{% else %}Not implemented for this platform{% endif %}</span></p>
+        {% if routing_family_selectable.bgp %}
+        <form method="post" action="{{ routing_instance_add_url }}" class="collection-form">
+          {% csrf_token %}
+          <input class="form-control" type="text" name="local_asn" placeholder="Local ASN (1-4294967295)" required>
+          <button type="submit" class="btn btn--primary">Add BGP Instance</button>
+        </form>
+        {% endif %}
+        {% if not routing_summary.bgp %}<div class="empty-state">No BGP instance yet.</div>{% endif %}
+        {% if routing_summary.bgp %}
+        <nav class="interface-selector" aria-label="BGP instances">
+          {% for inst in routing_summary.bgp %}<a class="btn btn--secondary{% if selected_routing_instance.id == inst.id %} is-active{% endif %}" href="?routing_family=bgp&amp;routing_instance={{ inst.id }}">AS{{ inst.local_asn }}</a>{% endfor %}
+        </nav>
+        {% endif %}
+        {% if selected_routing_instance %}
+        <section data-routing-instance-id="{{ selected_routing_instance.id }}">
+          <p><code>{{ selected_routing_instance.id }}</code> &middot; <span class="badge {% if selected_routing_instance.is_compatible %}badge--success{% else %}badge--danger{% endif %}">{% if selected_routing_instance.is_compatible %}Implemented{% else %}Not implemented for this platform{% endif %}</span></p>
+          <div class="field-row" data-field-row="{{ selected_routing_instance.paths.local_asn }}"><div class="field-row__label"><span>Local ASN</span><span class="badge field-status" data-field-status></span></div><input class="form-control" type="text" data-field-path="{{ selected_routing_instance.paths.local_asn }}" value="{{ selected_routing_instance.local_asn }}"><div class="field-row__message" data-field-message></div></div>
+          <div class="field-row" data-field-row="{{ selected_routing_instance.paths.router_id }}"><div class="field-row__label"><span>Router ID</span><span class="badge field-status" data-field-status></span></div><input class="form-control" type="text" data-field-path="{{ selected_routing_instance.paths.router_id }}" value="{{ selected_routing_instance.router_id }}" placeholder="192.0.2.1"><div class="field-row__message" data-field-message></div></div>
+
+          <h4>Neighbors</h4>
+          {% if bgp_neighbor_add_url %}
+          <form method="post" action="{{ bgp_neighbor_add_url }}" class="collection-form">{% csrf_token %}<input class="form-control" type="text" name="peer_address" placeholder="Peer address" required><input class="form-control" type="text" name="remote_asn" placeholder="Remote ASN" required><button type="submit" class="btn btn--primary">Add Neighbor</button></form>
+          {% endif %}
+          {% for neighbor in selected_routing_instance.neighbors %}
+          <div class="address-card" data-bgp-neighbor-id="{{ neighbor.id }}">
+            <p><code>{{ neighbor.id }}</code> &middot; {{ neighbor.family }} &middot; <span class="badge {% if neighbor.is_compatible %}badge--success{% else %}badge--danger{% endif %}">{{ neighbor.capability_label }}</span></p>
+            <div class="field-row" data-field-row="{{ neighbor.paths.peer_address }}"><div class="field-row__label"><span>Peer address</span><span class="badge field-status" data-field-status></span></div><input class="form-control" type="text" data-field-path="{{ neighbor.paths.peer_address }}" value="{{ neighbor.peer_address }}"><div class="field-row__message" data-field-message></div></div>
+            <div class="field-row" data-field-row="{{ neighbor.paths.remote_asn }}"><div class="field-row__label"><span>Remote ASN</span><span class="badge field-status" data-field-status></span></div><input class="form-control" type="text" data-field-path="{{ neighbor.paths.remote_asn }}" value="{{ neighbor.remote_asn }}"><div class="field-row__message" data-field-message></div></div>
+            <div class="field-row" data-field-row="{{ neighbor.paths.activate_ipv4 }}"><div class="field-row__label"><span>Activate IPv4</span><span class="badge field-status" data-field-status></span></div><select class="form-control" data-field-path="{{ neighbor.paths.activate_ipv4 }}"><option value="true" {% if neighbor.activate_ipv4 %}selected{% endif %}>Yes</option><option value="false" {% if not neighbor.activate_ipv4 %}selected{% endif %}>No</option></select><div class="field-row__message" data-field-message></div></div>
+            <div class="field-row" data-field-row="{{ neighbor.paths.activate_ipv6 }}"><div class="field-row__label"><span>Activate IPv6</span><span class="badge field-status" data-field-status></span></div><select class="form-control" data-field-path="{{ neighbor.paths.activate_ipv6 }}"><option value="true" {% if neighbor.activate_ipv6 %}selected{% endif %}>Yes</option><option value="false" {% if not neighbor.activate_ipv6 %}selected{% endif %}>No</option></select><div class="field-row__message" data-field-message></div></div>
+            <div class="field-row" data-field-row="{{ neighbor.paths.description }}"><div class="field-row__label"><span>Description</span><span class="badge field-status" data-field-status></span></div><input class="form-control" type="text" data-field-path="{{ neighbor.paths.description }}" value="{{ neighbor.description }}"><div class="field-row__message" data-field-message></div></div>
+            {% if mode == 'advanced' %}
+            <div class="field-row" data-field-row="{{ neighbor.paths.update_source_interface_id }}"><div class="field-row__label"><span>Update source</span><span class="badge field-status" data-field-status></span></div><select class="form-control" data-field-path="{{ neighbor.paths.update_source_interface_id }}"><option value="">None</option>{% for iface in interfaces %}<option value="{{ iface.id }}" {% if iface.id == neighbor.update_source_interface_id %}selected{% endif %}>{{ iface.name|default:iface.id }}</option>{% endfor %}</select><div class="field-row__message" data-field-message></div></div>
+            <div class="field-row" data-field-row="{{ neighbor.paths.ebgp_multihop }}"><div class="field-row__label"><span>eBGP multihop (optional)</span><span class="badge field-status" data-field-status></span></div><input class="form-control" type="number" min="1" max="255" data-field-path="{{ neighbor.paths.ebgp_multihop }}" value="{{ neighbor.ebgp_multihop|default_if_none:'' }}"><div class="field-row__message" data-field-message></div></div>
+            <div class="field-row" data-field-row="{{ neighbor.paths.next_hop_self }}"><div class="field-row__label"><span>Next-hop-self</span><span class="badge field-status" data-field-status></span></div><select class="form-control" data-field-path="{{ neighbor.paths.next_hop_self }}"><option value="true" {% if neighbor.next_hop_self %}selected{% endif %}>Yes</option><option value="false" {% if not neighbor.next_hop_self %}selected{% endif %}>No</option></select><div class="field-row__message" data-field-message></div></div>
+            <div class="field-row" data-field-row="{{ neighbor.paths.route_reflector_client }}"><div class="field-row__label"><span>Route-reflector-client</span><span class="badge field-status" data-field-status></span></div><select class="form-control" data-field-path="{{ neighbor.paths.route_reflector_client }}"><option value="true" {% if neighbor.route_reflector_client %}selected{% endif %}>Yes</option><option value="false" {% if not neighbor.route_reflector_client %}selected{% endif %}>No</option></select><div class="field-row__message" data-field-message></div></div>
+            <div class="field-row" data-field-row="{{ neighbor.paths.shutdown }}"><div class="field-row__label"><span>Shutdown</span><span class="badge field-status" data-field-status></span></div><select class="form-control" data-field-path="{{ neighbor.paths.shutdown }}"><option value="true" {% if neighbor.shutdown %}selected{% endif %}>Yes</option><option value="false" {% if not neighbor.shutdown %}selected{% endif %}>No</option></select><div class="field-row__message" data-field-message></div></div>
+            <div class="field-row" data-field-row="{{ neighbor.paths.password_ref }}"><div class="field-row__label"><span>Authentication reference (never the secret itself)</span><span class="badge field-status" data-field-status></span></div><input class="form-control" type="text" data-field-path="{{ neighbor.paths.password_ref }}" value="{{ neighbor.password_ref }}" placeholder="e.g. vault:bgp/r1-r5"><div class="field-row__message" data-field-message></div></div>
+            {% endif %}
+            <form method="post" action="{% url 'core:device_builder_bgp_neighbor_remove' change.change_id intent.pk selected_routing_instance.id neighbor.id %}" class="collection-form collection-form--remove">{% csrf_token %}<label><input type="checkbox" name="confirmation" value="REMOVE" required> Confirm removal</label><button type="submit" class="btn btn--secondary">Remove Neighbor</button></form>
+          </div>
+          {% endfor %}
+
+          <h4>Network Advertisements</h4>
+          {% if bgp_network_add_url %}
+          <form method="post" action="{{ bgp_network_add_url }}" class="collection-form">{% csrf_token %}<select class="form-control" name="family"><option value="IPV4">IPv4</option><option value="IPV6">IPv6</option></select><input class="form-control" type="text" name="cidr" placeholder="192.0.2.0/24" required><button type="submit" class="btn btn--primary">Add Network</button></form>
+          {% endif %}
+          {% for network in selected_routing_instance.networks %}
+          <div class="address-card" data-bgp-network-id="{{ network.id }}">
+            <p><code>{{ network.id }}</code> &middot; {{ network.family }}</p>
+            <div class="field-row" data-field-row="{{ network.paths.cidr }}"><div class="field-row__label"><span>Network CIDR</span><span class="badge field-status" data-field-status></span></div><input class="form-control" type="text" data-field-path="{{ network.paths.cidr }}" value="{{ network.cidr }}"><div class="field-row__message" data-field-message></div></div>
+            <form method="post" action="{% url 'core:device_builder_bgp_network_remove' change.change_id intent.pk selected_routing_instance.id network.id %}" class="collection-form collection-form--remove">{% csrf_token %}<label><input type="checkbox" name="confirmation" value="REMOVE" required> Confirm removal</label><button type="submit" class="btn btn--secondary">Remove Network</button></form>
+          </div>
+          {% endfor %}
+          <form method="post" action="{% url 'core:device_builder_routing_instance_remove' change.change_id intent.pk 'bgp' selected_routing_instance.id %}" class="collection-form collection-form--remove">{% csrf_token %}<label><input type="checkbox" name="confirmation" value="REMOVE" required> Confirm draft-only BGP instance removal</label><button type="submit" class="btn btn--secondary">Remove BGP Instance</button></form>
+        </section>
+        {% endif %}
+
+      {% else %}
+        {# RIP / OSPF / IS-IS / EIGRP share the instance + interface-binding shape #}
+        <p><span class="badge {% if routing_family_selectable|get_item:selected_routing_family %}badge--success{% else %}badge--danger{% endif %}">{% if routing_family_selectable|get_item:selected_routing_family %}Implemented{% else %}Not implemented for this platform{% endif %}</span></p>
+        {% if routing_family_selectable|get_item:selected_routing_family %}
+        <form method="post" action="{{ routing_instance_add_url }}" class="collection-form">
+          {% csrf_token %}
+          {% if selected_routing_family == 'rip' or selected_routing_family == 'eigrp' %}
+          <select class="form-control" name="address_family"><option value="IPV4">IPv4{% if selected_routing_family == 'rip' %} (RIPv2){% endif %}</option><option value="IPV6">IPv6{% if selected_routing_family == 'rip' %} (RIPng){% endif %}</option></select>
+          {% endif %}
+          {% if selected_routing_family == 'ospf' %}
+          <select class="form-control" name="version"><option value="OSPFV2">OSPFv2</option><option value="OSPFV3">OSPFv3</option></select>
+          {% endif %}
+          <button type="submit" class="btn btn--primary">Add {{ selected_routing_family|upper }} Instance</button>
+        </form>
+        {% endif %}
+        {% if not routing_summary|get_item:selected_routing_family %}<div class="empty-state">No {{ selected_routing_family|upper }} instance yet.</div>{% endif %}
+        {% if routing_summary|get_item:selected_routing_family %}
+        <nav class="interface-selector" aria-label="{{ selected_routing_family }} instances">
+          {% for inst in routing_summary|get_item:selected_routing_family %}<a class="btn btn--secondary{% if selected_routing_instance.id == inst.id %} is-active{% endif %}" href="?routing_family={{ selected_routing_family }}&amp;routing_instance={{ inst.id }}">{{ inst.id }}</a>{% endfor %}
+        </nav>
+        {% endif %}
+        {% if selected_routing_instance %}
+        <section data-routing-instance-id="{{ selected_routing_instance.id }}">
+          <p><code>{{ selected_routing_instance.id }}</code> &middot; <span class="badge {% if selected_routing_instance.is_compatible %}badge--success{% else %}badge--danger{% endif %}">{{ selected_routing_instance.capability_label }}</span></p>
+
+          {% if selected_routing_family == 'ospf' %}
+          <div class="field-row" data-field-row="{{ selected_routing_instance.paths.process_id }}"><div class="field-row__label"><span>Process ID</span><span class="badge field-status" data-field-status></span></div><input class="form-control" type="number" min="1" max="65535" data-field-path="{{ selected_routing_instance.paths.process_id }}" value="{{ selected_routing_instance.process_id|default_if_none:'' }}"><div class="field-row__message" data-field-message></div></div>
+          <div class="field-row" data-field-row="{{ selected_routing_instance.paths.router_id }}"><div class="field-row__label"><span>Router ID</span><span class="badge field-status" data-field-status></span></div><input class="form-control" type="text" data-field-path="{{ selected_routing_instance.paths.router_id }}" value="{{ selected_routing_instance.router_id }}" placeholder="192.0.2.1"><div class="field-row__message" data-field-message></div></div>
+          {% if mode == 'advanced' %}
+          <div class="field-row" data-field-row="{{ selected_routing_instance.paths.reference_bandwidth }}"><div class="field-row__label"><span>Reference bandwidth (Mbps, optional)</span><span class="badge field-status" data-field-status></span></div><input class="form-control" type="number" min="1" data-field-path="{{ selected_routing_instance.paths.reference_bandwidth }}" value="{{ selected_routing_instance.reference_bandwidth|default_if_none:'' }}"><div class="field-row__message" data-field-message></div></div>
+          {% endif %}
+          {% endif %}
+
+          {% if selected_routing_family == 'isis' %}
+          <div class="field-row" data-field-row="{{ selected_routing_instance.paths.net }}"><div class="field-row__label"><span>NET</span><span class="badge field-status" data-field-status></span></div><input class="form-control" type="text" data-field-path="{{ selected_routing_instance.paths.net }}" value="{{ selected_routing_instance.net }}" placeholder="49.0001.0000.0000.0001.00"><div class="field-row__message" data-field-message></div></div>
+          <div class="field-row" data-field-row="{{ selected_routing_instance.paths.level }}"><div class="field-row__label"><span>Level</span><span class="badge field-status" data-field-status></span></div><select class="form-control" data-field-path="{{ selected_routing_instance.paths.level }}"><option value="LEVEL_1" {% if selected_routing_instance.level == 'LEVEL_1' %}selected{% endif %}>Level 1</option><option value="LEVEL_2" {% if selected_routing_instance.level == 'LEVEL_2' %}selected{% endif %}>Level 2</option><option value="LEVEL_1_2" {% if selected_routing_instance.level == 'LEVEL_1_2' %}selected{% endif %}>Level 1-2</option></select><div class="field-row__message" data-field-message></div></div>
+          <div class="field-row" data-field-row="{{ selected_routing_instance.paths.address_family_ipv4 }}"><div class="field-row__label"><span>IPv4 address family</span><span class="badge field-status" data-field-status></span></div><select class="form-control" data-field-path="{{ selected_routing_instance.paths.address_family_ipv4 }}"><option value="true" {% if selected_routing_instance.address_family_ipv4 %}selected{% endif %}>Enabled</option><option value="false" {% if not selected_routing_instance.address_family_ipv4 %}selected{% endif %}>Disabled</option></select><div class="field-row__message" data-field-message></div></div>
+          <div class="field-row" data-field-row="{{ selected_routing_instance.paths.address_family_ipv6 }}"><div class="field-row__label"><span>IPv6 address family</span><span class="badge field-status" data-field-status></span></div><select class="form-control" data-field-path="{{ selected_routing_instance.paths.address_family_ipv6 }}"><option value="true" {% if selected_routing_instance.address_family_ipv6 %}selected{% endif %}>Enabled</option><option value="false" {% if not selected_routing_instance.address_family_ipv6 %}selected{% endif %}>Disabled</option></select><div class="field-row__message" data-field-message></div></div>
+          {% endif %}
+
+          {% if selected_routing_family == 'eigrp' %}
+          <div class="field-row" data-field-row="{{ selected_routing_instance.paths.asn }}"><div class="field-row__label"><span>AS number</span><span class="badge field-status" data-field-status></span></div><input class="form-control" type="number" min="1" max="65535" data-field-path="{{ selected_routing_instance.paths.asn }}" value="{{ selected_routing_instance.asn|default_if_none:'' }}"><div class="field-row__message" data-field-message></div></div>
+          <div class="field-row" data-field-row="{{ selected_routing_instance.paths.router_id }}"><div class="field-row__label"><span>Router ID</span><span class="badge field-status" data-field-status></span></div><input class="form-control" type="text" data-field-path="{{ selected_routing_instance.paths.router_id }}" value="{{ selected_routing_instance.router_id }}"><div class="field-row__message" data-field-message></div></div>
+          {% endif %}
+
+          {% if selected_routing_family == 'rip' %}
+          <div class="field-row" data-field-row="{{ selected_routing_instance.paths.enabled }}"><div class="field-row__label"><span>Enabled</span><span class="badge field-status" data-field-status></span></div><select class="form-control" data-field-path="{{ selected_routing_instance.paths.enabled }}"><option value="true" {% if selected_routing_instance.enabled %}selected{% endif %}>Enabled</option><option value="false" {% if not selected_routing_instance.enabled %}selected{% endif %}>Disabled (preserved, not rendered)</option></select><div class="field-row__message" data-field-message></div></div>
+          {% endif %}
+
+          {% if selected_routing_family == 'ospf' and selected_routing_instance.version == 'OSPFV2' %}
+          <h4>OSPF Network Statements</h4>
+          <p style="color:var(--text-muted); font-size:0.85rem;">Creates <code>network x.x.x.x/len area y</code> under the selected OSPFv2 process. OSPFv3 continues to use interface participation.</p>
+          {% if ospf_network_add_url %}<form method="post" action="{{ ospf_network_add_url }}" class="collection-form">{% csrf_token %}<input class="form-control" name="prefix" placeholder="10.0.0.0/24" required><input class="form-control" name="area" value="0" placeholder="Area" required><button type="submit" class="btn btn--primary">Add Network Statement</button></form>{% endif %}
+          {% for network in selected_routing_instance.networks %}
+          <div class="address-card" data-ospf-network-id="{{ network.id }}">
+            <div class="field-row" data-field-row="{{ network.paths.prefix }}"><div class="field-row__label"><span>Prefix</span><span class="badge field-status" data-field-status></span></div><input class="form-control" data-field-path="{{ network.paths.prefix }}" value="{{ network.prefix }}"><div class="field-row__message" data-field-message></div></div>
+            <div class="field-row" data-field-row="{{ network.paths.area }}"><div class="field-row__label"><span>Area</span><span class="badge field-status" data-field-status></span></div><input class="form-control" data-field-path="{{ network.paths.area }}" value="{{ network.area }}"><div class="field-row__message" data-field-message></div></div>
+            <form method="post" action="{% url 'core:device_builder_ospf_network_remove' change.change_id intent.pk selected_routing_instance.id network.id %}" class="collection-form collection-form--remove">{% csrf_token %}<label><input type="checkbox" name="confirmation" value="REMOVE" required> Confirm removal</label><button type="submit" class="btn btn--secondary">Remove Network Statement</button></form>
+          </div>
+          {% endfor %}
+          {% endif %}
+
+          <h4>Interface Participation</h4>
+          {% if routing_binding_add_url %}
+          <form method="post" action="{{ routing_binding_add_url }}" class="collection-form">{% csrf_token %}<select class="form-control" name="interface_id" required><option value="">Select interface</option>{% for iface in interfaces %}<option value="{{ iface.id }}">{{ iface.name|default:iface.id }}</option>{% endfor %}</select><button type="submit" class="btn btn--primary">Add Interface</button></form>
+          {% endif %}
+          {% for binding in selected_routing_instance.interfaces %}
+          <div class="address-card" data-routing-binding-id="{{ binding.id }}">
+            <p><strong>{{ binding.interface_label }}</strong> &middot; <code>{{ binding.id }}</code></p>
+            <div class="field-row" data-field-row="{{ binding.paths.passive }}"><div class="field-row__label"><span>Passive</span><span class="badge field-status" data-field-status></span></div><select class="form-control" data-field-path="{{ binding.paths.passive }}"><option value="true" {% if binding.passive %}selected{% endif %}>Yes</option><option value="false" {% if not binding.passive %}selected{% endif %}>No</option></select><div class="field-row__message" data-field-message></div></div>
+            {% if selected_routing_family == 'ospf' %}
+            <div class="field-row" data-field-row="{{ binding.paths.area }}"><div class="field-row__label"><span>Area</span><span class="badge field-status" data-field-status></span></div><input class="form-control" type="text" data-field-path="{{ binding.paths.area }}" value="{{ binding.area }}" placeholder="0.0.0.0"><div class="field-row__message" data-field-message></div></div>
+            {% if mode == 'advanced' %}
+            <div class="field-row" data-field-row="{{ binding.paths.cost }}"><div class="field-row__label"><span>Cost (optional)</span><span class="badge field-status" data-field-status></span></div><input class="form-control" type="number" min="1" max="65535" data-field-path="{{ binding.paths.cost }}" value="{{ binding.cost|default_if_none:'' }}"><div class="field-row__message" data-field-message></div></div>
+            <div class="field-row" data-field-row="{{ binding.paths.network_type }}"><div class="field-row__label"><span>Network type</span><span class="badge field-status" data-field-status></span></div><select class="form-control" data-field-path="{{ binding.paths.network_type }}"><option value="" {% if not binding.network_type %}selected{% endif %}>Platform default</option><option value="POINT_TO_POINT" {% if binding.network_type == 'POINT_TO_POINT' %}selected{% endif %}>Point-to-point</option></select><div class="field-row__message" data-field-message></div></div>
+            <div class="field-row" data-field-row="{{ binding.paths.hello_interval }}"><div class="field-row__label"><span>Hello interval (optional)</span><span class="badge field-status" data-field-status></span></div><input class="form-control" type="number" min="1" max="65535" data-field-path="{{ binding.paths.hello_interval }}" value="{{ binding.hello_interval|default_if_none:'' }}"><div class="field-row__message" data-field-message></div></div>
+            <div class="field-row" data-field-row="{{ binding.paths.dead_interval }}"><div class="field-row__label"><span>Dead interval (optional)</span><span class="badge field-status" data-field-status></span></div><input class="form-control" type="number" min="1" max="65535" data-field-path="{{ binding.paths.dead_interval }}" value="{{ binding.dead_interval|default_if_none:'' }}"><div class="field-row__message" data-field-message></div></div>
+            <div class="field-row" data-field-row="{{ binding.paths.priority }}"><div class="field-row__label"><span>Priority (optional)</span><span class="badge field-status" data-field-status></span></div><input class="form-control" type="number" min="0" max="255" data-field-path="{{ binding.paths.priority }}" value="{{ binding.priority|default_if_none:'' }}"><div class="field-row__message" data-field-message></div></div>
+            {% endif %}
+            {% endif %}
+            {% if selected_routing_family == 'isis' and mode == 'advanced' %}
+            <div class="field-row" data-field-row="{{ binding.paths.metric }}"><div class="field-row__label"><span>Metric (optional)</span><span class="badge field-status" data-field-status></span></div><input class="form-control" type="number" min="1" data-field-path="{{ binding.paths.metric }}" value="{{ binding.metric|default_if_none:'' }}"><div class="field-row__message" data-field-message></div></div>
+            {% endif %}
+            <form method="post" action="{% url 'core:device_builder_routing_binding_remove' change.change_id intent.pk selected_routing_family selected_routing_instance.id binding.id %}" class="collection-form collection-form--remove">{% csrf_token %}<label><input type="checkbox" name="confirmation" value="REMOVE" required> Confirm removal</label><button type="submit" class="btn btn--secondary">Remove Binding</button></form>
+          </div>
+          {% endfor %}
+          <form method="post" action="{% url 'core:device_builder_routing_instance_remove' change.change_id intent.pk selected_routing_family selected_routing_instance.id %}" class="collection-form collection-form--remove">{% csrf_token %}<label><input type="checkbox" name="confirmation" value="REMOVE" required> Confirm draft-only instance removal</label><button type="submit" class="btn btn--secondary">Remove Instance</button></form>
+        </section>
+        {% endif %}
+      {% endif %}
+    </div>
+
+    <div class="module-card" data-phase12-module="fhrp">
+      <div class="module-card__title">FHRP</div>
+      <p style="color:var(--text-muted);">Structured HSRP, VRRP, VARP, GLBP, and anycast-gateway vocabulary. Only evidence-backed combinations can be added. Project peer/virtual-IP validation is pending.</p>
+      {% if service_policy_supported.FHRP_VARP_IPV4 or service_policy_supported.FHRP_VARP_IPV6 %}
+      <form method="post" action="{% url 'core:device_builder_phase12_add' change.change_id intent.pk 'fhrp' %}" class="collection-form">{% csrf_token %}
+        <select class="form-control" name="protocol"><option value="VARP">VARP (Arista virtual-router)</option></select>
+        <select class="form-control" name="address_family"><option value="IPV4">IPv4</option><option value="IPV6">IPv6</option></select>
+        <select class="form-control" name="interface_id" required><option value="">Candidate interface</option>{% for iface in interfaces %}<option value="{{ iface.id }}">{{ iface.name|default:iface.id }}</option>{% endfor %}</select>
+        <button class="btn btn--primary" type="submit">Add FHRP Instance</button>
+      </form>
+      {% else %}<div class="alert alert--warning">No FHRP protocol has an implemented renderer for this platform. HSRP, VRRP, GLBP, and anycast gateway remain honestly NOT_IMPLEMENTED.</div>{% endif %}
+      {% for instance in phase12.fhrp %}
+      <div class="address-card" data-fhrp-id="{{ instance.id }}"><p><code>{{ instance.id }}</code> · {{ instance.protocol }} · {{ instance.address_family }}</p>
+        <div class="field-row" data-field-row="{{ instance.paths.group_id }}"><div class="field-row__label"><span>Group / virtual-router ID</span><span class="badge field-status" data-field-status></span></div><input class="form-control" type="number" min="0" max="4095" data-field-path="{{ instance.paths.group_id }}" value="{{ instance.group_id|default_if_none:'' }}"><div class="field-row__message" data-field-message></div></div>
+        <div class="field-row" data-field-row="{{ instance.paths.priority }}"><div class="field-row__label"><span>Priority</span><span class="badge field-status" data-field-status></span></div><input class="form-control" type="number" min="0" max="255" data-field-path="{{ instance.paths.priority }}" value="{{ instance.priority|default_if_none:'' }}"><div class="field-row__message" data-field-message></div></div>
+        <div class="field-row" data-field-row="{{ instance.paths.preempt }}"><div class="field-row__label"><span>Preempt</span><span class="badge field-status" data-field-status></span></div><select class="form-control" data-field-path="{{ instance.paths.preempt }}"><option value="false" {% if not instance.preempt %}selected{% endif %}>Disabled</option><option value="true" {% if instance.preempt %}selected{% endif %}>Enabled</option></select><div class="field-row__message" data-field-message></div></div>
+        <div class="field-row" data-field-row="{{ instance.paths.description }}"><div class="field-row__label"><span>Description</span><span class="badge field-status" data-field-status></span></div><input class="form-control" data-field-path="{{ instance.paths.description }}" value="{{ instance.description }}"><div class="field-row__message" data-field-message></div></div>
+        <div class="field-row" data-field-row="{{ instance.paths.virtual_mac }}"><div class="field-row__label"><span>Virtual MAC (VARP)</span><span class="badge field-status" data-field-status></span></div><input class="form-control" data-field-path="{{ instance.paths.virtual_mac }}" value="{{ instance.virtual_mac }}" placeholder="001c.7300.0099"><div class="field-row__message" data-field-message></div></div>
+        {% if mode == 'advanced' %}
+        <div class="field-row" data-field-row="{{ instance.paths.preempt_delay }}"><div class="field-row__label"><span>Preempt delay (seconds)</span><span class="badge field-status" data-field-status></span></div><input class="form-control" type="number" min="0" max="3600" data-field-path="{{ instance.paths.preempt_delay }}" value="{{ instance.preempt_delay|default_if_none:'' }}"><div class="field-row__message" data-field-message></div></div>
+        <div class="field-row" data-field-row="{{ instance.paths.hello_timer }}"><div class="field-row__label"><span>Hello timer (seconds)</span><span class="badge field-status" data-field-status></span></div><input class="form-control" type="number" min="1" max="255" data-field-path="{{ instance.paths.hello_timer }}" value="{{ instance.hello_timer|default_if_none:'' }}"><div class="field-row__message" data-field-message></div></div>
+        <div class="field-row" data-field-row="{{ instance.paths.hold_timer }}"><div class="field-row__label"><span>Hold timer (seconds)</span><span class="badge field-status" data-field-status></span></div><input class="form-control" type="number" min="1" max="255" data-field-path="{{ instance.paths.hold_timer }}" value="{{ instance.hold_timer|default_if_none:'' }}"><div class="field-row__message" data-field-message></div></div>
+        <div class="field-row" data-field-row="{{ instance.paths.auth_secret_ref }}"><div class="field-row__label"><span>Authentication secret reference only</span><span class="badge field-status" data-field-status></span></div><input class="form-control" data-field-path="{{ instance.paths.auth_secret_ref }}" value="{{ instance.auth_secret_ref }}"><div class="field-row__message" data-field-message></div></div>
+        {% endif %}
+        {% for vip in instance.virtual_ips_ordered %}<div class="field-row" data-field-row="{{ vip.paths.address }}"><div class="field-row__label"><span>Virtual IP · <code>{{ vip.id }}</code></span><span class="badge field-status" data-field-status></span></div><input class="form-control" data-field-path="{{ vip.paths.address }}" value="{{ vip.address }}"><div class="field-row__message" data-field-message></div><form method="post" action="{% url 'core:device_builder_phase12_remove' change.change_id intent.pk 'fhrp_vip' vip.id %}" class="collection-form collection-form--remove">{% csrf_token %}<input type="hidden" name="parent_id" value="{{ instance.id }}"><label><input type="checkbox" name="confirmation" value="REMOVE" required> Confirm virtual-IP removal</label><button class="btn btn--secondary" type="submit">Remove Virtual IP</button></form></div>{% endfor %}
+        <form method="post" action="{% url 'core:device_builder_phase12_add' change.change_id intent.pk 'fhrp_vip' %}" class="collection-form">{% csrf_token %}<input type="hidden" name="parent_id" value="{{ instance.id }}"><input class="form-control" name="address" placeholder="Virtual IP" required><button class="btn btn--primary" type="submit">Add Virtual IP</button></form>
+        <form method="post" action="{% url 'core:device_builder_phase12_remove' change.change_id intent.pk 'fhrp' instance.id %}" class="collection-form collection-form--remove">{% csrf_token %}<label><input type="checkbox" name="confirmation" value="REMOVE" required> Confirm removal</label><button class="btn btn--secondary" type="submit">Remove FHRP</button></form>
+      </div>{% empty %}<div class="empty-state">No FHRP intent.</div>{% endfor %}
+    </div>
+
+    <div class="module-card" data-phase12-module="nat">
+      <div class="module-card__title">NAT</div>
+      <p style="color:var(--text-muted);">Translation family and rule behavior are separate. NAT-PT is deprecated and never mapped to NAT64.</p>
+      {% if service_policy_supported.NAT_NAT44_PAT %}<form method="post" action="{% url 'core:device_builder_phase12_add' change.change_id intent.pk 'nat_rule' %}" class="collection-form">{% csrf_token %}<input type="hidden" name="family" value="NAT44"><select class="form-control" name="mode"><option value="PAT">PAT / overload</option><option value="STATEFUL">Stateful NAT44</option></select><button class="btn btn--primary" type="submit">Add NAT Rule</button></form>{% else %}<div class="alert alert--warning">No new NAT rule is selectable for this platform. Advanced NAT families remain NOT_IMPLEMENTED; NAT-PT is DEPRECATED / UNSUPPORTED.</div>{% endif %}
+      {% for rule in phase12.nat_rules %}<div class="address-card"><p><code>{{ rule.id }}</code> · {{ rule.family }} / {{ rule.mode }}</p>
+        <div class="field-row" data-field-row="{{ rule.paths.original_source }}"><div class="field-row__label"><span>Original source prefix</span><span class="badge field-status" data-field-status></span></div><input class="form-control" data-field-path="{{ rule.paths.original_source }}" value="{{ rule.original_source }}"><div class="field-row__message" data-field-message></div></div>
+        <div class="field-row" data-field-row="{{ rule.paths.outside_interface_id }}"><div class="field-row__label"><span>Outside interface</span><span class="badge field-status" data-field-status></span></div><select class="form-control" data-field-path="{{ rule.paths.outside_interface_id }}"><option value="">Select</option>{% for iface in interfaces %}<option value="{{ iface.id }}" {% if iface.id == rule.outside_interface_id %}selected{% endif %}>{{ iface.name|default:iface.id }}</option>{% endfor %}</select><div class="field-row__message" data-field-message></div></div>
+        <form method="post" action="{% url 'core:device_builder_phase12_remove' change.change_id intent.pk 'nat_rule' rule.id %}" class="collection-form collection-form--remove">{% csrf_token %}<label><input type="checkbox" name="confirmation" value="REMOVE" required> Confirm removal</label><button class="btn btn--secondary" type="submit">Remove Rule</button></form>
+      </div>{% empty %}<div class="empty-state">No NAT intent.</div>{% endfor %}
+    </div>
+
+    <div class="module-card" data-phase12-module="services">
+      <div class="module-card__title">Services · DHCP / DHCPv6 / DNS</div>
+      <p><strong>DHCP:</strong> {{ phase12.dhcp.mode }} · <strong>DNS:</strong> {{ phase12.dns.mode }}</p>
+      <p style="color:var(--text-muted);">INHERIT preserves project defaults. NMAS remains primary and R2 secondary. Override does not create a competing local server. VLAN 200 remains static.</p>
+      <form method="post" action="{% url 'core:device_builder_service_mode' change.change_id intent.pk 'dhcp' %}" class="collection-form">{% csrf_token %}<select class="form-control" name="mode"><option value="INHERIT" {% if phase12.dhcp.mode == 'INHERIT' %}selected{% endif %}>INHERIT project DHCP defaults</option>{% if service_policy_supported.DHCP_OVERRIDE %}<option value="OVERRIDE" {% if phase12.dhcp.mode == 'OVERRIDE' %}selected{% endif %}>OVERRIDE (warning: changes inherited assumptions)</option>{% endif %}</select><button class="btn btn--secondary" type="submit">Set DHCP Mode</button></form>
+      {% if service_policy_supported.DHCP_RELAY_IPV4 or service_policy_supported.DHCP_RELAY_IPV6 %}<form method="post" action="{% url 'core:device_builder_phase12_add' change.change_id intent.pk 'dhcp_relay' %}" class="collection-form">{% csrf_token %}<select class="form-control" name="family"><option value="IPV4">DHCPv4 relay</option><option value="IPV6">DHCPv6 relay</option></select><select class="form-control" name="interface_id" required><option value="">Candidate interface</option>{% for iface in interfaces %}<option value="{{ iface.id }}">{{ iface.name|default:iface.id }}</option>{% endfor %}</select><input class="form-control" name="destination" placeholder="Relay destination" required><button class="btn btn--primary" type="submit">Add Relay</button></form>{% endif %}
+      {% for relay in phase12.dhcp.relays_ordered %}<div class="address-card"><p><code>{{ relay.id }}</code> · {{ relay.family }} relay to {{ relay.destination }}</p><form method="post" action="{% url 'core:device_builder_phase12_remove' change.change_id intent.pk 'dhcp_relay' relay.id %}" class="collection-form collection-form--remove">{% csrf_token %}<label><input type="checkbox" name="confirmation" value="REMOVE" required> Confirm relay removal</label><button class="btn btn--secondary" type="submit">Remove Relay</button></form></div>{% endfor %}
+      <form method="post" action="{% url 'core:device_builder_service_mode' change.change_id intent.pk 'dns' %}" class="collection-form">{% csrf_token %}<select class="form-control" name="mode"><option value="INHERIT" {% if phase12.dns.mode == 'INHERIT' %}selected{% endif %}>INHERIT project / host DNS defaults</option>{% if service_policy_supported.DNS_OVERRIDE %}<option value="OVERRIDE" {% if phase12.dns.mode == 'OVERRIDE' %}selected{% endif %}>OVERRIDE resolvers/search domains</option>{% endif %}</select><button class="btn btn--secondary" type="submit">Set DNS Mode</button></form>
+      {% if not service_policy_supported.DNS_OVERRIDE %}<p class="alert alert--warning">Explicit DNS override is NOT_IMPLEMENTED on this platform; authoritative DNS zones are outside the Device Builder catalogue.</p>{% endif %}
+    </div>
+
+    <div class="module-card" data-phase12-module="security">
+      <div class="module-card__title">Security · ACLs</div>
+      <div class="alert alert--warning">Traffic-impact validation has not run. ACL definitions and interface attachments are separate objects.</div>
+      {% if service_policy_supported.ACL_IPV4_STANDARD or service_policy_supported.ACL_IPV4_EXTENDED %}<form method="post" action="{% url 'core:device_builder_phase12_add' change.change_id intent.pk 'acl' %}" class="collection-form">{% csrf_token %}<input class="form-control" name="name" placeholder="ACL name" required><input type="hidden" name="family" value="IPV4"><select class="form-control" name="acl_type"><option value="EXTENDED">IPv4 extended</option><option value="STANDARD">IPv4 standard</option></select><button class="btn btn--primary" type="submit">Define ACL</button></form>{% else %}<div class="alert alert--warning">No ACL family is implemented for this platform.</div>{% endif %}
+      {% for acl in phase12.acls %}<div class="address-card"><p><code>{{ acl.id }}</code> · {{ acl.name }} · {{ acl.family }} {{ acl.acl_type }}</p>
+        {% for ace in acl.entries_ordered %}<div class="field-row" data-field-row="{{ ace.paths.action }}"><div class="field-row__label"><span>ACE {{ ace.sequence }} · <code>{{ ace.id }}</code></span><span class="badge field-status" data-field-status></span></div><select class="form-control" data-field-path="{{ ace.paths.action }}"><option value="PERMIT" {% if ace.action == 'PERMIT' %}selected{% endif %}>Permit</option><option value="DENY" {% if ace.action == 'DENY' %}selected{% endif %}>Deny</option></select><div class="field-row__message" data-field-message></div></div>
+        <div class="field-row" data-field-row="{{ ace.paths.protocol }}"><div class="field-row__label"><span>Protocol</span><span class="badge field-status" data-field-status></span></div><select class="form-control" data-field-path="{{ ace.paths.protocol }}"><option value="IP" {% if ace.protocol == 'IP' %}selected{% endif %}>IP</option><option value="TCP" {% if ace.protocol == 'TCP' %}selected{% endif %}>TCP</option><option value="UDP" {% if ace.protocol == 'UDP' %}selected{% endif %}>UDP</option><option value="ICMP" {% if ace.protocol == 'ICMP' %}selected{% endif %}>ICMP</option></select><div class="field-row__message" data-field-message></div></div>
+        <div class="field-row" data-field-row="{{ ace.paths.source_type }}"><div class="field-row__label"><span>Source match</span><span class="badge field-status" data-field-status></span></div><select class="form-control" data-field-path="{{ ace.paths.source_type }}"><option value="ANY" {% if ace.source_type == 'ANY' %}selected{% endif %}>Any</option><option value="HOST" {% if ace.source_type == 'HOST' %}selected{% endif %}>Host</option><option value="PREFIX" {% if ace.source_type == 'PREFIX' %}selected{% endif %}>Prefix</option></select><div class="field-row__message" data-field-message></div></div>
+        <div class="field-row" data-field-row="{{ ace.paths.source_value }}"><div class="field-row__label"><span>Source host/prefix</span><span class="badge field-status" data-field-status></span></div><input class="form-control" data-field-path="{{ ace.paths.source_value }}" value="{{ ace.source_value }}" placeholder="blank for ANY"><div class="field-row__message" data-field-message></div></div>
+        <div class="field-row" data-field-row="{{ ace.paths.destination_type }}"><div class="field-row__label"><span>Destination match</span><span class="badge field-status" data-field-status></span></div><select class="form-control" data-field-path="{{ ace.paths.destination_type }}"><option value="ANY" {% if ace.destination_type == 'ANY' %}selected{% endif %}>Any</option><option value="HOST" {% if ace.destination_type == 'HOST' %}selected{% endif %}>Host</option><option value="PREFIX" {% if ace.destination_type == 'PREFIX' %}selected{% endif %}>Prefix</option></select><div class="field-row__message" data-field-message></div></div>
+        <div class="field-row" data-field-row="{{ ace.paths.destination_value }}"><div class="field-row__label"><span>Destination host/prefix</span><span class="badge field-status" data-field-status></span></div><input class="form-control" data-field-path="{{ ace.paths.destination_value }}" value="{{ ace.destination_value }}" placeholder="blank for ANY"><div class="field-row__message" data-field-message></div></div>
+        {% if mode == 'advanced' %}<div class="field-row" data-field-row="{{ ace.paths.source_port }}"><div class="field-row__label"><span>Source port / range</span><span class="badge field-status" data-field-status></span></div><input class="form-control" data-field-path="{{ ace.paths.source_port }}" value="{{ ace.source_port }}" placeholder="443 or 1024-65535"><div class="field-row__message" data-field-message></div></div><div class="field-row" data-field-row="{{ ace.paths.destination_port }}"><div class="field-row__label"><span>Destination port / range</span><span class="badge field-status" data-field-status></span></div><input class="form-control" data-field-path="{{ ace.paths.destination_port }}" value="{{ ace.destination_port }}" placeholder="443 or 8000-8999"><div class="field-row__message" data-field-message></div></div>{% endif %}
+        <form method="post" action="{% url 'core:device_builder_phase12_remove' change.change_id intent.pk 'ace' ace.id %}" class="collection-form collection-form--remove">{% csrf_token %}<input type="hidden" name="parent_id" value="{{ acl.id }}"><label><input type="checkbox" name="confirmation" value="REMOVE" required> Confirm ACE removal</label><button class="btn btn--secondary" type="submit">Remove ACE</button></form>
+        {% endfor %}
+        <form method="post" action="{% url 'core:device_builder_phase12_add' change.change_id intent.pk 'ace' %}" class="collection-form">{% csrf_token %}<input type="hidden" name="parent_id" value="{{ acl.id }}"><select class="form-control" name="action"><option value="PERMIT">Permit</option><option value="DENY">Deny</option></select><select class="form-control" name="protocol"><option value="IP">IP</option><option value="TCP">TCP</option><option value="UDP">UDP</option><option value="ICMP">ICMP</option></select><button class="btn btn--primary" type="submit">Add ACE</button></form>
+        <form method="post" action="{% url 'core:device_builder_phase12_remove' change.change_id intent.pk 'acl' acl.id %}" class="collection-form collection-form--remove">{% csrf_token %}<label><input type="checkbox" name="confirmation" value="REMOVE" required> Confirm ACL definition removal</label><button class="btn btn--secondary" type="submit">Remove ACL</button></form>
+      </div>{% empty %}<div class="empty-state">No ACL definitions.</div>{% endfor %}
+      {% if phase12.acls and service_policy_supported.ACL_ATTACH_IPV4 %}<form method="post" action="{% url 'core:device_builder_phase12_add' change.change_id intent.pk 'acl_attachment' %}" class="collection-form">{% csrf_token %}<select class="form-control" name="acl_id">{% for acl in phase12.acls %}<option value="{{ acl.id }}">{{ acl.name }}</option>{% endfor %}</select><select class="form-control" name="interface_id">{% for iface in interfaces %}<option value="{{ iface.id }}">{{ iface.name|default:iface.id }}</option>{% endfor %}</select><select class="form-control" name="direction"><option value="IN">IN</option><option value="OUT">OUT</option></select><button class="btn btn--primary" type="submit">Attach ACL</button></form>{% endif %}
+      {% for attachment in phase12.acl_attachments %}<div class="address-card"><p><code>{{ attachment.id }}</code> definition <code>{{ attachment.acl_id }}</code> attached {{ attachment.direction }} on <code>{{ attachment.interface_id }}</code></p><form method="post" action="{% url 'core:device_builder_phase12_remove' change.change_id intent.pk 'acl_attachment' attachment.id %}" class="collection-form collection-form--remove">{% csrf_token %}<label><input type="checkbox" name="confirmation" value="REMOVE" required> Confirm attachment removal</label><button class="btn btn--secondary" type="submit">Remove Attachment</button></form></div>{% endfor %}
+    </div>
+
+    <div class="module-card" data-phase12-module="policy">
+      <div class="module-card__title">Policy · PBR</div>
+      <p style="color:var(--text-muted);">Structured definition/attachment vocabulary exists, but no platform has evidence-backed PBR rendering in this repository. New PBR objects are therefore not selectable. Next-hop reachability and loop-risk checks belong to Phase 13.</p>
+      {% for policy in phase12.pbr_policies %}<p><code>{{ policy.id }}</code> · {{ policy.name }} · preserved incompatible intent</p>{% empty %}<div class="empty-state">No PBR intent.</div>{% endfor %}
+    </div>
+
+    <div class="module-card" data-management-module="vrf">
+      <div class="module-card__title">Management VRF</div>
+      <p style="color:var(--text-muted);">A routed management VRF: definition, layer-3 interface binding (the interface's addresses are re-applied after the move), VRF routes and management services. Rendering alone is not support: execution stays refused until live evidence is recorded for this platform.</p>
+      <table class="data-table"><thead><tr><th>Feature</th><th>Render</th><th>Validate</th><th>Import</th><th>Execute</th><th>Live</th></tr></thead><tbody>
+        {% for feature, row in management_capability.items %}<tr><td>{{ feature }}</td><td>{{ row.render }}</td><td>{{ row.validate }}</td><td>{{ row.import }}</td><td>{{ row.execute }}</td><td>{{ row.live_verified }}</td></tr>{% endfor %}
+      </tbody></table>
+      <form method="post" action="{% url 'core:device_builder_management_add' change.change_id intent.pk 'vrf' %}" class="collection-form">{% csrf_token %}
+        <input class="form-control" name="name" placeholder="VRF name (e.g. MGMT)" aria-label="Management VRF name" maxlength="32" required>
+        <input class="form-control" name="description" placeholder="Description (optional)" aria-label="Management VRF description" maxlength="80">
+        <button class="btn btn--primary" type="submit">Add Management VRF</button>
+      </form>
+      {% for vrf_id, row in management.vrfs.items %}
+      <div class="address-card" data-management-vrf="{{ vrf_id }}"><p><code>{{ vrf_id }}</code> · <strong>{{ row.name }}</strong>{% if row.description %} · {{ row.description }}{% endif %}</p>
+        <form method="post" action="{% url 'core:device_builder_management_add' change.change_id intent.pk 'binding' %}" class="collection-form">{% csrf_token %}<input type="hidden" name="vrf_id" value="{{ vrf_id }}">
+          <select class="form-control" name="interface_id" aria-label="Interface to bind" required><option value="">Layer-3 interface</option>{% for iface in interfaces %}<option value="{{ iface.id }}">{{ iface.name|default:iface.id }}</option>{% endfor %}</select>
+          <button class="btn btn--primary" type="submit">Bind interface</button></form>
+        <form method="post" action="{% url 'core:device_builder_management_add' change.change_id intent.pk 'route' %}" class="collection-form">{% csrf_token %}<input type="hidden" name="vrf_id" value="{{ vrf_id }}">
+          <input class="form-control" name="destination" placeholder="Destination (0.0.0.0/0)" aria-label="VRF route destination" required>
+          <input class="form-control" name="next_hop" placeholder="Next hop" aria-label="VRF route next hop" required>
+          <button class="btn btn--primary" type="submit">Add VRF route</button></form>
+        <form method="post" action="{% url 'core:device_builder_management_add' change.change_id intent.pk 'service' %}" class="collection-form">{% csrf_token %}<input type="hidden" name="vrf_id" value="{{ vrf_id }}">
+          <select class="form-control" name="service" aria-label="Management service">{% for svc in management_services %}<option value="{{ svc }}">{{ svc }}</option>{% endfor %}</select>
+          <input class="form-control" name="host" placeholder="Host ({{ management_host_services|join:' / ' }} only)" aria-label="Service host">
+          <select class="form-control" name="source_interface_id" aria-label="Source interface"><option value="">Source interface (optional)</option>{% for iface in interfaces %}<option value="{{ iface.id }}">{{ iface.name|default:iface.id }}</option>{% endfor %}</select>
+          <button class="btn btn--primary" type="submit">Add service</button></form>
+        <form method="post" action="{% url 'core:device_builder_management_remove' change.change_id intent.pk 'vrf' vrf_id %}" class="collection-form collection-form--remove">{% csrf_token %}<button class="btn" type="submit">Remove VRF (only when unused)</button></form>
+      </div>{% empty %}<div class="empty-state">No management VRF intent.</div>{% endfor %}
+      {% for object_id, row in management.bindings.items %}<div class="address-card"><p><code>{{ object_id }}</code> · binding to {{ row.vrf_id }} on <code>{{ row.interface_id }}</code></p><form method="post" action="{% url 'core:device_builder_management_remove' change.change_id intent.pk 'binding' object_id %}" class="collection-form collection-form--remove">{% csrf_token %}<button class="btn" type="submit">Remove</button></form></div>{% endfor %}
+      {% for object_id, row in management.routes.items %}<div class="address-card"><p><code>{{ object_id }}</code> · route {{ row.destination }} via {{ row.next_hop }} ({{ row.vrf_id }})</p><form method="post" action="{% url 'core:device_builder_management_remove' change.change_id intent.pk 'route' object_id %}" class="collection-form collection-form--remove">{% csrf_token %}<button class="btn" type="submit">Remove</button></form></div>{% endfor %}
+      {% for object_id, row in management.services.items %}<div class="address-card"><p><code>{{ object_id }}</code> · {{ row.service }}{% if row.host %} → {{ row.host }}{% endif %} ({{ row.vrf_id }})</p><form method="post" action="{% url 'core:device_builder_management_remove' change.change_id intent.pk 'service' object_id %}" class="collection-form collection-form--remove">{% csrf_token %}<button class="btn" type="submit">Remove</button></form></div>{% endfor %}
+    </div>
+
+    {% for locked in locked_modules %}
+    <div class="module-card module-card--locked">
+      <div class="module-card__title">{{ locked }}</div>
+      <p style="color:var(--text-muted); margin:0;">Available in a later phase.</p>
+    </div>
+    {% endfor %}
+  </div>
+
+  <div class="device-builder-editor__right">
+    <div class="card">
+      <div class="candidate-panel__header">
+        <h3 style="margin:0;">Candidate Configuration</h3>
+        <div class="candidate-panel__actions">
+          <button type="button" class="btn btn--secondary" data-copy-candidate>Copy Candidate</button>
+          <a class="btn btn--secondary" href="{{ download_url }}">Download Candidate</a>
+          <a class="btn btn--secondary" href="{{ diff_url }}">Diff (Accepted vs Draft)</a>
+        </div>
+      </div>
+      <p style="color:var(--text-muted); font-size:0.85rem;">Not deployed. May contain uncommitted draft values until each field is committed with Enter.</p>
+      <pre class="code-panel" data-candidate-preview>{{ bootstrap.candidate.text }}</pre>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block extra_scripts %}
+<script src="{% static 'core/js/device_builder.js' %}"></script>
+{% endblock %}

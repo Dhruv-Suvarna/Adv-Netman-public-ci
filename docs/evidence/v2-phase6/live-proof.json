@@ -1,0 +1,756 @@
+{
+  "started_at": "2026-10-06T11:37:40.403Z",
+  "config": {
+    "connectivity_interval": 5.0,
+    "counters_interval": 10.0,
+    "services_interval": 15.0,
+    "automation_interval": 20.0,
+    "nsot_interval": 120.0,
+    "address_refresh_interval": 60.0
+  },
+  "collectors_running": {
+    "threads": [
+      "console-automation",
+      "console-connectivity",
+      "console-counters",
+      "console-counters_0",
+      "console-counters_1",
+      "console-counters_2",
+      "console-counters_3",
+      "console-counters_4",
+      "console-counters_5",
+      "console-counters_6",
+      "console-counters_7",
+      "console-counters_8",
+      "console-nsot",
+      "console-probe_0",
+      "console-probe_1",
+      "console-probe_2",
+      "console-probe_3",
+      "console-probe_4",
+      "console-probe_5",
+      "console-probe_6",
+      "console-services",
+      "console-session-log",
+      "console-watchdog"
+    ],
+    "alive": [
+      "automation",
+      "connectivity",
+      "counters",
+      "nsot",
+      "services"
+    ],
+    "cycles": {
+      "connectivity": 5,
+      "services": 2,
+      "nsot": 1,
+      "automation": 2,
+      "counters": 3
+    }
+  },
+  "views": {
+    "connectivity": {
+      "title": "Continuous Connectivity",
+      "renders": 36,
+      "rows": 7,
+      "summary": "7 / 7 required paths UP     one ICMP echo per path every 5 s"
+    },
+    "services": {
+      "title": "NMAS / Telemetry",
+      "renders": 3,
+      "rows": 12,
+      "summary": "12 / 12 components UP"
+    },
+    "nsot": {
+      "title": "NSOT",
+      "renders": 3,
+      "rows": 11,
+      "summary": "NetBox (read-only) refreshed 11:37:40Z: 11 devices, 41 interfaces, 83 addresses, 33 prefixes, 9 VLANs     lab containers running: 15 / 15"
+    },
+    "automation": {
+      "title": "Automation",
+      "renders": 3,
+      "rows": 3,
+      "summary": "NMAS automation records (read-only database, mode=ro) refreshed 11:38:00Z     current Golden: none"
+    },
+    "counters": {
+      "title": "Interface Counters",
+      "renders": 3,
+      "rows": 84,
+      "summary": "9 / 9 managed devices read     every 10 s; rate = counter delta / time delta"
+    }
+  },
+  "hidden_collection": {
+    "connectivity_sample_counts": {
+      "before": {
+        "H1/IPV4": 8,
+        "H1/IPV6": 8,
+        "H2/IPV4": 8,
+        "H2/IPV6": 8,
+        "H3/IPV4": 8,
+        "H3/IPV6": 8,
+        "H4/IPV6": 8
+      },
+      "after_nsot_visible": {
+        "H1/IPV4": 13,
+        "H1/IPV6": 13,
+        "H2/IPV4": 13,
+        "H2/IPV6": 13,
+        "H3/IPV4": 13,
+        "H3/IPV6": 13,
+        "H4/IPV6": 13
+      },
+      "after_counters_visible": {
+        "H1/IPV4": 18,
+        "H1/IPV6": 18,
+        "H2/IPV4": 18,
+        "H2/IPV6": 18,
+        "H3/IPV4": 18,
+        "H3/IPV6": 18,
+        "H4/IPV6": 18
+      }
+    },
+    "hidden_for_seconds": 50.0,
+    "grew_while_hidden": true,
+    "largest_gap_between_samples_seconds": 5.491,
+    "probe_interval_seconds": 5.0,
+    "other_collectors_cycles": {
+      "connectivity": 18,
+      "services": 6,
+      "nsot": 1,
+      "automation": 5,
+      "counters": 9
+    },
+    "restarts": {
+      "connectivity": 0,
+      "services": 0,
+      "nsot": 0,
+      "automation": 0,
+      "counters": 0
+    }
+  },
+  "connectivity": [
+    {
+      "row": "H1/IPV4",
+      "destination": "H2",
+      "source_address": "192.168.10.102",
+      "target_address": "192.168.20.101",
+      "state": "UP",
+      "samples": 18,
+      "failures": 0,
+      "last_rtt_ms": 3.95,
+      "last_sample": "2026-10-06T11:39:05.618Z"
+    },
+    {
+      "row": "H1/IPV6",
+      "destination": "H2",
+      "source_address": "2001:db8:10::2001",
+      "target_address": "2001:db8:20::2001",
+      "state": "UP",
+      "samples": 18,
+      "failures": 0,
+      "last_rtt_ms": 4.22,
+      "last_sample": "2026-10-06T11:39:05.618Z"
+    },
+    {
+      "row": "H2/IPV4",
+      "destination": "H3",
+      "source_address": "192.168.20.101",
+      "target_address": "192.168.10.103",
+      "state": "UP",
+      "samples": 18,
+      "failures": 0,
+      "last_rtt_ms": 4.88,
+      "last_sample": "2026-10-06T11:39:05.619Z"
+    },
+    {
+      "row": "H2/IPV6",
+      "destination": "H3",
+      "source_address": "2001:db8:20::2001",
+      "target_address": "2001:db8:10::2003",
+      "state": "UP",
+      "samples": 18,
+      "failures": 0,
+      "last_rtt_ms": 3.56,
+      "last_sample": "2026-10-06T11:39:05.619Z"
+    },
+    {
+      "row": "H3/IPV4",
+      "destination": "H1",
+      "source_address": "192.168.10.103",
+      "target_address": "192.168.10.102",
+      "state": "UP",
+      "samples": 18,
+      "failures": 0,
+      "last_rtt_ms": 6.57,
+      "last_sample": "2026-10-06T11:39:05.620Z"
+    },
+    {
+      "row": "H3/IPV6",
+      "destination": "H4",
+      "source_address": "2001:db8:10::2003",
+      "target_address": "2001:db8:30::18e5",
+      "state": "UP",
+      "samples": 18,
+      "failures": 0,
+      "last_rtt_ms": 2.06,
+      "last_sample": "2026-10-06T11:39:05.620Z"
+    },
+    {
+      "row": "H4/IPV6",
+      "destination": "H1",
+      "source_address": "2001:db8:30::18e5",
+      "target_address": "2001:db8:10::2001",
+      "state": "UP",
+      "samples": 18,
+      "failures": 0,
+      "last_rtt_ms": 1.63,
+      "last_sample": "2026-10-06T11:39:05.621Z"
+    }
+  ],
+  "connectivity_expectation": {
+    "rows": [
+      "H1/IPV4",
+      "H1/IPV6",
+      "H2/IPV4",
+      "H2/IPV6",
+      "H3/IPV4",
+      "H3/IPV6",
+      "H4/IPV6"
+    ],
+    "h4_ipv4_row_exists": false
+  },
+  "services": {
+    "nmas-web": {
+      "state": "UP",
+      "evidence": "systemd: active/running; http: HTTP 200"
+    },
+    "netbox": {
+      "state": "UP",
+      "evidence": "container: running/healthy; http: HTTP 200"
+    },
+    "influxdb": {
+      "state": "UP",
+      "evidence": "container: running/healthy; http: HTTP 200"
+    },
+    "grafana": {
+      "state": "UP",
+      "evidence": "container: running/healthy; http: HTTP 200"
+    },
+    "freeradius": {
+      "state": "UP",
+      "evidence": "container: running/healthy"
+    },
+    "privacyidea": {
+      "state": "UP",
+      "evidence": "container: running/healthy; http: HTTP 200"
+    },
+    "traffic-runner": {
+      "state": "UP",
+      "evidence": "systemd: active/running; socket: listening socket present"
+    },
+    "soak-timer": {
+      "state": "UP",
+      "evidence": "last-run: result success, last exit Tue 2026-10-06 05:33:57 MDT; systemd: active/waiting"
+    },
+    "topology": {
+      "state": "UP",
+      "evidence": "systemd: active/running; http: HTTP 200"
+    },
+    "gnmi-collector": {
+      "state": "UP",
+      "evidence": "systemd: active/running"
+    },
+    "syslog-ingest": {
+      "state": "UP",
+      "evidence": "systemd: active/running"
+    },
+    "snmptrapd": {
+      "state": "UP",
+      "evidence": "systemd: active/running"
+    }
+  },
+  "telemetry": {
+    "available": true,
+    "thresholds": {
+      "healthy": 60.0,
+      "stale": 120.0
+    },
+    "backend": "OK",
+    "devices": {
+      "R1": {
+        "managed": true,
+        "freshness": "FRESH",
+        "last_sample": "2026-10-06T11:38:46.562Z",
+        "age_seconds": 9.9
+      },
+      "R2": {
+        "managed": true,
+        "freshness": "FRESH",
+        "last_sample": "2026-10-06T11:38:46.710Z",
+        "age_seconds": 9.8
+      },
+      "R3": {
+        "managed": true,
+        "freshness": "FRESH",
+        "last_sample": "2026-10-06T11:38:46.562Z",
+        "age_seconds": 9.9
+      },
+      "R4": {
+        "managed": true,
+        "freshness": "FRESH",
+        "last_sample": "2026-10-06T11:38:49.524Z",
+        "age_seconds": 7.0
+      },
+      "S1": {
+        "managed": true,
+        "freshness": "FRESH",
+        "last_sample": "2026-10-06T11:38:46.710Z",
+        "age_seconds": 9.8
+      },
+      "S2": {
+        "managed": true,
+        "freshness": "FRESH",
+        "last_sample": "2026-10-06T11:38:46.710Z",
+        "age_seconds": 9.8
+      },
+      "S3": {
+        "managed": true,
+        "freshness": "FRESH",
+        "last_sample": "2026-10-06T11:38:46.562Z",
+        "age_seconds": 9.9
+      },
+      "S4": {
+        "managed": true,
+        "freshness": "FRESH",
+        "last_sample": "2026-10-06T11:38:49.524Z",
+        "age_seconds": 7.0
+      },
+      "mgmt_swt": {
+        "managed": true,
+        "freshness": "FRESH",
+        "last_sample": "2026-10-06T11:38:49.524Z",
+        "age_seconds": 7.0
+      },
+      "R5": {
+        "managed": false,
+        "freshness": "FRESH",
+        "last_sample": "2026-10-06T11:38:46.562Z",
+        "age_seconds": 9.9
+      }
+    }
+  },
+  "nsot": {
+    "available": true,
+    "counts": {
+      "devices": 11,
+      "interfaces": 41,
+      "addresses": 83,
+      "prefixes": 33,
+      "vlans": 9
+    },
+    "lab": {
+      "running": 15,
+      "expected": 15
+    },
+    "devices": [
+      {
+        "name": "R1",
+        "role": "Router",
+        "managed": true,
+        "primary_ip4": "192.168.200.1/24",
+        "primary_ip6": "2001:db8:200::1/64",
+        "interfaces": 5,
+        "addresses": 10
+      },
+      {
+        "name": "R2",
+        "role": "Router",
+        "managed": true,
+        "primary_ip4": "192.168.200.2/24",
+        "primary_ip6": "2001:db8:200::2/64",
+        "interfaces": 5,
+        "addresses": 10
+      },
+      {
+        "name": "R3",
+        "role": "Router",
+        "managed": true,
+        "primary_ip4": "192.168.200.3/24",
+        "primary_ip6": "2001:db8:200::3/64",
+        "interfaces": 5,
+        "addresses": 10
+      },
+      {
+        "name": "R4",
+        "role": "Router",
+        "managed": true,
+        "primary_ip4": "192.168.200.4/24",
+        "primary_ip6": "2001:db8:200::4/64",
+        "interfaces": 5,
+        "addresses": 10
+      },
+      {
+        "name": "R5",
+        "role": "External / Unmanaged",
+        "managed": false,
+        "primary_ip4": "192.168.255.5/32",
+        "primary_ip6": "2001:db8:255::5/128",
+        "interfaces": 4,
+        "addresses": 8
+      },
+      {
+        "name": "S1",
+        "role": "Switch",
+        "managed": true,
+        "primary_ip4": "192.168.200.11/24",
+        "primary_ip6": "2001:db8:200::11/64",
+        "interfaces": 6,
+        "addresses": 10
+      },
+      {
+        "name": "S2",
+        "role": "Switch",
+        "managed": true,
+        "primary_ip4": "192.168.200.12/24",
+        "primary_ip6": "2001:db8:200::12/64",
+        "interfaces": 6,
+        "addresses": 10
+      },
+      {
+        "name": "S3",
+        "role": "Switch",
+        "managed": true,
+        "primary_ip4": "192.168.200.13/24",
+        "primary_ip6": "2001:db8:200::13/64",
+        "interfaces": 1,
+        "addresses": 2
+      },
+      {
+        "name": "S4",
+        "role": "Switch",
+        "managed": true,
+        "primary_ip4": "192.168.200.14/24",
+        "primary_ip6": "2001:db8:200::14/64",
+        "interfaces": 1,
+        "addresses": 2
+      },
+      {
+        "name": "WebServer",
+        "role": "External / Unmanaged",
+        "managed": false,
+        "primary_ip4": "172.30.50.10/32",
+        "primary_ip6": "2001:db8:3050::10/128",
+        "interfaces": 2,
+        "addresses": 4
+      },
+      {
+        "name": "mgmt_swt",
+        "role": "Management Switch",
+        "managed": true,
+        "primary_ip4": "192.168.200.10/24",
+        "primary_ip6": "2001:db8:200::10/64",
+        "interfaces": 1,
+        "addresses": 2
+      }
+    ],
+    "consistency": [
+      {
+        "device": "R1",
+        "management_address": "MATCH",
+        "managed_scope": "MATCH",
+        "runtime": "RUNNING"
+      },
+      {
+        "device": "R2",
+        "management_address": "MATCH",
+        "managed_scope": "MATCH",
+        "runtime": "RUNNING"
+      },
+      {
+        "device": "R3",
+        "management_address": "MATCH",
+        "managed_scope": "MATCH",
+        "runtime": "RUNNING"
+      },
+      {
+        "device": "R4",
+        "management_address": "MATCH",
+        "managed_scope": "MATCH",
+        "runtime": "RUNNING"
+      },
+      {
+        "device": "R5",
+        "management_address": "NO_INVENTORY_ADDRESS",
+        "managed_scope": "MATCH",
+        "runtime": "RUNNING"
+      },
+      {
+        "device": "S1",
+        "management_address": "MATCH",
+        "managed_scope": "MATCH",
+        "runtime": "RUNNING"
+      },
+      {
+        "device": "S2",
+        "management_address": "MATCH",
+        "managed_scope": "MATCH",
+        "runtime": "RUNNING"
+      },
+      {
+        "device": "S3",
+        "management_address": "MATCH",
+        "managed_scope": "MATCH",
+        "runtime": "RUNNING"
+      },
+      {
+        "device": "S4",
+        "management_address": "MATCH",
+        "managed_scope": "MATCH",
+        "runtime": "RUNNING"
+      },
+      {
+        "device": "WebServer",
+        "management_address": "NOT_IN_INVENTORY",
+        "managed_scope": "N/A",
+        "runtime": "RUNNING"
+      },
+      {
+        "device": "mgmt_swt",
+        "management_address": "MATCH",
+        "managed_scope": "MATCH",
+        "runtime": "RUNNING"
+      }
+    ]
+  },
+  "automation": {
+    "available": true,
+    "soaks": [
+      {
+        "soak_id": "SOAK-000001",
+        "state": "RUNNING",
+        "result": "",
+        "terminal_reason": "",
+        "bundle_id": "BND-PROB-000001",
+        "root_bundle": "BND-DEP-000001",
+        "change_id": "CHG-20261006-0002",
+        "devices": [
+          "R1"
+        ],
+        "started_by": "dhruv",
+        "started_at": "2026-10-06T10:56:22.446Z",
+        "due_at": "2026-10-13T10:56:22.446Z",
+        "finished_at": "",
+        "elapsed_seconds": 2558.184408,
+        "remaining_seconds": 602241.815592,
+        "duration_seconds": 604800.0,
+        "percent_elapsed": 0.42,
+        "policy": {
+          "duration_seconds": 604800,
+          "sample_interval_seconds": 900,
+          "min_coverage_percent": 90,
+          "max_gap_seconds": 7200
+        },
+        "collector": {
+          "state": "FRESH",
+          "last_sample_at": "2026-10-06T11:28:55.220Z",
+          "age_seconds": 605.410408,
+          "expected_every_seconds": 900
+        },
+        "latest_sample": {
+          "bucket": 2,
+          "sampled_at": "2026-10-06T11:28:55.220Z",
+          "result": "PASS",
+          "expected_state": "PASS",
+          "device_health": "HEALTHY",
+          "telemetry_freshness": "FRESH",
+          "monitoring_state": "OK",
+          "integrity_ok": true,
+          "interference": false,
+          "config_drift": false
+        },
+        "sample_counts": {
+          "PASS": 3
+        },
+        "samples": 3,
+        "drift": [
+          {
+            "device": "R1",
+            "state": "MATCH",
+            "baseline": "9cd6f5a17cf1",
+            "current": "9cd6f5a17cf1",
+            "changed_sections": []
+          }
+        ],
+        "drift_state": "MATCH",
+        "health": "HEALTHY",
+        "eligibility": {
+          "code": "IN_PROBATION",
+          "text": "In probation. Not eligible for Golden before the full policy period has elapsed."
+        }
+      }
+    ],
+    "counts": {
+      "changes": 4,
+      "executions": 3,
+      "validations": 3,
+      "config_validations": 5,
+      "checks": 4,
+      "bundles": 2,
+      "traffic": 1,
+      "provisioning": 0,
+      "rotation_runs": 1,
+      "rotation_policy": 1,
+      "soaks": 1
+    },
+    "golden": null
+  },
+  "counters": {
+    "devices": {
+      "R1": 9,
+      "R2": 8,
+      "R3": 10,
+      "R4": 10,
+      "S1": 12,
+      "S2": 12,
+      "S3": 6,
+      "S4": 6,
+      "mgmt_swt": 11
+    },
+    "device_status": {
+      "R1": true,
+      "R2": true,
+      "R3": true,
+      "R4": true,
+      "S1": true,
+      "S2": true,
+      "S3": true,
+      "S4": true,
+      "mgmt_swt": true
+    },
+    "interfaces": 84,
+    "with_rates": 60,
+    "counters_that_changed_between_two_reads": 58,
+    "busiest_rx": [
+      {
+        "device": "S1",
+        "interface": "Ethernet2",
+        "rx_bps": 1664.1,
+        "rx_bytes": 390322725
+      },
+      {
+        "device": "R3",
+        "interface": "eth3",
+        "rx_bps": 1161.1,
+        "rx_bytes": 455609671
+      },
+      {
+        "device": "R1",
+        "interface": "Ethernet1",
+        "rx_bps": 1089.3,
+        "rx_bytes": 465268778
+      },
+      {
+        "device": "R2",
+        "interface": "Ethernet1",
+        "rx_bps": 1088.3,
+        "rx_bytes": 462619108
+      },
+      {
+        "device": "R3",
+        "interface": "Vlan200",
+        "rx_bps": 1049.0,
+        "rx_bytes": 367583032
+      }
+    ]
+  },
+  "cancel_close": {
+    "buttons": [
+      "Save",
+      "Don't Save",
+      "Cancel"
+    ],
+    "destination": "/tmp/claude-1001/-home-student-Scripts-clab-dualstack-lab-v2-phase6/40e4592c-b18f-412d-a79e-8389731c2680/scratchpad/sessions/nmas-challenge-console-20261006T113740Z-e9d594c29f1b.jsonl",
+    "action": "cancel",
+    "window_still_open": true,
+    "runtime_running": true,
+    "collectors_advanced_after_cancel": true,
+    "cycles_before": {
+      "connectivity": 22,
+      "services": 8,
+      "nsot": 1,
+      "automation": 6,
+      "counters": 11
+    },
+    "cycles_after": {
+      "connectivity": 25,
+      "services": 9,
+      "nsot": 1,
+      "automation": 7,
+      "counters": 13
+    }
+  },
+  "save_close": {
+    "buttons": [
+      "Save",
+      "Don't Save",
+      "Cancel"
+    ],
+    "destination": "/tmp/claude-1001/-home-student-Scripts-clab-dualstack-lab-v2-phase6/40e4592c-b18f-412d-a79e-8389731c2680/scratchpad/sessions/nmas-challenge-console-20261006T113740Z-e9d594c29f1b.jsonl",
+    "action": "save",
+    "saved_path": "/tmp/claude-1001/-home-student-Scripts-clab-dualstack-lab-v2-phase6/40e4592c-b18f-412d-a79e-8389731c2680/scratchpad/sessions/nmas-challenge-console-20261006T113740Z-e9d594c29f1b.jsonl",
+    "window_closed": true,
+    "leftover_workers": [],
+    "threads_after": [],
+    "file_mode": "0o600",
+    "bytes": 216449,
+    "records": 446,
+    "first_last": [
+      "session.meta",
+      "app.stop"
+    ],
+    "kinds": {
+      "app.start": 1,
+      "app.stop": 1,
+      "automation.snapshot": 7,
+      "collector.start": 5,
+      "collector.stop": 5,
+      "connectivity.addresses": 4,
+      "connectivity.plan": 1,
+      "connectivity.sample": 175,
+      "counters.change": 8,
+      "counters.plan": 1,
+      "counters.sample": 117,
+      "nsot.snapshot": 2,
+      "service.sample": 108,
+      "session.meta": 1,
+      "session.summary": 1,
+      "telemetry.sample": 9
+    },
+    "collectors_in_log": [
+      "app",
+      "automation",
+      "connectivity",
+      "counters",
+      "nsot",
+      "services"
+    ]
+  },
+  "dont_save_close": {
+    "buttons": [
+      "Save",
+      "Don't Save",
+      "Cancel"
+    ],
+    "destination": "/tmp/claude-1001/-home-student-Scripts-clab-dualstack-lab-v2-phase6/40e4592c-b18f-412d-a79e-8389731c2680/scratchpad/sessions/nmas-challenge-console-20261006T113942Z-547777ac3c62.jsonl",
+    "action": "discard",
+    "spool_existed_while_running": true,
+    "spool_exists_after": false,
+    "window_closed": true,
+    "leftover_workers": [],
+    "threads_after": [],
+    "saved_path": null
+  },
+  "finished_at": "2026-10-06T11:39:55.176Z"
+}

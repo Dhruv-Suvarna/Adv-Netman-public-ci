@@ -1,0 +1,6 @@
+# loopback interface
+# interface: {{ name }}
+# description: {{ description }}
+ip link show dev {{ accepted_name }} >/dev/null 2>&1 || ip link add {{ accepted_name }} type dummy
+ip link set dev {{ accepted_name }} mtu {{ mtu }}
+ip link set dev {{ accepted_name }} up

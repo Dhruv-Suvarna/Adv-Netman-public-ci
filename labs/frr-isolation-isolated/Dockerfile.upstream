@@ -1,0 +1,10 @@
+# One image for every node of the disposable FRR isolation fixture (labs/frr-isolation-isolated/fixture.sh).
+# Base: the production R4 FRR build (8.4.4-1.1ubuntu6.7 on Ubuntu 24.04); plus the exact nftables build R4 runs (1.0.9-1ubuntu0.1),
+# ISC dhcrelay (the relay the upstream needs), and the tools the other fixture roles use (ISC dhcpd + python3 HTTP for the
+# bootstrap service, OpenSSH for NMAS's session, dhclient / netcat / ping for the probe and the production host).
+FROM clab-raw-verifier-frr:8.4.4-1.1ubuntu6.7
+RUN apt-get update -qq \
+ && DEBIAN_FRONTEND=noninteractive apt-get install -y -qq --no-install-recommends nftables=1.0.9-1ubuntu0.1 isc-dhcp-relay iproute2 \
+      iputils-ping ethtool procps isc-dhcp-server isc-dhcp-client python3 openssh-server openssh-client netcat-openbsd bridge-utils \
+ && rm -rf /var/lib/apt/lists/*
+LABEL nmas-fixture=frr-isolation

@@ -1,0 +1,182 @@
+{
+ "04_quiesced_traffic_permits_progression": {
+  "ok": true,
+  "steps": [
+   {
+    "family": "IPV6",
+    "direction": "NORTHBOUND",
+    "mechanism": "ISIS_ACCESS_METRIC_STEER",
+    "workloads": []
+   }
+  ],
+  "note": "all hosts quiet; northbound READY (sandbox input), southbound NOT_READY: only the northbound cell is drained"
+ },
+ "05_drain_syntax_readback_traffic_moved_zero_loss": {
+  "ok": true,
+  "entry_outcome": "SUCCEEDED",
+  "applied": [
+   "S1-shield-install-drain",
+   "S1-uplink-metric-drain",
+   "S1-shield-remove-drain"
+  ],
+  "probes_lost_in_run": 0,
+  "probe_totals_entry": {
+   "answered": 121086,
+   "lost": 0,
+   "flows": 14
+  },
+  "proofs": [
+   {
+    "family": "IPV6",
+    "direction": "NORTHBOUND",
+    "moved": true,
+    "probes_lost": 0,
+    "alternate_healthy": true,
+    "detail": ""
+   }
+  ],
+  "after_paths": {
+   "h1-v4-north": "S1 > R1 > R3|R4 > R5",
+   "h1-v4-south": "R5 > R3 > R1|R2 > S1|S2",
+   "h1-v6-north": "S1 > S2 > R2 > R3|R4 > R5",
+   "h1-v6-south": "R5 > R3 > R1|R2 > S1|S2",
+   "h2-v4-north": "S1 > R1 > R3|R4 > R5",
+   "h2-v4-south": "R5 > R3 > R1|R2 > S1|S2",
+   "h2-v6-north": "S1 > S2 > R2 > R3|R4 > R5",
+   "h2-v6-south": "R5 > R3 > R1|R2 > S1|S2",
+   "h3-v4-north": "S2 > R2 > R3|R4 > R5",
+   "h3-v4-south": "R5 > R3 > R1|R2 > S1|S2",
+   "h3-v6-north": "S2 > R2 > R3|R4 > R5",
+   "h3-v6-south": "R5 > R3 > R1|R2 > S1|S2",
+   "h4-v6-north": "S2 > R2 > R3|R4 > R5",
+   "h4-v6-south": "R5 > R3 > R1|R2 > S1|S2"
+  },
+  "persistence": {
+   "S1": "VERIFIED"
+  },
+  "s1_startup_equals_running_drained": true,
+  "router_and_cores_untouched": true
+ },
+ "06_successful_restore_exact_baseline": {
+  "ok": true,
+  "state_after_restore": "RESTORED",
+  "restore_outcome": "SUCCEEDED",
+  "probes_lost_in_restore": 0,
+  "probe_totals_restore": {
+   "answered": 132607,
+   "lost": 0,
+   "flows": 14
+  },
+  "verification": [],
+  "baseline_restored": true,
+  "chain_ok": true,
+  "end_running_equals_startup": {
+   "R1": true,
+   "R2": true,
+   "S1": true,
+   "S2": true
+  }
+ },
+ "07_entry_failure_compensated_newest_first": {
+  "ok": true,
+  "state": "ENTRY_ABORTED_RESTORED",
+  "failure": {
+   "code": "INTERNAL_ERROR",
+   "detail": "Injected",
+   "operation": ""
+  },
+  "compensation": [
+   {
+    "operation": "S1-uplink-metric-drain",
+    "device": "S1",
+    "state": "MAINTENANCE",
+    "status": "COMPENSATED",
+    "error": ""
+   },
+   {
+    "operation": "S1-shield-install-drain",
+    "device": "S1",
+    "state": "TEMPORARY",
+    "status": "COMPENSATED",
+    "error": ""
+   }
+  ],
+  "probes_lost_in_run": 0,
+  "baseline_restored": true,
+  "chain_ok": true
+ },
+ "08_restore_failure_escalates": {
+  "ok": true,
+  "failed_state": "RESTORE_FAILED_ESCALATED",
+  "failed_findings": [
+   {
+    "code": "PRECHECK_FAILED",
+    "family": "",
+    "direction": "",
+    "traffic_class": "",
+    "workloads": [],
+    "detail": "S2 is unchanged since the maintenance became active (or, for an aborted entry, since the pre-state was captured): running configuration differs"
+   }
+  ],
+  "drained_state_kept": [
+   "isis metric 1000"
+  ],
+  "locks_after_failure": [],
+  "entry_on_intersecting_device": [],
+  "retried_state": "RESTORED",
+  "baseline_restored": true,
+  "chain_ok": true
+ },
+ "14_deadline_restore": {
+  "ok": true,
+  "tick": [
+   {
+    "record": "MNT-000005",
+    "item": "DEADLINE",
+    "state": "RESTORED",
+    "outcome": "DONE",
+    "escalated": false
+   }
+  ],
+  "state": "RESTORED",
+  "trigger": "DEADLINE",
+  "deadline_at": "2026-10-17 23:59:30.219789+00:00",
+  "baseline_restored": true,
+  "chain_ok": true
+ },
+ "13_worker_retry_idempotent": {
+  "ok": true,
+  "second_queue": "RECORD_BUSY",
+  "concurrent_workers": [
+   [
+    "[{\"record\": \"MNT-000006\", \"item\": \"ENTER\", \"state\": \"ACTIVE\", \"outcome\": \"DONE\", \"escalated\": false}]"
+   ],
+   [
+    "[]"
+   ]
+  ],
+  "entry_runs": 1,
+  "state_after_workers": "ACTIVE",
+  "tick_again": [],
+  "restore_tick": [
+   {
+    "record": "MNT-000006",
+    "item": "RESTORE",
+    "state": "RESTORED",
+    "outcome": "DONE",
+    "escalated": false
+   }
+  ],
+  "idle_tick": [],
+  "final": "RESTORED",
+  "baseline_restored": true
+ },
+ "11b": {
+  "ok": false,
+  "crashed": "ipts/clab_dualstack_lab-v2-maintenance-mode/docs/evidence/v2-maintenance-mode/sandbox/run.py\", line 581, in s11b_crash_recovery\n    row, _rt = approved(\"R1\", NORTH_READY)\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/student/Scripts/clab_dualstack_lab-v2-maintenance-mode/docs/evidence/v2-maintenance-mode/sandbox/run.py\", line 241, in approved\n    row, rt = planned(device, states)\n              ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/student/Scripts/clab_dualstack_lab-v2-maintenance-mode/docs/evidence/v2-maintenance-mode/sandbox/run.py\", line 235, in planned\n    row = service.request(device, \"sandbox-operator\", \"sandbox scenario\", timedelta(hours=1), now=now(), runtime=rt)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/student/Scripts/clab_dualstack_lab-v2-maintenance-mode/web/core/services/maintenance_mode/service.py\", line 260, in request\n    row = store.save(lifecycle.request(device, operator, reason, duration, at=now, existing=existing))\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/student/Scripts/clab_dualstack_lab-v2-maintenance-mode/web/core/services/maintenance_mode/lifecycle.py\", line 179, in request\n    raise model.MaintenanceError(\"MAINTENANCE_ALREADY_OPEN\", f\"{device} is {open_ones[0].state}\")\ncore.services.maintenance_mode.model.MaintenanceError: MAINTENANCE_ALREADY_OPEN: R1 is RESTORE_FAILED_ESCALATED\n"
+ },
+ "05b": {
+  "ok": false,
+  "crashed": "ile \"/home/student/Scripts/clab_dualstack_lab-v2-maintenance-mode/docs/evidence/v2-maintenance-mode/sandbox/run.py\", line 407, in cycle\n    row, rt = approved(device, states)\n              ^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/student/Scripts/clab_dualstack_lab-v2-maintenance-mode/docs/evidence/v2-maintenance-mode/sandbox/run.py\", line 241, in approved\n    row, rt = planned(device, states)\n              ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/student/Scripts/clab_dualstack_lab-v2-maintenance-mode/docs/evidence/v2-maintenance-mode/sandbox/run.py\", line 235, in planned\n    row = service.request(device, \"sandbox-operator\", \"sandbox scenario\", timedelta(hours=1), now=now(), runtime=rt)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/student/Scripts/clab_dualstack_lab-v2-maintenance-mode/web/core/services/maintenance_mode/service.py\", line 260, in request\n    row = store.save(lifecycle.request(device, operator, reason, duration, at=now, existing=existing))\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/student/Scripts/clab_dualstack_lab-v2-maintenance-mode/web/core/services/maintenance_mode/lifecycle.py\", line 179, in request\n    raise model.MaintenanceError(\"MAINTENANCE_ALREADY_OPEN\", f\"{device} is {open_ones[0].state}\")\ncore.services.maintenance_mode.model.MaintenanceError: MAINTENANCE_ALREADY_OPEN: R1 is RESTORE_FAILED_ESCALATED\n"
+ }
+}

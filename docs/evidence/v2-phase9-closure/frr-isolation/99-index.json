@@ -1,0 +1,38 @@
+{
+  "files": [
+    "00-prepare.json",
+    "05-transport.json",
+    "10-baseline-no-isolation.json",
+    "20-plan-blocked-while-routes-leave-the-port.json",
+    "30-isolate-apply.json",
+    "40-verify-traffic-matrix.json",
+    "50-release-fail-restored.json",
+    "60-release-admitted.json",
+    "70-fault-compensated.json",
+    "80-uncertain.json",
+    "90-drift.json"
+  ],
+  "policies": [
+    {
+      "id": 1,
+      "state": "RELEASED",
+      "upstream_device": "UP4",
+      "upstream_interface": "eth4",
+      "upstream_platform": "ubuntu_frr"
+    },
+    {
+      "id": 2,
+      "state": "UNCERTAIN",
+      "upstream_device": "UP4",
+      "upstream_interface": "eth4",
+      "upstream_platform": "ubuntu_frr"
+    },
+    {
+      "id": 3,
+      "state": "DRIFTED",
+      "upstream_device": "UP4",
+      "upstream_interface": "eth5",
+      "upstream_platform": "ubuntu_frr"
+    }
+  ]
+}

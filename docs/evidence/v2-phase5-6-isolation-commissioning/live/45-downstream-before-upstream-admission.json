@@ -1,0 +1,50 @@
+{
+  "attachment_before_upstream_admitted": [
+    "UPSTREAM_NOT_TRUSTED"
+  ],
+  "cycle_refused": [
+    "COMMISSIONING_DEPENDENCY_CYCLE"
+  ],
+  "declared_dependency": {
+    "codes": [],
+    "ok": true
+  },
+  "graph": {
+    "cycles": [],
+    "edges": [
+      {
+        "device": "NEW2",
+        "kind": "DECLARED",
+        "reason": "the upstream is COMMISSIONING",
+        "satisfied": false,
+        "upstream": "NEW1"
+      }
+    ],
+    "nodes": [
+      {
+        "admission_state": "NOT_ADMITTED",
+        "device_id": "DEV-000002",
+        "lifecycle_state": "COMMISSIONING",
+        "name": "NEW1"
+      },
+      {
+        "admission_state": "NOT_ADMITTED",
+        "device_id": "DEV-000003",
+        "lifecycle_state": "REGISTERED",
+        "name": "NEW2"
+      }
+    ]
+  },
+  "unmet": [
+    {
+      "code": "COMMISSIONING_DEPENDENCY_UNMET",
+      "details": {
+        "kind": "DECLARED",
+        "reason": "the upstream is COMMISSIONING",
+        "upstream": "NEW1"
+      },
+      "message": "A commissioning dependency is not in service and admitted.",
+      "remediation": "Admit the upstream dependency first."
+    }
+  ]
+}

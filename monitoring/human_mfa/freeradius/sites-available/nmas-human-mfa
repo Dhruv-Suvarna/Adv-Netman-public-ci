@@ -1,0 +1,31 @@
+server nmas_human_mfa {
+    listen {
+        type = auth
+        ipaddr = *
+        port = 1812
+    }
+
+    authorize {
+        # Defense in depth: the EOS local-first list must consume the machine
+        # identity.  It is never eligible for the human RADIUS/TOTP path.
+        if (&User-Name == "nmas-automation") {
+            reject
+        }
+        update control {
+            Auth-Type := privacyidea
+        }
+    }
+
+    authenticate {
+        Auth-Type privacyidea {
+            privacyidea
+        }
+    }
+
+    post-auth {
+        update reply {
+            Service-Type := NAS-Prompt-User
+            Arista-AVPair := "shell:roles=network-admin"
+        }
+    }
+}

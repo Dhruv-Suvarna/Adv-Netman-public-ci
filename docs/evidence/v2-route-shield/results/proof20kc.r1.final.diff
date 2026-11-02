@@ -1,0 +1,45 @@
+--- baseline
++++ final
+@@ -41,2 +41,4 @@
+    ipv6 address 2001:db8:110:1::1/64
++   isis enable NMAS
++   isis metric 10
+ !
+@@ -51,2 +53,5 @@
+ !
++ipv6 prefix-list ACCESS6-NORTHBOUND-AGG
++   seq 10 permit 2001:db8::/32
++!
+ ipv6 prefix-list CLIENT-V6
+@@ -59,5 +64,8 @@
+ ipv6 route ::/0 3fff:172:20:20::1
+-ipv6 route 2001:db8:10::/64 2001:db8:110:1::2
+-ipv6 route 2001:db8:20::/64 2001:db8:110:1::2
+-ipv6 route 2001:db8:30::/64 2001:db8:110:1::2
++ipv6 route 2001:db8::/32 2001:db8:100:103::2
++ipv6 route 2001:db8::/32 2001:db8:100:104::2
++ipv6 route 2001:db8::/32 2001:db8:3050::10
++!
++route-map ISIS6-TO-OSPF3 permit 10
++   match ipv6 address prefix-list CLIENT-V6
+ !
+@@ -71,4 +79,11 @@
+ !
+-route-map STATIC6-TO-OSPF permit 10
+-   match ipv6 address prefix-list CLIENT-V6
++route-map STATIC6-TO-ISIS6 permit 10
++   match ipv6 address prefix-list ACCESS6-NORTHBOUND-AGG
++!
++router isis NMAS
++   net 49.0110.1921.6825.5001.00
++   is-type level-2
++   !
++   address-family ipv6 unicast
++      redistribute static route-map STATIC6-TO-ISIS6
+ !
+@@ -82,3 +97,4 @@
+    router-id 192.168.255.1
+-   redistribute static route-map STATIC6-TO-OSPF
++   distance ospf external 130
++   redistribute isis level-2 route-map ISIS6-TO-OSPF3
+ !

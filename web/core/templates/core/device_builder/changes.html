@@ -1,0 +1,38 @@
+{% extends "core/base.html" %}
+{% block title %}Changes · Device Builder{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>Changes</h1>
+  <p><a href="{% url 'core:device_builder' %}">&larr; Back to Device Builder</a></p>
+  <p>Read-only inspection of the Phase 8 Change/Device Intent/Configlet data model. No Push/Deploy action exists here — there is no deployment engine yet. A pending <span class="badge badge--info">Draft</span> may be continued or deleted; every other lifecycle state carries real history and can only be inspected.</p>
+  {% if deleted %}<div class="alert alert--success">Draft {{ deleted }} deleted. No device, NetBox, or Golden state was touched.</div>{% endif %}
+</div>
+<div class="card">
+  <table class="data-table">
+    <thead><tr><th>Change ID</th><th>Title</th><th>Category</th><th>Execution mode</th><th>Lifecycle state</th><th>Created</th><th></th></tr></thead>
+    <tbody>
+    {% for change in changes %}
+      <tr>
+        <td><a href="{% url 'core:device_builder_change_detail' change.change_id %}">{{ change.change_id }}</a></td>
+        <td>{{ change.title }}</td>
+        <td>{{ change.get_category_display }}</td>
+        <td><span class="badge badge--neutral">{{ change.get_execution_mode_display }}</span></td>
+        <td><span class="badge {% if change.lifecycle_state == 'DRAFT' %}badge--warning{% else %}badge--info{% endif %}">{{ change.get_lifecycle_state_display }}</span></td>
+        <td>{{ change.created_at }}</td>
+        <td>
+          {% if change.can_delete_draft %}
+          <form method="post" action="{% url 'core:device_builder_delete_change' change.change_id %}">
+            {% csrf_token %}
+            <label><input type="checkbox" name="confirmation" value="DELETE" required> Confirm</label>
+            <button type="submit" class="btn btn--secondary">Delete Draft</button>
+          </form>
+          {% endif %}
+        </td>
+      </tr>
+    {% empty %}
+      <tr><td colspan="7"><div class="empty-state">No Changes recorded yet.</div></td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

@@ -1,0 +1,274 @@
+{
+ "runtime": "host python3-tk, Tk 8.6.14, real desktop display :0; each mutant applied to a scratch copy of challenge_console/",
+ "mutants": 23,
+ "caught_by_112_tests_at_55e3ae1": 22,
+ "caught_by_113_tests_at_e5554da": 23,
+ "results": [
+  {
+   "mutant": "BASELINE (no mutation)",
+   "caught": false,
+   "exit": 0,
+   "failing_tests": [],
+   "n_failing": 0,
+   "result": "Ran 112 tests in 13.779s OK"
+  },
+  {
+   "mutant": "history not recorded",
+   "caught": true,
+   "exit": 1,
+   "failing_tests": [
+    "test_timeout_recovery_and_consecutive_failures.test_timeout_recovery_and_consecutive_failures",
+    "test_every_sample_is_timestamped_and_recorded_not_only_transitions.test_every_sample_is_timestamped_and_recorded_not_only_transitions",
+    "test_one_hour_retention_through_the_collector_path.test_one_hour_retention_through_the_collector_path",
+    "test_runs_continuously_under_the_supervisor.test_runs_continuously_under_the_supervisor"
+   ],
+   "n_failing": 7,
+   "result": "Ran 112 tests in 18.141s FAILED (failures=6, errors=1)"
+  },
+  {
+   "mutant": "retention not pruned",
+   "caught": true,
+   "exit": 1,
+   "failing_tests": [
+    "test_one_hour_retention_through_the_collector_path.test_one_hour_retention_through_the_collector_path",
+    "test_one_hour_of_samples_is_retained_and_older_ones_are_dropped.test_one_hour_of_samples_is_retained_and_older_ones_are_dropped"
+   ],
+   "n_failing": 2,
+   "result": "Ran 112 tests in 13.861s FAILED (failures=2)"
+  },
+  {
+   "mutant": "counter reset ignored",
+   "caught": true,
+   "exit": 1,
+   "failing_tests": [
+    "test_counter_reset_or_rollover_yields_no_rate_and_is_flagged.test_counter_reset_or_rollover_yields_no_rate_and_is_flagged"
+   ],
+   "n_failing": 1,
+   "result": "Ran 112 tests in 13.921s FAILED (failures=1)"
+  },
+  {
+   "mutant": "database opened read-write",
+   "caught": true,
+   "exit": 1,
+   "failing_tests": [
+    "test_each_read_only_layer_refuses_writes_on_its_own.test_each_read_only_layer_refuses_writes_on_its_own"
+   ],
+   "n_failing": 1,
+   "result": "Ran 113 tests in 14.098s FAILED (failures=1)",
+   "note": "survived the 112-test suite (first run); caught after test_each_read_only_layer_refuses_writes_on_its_own was added (e5554da)"
+  },
+  {
+   "mutant": "query_only pragma dropped",
+   "caught": true,
+   "exit": 1,
+   "failing_tests": [
+    "test_each_read_only_layer_refuses_writes_on_its_own.test_each_read_only_layer_refuses_writes_on_its_own",
+    "test_no_write_statement_and_no_dynamic_sql_exist_in_the_transport.test_no_write_statement_and_no_dynamic_sql_exist_in_the_transport"
+   ],
+   "n_failing": 2,
+   "result": "Ran 113 tests in 14.261s FAILED (failures=2)"
+  },
+  {
+   "mutant": "a secret column selected",
+   "caught": true,
+   "exit": 1,
+   "failing_tests": [
+    "test_no_secret_or_payload_column_is_ever_read.test_no_secret_or_payload_column_is_ever_read"
+   ],
+   "n_failing": 1,
+   "result": "Ran 112 tests in 14.233s FAILED (failures=1)"
+  },
+  {
+   "mutant": "Cancel exits",
+   "caught": true,
+   "exit": 1,
+   "failing_tests": [
+    "test_cancel_returns_to_the_running_console_without_resetting_anything.test_cancel_returns_to_the_running_console_without_resetting_anything",
+    "test_the_window_close_button_goes_through_the_chooser.test_the_window_close_button_goes_through_the_chooser"
+   ],
+   "n_failing": 2,
+   "result": "Ran 112 tests in 13.976s FAILED (failures=1, errors=1)"
+  },
+  {
+   "mutant": "navigation stops collectors",
+   "caught": true,
+   "exit": 1,
+   "failing_tests": [
+    "test_nmas_web_down_is_shown_and_the_console_keeps_working.test_nmas_web_down_is_shown_and_the_console_keeps_working",
+    "test_a_slow_render_does_not_delay_collection.test_a_slow_render_does_not_delay_collection",
+    "test_cancel_returns_to_the_running_console_without_resetting_anything.test_cancel_returns_to_the_running_console_without_resetting_anything",
+    "test_save_persists_then_exits_cleanly.test_save_persists_then_exits_cleanly"
+   ],
+   "n_failing": 6,
+   "result": "Ran 112 tests in 11.799s FAILED (failures=5, errors=1)"
+  },
+  {
+   "mutant": "widget touched from a worker thread",
+   "caught": true,
+   "exit": 1,
+   "failing_tests": [
+    "test_nmas_web_down_is_shown_and_the_console_keeps_working.test_nmas_web_down_is_shown_and_the_console_keeps_working",
+    "test_a_slow_render_does_not_delay_collection.test_a_slow_render_does_not_delay_collection",
+    "test_events_published_from_worker_threads_are_delivered_as_topics.test_events_published_from_worker_threads_are_delivered_as_topics",
+    "test_widgets_are_only_touched_on_the_tk_thread.test_widgets_are_only_touched_on_the_tk_thread"
+   ],
+   "n_failing": 8,
+   "result": "Ran 112 tests in 36.951s FAILED (failures=7, errors=1)"
+  },
+  {
+   "mutant": "hidden views rendered too",
+   "caught": true,
+   "exit": 1,
+   "failing_tests": [
+    "test_only_the_visible_view_is_rendered.test_only_the_visible_view_is_rendered"
+   ],
+   "n_failing": 1,
+   "result": "Ran 112 tests in 13.762s FAILED (failures=1)"
+  },
+  {
+   "mutant": "a control button in a view",
+   "caught": true,
+   "exit": 1,
+   "failing_tests": [
+    "test_no_view_offers_a_control_action.test_no_view_offers_a_control_action"
+   ],
+   "n_failing": 1,
+   "result": "Ran 112 tests in 13.953s FAILED (failures=1)"
+  },
+  {
+   "mutant": "no backoff",
+   "caught": true,
+   "exit": 1,
+   "failing_tests": [
+    "test_failures_back_off_instead_of_spinning.test_failures_back_off_instead_of_spinning"
+   ],
+   "n_failing": 1,
+   "result": "Ran 112 tests in 13.709s FAILED (failures=1)"
+  },
+  {
+   "mutant": "unexpected failure not logged",
+   "caught": true,
+   "exit": 1,
+   "failing_tests": [
+    "test_a_failing_collector_does_not_stop_the_others_or_crash.test_a_failing_collector_does_not_stop_the_others_or_crash"
+   ],
+   "n_failing": 1,
+   "result": "Ran 112 tests in 18.755s FAILED (failures=1)"
+  },
+  {
+   "mutant": "dead worker not restarted",
+   "caught": true,
+   "exit": 1,
+   "failing_tests": [
+    "test_a_dead_worker_is_restarted_and_reported.test_a_dead_worker_is_restarted_and_reported"
+   ],
+   "n_failing": 1,
+   "result": "Ran 112 tests in 18.824s FAILED (failures=1)"
+  },
+  {
+   "mutant": "samples logged only on transitions",
+   "caught": true,
+   "exit": 1,
+   "failing_tests": [
+    "test_a_probe_that_cannot_run_is_still_a_recorded_failure.test_a_probe_that_cannot_run_is_still_a_recorded_failure",
+    "test_every_sample_is_timestamped_and_recorded_not_only_transitions.test_every_sample_is_timestamped_and_recorded_not_only_transitions",
+    "test_timeout_recovery_and_consecutive_failures.test_timeout_recovery_and_consecutive_failures"
+   ],
+   "n_failing": 3,
+   "result": "Ran 112 tests in 14.248s FAILED (failures=3)"
+  },
+  {
+   "mutant": "counter failure not logged",
+   "caught": true,
+   "exit": 1,
+   "failing_tests": [
+    "test_an_unavailable_device_is_an_event_every_cycle_and_others_continue.test_an_unavailable_device_is_an_event_every_cycle_and_others_continue",
+    "test_unparsable_output_and_timeouts_are_classified.test_unparsable_output_and_timeouts_are_classified"
+   ],
+   "n_failing": 2,
+   "result": "Ran 112 tests in 15.490s FAILED (failures=2)"
+  },
+  {
+   "mutant": "H4 IPv4 probed",
+   "caught": true,
+   "exit": 1,
+   "failing_tests": [
+    "test_a_probe_that_cannot_run_is_still_a_recorded_failure.test_a_probe_that_cannot_run_is_still_a_recorded_failure",
+    "test_all_required_pairs_are_probed_and_pass.test_all_required_pairs_are_probed_and_pass",
+    "test_an_endpoint_that_cannot_be_inspected_fails_its_rows_and_is_logged.test_an_endpoint_that_cannot_be_inspected_fails_its_rows_and_is_logged",
+    "test_every_sample_is_timestamped_and_recorded_not_only_transitions.test_every_sample_is_timestamped_and_recorded_not_only_transitions"
+   ],
+   "n_failing": 6,
+   "result": "Ran 112 tests in 13.936s FAILED (failures=6)"
+  },
+  {
+   "mutant": "'active' alone reported as UP",
+   "caught": true,
+   "exit": 1,
+   "failing_tests": [
+    "test_console_keeps_working_with_nmas_web_down.test_console_keeps_working_with_nmas_web_down",
+    "test_down_then_up_is_a_transition_with_last_seen_up.test_down_then_up_is_a_transition_with_last_seen_up",
+    "test_degraded_and_unknown_are_distinguished_from_down.test_degraded_and_unknown_are_distinguished_from_down",
+    "test_systemd_active_is_not_enough_when_the_health_endpoint_fails.test_systemd_active_is_not_enough_when_the_health_endpoint_fails"
+   ],
+   "n_failing": 4,
+   "result": "Ran 112 tests in 13.851s FAILED (failures=4)"
+  },
+  {
+   "mutant": "EXPIRED never reported",
+   "caught": true,
+   "exit": 1,
+   "failing_tests": [
+    "test_fresh_stale_expired_missing_and_recovery.test_fresh_stale_expired_missing_and_recovery",
+    "test_freshness_boundaries_are_the_project_ones.test_freshness_boundaries_are_the_project_ones"
+   ],
+   "n_failing": 2,
+   "result": "Ran 112 tests in 13.854s FAILED (failures=2)"
+  },
+  {
+   "mutant": "EOS configuration commands allowed",
+   "caught": true,
+   "exit": 1,
+   "failing_tests": [
+    "test_everything_else_is_refused_before_a_process_exists.test_everything_else_is_refused_before_a_process_exists"
+   ],
+   "n_failing": 1,
+   "result": "Ran 112 tests in 13.798s FAILED (failures=1)"
+  },
+  {
+   "mutant": "secret keys not redacted",
+   "caught": true,
+   "exit": 1,
+   "failing_tests": [
+    "test_redaction_helpers.test_redaction_helpers",
+    "test_secrets_never_reach_the_file.test_secrets_never_reach_the_file"
+   ],
+   "n_failing": 2,
+   "result": "Ran 112 tests in 13.893s FAILED (failures=2)"
+  },
+  {
+   "mutant": "Don't Save keeps the file",
+   "caught": true,
+   "exit": 1,
+   "failing_tests": [
+    "test_dont_save_discards_persistence_and_stops.test_dont_save_discards_persistence_and_stops",
+    "test_dont_save_discards_and_exits_cleanly.test_dont_save_discards_and_exits_cleanly"
+   ],
+   "n_failing": 2,
+   "result": "Ran 112 tests in 14.115s FAILED (failures=2)"
+  },
+  {
+   "mutant": "world-readable log",
+   "caught": true,
+   "exit": 1,
+   "failing_tests": [
+    "test_log_is_append_only_jsonl_with_private_permissions.test_log_is_append_only_jsonl_with_private_permissions",
+    "test_all_five_collectors_start_and_run_concurrently.test_all_five_collectors_start_and_run_concurrently",
+    "test_stop_signals_joins_and_leaves_no_worker.test_stop_signals_joins_and_leaves_no_worker",
+    "test_save_persists_then_exits_cleanly.test_save_persists_then_exits_cleanly"
+   ],
+   "n_failing": 4,
+   "result": "Ran 112 tests in 13.883s FAILED (failures=4)"
+  }
+ ]
+}

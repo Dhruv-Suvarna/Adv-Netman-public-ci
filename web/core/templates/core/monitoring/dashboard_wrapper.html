@@ -1,0 +1,96 @@
+<div class="page-header monitoring-page-header">
+  <div>
+    <h1>{{ dashboard.label }}</h1>
+    <p>{{ dashboard.description }}</p>
+  </div>
+  <a class="btn btn--primary" href="{{ full_grafana_url }}" target="_blank" rel="noopener noreferrer">Open Full Grafana Dashboard</a>
+</div>
+
+{% include "core/components/monitoring_subnav.html" %}
+
+{% if summary.status == "unavailable" %}
+  <div class="alert alert--warning" data-monitoring-status="unavailable">
+    <span aria-hidden="true">&#9888;</span>
+    <div><strong>Unavailable.</strong> {{ summary.message }} Filters and navigation remain available; no data is being inferred.</div>
+  </div>
+{% else %}
+  <div class="alert alert--info" data-monitoring-status="available">
+    <span aria-hidden="true">&#10003;</span>
+    <div><strong>Grafana available.</strong> Dashboard UID <code>{{ dashboard.grafana_uid }}</code>.</div>
+  </div>
+{% endif %}
+
+{% if invalid_filters %}
+  <div class="alert alert--warning monitoring-filter-warning">
+    <span aria-hidden="true">&#9888;</span>
+    <div>One or more invalid filter values were ignored.</div>
+  </div>
+{% endif %}
+
+<form class="card monitoring-filters" method="get" action="{{ reset_url }}" data-monitoring-filter-form>
+  <div class="monitoring-filters__heading">
+    <div>
+      <h2>Dashboard filters</h2>
+      <p>Filters are validated here and passed to the matching Grafana variables.</p>
+    </div>
+    <a class="btn btn--secondary" href="{{ reset_url }}" data-reset-filters>Reset Filters</a>
+  </div>
+  <div class="monitoring-filter-grid">
+    {% for filter in filters %}
+      <div class="form-field monitoring-filter">
+        <label for="monitoring-filter-{{ filter.name }}">{{ filter.label }}</label>
+        {% if filter.kind == "text" %}
+          <input class="form-control" id="monitoring-filter-{{ filter.name }}" name="{{ filter.name }}" value="{{ filter.value }}" maxlength="128" autocomplete="off">
+        {% else %}
+          <select class="form-control" id="monitoring-filter-{{ filter.name }}" name="{{ filter.name }}">
+            {% if filter.kind == "choice" %}<option value="">All</option>{% endif %}
+            {% for option in filter.options %}
+              <option value="{{ option.0 }}"{% if option.0 == filter.value %} selected{% endif %}>{{ option.1 }}</option>
+            {% endfor %}
+          </select>
+        {% endif %}
+      </div>
+    {% endfor %}
+    <div class="form-field monitoring-filter">
+      <label for="monitoring-filter-time-range">Time range</label>
+      <select class="form-control" id="monitoring-filter-time-range" name="time_range">
+        {% for time_range in time_ranges %}
+          <option value="{{ time_range.value }}"{% if time_range.value == selected_time_range %} selected{% endif %}>{{ time_range.label }}</option>
+        {% endfor %}
+      </select>
+    </div>
+  </div>
+  <div class="monitoring-filters__actions">
+    <button class="btn btn--primary" type="submit">Apply Filters</button>
+    <span>Read-only GET navigation only. No monitoring state is changed.</span>
+  </div>
+</form>
+
+<section class="card monitoring-dashboard" aria-label="{{ dashboard.grafana_title }} dashboard">
+  <div class="monitoring-dashboard__header">
+    <div>
+      <span class="badge badge--neutral">Canonical Grafana dashboard</span>
+      <h2>{{ dashboard.grafana_title }}</h2>
+    </div>
+    <a class="btn btn--secondary" href="{{ full_grafana_url }}" target="_blank" rel="noopener noreferrer">Open Full Grafana Dashboard</a>
+  </div>
+
+  {% if summary.status == "unavailable" %}
+    <div class="empty-state" data-monitoring-data="none">
+      <div class="empty-state__icon" aria-hidden="true">&#128202;</div>
+      <strong>Grafana monitoring service temporarily unavailable.</strong>
+      <div>No monitoring data is displayed or fabricated by Django.</div>
+    </div>
+  {% elif embed_enabled %}
+    <div class="monitoring-embed-container">
+      <iframe class="monitoring-embed" src="{{ embed_url }}" title="{{ dashboard.grafana_title }}" loading="lazy" referrerpolicy="no-referrer" sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox allow-downloads"></iframe>
+    </div>
+  {% else %}
+    <div class="empty-state monitoring-link-only" data-monitoring-data="grafana-link">
+      <div class="empty-state__icon" aria-hidden="true">&#128202;</div>
+      <strong>Secure full-dashboard access</strong>
+      <div>Grafana requires its own authenticated browser session and currently denies iframe embedding. Open the canonical dashboard in Grafana to view live panels with these filters.</div>
+      <a class="btn btn--primary" href="{{ full_grafana_url }}" target="_blank" rel="noopener noreferrer">Open Full Grafana Dashboard</a>
+    </div>
+  {% endif %}
+</section>

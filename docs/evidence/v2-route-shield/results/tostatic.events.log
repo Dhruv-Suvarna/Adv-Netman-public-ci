@@ -1,0 +1,43 @@
+1791728316.192 START to-static 1 load 22.63 23.05 22.57
+1791728318.528 CONFIG start r1=5408a3ab57b34d17 r2=4d5eb24485271374 s1=c14991f826026d59 s2=9e1955c8185575b0
+1791728334.620 to-static core-cover-installed 2001:db8:10::/63 2001:db8:20::/63 2001:db8:30::/63
+1791728334.620 B0-r2 rb1 shield
+1791728335.045 B0-r2 shield-install s2 2001:db8:110:2::1
+1791728336.661 B0-r2 shield-verified s2
+1791728337.018 B0-r2 shield-install r2 2001:db8:110:2::2
+1791728339.135 B0-r2 shield-verified r2
+1791728342.135 B0-r2 rb2 static-restore start
+1791728345.189 B0-r2 rb2 router-statics-restored
+1791728345.596 B0-r2 rb2 switch-static-restored
+1791728352.473 B0-r2 rb3 shield-removal
+1791728353.654 B0-r2 takeover-nexthop r2 2001:db8:10::/64 static 2001:db8:110:2::2 before=REACHABLE after=REACHABLE
+1791728354.693 B0-r2 takeover-nexthop r2 2001:db8:20::/64 static 2001:db8:110:2::2 before=REACHABLE after=REACHABLE
+1791728355.838 B0-r2 takeover-nexthop r2 2001:db8:30::/64 static 2001:db8:110:2::2 before=REACHABLE after=REACHABLE
+1791728355.838 B0-r2 shield-remove r2
+1791728357.711 B0-r2 shield-removed r2
+1791728358.881 B0-r2 takeover-nexthop s2 2001:db8::/32 static 2001:db8:110:2::1 before=REACHABLE after=REACHABLE
+1791728358.882 B0-r2 shield-remove s2
+1791728360.582 B0-r2 shield-removed s2
+1791728363.582 B0-r1 rb1 shield
+1791728363.912 B0-r1 shield-install s1 2001:db8:110:1::1
+1791728365.414 B0-r1 shield-verified s1
+1791728365.794 B0-r1 shield-install r1 2001:db8:110:1::2
+1791728368.390 B0-r1 shield-verified r1
+1791728371.390 B0-r1 rb2 static-restore start
+1791728374.284 B0-r1 rb2 router-statics-restored
+1791728374.889 B0-r1 rb2 switch-static-restored
+1791728381.687 B0-r1 rb3 shield-removal
+1791728382.908 B0-r1 takeover-nexthop r1 2001:db8:10::/64 static 2001:db8:110:1::2 before=REACHABLE after=REACHABLE
+1791728384.084 B0-r1 takeover-nexthop r1 2001:db8:20::/64 static 2001:db8:110:1::2 before=REACHABLE after=REACHABLE
+1791728385.120 B0-r1 takeover-nexthop r1 2001:db8:30::/64 static 2001:db8:110:1::2 before=REACHABLE after=REACHABLE
+1791728385.120 B0-r1 shield-remove r1
+1791728387.508 B0-r1 shield-removed r1
+1791728388.637 B0-r1 takeover-nexthop s1 2001:db8::/32 static 2001:db8:110:1::1 before=REACHABLE after=REACHABLE
+1791728388.637 B0-r1 shield-remove s1
+1791728390.739 B0-r1 shield-removed s1
+1791728393.740 B0 rb4 withdraw-advertisements start
+1791728397.701 B0 rb5 isis-removal start
+1791728407.607 B0 rb6 baseline-config r1=2bd8c040664c1216 r2=6284ec1a7270b9dd s1=7d083ffd40ee3b4f s2=a4f9a4a23f07a916
+1791728535.320 to-static core-quiet 190
+1791728537.028 to-static core-cover-removed
+1791728565.747 END ok load 25.27 25.62 23.85

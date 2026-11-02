@@ -1,0 +1,40 @@
+{
+  "adopted": {
+    "E1": {
+      "codes": [],
+      "device": "DEV-000001",
+      "ok": true
+    },
+    "E2": {
+      "codes": [],
+      "device": "DEV-000004",
+      "ok": true
+    },
+    "STUB": {
+      "codes": [],
+      "device": "DEV-000005",
+      "ok": true
+    },
+    "T1": {
+      "codes": [],
+      "device": "DEV-000002",
+      "ok": true
+    },
+    "T2": {
+      "codes": [],
+      "device": "DEV-000003",
+      "ok": true
+    }
+  },
+  "baseline_containers": "see 99-index",
+  "routes_to_hb": {
+    "E1": [
+      " O        10.254.85.0/24 [110/30]",
+      "           via 10.254.81.1, Ethernet2"
+    ],
+    "T1": [
+      " O        10.254.85.0/24 [110/20]",
+      "           via 10.254.83.1, Ethernet2"
+    ]
+  }
+}

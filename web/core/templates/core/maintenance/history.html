@@ -1,0 +1,21 @@
+{% extends "core/base.html" %}
+{% block title %}{{ row.record_id }} history{% endblock %}
+{% block content %}
+{% include "core/maintenance/_header.html" %}
+<div class="card" style="border-left:6px solid var(--{% if chain.0 %}success{% else %}danger{% endif %});">
+  <h3>Evidence chain {% if chain.0 %}<span class="badge badge--success">INTACT</span>{% else %}<span class="badge badge--danger">BROKEN</span>{% endif %}</h3>
+  <p>Append-only and hash-chained: every entry's digest covers its payload digest and the previous entry. {% if not chain.0 %}Problems: {{ chain.1|join:"; " }}{% endif %}</p>
+</div>
+<div class="card" style="margin-top:16px;"><h3>Evidence</h3>
+  <table class="data-table"><thead><tr><th>#</th><th>At (UTC)</th><th>Kind</th><th>Actor</th><th>Transition</th><th>Summary</th><th>Entry digest</th></tr></thead><tbody>
+  {% for e in entries %}<tr><td>{{ e.sequence }}</td><td>{{ e.at|date:"Y-m-d H:i:s" }}</td><td>{{ e.kind }}</td><td>{{ e.actor }}</td>
+    <td>{% if e.state_from or e.state_to %}{{ e.state_from|default:"·" }} → {{ e.state_to }}{% else %}—{% endif %}</td><td>{{ e.summary }}</td><td><code>{{ e.entry_digest|truncatechars:20 }}</code></td></tr>
+  {% empty %}<tr><td colspan="7">No evidence.</td></tr>{% endfor %}
+  </tbody></table>
+</div>
+<div class="card" style="margin-top:16px;"><h3>Lifecycle</h3>
+  <table class="data-table"><thead><tr><th>At (UTC)</th><th>From</th><th>To</th><th>Actor</th><th>Note</th></tr></thead><tbody>
+  {% for h in history %}<tr><td>{{ h.at|date:"Y-m-d H:i:s" }}</td><td>{{ h.from|default:"—" }}</td><td>{{ h.to }}</td><td>{{ h.actor }}</td><td>{{ h.note|truncatechars:300 }}</td></tr>{% endfor %}
+  </tbody></table>
+</div>
+{% endblock %}

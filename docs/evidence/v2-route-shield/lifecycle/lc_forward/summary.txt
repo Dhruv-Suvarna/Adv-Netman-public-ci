@@ -1,0 +1,39 @@
+== sequence-numbered probes
+== long-lived TCP sessions
+   h1_tcp4: UNINTERRUPTED CLOSE 1791761216.582 11521 11521 1070  stalls>250ms: 164 (informational)
+   h1_tcp6: UNINTERRUPTED CLOSE 1791761216.601 11551 11551 949  stalls>250ms: 144 (informational)
+   h2_tcp4: UNINTERRUPTED CLOSE 1791761220.722 11557 11557 1071  stalls>250ms: 164 (informational)
+   h2_tcp6: UNINTERRUPTED CLOSE 1791761220.642 11599 11599 840  stalls>250ms: 141 (informational)
+   h3_tcp4: UNINTERRUPTED CLOSE 1791761224.866 11687 11687 950  stalls>250ms: 115 (informational)
+   h3_tcp6: UNINTERRUPTED CLOSE 1791761224.814 11688 11688 951  stalls>250ms: 99 (informational)
+   h4_tcp6: UNINTERRUPTED CLOSE 1791761228.995 11725 11725 828  stalls>250ms: 96 (informational)
+== repeated new HTTP sessions
+   h1_http4: ALL OK CLOSE 1791761216.619 4540 0 126 1466  slow>400ms: 126 (informational)
+   h1_http6: ALL OK CLOSE 1791761216.626 4583 0 97 1558  slow>400ms: 97 (informational)
+   h2_http4: ALL OK CLOSE 1791761220.688 4551 0 127 1627  slow>400ms: 127 (informational)
+   h2_http6: ALL OK CLOSE 1791761220.643 4596 0 93 1574  slow>400ms: 93 (informational)
+   h3_http4: ALL OK CLOSE 1791761224.946 4643 0 85 1495  slow>400ms: 85 (informational)
+   h3_http6: ALL OK CLOSE 1791761225.027 4633 0 95 1529  slow>400ms: 95 (informational)
+   h4_http6: ALL OK CLOSE 1791761229.175 4649 0 95 1490  slow>400ms: 95 (informational)
+== completed: forward 0  rollback 0  drains 0  restores 0   failed-events: []
+   flows without evidence: none
+VERDICT: PASS (production transit loss 0, TCP uninterrupted, HTTP all successful)
+== c3
+     1  covered   | NMAS before R2-client-statics-remove
+== c4
+     1  covered   | NMAS before R2-client-statics-remove
+client /64 route replacements on the cores: 2   without a cover: 0
+CORE VERDICT: PASS
+edge router (pe) client-route events: 0
+c3 cover event: [2026-10-11T23:09:18.097080] 2001:db8:10::/63 metric 1024 pref medium
+c3 cover event: [2026-10-11T23:09:26.377853] 2001:db8:20::/63 metric 1024 pref medium
+c3 cover event: [2026-10-11T23:09:35.575506] 2001:db8:30::/63 metric 1024 pref medium
+c3 cover event: [2026-10-11T23:25:22.592455] Deleted 2001:db8:10::/63 metric 1024 pref medium
+c3 cover event: [2026-10-11T23:25:46.294600] Deleted 2001:db8:20::/63 metric 1024 pref medium
+c3 cover event: [2026-10-11T23:25:52.602784] Deleted 2001:db8:30::/63 metric 1024 pref medium
+c4 cover event: [2026-10-11T23:09:46.841229] 2001:db8:10::/63 metric 1024 pref medium
+c4 cover event: [2026-10-11T23:09:54.905349] 2001:db8:20::/63 metric 1024 pref medium
+c4 cover event: [2026-10-11T23:10:03.970417] 2001:db8:30::/63 metric 1024 pref medium
+c4 cover event: [2026-10-11T23:25:58.509892] Deleted 2001:db8:10::/63 metric 1024 pref medium
+c4 cover event: [2026-10-11T23:26:04.582406] Deleted 2001:db8:20::/63 metric 1024 pref medium
+c4 cover event: [2026-10-11T23:26:11.455859] Deleted 2001:db8:30::/63 metric 1024 pref medium

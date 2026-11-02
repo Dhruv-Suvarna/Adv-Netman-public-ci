@@ -1,0 +1,40 @@
+{% extends "core/base.html" %}
+{% block title %}Network Config Validation · {{ change.change_id }}{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>Network Config Validation <span style="font-weight:400;">· {{ change.change_id }}</span></h1>
+  <p><a href="{% url 'core:device_builder_change_detail' change.change_id %}">&larr; Back to {{ change.change_id }}</a> · <a href="{% url 'core:change_validation' change.change_id %}">Whole Change validation</a></p>
+  <p>Validates network-device configuration. This is separate from Tier-2 whole-Change validation and hosted Tier-3 NMAS software validation.</p>
+</div>
+
+<div class="card-grid">
+  <div class="card"><h3>Currency</h3>
+    <p><span class="badge {% if currency.state == 'CURRENT' %}badge--success{% elif currency.state == 'STALE' %}badge--warning{% else %}badge--neutral{% endif %}">{{ currency.state }}</span>
+    {% if run %}<span class="badge {% if run.status == 'PASS' %}badge--success{% elif run.status == 'WARNING' %}badge--warning{% else %}badge--danger{% endif %}">{{ run.status }}</span>{% endif %}</p>
+    {% if currency.reasons %}<ul>{% for reason in currency.reasons %}<li>{{ reason }}</li>{% endfor %}</ul>{% endif %}
+    <form method="post" action="{% url 'core:network_config_validation_run' change.change_id %}">{% csrf_token %}
+      <button class="btn btn--primary" type="submit">Run Network Config Validation</button>
+    </form>
+  </div>
+  <div class="card"><h3>Domain boundary</h3>
+    <p>Checks syntax, IP/prefix safety, duplicate/conflicting assignments, routing and interface dependencies, NetBox/IPAM relationship, VLAN 200, managed scope, platform capability, and removal safety. It never writes NetBox or a device.</p>
+  </div>
+</div>
+
+{% if document %}
+<div class="card" style="margin-top:16px;"><h3>Run {{ document.run_id }}</h3>
+  <p>Operation <span class="badge badge--info">{{ document.operation_type }}</span> · actor {{ document.created_by|default:"—" }} · {{ document.created_at }}</p>
+  <table class="data-table"><thead><tr><th>Check</th><th>Status</th><th>Message</th></tr></thead><tbody>
+  {% for row in document.checks %}<tr><td><code>{{ row.check }}</code></td><td><span class="badge {% if row.status == 'PASS' %}badge--success{% elif row.status == 'WARNING' %}badge--warning{% else %}badge--danger{% endif %}">{{ row.status }}</span></td><td>{{ row.message }}</td></tr>{% endfor %}
+  </tbody></table>
+  <p><a class="btn btn--secondary" href="{% url 'core:network_config_validation_report' change.change_id run.run_id %}">Export evidence JSON</a></p>
+</div>
+{% endif %}
+
+<div class="card" style="margin-top:16px;"><h3>Immutable history</h3>
+  <table class="data-table"><thead><tr><th>Run</th><th>Operation</th><th>Status</th><th>Actor</th><th>Created</th></tr></thead><tbody>
+  {% for item in history %}<tr><td><a href="{% url 'core:network_config_validation_detail' change.change_id item.run_id %}"><code>{{ item.run_id }}</code></a></td><td>{{ item.operation_type }}</td><td>{{ item.status }}</td><td>{{ item.created_by|default:"—" }}</td><td>{{ item.created_at }}</td></tr>
+  {% empty %}<tr><td colspan="5">No network configuration validation has run.</td></tr>{% endfor %}
+  </tbody></table>
+</div>
+{% endblock %}

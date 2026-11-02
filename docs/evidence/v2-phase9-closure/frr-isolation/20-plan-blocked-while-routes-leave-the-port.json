@@ -1,0 +1,31 @@
+{
+  "codes": [
+    "ISOLATION_PORT_SHARED"
+  ],
+  "failure": {
+    "codes": [
+      "ISOLATION_PORT_SHARED"
+    ],
+    "problems": [
+      {
+        "code": "ISOLATION_PORT_SHARED",
+        "detail": "routes already leave through eth4: ['10.254.255.6/32']"
+      }
+    ]
+  },
+  "ok": false,
+  "ospf": {
+    "core_route_to_device_loopback": "10.254.255.6 nhid 26 via 10.254.91.1 dev eth1 proto ospf metric 20",
+    "probe_hellos": {
+      "received": 12,
+      "sent": 12
+    },
+    "probe_neighbors": "\nNeighbor ID     Pri State           Up Time         Dead Time Address         Interface                        RXmtL RqstL DBsmL\n10.254.255.4      1 Full/DR         8.262s             3.215s 10.254.90.1     eth1:10.254.90.2                     0     0     0\n\n",
+    "probe_on_port": [
+      "10.254.255.6      1 Full/Backup     8.877s             3.132s 10.254.90.2     eth4:10.254.90.1                     1     0     0"
+    ],
+    "probe_ospfd_running": true,
+    "upstream_neighbors": "\nNeighbor ID     Pri State           Up Time         Dead Time Address         Interface                        RXmtL RqstL DBsmL\n10.254.255.2      1 Full/Backup     1m07s             30.662s 10.254.91.2     Vlan102:10.254.91.1                  0     0     0\n10.254.255.6      1 Full/Backup     8.491s             3.518s 10.254.90.2     eth4:10.254.90.1                     1     0     0\n\n"
+  },
+  "state": "BLOCKED"
+}

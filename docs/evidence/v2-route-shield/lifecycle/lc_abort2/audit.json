@@ -1,0 +1,52 @@
+[
+ {
+  "type": "CHANGE_CREATED",
+  "summary": "Change CHG-20261011-0001 created",
+  "actor": "sandbox-operator"
+ },
+ {
+  "type": "VALIDATION_RECORDED",
+  "summary": "CHG-20261011-0001: transition validation PASS",
+  "actor": "sandbox-operator"
+ },
+ {
+  "type": "PLAN_BUILT",
+  "summary": "CHG-20261011-0001: transition plan built (48 operations)",
+  "actor": "sandbox-operator"
+ },
+ {
+  "type": "PRECHECK_RECORDED",
+  "summary": "CHG-20261011-0001: transition precheck PASS",
+  "actor": "sandbox-operator"
+ },
+ {
+  "type": "DEPLOYMENT_RECORDED",
+  "summary": "CHG-20261011-0001: COMPLETE execution BLOCKED (NOT_APPROVED, PRECHECK_NOT_PASSED)",
+  "actor": "sandbox-operator"
+ },
+ {
+  "type": "LIFECYCLE_CHANGED",
+  "summary": "CHG-20261011-0001: DRAFT -> READY_TO_DEPLOY",
+  "actor": "sandbox-operator"
+ },
+ {
+  "type": "DEPLOYMENT_RECORDED",
+  "summary": "CHG-20261011-0001: COMPLETE execution 1d19ecb5 started",
+  "actor": "sandbox-operator"
+ },
+ {
+  "type": "DEPLOYMENT_RECORDED",
+  "summary": "CHG-20261011-0001: COMPLETE execution 1d19ecb5 FAILED_ROLLED_BACK",
+  "actor": "sandbox-operator"
+ },
+ {
+  "type": "ROLLBACK_RECORDED",
+  "summary": "CHG-20261011-0001: compensation COMPENSATED for execution 1d19ecb5",
+  "actor": "sandbox-operator"
+ },
+ {
+  "type": "LIFECYCLE_CHANGED",
+  "summary": "CHG-20261011-0001: READY_TO_DEPLOY -> ROLLED_BACK",
+  "actor": "sandbox-operator"
+ }
+]

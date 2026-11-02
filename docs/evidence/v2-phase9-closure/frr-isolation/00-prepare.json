@@ -1,0 +1,22 @@
+{
+  "R6FX": {
+    "attachment": "R6FX -> UP4:eth4 (PRODUCTION)",
+    "device_id": "DEV-000002",
+    "state": "REGISTERED"
+  },
+  "R6FXB": {
+    "attachment": "R6FXB -> UP4:eth5 (PRODUCTION)",
+    "device_id": "DEV-000003",
+    "state": "REGISTERED"
+  },
+  "UP4": {
+    "device_id": "DEV-000001",
+    "origin": "LEGACY_ADOPTION",
+    "state": "IN_SERVICE"
+  },
+  "upstream_versions": {
+    "frr": "frr\t8.4.4-1.1ubuntu6.7",
+    "kernel": "7.0.0-30-generic",
+    "nft": "nftables v1.0.9 (Old Doc Yak #3)"
+  }
+}

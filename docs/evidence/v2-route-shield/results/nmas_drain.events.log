@@ -1,0 +1,40 @@
+1791736647.347 START nmas-pipeline drain 2 load 13.52 17.99 21.11
+1791736648.488 NMAS service-gate execute() -> TRANSITION_PROVEN_NOT_AUTHORIZED sent-nothing
+1791736649.668 CONFIG start {"r1": "5408a3ab57b34d17", "r2": "4d5eb24485271374", "s1": "c14991f826026d59", "s2": "9e1955c8185575b0"}
+1791736664.263 C1 begin load 12.93 17.56 20.90
+1791736664.263 NMAS plan S1-aggregate-drain MORE_SPECIFIC_PAIR specs=install,metric,remove
+1791736738.679 NMAS-S1-aggregate-drain takeover-nexthop s1 2001:db8::/32 isisL2 fe80::42:aff:febe:c180%vlan99 before=STALE after=DELAY
+1791736767.244 NMAS result S1-aggregate-drain ok=True aborted=- restored=None lost=0 [["precheck", "PASS"], ["shield-install", "APPLIED"], ["shield-verify", "PASS"], ["transition", "APPLIED"], ["transition-verify", "PASS"], ["shield-remove", "APPLIED"], ["final-verify", "PASS"]]
+1791736767.746 D1-S1-drain verified S1 ('isisL2', ['Vlan99'], ['fe80::42:aff:febe:c180'], True)
+1791736771.747 NMAS plan S1-aggregate-restore MORE_SPECIFIC_PAIR specs=install,metric,remove
+1791736849.891 NMAS-S1-aggregate-restore takeover-nexthop s1 2001:db8::/32 isisL2 fe80::42:aff:fefb:1b02%eth1 before=REACHABLE after=REACHABLE
+1791736880.907 NMAS result S1-aggregate-restore ok=True aborted=- restored=None lost=0 [["precheck", "PASS"], ["shield-install", "APPLIED"], ["shield-verify", "PASS"], ["transition", "APPLIED"], ["transition-verify", "PASS"], ["shield-remove", "APPLIED"], ["final-verify", "PASS"]]
+1791736881.331 D1-S1-restore verified S1 ('isisL2', ['Ethernet1'], ['fe80::42:aff:fefb:1b02'], True)
+1791736885.332 NMAS plan S2-aggregate-drain MORE_SPECIFIC_PAIR specs=install,metric,remove
+1791736971.800 NMAS-S2-aggregate-drain takeover-nexthop s2 2001:db8::/32 isisL2 fe80::42:aff:fe02:a881%vlan99 before=DELAY after=DELAY
+1791737005.890 NMAS result S2-aggregate-drain ok=True aborted=- restored=None lost=0 [["precheck", "PASS"], ["shield-install", "APPLIED"], ["shield-verify", "PASS"], ["transition", "APPLIED"], ["transition-verify", "PASS"], ["shield-remove", "APPLIED"], ["final-verify", "PASS"]]
+1791737006.239 D1-S2-drain verified S2 ('isisL2', ['Vlan99'], ['fe80::42:aff:fe02:a881'], True)
+1791737010.240 NMAS plan S2-aggregate-restore MORE_SPECIFIC_PAIR specs=install,metric,remove
+1791737103.081 NMAS-S2-aggregate-restore takeover-nexthop s2 2001:db8::/32 isisL2 fe80::42:aff:fefb:1c02%eth1 before=REACHABLE after=REACHABLE
+1791737141.171 NMAS result S2-aggregate-restore ok=True aborted=- restored=None lost=0 [["precheck", "PASS"], ["shield-install", "APPLIED"], ["shield-verify", "PASS"], ["transition", "APPLIED"], ["transition-verify", "PASS"], ["shield-remove", "APPLIED"], ["final-verify", "PASS"]]
+1791737141.454 D1-S2-restore verified S2 ('isisL2', ['Ethernet1'], ['fe80::42:aff:fefb:1c02'], True)
+1791737152.181 C1 end load 26.72 24.70 22.99
+1791737167.548 C2 begin load 26.45 24.74 23.03
+1791737167.548 NMAS plan S1-aggregate-drain MORE_SPECIFIC_PAIR specs=install,metric,remove
+1791737243.716 NMAS-S1-aggregate-drain takeover-nexthop s1 2001:db8::/32 isisL2 fe80::42:aff:febe:c180%vlan99 before=DELAY after=DELAY
+1791737270.733 NMAS result S1-aggregate-drain ok=True aborted=- restored=None lost=0 [["precheck", "PASS"], ["shield-install", "APPLIED"], ["shield-verify", "PASS"], ["transition", "APPLIED"], ["transition-verify", "PASS"], ["shield-remove", "APPLIED"], ["final-verify", "PASS"]]
+1791737271.261 D2-S1-drain verified S1 ('isisL2', ['Vlan99'], ['fe80::42:aff:febe:c180'], True)
+1791737275.262 NMAS plan S1-aggregate-restore MORE_SPECIFIC_PAIR specs=install,metric,remove
+1791737356.112 NMAS-S1-aggregate-restore takeover-nexthop s1 2001:db8::/32 isisL2 fe80::42:aff:fefb:1b02%eth1 before=REACHABLE after=REACHABLE
+1791737386.832 NMAS result S1-aggregate-restore ok=True aborted=- restored=None lost=0 [["precheck", "PASS"], ["shield-install", "APPLIED"], ["shield-verify", "PASS"], ["transition", "APPLIED"], ["transition-verify", "PASS"], ["shield-remove", "APPLIED"], ["final-verify", "PASS"]]
+1791737387.268 D2-S1-restore verified S1 ('isisL2', ['Ethernet1'], ['fe80::42:aff:fefb:1b02'], True)
+1791737391.269 NMAS plan S2-aggregate-drain MORE_SPECIFIC_PAIR specs=install,metric,remove
+1791737477.416 NMAS-S2-aggregate-drain takeover-nexthop s2 2001:db8::/32 isisL2 fe80::42:aff:fe02:a881%vlan99 before=DELAY after=DELAY
+1791737522.542 NMAS result S2-aggregate-drain ok=True aborted=- restored=None lost=0 [["precheck", "PASS"], ["shield-install", "APPLIED"], ["shield-verify", "PASS"], ["transition", "APPLIED"], ["transition-verify", "PASS"], ["shield-remove", "APPLIED"], ["final-verify", "PASS"]]
+1791737522.999 D2-S2-drain verified S2 ('isisL2', ['Vlan99'], ['fe80::42:aff:fe02:a881'], True)
+1791737527.000 NMAS plan S2-aggregate-restore MORE_SPECIFIC_PAIR specs=install,metric,remove
+1791737620.662 NMAS-S2-aggregate-restore takeover-nexthop s2 2001:db8::/32 isisL2 fe80::42:aff:fefb:1c02%eth1 before=REACHABLE after=REACHABLE
+1791737662.552 NMAS result S2-aggregate-restore ok=True aborted=- restored=None lost=0 [["precheck", "PASS"], ["shield-install", "APPLIED"], ["shield-verify", "PASS"], ["transition", "APPLIED"], ["transition-verify", "PASS"], ["shield-remove", "APPLIED"], ["final-verify", "PASS"]]
+1791737663.208 D2-S2-restore verified S2 ('isisL2', ['Ethernet1'], ['fe80::42:aff:fefb:1c02'], True)
+1791737675.721 C2 end load 21.56 23.16 23.22
+1791737701.970 END ok load 16.65 21.89 22.80

@@ -1,0 +1,63 @@
+{
+  "audit": {
+    "DECOMMISSION_CHANGED": 19,
+    "RESTORATION_CHANGED": 15
+  },
+  "decommissions": [
+    {
+      "device__name": "STUB",
+      "id": 1,
+      "plan_hash": "9190ea3addb5b027192e5c8a22477270f5a683a6e98fa90c115836191da19ff6",
+      "readiness_mode": "QUIESCENT",
+      "state": "DECOMMISSIONED"
+    },
+    {
+      "device__name": "E2",
+      "id": 2,
+      "plan_hash": "",
+      "readiness_mode": "UNKNOWN",
+      "state": "CANCELLED"
+    },
+    {
+      "device__name": "T1",
+      "id": 3,
+      "plan_hash": "5a0fb2913e54f85726642515a1168b7d1b3bafb521b082225390b4b6d8f7e0ec",
+      "readiness_mode": "REDUNDANT_TRANSITION",
+      "state": "ROLLED_BACK"
+    },
+    {
+      "device__name": "T1",
+      "id": 4,
+      "plan_hash": "5a0fb2913e54f85726642515a1168b7d1b3bafb521b082225390b4b6d8f7e0ec",
+      "readiness_mode": "REDUNDANT_TRANSITION",
+      "state": "DECOMMISSIONED"
+    },
+    {
+      "device__name": "T1",
+      "id": 5,
+      "plan_hash": "5a0fb2913e54f85726642515a1168b7d1b3bafb521b082225390b4b6d8f7e0ec",
+      "readiness_mode": "REDUNDANT_TRANSITION",
+      "state": "UNCERTAIN"
+    }
+  ],
+  "restorations": [
+    {
+      "device__name": "STUB",
+      "id": 1,
+      "state": "ROLLED_BACK",
+      "successor__name": null
+    },
+    {
+      "device__name": "STUB",
+      "id": 2,
+      "state": "RESTORED",
+      "successor__name": "STUB"
+    },
+    {
+      "device__name": "T1",
+      "id": 3,
+      "state": "RESTORED",
+      "successor__name": "T1"
+    }
+  ]
+}

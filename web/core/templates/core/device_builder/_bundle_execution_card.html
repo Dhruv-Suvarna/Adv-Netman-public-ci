@@ -1,0 +1,17 @@
+{% load core_extras %}
+{# uat_bundle: UatEligibility for ONE finished Partial (UAT) run.  The server re-checks eligibility on POST whatever this card shows. #}
+<div class="card" style="margin-top:16px;"><h3>UAT bundle</h3>
+  {% if request.GET.bundle == 'refused' %}<p><span class="badge badge--danger">not created</span> The server refused to create a UAT bundle; the blockers are listed below.</p>{% endif %}
+  <p>An explicit, immutable record of exactly what this run applied. Creating it is artifact creation only: no device, NetBox, Git or lifecycle change, and no precheck / postcheck is re-run.</p>
+  {% if uat_bundle.existing %}
+    <p>This run already has its UAT bundle: <a href="{% url 'core:bundle_detail' uat_bundle.existing.bundle_id %}"><code>{{ uat_bundle.existing.bundle_id }}</code></a> <span class="badge badge--{{ uat_bundle.existing.verification_state|bundle_badge_class }}">{{ uat_bundle.existing.verification_state }}</span>. No duplicate can be created.</p>
+  {% elif uat_bundle.eligible %}
+    <p>Eligible ({{ uat_bundle.verification_state }}).{% if uat_bundle.verification_state != 'VERIFIED' %} The scope was applied but NOT verified; the bundle will say so and can never enter Probation.{% endif %}</p>
+    <form method="post" action="{% url 'core:change_execution_bundle_create' change.change_id run.run_id %}">{% csrf_token %}
+      <button class="btn btn--primary" type="submit">Create UAT bundle</button>
+    </form>
+  {% else %}
+    <p><strong>Not eligible for a UAT bundle:</strong></p>
+    <ul>{% for b in uat_bundle.blockers %}<li><span class="badge badge--danger">{{ b.code }}</span> {{ b.message }} <em>{{ b.remediation }}</em></li>{% endfor %}</ul>
+  {% endif %}
+</div>

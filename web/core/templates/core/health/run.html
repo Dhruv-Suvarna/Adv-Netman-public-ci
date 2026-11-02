@@ -1,0 +1,29 @@
+{% extends "core/base.html" %}
+{% load core_extras %}
+{% block title %}{{ run.get_mode_display }} · {{ run.run_id|slice:":8" }}{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>{{ run.get_mode_display }}</h1>
+  <p><a href="{{ back_url }}">&larr; {{ back_label }}</a></p>
+  <p>Stored evidence only: normalized facts and check results, never raw command output or credentials. Viewing it changes nothing.</p>
+</div>
+<div class="card">
+  <table class="data-table"><tbody>
+    <tr><th>Run</th><td><code>{{ run.run_id }}</code></td></tr>
+    <tr><th>Status</th><td><span class="badge badge--{{ run.status|health_badge_class }}">{{ run.status }}</span></td></tr>
+    {% if run.device %}<tr><th>Device</th><td>{{ run.device }}</td></tr>{% endif %}
+    {% if run.change_id %}<tr><th>Change</th><td><code>{{ run.change.change_id }}</code> (a run never changes its lifecycle)</td></tr>{% endif %}
+    <tr><th>Started / finished</th><td>{{ run.started_at }} → {{ run.finished_at }}</td></tr>
+    <tr><th>By</th><td>{{ run.created_by|default:"—" }}</td></tr>
+    <tr><th>Engine</th><td>{{ run.engine_version }}</td></tr>
+    <tr><th>Counts</th><td>{% for k, v in report.counts.items %}{{ k }}={{ v }} {% endfor %}{% if report.results_truncated %}<span class="badge badge--warning">results truncated to the most severe</span>{% endif %}</td></tr>
+  </tbody></table>
+  {% if run.mode == "DEVICE_DEEP" or run.mode == "FLEET_QUICK" %}<p><a href="{% url 'core:health_run_report' run.run_id %}">Download JSON</a></p>{% endif %}
+</div>
+{% if report.provenance %}<div class="card" style="margin-top:16px;"><h3>Provenance</h3>
+  <table class="data-table"><tbody>{% for k, v in report.provenance.items %}<tr><th>{{ k }}</th><td><code>{{ v }}</code></td></tr>{% endfor %}</tbody></table></div>{% endif %}
+{% if report.scope %}<div class="card" style="margin-top:16px;"><h3>Affected scope</h3>
+  <table class="data-table"><thead><tr><th>Device</th><th>Role</th><th>Why</th></tr></thead><tbody>
+  {% for d in report.scope.devices %}<tr><td>{{ d.device }}</td><td><span class="badge badge--neutral">{{ d.role }}</span></td><td>{{ d.reasons|join:", " }}</td></tr>{% endfor %}</tbody></table></div>{% endif %}
+<div class="card" style="margin-top:16px;"><h3>Results</h3>{% include "core/health/_results.html" with rows=rows %}</div>
+{% endblock %}

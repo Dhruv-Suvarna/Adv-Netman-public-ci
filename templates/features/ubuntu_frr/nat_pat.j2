@@ -1,0 +1,4 @@
+# Stateful NAT44/PAT (nftables; candidate only)
+table ip DEVICE_BUILDER_PAT {
+    chain postrouting {
+        type nat hook postrouting priority srcnat; policy accept;

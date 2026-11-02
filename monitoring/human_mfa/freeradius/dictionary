@@ -1,0 +1,4 @@
+VENDOR Arista 30065
+BEGIN-VENDOR Arista
+ATTRIBUTE Arista-AVPair 1 string
+END-VENDOR Arista

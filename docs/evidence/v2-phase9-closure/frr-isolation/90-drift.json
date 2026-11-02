@@ -1,0 +1,274 @@
+{
+  "drift_check": {
+    "codes": [
+      "ISOLATION_DRIFTED"
+    ],
+    "facts": {
+      "detail": {
+        "MANAGEMENT_PLANE": {
+          "input_chain_enforced": false,
+          "nmas_routed_via_port": []
+        },
+        "READ_BACK": {
+          "chains": {
+            "forward": {
+              "hook": "forward",
+              "policy": "accept",
+              "prio": 0,
+              "type": "filter"
+            },
+            "input": {
+              "hook": "input",
+              "policy": "accept",
+              "prio": 0,
+              "type": "filter"
+            },
+            "output": {
+              "hook": "output",
+              "policy": "accept",
+              "prio": 0,
+              "type": "filter"
+            }
+          },
+          "exact": false,
+          "extra": [],
+          "foreign": [],
+          "hooks": {
+            "ip": [
+              "forward",
+              "input",
+              "output"
+            ],
+            "ip6": [
+              "forward",
+              "input",
+              "output"
+            ]
+          },
+          "missing": [],
+          "present": true
+        }
+      },
+      "digest": "8eee625724a580905469fed5e1dc070c3111fb519245c817d7eabd3fd8762c99",
+      "enforced_digest": "3c88cc3fc6ef7939c605f186662048fb0d3e4641164e4b0619a36c61ca69ca2c",
+      "failed": [
+        "READ_BACK",
+        "MANAGEMENT_PLANE"
+      ]
+    },
+    "ok": false,
+    "state": "DRIFTED"
+  },
+  "drift_check_clean": {
+    "codes": [],
+    "ok": true
+  },
+  "intent": {
+    "bootstrap": {
+      "http_port": 8080,
+      "prefix": "10.254.95.0/29",
+      "service_address": "10.254.92.2"
+    },
+    "device": "DEV-000003",
+    "elements": {
+      "CONTROL_PLANE": {
+        "filtered_on_port": [
+          "OSPF",
+          "OSPFv3"
+        ],
+        "mode": "PACKET_FILTER"
+      },
+      "IPV4": {
+        "forward": "service HTTP + service SSH only, then drop",
+        "input": "DHCP to the relay only, then drop"
+      },
+      "IPV6": {
+        "forward": "drop",
+        "input": "neighbour discovery from link-local only, then drop"
+      },
+      "L2": {
+        "kind": "veth",
+        "mode": "VERIFY",
+        "routed_port": true
+      },
+      "MANAGEMENT_PLANE": {
+        "mode": "INPUT_FILTER",
+        "nmas_sources": [
+          "10.254.92.2"
+        ]
+      },
+      "PACKET_FILTER": {
+        "chains": [
+          "forward",
+          "input",
+          "output"
+        ],
+        "family": "inet",
+        "hook_families": [
+          "ip",
+          "ip6"
+        ],
+        "table": "nmas_iso_dev000003"
+      }
+    },
+    "schema": 1,
+    "upstream": {
+      "device": "UP4",
+      "interface": "eth5",
+      "platform": "ubuntu_frr",
+      "vrf": ""
+    }
+  },
+  "ops": [
+    {
+      "description": "nftables isolation of eth5 (forward, input, output; IPv4 and IPv6)",
+      "inverse": [
+        "delete table inet nmas_iso_dev000003"
+      ],
+      "key": "nft-table",
+      "kind": "ADD",
+      "lines": [
+        "table inet nmas_iso_dev000003 {",
+        "  chain forward {",
+        "    type filter hook forward priority filter; policy accept;",
+        "    iifname \"eth5\" ip saddr 10.254.95.0/29 ip daddr 10.254.92.2 tcp dport 8080 accept",
+        "    iifname \"eth5\" ip saddr 10.254.95.0/29 ip daddr 10.254.92.2 tcp sport 22 ct state established,related accept",
+        "    iifname \"eth5\" counter drop",
+        "    oifname \"eth5\" ip saddr 10.254.92.2 ip daddr 10.254.95.0/29 tcp sport 8080 accept",
+        "    oifname \"eth5\" ip saddr 10.254.92.2 ip daddr 10.254.95.0/29 tcp dport 22 accept",
+        "    oifname \"eth5\" counter drop",
+        "  }",
+        "  chain input {",
+        "    type filter hook input priority filter; policy accept;",
+        "    iifname \"eth5\" udp sport 68 udp dport 67 accept",
+        "    iifname \"eth5\" ip6 saddr fe80::/10 icmpv6 type { nd-router-solicit, nd-neighbor-solicit, nd-neighbor-advert } accept",
+        "    iifname \"eth5\" counter drop",
+        "  }",
+        "  chain output {",
+        "    type filter hook output priority filter; policy accept;",
+        "    oifname \"eth5\" udp sport 67 udp dport 68 accept",
+        "    oifname \"eth5\" icmpv6 type { nd-router-advert, nd-neighbor-solicit, nd-neighbor-advert } accept",
+        "    oifname \"eth5\" counter drop",
+        "  }",
+        "}"
+      ],
+      "paths": [
+        "nft table inet nmas_iso_dev000003"
+      ],
+      "platform": "ubuntu_frr"
+    }
+  ],
+  "out_of_band": {
+    "command": "nft delete rule inet nmas_iso_dev000003 forward handle 6  (the device-to-anything drop)",
+    "rc": 0
+  },
+  "plan": {
+    "codes": [],
+    "detail": {
+      "change": "CHG-20261027-0005",
+      "plan_hash": "c0898308c1e2d628c7255d5bfe82f00f1012e8dab20d7f0a134b926a9eecc7c8"
+    },
+    "ok": true
+  },
+  "precheck": {
+    "codes": [],
+    "ok": true
+  },
+  "self_approval": [
+    "ISOLATION_SELF_APPROVAL"
+  ],
+  "udp_probe_to_production_after_drift": true,
+  "udp_probe_to_production_before_drift": false,
+  "verify": {
+    "codes": [],
+    "flows": [
+      {
+        "detail": "OPEN",
+        "expect": "PERMIT",
+        "flow": "dev2 -> bootstrap HTTP 10.254.92.2:8080",
+        "observed": "PERMIT"
+      },
+      {
+        "detail": "OPEN",
+        "expect": "PERMIT",
+        "flow": "NMAS service 10.254.92.2 -> 10.254.95.2:22 (NMAS management)",
+        "observed": "PERMIT"
+      },
+      {
+        "detail": "",
+        "expect": "DENY",
+        "flow": "dev2 -> production host 10.254.94.10 (ICMP)",
+        "observed": "DENY"
+      },
+      {
+        "detail": "",
+        "expect": "DENY",
+        "flow": "dev2 -> production host 2001:db8:fe94::10 (ICMPv6)",
+        "observed": "DENY"
+      },
+      {
+        "detail": "",
+        "expect": "DENY",
+        "flow": "dev2 -> core loopback 10.254.255.2 (ICMP, lateral)",
+        "observed": "DENY"
+      },
+      {
+        "detail": "TIMEOUT",
+        "expect": "DENY",
+        "flow": "dev2 -> 10.254.92.2:22 (not a bootstrap flow)",
+        "observed": "DENY"
+      },
+      {
+        "detail": "TIMEOUT; seen at service: 0",
+        "expect": "DENY",
+        "flow": "dev2 -> 10.254.92.2:22 from forged source port 22 (not an SSH reply)",
+        "observed": "DENY"
+      },
+      {
+        "detail": "TIMEOUT",
+        "expect": "DENY",
+        "flow": "dev2 -> upstream's own SSH 10.254.95.1:22",
+        "observed": "DENY"
+      },
+      {
+        "detail": "TIMEOUT",
+        "expect": "DENY",
+        "flow": "dev2 -> upstream's own SSH 10.254.255.4:22",
+        "observed": "DENY"
+      },
+      {
+        "detail": "",
+        "expect": "DENY",
+        "flow": "dev2 -> upstream 10.254.95.1 (ICMP)",
+        "observed": "DENY"
+      },
+      {
+        "detail": "",
+        "expect": "DENY",
+        "flow": "production host -> 10.254.95.2 (ICMP)",
+        "observed": "DENY"
+      },
+      {
+        "detail": "",
+        "expect": "DENY",
+        "flow": "production host -> 2001:db8:fe95::2 (ICMPv6)",
+        "observed": "DENY"
+      }
+    ],
+    "ok": true
+  },
+  "wrong_hash": [
+    "ISOLATION_CONFIRMATION_MISMATCH"
+  ],
+  "ztp_gate_after_drift": [
+    {
+      "code": "ISOLATION_DRIFTED",
+      "details": {
+        "policy": "ISO-000003",
+        "state": "DRIFTED"
+      },
+      "message": "The upstream no longer holds the enforced isolation policy.",
+      "remediation": "Investigate the drift; re-apply through a new governed Change."
+    }
+  ]
+}

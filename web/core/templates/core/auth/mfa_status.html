@@ -1,0 +1,17 @@
+{% extends "core/base.html" %}
+{% block title %}Account security{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>Account security</h1>
+  <p>Your NMAS website identity. Website MFA is separate from network-device MFA.</p>
+</div>
+<div class="card">
+  <table class="data-table">
+    <tr><th>User</th><td>{{ request.user.get_username }}</td></tr>
+    <tr><th>Roles</th><td>{% if request.user.is_superuser %}Superuser (all permissions){% if groups %}; {% endif %}{% endif %}{{ groups|join:", "|default:"(no NMAS role group)" }}</td></tr>
+    <tr><th>Website MFA</th><td>{% if device %}<span class="badge badge--success">Microsoft Authenticator enrolled</span> since {{ device.confirmed_at|date:"Y-m-d H:i" }} UTC{% if device.last_verified_at %}; last verified {{ device.last_verified_at|date:"Y-m-d H:i" }} UTC{% endif %}{% else %}<span class="badge badge--warning">Not enrolled</span>{% endif %}</td></tr>
+    <tr><th>Permitted actions</th><td>{% for name, allowed in actions.items %}<span class="badge {% if allowed %}badge--success{% else %}badge--neutral{% endif %}">{{ name }}</span> {% endfor %}</td></tr>
+  </table>
+  <p class="wb-muted">To replace a lost authenticator an administrator resets it (<code>manage.py nmas_app_mfa_reset --username &lt;user&gt;</code> or the Django admin); you then re-enroll at the next sign-in.</p>
+</div>
+{% endblock %}

@@ -1,0 +1,18 @@
+{% load core_extras %}
+{# runs: OperationalCheckRun rows.  Links only to server-side UUIDs. #}
+<table class="data-table">
+  <thead><tr><th>When</th><th>Mode</th><th>Scope</th><th>Status</th><th>By</th></tr></thead>
+  <tbody>
+  {% for item in runs %}
+    <tr>
+      <td>{{ item.created_at }}</td>
+      <td>{{ item.get_mode_display }}</td>
+      <td>{% if item.change_id %}<a href="{% url 'core:change_precheck_detail' item.change.change_id item.run_id %}">{{ item.change.change_id }}</a>{% elif item.mode == "DEVICE_DEEP" or item.mode == "FLEET_QUICK" %}<a href="{% url 'core:health_run' item.run_id %}">{% if item.device %}{{ item.device }}{% else %}Fleet{% endif %}</a>{% else %}—{% endif %}</td>
+      <td><span class="badge badge--{{ item.status|health_badge_class }}">{{ item.status }}</span></td>
+      <td>{{ item.created_by|default:"—" }}</td>
+    </tr>
+  {% empty %}
+    <tr><td colspan="5">No runs recorded yet.</td></tr>
+  {% endfor %}
+  </tbody>
+</table>

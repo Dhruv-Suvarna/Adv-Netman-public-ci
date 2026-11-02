@@ -1,0 +1,55 @@
+{% extends "core/base.html" %}
+{% block title %}{{ artifact.path }} · Unit Test Matrix{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1><code>{{ artifact.path }}</code></h1>
+  <p><a href="{% url 'core:quality_unit_tests' %}">&larr; Unit Test Matrix</a> · read-only (no editor: the repository is the source of truth)</p>
+</div>
+{% include "core/quality/_evidence.html" %}
+<div class="card-grid" style="margin-top:12px;">
+  <div class="card"><h3>Classification</h3>
+    <p>ID <code>{{ artifact.id }}</code><br>Type {{ artifact.type }} · {{ artifact.role }}<br>Group {{ artifact.group_title }} · Tier-3 subsystem{{ artifact.subsystems|length|pluralize }} {{ artifact.subsystems|join:", " }}<br>
+    {% if artifact.platform %}Platform {{ artifact.platform }}{% endif %}{% if artifact.features %} · features {{ artifact.features|join:", " }}{% endif %}<br>
+    Scope <strong>{{ artifact.scope }}</strong>{% if artifact.scope_reason %} — {{ artifact.scope_reason }}{% endif %}<br>
+    Status <span class="badge badge--{{ status_badge }}">{{ artifact.status }}</span><br>
+    <span style="font-size:0.8em;">sha256 <code>{{ artifact.sha256|slice:":16" }}</code>{% if artifact.variables %} · template variables {{ artifact.variables|join:", " }}{% endif %}</span></p></div>
+  <div class="card"><h3>Cases</h3>
+    <p>Negative <strong>{{ artifact.negative.pass }} / {{ artifact.negative.required }}</strong> · Positive <strong>{{ artifact.positive.pass }} / {{ artifact.positive.required }}</strong><br>
+    missing {{ artifact.negative.missing|add:artifact.positive.missing }} · failing {{ artifact.negative.fail|add:artifact.positive.fail }} · exempt {{ artifact.negative.exempt|add:artifact.positive.exempt }} · tracked debt {{ artifact.negative.debt|add:artifact.positive.debt }}</p>
+    {% if is_python %}<p>Functions explicitly tested <strong>{{ artifact.functions.tested }} / {{ artifact.functions.required }}</strong> · internal {{ artifact.functions.internal }} · exempt {{ artifact.functions.exempt }}</p>{% endif %}</div>
+  {% if artifact.coverage %}<div class="card"><h3>Runtime coverage</h3>
+    <p>Statements <strong>{{ artifact.coverage.covered }} / {{ artifact.coverage.statements }}</strong> ({{ artifact.coverage.line_pct|default:"-" }}%)<br>
+    Branches <strong>{{ artifact.coverage.covered_branches }} / {{ artifact.coverage.branches }}</strong> ({{ artifact.coverage.branch_pct|default:"-" }}%)<br>
+    {% if not artifact.coverage.measured %}<em>No test imported this file: every statement counts as uncovered.</em><br>{% endif %}
+    <span style="font-size:0.8em;">Uncovered lines: {{ artifact.coverage.missing_lines|join:", "|default:"none" }}</span><br>
+    <span style="font-size:0.8em;">Uncovered branches: {{ artifact.coverage.missing_branches|join:", "|default:"none" }}</span></p></div>{% endif %}
+  {% if is_python %}<div class="card"><h3>Pylint</h3>
+    <p><span class="badge badge--{% if artifact.pylint.status == 'PASS' %}success{% elif artifact.pylint.status == 'FAIL' %}danger{% else %}warning{% endif %}">{{ artifact.pylint.status }}</span>
+    critical {{ artifact.pylint.critical|default:0 }}{% if artifact.pylint.false_positives %} · documented false positives {{ artifact.pylint.false_positives }}{% endif %}</p>
+    {% if artifact.pylint.counts %}<p style="font-size:0.85em;">Tracked: {% for k, v in artifact.pylint.counts.items %}{{ k }} {{ v }}{% if not forloop.last %}, {% endif %}{% endfor %} (baseline {% for k, v in artifact.pylint.baseline.items %}{{ k }} {{ v }}{% if not forloop.last %}, {% endif %}{% empty %}none{% endfor %})</p>{% endif %}
+    {% if artifact.pylint.messages %}<ul style="font-size:0.8em;">{% for m in artifact.pylint.messages %}<li>line {{ m.line }} <code>{{ m.symbol }}</code>{% if m.critical %} <strong>critical</strong>{% endif %} {{ m.message }}</li>{% endfor %}</ul>{% endif %}</div>{% endif %}
+</div>
+
+<div class="card" style="margin-top:12px;" id="negative-cases"><h3>Negative cases ({{ negative|length }})</h3>
+  <table class="data-table"><thead><tr><th>State</th><th>Case</th><th>Condition → expected</th><th>Proving tests (exact identifiers)</th></tr></thead><tbody>
+  {% for c in negative %}<tr><td><span class="badge badge--{{ c.badge }}">{{ c.state }}</span>{% if c.debt %}<br><span style="font-size:0.75em;">tracked debt</span>{% endif %}</td><td><code style="font-size:0.8em;">{{ c.id }}</code><br>{{ c.title }}</td>
+    <td style="font-size:0.85em;">{{ c.condition }} → {{ c.expected }}{% if c.reason %}<br><em>{{ c.reason }}</em>{% endif %}</td>
+    <td style="font-size:0.8em;">{% for t in c.tests %}<code>{{ t.id }}</code> {{ t.outcome }} · {{ t.basis }}{% if t.file %} · {{ t.file }}:{{ t.line }}{% endif %}<br>{% empty %}—{% endfor %}{% if c.evidence_total > c.tests|length %}… {{ c.evidence_total }} in total{% endif %}</td></tr>
+  {% empty %}<tr><td colspan="4">No negative case is required for this artifact.</td></tr>{% endfor %}</tbody></table></div>
+<div class="card" style="margin-top:12px;" id="positive-cases"><h3>Positive cases ({{ positive|length }})</h3>
+  <table class="data-table"><thead><tr><th>State</th><th>Case</th><th>Condition → expected</th><th>Proving tests (exact identifiers)</th></tr></thead><tbody>
+  {% for c in positive %}<tr><td><span class="badge badge--{{ c.badge }}">{{ c.state }}</span>{% if c.debt %}<br><span style="font-size:0.75em;">tracked debt</span>{% endif %}</td><td><code style="font-size:0.8em;">{{ c.id }}</code><br>{{ c.title }}</td>
+    <td style="font-size:0.85em;">{{ c.condition }} → {{ c.expected }}{% if c.reason %}<br><em>{{ c.reason }}</em>{% endif %}</td>
+    <td style="font-size:0.8em;">{% for t in c.tests %}<code>{{ t.id }}</code> {{ t.outcome }} · {{ t.basis }}{% if t.file %} · {{ t.file }}:{{ t.line }}{% endif %}<br>{% empty %}—{% endfor %}{% if c.evidence_total > c.tests|length %}… {{ c.evidence_total }} in total{% endif %}</td></tr>
+  {% empty %}<tr><td colspan="4">No positive case is required for this artifact.</td></tr>{% endfor %}</tbody></table></div>
+
+{% if symbols %}<div class="card" style="margin-top:12px;" id="symbols"><h3>Functions / methods ({{ symbols|length }})</h3>
+  <table class="data-table"><thead><tr><th>Symbol</th><th>Lines</th><th>Disposition</th><th>Negative</th><th>Positive</th><th>Lines / branches covered</th></tr></thead><tbody>
+  {% for s in symbols %}<tr data-symbol="{{ s.id }}"><td><code>{{ s.qualname }}</code>{% if not s.public %} <span style="font-size:0.75em;">private</span>{% endif %}<br><span style="font-size:0.75em;color:var(--text-muted);">{{ s.kind }}{% if s.params %} ({{ s.params|join:", " }}){% endif %}</span></td>
+    <td>{{ s.lines.0 }}–{{ s.lines.1 }}</td><td style="font-size:0.85em;">{{ s.disposition_label }} <span style="color:var(--text-muted);">{{ s.rule }}</span>{% if s.reason %}<br><em style="font-size:0.85em;">{{ s.reason }}</em>{% endif %}</td>
+    <td>{% if s.negative %}<span class="badge badge--{% if s.negative == 'PASS' %}success{% elif s.negative == 'MISSING' %}warning{% else %}danger{% endif %}">{{ s.negative }}</span>{% else %}—{% endif %}</td>
+    <td>{% if s.positive %}<span class="badge badge--{% if s.positive == 'PASS' %}success{% elif s.positive == 'MISSING' %}warning{% else %}danger{% endif %}">{{ s.positive }}</span>{% else %}—{% endif %}</td>
+    <td style="font-size:0.85em;">{% if s.coverage %}{{ s.coverage.covered }}/{{ s.coverage.statements }} ({{ s.coverage.line_pct|default:"-" }}%) · {{ s.coverage.covered_branches }}/{{ s.coverage.branches }}{% endif %}</td></tr>{% endfor %}
+  </tbody></table></div>{% endif %}
+{% if cells %}<div class="card" style="margin-top:12px;"><h3>Capability cells using this artifact</h3><p>{% for c in cells %}<a href="{% url 'core:quality_cell' c.platform c.feature %}">{{ c.platform }} · {{ c.feature }}</a> ({{ c.status }}){% if not forloop.last %}, {% endif %}{% endfor %}</p></div>{% endif %}
+{% endblock %}

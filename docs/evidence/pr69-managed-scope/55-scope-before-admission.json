@@ -1,0 +1,47 @@
+{
+  "commissioning": "CONFIGURED",
+  "consumers": {
+    "active_managed": false,
+    "config_validation": {
+      "evidence": {
+        "outside_scope": [
+          "NEW1"
+        ]
+      },
+      "status": "BLOCKED"
+    },
+    "execution_gate": [
+      "TARGET_DEVICE_OUTSIDE_MANAGED_SCOPE",
+      "TARGET_DEVICE_UNRESOLVABLE"
+    ],
+    "refusal": "NOT_ACTIVE_PROVISIONED"
+  },
+  "device": [
+    "COMMISSIONING",
+    "NOT_ADMITTED"
+  ],
+  "netbox": {
+    "exists": true,
+    "iac_managed": null,
+    "id": 12,
+    "name": "NEW1",
+    "status": "planned",
+    "tags": [
+      "nmas-provisioning"
+    ]
+  },
+  "netbox_device_id": 12,
+  "netbox_managed_devices": [
+    "R1",
+    "R2",
+    "R3",
+    "R4",
+    "S1",
+    "S2",
+    "S3",
+    "S4",
+    "mgmt_swt"
+  ],
+  "registry_state": "ADMITTED",
+  "run_status": "POSTCHECKED"
+}

@@ -1,0 +1,476 @@
+{
+  "description": "Canonical dashboard for the future Django 'Link Events' page: chronological interface/link notifications and related critical syslog. Sources: snmp_trap (linkUp/linkDown/other authenticated notifications -- event-shaped, legitimately empty when quiet) and syslog_event (event-optional). Does not fabricate a discrete transition-event log for gNMI continuous interface state or for interface errors/discards -- both are stored only as continuous samples/counters and are presented as such on NMAS Link State & Traffic instead. See docs/GRAFANA_MONITORING_TAXONOMY.md \"Known limitations\".",
+  "editable": false,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 1,
+  "id": null,
+  "links": [],
+  "liveNow": true,
+  "panels": [
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "nmas-influxdb"
+      },
+      "description": "Authenticated SNMPv3 notifications (including linkUp/linkDown) in the selected range. Legitimately zero on a fully quiet, stable network.",
+      "eventOptional": true,
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 1
+              },
+              {
+                "color": "red",
+                "value": 10
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 0,
+        "y": 0
+      },
+      "id": 1,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "nmas-influxdb"
+          },
+          "query": "from(bucket: \"network-monitoring\")\n          |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n          |> filter(fn: (r) => r._measurement == \"snmp_trap\" and r._field == \"value\")\n          |> filter(fn: (r) => r.device =~ /^${device:regex}$/ and r.event_type =~ /^${event_type:regex}$/)\n          |> group()\n          |> count()",
+          "refId": "A"
+        }
+      ],
+      "title": "SNMP notifications (range)",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "nmas-influxdb"
+      },
+      "description": "Critical-or-worse syslog events in range. Not topic-tagged to interfaces specifically -- see the recent-events table below.",
+      "eventOptional": true,
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 1
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 6,
+        "y": 0
+      },
+      "id": 2,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "nmas-influxdb"
+          },
+          "query": "from(bucket: \"network-monitoring\")\n          |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n          |> filter(fn: (r) => r._measurement == \"syslog_event\" and r._field == \"message\")\n          |> map(fn: (r) => ({r with device: if r.device == \"mgmt-swt\" then \"mgmt_swt\" else r.device}))\n          |> filter(fn: (r) => r.device =~ /^${device:regex}$/ and r.severity =~ /^${severity:regex}$/)\n          |> group()\n          |> count()",
+          "refId": "A"
+        }
+      ],
+      "title": "Critical syslog (range)",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "nmas-influxdb"
+      },
+      "description": "Includes linkUp/linkDown and explicitly labelled cEOS safe test notifications. collector_alert CPU events are a distinct measurement and never appear here.",
+      "eventOptional": true,
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 1
+              },
+              {
+                "color": "red",
+                "value": 10
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 12,
+        "x": 12,
+        "y": 0
+      },
+      "id": 3,
+      "options": {
+        "displayMode": "gradient",
+        "minVizHeight": 10,
+        "minVizWidth": 0,
+        "namePlacement": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true,
+        "sizing": "auto",
+        "valueMode": "color"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "nmas-influxdb"
+          },
+          "query": "from(bucket: \"network-monitoring\")\n          |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n          |> filter(fn: (r) => r._measurement == \"snmp_trap\" and r._field == \"value\")\n          |> filter(fn: (r) => r.device =~ /^${device:regex}$/ and r.event_type =~ /^${event_type:regex}$/)\n          |> group(columns: [\"event_type\"])\n          |> count()",
+          "refId": "A"
+        }
+      ],
+      "title": "Trap types",
+      "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "nmas-influxdb"
+      },
+      "description": "Received SNMP notification count per dashboard interval, grouped by event type (linkUp/linkDown/ceosTestNotification/other).",
+      "eventOptional": true,
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 4
+      },
+      "id": 4,
+      "options": {
+        "legend": {
+          "calcs": [
+            "lastNotNull",
+            "max"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "nmas-influxdb"
+          },
+          "query": "from(bucket: \"network-monitoring\")\n          |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n          |> filter(fn: (r) => r._measurement == \"snmp_trap\" and r._field == \"value\")\n          |> filter(fn: (r) => r.device =~ /^${device:regex}$/ and r.event_type =~ /^${event_type:regex}$/)\n          |> group(columns: [\"event_type\"])\n          |> aggregateWindow(every: v.windowPeriod, fn: count, createEmpty: false)",
+          "refId": "A"
+        }
+      ],
+      "title": "Notification volume over time (by event type)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "nmas-influxdb"
+      },
+      "description": "Chronological event feed: time, device/source, notification class/OID, optional interface index, decoded varbinds. No distinct admin-state-transition trap exists separately from linkUp/linkDown on either platform -- not fabricated here.",
+      "eventOptional": true,
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "filterable": true
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 24,
+        "x": 0,
+        "y": 12
+      },
+      "id": 5,
+      "options": {
+        "cellHeight": "sm",
+        "showHeader": true,
+        "sortBy": []
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "nmas-influxdb"
+          },
+          "query": "from(bucket: \"network-monitoring\")\n          |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n          |> filter(fn: (r) => r._measurement == \"snmp_trap\" and r._field == \"raw_varbinds\")\n          |> filter(fn: (r) => r.device =~ /^${device:regex}$/ and r.event_type =~ /^${event_type:regex}$/)\n          |> map(fn: (r) => ({r with ifindex: if exists r.ifindex then r.ifindex else \"-\"}))\n          |> keep(columns: [\"_time\", \"device\", \"source_ip\", \"event_type\", \"severity\", \"ifindex\", \"notification_oid\", \"_value\"])\n          |> rename(columns: {_value: \"raw_varbinds\"})\n          |> group()\n          |> sort(columns: [\"_time\"], desc: true)\n          |> limit(n: 200)",
+          "refId": "A"
+        }
+      ],
+      "title": "Recent SNMP notifications",
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "nmas-influxdb"
+      },
+      "description": "Critical-or-worse syslog for the selected device/severity. syslog_event has no topic tag separating resource from interface/link messages, so this is the full matching feed, not a topic-specific subset -- a disclosed limitation, not a fabricated split.",
+      "eventOptional": true,
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "filterable": true
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 24,
+        "x": 0,
+        "y": 22
+      },
+      "id": 6,
+      "options": {
+        "cellHeight": "sm",
+        "showHeader": true,
+        "sortBy": []
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "nmas-influxdb"
+          },
+          "query": "from(bucket: \"network-monitoring\")\n      |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n      |> filter(fn: (r) => r._measurement == \"syslog_event\" and r._field == \"message\")\n      |> map(fn: (r) => ({r with device: if r.device == \"mgmt-swt\" then \"mgmt_swt\" else r.device, platform: if exists r.platform then r.platform else \"unknown\"}))\n      |> filter(fn: (r) => r.device =~ /^${device:regex}$/ and r.severity =~ /^${severity:regex}$/)\n      |> keep(columns: [\"_time\", \"device\", \"platform\", \"source_ip\", \"severity\", \"facility\", \"_value\"])\n      |> rename(columns: {_value: \"message\"})\n      |> group()\n      |> sort(columns: [\"_time\"], desc: true)\n      |> limit(n: 200)",
+          "refId": "A"
+        }
+      ],
+      "title": "Recent critical syslog",
+      "type": "table"
+    }
+  ],
+  "refresh": "20s",
+  "schemaVersion": 40,
+  "tags": [
+    "nmas",
+    "network-monitoring",
+    "iac",
+    "canonical"
+  ],
+  "templating": {
+    "list": [
+      {
+        "allValue": ".*",
+        "current": {
+          "selected": true,
+          "text": "All",
+          "value": "$__all"
+        },
+        "datasource": {
+          "type": "influxdb",
+          "uid": "nmas-influxdb"
+        },
+        "definition": "from(bucket: \"network-monitoring\")\n      |> range(start: -30d)\n      |> filter(fn: (r) => r._measurement == \"gnmi_telemetry\" and r.category == \"system_identity\" and r._field == \"hostname\")\n      |> keep(columns: [\"device\"])\n      |> group()\n      |> distinct(column: \"device\")\n      |> sort(columns: [\"device\"])",
+        "hide": 0,
+        "includeAll": true,
+        "label": "Device",
+        "multi": true,
+        "name": "device",
+        "query": "from(bucket: \"network-monitoring\")\n      |> range(start: -30d)\n      |> filter(fn: (r) => r._measurement == \"gnmi_telemetry\" and r.category == \"system_identity\" and r._field == \"hostname\")\n      |> keep(columns: [\"device\"])\n      |> group()\n      |> distinct(column: \"device\")\n      |> sort(columns: [\"device\"])",
+        "refresh": 2,
+        "skipUrlSync": false,
+        "sort": 1,
+        "type": "query"
+      },
+      {
+        "allValue": ".*",
+        "current": {
+          "selected": true,
+          "text": "All",
+          "value": "$__all"
+        },
+        "datasource": {
+          "type": "influxdb",
+          "uid": "nmas-influxdb"
+        },
+        "definition": "from(bucket: \"network-monitoring\")\n      |> range(start: -30d)\n      |> filter(fn: (r) => r._measurement == \"snmp_trap\" and r._field == \"value\")\n      |> keep(columns: [\"event_type\"])\n      |> group()\n      |> distinct(column: \"event_type\")\n      |> sort(columns: [\"event_type\"])",
+        "hide": 0,
+        "includeAll": true,
+        "label": "Event type",
+        "multi": true,
+        "name": "event_type",
+        "query": "from(bucket: \"network-monitoring\")\n      |> range(start: -30d)\n      |> filter(fn: (r) => r._measurement == \"snmp_trap\" and r._field == \"value\")\n      |> keep(columns: [\"event_type\"])\n      |> group()\n      |> distinct(column: \"event_type\")\n      |> sort(columns: [\"event_type\"])",
+        "refresh": 2,
+        "skipUrlSync": false,
+        "sort": 1,
+        "type": "query"
+      },
+      {
+        "allValue": ".*",
+        "current": {
+          "selected": true,
+          "text": "All",
+          "value": "$__all"
+        },
+        "datasource": {
+          "type": "influxdb",
+          "uid": "nmas-influxdb"
+        },
+        "definition": "from(bucket: \"network-monitoring\")\n      |> range(start: -30d)\n      |> filter(fn: (r) => r._measurement == \"syslog_event\" and r._field == \"message\")\n      |> keep(columns: [\"severity\"])\n      |> group()\n      |> distinct(column: \"severity\")\n      |> sort(columns: [\"severity\"])",
+        "hide": 0,
+        "includeAll": true,
+        "label": "Severity",
+        "multi": true,
+        "name": "severity",
+        "query": "from(bucket: \"network-monitoring\")\n      |> range(start: -30d)\n      |> filter(fn: (r) => r._measurement == \"syslog_event\" and r._field == \"message\")\n      |> keep(columns: [\"severity\"])\n      |> group()\n      |> distinct(column: \"severity\")\n      |> sort(columns: [\"severity\"])",
+        "refresh": 2,
+        "skipUrlSync": false,
+        "sort": 1,
+        "type": "query"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-24h",
+    "to": "now"
+  },
+  "timepicker": {
+    "refresh_intervals": [
+      "10s",
+      "20s",
+      "30s",
+      "1m",
+      "5m"
+    ]
+  },
+  "timezone": "browser",
+  "title": "NMAS Link Events",
+  "uid": "nmas-link-events",
+  "version": 1,
+  "weekStart": ""
+}

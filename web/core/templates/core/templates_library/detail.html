@@ -1,0 +1,41 @@
+{% extends "core/base.html" %}
+{% block title %}{{ template.name }}{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>{{ template.name }}</h1>
+  <p><a href="{% url 'core:template_library' %}">Template Library</a> · <code>{{ template.template_id }}</code> · {{ template.get_family_display }} ·
+     {% if template.is_baseline %}<span class="badge badge--info">Baseline · immutable</span>{% else %}<span class="badge badge--neutral">{{ template.get_origin_display }}</span>{% endif %}
+     {% if template.retired_at %}<span class="badge badge--neutral">Retired {{ template.retired_at|date:"Y-m-d" }} by {{ template.retired_by }}</span>{% endif %}</p>
+</div>
+{% include "core/templates_library/_flash.html" %}
+<p>{{ template.description }}</p>
+<p style="color:var(--text-muted); font-size:0.85rem;">Created {{ template.created_at|date:"Y-m-d H:i" }} UTC by {{ template.created_by|default:"—" }}.
+   Published versions are immutable: a change is always a new version or a cloned working intent.</p>
+
+<h2>Versions</h2>
+<table class="data-table" data-component="template-versions">
+  <thead><tr><th>Version</th><th>Status</th><th>Created</th><th>Published</th><th>Platforms</th><th>Source devices</th><th>Digest (sha256)</th><th></th></tr></thead>
+  <tbody>
+  {% for version in versions %}
+    <tr>
+      <td><a href="{% url 'core:template_version_detail' template.template_id version.version %}">v{{ version.version }}</a></td>
+      <td>{% if version.is_published %}<span class="badge badge--success">Published · immutable</span>{% else %}<span class="badge badge--warning">Draft</span>{% endif %}</td>
+      <td>{{ version.created_at|date:"Y-m-d H:i" }} · {{ version.created_by|default:"—" }}</td>
+      <td>{% if version.published_at %}{{ version.published_at|date:"Y-m-d H:i" }} · {{ version.published_by|default:"—" }}{% else %}—{% endif %}</td>
+      <td>{{ version.platforms|join:", "|default:"not deployable" }}</td>
+      <td>{{ version.provenance.source_devices|join:", " }}</td>
+      <td><code>{{ version.digest|slice:":16" }}</code></td>
+      <td>{% if version.is_published %}<a class="btn btn--secondary" href="{% url 'core:template_export' template.template_id version.version %}">Export</a>{% endif %}</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+
+{% if not template.retired_at and perms.core.nmas_approve %}
+<form method="post" action="{% url 'core:template_retire' template.template_id %}" style="margin-top:24px;">
+  {% csrf_token %}
+  <button class="btn btn--secondary" type="submit">Retire template</button>
+  <span class="rc-note">Hides it from new use. Every version and its history is retained.</span>
+</form>
+{% endif %}
+{% endblock %}

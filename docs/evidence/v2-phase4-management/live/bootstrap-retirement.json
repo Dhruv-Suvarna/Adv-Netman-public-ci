@@ -1,0 +1,128 @@
+{
+  "after": {
+    "accounts": [
+      "fixture-admin",
+      "nmas-ops",
+      "nmas-svc"
+    ],
+    "bootstrap_login": "AUTH_FAILED",
+    "configuration_sessions": "Maximum number of completed sessions: 1\nMaximum number of pending sessions: 5\nMerge on commit is disabled\nAutosave to startup-config on commit is disabled\n\n Name State User Terminal\n ---- ----- ---- --------\n",
+    "enrollment_secret_in_provider": "ABSENT",
+    "replacement_key_installed": true,
+    "replacement_login_hostname": "DUT1"
+  },
+  "before": {
+    "accounts": [
+      "fixture-admin",
+      "nmas-enroll",
+      "nmas-svc"
+    ],
+    "bootstrap_login": "ACCEPTED"
+  },
+  "fixture_step": "fixture-admin installs the session's enrollment public key as nmas-enroll (stands in for the Phase-3 delivered artifact; live ZTP is Phase 3's evidence)",
+  "status": {
+    "approved_by": "arthur",
+    "bootstrap_key_fingerprint": "SHA256:u6EQNLFRixiugrIibE1qJEtGXQYr1FO5oyLSGbbre4Y",
+    "bootstrap_username": "nmas-enroll",
+    "complete": true,
+    "device": "NEW1",
+    "digest": "1513c4f56c895ffa0542f8a9c814be08d45be14b3cd70606af70b31fada1738e",
+    "executed_by": "nmas-automation (live harness)",
+    "failure": {},
+    "id": "BCRED-000001",
+    "path": "",
+    "replacement_key_fingerprint": "SHA256:Z7OmzlQ4vTPSQLL79Fn+pfjdyjPclhk45xfQwQaPfbw",
+    "replacement_username": "nmas-ops",
+    "requested_by": "olivia",
+    "state": "COMPLETE",
+    "steps": [
+      {
+        "at": "2026-10-26T05:25:57.083507+00:00",
+        "code": "",
+        "facts": {},
+        "ok": true,
+        "step": "execution_started"
+      },
+      {
+        "at": "2026-10-26T05:25:57.853066+00:00",
+        "code": "",
+        "facts": {
+          "bootstrap_account": true,
+          "replacement_account": false
+        },
+        "ok": true,
+        "step": "preflight"
+      },
+      {
+        "at": "2026-10-26T05:25:57.864819+00:00",
+        "code": "",
+        "facts": {},
+        "ok": true,
+        "step": "before_install"
+      },
+      {
+        "at": "2026-10-26T05:26:01.583207+00:00",
+        "code": "",
+        "facts": {
+          "action": "INSTALLED",
+          "username": "nmas-ops"
+        },
+        "ok": true,
+        "step": "install"
+      },
+      {
+        "at": "2026-10-26T05:26:02.528316+00:00",
+        "code": "",
+        "facts": {
+          "host_key_pinned": true,
+          "independent_session": true
+        },
+        "ok": true,
+        "step": "verify_replacement"
+      },
+      {
+        "at": "2026-10-26T05:26:02.802860+00:00",
+        "code": "",
+        "facts": {},
+        "ok": true,
+        "step": "before_revoke"
+      },
+      {
+        "at": "2026-10-26T05:26:06.105096+00:00",
+        "code": "",
+        "facts": {
+          "commit_timer": "00:10:00",
+          "confirmed": false
+        },
+        "ok": true,
+        "step": "revoke"
+      },
+      {
+        "at": "2026-10-26T05:26:09.833265+00:00",
+        "code": "",
+        "facts": {
+          "account_absent": true,
+          "bootstrap_auth": "REJECTED",
+          "confirmed": true
+        },
+        "ok": true,
+        "step": "confirm_revocation"
+      },
+      {
+        "at": "2026-10-26T05:26:09.853957+00:00",
+        "code": "",
+        "facts": {
+          "provider_record": "ABSENT"
+        },
+        "ok": true,
+        "step": "retire_secret"
+      }
+    ]
+  },
+  "transport": {
+    "host_key_pinned": true,
+    "interface": "eth1",
+    "source": "10.254.40.10",
+    "target": "10.254.40.21"
+  }
+}

@@ -1,0 +1,10 @@
+/var/log/lab-monitoring/remote-syslog.log /var/log/lab-monitoring/snmptrapd.log {
+    daily
+    rotate 30
+    maxage 30
+    compress
+    delaycompress
+    missingok
+    ifempty
+    copytruncate
+}

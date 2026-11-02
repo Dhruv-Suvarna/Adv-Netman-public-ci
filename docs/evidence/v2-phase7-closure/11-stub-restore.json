@@ -1,0 +1,185 @@
+{
+  "approve": {
+    "codes": [],
+    "ok": true
+  },
+  "check": {
+    "checks": {
+      "attachments": {
+        "ports": 0,
+        "taken": []
+      },
+      "credentials": {
+        "session": "authenticated",
+        "transport": "CeosExecutor"
+      },
+      "drift": {
+        "since_decommission": false
+      },
+      "identity": {
+        "basis": "decommission-time session host key",
+        "expected_known": true,
+        "match": true,
+        "observed_known": true
+      },
+      "integrity": true,
+      "isolation": {
+        "basis": "identity re-observed in place and prior admission LEGACY_PREEXISTING",
+        "required": false
+      },
+      "platform": true
+    },
+    "codes": [],
+    "ok": true,
+    "plan": {
+      "facts": {
+        "management_interfaces": [
+          "Ethernet5"
+        ]
+      },
+      "operations": [
+        {
+          "description": "restore router ospf 1",
+          "inverse": [
+            "no router ospf 1"
+          ],
+          "key": "restore-router-ospf-1",
+          "kind": "ADD",
+          "lines": [
+            "router ospf 1",
+            "   router-id 10.254.255.5",
+            "   network 10.254.86.0/31 area 0.0.0.0",
+            "   network 10.254.255.5/32 area 0.0.0.0",
+            "   max-lsa 12000"
+          ],
+          "paths": [
+            "router ospf 1",
+            "router ospf 1 > router-id 10.254.255.5",
+            "router ospf 1 > network 10.254.86.0/31 area 0.0.0.0",
+            "router ospf 1 > network 10.254.255.5/32 area 0.0.0.0",
+            "router ospf 1 > max-lsa 12000"
+          ]
+        },
+        {
+          "description": "restore ipv6 router ospf 1",
+          "inverse": [
+            "no ipv6 router ospf 1"
+          ],
+          "key": "restore-ipv6-router-ospf-1",
+          "kind": "ADD",
+          "lines": [
+            "ipv6 router ospf 1",
+            "   router-id 10.254.255.5"
+          ],
+          "paths": [
+            "ipv6 router ospf 1",
+            "ipv6 router ospf 1 > router-id 10.254.255.5"
+          ]
+        },
+        {
+          "description": "Ethernet1: administratively up",
+          "inverse": [
+            "interface Ethernet1",
+            "   shutdown"
+          ],
+          "key": "no-shutdown-Ethernet1",
+          "kind": "REMOVE",
+          "lines": [
+            "interface Ethernet1",
+            "   no shutdown"
+          ],
+          "paths": [
+            "interface Ethernet1 > shutdown"
+          ]
+        }
+      ]
+    },
+    "state": "PLANNED"
+  },
+  "execute": {
+    "codes": [],
+    "exact_digest": true,
+    "ok": true,
+    "outcome": "SUCCEEDED",
+    "outcome_detail": {
+      "adjacencies": {
+        "IPV4": {
+          "device": [
+            "E2"
+          ],
+          "graph": [
+            [
+              "E1",
+              "T1"
+            ],
+            [
+              "E1",
+              "T2"
+            ],
+            [
+              "E2",
+              "STUB"
+            ],
+            [
+              "E2",
+              "T1"
+            ],
+            [
+              "E2",
+              "T2"
+            ]
+          ]
+        },
+        "IPV6": {
+          "device": [
+            "E2"
+          ],
+          "graph": [
+            [
+              "E1",
+              "T1"
+            ],
+            [
+              "E1",
+              "T2"
+            ],
+            [
+              "E2",
+              "STUB"
+            ],
+            [
+              "E2",
+              "T1"
+            ],
+            [
+              "E2",
+              "T2"
+            ]
+          ]
+        }
+      },
+      "blockers": [],
+      "credentials_reinstated": [],
+      "digest": "e149c187b1977a2f761cebe3cffdcbf20dc219607fda2c19d9b446ccb517e97d",
+      "expected_digest": "e149c187b1977a2f761cebe3cffdcbf20dc219607fda2c19d9b446ccb517e97d",
+      "outcome": "SUCCEEDED",
+      "run": "41281c57-e582-4ac3-830d-c6b2096b9ab0"
+    },
+    "state": "RESTORED",
+    "successor": {
+      "admission": "LEGACY_PREEXISTING",
+      "device_id": "DEV-000009",
+      "lifecycle": "IN_SERVICE",
+      "origin": "RESTORED",
+      "predecessor": "DEV-000005"
+    }
+  },
+  "label": "STUB restore",
+  "request": {
+    "codes": [],
+    "ok": true
+  },
+  "self_approval": [
+    "RESTORATION_SELF_APPROVAL"
+  ]
+}

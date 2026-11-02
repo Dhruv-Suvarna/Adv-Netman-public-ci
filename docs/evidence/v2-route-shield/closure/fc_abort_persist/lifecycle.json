@@ -1,0 +1,36 @@
+[
+ {
+  "from": "",
+  "to": "DRAFT",
+  "reason": "Change created",
+  "metadata": {}
+ },
+ {
+  "from": "DRAFT",
+  "to": "READY_TO_DEPLOY",
+  "reason": "Transition approved",
+  "metadata": {
+   "approval": {
+    "plan_id": "1c5d284f-a178-4c47-adab-3ae264b55952",
+    "plan_hash": "83b89d0a252196ce1664861f9991476c21ca6ca80f0b9baafafba2790cd0ed89",
+    "precheck_run": "27494c74-6f4d-4620-a1bb-818b555a1089",
+    "acknowledged": [
+     "window_authorized",
+     "core_kernel_routes",
+     "access_routing_configuration",
+     "host_quiet"
+    ],
+    "approved_by": "sandbox-operator"
+   }
+  }
+ },
+ {
+  "from": "READY_TO_DEPLOY",
+  "to": "ROLLED_BACK",
+  "reason": "Transition execution FAILED_ROLLED_BACK",
+  "metadata": {
+   "run_id": "275ff56c-18f6-42e0-a8e8-7351ee78528d",
+   "outcome": "FAILED_ROLLED_BACK"
+  }
+ }
+]

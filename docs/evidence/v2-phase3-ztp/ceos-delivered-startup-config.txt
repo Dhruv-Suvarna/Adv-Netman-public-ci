@@ -1,0 +1,25 @@
+! NMAS minimal management bootstrap ZTP-000001 (BAUTH-000001) -- bootstrap scope only.
+! No production routing, forwarding, VLANs or services: production configuration is Phase 6 commissioning.
+hostname ZTPNEW1
+!
+aaa authorization exec default local
+!
+username nmas-enroll privilege 15 role network-admin secret sha512 <locked sha512-crypt of discarded random bytes; redacted>
+username nmas-enroll ssh-key ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJ/Iv9voYWeUYAPxyzFQuZPH5XZR4/JrC9An+/A2pa3+ nmas-enroll@DEV-000002
+!
+no ip routing
+!
+ip access-list NMAS-BOOTSTRAP-MGMT
+   10 permit tcp host 10.254.31.2 any eq ssh
+!
+interface Ethernet1
+   description NMAS bootstrap uplink ZTP-000001
+   no switchport
+   ip address 10.254.30.10/24
+!
+ip route 10.254.31.0/30 10.254.30.1
+!
+management ssh
+   ip access-group NMAS-BOOTSTRAP-MGMT in
+!
+end

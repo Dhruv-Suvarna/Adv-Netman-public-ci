@@ -1,0 +1,17 @@
+{% load core_extras %}
+{# deployed_bundle: eligibility for ONE finished Complete run.  The server re-checks eligibility on POST whatever this card shows. #}
+<div class="card" style="margin-top:16px;" data-component="deployed-bundle-card"><h3>Deployed bundle</h3>
+  {% if request.GET.bundle == 'refused' %}<p><span class="badge badge--danger">not sealed</span> The server refused to seal a Deployed bundle; the blockers are listed below.</p>{% endif %}
+  <p>An explicit, immutable record of exactly what this successful Complete run applied and its postcheck confirmed. Sealing it is artifact creation only: no device, NetBox, Git or lifecycle change, and no precheck / postcheck is re-run. It is the root from which a Probation candidate can be created; <strong>sealing does not create a Probation bundle and does not start the seven-day soak</strong> — those are separate, explicit actions.</p>
+  {% if deployed_bundle.existing %}
+    <p>This run already has its Deployed bundle: <a href="{% url 'core:bundle_detail' deployed_bundle.existing.bundle_id %}"><code>{{ deployed_bundle.existing.bundle_id }}</code></a> <span class="badge badge--{{ deployed_bundle.existing.verification_state|bundle_badge_class }}">{{ deployed_bundle.existing.verification_state }}</span>. No duplicate can be created. Open it to create the Probation bundle and, from there, start the normal seven-day probation.</p>
+  {% elif deployed_bundle.eligible %}
+    <p>Eligible ({{ deployed_bundle.verification_state }}).</p>
+    <form method="post" action="{% url 'core:change_execution_bundle_create' change.change_id run.run_id %}">{% csrf_token %}
+      <button class="btn btn--primary" type="submit">Seal Deployed bundle</button>
+    </form>
+  {% else %}
+    <p><strong>Not eligible for a Deployed bundle:</strong></p>
+    <ul>{% for b in deployed_bundle.blockers %}<li><span class="badge badge--danger">{{ b.code }}</span> {{ b.message }} <em>{{ b.remediation }}</em></li>{% endfor %}</ul>
+  {% endif %}
+</div>

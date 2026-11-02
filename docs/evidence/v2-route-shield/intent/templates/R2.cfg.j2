@@ -1,0 +1,137 @@
+hostname R2
+!
+ip routing
+ipv6 unicast-routing
+!
+spanning-tree mode none
+!
+vlan 200
+   name MANAGEMENT
+vlan 103
+vlan 104
+!
+interface Vlan103
+   no ip ospf area 0.0.0.0
+   no ipv6 ospf 10 area 0.0.0.0
+!
+interface Vlan104
+   no ip ospf area 0.0.0.0
+   no ipv6 ospf 10 area 0.0.0.0
+!
+no router ospf 10
+no ipv6 router ospf 10
+!
+! Remove old IPIP configuration
+no ipv6 route 2001:db8:10::/64 nexthop-group IPIP-S2
+no ipv6 route 2001:db8:20::/64 nexthop-group IPIP-S2
+no ipv6 route 2001:db8:30::/64 nexthop-group IPIP-S2
+no nexthop-group IPIP-S2
+no ip decap-group IPIP-DECAP
+!
+! Remove temporary IPIP troubleshooting route if present
+no ip route 192.168.254.2/32 192.168.110.2
+!
+interface Ethernet3
+   description MANAGEMENT
+   switchport access vlan 200
+!
+interface Vlan200
+   ip address 192.168.200.2/24
+   ipv6 address 2001:db8:200::2/64
+{% if dhcp is defined %}
+   dhcp server ipv4
+   dhcp server ipv6
+{% endif %}
+!
+interface Loopback0
+   ip address 192.168.255.2/32
+   ipv6 address 2001:db8:255::2/128
+!
+no interface Loopback10
+!
+interface Ethernet2
+   description RIP_IPV4_STATIC_IPV6_TO_S2
+   no switchport
+   ip address 192.168.110.2/31
+   ipv6 address 2001:db8:110:2::1/64
+!
+default interface Ethernet1
+interface Ethernet1
+   description OSPF_L2_FABRIC_TRUNK
+   switchport
+   switchport mode trunk
+   switchport trunk allowed vlan 103,104
+!
+route-map RIP-TO-OSPF permit 10
+   set tag 200
+!
+route-map OSPF-TO-RIP deny 10
+   match tag 200
+!
+route-map OSPF-TO-RIP permit 100
+!
+ipv6 prefix-list CLIENT-V6
+   seq 10 permit 2001:db8:10::/64
+   seq 20 permit 2001:db8:20::/64
+   seq 30 permit 2001:db8:30::/64
+!
+!
+router rip
+   no network 192.168.254.2/32
+   network 192.168.110.2/31
+   redistribute ospf match external route-map OSPF-TO-RIP
+!
+router ospf 10
+   router-id 192.168.255.2
+   redistribute rip route-map RIP-TO-OSPF
+   distance ospf external 130
+!
+ipv6 router ospf 10
+   router-id 192.168.255.2
+!
+interface Vlan103
+   ip address 192.168.100.4/31
+   ipv6 address 2001:db8:100:103::1/64
+   ip ospf area 0.0.0.0
+   ipv6 ospf 10 area 0.0.0.0
+!
+interface Vlan104
+   ip address 192.168.100.6/31
+   ipv6 address 2001:db8:100:104::1/64
+   ip ospf area 0.0.0.0
+   ipv6 ospf 10 area 0.0.0.0
+!
+!
+{% if dhcp is defined %}
+{% include "templates/R2_dhcp_server.cfg.j2" %}
+{% endif %}
+
+!
+! Baseline IS-IS access routing (NMAS baseline migration; docs/V2_LOSSLESS_ROUTE_SHIELD.md)
+router isis NMAS
+   net 49.0110.1921.6825.5002.00
+   is-type level-2
+   address-family ipv6 unicast
+!
+interface Ethernet2
+   isis enable NMAS
+   isis metric 10
+!
+ipv6 prefix-list ACCESS6-NORTHBOUND-AGG
+   seq 10 permit 2001:db8::/32
+route-map ISIS6-TO-OSPF3 permit 10
+   match ipv6 address prefix-list CLIENT-V6
+route-map STATIC6-TO-ISIS6 permit 10
+   match ipv6 address prefix-list ACCESS6-NORTHBOUND-AGG
+ipv6 route 2001:db8::/32 2001:db8:100:101::2
+ipv6 route 2001:db8::/32 2001:db8:100:102::2
+ipv6 route 2001:db8::/32 2001:db8:3050::10
+!
+router isis NMAS
+   address-family ipv6 unicast
+      redistribute static route-map STATIC6-TO-ISIS6
+!
+ipv6 router ospf 10
+   distance ospf external 130
+   redistribute isis level-2 route-map ISIS6-TO-OSPF3
+!

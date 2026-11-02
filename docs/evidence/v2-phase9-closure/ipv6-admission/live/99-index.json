@@ -1,0 +1,30 @@
+{
+  "devices": {
+    "NEW1": [
+      "DEV-000002",
+      "IN_SERVICE",
+      "ADMITTED",
+      "VERIFIED"
+    ],
+    "UP1": [
+      "DEV-000001",
+      "IN_SERVICE",
+      "LEGACY_PREEXISTING",
+      "UNVERIFIED"
+    ]
+  },
+  "files": [
+    "00-prepare.json",
+    "10-isolation-before-device.json",
+    "20-dhcpd.conf",
+    "20-ztp.json",
+    "30-onboard.json",
+    "40-commission.json",
+    "50-admission-injected-failure.json",
+    "60-admission.json",
+    "v6-40-commission-ipv6-configlets.json",
+    "v6-45-isolated-ospfv3-suppressed.json",
+    "v6-50-restored-ospfv3-passive.json",
+    "v6-60-admitted-ipv6-reachability.json"
+  ]
+}

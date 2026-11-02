@@ -1,0 +1,47 @@
+hostname mgmt_swt
+!
+no ip routing
+!
+vlan 200
+   name MANAGEMENT
+!
+interface Vlan200
+   ip address 192.168.200.10/24
+   ipv6 address 2001:db8:200::10/64
+!
+interface Ethernet1
+   switchport access vlan 200
+   spanning-tree portfast
+!
+interface Ethernet2
+   switchport access vlan 200
+   spanning-tree portfast
+!
+interface Ethernet3
+   switchport access vlan 200
+   spanning-tree portfast
+!
+interface Ethernet4
+   switchport access vlan 200
+   spanning-tree portfast
+!
+interface Ethernet5
+   switchport access vlan 200
+   spanning-tree portfast
+!
+interface Ethernet6
+   switchport access vlan 200
+   spanning-tree portfast
+!
+interface Ethernet7
+   switchport access vlan 200
+   spanning-tree portfast
+!
+interface Ethernet8
+   switchport access vlan 200
+   spanning-tree portfast
+!
+interface Ethernet9
+   switchport access vlan 200
+   spanning-tree portfast
+!

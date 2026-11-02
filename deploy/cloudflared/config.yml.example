@@ -1,0 +1,17 @@
+# cloudflared named-tunnel ingress for the NMAS WEBSITE ONLY (V2 Phase 1).
+# Copy to /etc/cloudflared/config.yml after `cloudflared tunnel create nmas` and replace the two placeholders.
+# The credentials JSON written by `tunnel create` stays in /etc/cloudflared (root-only) and is never committed.
+#
+# Website-only: there is exactly one public hostname, it reaches only the Apache tunnel vhost, and every other
+# request is refused.  No network device, DNS record for a device, or device management path is exposed.
+tunnel: <TUNNEL_UUID>
+credentials-file: /etc/cloudflared/<TUNNEL_UUID>.json
+no-autoupdate: true
+
+ingress:
+  - hostname: <NMAS_PUBLIC_HOSTNAME>
+    service: http://127.0.0.1:8081
+    originRequest:
+      connectTimeout: 10s
+      noTLSVerify: false
+  - service: http_status:404

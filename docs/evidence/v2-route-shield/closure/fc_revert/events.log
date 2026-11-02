@@ -1,0 +1,126 @@
+1791785840.520 START nmas-lifecycle revert latest load 25.13 26.98 26.10
+1791785844.837 CONFIG start {"r1": "5408a3ab57b34d17", "r2": "4d5eb24485271374", "s1": "c14991f826026d59", "s2": "9e1955c8185575b0"} covers {"c3": 0, "c4": 0}
+1791785844.837 STARTUP start {"R1": {"startup": "e496c8b4641be1f53c0166a4043e05e327be6a892b0d2dc628cdbc0fc3ba9921", "running": "e496c8b4641be1f53c0166a4043e05e327be6a892b0d2dc628cdbc0fc3ba9921"}, "R2": {"startup": "55f21992ba1908eb09b5410fccf530d3040562b50766f8c802f95b7ebfc685e6", "running": "55f21992ba1908eb09b5410fccf530d3040562b50766f8c802f95b7ebfc685e6"}, "S1": {"startup": "7322233ef4b929928fdb2f48ab62b5748bb394583509164eed7ee9bbeaf0aa57", "running": "7322233ef4b929928fdb2f48ab62b5748bb394583509164eed7ee9bbeaf0aa57"}, "S2": {"startup": "0674eda203dccc8f536b85f6a7ad4e7456e91c24520c3177da203cc42020dbb8", "running": "0674eda203dccc8f536b85f6a7ad4e7456e91c24520c3177da203cc42020dbb8"}} core-boot {"c3": "c779f912a770e264", "c4": "562ad6c9311dfc44"}
+1791785882.504 GATE revert of an unknown run -> REVERT_SOURCE_NOT_SUCCEEDED
+1791785882.564 LIFECYCLE revert of CHG-20261012-0002 run 6341bf45-eff8-47ff-9fcb-5d74e9869981
+1791785882.564 LIFECYCLE change CHG-20261012-0003 {"transition": {"kind": "REVERT_COMPLETED_BASELINE_MIGRATION", "definition": "sandbox", "schema": 1, "reverts": {"change": "CHG-20261012-0002", "run_id": "6341bf45-eff8-47ff-9fcb-5d74e9869981"}}}
+1791785882.594 LIFECYCLE validation PASS findings=0
+1791785882.649 LIFECYCLE plan 43794efa operations=48 permanent=24 temporary=24
+1791785883.532 GATE general execution engine -> TRANSITION_CHANGE_NOT_GENERIC
+1791785915.707 LIFECYCLE precheck PASS {"status": "PASS", "blockers": []}
+1791785915.735 GATE execution before approval -> BLOCKED NOT_APPROVED,PRECHECK_NOT_PASSED
+1791785917.791 GATE approval without acknowledgements -> ACKNOWLEDGEMENT_MISSING
+1791785917.817 LIFECYCLE approved READY_TO_DEPLOY
+1791785917.817 GATE service entry point execute() -> REFUSED NOT_THIS_TRANSITION
+1791785919.675 LIFECYCLE execute begin load 27.56 27.10 26.20
+1791785958.508 NMAS before revert-R4-cover-2001:db8:30::/63-remove
+1791785959.408 NMAS after revert-R4-cover-2001:db8:30::/63-remove
+1791785966.688 NMAS before revert-R4-cover-2001:db8:20::/63-remove
+1791785967.781 NMAS after revert-R4-cover-2001:db8:20::/63-remove
+1791785975.311 NMAS before revert-R4-cover-2001:db8:10::/63-remove
+1791785976.447 NMAS after revert-R4-cover-2001:db8:10::/63-remove
+1791785983.660 NMAS before revert-R3-cover-2001:db8:30::/63-remove
+1791785984.559 NMAS after revert-R3-cover-2001:db8:30::/63-remove
+1791785991.954 NMAS before revert-R3-cover-2001:db8:20::/63-remove
+1791785992.906 NMAS after revert-R3-cover-2001:db8:20::/63-remove
+1791786001.380 NMAS before revert-R3-cover-2001:db8:10::/63-remove
+1791786006.096 NMAS after revert-R3-cover-2001:db8:10::/63-remove
+1791786014.451 NMAS before revert-S2-shield-remove
+1791786031.996 NMAS after revert-S2-shield-remove
+1791786040.894 NMAS before revert-R2-shield-remove
+1791786058.504 NMAS after revert-R2-shield-remove
+1791786071.690 NMAS before revert-R2-old-redistribution-remove
+1791786089.178 NMAS after revert-R2-old-redistribution-remove
+1791786102.286 NMAS before revert-R2-floating-statics-remove
+1791786119.088 NMAS after revert-R2-floating-statics-remove
+1791786141.362 NMAS before revert-R2-client-statics-remove
+1791786160.485 NMAS after revert-R2-client-statics-remove
+1791786166.392 NMAS before revert-R2-floating-statics-add
+1791786169.245 NMAS after revert-R2-floating-statics-add
+1791786175.425 NMAS before revert-S2-static-aggregate-remove
+1791786192.521 NMAS after revert-S2-static-aggregate-remove
+1791786203.833 NMAS before revert-R2-shield-install
+1791786213.587 NMAS after revert-R2-shield-install
+1791786220.679 NMAS before revert-S2-shield-install
+1791786226.406 NMAS after revert-S2-shield-install
+1791786237.113 NMAS before revert-S1-shield-remove
+1791786259.720 NMAS after revert-S1-shield-remove
+1791786268.277 NMAS before revert-R1-shield-remove
+1791786290.785 NMAS after revert-R1-shield-remove
+1791786302.605 NMAS before revert-R1-old-redistribution-remove
+1791786320.741 NMAS after revert-R1-old-redistribution-remove
+1791786331.717 NMAS before revert-R1-floating-statics-remove
+1791786348.915 NMAS after revert-R1-floating-statics-remove
+1791786358.696 NMAS before revert-R1-client-statics-remove
+1791786377.379 NMAS after revert-R1-client-statics-remove
+1791786400.930 NMAS before revert-R1-floating-statics-add
+1791786404.056 NMAS after revert-R1-floating-statics-add
+1791786409.361 NMAS before revert-S1-static-aggregate-remove
+1791786426.972 NMAS after revert-S1-static-aggregate-remove
+1791786437.707 NMAS before revert-R1-shield-install
+1791786446.363 NMAS after revert-R1-shield-install
+1791786453.218 NMAS before revert-S1-shield-install
+1791786459.629 NMAS after revert-S1-shield-install
+1791786469.358 NMAS before revert-R2-isis-into-ospfv3
+1791786471.995 NMAS after revert-R2-isis-into-ospfv3
+1791786478.783 NMAS before revert-R2-aggregate-into-isis
+1791786482.669 NMAS after revert-R2-aggregate-into-isis
+1791786489.661 NMAS before revert-R2-boundary-policy
+1791786492.698 NMAS after revert-R2-boundary-policy
+1791786499.949 NMAS before revert-R1-isis-into-ospfv3
+1791786502.424 NMAS after revert-R1-isis-into-ospfv3
+1791786510.275 NMAS before revert-R1-aggregate-into-isis
+1791786513.207 NMAS after revert-R1-aggregate-into-isis
+1791786520.941 NMAS before revert-R1-boundary-policy
+1791786523.665 NMAS after revert-R1-boundary-policy
+1791786531.820 NMAS before revert-S2-client-svis-passive
+1791786534.663 NMAS after revert-S2-client-svis-passive
+1791786543.320 NMAS before revert-S1-client-svis-passive
+1791786546.815 NMAS after revert-S1-client-svis-passive
+1791786555.623 NMAS before revert-S2-isis-links
+1791786558.643 NMAS after revert-S2-isis-links
+1791786566.720 NMAS before revert-S1-isis-links
+1791786569.365 NMAS after revert-S1-isis-links
+1791786578.039 NMAS before revert-R2-isis-access
+1791786580.809 NMAS after revert-R2-isis-access
+1791786589.446 NMAS before revert-R1-isis-access
+1791786591.754 NMAS after revert-R1-isis-access
+1791786600.205 NMAS before revert-S2-isis-process
+1791786603.924 NMAS after revert-S2-isis-process
+1791786614.042 NMAS before revert-S1-isis-process
+1791786617.058 NMAS after revert-S1-isis-process
+1791786626.467 NMAS before revert-R2-isis-process
+1791786629.412 NMAS after revert-R2-isis-process
+1791786650.349 NMAS before revert-R1-isis-process
+1791786652.908 NMAS after revert-R1-isis-process
+1791786658.106 NMAS before revert-S2-vlan99-ipv6
+1791786660.667 NMAS after revert-S2-vlan99-ipv6
+1791786666.066 NMAS before revert-S1-vlan99-ipv6
+1791786668.676 NMAS after revert-S1-vlan99-ipv6
+1791786674.328 NMAS before revert-R4-cover-2001:db8:30::/63
+1791786790.960 NMAS after revert-R4-cover-2001:db8:30::/63
+1791786799.286 NMAS before revert-R4-cover-2001:db8:20::/63
+1791786801.260 NMAS after revert-R4-cover-2001:db8:20::/63
+1791786809.319 NMAS before revert-R4-cover-2001:db8:10::/63
+1791786811.197 NMAS after revert-R4-cover-2001:db8:10::/63
+1791786819.800 NMAS before revert-R3-cover-2001:db8:30::/63
+1791786821.791 NMAS after revert-R3-cover-2001:db8:30::/63
+1791786830.807 NMAS before revert-R3-cover-2001:db8:20::/63
+1791786832.646 NMAS after revert-R3-cover-2001:db8:20::/63
+1791786841.407 NMAS before revert-R3-cover-2001:db8:10::/63
+1791786843.545 NMAS after revert-R3-cover-2001:db8:10::/63
+1791786852.894 NMAS before FINAL_VALIDATION
+1791786871.212 NMAS before PERSISTENCE-R1
+1791786873.816 NMAS after PERSISTENCE-R1
+1791786873.816 NMAS before PERSISTENCE-R2
+1791786875.756 NMAS after PERSISTENCE-R2
+1791786875.756 NMAS before PERSISTENCE-S1
+1791786878.838 NMAS after PERSISTENCE-S1
+1791786878.838 NMAS before PERSISTENCE-S2
+1791786880.837 NMAS after PERSISTENCE-S2
+1791786890.710 LIFECYCLE execute SUCCEEDED lifecycle=DEPLOYED probes_lost=0 applied=48 compensated=0 temporary_remaining=[] restored=None
+1791786894.308 CONFIG end {"r1": "2bd8c040664c1216", "r2": "6284ec1a7270b9dd", "s1": "7d083ffd40ee3b4f", "s2": "a4f9a4a23f07a916"} baseline-restored=False covers {"c3": 0, "c4": 0}
+1791786894.308 STARTUP end {"R1": {"startup": "f7e23531997fbe0c2600218ea7c7885f2591e40bad652ec900ac9558e2b0b0db", "running": "f7e23531997fbe0c2600218ea7c7885f2591e40bad652ec900ac9558e2b0b0db"}, "R2": {"startup": "a76c51916fd1da35620973d9cd3e718d0c8bce96e215caf17f158319395beb23", "running": "a76c51916fd1da35620973d9cd3e718d0c8bce96e215caf17f158319395beb23"}, "S1": {"startup": "f7e4fd4fdee0bb8346329a6add7e553851d7bba67c8a0b02db06e3c4ae6efa31", "running": "f7e4fd4fdee0bb8346329a6add7e553851d7bba67c8a0b02db06e3c4ae6efa31"}, "S2": {"startup": "ee5f0cb47cb509c8548e6d213cec4d76666ab33768f56cbc53d0889a7b6a4909", "running": "ee5f0cb47cb509c8548e6d213cec4d76666ab33768f56cbc53d0889a7b6a4909"}} startup-equals-running=True startup-unchanged=False core-boot-unchanged=True persistence="VERIFIED"
+1791786894.525 REVERT running-and-startup-equal-pre-migration-baseline=True
+1791786909.777 PROBES answered=579860 lost=0 errors=[]
+1791786929.688 END ok load 25.37 25.13 25.44

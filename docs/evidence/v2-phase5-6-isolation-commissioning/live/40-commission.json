@@ -1,0 +1,342 @@
+{
+  "approve": {
+    "codes": [],
+    "ok": true
+  },
+  "approve_self": [
+    "COMMISSIONING_SELF_APPROVAL"
+  ],
+  "approve_wrong_digest": [
+    "COMMISSIONING_CONFIRMATION_MISMATCH"
+  ],
+  "assess": {
+    "codes": [],
+    "ok": true,
+    "readiness": {
+      "at": "2026-10-26T15:01:24.960920+00:00",
+      "checks": [
+        {
+          "check": "identity_verified",
+          "code": "",
+          "detail": "VERIFIED",
+          "ok": true
+        },
+        {
+          "check": "host_key_enrolled",
+          "code": "",
+          "detail": "the verified host key is the out-of-band enrolled one",
+          "ok": true
+        },
+        {
+          "check": "attachment_verified",
+          "code": "",
+          "detail": "VERIFIED",
+          "ok": true
+        },
+        {
+          "check": "bootstrap_authorization",
+          "code": "",
+          "detail": "CONSUMED by -",
+          "ok": true
+        },
+        {
+          "check": "native_bootstrap",
+          "code": "",
+          "detail": "ztp_state=DISABLED_VERIFIED (observed; native ZTP completion is never admission)",
+          "ok": true
+        },
+        {
+          "check": "management_transport",
+          "code": "",
+          "detail": "",
+          "ok": true
+        },
+        {
+          "check": "credential_transitioned",
+          "code": "",
+          "detail": "bootstrap credential revoked, proven rejected and retired; the service credential works",
+          "ok": true
+        },
+        {
+          "check": "isolation_verified",
+          "code": "",
+          "detail": "VERIFIED",
+          "ok": true
+        },
+        {
+          "check": "dependencies",
+          "code": "",
+          "detail": "",
+          "ok": true
+        },
+        {
+          "check": "lifecycle",
+          "code": "",
+          "detail": "ISOLATED",
+          "ok": true
+        },
+        {
+          "check": "production_candidate",
+          "code": "",
+          "detail": "PROV-000004 PRECHECKED: validated, planned and prechecked through the ordinary provisioning stages",
+          "ok": true
+        }
+      ],
+      "ready": true
+    }
+  },
+  "commissioning": {
+    "approved_by": "arthur",
+    "candidate_hash": "141e38980e73ae4541fc4454d2eaac88323337de34878857812a43456968b394",
+    "commissioning": "COM-000004",
+    "dependencies": {
+      "cycles": [],
+      "edges": [],
+      "nodes": []
+    },
+    "device": "DEV-000002",
+    "evidence_digest": "fcfc9fe5c42aaa7fe1e56b0235e6f98195d6434885e505a02926690380a408e8",
+    "failure": {},
+    "isolation_state": "VERIFIED",
+    "policy": "ISO-000001",
+    "provisioning_run": "PROV-000004",
+    "provisioning_status": "POSTCHECKED",
+    "readiness": {
+      "at": "2026-10-26T15:01:24.960920+00:00",
+      "checks": [
+        {
+          "check": "identity_verified",
+          "code": "",
+          "detail": "VERIFIED",
+          "ok": true
+        },
+        {
+          "check": "host_key_enrolled",
+          "code": "",
+          "detail": "the verified host key is the out-of-band enrolled one",
+          "ok": true
+        },
+        {
+          "check": "attachment_verified",
+          "code": "",
+          "detail": "VERIFIED",
+          "ok": true
+        },
+        {
+          "check": "bootstrap_authorization",
+          "code": "",
+          "detail": "CONSUMED by -",
+          "ok": true
+        },
+        {
+          "check": "native_bootstrap",
+          "code": "",
+          "detail": "ztp_state=DISABLED_VERIFIED (observed; native ZTP completion is never admission)",
+          "ok": true
+        },
+        {
+          "check": "management_transport",
+          "code": "",
+          "detail": "",
+          "ok": true
+        },
+        {
+          "check": "credential_transitioned",
+          "code": "",
+          "detail": "bootstrap credential revoked, proven rejected and retired; the service credential works",
+          "ok": true
+        },
+        {
+          "check": "isolation_verified",
+          "code": "",
+          "detail": "VERIFIED",
+          "ok": true
+        },
+        {
+          "check": "dependencies",
+          "code": "",
+          "detail": "",
+          "ok": true
+        },
+        {
+          "check": "lifecycle",
+          "code": "",
+          "detail": "ISOLATED",
+          "ok": true
+        },
+        {
+          "check": "production_candidate",
+          "code": "",
+          "detail": "PROV-000004 PRECHECKED: validated, planned and prechecked through the ordinary provisioning stages",
+          "ok": true
+        }
+      ],
+      "ready": true
+    },
+    "requested_by": "olivia",
+    "state": "CONFIGURED"
+  },
+  "configlets": [
+    {
+      "cfg_id": "CFG-001",
+      "lines": [
+        "interface Ethernet1",
+        "   no switchport",
+        "   ! admin intent: ENABLED",
+        "   no shutdown"
+      ],
+      "object_type": "interface"
+    },
+    {
+      "cfg_id": "CFG-002",
+      "lines": [
+        "interface Ethernet2",
+        "   no switchport",
+        "   ! admin intent: ENABLED",
+        "   no shutdown"
+      ],
+      "object_type": "interface"
+    },
+    {
+      "cfg_id": "CFG-003",
+      "lines": [
+        "interface Loopback0",
+        "   ! admin intent: ENABLED",
+        "   no shutdown"
+      ],
+      "object_type": "interface"
+    },
+    {
+      "cfg_id": "CFG-004",
+      "lines": [
+        "interface Loopback0",
+        "   ip address 10.254.255.11/32"
+      ],
+      "object_type": "address"
+    },
+    {
+      "cfg_id": "CFG-005",
+      "lines": [
+        "interface Ethernet1",
+        "   ip address 10.254.60.10/24"
+      ],
+      "object_type": "address"
+    },
+    {
+      "cfg_id": "CFG-006",
+      "lines": [
+        "interface Ethernet2",
+        "   ip address 10.254.64.1/24"
+      ],
+      "object_type": "address"
+    },
+    {
+      "cfg_id": "CFG-007",
+      "lines": [
+        "ip routing",
+        "router ospf 1",
+        "   router-id 10.254.255.11"
+      ],
+      "object_type": "routing_ospf"
+    },
+    {
+      "cfg_id": "CFG-008",
+      "lines": [
+        "interface Loopback0",
+        "   ip ospf area 0.0.0.0",
+        "router ospf 1",
+        "   passive-interface Loopback0"
+      ],
+      "object_type": "routing_binding"
+    },
+    {
+      "cfg_id": "CFG-009",
+      "lines": [
+        "interface Ethernet1",
+        "   ip ospf area 0.0.0.0"
+      ],
+      "object_type": "routing_binding"
+    },
+    {
+      "cfg_id": "CFG-010",
+      "lines": [
+        "interface Ethernet2",
+        "   ip ospf area 0.0.0.0",
+        "router ospf 1",
+        "   passive-interface Ethernet2"
+      ],
+      "object_type": "routing_binding"
+    },
+    {
+      "cfg_id": "CFG-011",
+      "lines": [
+        "interface Ethernet2",
+        "   ip helper-address 10.254.61.2"
+      ],
+      "object_type": "dhcp_relay"
+    }
+  ],
+  "configured": {
+    "codes": [],
+    "ok": true
+  },
+  "early_assess": [
+    "COMMISSIONING_CONFIG_NOT_APPLIED"
+  ],
+  "execution": {
+    "blockers": [],
+    "outcome": "SUCCEEDED",
+    "report_failure": null,
+    "run_status": "POSTCHECKED"
+  },
+  "isolation_after_configuration": {
+    "drift": [],
+    "state": "VERIFIED"
+  },
+  "new1_ospf": "Neighbor ID     Instance VRF      Pri State                  Dead Time   Address         Interface\n",
+  "new1_running": "\n> show running-config\n! Command: show running-config at line 1\n! device: NEW1 (cEOSLab, EOS-4.36.2F-49692632.4362F.1 (engineering build))\n!\nno aaa root\n!\n!\nno service interface inactive port-id allocation disabled\n!\nservice routing protocols model multi-agent\n!\nhostname NEW1\n!\nspanning-tree mode mstp\n!\nsystem l1\n   unsupported speed action error\n   unsupported error-correction action error\n!\naaa authorization exec default local\n!\ninterface Ethernet1\n   description NMAS bootstrap uplink ZTP-000001\n   no switchport\n   ip address 10.254.60.10/24\n   ip ospf area 0.0.0.0\n!\ninterface Ethernet2\n   no switchport\n   ip address 10.254.64.1/24\n   ip helper-address 10.254.61.2\n   ip ospf area 0.0.0.0\n!\ninterface Loopback0\n   ip address 10.254.255.11/32\n   ip ospf area 0.0.0.0\n!\nip access-list NMAS-BOOTSTRAP-MGMT\n   10 permit tcp host 10.254.61.2 any eq ssh\n!\nip routing\n!\nip route 10.254.61.0/30 10.254.60.1\n!\nrouter ospf 1\n   router-id 10.254.255.11\n   passive-interface Ethernet2\n   passive-interface Loopback0\n   max-lsa 12000\n!\nmanagement ssh\n   ip access-group NMAS-BOOTSTRAP-MGMT in\n!\nend",
+  "open": {
+    "codes": [],
+    "ok": true
+  },
+  "provisioning_steps": [
+    {
+      "codes": [],
+      "ok": true,
+      "stage": "bootstrap"
+    },
+    {
+      "codes": [],
+      "ok": true,
+      "stage": "capability"
+    },
+    {
+      "codes": [],
+      "ok": true,
+      "stage": "ipam"
+    },
+    {
+      "codes": [],
+      "ok": true,
+      "stage": "candidate"
+    },
+    {
+      "codes": [],
+      "ok": true,
+      "stage": "validate"
+    },
+    {
+      "codes": [],
+      "ok": true,
+      "stage": "plan"
+    },
+    {
+      "codes": [],
+      "ok": true,
+      "stage": "precheck"
+    }
+  ],
+  "up1_ospf": "Neighbor ID     Instance VRF      Pri State                  Dead Time   Address         Interface\n10.254.255.2    1        default  1   FULL/BDR               00:00:32    10.254.62.2     Ethernet3\n",
+  "up1_route_to_new1_loopback": "\nVRF: default\nSource Codes:\n       C - connected, S - static, K - kernel,\n       O - OSPF, O IA - OSPF inter area, O E1 - OSPF external type 1,\n       O E2 - OSPF external type 2, O N1 - OSPF NSSA external type 1,\n       O N2 - OSPF NSSA external type2, O3 - OSPFv3,\n       O3 IA - OSPFv3 inter area, O3 E1 - OSPFv3 external type 1,\n       O3 E2 - OSPFv3 external type 2,\n       O3 N1 - OSPFv3 NSSA external type 1,\n       O3 N2 - OSPFv3 NSSA external type2, B - Other BGP Routes,\n       B I - iBGP, B E - eBGP, R - RIP, I L1 - IS-IS level 1,\n       I L2 - IS-IS level 2, A B - BGP Aggregate,\n       A O - OSPF Summary, NG - Nexthop Group Static Route,\n       V - VXLAN Control Service, M - Martian,\n       DH - DHCP client installed default route,\n       DP - Dynamic Policy Route, L - VRF Leaked,\n       G  - gRIBI, RC - Route Cache Route,\n       CL - CBF Leaked Route\n\nGateway of last resort is not set\n\n\n",
+  "upstream_before_configuration": "\n> show running-config\n! Command: show running-config at line 1\n! device: ISOUP1 (cEOSLab, EOS-4.36.2F-49692632.4362F.1 (engineering build))\n!\nno aaa root\n!\n!\nip dhcp relay information option\n!\nno service interface inactive port-id allocation disabled\n!\nservice routing protocols model multi-agent\n!\nhostname ISOUP1\n!\nspanning-tree mode mstp\n!\nsystem l1\n   unsupported speed action error\n   unsupported error-correction action error\n!\naaa authorization exec default local\n!\ninterface Ethernet1\n   description bootstrap port A (untrusted device side)\n   no switchport\n   ip address 10.254.60.1/24\n   ip helper-address 10.254.61.2\n   ipv6 address 2001:db8:254:60::1/64\n   ip access-group NMAS-ISO-DEV-000002-V4 in\n   ip access-group NMAS-ISO-DEV-000002-V4-OUT out\n   ipv6 access-group NMAS-ISO-DEV-000002-V6 in\n   ipv6 access-group NMAS-ISO-DEV-000002-V6-OUT out\n!\ninterface Ethernet2\n   description NMAS bootstrap service\n   no switchport\n   ip address 10.254.61.1/30\n   ipv6 address 2001:db8:254:61::1/64\n!\ninterface Ethernet3\n   description production core\n   no switchport\n   ip address 10.254.62.1/30\n   ipv6 address 2001:db8:254:62::1/64\n!\ninterface Loopback0\n   ip address 10.254.255.1/32\n!\nipv6 access-list NMAS-ISO-DEV-000002-MGMT6\n   counters per-entry\n   10 deny ipv6 2001:db8:254:60::/64 any\n   20 deny ipv6 fe80::/10 any\n   30 permit ipv6 any any\n!\nipv6 access-list NMAS-ISO-DEV-000002-V6\n   counters per-entry\n   10 permit icmpv6 fe80::/10 any\n   1000 deny ipv6 any any\n!\nipv6 access-list NMAS-ISO-DEV-000002-V6-OUT\n   counters per-entry\n   1000 deny ipv6 any any\n!\nip access-list NMAS-ISO-DEV-000002-MGMT4\n   counters per-entry\n   10 deny ip 10.254.60.0/24 any\n   20 permit ip any any\n!\nip access-list NMAS-ISO-DEV-000002-V4\n   counters per-entry\n   10 permit udp any eq bootpc any eq bootps\n   20 permit tcp 10.254.60.0/24 host 10.254.61.2 eq 8080\n   30 permit tcp 10.254.60.0/24 eq ssh host 10.254.61.2\n   1000 deny ip any any\n!\nip access-list NMAS-ISO-DEV-000002-V4-OUT\n   counters per-entry\n   10 permit tcp host 10.254.61.2 eq 8080 10.254.60.0/24\n   20 permit tcp host 10.254.61.2 10.254.60.0/24 eq ssh\n   1000 deny ip any any\n!\nip routing\n!\nipv6 unicast-routing\n!\nipv6 route 2001:db8:254:63::/64 2001:db8:254:62::2\n!\nrouter ospf 1\n   router-id 10.254.255.1\n   passive-interface Ethernet1\n   passive-interface Ethernet2\n   network 10.254.60.0/24 area 0.0.0.0\n   network 10.254.61.0/30 area 0.0.0.0\n   network 10.254.62.0/30 area 0.0.0.0\n   network 10.254.255.1/32 area 0.0.0.0\n   max-lsa 12000\n!\nmanagement ssh\n   ip access-group NMAS-ISO-DEV-000002-MGMT4 in\n   ipv6 access-group NMAS-ISO-DEV-000002-MGMT6 in\n!\nend"
+}

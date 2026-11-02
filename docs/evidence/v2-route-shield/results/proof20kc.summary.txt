@@ -1,0 +1,73 @@
+== sequence-numbered probes
+   c01: production 0/145903 lost   diagnostic 0/10196 lost
+   c02: production 0/124785 lost   diagnostic 0/8689 lost
+   c03: production 0/142561 lost   diagnostic 0/9942 lost
+   c04: production 0/125612 lost   diagnostic 0/8741 lost
+   c05: production 0/147640 lost   diagnostic 0/10287 lost
+   c06: production 0/125262 lost   diagnostic 0/8732 lost
+   c07: production 0/144681 lost   diagnostic 0/10090 lost
+   c08: production 0/125060 lost   diagnostic 0/8725 lost
+   c09: production 0/143814 lost   diagnostic 0/10006 lost
+   c10: production 0/126442 lost   diagnostic 0/8830 lost
+   c11: production 0/142597 lost   diagnostic 0/9937 lost
+   c12: production 0/124523 lost   diagnostic 0/8653 lost
+   c13: production 0/143497 lost   diagnostic 0/10015 lost
+   c14: production 0/125229 lost   diagnostic 0/8727 lost
+   c15: production 0/154898 lost   diagnostic 0/10859 lost
+   c16: production 0/125936 lost   diagnostic 0/8780 lost
+   c17: production 0/140154 lost   diagnostic 0/9774 lost
+   c18: production 0/124543 lost   diagnostic 0/8661 lost
+   c19: production 0/148520 lost   diagnostic 0/10367 lost
+   c20: production 0/125236 lost   diagnostic 0/8730 lost
+   c21: production 0/146305 lost   diagnostic 0/10186 lost
+   c22: production 0/124015 lost   diagnostic 0/8646 lost
+   c23: production 0/146124 lost   diagnostic 0/10186 lost
+   c24: production 0/124289 lost   diagnostic 0/8653 lost
+   c25: production 0/147134 lost   diagnostic 0/10272 lost
+   c26: production 0/125917 lost   diagnostic 0/8767 lost
+   c27: production 0/142982 lost   diagnostic 0/9976 lost
+   c28: production 0/125295 lost   diagnostic 0/8706 lost
+   c29: production 0/141327 lost   diagnostic 0/9912 lost
+   c30: production 0/127157 lost   diagnostic 0/8850 lost
+   c31: production 0/143860 lost   diagnostic 0/10039 lost
+   c32: production 0/125250 lost   diagnostic 0/8726 lost
+   c33: production 0/145636 lost   diagnostic 0/10142 lost
+   c34: production 0/125449 lost   diagnostic 0/8773 lost
+   c35: production 0/145689 lost   diagnostic 0/10175 lost
+   c36: production 0/124298 lost   diagnostic 0/8666 lost
+   c37: production 0/143536 lost   diagnostic 0/10038 lost
+   c38: production 0/124285 lost   diagnostic 0/8665 lost
+   c39: production 0/144270 lost   diagnostic 0/10089 lost
+   c40: production 0/125129 lost   diagnostic 0/8722 lost
+   PRODUCTION TRANSIT: probes 5404840 lost 0    DIAGNOSTIC (device-originated): probes 376930 lost 0
+== long-lived TCP sessions
+   h1_tcp4: UNINTERRUPTED CLOSE 1791725927.158 98123 98123 1319  stalls>250ms: 473 (informational)
+   h1_tcp6: UNINTERRUPTED CLOSE 1791725927.126 98273 98273 1682  stalls>250ms: 310 (informational)
+   h2_tcp4: UNINTERRUPTED CLOSE 1791725931.264 98154 98154 1314  stalls>250ms: 485 (informational)
+   h2_tcp6: UNINTERRUPTED CLOSE 1791725931.239 98265 98265 1796  stalls>250ms: 389 (informational)
+   h3_tcp4: UNINTERRUPTED CLOSE 1791725935.337 98058 98058 1328  stalls>250ms: 510 (informational)
+   h3_tcp6: UNINTERRUPTED CLOSE 1791725935.421 98435 98435 1324  stalls>250ms: 350 (informational)
+   h4_tcp6: UNINTERRUPTED CLOSE 1791725939.464 98491 98491 1681  stalls>250ms: 361 (informational)
+== repeated new HTTP sessions
+   h1_http4: ALL OK CLOSE 1791725927.106 39188 0 393 2306  slow>400ms: 393 (informational)
+   h1_http6: ALL OK CLOSE 1791725927.165 39315 0 315 2255  slow>400ms: 315 (informational)
+   h2_http4: ALL OK CLOSE 1791725931.332 39202 0 393 2840  slow>400ms: 393 (informational)
+   h2_http6: ALL OK CLOSE 1791725931.363 39343 0 321 2305  slow>400ms: 321 (informational)
+   h3_http4: ALL OK CLOSE 1791725935.461 39174 0 405 2809  slow>400ms: 405 (informational)
+   h3_http6: ALL OK CLOSE 1791725935.533 39386 0 307 2721  slow>400ms: 307 (informational)
+   h4_http6: ALL OK CLOSE 1791725939.572 39397 0 304 2048  slow>400ms: 304 (informational)
+== completed: forward 20  rollback 20  drains 0  restores 0   failed-events: []
+   flows without evidence: none
+VERDICT: PASS (production transit loss 0, TCP uninterrupted, HTTP all successful)
+== c3
+     3  covered   | X-r1 rb2 static-restore start
+     1  covered   | X-r2 rb2 router-statics-restored
+     3  covered   | X-r2 rb2 static-restore start
+     5  covered   | X-r2 stage7 router-floating-statics-added
+== c4
+     3  covered   | X-r1 rb2 static-restore start
+     4  covered   | X-r2 rb2 static-restore start
+     5  covered   | X-r2 stage7 router-floating-statics-added
+client /64 route replacements on the cores: 24   without a cover: 0
+CORE VERDICT: PASS
+R5-equivalent (pe) client-route events: 0

@@ -1,0 +1,378 @@
+{
+ "device": "PROVEDGE1",
+ "execution": {
+  "outcome": "SUCCEEDED",
+  "report": {
+   "blockers": [],
+   "compensation": {
+    "attempted": false,
+    "not_compensated": [],
+    "status": "NOT_ATTEMPTED"
+   },
+   "engine_version": "17.0.0",
+   "limitations": [
+    "Running configuration only: the startup configuration is not written, so restarting a device reverts an unpersisted change. Durable persistence belongs to the later Golden / Probation phases.",
+    "Transport acceptance, command acceptance and operational verification are distinct: success is decided by the Phase-15 postcheck, never by a command's return status.",
+    "Complete-mode compensation is additive-only (exact inverse of what THIS run added, verified by read-back); it is not the general Phase-21 rollback workflow.",
+    "AUTO addresses are rechecked read-only immediately before execution; nothing is reserved or written to NetBox, and the recheck cannot lock NetBox against a concurrent allocator."
+   ],
+   "mode": "COMPLETE",
+   "outcome": "SUCCEEDED",
+   "persistence": "RUNNING_CONFIG_ONLY",
+   "postcheck": {
+    "cfg_ids": [
+     "CFG-001",
+     "CFG-002",
+     "CFG-003"
+    ],
+    "counts": {
+     "FAIL": 0,
+     "NOT_APPLICABLE": 0,
+     "PASS": 5,
+     "UNKNOWN": 0,
+     "WARN": 0
+    },
+    "result": "PASS",
+    "run_id": "5401585b-f0b1-4316-9809-70fb8a7013d5",
+    "settle": {
+     "attempts": 1,
+     "interval_seconds": 3.0,
+     "settled": true,
+     "timeout_seconds": 30.0
+    },
+    "unverified": []
+   },
+   "preparation": {
+    "assessments": {
+     "CFG-001": {
+      "action": "APPLY",
+      "reason": "",
+      "restorable": true
+     },
+     "CFG-002": {
+      "action": "APPLY",
+      "reason": "",
+      "restorable": true
+     },
+     "CFG-003": {
+      "action": "APPLY",
+      "reason": "",
+      "restorable": true
+     }
+    },
+    "auto_address_recheck": [],
+    "configlets": [
+     {
+      "apply": "SUPPORTED",
+      "cfg_id": "CFG-001",
+      "compensation": "SUPPORTED",
+      "description": "interface definition: PROVEDGE1 loopback10",
+      "device": "PROVEDGE1",
+      "note": "Additive: exact inverse, verified by read-back.",
+      "object_type": "interface",
+      "operation": "CREATE_DEFINE",
+      "origin": "STRUCTURED",
+      "sequence": 1
+     },
+     {
+      "apply": "SUPPORTED",
+      "cfg_id": "CFG-002",
+      "compensation": "SUPPORTED",
+      "description": "address assignment: PROVEDGE1 loopback10 2001:db8:5a::10/128",
+      "device": "PROVEDGE1",
+      "note": "Additive: exact inverse, verified by read-back.",
+      "object_type": "address",
+      "operation": "CREATE_DEFINE",
+      "origin": "STRUCTURED",
+      "sequence": 2
+     },
+     {
+      "apply": "SUPPORTED",
+      "cfg_id": "CFG-003",
+      "compensation": "SUPPORTED",
+      "description": "address assignment: PROVEDGE1 loopback10 198.51.100.10/32",
+      "device": "PROVEDGE1",
+      "note": "Additive: exact inverse, verified by read-back.",
+      "object_type": "address",
+      "operation": "CREATE_DEFINE",
+      "origin": "STRUCTURED",
+      "sequence": 3
+     }
+    ]
+   },
+   "raw_configlets": [],
+   "report_schema_version": 1,
+   "scope": {
+    "devices": [
+     "PROVEDGE1"
+    ],
+    "executed_configlets": [
+     "CFG-001",
+     "CFG-002",
+     "CFG-003"
+    ],
+    "mode": "COMPLETE",
+    "plan_order": [
+     "CFG-001",
+     "CFG-002",
+     "CFG-003"
+    ],
+    "requested": [
+     "CFG-001",
+     "CFG-002",
+     "CFG-003"
+    ],
+    "through_cfg_id": "",
+    "unselected": []
+   },
+   "state": {
+    "already_satisfied": [],
+    "applied": [
+     "CFG-001",
+     "CFG-002",
+     "CFG-003"
+    ],
+    "compensated": [],
+    "failed": [],
+    "out_of_scope": [],
+    "unapplied": []
+   },
+   "warnings": [
+    {
+     "code": "PRECHECK_WARNINGS",
+     "message": "The precheck passed with warnings."
+    }
+   ]
+  }
+ },
+ "mode": "success",
+ "probation_candidate": {
+  "blockers": [],
+  "bundle": "BND-PROB-000001",
+  "eligible": true,
+  "root": "BND-DEP-000001",
+  "root_kind": "DEPLOYED",
+  "soak_blockers": [],
+  "soak_started": false
+ },
+ "run": {
+  "approval": {
+   "approved_at": "2026-10-06T00:01:32.545645+00:00",
+   "approved_by": "phase5-proof-operator",
+   "candidate_hash": "2f0b3397860236633c1fd5a6c5ea95c4dcb9c1ef368722de91ee768516fef9da",
+   "comment": "Phase 5 live proof",
+   "plan_id": "363e3b55-579d-43e8-90f2-95c1152d2a26",
+   "precheck_run_id": "318b23aa-e93b-43e4-9c8b-9ad3264359d9"
+  },
+  "bootstrap_state": "REACHABLE_BOOTSTRAP",
+  "candidate_hash": "2f0b3397860236633c1fd5a6c5ea95c4dcb9c1ef368722de91ee768516fef9da",
+  "capability": {
+   "cells": [
+    {
+     "configlets": [
+      "CFG-001",
+      "CFG-002",
+      "CFG-003"
+     ],
+     "feature": "interface.LOOPBACK",
+     "reason": "All mandatory implementation and empirical axes are satisfied.",
+     "status": "SUPPORTED"
+    }
+   ],
+   "platform": "ubuntu_frr",
+   "unclassified": []
+  },
+  "change_id": "CHG-20261005-0001",
+  "execution_outcome": "SUCCEEDED",
+  "execution_run": "8b970590-3338-4e9b-ace3-12ea7d8c648d",
+  "failure": {},
+  "netbox": {
+   "created": [
+    {
+     "id": 67,
+     "kind": "prefix",
+     "name": "172.31.250.0/24"
+    },
+    {
+     "id": 68,
+     "kind": "prefix",
+     "name": "fd00:ca:250::/64"
+    },
+    {
+     "id": 23,
+     "kind": "device",
+     "name": "PROVEDGE1"
+    },
+    {
+     "id": 83,
+     "kind": "interface",
+     "name": "eth0"
+    },
+    {
+     "id": 167,
+     "kind": "ip_address",
+     "name": "172.31.250.11/24"
+    },
+    {
+     "id": 168,
+     "kind": "ip_address",
+     "name": "fd00:ca:250::11/64"
+    }
+   ],
+   "device_id": 23,
+   "device_name": "PROVEDGE1",
+   "managed_scope": false,
+   "plan": {
+    "addresses": [
+     {
+      "address": "172.31.250.11/24",
+      "family": 4,
+      "interface": "eth0",
+      "prefix": "172.31.250.0/24",
+      "role": "management"
+     },
+     {
+      "address": "fd00:ca:250::11/64",
+      "family": 6,
+      "interface": "eth0",
+      "prefix": "fd00:ca:250::/64",
+      "role": "management"
+     }
+    ],
+    "assignment": "static",
+    "device": {
+     "name": "PROVEDGE1",
+     "platform": "ubuntu_frr",
+     "role": "router",
+     "site": "",
+     "status": "planned"
+    },
+    "interfaces": [
+     {
+      "management": true,
+      "name": "eth0",
+      "vlan": null
+     }
+    ],
+    "new_prefixes": [
+     "172.31.250.0/24",
+     "fd00:ca:250::/64"
+    ],
+    "tags": [
+     "nmas-provisioning",
+     "nmas-disposable"
+    ]
+   },
+   "status": "active"
+  },
+  "network_config_validation_run": "e6977180-efc3-4be3-a1c4-f18a164de8b8",
+  "plan": "363e3b55-579d-43e8-90f2-95c1152d2a26",
+  "platform": "ubuntu_frr",
+  "post_config_digest": "cacab448a6044e59ce754594fb2dc7bb6545181adfb0db6e331fa1b0ddc52e07",
+  "postcheck_run": "5401585b-f0b1-4316-9809-70fb8a7013d5",
+  "pre_config_digest": "f6e49561212525f3d6a617c6b029968e14ab67e412d629d611765487605fae5b",
+  "precheck_run": "318b23aa-e93b-43e4-9c8b-9ad3264359d9",
+  "prov_id": "PROV-000001",
+  "registry": [
+   {
+    "container": "clab-nmas-prov-proof-edge1",
+    "lab": "nmas-prov-proof",
+    "name": "PROVEDGE1",
+    "netbox_device_id": 23,
+    "state": "ACTIVE"
+   }
+  ],
+  "repository_head": "f1c4dbe079f12f548965b34fa695c8b48c2956aa",
+  "result": {
+   "config_changed": true,
+   "config_digest": "cacab448a6044e59ce754594fb2dc7bb6545181adfb0db6e331fa1b0ddc52e07",
+   "execution_mode": "COMPLETE",
+   "execution_outcome": "SUCCEEDED",
+   "netbox_identity": {
+    "device_id": 23,
+    "managed_scope": false,
+    "name": "PROVEDGE1",
+    "status": "active"
+   },
+   "postcheck": {
+    "result": "PASS",
+    "run_id": "5401585b-f0b1-4316-9809-70fb8a7013d5"
+   },
+   "runtime_identity": {
+    "container": "clab-nmas-prov-proof-edge1",
+    "lab": "nmas-prov-proof",
+    "name": "PROVEDGE1",
+    "platform": "ubuntu_frr"
+   }
+  },
+  "status": "NSOT_SYNCED",
+  "validation_run": "b2c9d18e-1300-45fc-aa72-f9c01e08a9fd"
+ },
+ "steps": [
+  {
+   "codes": [],
+   "evidence": {
+    "network_config_status": "WARNING",
+    "network_config_validation_run_id": "e6977180-efc3-4be3-a1c4-f18a164de8b8",
+    "validation_run_id": "b2c9d18e-1300-45fc-aa72-f9c01e08a9fd",
+    "validation_status": "PASS"
+   },
+   "http": 302,
+   "outcome": "ADVANCED",
+   "status": "VALIDATED",
+   "step": "validation"
+  },
+  {
+   "codes": [],
+   "evidence": {
+    "candidate_hash": "2f0b3397860236633c1fd5a6c5ea95c4dcb9c1ef368722de91ee768516fef9da",
+    "features": [
+     "interface.LOOPBACK"
+    ],
+    "plan_id": "363e3b55-579d-43e8-90f2-95c1152d2a26"
+   },
+   "http": 302,
+   "outcome": "ADVANCED",
+   "status": "PLANNED",
+   "step": "plan"
+  },
+  {
+   "codes": [],
+   "evidence": {
+    "result": "PASS_WITH_WARNINGS",
+    "run_id": "318b23aa-e93b-43e4-9c8b-9ad3264359d9"
+   },
+   "http": 302,
+   "outcome": "ADVANCED",
+   "status": "PRECHECKED",
+   "step": "precheck"
+  },
+  {
+   "codes": [],
+   "evidence": {
+    "approved_at": "2026-10-06T00:01:32.545645+00:00",
+    "approved_by": "phase5-proof-operator",
+    "candidate_hash": "2f0b3397860236633c1fd5a6c5ea95c4dcb9c1ef368722de91ee768516fef9da",
+    "plan_id": "363e3b55-579d-43e8-90f2-95c1152d2a26",
+    "precheck_run_id": "318b23aa-e93b-43e4-9c8b-9ad3264359d9"
+   },
+   "http": 302,
+   "outcome": "ADVANCED",
+   "status": "APPROVED",
+   "step": "approve"
+  },
+  {
+   "codes": [],
+   "evidence": {
+    "device_id": 23,
+    "managed_scope": false,
+    "name": "PROVEDGE1",
+    "status": "active"
+   },
+   "http": 302,
+   "outcome": "ADVANCED",
+   "status": "NSOT_SYNCED",
+   "step": "nsot_sync"
+  }
+ ]
+}

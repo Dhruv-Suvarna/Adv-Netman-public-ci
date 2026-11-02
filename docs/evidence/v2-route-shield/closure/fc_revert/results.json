@@ -1,0 +1,626 @@
+[
+ {
+  "cfg_id": "CFG-001",
+  "device": "R4",
+  "phase": "APPLY",
+  "status": "APPLIED",
+  "error": "",
+  "detail": {
+   "operation": "revert-R4-cover-2001:db8:30::/63-remove",
+   "stage": "CORE_COVER_REMOVE",
+   "state": "TEMPORARY",
+   "read_back": "SKIP_SATISFIED"
+  }
+ },
+ {
+  "cfg_id": "CFG-002",
+  "device": "R4",
+  "phase": "APPLY",
+  "status": "APPLIED",
+  "error": "",
+  "detail": {
+   "operation": "revert-R4-cover-2001:db8:20::/63-remove",
+   "stage": "CORE_COVER_REMOVE",
+   "state": "TEMPORARY",
+   "read_back": "SKIP_SATISFIED"
+  }
+ },
+ {
+  "cfg_id": "CFG-003",
+  "device": "R4",
+  "phase": "APPLY",
+  "status": "APPLIED",
+  "error": "",
+  "detail": {
+   "operation": "revert-R4-cover-2001:db8:10::/63-remove",
+   "stage": "CORE_COVER_REMOVE",
+   "state": "TEMPORARY",
+   "read_back": "SKIP_SATISFIED"
+  }
+ },
+ {
+  "cfg_id": "CFG-004",
+  "device": "R3",
+  "phase": "APPLY",
+  "status": "APPLIED",
+  "error": "",
+  "detail": {
+   "operation": "revert-R3-cover-2001:db8:30::/63-remove",
+   "stage": "CORE_COVER_REMOVE",
+   "state": "TEMPORARY",
+   "read_back": "SKIP_SATISFIED"
+  }
+ },
+ {
+  "cfg_id": "CFG-005",
+  "device": "R3",
+  "phase": "APPLY",
+  "status": "APPLIED",
+  "error": "",
+  "detail": {
+   "operation": "revert-R3-cover-2001:db8:20::/63-remove",
+   "stage": "CORE_COVER_REMOVE",
+   "state": "TEMPORARY",
+   "read_back": "SKIP_SATISFIED"
+  }
+ },
+ {
+  "cfg_id": "CFG-006",
+  "device": "R3",
+  "phase": "APPLY",
+  "status": "APPLIED",
+  "error": "",
+  "detail": {
+   "operation": "revert-R3-cover-2001:db8:10::/63-remove",
+   "stage": "CORE_COVER_REMOVE",
+   "state": "TEMPORARY",
+   "read_back": "SKIP_SATISFIED"
+  }
+ },
+ {
+  "cfg_id": "CFG-007",
+  "device": "S2",
+  "phase": "APPLY",
+  "status": "APPLIED",
+  "error": "",
+  "detail": {
+   "operation": "revert-S2-shield-remove",
+   "stage": "SHIELD_REMOVE",
+   "state": "TEMPORARY",
+   "read_back": "SKIP_SATISFIED"
+  }
+ },
+ {
+  "cfg_id": "CFG-008",
+  "device": "R2",
+  "phase": "APPLY",
+  "status": "APPLIED",
+  "error": "",
+  "detail": {
+   "operation": "revert-R2-shield-remove",
+   "stage": "SHIELD_REMOVE",
+   "state": "TEMPORARY",
+   "read_back": "SKIP_SATISFIED"
+  }
+ },
+ {
+  "cfg_id": "CFG-009",
+  "device": "R2",
+  "phase": "APPLY",
+  "status": "APPLIED",
+  "error": "",
+  "detail": {
+   "operation": "revert-R2-old-redistribution-remove",
+   "stage": "PROTECTED_STATIC_REMOVAL",
+   "state": "PERMANENT",
+   "read_back": "SKIP_SATISFIED"
+  }
+ },
+ {
+  "cfg_id": "CFG-010",
+  "device": "R2",
+  "phase": "APPLY",
+  "status": "APPLIED",
+  "error": "",
+  "detail": {
+   "operation": "revert-R2-floating-statics-remove",
+   "stage": "PROTECTED_STATIC_REMOVAL",
+   "state": "TEMPORARY",
+   "read_back": "SKIP_SATISFIED"
+  }
+ },
+ {
+  "cfg_id": "CFG-011",
+  "device": "R2",
+  "phase": "APPLY",
+  "status": "APPLIED",
+  "error": "",
+  "detail": {
+   "operation": "revert-R2-client-statics-remove",
+   "stage": "PROTECTED_STATIC_REMOVAL",
+   "state": "PERMANENT",
+   "read_back": "SKIP_SATISFIED"
+  }
+ },
+ {
+  "cfg_id": "CFG-012",
+  "device": "R2",
+  "phase": "APPLY",
+  "status": "APPLIED",
+  "error": "",
+  "detail": {
+   "operation": "revert-R2-floating-statics-add",
+   "stage": "PROTECTED_STATIC_REMOVAL",
+   "state": "TEMPORARY",
+   "read_back": "SKIP_SATISFIED"
+  }
+ },
+ {
+  "cfg_id": "CFG-013",
+  "device": "S2",
+  "phase": "APPLY",
+  "status": "APPLIED",
+  "error": "",
+  "detail": {
+   "operation": "revert-S2-static-aggregate-remove",
+   "stage": "PROTECTED_STATIC_REMOVAL",
+   "state": "PERMANENT",
+   "read_back": "SKIP_SATISFIED"
+  }
+ },
+ {
+  "cfg_id": "CFG-014",
+  "device": "R2",
+  "phase": "APPLY",
+  "status": "APPLIED",
+  "error": "",
+  "detail": {
+   "operation": "revert-R2-shield-install",
+   "stage": "SHIELD_INSTALL",
+   "state": "TEMPORARY",
+   "read_back": "SKIP_SATISFIED"
+  }
+ },
+ {
+  "cfg_id": "CFG-015",
+  "device": "S2",
+  "phase": "APPLY",
+  "status": "APPLIED",
+  "error": "",
+  "detail": {
+   "operation": "revert-S2-shield-install",
+   "stage": "SHIELD_INSTALL",
+   "state": "TEMPORARY",
+   "read_back": "SKIP_SATISFIED"
+  }
+ },
+ {
+  "cfg_id": "CFG-016",
+  "device": "S1",
+  "phase": "APPLY",
+  "status": "APPLIED",
+  "error": "",
+  "detail": {
+   "operation": "revert-S1-shield-remove",
+   "stage": "SHIELD_REMOVE",
+   "state": "TEMPORARY",
+   "read_back": "SKIP_SATISFIED"
+  }
+ },
+ {
+  "cfg_id": "CFG-017",
+  "device": "R1",
+  "phase": "APPLY",
+  "status": "APPLIED",
+  "error": "",
+  "detail": {
+   "operation": "revert-R1-shield-remove",
+   "stage": "SHIELD_REMOVE",
+   "state": "TEMPORARY",
+   "read_back": "SKIP_SATISFIED"
+  }
+ },
+ {
+  "cfg_id": "CFG-018",
+  "device": "R1",
+  "phase": "APPLY",
+  "status": "APPLIED",
+  "error": "",
+  "detail": {
+   "operation": "revert-R1-old-redistribution-remove",
+   "stage": "PROTECTED_STATIC_REMOVAL",
+   "state": "PERMANENT",
+   "read_back": "SKIP_SATISFIED"
+  }
+ },
+ {
+  "cfg_id": "CFG-019",
+  "device": "R1",
+  "phase": "APPLY",
+  "status": "APPLIED",
+  "error": "",
+  "detail": {
+   "operation": "revert-R1-floating-statics-remove",
+   "stage": "PROTECTED_STATIC_REMOVAL",
+   "state": "TEMPORARY",
+   "read_back": "SKIP_SATISFIED"
+  }
+ },
+ {
+  "cfg_id": "CFG-020",
+  "device": "R1",
+  "phase": "APPLY",
+  "status": "APPLIED",
+  "error": "",
+  "detail": {
+   "operation": "revert-R1-client-statics-remove",
+   "stage": "PROTECTED_STATIC_REMOVAL",
+   "state": "PERMANENT",
+   "read_back": "SKIP_SATISFIED"
+  }
+ },
+ {
+  "cfg_id": "CFG-021",
+  "device": "R1",
+  "phase": "APPLY",
+  "status": "APPLIED",
+  "error": "",
+  "detail": {
+   "operation": "revert-R1-floating-statics-add",
+   "stage": "PROTECTED_STATIC_REMOVAL",
+   "state": "TEMPORARY",
+   "read_back": "SKIP_SATISFIED"
+  }
+ },
+ {
+  "cfg_id": "CFG-022",
+  "device": "S1",
+  "phase": "APPLY",
+  "status": "APPLIED",
+  "error": "",
+  "detail": {
+   "operation": "revert-S1-static-aggregate-remove",
+   "stage": "PROTECTED_STATIC_REMOVAL",
+   "state": "PERMANENT",
+   "read_back": "SKIP_SATISFIED"
+  }
+ },
+ {
+  "cfg_id": "CFG-023",
+  "device": "R1",
+  "phase": "APPLY",
+  "status": "APPLIED",
+  "error": "",
+  "detail": {
+   "operation": "revert-R1-shield-install",
+   "stage": "SHIELD_INSTALL",
+   "state": "TEMPORARY",
+   "read_back": "SKIP_SATISFIED"
+  }
+ },
+ {
+  "cfg_id": "CFG-024",
+  "device": "S1",
+  "phase": "APPLY",
+  "status": "APPLIED",
+  "error": "",
+  "detail": {
+   "operation": "revert-S1-shield-install",
+   "stage": "SHIELD_INSTALL",
+   "state": "TEMPORARY",
+   "read_back": "SKIP_SATISFIED"
+  }
+ },
+ {
+  "cfg_id": "CFG-025",
+  "device": "R2",
+  "phase": "APPLY",
+  "status": "APPLIED",
+  "error": "",
+  "detail": {
+   "operation": "revert-R2-isis-into-ospfv3",
+   "stage": "BOUNDARY_POLICY",
+   "state": "PERMANENT",
+   "read_back": "SKIP_SATISFIED"
+  }
+ },
+ {
+  "cfg_id": "CFG-026",
+  "device": "R2",
+  "phase": "APPLY",
+  "status": "APPLIED",
+  "error": "",
+  "detail": {
+   "operation": "revert-R2-aggregate-into-isis",
+   "stage": "BOUNDARY_POLICY",
+   "state": "PERMANENT",
+   "read_back": "SKIP_SATISFIED"
+  }
+ },
+ {
+  "cfg_id": "CFG-027",
+  "device": "R2",
+  "phase": "APPLY",
+  "status": "APPLIED",
+  "error": "",
+  "detail": {
+   "operation": "revert-R2-boundary-policy",
+   "stage": "BOUNDARY_POLICY",
+   "state": "PERMANENT",
+   "read_back": "SKIP_SATISFIED"
+  }
+ },
+ {
+  "cfg_id": "CFG-028",
+  "device": "R1",
+  "phase": "APPLY",
+  "status": "APPLIED",
+  "error": "",
+  "detail": {
+   "operation": "revert-R1-isis-into-ospfv3",
+   "stage": "BOUNDARY_POLICY",
+   "state": "PERMANENT",
+   "read_back": "SKIP_SATISFIED"
+  }
+ },
+ {
+  "cfg_id": "CFG-029",
+  "device": "R1",
+  "phase": "APPLY",
+  "status": "APPLIED",
+  "error": "",
+  "detail": {
+   "operation": "revert-R1-aggregate-into-isis",
+   "stage": "BOUNDARY_POLICY",
+   "state": "PERMANENT",
+   "read_back": "SKIP_SATISFIED"
+  }
+ },
+ {
+  "cfg_id": "CFG-030",
+  "device": "R1",
+  "phase": "APPLY",
+  "status": "APPLIED",
+  "error": "",
+  "detail": {
+   "operation": "revert-R1-boundary-policy",
+   "stage": "BOUNDARY_POLICY",
+   "state": "PERMANENT",
+   "read_back": "SKIP_SATISFIED"
+  }
+ },
+ {
+  "cfg_id": "CFG-031",
+  "device": "S2",
+  "phase": "APPLY",
+  "status": "APPLIED",
+  "error": "",
+  "detail": {
+   "operation": "revert-S2-client-svis-passive",
+   "stage": "BOUNDARY_POLICY",
+   "state": "PERMANENT",
+   "read_back": "SKIP_SATISFIED"
+  }
+ },
+ {
+  "cfg_id": "CFG-032",
+  "device": "S1",
+  "phase": "APPLY",
+  "status": "APPLIED",
+  "error": "",
+  "detail": {
+   "operation": "revert-S1-client-svis-passive",
+   "stage": "BOUNDARY_POLICY",
+   "state": "PERMANENT",
+   "read_back": "SKIP_SATISFIED"
+  }
+ },
+ {
+  "cfg_id": "CFG-033",
+  "device": "S2",
+  "phase": "APPLY",
+  "status": "APPLIED",
+  "error": "",
+  "detail": {
+   "operation": "revert-S2-isis-links",
+   "stage": "ISIS_FORMATION",
+   "state": "PERMANENT",
+   "read_back": "SKIP_SATISFIED"
+  }
+ },
+ {
+  "cfg_id": "CFG-034",
+  "device": "S1",
+  "phase": "APPLY",
+  "status": "APPLIED",
+  "error": "",
+  "detail": {
+   "operation": "revert-S1-isis-links",
+   "stage": "ISIS_FORMATION",
+   "state": "PERMANENT",
+   "read_back": "SKIP_SATISFIED"
+  }
+ },
+ {
+  "cfg_id": "CFG-035",
+  "device": "R2",
+  "phase": "APPLY",
+  "status": "APPLIED",
+  "error": "",
+  "detail": {
+   "operation": "revert-R2-isis-access",
+   "stage": "ISIS_FORMATION",
+   "state": "PERMANENT",
+   "read_back": "SKIP_SATISFIED"
+  }
+ },
+ {
+  "cfg_id": "CFG-036",
+  "device": "R1",
+  "phase": "APPLY",
+  "status": "APPLIED",
+  "error": "",
+  "detail": {
+   "operation": "revert-R1-isis-access",
+   "stage": "ISIS_FORMATION",
+   "state": "PERMANENT",
+   "read_back": "SKIP_SATISFIED"
+  }
+ },
+ {
+  "cfg_id": "CFG-037",
+  "device": "S2",
+  "phase": "APPLY",
+  "status": "APPLIED",
+  "error": "",
+  "detail": {
+   "operation": "revert-S2-isis-process",
+   "stage": "ISIS_FORMATION",
+   "state": "PERMANENT",
+   "read_back": "SKIP_SATISFIED"
+  }
+ },
+ {
+  "cfg_id": "CFG-038",
+  "device": "S1",
+  "phase": "APPLY",
+  "status": "APPLIED",
+  "error": "",
+  "detail": {
+   "operation": "revert-S1-isis-process",
+   "stage": "ISIS_FORMATION",
+   "state": "PERMANENT",
+   "read_back": "SKIP_SATISFIED"
+  }
+ },
+ {
+  "cfg_id": "CFG-039",
+  "device": "R2",
+  "phase": "APPLY",
+  "status": "APPLIED",
+  "error": "",
+  "detail": {
+   "operation": "revert-R2-isis-process",
+   "stage": "ISIS_FORMATION",
+   "state": "PERMANENT",
+   "read_back": "SKIP_SATISFIED"
+  }
+ },
+ {
+  "cfg_id": "CFG-040",
+  "device": "R1",
+  "phase": "APPLY",
+  "status": "APPLIED",
+  "error": "",
+  "detail": {
+   "operation": "revert-R1-isis-process",
+   "stage": "ISIS_FORMATION",
+   "state": "PERMANENT",
+   "read_back": "SKIP_SATISFIED"
+  }
+ },
+ {
+  "cfg_id": "CFG-041",
+  "device": "S2",
+  "phase": "APPLY",
+  "status": "APPLIED",
+  "error": "",
+  "detail": {
+   "operation": "revert-S2-vlan99-ipv6",
+   "stage": "VLAN99_IPV6",
+   "state": "PERMANENT",
+   "read_back": "SKIP_SATISFIED"
+  }
+ },
+ {
+  "cfg_id": "CFG-042",
+  "device": "S1",
+  "phase": "APPLY",
+  "status": "APPLIED",
+  "error": "",
+  "detail": {
+   "operation": "revert-S1-vlan99-ipv6",
+   "stage": "VLAN99_IPV6",
+   "state": "PERMANENT",
+   "read_back": "SKIP_SATISFIED"
+  }
+ },
+ {
+  "cfg_id": "CFG-043",
+  "device": "R4",
+  "phase": "APPLY",
+  "status": "APPLIED",
+  "error": "",
+  "detail": {
+   "operation": "revert-R4-cover-2001:db8:30::/63",
+   "stage": "CORE_COVER_INSTALL",
+   "state": "TEMPORARY",
+   "read_back": "SKIP_SATISFIED"
+  }
+ },
+ {
+  "cfg_id": "CFG-044",
+  "device": "R4",
+  "phase": "APPLY",
+  "status": "APPLIED",
+  "error": "",
+  "detail": {
+   "operation": "revert-R4-cover-2001:db8:20::/63",
+   "stage": "CORE_COVER_INSTALL",
+   "state": "TEMPORARY",
+   "read_back": "SKIP_SATISFIED"
+  }
+ },
+ {
+  "cfg_id": "CFG-045",
+  "device": "R4",
+  "phase": "APPLY",
+  "status": "APPLIED",
+  "error": "",
+  "detail": {
+   "operation": "revert-R4-cover-2001:db8:10::/63",
+   "stage": "CORE_COVER_INSTALL",
+   "state": "TEMPORARY",
+   "read_back": "SKIP_SATISFIED"
+  }
+ },
+ {
+  "cfg_id": "CFG-046",
+  "device": "R3",
+  "phase": "APPLY",
+  "status": "APPLIED",
+  "error": "",
+  "detail": {
+   "operation": "revert-R3-cover-2001:db8:30::/63",
+   "stage": "CORE_COVER_INSTALL",
+   "state": "TEMPORARY",
+   "read_back": "SKIP_SATISFIED"
+  }
+ },
+ {
+  "cfg_id": "CFG-047",
+  "device": "R3",
+  "phase": "APPLY",
+  "status": "APPLIED",
+  "error": "",
+  "detail": {
+   "operation": "revert-R3-cover-2001:db8:20::/63",
+   "stage": "CORE_COVER_INSTALL",
+   "state": "TEMPORARY",
+   "read_back": "SKIP_SATISFIED"
+  }
+ },
+ {
+  "cfg_id": "CFG-048",
+  "device": "R3",
+  "phase": "APPLY",
+  "status": "APPLIED",
+  "error": "",
+  "detail": {
+   "operation": "revert-R3-cover-2001:db8:10::/63",
+   "stage": "CORE_COVER_INSTALL",
+   "state": "TEMPORARY",
+   "read_back": "SKIP_SATISFIED"
+  }
+ }
+]

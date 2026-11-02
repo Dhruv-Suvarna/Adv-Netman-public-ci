@@ -1,0 +1,32 @@
+# FIXTURE/EXAMPLE ONLY. Copy to monitoring/runtime/human-mfa/freeradius/
+# and replace every TEST_ONLY value with a unique runtime secret. Never commit
+# the rendered file. R5 is absent because it has no trusted static Vlan200
+# source and is outside the managed Phase-24 scope.
+client R1 {
+    ipaddr = 192.168.200.1
+    secret = TEST_ONLY_REPLACE_R1_RADIUS_SECRET
+}
+client R2 {
+    ipaddr = 192.168.200.2
+    secret = TEST_ONLY_REPLACE_R2_RADIUS_SECRET
+}
+client S1 {
+    ipaddr = 192.168.200.11
+    secret = TEST_ONLY_REPLACE_S1_RADIUS_SECRET
+}
+client S2 {
+    ipaddr = 192.168.200.12
+    secret = TEST_ONLY_REPLACE_S2_RADIUS_SECRET
+}
+client S3 {
+    ipaddr = 192.168.200.13
+    secret = TEST_ONLY_REPLACE_S3_RADIUS_SECRET
+}
+client S4 {
+    ipaddr = 192.168.200.14
+    secret = TEST_ONLY_REPLACE_S4_RADIUS_SECRET
+}
+client mgmt_swt {
+    ipaddr = 192.168.200.10
+    secret = TEST_ONLY_REPLACE_MGMT_SWT_RADIUS_SECRET
+}

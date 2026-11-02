@@ -1,0 +1,86 @@
+{% extends "core/automation/workbench/base.html" %}
+{% load core_extras %}
+{% block left %}
+<h2>What do you want to add or change?</h2>
+{% if not snapshot %}
+  <p>Select a device and capture its running configuration first. Changes are built against that exact snapshot.</p>
+{% else %}
+  <div class="workbench-tabs" role="tablist">
+    <a class="btn btn--secondary" role="tab" aria-selected="{% if mode == 'cli' %}true{% else %}false{% endif %}"
+       href="{{ page_url }}?device={{ device.name|urlencode }}&snapshot={{ snapshot.snapshot_id }}&mode=cli">Push configs into CLI directly</a>
+    <a class="btn btn--secondary" role="tab" aria-selected="{% if mode == 'structured' %}true{% else %}false{% endif %}"
+       href="{{ page_url }}?device={{ device.name|urlencode }}&snapshot={{ snapshot.snapshot_id }}&mode=structured">Push supporting configs</a>
+  </div>
+
+  <form method="post" action="{% url 'core:workbench_changes_preview' %}" data-component="change-input">
+    {% csrf_token %}
+    <input type="hidden" name="device" value="{{ device.name }}">
+    <input type="hidden" name="snapshot" value="{{ snapshot.snapshot_id }}">
+    <input type="hidden" name="mode" value="{{ mode }}">
+    {% if mode == 'cli' %}
+      <div class="form-field">
+        <label for="wb-fragment">Configuration fragment ({{ device.platform }} syntax)</label>
+        <textarea id="wb-fragment" name="fragment" class="form-control wb-editor" rows="10" spellcheck="false"
+                  placeholder="ip route 10.9.0.0/24 192.0.2.1&#10;interface Ethernet2&#10;   ip address 203.0.113.1/24 secondary">{{ fragment }}</textarea>
+      </div>
+      <p class="rc-note">Recognised lines become the same structured operations the widgets produce; anything else is rejected with a reason (never sent). Removals (<code>no …</code>) belong to Remove Configuration.</p>
+    {% else %}
+      <div class="form-field">
+        <label for="wb-op">Supporting configuration</label>
+        <select id="wb-op" name="op" class="form-control" data-op-select>
+          {% for row in catalogue %}<option value="{{ row.key }}"{% if row.key == op_key %} selected{% endif %}{% if not row.executable %} disabled{% endif %}>{{ row.label }}{% if not row.executable %} — not executable on {{ device.platform }}{% elif row.mode == 'PARTIAL_UAT_ONLY' %} — Partial (UAT) only{% endif %}</option>{% endfor %}
+        </select>
+      </div>
+      {% for row in catalogue %}
+        <fieldset class="op-fields" data-op="{{ row.key }}"{% if row.key != op_key %} hidden{% endif %}>
+          <legend>{{ row.label }}</legend>
+          {% for field, label in row.field_labels %}
+            <div class="form-field">
+              <label for="f-{{ row.key }}-{{ field }}">{{ label }}</label>
+              {% if field == 'interface' %}
+                <select id="f-{{ row.key }}-{{ field }}" name="{{ field }}" class="form-control"{% if row.key != op_key %} disabled{% endif %}>
+                  {% for name in existing.interfaces %}{% if name not in existing.protected_interfaces %}<option>{{ name }}</option>{% endif %}{% endfor %}
+                </select>
+              {% else %}
+                <input id="f-{{ row.key }}-{{ field }}" name="{{ field }}" class="form-control"{% if row.key != op_key %} disabled{% endif %}>
+              {% endif %}
+            </div>
+          {% endfor %}
+          {% if row.key == 'static_route' %}<div class="form-field"><label for="f-dist">Distance (optional)</label><input id="f-dist" name="distance" class="form-control"{% if row.key != op_key %} disabled{% endif %}></div>{% endif %}
+          {% if row.key == 'interface_address' %}<div class="form-field"><label for="f-role">Role</label><select id="f-role" name="role" class="form-control"{% if row.key != op_key %} disabled{% endif %}><option>PRIMARY</option><option selected>SECONDARY</option></select></div>{% endif %}
+          {% if row.key == 'loopback' %}<div class="form-field"><label for="f-lcidr">Address (optional)</label><input id="f-lcidr" name="cidr" class="form-control"{% if row.key != op_key %} disabled{% endif %}></div>{% endif %}
+          <p class="rc-note">Execution: {{ row.mode|execution_mode_label }}{% if row.note %} — {{ row.note }}{% endif %}</p>
+        </fieldset>
+      {% endfor %}
+    {% endif %}
+    <div class="wb-actions">
+      <button class="btn btn--primary" type="submit">Validate</button>
+      <a class="btn btn--secondary" href="{{ page_url }}?device={{ device.name|urlencode }}&snapshot={{ snapshot.snapshot_id }}&mode={{ mode }}">Cancel</a>
+    </div>
+  </form>
+
+  {% if preview %}
+    <div class="wb-preview" data-component="preview">
+      <h3>Requested change (normalized)</h3>
+      {% if operations %}
+        <table class="data-table"><thead><tr><th>Operation</th><th>Parameters</th></tr></thead><tbody>
+        {% for op in operations %}<tr><td><code>{{ op.op }}</code></td><td>{% for k, v in op.items %}{% if k != 'op' and k != 'source_lines' %}<span class="badge badge--neutral">{{ k }}={{ v }}</span> {% endif %}{% endfor %}</td></tr>{% endfor %}
+        </tbody></table>
+      {% else %}<p>Nothing recognised.</p>{% endif %}
+      {% if rejected %}<h3>Rejected input</h3><ul class="wb-list">{% for r in rejected %}<li>line {{ r.line }}: <code>{{ r.text }}</code> — {{ r.reason }}</li>{% endfor %}</ul>{% endif %}
+      {% if problems %}<h3>Problems</h3><ul class="wb-list">{% for p in problems %}<li>{{ p }}</li>{% endfor %}</ul>{% endif %}
+      {% if operations and not problems and not rejected %}
+        <form method="post" action="{% url 'core:workbench_changes_save' %}">
+          {% csrf_token %}
+          <input type="hidden" name="device" value="{{ device.name }}">
+          <input type="hidden" name="snapshot" value="{{ snapshot.snapshot_id }}">
+          <input type="hidden" name="operations" value="{{ operations_json }}">
+          <div class="form-field"><label for="wb-title">Change title (optional)</label><input id="wb-title" name="title" class="form-control" maxlength="200"></div>
+          <button class="btn btn--primary" type="submit">Save Draft</button>
+          <p class="rc-note">Save Draft reads the device's running configuration again (read-only) as context, checks it still matches this snapshot, then validates and plans ONLY your contribution. Nothing is sent to the device.</p>
+        </form>
+      {% elif rejected %}<p class="rc-note">Fix or remove the rejected lines before saving.</p>{% endif %}
+    </div>
+  {% endif %}
+{% endif %}
+{% endblock %}

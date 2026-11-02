@@ -1,0 +1,86 @@
+[
+ {
+  "flow": "h1-web-v6",
+  "destination": "2001:db8:3050::10",
+  "answered": 131082,
+  "lost": 0
+ },
+ {
+  "flow": "web-h1-v6",
+  "destination": "2001:db8:10::102",
+  "answered": 74243,
+  "lost": 0
+ },
+ {
+  "flow": "h1-web-v4",
+  "destination": "172.30.50.10",
+  "answered": 16357,
+  "lost": 0
+ },
+ {
+  "flow": "web-h1-v4",
+  "destination": "192.168.10.102",
+  "answered": 16326,
+  "lost": 0
+ },
+ {
+  "flow": "h2-web-v6",
+  "destination": "2001:db8:3050::10",
+  "answered": 126360,
+  "lost": 0
+ },
+ {
+  "flow": "web-h2-v6",
+  "destination": "2001:db8:20::101",
+  "answered": 74182,
+  "lost": 0
+ },
+ {
+  "flow": "h2-web-v4",
+  "destination": "172.30.50.10",
+  "answered": 16349,
+  "lost": 0
+ },
+ {
+  "flow": "web-h2-v4",
+  "destination": "192.168.20.101",
+  "answered": 16318,
+  "lost": 0
+ },
+ {
+  "flow": "h3-web-v6",
+  "destination": "2001:db8:3050::10",
+  "answered": 126932,
+  "lost": 0
+ },
+ {
+  "flow": "web-h3-v6",
+  "destination": "2001:db8:10::103",
+  "answered": 74773,
+  "lost": 0
+ },
+ {
+  "flow": "h3-web-v4",
+  "destination": "172.30.50.10",
+  "answered": 16347,
+  "lost": 0
+ },
+ {
+  "flow": "web-h3-v4",
+  "destination": "192.168.10.103",
+  "answered": 16329,
+  "lost": 0
+ },
+ {
+  "flow": "h4-web-v6",
+  "destination": "2001:db8:3050::10",
+  "answered": 128491,
+  "lost": 0
+ },
+ {
+  "flow": "web-h4-v6",
+  "destination": "2001:db8:30::104",
+  "answered": 74828,
+  "lost": 0
+ }
+]

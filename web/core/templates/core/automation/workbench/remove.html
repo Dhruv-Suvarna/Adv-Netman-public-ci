@@ -1,0 +1,82 @@
+{% extends "core/automation/workbench/base.html" %}
+{% load core_extras %}
+{% block left %}
+<h2>What do you want to remove?</h2>
+{% if not snapshot %}
+  <p>Select a device and capture its running configuration first. Removals are analysed against that exact snapshot.</p>
+{% else %}
+  <div class="workbench-tabs" role="tablist">
+    <a class="btn btn--secondary" role="tab" aria-selected="{% if mode == 'line' %}true{% else %}false{% endif %}"
+       href="{{ page_url }}?device={{ device.name|urlencode }}&snapshot={{ snapshot.snapshot_id }}&mode=line">Line range</a>
+    <a class="btn btn--secondary" role="tab" aria-selected="{% if mode == 'smart' %}true{% else %}false{% endif %}"
+       href="{{ page_url }}?device={{ device.name|urlencode }}&snapshot={{ snapshot.snapshot_id }}&mode=smart">Smart removal</a>
+  </div>
+
+  {% if analysis %}
+    <div class="wb-preview" data-component="preview" data-status="{{ analysis.status }}">
+      <h3>Removal analysis <span class="badge {% if analysis.status == 'READY' %}badge--success{% else %}badge--danger{% endif %}">{{ analysis.status }}</span></h3>
+      {% if analysis.blockers %}<h3>Blocked</h3><ul class="wb-list">{% for b in analysis.blockers %}<li><code>{{ b.code }}</code> {{ b.message }}</li>{% endfor %}</ul>{% endif %}
+      {% if analysis.items %}
+        <h3>Exact removal operations</h3>
+        <table class="data-table"><thead><tr><th>Order</th><th>Operation</th><th>Object</th><th>CLI</th><th>Proof</th></tr></thead><tbody>
+        {% for i in analysis.items %}<tr><td>{{ forloop.counter }}</td><td><span class="badge badge--neutral">{{ i.operation }}</span></td><td>{{ i.label }}</td>
+          <td><pre class="code-panel wb-snippet">{% for l in i.removal_lines %}{{ l }}
+{% endfor %}</pre></td>
+          <td><span class="badge {% if i.support == 'PARSER_VALIDATED' %}badge--success{% else %}badge--warning{% endif %}" title="{{ i.support }}">{{ i.support|support_label }}</span>{% if not i.restorable %} <span class="badge badge--warning">not restorable</span>{% endif %}</td></tr>{% endfor %}
+        </tbody></table>
+      {% endif %}
+      {% if analysis.proposals %}
+        <form method="get" action="{{ page_url }}" class="wb-proposals">
+          <input type="hidden" name="device" value="{{ device.name }}"><input type="hidden" name="snapshot" value="{{ snapshot.snapshot_id }}"><input type="hidden" name="mode" value="{{ mode }}">
+          {% if mode == 'line' %}<input type="hidden" name="from_line" value="{{ from_line }}"><input type="hidden" name="to_line" value="{{ to_line }}">{% else %}{% for o in selected_objects %}<input type="hidden" name="obj" value="{{ o }}">{% endfor %}{% endif %}
+          {% for p in accepted %}<input type="hidden" name="proposal" value="{{ p }}">{% endfor %}
+          <h3>Now-unused configuration (proposed, not included)</h3>
+          {% for p in analysis.proposals %}<label class="wb-proposal"><input type="checkbox" name="proposal" value="{{ p.object }}"> {{ p.message }}</label>{% endfor %}
+          <button class="btn btn--secondary" type="submit">Include selected proposals</button>
+        </form>
+      {% endif %}
+      {% if analysis.warnings %}<h3>Warnings</h3><ul class="wb-list">{% for w in analysis.warnings %}<li><code>{{ w.code }}</code> {{ w.message }}</li>{% endfor %}</ul>{% endif %}
+      {% if analysis.status == 'READY' %}
+        <form method="post" action="{% url 'core:workbench_remove_save' %}">
+          {% csrf_token %}
+          <input type="hidden" name="device" value="{{ device.name }}"><input type="hidden" name="snapshot" value="{{ snapshot.snapshot_id }}">
+          <input type="hidden" name="mode" value="{% if mode == 'line' %}LINE_RANGE{% else %}SEMANTIC{% endif %}">
+          <input type="hidden" name="selection" value="{{ selection_json }}">
+          <div class="form-field"><label for="wb-rtitle">Change title (optional)</label><input id="wb-rtitle" name="title" class="form-control" maxlength="200"></div>
+          <button class="btn btn--danger" type="submit">Save removal draft</button>
+          <p class="rc-note">Saving re-analyses the selection on the server and validates + plans it. Nothing is sent to the device; execution needs the Change's precheck and explicit approval.</p>
+        </form>
+      {% endif %}
+    </div>
+  {% endif %}
+  <form method="get" action="{{ page_url }}" data-component="removal-input">
+    <input type="hidden" name="device" value="{{ device.name }}">
+    <input type="hidden" name="snapshot" value="{{ snapshot.snapshot_id }}">
+    <input type="hidden" name="mode" value="{{ mode }}">
+    {% if mode == 'line' %}
+      <div class="wb-range">
+        <div class="form-field"><label for="wb-from">From line</label><input id="wb-from" name="from_line" type="number" min="1" max="{{ snapshot.line_count }}" class="form-control" value="{{ from_line }}" data-range="from"></div>
+        <div class="form-field"><label for="wb-to">Through line</label><input id="wb-to" name="to_line" type="number" min="1" max="{{ snapshot.line_count }}" class="form-control" value="{{ to_line }}" data-range="to"></div>
+      </div>
+      <p class="rc-note">Tip: click a line number on the right to set <em>From</em>; shift-click to set <em>Through</em>. A range must cover whole objects or individually removable child lines — a range that cuts through a stanza's context is refused.</p>
+    {% else %}
+      <div class="wb-objects" data-component="object-navigator">
+        <table class="data-table"><thead><tr><th></th><th>Object</th><th>Kind</th><th>Lines</th><th>Status</th></tr></thead><tbody>
+        {% for o in objects %}
+          <tr{% if not o.removable %} class="wb-muted"{% endif %}>
+            <td><input type="checkbox" name="obj" value="{{ o.id }}" id="o{{ forloop.counter }}"{% if o.id in selected_objects %} checked{% endif %}{% if not o.removable %} disabled{% endif %}></td>
+            <td><label for="o{{ forloop.counter }}">{% if o.parent %}&nbsp;&nbsp;↳ {% endif %}{{ o.label }}</label></td>
+            <td><code>{{ o.kind }}</code></td><td>{{ o.lines|first }}{% if o.lines|length > 1 %}–{{ o.lines|last }}{% endif %}</td>
+            <td>{% if o.removable %}<span class="badge {% if o.support == 'PARSER_VALIDATED' %}badge--success{% else %}badge--warning{% endif %}" title="{{ o.support }}">{{ o.support|support_label }}</span>{% else %}<span class="badge badge--not-implemented wb-reason" title="{{ o.reason }}">{{ o.reason|lower|cut:"_"|truncatechars:22 }}</span>{% endif %}</td>
+          </tr>
+        {% endfor %}
+        </tbody></table>
+      </div>
+    {% endif %}
+    {% for p in accepted %}<input type="hidden" name="proposal" value="{{ p }}">{% endfor %}
+    <div class="wb-actions"><button class="btn btn--primary" type="submit">Analyse removal</button>
+      <a class="btn btn--secondary" href="{{ page_url }}?device={{ device.name|urlencode }}&snapshot={{ snapshot.snapshot_id }}&mode={{ mode }}">Cancel</a></div>
+  </form>
+
+{% endif %}
+{% endblock %}

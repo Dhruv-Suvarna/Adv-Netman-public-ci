@@ -1,0 +1,32 @@
+{% extends "core/base.html" %}
+{% block title %}Request maintenance{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>Request maintenance</h1>
+  <p><a href="{% url 'core:maintenance_list' %}">&larr; Maintenance Mode</a></p>
+  <p>Creating a request contacts no device. Readiness is then evaluated from the live network (read-only) when you queue it on the next page.</p>
+</div>
+{% if error %}<div class="card" style="border-left:6px solid var(--danger);"><p><span class="badge badge--danger">REFUSED</span> {{ error }}</p></div>{% endif %}
+{% if scope_error %}<div class="card" style="border-left:6px solid var(--danger);"><p>The writable managed scope could not be read ({{ scope_error }}); no device can be requested.</p></div>{% endif %}
+<div class="card-grid">
+  <div class="card"><h3>Request</h3>
+    <form method="post" action="{% url 'core:maintenance_request' %}">{% csrf_token %}
+      <p><label>Target device<br><select name="device" required>
+        <option value="">— choose —</option>
+        {% for name in scope.devices %}<option value="{{ name }}" {% if values.device == name %}selected{% endif %}>{{ name }}</option>{% endfor %}
+      </select></label></p>
+      <p><label>Reason (up to {{ max_reason }} characters; never enter a secret)<br><textarea name="reason" maxlength="{{ max_reason }}" rows="3" cols="60" required>{{ values.reason }}</textarea></label></p>
+      <p><label>Requested duration (hours)<br><input type="number" name="hours" min="0.25" step="0.25" value="{{ values.hours }}" required></label></p>
+      <p style="color:var(--text-secondary);">The requested duration is your intended window. It is shown and recorded; it is <strong>not</strong> capped and it ends nothing. Separately, every maintenance has a hard safety deadline of {{ cycle_days }} days after entry: if the device is still in maintenance then, the worker starts the verified restore.</p>
+      <button class="btn btn--primary" type="submit">Request maintenance</button>
+    </form>
+  </div>
+  <div class="card"><h3>Affected scope (tracked cabling)</h3>
+    <p style="color:var(--text-secondary);">What the tracked topology says hangs off each device. Readiness derives the real affected scope from what the devices report: adjacencies, routes, gateway addresses and the observed traffic.</p>
+    <table class="data-table"><thead><tr><th>Device</th><th>Production neighbours</th><th>Single-homed hosts</th><th>Loses management if down</th></tr></thead><tbody>
+    {% for r in scope.rows %}<tr><td>{{ r.device }}{% if r.management_switch %} <span class="badge badge--danger">VLAN 200</span>{% endif %}</td><td>{{ r.neighbours|join:", "|default:"—" }}</td><td>{{ r.single_homed|join:", "|default:"—" }}</td><td>{{ r.management_cut|join:", "|default:"—" }}</td></tr>{% endfor %}
+    </tbody></table>
+    {% if scope.out_of_scope %}<p>Outside the writable managed scope (never a maintenance target): {{ scope.out_of_scope|join:", " }}.</p>{% endif %}
+  </div>
+</div>
+{% endblock %}

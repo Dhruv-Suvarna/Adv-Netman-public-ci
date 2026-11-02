@@ -1,0 +1,10 @@
+Routing Process "ospf 1":
+Neighbor 10.254.255.11 VRF default priority is 1, state is Full
+  In area 0.0.0.0 interface Ethernet1
+  Adjacency was established 00:00:04 ago
+  Current state was established 00:00:04 ago
+  DR is 10.254.255.1 BDR is 10.254.255.11
+  Options is E R V6
+  Dead timer is due in 36 seconds
+  Graceful-restart-helper mode is Inactive
+  Graceful-restart attempts: 0

@@ -1,0 +1,236 @@
+{
+ "record": "MNT-000001",
+ "state": "RESTORED",
+ "escalated": false,
+ "plan_hash": "d2819b6d0998244e9f5fc754de9c3b46377f070b17e8d5e1f80340237d5f1fb7",
+ "plan_status": "CURRENT",
+ "findings": [],
+ "maintenance_only_state": [],
+ "chain_ok": true,
+ "entries": [
+  {
+   "seq": 1,
+   "kind": "REQUESTED",
+   "from": "",
+   "to": "REQUESTED",
+   "summary": "requested by sandbox-operator",
+   "actor": "sandbox-operator"
+  },
+  {
+   "seq": 2,
+   "kind": "OBSERVATION",
+   "from": "REQUESTED",
+   "to": "READY",
+   "summary": "readiness READY",
+   "actor": "sandbox-operator"
+  },
+  {
+   "seq": 3,
+   "kind": "PLAN",
+   "from": "READY",
+   "to": "PLANNED",
+   "summary": "plan d2819b6d0998: 3 drain / 3 restore operation(s)",
+   "actor": "nmas"
+  },
+  {
+   "seq": 4,
+   "kind": "APPROVAL",
+   "from": "PLANNED",
+   "to": "APPROVED",
+   "summary": "plan d2819b6d0998 approved by sandbox-approver",
+   "actor": "sandbox-approver"
+  },
+  {
+   "seq": 5,
+   "kind": "TRANSITION",
+   "from": "APPROVED",
+   "to": "ENTERING",
+   "summary": "APPROVED -> ENTERING",
+   "actor": "sandbox-operator"
+  },
+  {
+   "seq": 6,
+   "kind": "STEP",
+   "from": "",
+   "to": "ENTERING",
+   "summary": "before S1-shield-install-drain",
+   "actor": "maintenance-worker"
+  },
+  {
+   "seq": 7,
+   "kind": "STEP",
+   "from": "",
+   "to": "ENTERING",
+   "summary": "after S1-shield-install-drain",
+   "actor": "maintenance-worker"
+  },
+  {
+   "seq": 8,
+   "kind": "STEP",
+   "from": "",
+   "to": "ENTERING",
+   "summary": "before S1-uplink-metric-drain",
+   "actor": "maintenance-worker"
+  },
+  {
+   "seq": 9,
+   "kind": "STEP",
+   "from": "",
+   "to": "ENTERING",
+   "summary": "after S1-uplink-metric-drain",
+   "actor": "maintenance-worker"
+  },
+  {
+   "seq": 10,
+   "kind": "STEP",
+   "from": "",
+   "to": "ENTERING",
+   "summary": "before S1-shield-remove-drain",
+   "actor": "maintenance-worker"
+  },
+  {
+   "seq": 11,
+   "kind": "STEP",
+   "from": "",
+   "to": "ENTERING",
+   "summary": "after S1-shield-remove-drain",
+   "actor": "maintenance-worker"
+  },
+  {
+   "seq": 12,
+   "kind": "STEP",
+   "from": "",
+   "to": "ENTERING",
+   "summary": "before FINAL_VALIDATION",
+   "actor": "maintenance-worker"
+  },
+  {
+   "seq": 13,
+   "kind": "STEP",
+   "from": "",
+   "to": "ENTERING",
+   "summary": "before PERSISTENCE-S1",
+   "actor": "maintenance-worker"
+  },
+  {
+   "seq": 14,
+   "kind": "STEP",
+   "from": "",
+   "to": "ENTERING",
+   "summary": "after PERSISTENCE-S1",
+   "actor": "maintenance-worker"
+  },
+  {
+   "seq": 15,
+   "kind": "ENTRY_RUN",
+   "from": "ENTERING",
+   "to": "ACTIVE",
+   "summary": "ACTIVE: 3 operation(s), 0 probe(s) lost",
+   "actor": "nmas"
+  },
+  {
+   "seq": 16,
+   "kind": "TRANSITION",
+   "from": "ACTIVE",
+   "to": "RESTORING",
+   "summary": "ACTIVE -> RESTORING",
+   "actor": "sandbox-operator"
+  },
+  {
+   "seq": 17,
+   "kind": "STEP",
+   "from": "",
+   "to": "RESTORING",
+   "summary": "before S1-shield-install-restore",
+   "actor": "maintenance-worker"
+  },
+  {
+   "seq": 18,
+   "kind": "STEP",
+   "from": "",
+   "to": "RESTORING",
+   "summary": "after S1-shield-install-restore",
+   "actor": "maintenance-worker"
+  },
+  {
+   "seq": 19,
+   "kind": "STEP",
+   "from": "",
+   "to": "RESTORING",
+   "summary": "before S1-uplink-metric-restore",
+   "actor": "maintenance-worker"
+  },
+  {
+   "seq": 20,
+   "kind": "STEP",
+   "from": "",
+   "to": "RESTORING",
+   "summary": "after S1-uplink-metric-restore",
+   "actor": "maintenance-worker"
+  },
+  {
+   "seq": 21,
+   "kind": "STEP",
+   "from": "",
+   "to": "RESTORING",
+   "summary": "before S1-shield-remove-restore",
+   "actor": "maintenance-worker"
+  },
+  {
+   "seq": 22,
+   "kind": "STEP",
+   "from": "",
+   "to": "RESTORING",
+   "summary": "after S1-shield-remove-restore",
+   "actor": "maintenance-worker"
+  },
+  {
+   "seq": 23,
+   "kind": "STEP",
+   "from": "",
+   "to": "RESTORING",
+   "summary": "before FINAL_VALIDATION",
+   "actor": "maintenance-worker"
+  },
+  {
+   "seq": 24,
+   "kind": "STEP",
+   "from": "",
+   "to": "RESTORING",
+   "summary": "before PERSISTENCE-S1",
+   "actor": "maintenance-worker"
+  },
+  {
+   "seq": 25,
+   "kind": "STEP",
+   "from": "",
+   "to": "RESTORING",
+   "summary": "after PERSISTENCE-S1",
+   "actor": "maintenance-worker"
+  },
+  {
+   "seq": 26,
+   "kind": "STEP",
+   "from": "",
+   "to": "RESTORING",
+   "summary": "before PERSISTENCE-R1",
+   "actor": "maintenance-worker"
+  },
+  {
+   "seq": 27,
+   "kind": "STEP",
+   "from": "",
+   "to": "RESTORING",
+   "summary": "after PERSISTENCE-R1",
+   "actor": "maintenance-worker"
+  },
+  {
+   "seq": 28,
+   "kind": "RESTORE_RUN",
+   "from": "RESTORING",
+   "to": "RESTORED",
+   "summary": "RESTORED (MANUAL_EXIT)",
+   "actor": "nmas"
+  }
+ ]
+}

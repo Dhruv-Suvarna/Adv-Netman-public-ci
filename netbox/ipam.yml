@@ -1,0 +1,745 @@
+# netbox/ipam.yml -- bootstrap/seed manifest for NetBox (Phase 2 origin;
+# final role decided at migration cleanup -- see docs/NETBOX_IPAM.md
+# "Final Migration Cleanup" and "netbox/ipam.yml -- final role")
+# ============================================================================
+#
+#   this file (hand-verified transcription, Phase 2)
+#         -> netbox/scripts/populate_netbox.py --apply
+#         -> NetBox (the RUNTIME source of truth for R2/NMAS DHCP pool
+#            provisioning as of Phase 3D/3G -- see modules/ipam_context.py)
+#
+# FINAL ROLE: this file is NOT a second live/runtime IPAM source, and
+# nothing in the active provisioning path (master.py, modules/ipam_context.py,
+# dhcp/*.j2, templates/R2.cfg.j2/R2_dhcp_server.cfg.j2) reads it -- they all
+# read NetBox, live, through modules/netbox_ipam.py. This file's actual,
+# retained job is: (1) the bootstrap/recovery seed that (re)populates NetBox's
+# IPAM objects from scratch (`populate_netbox.py --apply`) if NetBox's own
+# database were ever lost/reset, and (2) the fixture
+# `monitoring/tests/test_populate_netbox.py` validates against. It is
+# intentionally NOT retired (an earlier phase's framing suggested it would
+# be once cutover happened; that framing is superseded -- see Phase 3G
+# "Traceability"): a bootstrap manifest remains genuinely useful for exactly
+# as long as NetBox itself needs a from-scratch recovery path, which is
+# ongoing, not a temporary migration artifact. It is re-derived from the
+# templates/inventory whenever THEY change, never the other way around --
+# NetBox is never "written back" into this file.
+#
+# Every value below was read directly from the authoritative template/
+# config files (NOT from address_report.csv, which is observed live state,
+# and NOT from README.md/LAB_REQUIREMENTS.md prose where it could not be
+# cross-checked against an actual template -- see the `notes:` block at the
+# bottom for the one place that distinction mattered).
+#
+# Containerlab-runtime management addresses (172.20.20.0/24,
+# 3fff:172:20:20::/64) are DELIBERATELY NOT modeled here as authoritative
+# IPAM -- see docs/NETBOX_IPAM.md "Containerlab management addresses" for
+# why. This manifest is scoped to addresses controlled by this IaC project.
+
+schema_version: 1
+
+site:
+  name: CSCI 5840 Dual-Stack Lab
+  slug: csci5840-dualstack-lab
+  status: active
+  description: >-
+    Containerlab lab "srlceos01": 10 Arista cEOS + 5 Ubuntu Linux containers,
+    dual-stack (IPv4/IPv6) addressing, RIPv2/OSPFv2/OSPFv3/eBGP routing.
+    Frozen Lab 1 baseline per AGENTS.md/LAB_REQUIREMENTS.md.
+
+tags:
+  ownership: csci5840-iac      # every object this script creates/touches
+  managed: managed              # device may be configured by this IaC
+  unmanaged: unmanaged          # device must NEVER be a provisioning target
+  dhcp_primary: dhcp-primary    # this IPRange is a PRIMARY (NMAS) DHCP pool boundary
+  dhcp_secondary: dhcp-secondary  # this IPRange is a SECONDARY (R2) DHCP pool boundary
+
+manufacturers:
+  - name: Arista
+    slug: arista
+  - name: Generic
+    slug: generic
+    description: "Ubuntu 24.04 Linux containers (routers running FRR, and the unmanaged host role)"
+
+device_types:
+  - model: cEOS 4.36.2F
+    slug: ceos-4-36-2f
+    manufacturer: arista
+  - model: "Ubuntu 24.04"
+    slug: ubuntu-24-04
+    manufacturer: generic
+
+device_roles:
+  - name: Router
+    slug: router
+    color: "2196f3"
+  - name: Switch
+    slug: switch
+    color: "4caf50"
+  - name: Management Switch
+    slug: management-switch
+    color: "9c27b0"
+  - name: External / Unmanaged
+    slug: external-unmanaged
+    color: "9e9e9e"
+    description: "Outside ongoing configuration-management scope per AGENTS.md (R5, WebServer). Never a provisioning target."
+
+ipam_roles:
+  - name: Loopback
+    slug: loopback
+  - name: Management
+    slug: management
+  - name: Client
+    slug: client
+  - name: Transit
+    slug: transit
+  - name: External
+    slug: external
+    description: "Addressing on the R5/WebServer side of the managed boundary; modeled for collision prevention only."
+
+# ---------------------------------------------------------------------
+# VLANs
+# ---------------------------------------------------------------------
+# Sources: templates/S1.cfg.j2, S2.cfg.j2, S3.cfg.j2, S4.cfg.j2, R1.cfg.j2,
+# R2.cfg.j2, mgmt_swt.cfg.j2 (every `vlan <id> name <NAME>` declaration).
+vlans:
+  - vid: 10
+    name: USERS10
+    role: client
+    description: "Dual-stack client VLAN (H1 on S1, H3 on S2)"
+  - vid: 20
+    name: USERS20
+    role: client
+    description: "Dual-stack client VLAN (H2 on S1)"
+  - vid: 30
+    name: IPV6_ONLY
+    role: client
+    description: "IPv6-only client VLAN (H4 on S2) -- intentionally no IPv4 (see S1/S2.cfg.j2: 'no ip address' on Vlan30)"
+  - vid: 99
+    name: RIP_TRANSIT
+    role: transit
+    description: "S1<->S2 dual-stack access-domain routing transit (RIPv2 IPv4, IS-IS IPv6), carried on the S1-S2 trunk"
+  - vid: 101
+    name: R1_R3
+    role: transit
+    description: "OSPF fabric VLAN, R1<->R3 via S3"
+  - vid: 102
+    name: R1_R4
+    role: transit
+    description: "OSPF fabric VLAN, R1<->R4 via S3<->S4 transit"
+  - vid: 103
+    name: R2_R3
+    role: transit
+    description: "OSPF fabric VLAN, R2<->R3 via S4<->S3 transit"
+  - vid: 104
+    name: R2_R4
+    role: transit
+    description: "OSPF fabric VLAN, R2<->R4 via S4"
+  - vid: 200
+    name: MANAGEMENT
+    role: management
+    description: "Dedicated out-of-band management VLAN (mgmt_swt + every managed device's access port)"
+
+# ---------------------------------------------------------------------
+# Prefixes
+# ---------------------------------------------------------------------
+# Parent "numbering block" prefixes are included only where the
+# configured masks genuinely tile a larger block with no gaps invented
+# (see docs/NETBOX_IPAM.md for the reasoning); every other prefix is a
+# single, standalone allocation exactly as configured.
+prefixes:
+  # --- Loopbacks -------------------------------------------------------
+  - prefix: 192.168.255.0/24
+    role: loopback
+    managed: true
+    description: "Router loopback/OSPF+RIP+BGP router-id range (R1-R5)"
+  - prefix: 2001:db8:255::/64
+    role: loopback
+    managed: true
+    description: "IPv6 equivalent of the router loopback range"
+
+  # --- Management --------------------------------------------------------
+  - prefix: 192.168.200.0/24
+    vlan: 200
+    role: management
+    managed: true
+    description: "Dedicated management VLAN200 (all 9 managed devices' Vlan200 SVI + NMAS at .100)"
+  - prefix: 2001:db8:200::/64
+    vlan: 200
+    role: management
+    managed: true
+    description: "IPv6 equivalent of the management VLAN"
+
+  # --- Client VLANs (DHCP; see dhcp_ranges below) -------------------------
+  - prefix: 192.168.10.0/24
+    vlan: 10
+    role: client
+    managed: true
+    gateway_v4: 192.168.10.1
+    description: "VLAN10 client subnet; gateway is a shared virtual-router (VRRP-style) address on S1/S2"
+  - prefix: 2001:db8:10::/64
+    vlan: 10
+    role: client
+    managed: true
+    gateway_v6: 2001:db8:10::1
+    description: "IPv6 equivalent of VLAN10"
+  - prefix: 192.168.20.0/24
+    vlan: 20
+    role: client
+    managed: true
+    gateway_v4: 192.168.20.1
+    description: "VLAN20 client subnet; gateway is a shared virtual-router (VRRP-style) address on S1/S2"
+  - prefix: 2001:db8:20::/64
+    vlan: 20
+    role: client
+    managed: true
+    gateway_v6: 2001:db8:20::1
+    description: "IPv6 equivalent of VLAN20"
+  - prefix: 2001:db8:30::/64
+    vlan: 30
+    role: client
+    managed: true
+    gateway_v6: 2001:db8:30::1
+    description: "VLAN30 IPv6-only client subnet (H4). No IPv4 prefix exists for VLAN30 by design."
+
+  # --- RIPv2 IPv4 transit numbering block (192.168.110.0/29) -------------
+  # Exactly 3 of the 4 possible /31s in this /29 are configured; .6/31 is
+  # unused/reserved by the current design.
+  - prefix: 192.168.110.0/29
+    role: transit
+    managed: true
+    description: "RIPv2 IPv4 transit numbering block (R1-S1, R2-S2, S1-S2); .6/31 unused/reserved"
+  - prefix: 192.168.110.0/31
+    role: transit
+    managed: true
+    description: "R1 Ethernet2 <-> S1 Ethernet1 (routed port, not VLAN-tagged)"
+  - prefix: 192.168.110.2/31
+    role: transit
+    managed: true
+    description: "R2 Ethernet2 <-> S2 Ethernet1 (routed port, not VLAN-tagged)"
+  - prefix: 192.168.110.4/31
+    vlan: 99
+    role: transit
+    managed: true
+    description: "S1 Vlan99 <-> S2 Vlan99 (RIP_TRANSIT VLAN over the S1-S2 trunk)"
+
+  # IPv6 access transit for the IS-IS access design
+  # (docs/V2_IPV6_ISIS_ACCESS_REDUNDANCY.md). The S1 ::1 / S2 ::2 VLAN99
+  # interface addresses were added with the live activation (CHG-20261012-0002),
+  # once the devices held them.
+  - prefix: 2001:db8:110:1::/64
+    role: transit
+    managed: true
+    description: "R1 Ethernet2 <-> S1 Ethernet1, IPv6 IS-IS access link"
+  - prefix: 2001:db8:110:2::/64
+    role: transit
+    managed: true
+    description: "R2 Ethernet2 <-> S2 Ethernet1, IPv6"
+  - prefix: 2001:db8:110:3::/64
+    vlan: 99
+    role: transit
+    managed: true
+    description: "S1 Vlan99 <-> S2 Vlan99, IPv6 IS-IS transit (S1 ::1, S2 ::2)"
+
+  # --- OSPF fabric numbering block (192.168.100.0/29) ---------------------
+  # All 4 possible /31s in this /29 are configured, one per fabric VLAN.
+  - prefix: 192.168.100.0/29
+    role: transit
+    managed: true
+    description: "OSPF fabric transit numbering block (R1/R2 <-> R3/R4 via S3/S4)"
+  - prefix: 192.168.100.0/31
+    vlan: 101
+    role: transit
+    managed: true
+    description: "R1 Vlan101 <-> R3 Vlan101"
+  - prefix: 192.168.100.2/31
+    vlan: 102
+    role: transit
+    managed: true
+    description: "R1 Vlan102 <-> R4 Vlan102"
+  - prefix: 192.168.100.4/31
+    vlan: 103
+    role: transit
+    managed: true
+    description: "R2 Vlan103 <-> R3 Vlan103"
+  - prefix: 192.168.100.6/31
+    vlan: 104
+    role: transit
+    managed: true
+    description: "R2 Vlan104 <-> R4 Vlan104"
+
+  - prefix: 2001:db8:100:101::/64
+    vlan: 101
+    role: transit
+    managed: true
+    description: "R1 Vlan101 <-> R3 Vlan101, IPv6"
+  - prefix: 2001:db8:100:102::/64
+    vlan: 102
+    role: transit
+    managed: true
+    description: "R1 Vlan102 <-> R4 Vlan102, IPv6"
+  - prefix: 2001:db8:100:103::/64
+    vlan: 103
+    role: transit
+    managed: true
+    description: "R2 Vlan103 <-> R3 Vlan103, IPv6"
+  - prefix: 2001:db8:100:104::/64
+    vlan: 104
+    role: transit
+    managed: true
+    description: "R2 Vlan104 <-> R4 Vlan104, IPv6"
+
+  # --- External / unmanaged (R3/R4 <-> R5 eBGP, R5 <-> WebServer) --------
+  # Modeled ONLY for IPAM collision prevention (Step 5) -- R5/WebServer are
+  # never provisioning targets; see the "managed: false" flag below and
+  # docs/NETBOX_IPAM.md "R5 / WebServer modeling decision".
+  - prefix: 172.20.5.0/30
+    role: external
+    managed: false
+    description: "R3/R4 <-> R5 eBGP transit numbering block (unmanaged edge)"
+  - prefix: 172.20.5.0/31
+    role: external
+    managed: false
+    description: "R3 eth2 <-> R5 Ethernet1 (eBGP AS65003<->AS65005)"
+  - prefix: 172.20.5.2/31
+    role: external
+    managed: false
+    description: "R4 eth2 <-> R5 Ethernet2 (eBGP AS65004<->AS65005)"
+  - prefix: 2001:db8:205:1::/64
+    role: external
+    managed: false
+    description: "R3 eth2 <-> R5 Ethernet1, IPv6"
+  - prefix: 2001:db8:205:2::/64
+    role: external
+    managed: false
+    description: "R4 eth2 <-> R5 Ethernet2, IPv6"
+  - prefix: 172.31.50.0/31
+    role: external
+    managed: false
+    description: "R5 Ethernet3 <-> WebServer eth1 transit (unmanaged edge)"
+  - prefix: 2001:db8:3150::/64
+    role: external
+    managed: false
+    description: "R5 Ethernet3 <-> WebServer eth1 transit, IPv6"
+  - prefix: 172.30.50.10/32
+    role: external
+    managed: false
+    description: "WebServer BGP-advertised service address (Apache 'Hello world')"
+  - prefix: 2001:db8:3050::10/128
+    role: external
+    managed: false
+    description: "WebServer BGP-advertised service address, IPv6"
+
+# ---------------------------------------------------------------------
+# DHCP allocation ranges (Step 16 metadata for the NEXT, DHCP, phase).
+# ---------------------------------------------------------------------
+# Modeled as NetBox's native ipam.IPRange objects rather than a custom
+# field: NetBox has a first-class, independently-queryable start/end-address
+# range model, which is strictly better structured storage than a free-form
+# description or a custom field for exactly this "pool start/end" data (see
+# Step 16's own preference for structured fields). Status is "reserved", not
+# "dhcp": this NetBox release's ipam.IPRange model supports only
+# active/reserved/deprecated (verified live via the API), unlike
+# ipam.IPAddress which does support "dhcp" -- "reserved" is the genuinely
+# supported status that accurately describes a pool boundary, and the
+# range's own name/description make its DHCP purpose unambiguous. Only the
+# NMAS primary server's pools are modeled here: the secondary/backup pools
+# described in README.md were NOT found in templates/R2.cfg.j2 during this
+# audit -- see `notes:` below; nothing unverified is fabricated as a
+# structured NetBox object.
+#
+# Phase 3C update: the 5 secondary/R2 ranges documented in README.md are now
+# ALSO modeled here (see the `notes:` entry below for the resolution of the
+# prior audit's finding) -- every entry carries an explicit `server: nmas`
+# or `server: r2` key so `populate_netbox.py` can tag primary vs. secondary
+# ranges distinctly (`dhcp-primary`/`dhcp-secondary`, see `tags:` above) and
+# `modules/netbox_ipam.get_dhcp_ranges()` can filter/report by server. This
+# models the DESIRED secondary service only -- templates/R2.cfg.j2 itself
+# is not modified in this phase (see docs/NETBOX_IPAM.md "Phase 3C").
+dhcp_ranges:
+  - name: VLAN10-v4-primary
+    start: 192.168.10.100
+    end: 192.168.10.179
+    vlan: 10
+    server: nmas
+    description: "NMAS primary DHCPv4 pool for VLAN10 (dhcp/dhcpd.conf.j2)"
+  - name: VLAN20-v4-primary
+    start: 192.168.20.100
+    end: 192.168.20.179
+    vlan: 20
+    server: nmas
+    description: "NMAS primary DHCPv4 pool for VLAN20 (dhcp/dhcpd.conf.j2)"
+  - name: VLAN10-v6-primary
+    start: "2001:db8:10::1000"
+    end: "2001:db8:10::1fff"
+    vlan: 10
+    server: nmas
+    description: "NMAS primary DHCPv6 pool for VLAN10 (dhcp/dhcpd6.conf.j2)"
+  - name: VLAN20-v6-primary
+    start: "2001:db8:20::1000"
+    end: "2001:db8:20::1fff"
+    vlan: 20
+    server: nmas
+    description: "NMAS primary DHCPv6 pool for VLAN20 (dhcp/dhcpd6.conf.j2)"
+  - name: VLAN30-v6-primary
+    start: "2001:db8:30::1000"
+    end: "2001:db8:30::1fff"
+    vlan: 30
+    server: nmas
+    description: "NMAS primary DHCPv6 pool for VLAN30 (dhcp/dhcpd6.conf.j2); VLAN30 has no IPv4 pool (IPv6-only design)"
+  - name: VLAN10-v4-secondary
+    start: 192.168.10.200
+    end: 192.168.10.220
+    vlan: 10
+    server: r2
+    description: "R2 secondary DHCPv4 pool for VLAN10 (README.md; desired state -- not yet in templates/R2.cfg.j2, see docs/NETBOX_IPAM.md Phase 3C)"
+  - name: VLAN20-v4-secondary
+    start: 192.168.20.200
+    end: 192.168.20.220
+    vlan: 20
+    server: r2
+    description: "R2 secondary DHCPv4 pool for VLAN20 (README.md; desired state -- not yet in templates/R2.cfg.j2, see docs/NETBOX_IPAM.md Phase 3C)"
+  - name: VLAN10-v6-secondary
+    start: "2001:db8:10::2000"
+    end: "2001:db8:10::20ff"
+    vlan: 10
+    server: r2
+    description: "R2 secondary DHCPv6 pool for VLAN10 (README.md; desired state -- not yet in templates/R2.cfg.j2, see docs/NETBOX_IPAM.md Phase 3C)"
+  - name: VLAN20-v6-secondary
+    start: "2001:db8:20::2000"
+    end: "2001:db8:20::20ff"
+    vlan: 20
+    server: r2
+    description: "R2 secondary DHCPv6 pool for VLAN20 (README.md; desired state -- not yet in templates/R2.cfg.j2, see docs/NETBOX_IPAM.md Phase 3C)"
+  - name: VLAN30-v6-secondary
+    start: "2001:db8:30::2000"
+    end: "2001:db8:30::20ff"
+    vlan: 30
+    server: r2
+    description: "R2 secondary DHCPv6 pool for VLAN30 (README.md; desired state -- not yet in templates/R2.cfg.j2, see docs/NETBOX_IPAM.md Phase 3C); VLAN30 has no IPv4 pool (IPv6-only design)"
+
+# Custom field `dhcp_relay_targets` on the client prefixes, populated from
+# inventory.yml.management (primary_dhcp_ipv4/6, backup_dhcp_ipv4/6) and
+# cross-checked against the `ip helper-address` / `ipv6 dhcp relay
+# destination` lines actually present in templates/S1.cfg.j2 and S2.cfg.j2.
+dhcp_relay_targets:
+  "192.168.10.0/24": ["192.168.200.100", "192.168.200.2"]
+  "192.168.20.0/24": ["192.168.200.100", "192.168.200.2"]
+  "2001:db8:10::/64": ["2001:db8:200::100", "2001:db8:200::2"]
+  "2001:db8:20::/64": ["2001:db8:200::100", "2001:db8:200::2"]
+  "2001:db8:30::/64": ["2001:db8:200::100", "2001:db8:200::2"]
+
+# ---------------------------------------------------------------------
+# Devices, interfaces, IP addresses.
+# ---------------------------------------------------------------------
+# Interface names are the actual network-OS-native names used by
+# templates/*.cfg.j2 itself (EOS "Ethernet"/"Vlan"/"Loopback" names for the
+# 8 cEOS devices, real Linux names for R3/R4) -- never invented, never a
+# raw Containerlab "ethN" name for a device where the OS renames it.
+# Interfaces with no IP address (pure L2 trunk ports) are intentionally
+# NOT modeled -- see docs/NETBOX_IPAM.md Step 9 rationale.
+#
+# `primary` marks the interface/family NetBox should set as the device's
+# primary_ip4/primary_ip6 -- the dedicated-management-VLAN (Vlan200)
+# address for all 9 managed devices, matching the exact identity
+# `modules/snmp.py`/`modules/syslog.py`/`modules/gnmi.py` already use via
+# inventory.yml's `network_devices.*.monitoring.address`. R5 and WebServer
+# have no management-VLAN presence, so their primary is their most
+# identity-representative address instead (R5: Loopback0; WebServer: its
+# service loopback) -- see docs/NETBOX_IPAM.md "Primary address convention".
+devices:
+  - name: R1
+    role: router
+    device_type: ceos-4-36-2f
+    managed: true
+    interfaces:
+      - name: Loopback0
+        addresses:
+          - {address: 192.168.255.1/32, role: loopback}
+          - {address: "2001:db8:255::1/128", role: loopback}
+      - name: Vlan200
+        addresses:
+          - {address: 192.168.200.1/24, primary: true}
+          - {address: "2001:db8:200::1/64", primary: true}
+      - name: Ethernet2
+        addresses:
+          - {address: 192.168.110.0/31}
+          - {address: "2001:db8:110:1::1/64"}
+      - name: Vlan101
+        addresses:
+          - {address: 192.168.100.0/31}
+          - {address: "2001:db8:100:101::1/64"}
+      - name: Vlan102
+        addresses:
+          - {address: 192.168.100.2/31}
+          - {address: "2001:db8:100:102::1/64"}
+
+  - name: R2
+    role: router
+    device_type: ceos-4-36-2f
+    managed: true
+    interfaces:
+      - name: Loopback0
+        addresses:
+          - {address: 192.168.255.2/32, role: loopback}
+          - {address: "2001:db8:255::2/128", role: loopback}
+      - name: Vlan200
+        addresses:
+          - {address: 192.168.200.2/24, primary: true}
+          - {address: "2001:db8:200::2/64", primary: true}
+      - name: Ethernet2
+        addresses:
+          - {address: 192.168.110.2/31}
+          - {address: "2001:db8:110:2::1/64"}
+      - name: Vlan103
+        addresses:
+          - {address: 192.168.100.4/31}
+          - {address: "2001:db8:100:103::1/64"}
+      - name: Vlan104
+        addresses:
+          - {address: 192.168.100.6/31}
+          - {address: "2001:db8:100:104::1/64"}
+
+  - name: R3
+    role: router
+    device_type: ubuntu-24-04
+    managed: true
+    interfaces:
+      - name: lo
+        addresses:
+          - {address: 192.168.255.3/32, role: loopback}
+          - {address: "2001:db8:255::3/128", role: loopback}
+      - name: Vlan200
+        addresses:
+          - {address: 192.168.200.3/24, primary: true}
+          - {address: "2001:db8:200::3/64", primary: true}
+      - name: eth2
+        addresses:
+          - {address: 172.20.5.0/31}
+          - {address: "2001:db8:205:1::1/64"}
+      - name: Vlan101
+        addresses:
+          - {address: 192.168.100.1/31}
+          - {address: "2001:db8:100:101::2/64"}
+      - name: Vlan103
+        addresses:
+          - {address: 192.168.100.5/31}
+          - {address: "2001:db8:100:103::2/64"}
+
+  - name: R4
+    role: router
+    device_type: ubuntu-24-04
+    managed: true
+    interfaces:
+      - name: lo
+        addresses:
+          - {address: 192.168.255.4/32, role: loopback}
+          - {address: "2001:db8:255::4/128", role: loopback}
+      - name: Vlan200
+        addresses:
+          - {address: 192.168.200.4/24, primary: true}
+          - {address: "2001:db8:200::4/64", primary: true}
+      - name: eth2
+        addresses:
+          - {address: 172.20.5.2/31}
+          - {address: "2001:db8:205:2::1/64"}
+      - name: Vlan102
+        addresses:
+          - {address: 192.168.100.3/31}
+          - {address: "2001:db8:100:102::2/64"}
+      - name: Vlan104
+        addresses:
+          - {address: 192.168.100.7/31}
+          - {address: "2001:db8:100:104::2/64"}
+
+  - name: S1
+    role: switch
+    device_type: ceos-4-36-2f
+    managed: true
+    interfaces:
+      - name: Vlan200
+        addresses:
+          - {address: 192.168.200.11/24, primary: true}
+          - {address: "2001:db8:200::11/64", primary: true}
+      - name: Ethernet1
+        addresses:
+          - {address: 192.168.110.1/31}
+          - {address: "2001:db8:110:1::2/64"}
+      - name: Vlan99
+        addresses:
+          - {address: 192.168.110.4/31}
+          - {address: "2001:db8:110:3::1/64"}
+      - name: Vlan10
+        addresses:
+          - {address: 192.168.10.2/24}
+          - {address: "2001:db8:10::2/64"}
+      - name: Vlan20
+        addresses:
+          - {address: 192.168.20.2/24}
+          - {address: "2001:db8:20::2/64"}
+      - name: Vlan30
+        addresses:
+          - {address: "2001:db8:30::2/64"}
+
+  - name: S2
+    role: switch
+    device_type: ceos-4-36-2f
+    managed: true
+    interfaces:
+      - name: Vlan200
+        addresses:
+          - {address: 192.168.200.12/24, primary: true}
+          - {address: "2001:db8:200::12/64", primary: true}
+      - name: Ethernet1
+        addresses:
+          - {address: 192.168.110.3/31}
+          - {address: "2001:db8:110:2::2/64"}
+      - name: Vlan99
+        addresses:
+          - {address: 192.168.110.5/31}
+          - {address: "2001:db8:110:3::2/64"}
+      - name: Vlan10
+        addresses:
+          - {address: 192.168.10.3/24}
+          - {address: "2001:db8:10::3/64"}
+      - name: Vlan20
+        addresses:
+          - {address: 192.168.20.3/24}
+          - {address: "2001:db8:20::3/64"}
+      - name: Vlan30
+        addresses:
+          - {address: "2001:db8:30::3/64"}
+
+  - name: S3
+    role: switch
+    device_type: ceos-4-36-2f
+    managed: true
+    interfaces:
+      - name: Vlan200
+        addresses:
+          - {address: 192.168.200.13/24, primary: true}
+          - {address: "2001:db8:200::13/64", primary: true}
+
+  - name: S4
+    role: switch
+    device_type: ceos-4-36-2f
+    managed: true
+    interfaces:
+      - name: Vlan200
+        addresses:
+          - {address: 192.168.200.14/24, primary: true}
+          - {address: "2001:db8:200::14/64", primary: true}
+
+  - name: mgmt_swt
+    role: management-switch
+    device_type: ceos-4-36-2f
+    managed: true
+    interfaces:
+      - name: Vlan200
+        addresses:
+          - {address: 192.168.200.10/24, primary: true}
+          - {address: "2001:db8:200::10/64", primary: true}
+
+  # --- Unmanaged (Step 5): modeled for IPAM collision prevention only ----
+  - name: R5
+    role: external-unmanaged
+    device_type: ceos-4-36-2f
+    managed: false
+    interfaces:
+      - name: Loopback0
+        addresses:
+          - {address: 192.168.255.5/32, role: loopback, primary: true}
+          - {address: "2001:db8:255::5/128", role: loopback, primary: true}
+      - name: Ethernet1
+        addresses:
+          - {address: 172.20.5.1/31}
+          - {address: "2001:db8:205:1::2/64"}
+      - name: Ethernet2
+        addresses:
+          - {address: 172.20.5.3/31}
+          - {address: "2001:db8:205:2::2/64"}
+      - name: Ethernet3
+        addresses:
+          - {address: 172.31.50.0/31}
+          - {address: "2001:db8:3150::1/64"}
+
+  - name: WebServer
+    role: external-unmanaged
+    device_type: ubuntu-24-04
+    managed: false
+    interfaces:
+      - name: eth1
+        addresses:
+          - {address: 172.31.50.1/31}
+          - {address: "2001:db8:3150::2/64"}
+      - name: lo
+        addresses:
+          - {address: 172.30.50.10/32, primary: true}
+          - {address: "2001:db8:3050::10/128", primary: true}
+
+# ---------------------------------------------------------------------
+# Shared virtual-router (VRRP-style) gateway addresses.
+# ---------------------------------------------------------------------
+# `ip virtual-router address` / `ipv6 virtual-router address` in
+# templates/S1.cfg.j2 and S2.cfg.j2: one logical gateway shared by both
+# switches, not owned by a single interface. Modeled as NetBox IP-address
+# objects with role="vrrp", intentionally NOT assigned to either switch's
+# interface (assigning it to only one would misrepresent it as exclusively
+# owned by that device).
+virtual_ips:
+  - address: 192.168.10.1/24
+    role: vrrp
+    description: "VLAN10 shared gateway (S1+S2 ip virtual-router address)"
+  - address: "2001:db8:10::1/64"
+    role: vrrp
+    description: "VLAN10 shared gateway, IPv6"
+  - address: 192.168.20.1/24
+    role: vrrp
+    description: "VLAN20 shared gateway (S1+S2 ip virtual-router address)"
+  - address: "2001:db8:20::1/64"
+    role: vrrp
+    description: "VLAN20 shared gateway, IPv6"
+  - address: "2001:db8:30::1/64"
+    role: vrrp
+    description: "VLAN30 shared gateway, IPv6 (no IPv4 gateway exists for VLAN30)"
+
+# ---------------------------------------------------------------------
+# Known ambiguities (see docs/NETBOX_IPAM.md "Problems / Ambiguities" for
+# the full discussion) -- recorded here so the manifest itself documents
+# what it deliberately did NOT assert as verified structured data.
+# ---------------------------------------------------------------------
+notes:
+  - subject: "R2 secondary DHCP server (Phase 2 finding -- resolved by Phase 3C below)"
+    detail: >-
+      README.md and inventory.yml document R2 as a secondary EOS DHCP
+      server with non-overlapping pools (v4: .200-.220 on VLAN10/20; v6:
+      ::2000-20ff on VLAN10/20/30), and inventory.yml's
+      management.backup_dhcp_ipv4/6 (192.168.200.2 / 2001:db8:200::2,
+      which IS R2's real Vlan200 address) is genuinely used as a relay
+      destination in templates/S1.cfg.j2 and S2.cfg.j2. As of the Phase-2
+      audit, no corresponding native EOS DHCP server/pool configuration
+      existed in templates/R2.cfg.j2, so the secondary pool ranges were
+      deliberately NOT modeled as NetBox ipam.IPRange objects at that time
+      (asserting verified structured data for something not actually
+      present in the authoritative template source would have been
+      fabrication).
+  - subject: "R2 secondary DHCP server -- Phase 3C model resolution (superseded by Phase 3D/3E below)"
+    detail: >-
+      The 5 secondary ranges are modeled above (tagged `dhcp-secondary`,
+      `server: r2`) as genuinely DESIRED state -- native EOS DHCP-server
+      capability for both DHCPv4 and stateful DHCPv6 was proven present on
+      this exact cEOS 4.36.2F image (see docs/NETBOX_IPAM.md "Phase 3C"),
+      unlike the earlier cEOS DHCPv6 CLIENT investigation (Phase 3B.2) which
+      found no client capability. At the time of Phase 3C, `templates/R2.cfg.j2`
+      itself was not yet modified and nothing had been activated.
+  - subject: "R2 secondary DHCP server -- current status (Phase 3D/3E, live)"
+    detail: >-
+      `templates/R2.cfg.j2` now includes `templates/R2_dhcp_server.cfg.j2`
+      (guarded by `{% if dhcp is defined %}`) and its own `interface Vlan200`
+      stanza carries `dhcp server ipv4`/`dhcp server ipv6`; both are populated
+      by `modules.ipam_context.build_and_validate_r2_dhcp_context()`, sourced
+      from these same NetBox ranges. This was activated live via `master.py`'s
+      real `push_eos()` path in Phase 3E and verified in Phase 3F/3G (see
+      docs/NETBOX_IPAM.md) -- R2 is an active secondary DHCPv4/DHCPv6 server
+      for VLAN10/20 (v4+v6) and VLAN30 (v6 only), non-overlapping with NMAS's
+      primary pools. This manifest's ranges remain the seed data; the live
+      pool values are read from NetBox, not from this file, at render time.

@@ -1,0 +1,14 @@
+{% extends "core/base.html" %}
+{% block title %}Maintenance Mode{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>Maintenance Mode</h1>
+  <p><a href="{% url 'core:automation_landing' %}">&larr; Automation</a></p>
+  <p>A device enters maintenance only when the production traffic through it is proven quiesced, or can be moved away losslessly by redundancy that already exists in this network. Missing redundancy alone never blocks; active traffic with no proven lossless drain always does. The requested duration is the operator's intent and ends nothing; every maintenance has a hard safety deadline of {{ cycle_days }} days after entry, at which the worker starts the verified restore.</p>
+  {% if actions.edit %}<p><a class="btn btn--primary" href="{% url 'core:maintenance_request' %}">Request maintenance</a></p>{% else %}<p><em>Requesting maintenance needs the Operator role.</em></p>{% endif %}
+</div>
+<div class="card"><h3>Under maintenance</h3>{% include "core/maintenance/_table.html" with items=groups.active empty="No device is under maintenance." %}</div>
+<div class="card" style="margin-top:16px;"><h3>Blocked</h3>{% include "core/maintenance/_table.html" with items=groups.blocked empty="Nothing is blocked." %}</div>
+<div class="card" style="margin-top:16px;"><h3>Requested, planned or approved</h3>{% include "core/maintenance/_table.html" with items=groups.pending empty="Nothing is pending." %}</div>
+<div class="card" style="margin-top:16px;"><h3>History</h3>{% include "core/maintenance/_table.html" with items=groups.historical empty="No maintenance has ended yet." %}</div>
+{% endblock %}

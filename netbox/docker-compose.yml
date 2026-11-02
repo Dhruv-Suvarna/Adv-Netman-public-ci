@@ -1,0 +1,124 @@
+# NetBox stack -- Phase 1 of the NetBox migration (see docs/NETBOX_IPAM.md).
+#
+# Independently-managed lifecycle from monitoring/docker-compose.yml
+# (InfluxDB/Grafana): a separate Compose project ("netbox"), a separate
+# network, separate volumes. Mirrors the reference architecture published by
+# netbox-community/netbox-docker (release branch) for this NetBox version,
+# pinned to specific, mutually-compatible image tags rather than `latest`.
+#
+# This stack is NOT a Containerlab node and is not attached to any
+# Containerlab network/VLAN/bridge -- Compose creates its own isolated
+# "netbox_default" network, unrelated to the `clab` management network used
+# by the lab topology. The only host-exposed port is NetBox's own HTTP API/UI,
+# bound to 127.0.0.1 only.
+#
+# Start:    docker compose up -d --wait   (from this directory; or use
+#           netbox/scripts/bootstrap_netbox.sh, which also creates .env and
+#           the IaC API token on first run)
+# Stop:     docker compose down           (add -v only if you intentionally
+#           want to discard all NetBox data -- never run that without asking)
+# Status:   docker compose ps
+# Health:   curl -s http://127.0.0.1:8000/api/status/
+
+services:
+  netbox: &netbox
+    image: docker.io/netboxcommunity/netbox:v4.7-5.1.1
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      redis-cache:
+        condition: service_healthy
+    env_file: .env
+    ports:
+      - "127.0.0.1:8000:8080"
+    healthcheck:
+      test: /opt/netbox/health.sh
+      start_period: 90s
+      timeout: 3s
+      interval: 15s
+      retries: 6
+    volumes:
+      - ./configuration:/etc/netbox/config:ro
+      - netbox-media:/opt/netbox/netbox/media
+      - netbox-reports:/opt/netbox/netbox/reports
+      - netbox-scripts:/opt/netbox/netbox/scripts
+
+  netbox-worker:
+    <<: *netbox
+    depends_on:
+      netbox:
+        condition: service_healthy
+    ports: []
+    command:
+      - /opt/netbox/venv/bin/python
+      - /opt/netbox/netbox/manage.py
+      - rqworker
+    healthcheck:
+      test: ps -aux | grep -v grep | grep -q rqworker || exit 1
+      start_period: 20s
+      timeout: 3s
+      interval: 15s
+      retries: 6
+
+  # PostgreSQL: NetBox's primary datastore.
+  postgres:
+    image: docker.io/postgres:18-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    healthcheck:
+      test: pg_isready -q -t 2 -d $$POSTGRES_DB -U $$POSTGRES_USER
+      start_period: 20s
+      timeout: 5s
+      interval: 10s
+      retries: 5
+    volumes:
+      - netbox-postgres:/var/lib/postgresql
+
+  # Redis: background task queue (webhooks, rqworker jobs).
+  redis:
+    image: docker.io/valkey/valkey:9.1-alpine
+    command:
+      - sh
+      - -c
+      - valkey-server --appendonly yes --requirepass $$REDIS_PASSWORD
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+    healthcheck:
+      test: '[ $$(valkey-cli --pass "$${REDIS_PASSWORD}" ping) = ''PONG'' ]'
+      start_period: 5s
+      timeout: 3s
+      interval: 10s
+      retries: 5
+    volumes:
+      - netbox-redis-data:/data
+
+  # Redis: NetBox's cache backend. Kept as a distinct instance/volume from
+  # the task-queue Redis above, per NetBox's own documented recommendation.
+  redis-cache:
+    image: docker.io/valkey/valkey:9.1-alpine
+    command:
+      - sh
+      - -c
+      - valkey-server --requirepass $$REDIS_PASSWORD
+    environment:
+      REDIS_PASSWORD: ${REDIS_CACHE_PASSWORD}
+    healthcheck:
+      test: '[ $$(valkey-cli --pass "$${REDIS_PASSWORD}" ping) = ''PONG'' ]'
+      start_period: 5s
+      timeout: 3s
+      interval: 10s
+      retries: 5
+    volumes:
+      - netbox-redis-cache-data:/data
+
+volumes:
+  netbox-postgres:
+  netbox-redis-data:
+  netbox-redis-cache-data:
+  netbox-media:
+  netbox-reports:
+  netbox-scripts:

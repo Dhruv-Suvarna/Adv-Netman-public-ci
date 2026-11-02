@@ -1,0 +1,28 @@
+{% extends "core/base.html" %}
+{% block title %}Verification {{ run.run_id|slice:":8" }} · {{ raw.raw_id }}{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1><span class="badge badge--danger">RAW</span> Verification <code>{{ run.run_id|slice:":8" }}</code> <span style="font-weight:400;">· {{ raw.raw_id }} rev {{ revision.revision }}</span></h1>
+  <p><a href="{% url 'core:raw_configlet_detail' change.change_id raw.raw_id %}">&larr; Back to {{ raw.raw_id }}</a></p>
+  <p><strong>Append-only evidence.</strong> This verification is never modified: a later attempt is a new row. It proves only what the sandbox parser accepted (syntax); it does not prove the configuration is correct, safe for the network, or applied.</p>
+</div>
+<div class="card">
+  <table class="data-table"><tbody>
+    <tr><th>Result</th><td><span class="badge badge--{{ tone }}">{{ run.result|default:run.state }}</span> {% if is_current %}<span class="badge badge--success">CURRENT</span>{% elif run.state == "FINISHED" %}<span class="badge badge--warning">not current</span>{% endif %}{% if currency_reasons and not is_current %} {{ currency_reasons|join:", " }}{% endif %}</td></tr>
+    <tr><th>Revision</th><td>{{ revision.revision }}{% if not is_latest_revision %} (historical){% endif %} · <code>{{ run.content_hash }}</code></td></tr>
+    <tr><th>Platform</th><td>{{ run.platform }}</td></tr>
+    <tr><th>Verifier / policy</th><td>framework <code>{{ run.verifier_version }}</code> · policy <code>{{ run.policy_version }}</code> · adapter <code>{{ run.adapter_id|default:"—" }}@{{ run.adapter_version|default:"—" }}</code></td></tr>
+    <tr><th>Sandbox backend</th><td><code>{{ run.backend|default:"—" }}</code>{% if run.evidence.sandbox %} · privileged: {{ run.evidence.sandbox.privileged|default:"no" }} · network: {{ run.evidence.sandbox.network|default:"—" }} · cleanup: {{ run.evidence.sandbox.cleanup|default:"—" }}{% endif %}</td></tr>
+    <tr><th>Started / finished</th><td>{{ run.started_at }} → {{ run.finished_at|default:"—" }} by {{ run.actor|default:"—" }}</td></tr>
+    <tr><th>Static policy</th><td>{% if run.static_result.passed %}<span class="badge badge--success">passed</span>{% else %}<span class="badge badge--danger">failed</span>{% endif %} {{ run.static_result.codes|join:", " }}</td></tr>
+  </tbody></table>
+  <h3>Findings</h3>
+  {% include "core/device_builder/_raw_findings.html" with findings=run.findings %}
+  {% if run.evidence.output %}
+  <h3>Bounded, sanitized sandbox output</h3>
+  <pre style="white-space:pre-wrap;">{% for line in run.evidence.output %}{{ line }}
+{% endfor %}</pre>
+  <p style="font-size:0.85rem;color:var(--text-muted);">Redacted and truncated; never raw sandbox logs.</p>
+  {% endif %}
+</div>
+{% endblock %}

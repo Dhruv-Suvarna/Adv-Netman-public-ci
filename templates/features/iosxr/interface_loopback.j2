@@ -1,0 +1,5 @@
+interface {{ name }}
+ description {{ description }}
+{% if admin_disabled %} shutdown
+{% else %} no shutdown
+{% endif %}

@@ -1,0 +1,30 @@
+1791735291.162 START nmas-pipeline abort 1 load 13.60 19.45 22.10
+1791735292.294 NMAS service-gate execute() -> TRANSITION_PROVEN_NOT_AUTHORIZED sent-nothing
+1791735293.422 CONFIG start {"r1": "2bd8c040664c1216", "r2": "6284ec1a7270b9dd", "s1": "7d083ffd40ee3b4f", "s2": "a4f9a4a23f07a916"}
+1791735308.769 C1 begin load 14.32 19.31 22.02
+1791735308.769 NMAS plan R1-clients-static-to-isis LESS_SPECIFIC_COVER specs=install,add,remove,remove,remove,remove
+1791735323.910 NMAS result R1-clients-static-to-isis ok=False aborted=NEW_PATH_UNAVAILABLE restored=None lost=0 [["precheck", "BLOCKED"]]
+1791735323.910 GATE router transition without core covers -> NEW_PATH_UNAVAILABLE,UPSTREAM_COVER_NOT_CONFIRMED applied=0
+1791735326.853 A1 core-cover-installed 2001:db8:10::/63 2001:db8:20::/63 2001:db8:30::/63
+1791735326.853 FP1 stage1 vlan99-ipv6+isis start
+1791735331.621 FP1 stage2 adjacencies wait
+1791735346.380 FP1 stage3 advertise start
+1791735350.945 FP1 stage4 isis-available wait (static still owns)
+1791735358.267 FP1 stage12 final-config r1=8a14f83b0377eeb2 r2=10b230dc33e345c7 s1=ca72c15194707f3f s2=d6346702cc2b566b
+1791735365.214 NMAS plan S1-aggregate-static-to-isis MORE_SPECIFIC_PAIR specs=install,remove,remove
+1791735431.496 NMAS-S1-aggregate-static-to-isis takeover-nexthop s1 2001:db8::/32 isisL2 fe80::42:aff:fefb:1b02%eth1 before=DELAY after=DELAY
+1791735460.120 NMAS result S1-aggregate-static-to-isis ok=True aborted=- restored=None lost=0 [["precheck", "PASS"], ["shield-install", "APPLIED"], ["shield-verify", "PASS"], ["transition", "APPLIED"], ["transition-verify", "PASS"], ["shield-remove", "APPLIED"], ["final-verify", "PASS"]]
+1791735461.913 NMAS plan R1-clients-static-to-isis LESS_SPECIFIC_COVER specs=install,add,remove,remove,remove,remove
+1791735571.846 NMAS result R1-clients-static-to-isis ok=False aborted=PRODUCTION_PACKET_LOSS restored=True lost=0 [["precheck", "PASS"], ["shield-install", "APPLIED"], ["shield-verify", "PASS"], ["transition", "APPLIED"], ["transition", "APPLIED"], ["abort", "PRODUCTION_PACKET_LOSS"], ["restore", "RESTORED"]]
+1791735573.483 ABORT aborted=PRODUCTION_PACKET_LOSS restored=True config-restored=True owner=static [{"cfg_id": "RS-R1-clients-static-to-isis-11-static-remove", "status": "COMPENSATED", "error": ""}, {"cfg_id": "RS-R1-clients-static-to-isis-10-floating-add", "status": "COMPENSATED", "error": ""}, {"cfg_id": "RS-R1-clients-static-to-isis-1-shield-install", "status": "COMPENSATED", "error": ""}]
+1791735575.154 NMAS plan S1-aggregate-isis-to-static MORE_SPECIFIC_PAIR specs=install,restore,remove
+1791735663.182 NMAS-S1-aggregate-isis-to-static takeover-nexthop s1 2001:db8::/32 static 2001:db8:110:1::1 before=REACHABLE after=REACHABLE
+1791735700.387 NMAS result S1-aggregate-isis-to-static ok=True aborted=- restored=None lost=0 [["precheck", "PASS"], ["shield-install", "APPLIED"], ["shield-verify", "PASS"], ["transition", "APPLIED"], ["transition-verify", "PASS"], ["shield-remove", "APPLIED"], ["final-verify", "PASS"]]
+1791735700.387 BW1 rb4 withdraw-advertisements start
+1791735704.366 BW1 rb5 isis-removal start
+1791735713.888 BW1 rb6 baseline-config r1=2bd8c040664c1216 r2=6284ec1a7270b9dd s1=7d083ffd40ee3b4f s2=a4f9a4a23f07a916
+1791735839.261 A1 core-quiet 1175
+1791735840.949 A1 core-cover-removed
+1791735843.127 B1 baseline-restored True
+1791735848.128 C1 end load 24.33 23.54 22.93
+1791735874.853 END ok load 24.68 23.73 23.02

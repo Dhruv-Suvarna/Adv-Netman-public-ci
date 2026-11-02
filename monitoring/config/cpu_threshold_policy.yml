@@ -1,0 +1,40 @@
+# NMAS collector-generated CPU threshold alerting policy.
+#
+# This is the *production* policy consumed by modules/cpu_alerts.py, which
+# evaluates every real HOST-RESOURCES-MIB::hrProcessorLoad SNMP poll already
+# collected by modules/snmp.py:collect(). It exists to satisfy
+# LAB_REQUIREMENTS.md section 4 "Notifications" path 2 ("NMAS-side threshold
+# alerting generated from repeated CPU polls") and section 14 item 5.
+#
+# No such policy existed anywhere in the repository before this file (checked
+# via grep across modules/, monitoring/config/, and inventory.yml). These
+# values are new, conservative, lab-appropriate defaults chosen to align with
+# -- not duplicate the meaning of -- the pre-existing Grafana CPU panel
+# visual thresholds already defined in
+# monitoring/scripts/build_grafana_dashboards.py (orange=70, red=90). That
+# Grafana coloring is display-only and is NOT itself a stored alert; this
+# file is the actual alerting policy, and the two intentionally agree so the
+# dashboard color and the stored collector_alert severity never disagree for
+# the same CPU value.
+#
+# warning_pct         -- mean HOST-RESOURCES-MIB::hrProcessorLoad percent
+#                         (averaged across a device's polled logical
+#                         processor indexes) at/above which a WARNING alert
+#                         may be raised.
+# critical_pct        -- percent at/above which a CRITICAL alert may be
+#                         raised instead of WARNING.
+# consecutive_samples -- number of consecutive real SNMP CPU polls (each a
+#                         separate modules/snmp.py collect() invocation) that
+#                         must each be at/above the relevant threshold before
+#                         an ALERT event is written. Prevents a single
+#                         instantaneous spike from creating an alert storm.
+# recovery_pct        -- hysteresis floor. Once alerting, CPU must fall
+#                         to/below this value (not merely below warning_pct)
+#                         before a RECOVERY event is written and the device
+#                         returns to the NORMAL state. Must stay below
+#                         warning_pct so a device cannot flap between ALERT
+#                         and RECOVERY at a single boundary value.
+warning_pct: 70
+critical_pct: 90
+consecutive_samples: 3
+recovery_pct: 60

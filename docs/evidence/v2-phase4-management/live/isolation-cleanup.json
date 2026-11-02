@@ -1,0 +1,12 @@
+{
+  "address_comparison": "lease/RA lifetime counters excluded; all addresses and interface properties retained",
+  "existing_container_ids_unchanged": true,
+  "fixture_containers_remaining": 0,
+  "fixture_runtime_credentials_remaining": false,
+  "host_interfaces_addresses_and_flags_unchanged": true,
+  "host_ipv4_routes_unchanged": true,
+  "host_ipv6_routes_unchanged": true,
+  "host_links_after": 37,
+  "host_links_before": 37,
+  "named_namespaces_unchanged": true
+}

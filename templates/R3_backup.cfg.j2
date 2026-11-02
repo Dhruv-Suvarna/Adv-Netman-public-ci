@@ -1,0 +1,102 @@
+hostname R3
+!
+ip routing
+ipv6 unicast-routing
+!
+spanning-tree mode none
+!
+vlan 200
+   name MANAGEMENT
+vlan 101
+vlan 103
+!
+interface Vlan101
+   no ip ospf area 0.0.0.0
+   no ipv6 ospf 10 area 0.0.0.0
+!
+interface Vlan103
+   no ip ospf area 0.0.0.0
+   no ipv6 ospf 10 area 0.0.0.0
+!
+no router ospf 10
+no ipv6 router ospf 10
+!
+ip access-list NAT-INSIDE-V4
+   10 permit ip 192.168.10.0/24 any
+   20 permit ip 192.168.20.0/24 any
+!
+ip nat profile EDGE-PAT
+   ip nat source dynamic access-list NAT-INSIDE-V4 overload
+!
+interface Ethernet2
+   ip nat service-profile EDGE-PAT
+!
+interface Ethernet3
+   description MANAGEMENT
+   switchport access vlan 200
+!
+interface Vlan200
+   ip address 192.168.200.3/24
+   ipv6 address 2001:db8:200::3/64
+!
+interface Loopback0
+   ip address 192.168.255.3/32
+   ipv6 address 2001:db8:255::3/128
+!
+interface Ethernet1
+   description OSPF_L2_FABRIC_TRUNK
+   switchport mode trunk
+   switchport trunk allowed vlan 101,103
+!
+interface Ethernet2
+   description BGP_TO_R5
+   no switchport
+   ip address 172.20.5.0/31
+   ipv6 address 2001:db8:205:1::1/64
+!
+ip prefix-list WEB-V4
+   seq 10 permit 172.30.50.10/32
+!
+ipv6 prefix-list WEB-V6
+   seq 10 permit 2001:db8:3050::10/128
+!
+route-map BGP4-TO-OSPF permit 10
+   match ip address prefix-list WEB-V4
+!
+route-map BGP6-TO-OSPF permit 10
+   match ipv6 address prefix-list WEB-V6
+!
+router ospf 10
+   router-id 192.168.255.3
+   redistribute bgp route-map BGP4-TO-OSPF
+!
+ipv6 router ospf 10
+   router-id 192.168.255.3
+   redistribute bgp route-map BGP6-TO-OSPF
+!
+interface Vlan101
+   ip address 192.168.100.1/31
+   ipv6 address 2001:db8:100:101::2/64
+   ip ospf area 0.0.0.0
+   ipv6 ospf 10 area 0.0.0.0
+!
+interface Vlan103
+   ip address 192.168.100.5/31
+   ipv6 address 2001:db8:100:103::2/64
+   ip ospf area 0.0.0.0
+   ipv6 ospf 10 area 0.0.0.0
+!
+router bgp 65003
+   router-id 192.168.255.3
+   neighbor 172.20.5.1 remote-as 65005
+   neighbor 2001:db8:205:1::2 remote-as 65005
+   address-family ipv4
+      neighbor 172.20.5.1 activate
+      network 192.168.10.0/24
+      network 192.168.20.0/24
+   address-family ipv6
+      neighbor 2001:db8:205:1::2 activate
+      network 2001:db8:10::/64
+      network 2001:db8:20::/64
+      network 2001:db8:30::/64
+!

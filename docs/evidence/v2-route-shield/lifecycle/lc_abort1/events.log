@@ -1,0 +1,75 @@
+1791756334.517 START nmas-lifecycle abort R1-client-statics-remove load 15.16 22.87 28.37
+1791756336.508 CONFIG start {"r1": "2bd8c040664c1216", "r2": "6284ec1a7270b9dd", "s1": "7d083ffd40ee3b4f", "s2": "a4f9a4a23f07a916"} covers {"c3": 0, "c4": 0}
+1791756372.582 LIFECYCLE change CHG-20261011-0001 {"transition": {"kind": "BASELINE_STATIC_IPV6_TO_ISIS", "definition": "sandbox", "schema": 1}}
+1791756372.599 LIFECYCLE validation PASS findings=0
+1791756372.669 LIFECYCLE plan f0d4da2d operations=48 permanent=24 temporary=24
+1791756373.436 GATE general execution engine -> TRANSITION_CHANGE_NOT_GENERIC
+1791756426.190 LIFECYCLE precheck PASS {"status": "PASS", "blockers": []}
+1791756426.214 GATE execution before approval -> BLOCKED NOT_APPROVED,PRECHECK_NOT_PASSED
+1791756430.112 GATE approval without acknowledgements -> ACKNOWLEDGEMENT_MISSING
+1791756430.140 LIFECYCLE approved READY_TO_DEPLOY
+1791756430.140 GATE service entry point execute() -> REFUSED NOT_THIS_TRANSITION
+1791756434.644 LIFECYCLE execute begin load 20.21 22.26 27.57
+1791756495.261 NMAS before R3-cover-2001:db8:10::/63 lost=0
+1791756504.751 NMAS after R3-cover-2001:db8:10::/63 lost=0
+1791756517.199 NMAS before R3-cover-2001:db8:20::/63 lost=0
+1791756526.865 NMAS after R3-cover-2001:db8:20::/63 lost=0
+1791756539.614 NMAS before R3-cover-2001:db8:30::/63 lost=0
+1791756549.013 NMAS after R3-cover-2001:db8:30::/63 lost=0
+1791756563.594 NMAS before R4-cover-2001:db8:10::/63 lost=0
+1791756573.231 NMAS after R4-cover-2001:db8:10::/63 lost=0
+1791756588.472 NMAS before R4-cover-2001:db8:20::/63 lost=0
+1791756599.690 NMAS after R4-cover-2001:db8:20::/63 lost=0
+1791756625.523 NMAS before R4-cover-2001:db8:30::/63 lost=0
+1791756631.759 NMAS after R4-cover-2001:db8:30::/63 lost=0
+1791756639.568 NMAS before S1-vlan99-ipv6 lost=0
+1791756664.443 NMAS after S1-vlan99-ipv6 lost=0
+1791756673.429 NMAS before S2-vlan99-ipv6 lost=0
+1791756699.483 NMAS after S2-vlan99-ipv6 lost=0
+1791756711.401 NMAS before R1-isis-process lost=0
+1791756740.732 NMAS after R1-isis-process lost=0
+1791756752.220 NMAS before R2-isis-process lost=0
+1791756779.325 NMAS after R2-isis-process lost=0
+1791756791.222 NMAS before S1-isis-process lost=0
+1791756821.521 NMAS after S1-isis-process lost=0
+1791756837.150 NMAS before S2-isis-process lost=0
+1791756867.673 NMAS after S2-isis-process lost=0
+1791756892.595 NMAS before R1-isis-access lost=0
+1791756918.421 NMAS after R1-isis-access lost=0
+1791756927.771 NMAS before R2-isis-access lost=0
+1791756953.371 NMAS after R2-isis-access lost=0
+1791756963.250 NMAS before S1-isis-links lost=0
+1791756990.910 NMAS after S1-isis-links lost=0
+1791757001.121 NMAS before S2-isis-links lost=0
+1791757032.365 NMAS after S2-isis-links lost=0
+1791757046.191 NMAS before S1-client-svis-passive lost=0
+1791757075.919 NMAS after S1-client-svis-passive lost=0
+1791757089.150 NMAS before S2-client-svis-passive lost=0
+1791757118.779 NMAS after S2-client-svis-passive lost=0
+1791757142.587 NMAS before R1-boundary-policy lost=0
+1791757168.214 NMAS after R1-boundary-policy lost=0
+1791757176.648 NMAS before R1-aggregate-into-isis lost=0
+1791757202.661 NMAS after R1-aggregate-into-isis lost=0
+1791757211.923 NMAS before R1-isis-into-ospfv3 lost=0
+1791757237.382 NMAS after R1-isis-into-ospfv3 lost=0
+1791757247.930 NMAS before R2-boundary-policy lost=0
+1791757274.555 NMAS after R2-boundary-policy lost=0
+1791757287.000 NMAS before R2-aggregate-into-isis lost=0
+1791757314.753 NMAS after R2-aggregate-into-isis lost=0
+1791757328.369 NMAS before R2-isis-into-ospfv3 lost=0
+1791757364.759 NMAS after R2-isis-into-ospfv3 lost=0
+1791757391.317 NMAS before S1-shield-install lost=0
+1791757417.925 NMAS after S1-shield-install lost=0
+1791757427.143 NMAS before R1-shield-install lost=0
+1791757459.720 NMAS after R1-shield-install lost=0
+1791757474.677 NMAS before S1-static-aggregate-remove lost=0
+1791757488.039 NMAS after S1-static-aggregate-remove lost=0
+1791757500.420 NMAS before R1-floating-statics-add lost=0
+1791757528.059 NMAS after R1-floating-statics-add lost=0
+1791757542.353 NMAS before R1-client-statics-remove lost=0
+1791757557.423 NMAS after R1-client-statics-remove lost=0
+1791757557.423 INJECT failure after R1-client-statics-remove
+1791758501.744 LIFECYCLE execute FAILED_ROLLED_BACK lifecycle=ROLLED_BACK probes_lost=0 applied=29 compensated=29 temporary_remaining=[] restored=True
+1791758501.945 CONFIG end {"r1": "2bd8c040664c1216", "r2": "6284ec1a7270b9dd", "s1": "7d083ffd40ee3b4f", "s2": "a4f9a4a23f07a916"} baseline-restored=True covers {"c3": 0, "c4": 0}
+1791758516.193 PROBES answered=1206280 lost=0 errors=[]
+1791758536.782 END ok load 26.76 29.04 28.47

@@ -1,0 +1,13 @@
+authoritative;
+default-lease-time 28800;
+max-lease-time 28800;
+
+# Local NMAS management segment; no leases are handed out here.
+subnet6 {{ dhcp.management.v6_prefix }} {
+}
+{% for subnet in dhcp.ipv6_subnets %}
+
+subnet6 {{ subnet.prefix }} {
+  range6 {{ subnet.start }} {{ subnet.end }};
+}
+{% endfor %}

@@ -1,0 +1,2 @@
+2 packets transmitted, 2 received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev = 0.035/0.093/0.152/0.058 ms, ipg/ewma 0.269/0.137 ms

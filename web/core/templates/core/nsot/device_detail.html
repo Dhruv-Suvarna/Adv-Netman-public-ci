@@ -1,0 +1,107 @@
+{% extends "core/base.html" %}
+{% load nsot_extras %}
+{% block title %}{{ device_name }} · NSOT{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>{{ device_name }}</h1>
+  <p><a href="{% url 'core:nsot_devices' %}">&larr; Back to Devices</a></p>
+</div>
+{% include "core/nsot/_subnav.html" %}
+
+{% if detail.status != "available" %}
+  <div class="alert alert--warning"><div><strong>NetBox unavailable.</strong> {{ detail.message }}</div></div>
+{% else %}
+  <div class="card-grid">
+    <div class="card">
+      <span class="badge NETBOX">NETBOX</span>
+      <h3>Stored / intended</h3>
+      <table class="data-table">
+        <tbody>
+          <tr><th>Role</th><td>{{ detail.device.summary.role|default:"—" }}</td></tr>
+          <tr><th>Type</th><td>{{ detail.device.summary.device_type|default:"—" }}</td></tr>
+          <tr><th>Manufacturer</th><td>{{ detail.device.summary.manufacturer|default:"—" }}</td></tr>
+          <tr><th>Status</th><td>{{ detail.device.summary.status|default:"—" }}</td></tr>
+          <tr><th>Site</th><td>{{ detail.device.summary.site|default:"—" }}</td></tr>
+          <tr><th>Primary IPv4</th><td>{{ detail.device.summary.primary_ipv4|default:"—" }}</td></tr>
+          <tr><th>Primary IPv6</th><td>{{ detail.device.summary.primary_ipv6|default:"—" }}</td></tr>
+          <tr><th>Managed</th><td>{{ detail.device.summary.managed }}</td></tr>
+          <tr><th>Tags</th><td>{{ detail.device.summary.tags|join:", " }}</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <span class="badge GIT">GIT</span>
+      <h3>Template / code</h3>
+      {% if detail.git_template.available %}
+        <p><a href="{% url 'core:nsot_templates' %}?file={{ detail.git_template.path }}">{{ detail.git_template.path }}</a></p>
+      {% else %}
+        <p style="color:var(--text-muted);">No allowlisted template file found for this device.</p>
+      {% endif %}
+      <h3 style="margin-top:16px;">NetBox vs Git addressing</h3>
+      {% if detail.drift.status == "available" %}
+        <span class="badge {{ detail.drift.data.equivalent|yesno:'IN_SYNC,DRIFT'|badge_class }}">{{ detail.drift.data.equivalent|yesno:"IN_SYNC,DRIFT" }}</span>
+        {% if detail.drift.data.differences %}
+          <ul>
+            {% for d in detail.drift.data.differences %}<li>{{ d.category }}: legacy={{ d.legacy }} netbox={{ d.netbox }}</li>{% endfor %}
+          </ul>
+        {% endif %}
+      {% else %}
+        <span class="badge UNAVAILABLE">UNAVAILABLE</span>
+      {% endif %}
+    </div>
+
+    <div class="card">
+      <span class="badge LIVE">LIVE</span>
+      <h3>Running configuration</h3>
+      {% if detail.live.supported %}
+        <p style="color:var(--text-secondary);">Read-only fetch of <code>show running-config</code> from {{ detail.live.address }}, redacted before display.</p>
+        <a class="btn btn--secondary" href="{% url 'core:nsot_device_running_config' device_name %}">Fetch running-config</a>
+      {% else %}
+        <p style="color:var(--text-muted);">Live read-only retrieval is not supported for this device's platform in this phase.</p>
+      {% endif %}
+    </div>
+
+    <div class="card">
+      <span class="badge MONITORING">MONITORING</span>
+      <h3>Monitoring</h3>
+      <p><a href="{{ detail.monitoring_links.resources }}">Resources</a></p>
+      <p><a href="{{ detail.monitoring_links.link_events }}">Link Events</a></p>
+      <p><a href="{{ detail.monitoring_links.link_state_traffic }}">Link State &amp; Traffic</a></p>
+    </div>
+
+    <div class="card">
+      <span class="badge TOPOLOGY">TOPOLOGY</span>
+      <h3>Neighbors</h3>
+      {% if detail.topology_neighbors.status == "available" %}
+        <ul>
+          {% for n in detail.topology_neighbors.data %}<li>{{ n.neighbor }} <span class="badge {{ n.status|badge_class }}">{{ n.status }}</span></li>{% empty %}<li style="color:var(--text-muted);">No neighbors found.</li>{% endfor %}
+        </ul>
+      {% else %}
+        <p style="color:var(--text-muted);">{{ detail.topology_neighbors.message }}</p>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:16px;">
+    <h3>Interfaces <span class="badge NETBOX">NETBOX</span></h3>
+    <table class="data-table">
+      <thead><tr><th>Interface</th><th>Type</th><th>Mode</th><th>VLAN</th><th>Addresses</th><th>Enabled</th></tr></thead>
+      <tbody>
+      {% for iface in detail.device.interfaces %}
+        <tr>
+          <td>{{ iface.name }}{% if iface.untagged_vlan == 200 %} <span class="badge badge--info">management · static</span>{% endif %}</td>
+          <td>{{ iface.type|default:"—" }}</td>
+          <td>{{ iface.mode|default:"—" }}</td>
+          <td>{{ iface.untagged_vlan|default:"—" }}</td>
+          <td>{% for a in iface.addresses %}{{ a.address }}/{{ a.prefix_length }}<br>{% empty %}—{% endfor %}</td>
+          <td>{{ iface.enabled }}</td>
+        </tr>
+      {% empty %}
+        <tr><td colspan="6"><div class="empty-state">No interfaces modeled.</div></td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endif %}
+{% endblock %}

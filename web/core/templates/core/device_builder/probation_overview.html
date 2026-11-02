@@ -1,0 +1,87 @@
+{% extends "core/base.html" %}
+{% load core_extras %}
+{% block title %}Golden and probation{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>Golden and probation</h1>
+  <p><a href="{% url 'core:device_builder' %}">&larr; Device Builder</a> · <a href="{% url 'core:soaks_list' %}">All soaks</a> · <a href="{% url 'core:bundles_list' %}">Configuration bundles</a></p>
+  <p>The normal probation policy is <strong>7 days</strong> of elapsed time. A candidate is not Golden until the full period has passed
+     with healthy evidence <em>and</em> an operator has approved it. Opening this page reads no device and changes nothing. Server time: {{ now|date:"Y-m-d H:i:s" }} UTC.</p>
+</div>
+
+<div class="card">
+  <h3>Current Golden</h3>
+  {% if golden.valid %}
+    <p><a href="{% url 'core:bundle_detail' golden.golden.bundle_id %}"><code>{{ golden.golden.bundle_id }}</code></a>
+       <span class="badge badge--success">GOLDEN</span> · sealed {{ golden.golden.created_at|date:"Y-m-d H:i" }} UTC · source: {{ golden.source }}</p>
+    <p style="color:var(--text-muted); font-size:0.85rem;">{{ golden.note }}</p>
+  {% else %}
+    <p>No valid Golden bundle exists.</p>
+  {% endif %}
+</div>
+
+<h2 style="margin-top:24px;">In probation</h2>
+{% for p in active %}
+<div class="card" style="margin-top:12px; border-left:6px solid var(--warning);">
+  <h3><a href="{{ p.run.get_absolute_url }}"><code>{{ p.run.soak_id }}</code></a> — {% for d in p.devices %}{{ d.name }}{% if not forloop.last %}, {% endif %}{% endfor %}
+      <span class="badge badge--warning">IN PROBATION</span>{% if not p.is_production_duration %} <span class="badge badge--danger">NOT A PRODUCTION DURATION</span>{% endif %}</h3>
+  <p>{{ p.eligibility.text }}</p>
+  <div class="card-grid">
+    <div>
+      <table class="data-table"><tbody>
+        <tr><th>Candidate</th><td><a href="{% url 'core:bundle_detail' p.bundle.bundle_id %}"><code>{{ p.bundle.bundle_id }}</code></a></td></tr>
+        <tr><th>Change</th><td>{% if p.change %}<a href="{{ p.change.get_absolute_url }}"><code>{{ p.change.change_id }}</code></a>{% else %}—{% endif %}{% if p.provisioning %} · provisioning <a href="{{ p.provisioning.get_absolute_url }}"><code>{{ p.provisioning.prov_id }}</code></a>{% endif %}</td></tr>
+        <tr><th>Started (UTC)</th><td>{{ p.started_at|date:"Y-m-d H:i:s" }}</td></tr>
+        <tr><th>Due (UTC)</th><td>{{ p.due_at|date:"Y-m-d H:i:s" }}</td></tr>
+        <tr><th>Policy</th><td><strong>{{ p.policy_days|floatformat:"-2" }} days</strong> ({{ p.policy_seconds|soak_duration }})</td></tr>
+        <tr><th>Elapsed</th><td>{{ p.elapsed_seconds|soak_duration }} ({{ p.percent_elapsed }}%)</td></tr>
+        <tr><th>Remaining</th><td>{{ p.remaining_seconds|soak_duration }}</td></tr>
+        <tr><th>Baseline digest</th><td><code>{{ p.baseline_digest|default:"not recorded" }}</code></td></tr>
+      </tbody></table>
+    </div>
+    <div>
+      <table class="data-table"><tbody>
+        <tr><th>Health (latest sample)</th><td>{% if p.health.sample_result %}<span class="badge badge--{{ p.health.sample_result|bundle_badge_class }}">{{ p.health.sample_result }}</span> device health {{ p.health.device_health|default:"—" }} · expected state {{ p.health.expected_state|default:"—" }} · telemetry {{ p.health.telemetry_freshness|default:"—" }}{% else %}No sample has been collected yet.{% endif %}</td></tr>
+        <tr><th>Collector</th><td><span class="badge badge--{% if p.collector.state == 'FRESH' %}success{% elif p.collector.state == 'STALE' %}danger{% else %}warning{% endif %}">{{ p.collector.state }}</span>
+          {% if p.collector.last_sample_at %}last sample {{ p.collector.last_sample_at|date:"Y-m-d H:i:s" }} UTC ({{ p.collector.age_seconds|soak_duration }} ago){% else %}no sample yet{% endif %};
+          one is expected every {{ p.collector.expected_every_seconds|soak_duration }}.
+          {% if p.collector.state == 'STALE' %}<br><strong>The collector is not sampling this soak.</strong> Missing evidence can only make the result Incomplete — check the <code>nmas-probation-soak-tick.timer</code> unit.{% endif %}</td></tr>
+        <tr><th>Samples</th><td>{{ p.samples }} collected · {{ p.coverage.covered_intervals }} of {{ p.coverage.expected_intervals }} intervals covered</td></tr>
+      </tbody></table>
+    </div>
+  </div>
+  <table class="data-table" style="margin-top:8px;">
+    <thead><tr><th>Device</th><th>Baseline config digest (at start)</th><th>Current config digest (latest sample)</th><th>Drift</th></tr></thead>
+    <tbody>{% for d in p.devices %}<tr>
+      <td>{{ d.name }}</td><td><code>{{ d.baseline_digest|default:"not recorded" }}</code></td><td><code>{{ d.current_digest|default:"—" }}</code></td>
+      <td><span class="badge badge--{% if d.drift_state == 'MATCH' %}success{% elif d.drift_state == 'DRIFT' %}danger{% else %}warning{% endif %}">{{ d.drift_state }}</span>{% if d.changed_sections %} {{ d.changed_sections|join:", " }}{% endif %}</td>
+    </tr>{% endfor %}</tbody>
+  </table>
+  <h4 style="margin-top:12px;">Disqualifying and degraded events</h4>
+  {% if p.events %}<table class="data-table"><thead><tr><th>When (UTC)</th><th>Sample</th><th>Result</th><th>Findings</th></tr></thead><tbody>
+    {% for e in p.events %}<tr><td>{{ e.at|date:"Y-m-d H:i:s" }}</td><td>#{{ e.bucket }}</td><td><span class="badge badge--{{ e.result|bundle_badge_class }}">{{ e.result }}</span></td><td>{% for c in e.codes %}<code>{{ c }}</code> {% empty %}—{% endfor %}</td></tr>{% endfor %}
+  </tbody></table>{% else %}<p>None recorded.</p>{% endif %}
+</div>
+{% empty %}
+<div class="card" style="margin-top:12px;"><p>No candidate is in probation.</p></div>
+{% endfor %}
+
+{% if awaiting_decision %}<h2 style="margin-top:24px;">Eligible — operator decision required</h2>
+{% for p in awaiting_decision %}<div class="card" style="margin-top:12px; border-left:6px solid var(--success);">
+  <p><a href="{{ p.run.get_absolute_url }}"><code>{{ p.run.soak_id }}</code></a> — {% for d in p.devices %}{{ d.name }}{% if not forloop.last %}, {% endif %}{% endfor %}: {{ p.eligibility.text }}
+     This candidate is <strong>not Golden</strong> until an operator approves it on the soak page.</p>
+</div>{% endfor %}{% endif %}
+
+<h2 style="margin-top:24px;">Recently finished</h2>
+<div class="card">
+  <table class="data-table">
+    <thead><tr><th>Soak</th><th>Candidate</th><th>State</th><th>Result</th><th>Started (UTC)</th><th>Finished (UTC)</th><th>Reason</th></tr></thead>
+    <tbody>{% for r in finished %}<tr>
+      <td><a href="{{ r.get_absolute_url }}"><code>{{ r.soak_id }}</code></a></td><td><code>{{ r.bundle.bundle_id }}</code></td>
+      <td><span class="badge badge--{{ r.state|bundle_badge_class }}">{{ r.state }}</span></td>
+      <td>{% if r.result %}<span class="badge badge--{{ r.result|bundle_badge_class }}">{{ r.result }}</span>{% else %}—{% endif %}</td>
+      <td>{{ r.started_at|date:"Y-m-d H:i" }}</td><td>{{ r.finished_at|date:"Y-m-d H:i"|default:"—" }}</td><td>{{ r.terminal_reason|default:"—" }}</td>
+    </tr>{% empty %}<tr><td colspan="7">No soak has finished.</td></tr>{% endfor %}</tbody>
+  </table>
+</div>
+{% endblock %}

@@ -1,0 +1,52 @@
+== sequence-numbered probes
+   c01: production 0/136125 lost   diagnostic 0/9659 lost
+   c02: production 0/139751 lost   diagnostic 0/9862 lost
+   c03: production 0/137194 lost   diagnostic 0/9720 lost
+   c04: production 0/147795 lost   diagnostic 0/10470 lost
+   c05: production 0/128138 lost   diagnostic 0/9098 lost
+   c06: production 0/132782 lost   diagnostic 0/9410 lost
+   c07: production 0/132801 lost   diagnostic 0/9411 lost
+   c08: production 0/145764 lost   diagnostic 0/10299 lost
+   c09: production 0/131004 lost   diagnostic 0/9276 lost
+   c10: production 0/131241 lost   diagnostic 0/9288 lost
+   c11: production 0/130956 lost   diagnostic 0/9268 lost
+   c12: production 0/133930 lost   diagnostic 0/9483 lost
+   c13: production 0/138294 lost   diagnostic 0/9773 lost
+   c14: production 0/133538 lost   diagnostic 0/9473 lost
+   c15: production 0/133960 lost   diagnostic 0/9485 lost
+   c16: production 0/134048 lost   diagnostic 0/9482 lost
+   c17: production 0/132215 lost   diagnostic 0/9370 lost
+   c18: production 0/136122 lost   diagnostic 0/9636 lost
+   c19: production 0/131053 lost   diagnostic 0/9279 lost
+   c20: production 0/132538 lost   diagnostic 0/9392 lost
+   PRODUCTION TRANSIT: probes 2699249 lost 0    DIAGNOSTIC (device-originated): probes 191134 lost 0
+== long-lived TCP sessions
+   h1_tcp4: UNINTERRUPTED CLOSE 1791708343.174 47568 47568 2755  stalls>250ms: 2321 (informational)
+   h1_tcp6: UNINTERRUPTED CLOSE 1791708343.111 47934 47934 3246  stalls>250ms: 2030 (informational)
+   h2_tcp4: UNINTERRUPTED CLOSE 1791708347.251 47730 47730 3020  stalls>250ms: 2090 (informational)
+   h2_tcp6: UNINTERRUPTED CLOSE 1791708347.294 47989 47989 2528  stalls>250ms: 2005 (informational)
+   h3_tcp4: UNINTERRUPTED CLOSE 1791708351.399 48511 48511 2521  stalls>250ms: 1526 (informational)
+   h3_tcp6: UNINTERRUPTED CLOSE 1791708351.402 48221 48221 2179  stalls>250ms: 1733 (informational)
+   h4_tcp6: UNINTERRUPTED CLOSE 1791708355.597 48295 48295 3639  stalls>250ms: 1687 (informational)
+== repeated new HTTP sessions
+   h1_http4: ALL OK CLOSE 1791708343.203 17375 0 1694 5352  slow>400ms: 1694 (informational)
+   h1_http6: ALL OK CLOSE 1791708343.124 17367 0 1685 5663  slow>400ms: 1685 (informational)
+   h2_http4: ALL OK CLOSE 1791708347.421 17414 0 1679 4293  slow>400ms: 1679 (informational)
+   h2_http6: ALL OK CLOSE 1791708347.385 17383 0 1684 5933  slow>400ms: 1684 (informational)
+   h3_http4: ALL OK CLOSE 1791708351.541 17696 0 1539 4560  slow>400ms: 1539 (informational)
+   h3_http6: ALL OK CLOSE 1791708351.544 17724 0 1528 4028  slow>400ms: 1528 (informational)
+   h4_http6: ALL OK CLOSE 1791708355.555 17762 0 1506 4637  slow>400ms: 1506 (informational)
+== completed: forward 20  rollback 20  drains 0  restores 0   failed-events: []
+   flows without evidence: none
+VERDICT: PASS (production transit loss 0, TCP uninterrupted, HTTP all successful)
+== c3
+     1  UNCOVERED | X-r2 stage7 router-floating-statics-added
+     1  UNCOVERED | X-r2 stage7 router-floating-statics-removed
+== c4
+     2  UNCOVERED | X-r1 rb2 static-restore start
+     2  UNCOVERED | X-r1 rb2 switch-static-restored
+     1  UNCOVERED | X-r2 stage7 router-floating-statics-added
+     1  UNCOVERED | X-r2 stage7 router-floating-statics-removed
+client /64 route replacements on the cores: 8   without a cover: 8
+CORE VERDICT: FAIL
+R5-equivalent (pe) client-route events: 0

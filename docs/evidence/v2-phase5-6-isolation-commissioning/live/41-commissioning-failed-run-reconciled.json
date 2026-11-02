@@ -1,0 +1,113 @@
+{
+  "before": {
+    "record": "CONFIGURING",
+    "run": "FAILED"
+  },
+  "device": [
+    "COMMISSIONING",
+    "NOT_ADMITTED"
+  ],
+  "reconcile": {
+    "codes": [
+      "COMMISSIONING_CONFIG_NOT_APPLIED"
+    ],
+    "detail": {},
+    "ok": false
+  },
+  "record": {
+    "approved_by": "arthur",
+    "candidate_hash": "cc07ea2b5cac0169cdd323bea50445173f62f6e8f2db79fbcbc3bd078bef2875",
+    "commissioning": "COM-000002",
+    "dependencies": {
+      "cycles": [],
+      "edges": [],
+      "nodes": []
+    },
+    "device": "DEV-000002",
+    "evidence_digest": "ce9ef2fc03ce95a4a5efdf47875105c66632dc2a076908ceecd13b66da207479",
+    "failure": {
+      "code": "COMMISSIONING_CONFIG_NOT_APPLIED",
+      "provisioning": "FAILED",
+      "restored": false
+    },
+    "isolation_state": "VERIFIED",
+    "policy": "ISO-000001",
+    "provisioning_run": "PROV-000002",
+    "provisioning_status": "FAILED",
+    "readiness": {
+      "at": "2026-10-26T14:44:19.520982+00:00",
+      "checks": [
+        {
+          "check": "identity_verified",
+          "code": "",
+          "detail": "VERIFIED",
+          "ok": true
+        },
+        {
+          "check": "host_key_enrolled",
+          "code": "",
+          "detail": "the verified host key is the out-of-band enrolled one",
+          "ok": true
+        },
+        {
+          "check": "attachment_verified",
+          "code": "",
+          "detail": "VERIFIED",
+          "ok": true
+        },
+        {
+          "check": "bootstrap_authorization",
+          "code": "",
+          "detail": "CONSUMED by -",
+          "ok": true
+        },
+        {
+          "check": "native_bootstrap",
+          "code": "",
+          "detail": "ztp_state=DISABLED_VERIFIED (observed; native ZTP completion is never admission)",
+          "ok": true
+        },
+        {
+          "check": "management_transport",
+          "code": "",
+          "detail": "",
+          "ok": true
+        },
+        {
+          "check": "credential_transitioned",
+          "code": "",
+          "detail": "bootstrap credential revoked, proven rejected and retired; the service credential works",
+          "ok": true
+        },
+        {
+          "check": "isolation_verified",
+          "code": "",
+          "detail": "VERIFIED",
+          "ok": true
+        },
+        {
+          "check": "dependencies",
+          "code": "",
+          "detail": "",
+          "ok": true
+        },
+        {
+          "check": "lifecycle",
+          "code": "",
+          "detail": "ISOLATED",
+          "ok": true
+        },
+        {
+          "check": "production_candidate",
+          "code": "",
+          "detail": "PROV-000002 PRECHECKED: validated, planned and prechecked through the ordinary provisioning stages",
+          "ok": true
+        }
+      ],
+      "ready": true
+    },
+    "requested_by": "olivia",
+    "state": "UNCERTAIN"
+  },
+  "run_status": "FAILED"
+}

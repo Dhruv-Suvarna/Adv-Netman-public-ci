@@ -1,0 +1,1060 @@
+[
+ {
+  "cfg_id": "CFG-001",
+  "device": "R3",
+  "phase": "APPLY",
+  "status": "APPLIED",
+  "error": "",
+  "detail": {
+   "operation": "R3-cover-2001:db8:10::/63",
+   "stage": "CORE_COVER_INSTALL",
+   "state": "TEMPORARY",
+   "read_back": "SKIP_SATISFIED"
+  }
+ },
+ {
+  "cfg_id": "CFG-002",
+  "device": "R3",
+  "phase": "APPLY",
+  "status": "APPLIED",
+  "error": "",
+  "detail": {
+   "operation": "R3-cover-2001:db8:20::/63",
+   "stage": "CORE_COVER_INSTALL",
+   "state": "TEMPORARY",
+   "read_back": "SKIP_SATISFIED"
+  }
+ },
+ {
+  "cfg_id": "CFG-003",
+  "device": "R3",
+  "phase": "APPLY",
+  "status": "APPLIED",
+  "error": "",
+  "detail": {
+   "operation": "R3-cover-2001:db8:30::/63",
+   "stage": "CORE_COVER_INSTALL",
+   "state": "TEMPORARY",
+   "read_back": "SKIP_SATISFIED"
+  }
+ },
+ {
+  "cfg_id": "CFG-004",
+  "device": "R4",
+  "phase": "APPLY",
+  "status": "APPLIED",
+  "error": "",
+  "detail": {
+   "operation": "R4-cover-2001:db8:10::/63",
+   "stage": "CORE_COVER_INSTALL",
+   "state": "TEMPORARY",
+   "read_back": "SKIP_SATISFIED"
+  }
+ },
+ {
+  "cfg_id": "CFG-005",
+  "device": "R4",
+  "phase": "APPLY",
+  "status": "APPLIED",
+  "error": "",
+  "detail": {
+   "operation": "R4-cover-2001:db8:20::/63",
+   "stage": "CORE_COVER_INSTALL",
+   "state": "TEMPORARY",
+   "read_back": "SKIP_SATISFIED"
+  }
+ },
+ {
+  "cfg_id": "CFG-006",
+  "device": "R4",
+  "phase": "APPLY",
+  "status": "APPLIED",
+  "error": "",
+  "detail": {
+   "operation": "R4-cover-2001:db8:30::/63",
+   "stage": "CORE_COVER_INSTALL",
+   "state": "TEMPORARY",
+   "read_back": "SKIP_SATISFIED"
+  }
+ },
+ {
+  "cfg_id": "CFG-007",
+  "device": "S1",
+  "phase": "APPLY",
+  "status": "APPLIED",
+  "error": "",
+  "detail": {
+   "operation": "S1-vlan99-ipv6",
+   "stage": "VLAN99_IPV6",
+   "state": "PERMANENT",
+   "read_back": "SKIP_SATISFIED"
+  }
+ },
+ {
+  "cfg_id": "CFG-008",
+  "device": "S2",
+  "phase": "APPLY",
+  "status": "APPLIED",
+  "error": "",
+  "detail": {
+   "operation": "S2-vlan99-ipv6",
+   "stage": "VLAN99_IPV6",
+   "state": "PERMANENT",
+   "read_back": "SKIP_SATISFIED"
+  }
+ },
+ {
+  "cfg_id": "CFG-009",
+  "device": "R1",
+  "phase": "APPLY",
+  "status": "APPLIED",
+  "error": "",
+  "detail": {
+   "operation": "R1-isis-process",
+   "stage": "ISIS_FORMATION",
+   "state": "PERMANENT",
+   "read_back": "SKIP_SATISFIED"
+  }
+ },
+ {
+  "cfg_id": "CFG-010",
+  "device": "R2",
+  "phase": "APPLY",
+  "status": "APPLIED",
+  "error": "",
+  "detail": {
+   "operation": "R2-isis-process",
+   "stage": "ISIS_FORMATION",
+   "state": "PERMANENT",
+   "read_back": "SKIP_SATISFIED"
+  }
+ },
+ {
+  "cfg_id": "CFG-011",
+  "device": "S1",
+  "phase": "APPLY",
+  "status": "APPLIED",
+  "error": "",
+  "detail": {
+   "operation": "S1-isis-process",
+   "stage": "ISIS_FORMATION",
+   "state": "PERMANENT",
+   "read_back": "SKIP_SATISFIED"
+  }
+ },
+ {
+  "cfg_id": "CFG-012",
+  "device": "S2",
+  "phase": "APPLY",
+  "status": "APPLIED",
+  "error": "",
+  "detail": {
+   "operation": "S2-isis-process",
+   "stage": "ISIS_FORMATION",
+   "state": "PERMANENT",
+   "read_back": "SKIP_SATISFIED"
+  }
+ },
+ {
+  "cfg_id": "CFG-013",
+  "device": "R1",
+  "phase": "APPLY",
+  "status": "APPLIED",
+  "error": "",
+  "detail": {
+   "operation": "R1-isis-access",
+   "stage": "ISIS_FORMATION",
+   "state": "PERMANENT",
+   "read_back": "SKIP_SATISFIED"
+  }
+ },
+ {
+  "cfg_id": "CFG-014",
+  "device": "R2",
+  "phase": "APPLY",
+  "status": "APPLIED",
+  "error": "",
+  "detail": {
+   "operation": "R2-isis-access",
+   "stage": "ISIS_FORMATION",
+   "state": "PERMANENT",
+   "read_back": "SKIP_SATISFIED"
+  }
+ },
+ {
+  "cfg_id": "CFG-015",
+  "device": "S1",
+  "phase": "APPLY",
+  "status": "APPLIED",
+  "error": "",
+  "detail": {
+   "operation": "S1-isis-links",
+   "stage": "ISIS_FORMATION",
+   "state": "PERMANENT",
+   "read_back": "SKIP_SATISFIED"
+  }
+ },
+ {
+  "cfg_id": "CFG-016",
+  "device": "S2",
+  "phase": "APPLY",
+  "status": "APPLIED",
+  "error": "",
+  "detail": {
+   "operation": "S2-isis-links",
+   "stage": "ISIS_FORMATION",
+   "state": "PERMANENT",
+   "read_back": "SKIP_SATISFIED"
+  }
+ },
+ {
+  "cfg_id": "CFG-017",
+  "device": "S1",
+  "phase": "APPLY",
+  "status": "APPLIED",
+  "error": "",
+  "detail": {
+   "operation": "S1-client-svis-passive",
+   "stage": "BOUNDARY_POLICY",
+   "state": "PERMANENT",
+   "read_back": "SKIP_SATISFIED"
+  }
+ },
+ {
+  "cfg_id": "CFG-018",
+  "device": "S2",
+  "phase": "APPLY",
+  "status": "APPLIED",
+  "error": "",
+  "detail": {
+   "operation": "S2-client-svis-passive",
+   "stage": "BOUNDARY_POLICY",
+   "state": "PERMANENT",
+   "read_back": "SKIP_SATISFIED"
+  }
+ },
+ {
+  "cfg_id": "CFG-019",
+  "device": "R1",
+  "phase": "APPLY",
+  "status": "APPLIED",
+  "error": "",
+  "detail": {
+   "operation": "R1-boundary-policy",
+   "stage": "BOUNDARY_POLICY",
+   "state": "PERMANENT",
+   "read_back": "SKIP_SATISFIED"
+  }
+ },
+ {
+  "cfg_id": "CFG-020",
+  "device": "R1",
+  "phase": "APPLY",
+  "status": "APPLIED",
+  "error": "",
+  "detail": {
+   "operation": "R1-aggregate-into-isis",
+   "stage": "BOUNDARY_POLICY",
+   "state": "PERMANENT",
+   "read_back": "SKIP_SATISFIED"
+  }
+ },
+ {
+  "cfg_id": "CFG-021",
+  "device": "R1",
+  "phase": "APPLY",
+  "status": "APPLIED",
+  "error": "",
+  "detail": {
+   "operation": "R1-isis-into-ospfv3",
+   "stage": "BOUNDARY_POLICY",
+   "state": "PERMANENT",
+   "read_back": "SKIP_SATISFIED"
+  }
+ },
+ {
+  "cfg_id": "CFG-022",
+  "device": "R2",
+  "phase": "APPLY",
+  "status": "APPLIED",
+  "error": "",
+  "detail": {
+   "operation": "R2-boundary-policy",
+   "stage": "BOUNDARY_POLICY",
+   "state": "PERMANENT",
+   "read_back": "SKIP_SATISFIED"
+  }
+ },
+ {
+  "cfg_id": "CFG-023",
+  "device": "R2",
+  "phase": "APPLY",
+  "status": "APPLIED",
+  "error": "",
+  "detail": {
+   "operation": "R2-aggregate-into-isis",
+   "stage": "BOUNDARY_POLICY",
+   "state": "PERMANENT",
+   "read_back": "SKIP_SATISFIED"
+  }
+ },
+ {
+  "cfg_id": "CFG-024",
+  "device": "R2",
+  "phase": "APPLY",
+  "status": "APPLIED",
+  "error": "",
+  "detail": {
+   "operation": "R2-isis-into-ospfv3",
+   "stage": "BOUNDARY_POLICY",
+   "state": "PERMANENT",
+   "read_back": "SKIP_SATISFIED"
+  }
+ },
+ {
+  "cfg_id": "CFG-025",
+  "device": "S1",
+  "phase": "APPLY",
+  "status": "APPLIED",
+  "error": "",
+  "detail": {
+   "operation": "S1-shield-install",
+   "stage": "SHIELD_INSTALL",
+   "state": "TEMPORARY",
+   "read_back": "SKIP_SATISFIED"
+  }
+ },
+ {
+  "cfg_id": "CFG-026",
+  "device": "R1",
+  "phase": "APPLY",
+  "status": "APPLIED",
+  "error": "",
+  "detail": {
+   "operation": "R1-shield-install",
+   "stage": "SHIELD_INSTALL",
+   "state": "TEMPORARY",
+   "read_back": "SKIP_SATISFIED"
+  }
+ },
+ {
+  "cfg_id": "CFG-027",
+  "device": "S1",
+  "phase": "APPLY",
+  "status": "APPLIED",
+  "error": "",
+  "detail": {
+   "operation": "S1-static-aggregate-remove",
+   "stage": "PROTECTED_STATIC_REMOVAL",
+   "state": "PERMANENT",
+   "read_back": "SKIP_SATISFIED"
+  }
+ },
+ {
+  "cfg_id": "CFG-028",
+  "device": "R1",
+  "phase": "APPLY",
+  "status": "APPLIED",
+  "error": "",
+  "detail": {
+   "operation": "R1-floating-statics-add",
+   "stage": "PROTECTED_STATIC_REMOVAL",
+   "state": "TEMPORARY",
+   "read_back": "SKIP_SATISFIED"
+  }
+ },
+ {
+  "cfg_id": "CFG-029",
+  "device": "R1",
+  "phase": "APPLY",
+  "status": "APPLIED",
+  "error": "",
+  "detail": {
+   "operation": "R1-client-statics-remove",
+   "stage": "PROTECTED_STATIC_REMOVAL",
+   "state": "PERMANENT",
+   "read_back": "SKIP_SATISFIED"
+  }
+ },
+ {
+  "cfg_id": "CFG-030",
+  "device": "R1",
+  "phase": "APPLY",
+  "status": "APPLIED",
+  "error": "",
+  "detail": {
+   "operation": "R1-floating-statics-remove",
+   "stage": "PROTECTED_STATIC_REMOVAL",
+   "state": "TEMPORARY",
+   "read_back": "SKIP_SATISFIED"
+  }
+ },
+ {
+  "cfg_id": "CFG-031",
+  "device": "R1",
+  "phase": "APPLY",
+  "status": "APPLIED",
+  "error": "",
+  "detail": {
+   "operation": "R1-old-redistribution-remove",
+   "stage": "PROTECTED_STATIC_REMOVAL",
+   "state": "PERMANENT",
+   "read_back": "SKIP_SATISFIED"
+  }
+ },
+ {
+  "cfg_id": "CFG-032",
+  "device": "R1",
+  "phase": "APPLY",
+  "status": "APPLIED",
+  "error": "",
+  "detail": {
+   "operation": "R1-shield-remove",
+   "stage": "SHIELD_REMOVE",
+   "state": "TEMPORARY",
+   "read_back": "SKIP_SATISFIED"
+  }
+ },
+ {
+  "cfg_id": "CFG-033",
+  "device": "S1",
+  "phase": "APPLY",
+  "status": "APPLIED",
+  "error": "",
+  "detail": {
+   "operation": "S1-shield-remove",
+   "stage": "SHIELD_REMOVE",
+   "state": "TEMPORARY",
+   "read_back": "SKIP_SATISFIED"
+  }
+ },
+ {
+  "cfg_id": "CFG-034",
+  "device": "S2",
+  "phase": "APPLY",
+  "status": "APPLIED",
+  "error": "",
+  "detail": {
+   "operation": "S2-shield-install",
+   "stage": "SHIELD_INSTALL",
+   "state": "TEMPORARY",
+   "read_back": "SKIP_SATISFIED"
+  }
+ },
+ {
+  "cfg_id": "CFG-035",
+  "device": "R2",
+  "phase": "APPLY",
+  "status": "APPLIED",
+  "error": "",
+  "detail": {
+   "operation": "R2-shield-install",
+   "stage": "SHIELD_INSTALL",
+   "state": "TEMPORARY",
+   "read_back": "SKIP_SATISFIED"
+  }
+ },
+ {
+  "cfg_id": "CFG-036",
+  "device": "S2",
+  "phase": "APPLY",
+  "status": "APPLIED",
+  "error": "",
+  "detail": {
+   "operation": "S2-static-aggregate-remove",
+   "stage": "PROTECTED_STATIC_REMOVAL",
+   "state": "PERMANENT",
+   "read_back": "SKIP_SATISFIED"
+  }
+ },
+ {
+  "cfg_id": "CFG-037",
+  "device": "R2",
+  "phase": "APPLY",
+  "status": "APPLIED",
+  "error": "",
+  "detail": {
+   "operation": "R2-floating-statics-add",
+   "stage": "PROTECTED_STATIC_REMOVAL",
+   "state": "TEMPORARY",
+   "read_back": "SKIP_SATISFIED"
+  }
+ },
+ {
+  "cfg_id": "CFG-038",
+  "device": "R2",
+  "phase": "APPLY",
+  "status": "APPLIED",
+  "error": "",
+  "detail": {
+   "operation": "R2-client-statics-remove",
+   "stage": "PROTECTED_STATIC_REMOVAL",
+   "state": "PERMANENT",
+   "read_back": "SKIP_SATISFIED"
+  }
+ },
+ {
+  "cfg_id": "CFG-039",
+  "device": "R2",
+  "phase": "APPLY",
+  "status": "APPLIED",
+  "error": "",
+  "detail": {
+   "operation": "R2-floating-statics-remove",
+   "stage": "PROTECTED_STATIC_REMOVAL",
+   "state": "TEMPORARY",
+   "read_back": "SKIP_SATISFIED"
+  }
+ },
+ {
+  "cfg_id": "CFG-040",
+  "device": "R2",
+  "phase": "APPLY",
+  "status": "APPLIED",
+  "error": "",
+  "detail": {
+   "operation": "R2-old-redistribution-remove",
+   "stage": "PROTECTED_STATIC_REMOVAL",
+   "state": "PERMANENT",
+   "read_back": "SKIP_SATISFIED"
+  }
+ },
+ {
+  "cfg_id": "CFG-041",
+  "device": "R2",
+  "phase": "APPLY",
+  "status": "NOT_ATTEMPTED",
+  "error": "",
+  "detail": {}
+ },
+ {
+  "cfg_id": "CFG-042",
+  "device": "S2",
+  "phase": "APPLY",
+  "status": "NOT_ATTEMPTED",
+  "error": "",
+  "detail": {}
+ },
+ {
+  "cfg_id": "CFG-043",
+  "device": "R3",
+  "phase": "APPLY",
+  "status": "NOT_ATTEMPTED",
+  "error": "",
+  "detail": {}
+ },
+ {
+  "cfg_id": "CFG-044",
+  "device": "R3",
+  "phase": "APPLY",
+  "status": "NOT_ATTEMPTED",
+  "error": "",
+  "detail": {}
+ },
+ {
+  "cfg_id": "CFG-045",
+  "device": "R3",
+  "phase": "APPLY",
+  "status": "NOT_ATTEMPTED",
+  "error": "",
+  "detail": {}
+ },
+ {
+  "cfg_id": "CFG-046",
+  "device": "R4",
+  "phase": "APPLY",
+  "status": "NOT_ATTEMPTED",
+  "error": "",
+  "detail": {}
+ },
+ {
+  "cfg_id": "CFG-047",
+  "device": "R4",
+  "phase": "APPLY",
+  "status": "NOT_ATTEMPTED",
+  "error": "",
+  "detail": {}
+ },
+ {
+  "cfg_id": "CFG-048",
+  "device": "R4",
+  "phase": "APPLY",
+  "status": "NOT_ATTEMPTED",
+  "error": "",
+  "detail": {}
+ },
+ {
+  "cfg_id": "CFG-001",
+  "device": "R3",
+  "phase": "COMPENSATE",
+  "status": "COMPENSATED",
+  "error": "",
+  "detail": {
+   "operation": "R3-cover-2001:db8:10::/63",
+   "action": "INVERSE_APPLIED"
+  }
+ },
+ {
+  "cfg_id": "CFG-002",
+  "device": "R3",
+  "phase": "COMPENSATE",
+  "status": "COMPENSATED",
+  "error": "",
+  "detail": {
+   "operation": "R3-cover-2001:db8:20::/63",
+   "action": "INVERSE_APPLIED"
+  }
+ },
+ {
+  "cfg_id": "CFG-003",
+  "device": "R3",
+  "phase": "COMPENSATE",
+  "status": "COMPENSATED",
+  "error": "",
+  "detail": {
+   "operation": "R3-cover-2001:db8:30::/63",
+   "action": "INVERSE_APPLIED"
+  }
+ },
+ {
+  "cfg_id": "CFG-004",
+  "device": "R4",
+  "phase": "COMPENSATE",
+  "status": "COMPENSATED",
+  "error": "",
+  "detail": {
+   "operation": "R4-cover-2001:db8:10::/63",
+   "action": "INVERSE_APPLIED"
+  }
+ },
+ {
+  "cfg_id": "CFG-005",
+  "device": "R4",
+  "phase": "COMPENSATE",
+  "status": "COMPENSATED",
+  "error": "",
+  "detail": {
+   "operation": "R4-cover-2001:db8:20::/63",
+   "action": "INVERSE_APPLIED"
+  }
+ },
+ {
+  "cfg_id": "CFG-006",
+  "device": "R4",
+  "phase": "COMPENSATE",
+  "status": "COMPENSATED",
+  "error": "",
+  "detail": {
+   "operation": "R4-cover-2001:db8:30::/63",
+   "action": "INVERSE_APPLIED"
+  }
+ },
+ {
+  "cfg_id": "CFG-007",
+  "device": "S1",
+  "phase": "COMPENSATE",
+  "status": "COMPENSATED",
+  "error": "",
+  "detail": {
+   "operation": "S1-vlan99-ipv6",
+   "action": "INVERSE_APPLIED",
+   "commands": 2
+  }
+ },
+ {
+  "cfg_id": "CFG-008",
+  "device": "S2",
+  "phase": "COMPENSATE",
+  "status": "COMPENSATED",
+  "error": "",
+  "detail": {
+   "operation": "S2-vlan99-ipv6",
+   "action": "INVERSE_APPLIED",
+   "commands": 2
+  }
+ },
+ {
+  "cfg_id": "CFG-009",
+  "device": "R1",
+  "phase": "COMPENSATE",
+  "status": "COMPENSATED",
+  "error": "",
+  "detail": {
+   "operation": "R1-isis-process",
+   "action": "INVERSE_APPLIED",
+   "commands": 1
+  }
+ },
+ {
+  "cfg_id": "CFG-010",
+  "device": "R2",
+  "phase": "COMPENSATE",
+  "status": "COMPENSATED",
+  "error": "",
+  "detail": {
+   "operation": "R2-isis-process",
+   "action": "INVERSE_APPLIED",
+   "commands": 1
+  }
+ },
+ {
+  "cfg_id": "CFG-011",
+  "device": "S1",
+  "phase": "COMPENSATE",
+  "status": "COMPENSATED",
+  "error": "",
+  "detail": {
+   "operation": "S1-isis-process",
+   "action": "INVERSE_APPLIED",
+   "commands": 1
+  }
+ },
+ {
+  "cfg_id": "CFG-012",
+  "device": "S2",
+  "phase": "COMPENSATE",
+  "status": "COMPENSATED",
+  "error": "",
+  "detail": {
+   "operation": "S2-isis-process",
+   "action": "INVERSE_APPLIED",
+   "commands": 1
+  }
+ },
+ {
+  "cfg_id": "CFG-013",
+  "device": "R1",
+  "phase": "COMPENSATE",
+  "status": "COMPENSATED",
+  "error": "",
+  "detail": {
+   "operation": "R1-isis-access",
+   "action": "INVERSE_APPLIED",
+   "commands": 3
+  }
+ },
+ {
+  "cfg_id": "CFG-014",
+  "device": "R2",
+  "phase": "COMPENSATE",
+  "status": "COMPENSATED",
+  "error": "",
+  "detail": {
+   "operation": "R2-isis-access",
+   "action": "INVERSE_APPLIED",
+   "commands": 3
+  }
+ },
+ {
+  "cfg_id": "CFG-015",
+  "device": "S1",
+  "phase": "COMPENSATE",
+  "status": "COMPENSATED",
+  "error": "",
+  "detail": {
+   "operation": "S1-isis-links",
+   "action": "INVERSE_APPLIED",
+   "commands": 6
+  }
+ },
+ {
+  "cfg_id": "CFG-016",
+  "device": "S2",
+  "phase": "COMPENSATE",
+  "status": "COMPENSATED",
+  "error": "",
+  "detail": {
+   "operation": "S2-isis-links",
+   "action": "INVERSE_APPLIED",
+   "commands": 6
+  }
+ },
+ {
+  "cfg_id": "CFG-017",
+  "device": "S1",
+  "phase": "COMPENSATE",
+  "status": "COMPENSATED",
+  "error": "",
+  "detail": {
+   "operation": "S1-client-svis-passive",
+   "action": "INVERSE_APPLIED",
+   "commands": 9
+  }
+ },
+ {
+  "cfg_id": "CFG-018",
+  "device": "S2",
+  "phase": "COMPENSATE",
+  "status": "COMPENSATED",
+  "error": "",
+  "detail": {
+   "operation": "S2-client-svis-passive",
+   "action": "INVERSE_APPLIED",
+   "commands": 9
+  }
+ },
+ {
+  "cfg_id": "CFG-019",
+  "device": "R1",
+  "phase": "COMPENSATE",
+  "status": "COMPENSATED",
+  "error": "",
+  "detail": {
+   "operation": "R1-boundary-policy",
+   "action": "INVERSE_APPLIED",
+   "commands": 6
+  }
+ },
+ {
+  "cfg_id": "CFG-020",
+  "device": "R1",
+  "phase": "COMPENSATE",
+  "status": "COMPENSATED",
+  "error": "",
+  "detail": {
+   "operation": "R1-aggregate-into-isis",
+   "action": "INVERSE_APPLIED",
+   "commands": 3
+  }
+ },
+ {
+  "cfg_id": "CFG-021",
+  "device": "R1",
+  "phase": "COMPENSATE",
+  "status": "COMPENSATED",
+  "error": "",
+  "detail": {
+   "operation": "R1-isis-into-ospfv3",
+   "action": "INVERSE_APPLIED",
+   "commands": 3
+  }
+ },
+ {
+  "cfg_id": "CFG-022",
+  "device": "R2",
+  "phase": "COMPENSATE",
+  "status": "COMPENSATED",
+  "error": "",
+  "detail": {
+   "operation": "R2-boundary-policy",
+   "action": "INVERSE_APPLIED",
+   "commands": 6
+  }
+ },
+ {
+  "cfg_id": "CFG-023",
+  "device": "R2",
+  "phase": "COMPENSATE",
+  "status": "COMPENSATED",
+  "error": "",
+  "detail": {
+   "operation": "R2-aggregate-into-isis",
+   "action": "INVERSE_APPLIED",
+   "commands": 3
+  }
+ },
+ {
+  "cfg_id": "CFG-024",
+  "device": "R2",
+  "phase": "COMPENSATE",
+  "status": "COMPENSATED",
+  "error": "",
+  "detail": {
+   "operation": "R2-isis-into-ospfv3",
+   "action": "INVERSE_APPLIED",
+   "commands": 3
+  }
+ },
+ {
+  "cfg_id": "CFG-025",
+  "device": "S1",
+  "phase": "COMPENSATE",
+  "status": "COMPENSATED",
+  "error": "",
+  "detail": {
+   "operation": "S1-shield-install",
+   "action": "INVERSE_APPLIED",
+   "commands": 2
+  }
+ },
+ {
+  "cfg_id": "CFG-026",
+  "device": "R1",
+  "phase": "COMPENSATE",
+  "status": "COMPENSATED",
+  "error": "",
+  "detail": {
+   "operation": "R1-shield-install",
+   "action": "INVERSE_APPLIED",
+   "commands": 3
+  }
+ },
+ {
+  "cfg_id": "CFG-027",
+  "device": "S1",
+  "phase": "COMPENSATE",
+  "status": "COMPENSATED",
+  "error": "",
+  "detail": {
+   "operation": "S1-static-aggregate-remove",
+   "action": "ORIGINAL_LINES_RESTORED",
+   "commands": 1
+  }
+ },
+ {
+  "cfg_id": "CFG-028",
+  "device": "R1",
+  "phase": "COMPENSATE",
+  "status": "COMPENSATED",
+  "error": "",
+  "detail": {
+   "operation": "R1-floating-statics-add",
+   "action": "INVERSE_APPLIED",
+   "commands": 3
+  }
+ },
+ {
+  "cfg_id": "CFG-029",
+  "device": "R1",
+  "phase": "COMPENSATE",
+  "status": "COMPENSATED",
+  "error": "",
+  "detail": {
+   "operation": "R1-client-statics-remove",
+   "action": "ORIGINAL_LINES_RESTORED",
+   "commands": 3
+  }
+ },
+ {
+  "cfg_id": "CFG-030",
+  "device": "R1",
+  "phase": "COMPENSATE",
+  "status": "COMPENSATED",
+  "error": "",
+  "detail": {
+   "operation": "R1-floating-statics-remove",
+   "action": "ORIGINAL_LINES_RESTORED",
+   "commands": 3
+  }
+ },
+ {
+  "cfg_id": "CFG-031",
+  "device": "R1",
+  "phase": "COMPENSATE",
+  "status": "COMPENSATED",
+  "error": "",
+  "detail": {
+   "operation": "R1-old-redistribution-remove",
+   "action": "ORIGINAL_LINES_RESTORED",
+   "commands": 4
+  }
+ },
+ {
+  "cfg_id": "CFG-032",
+  "device": "R1",
+  "phase": "COMPENSATE",
+  "status": "COMPENSATED",
+  "error": "",
+  "detail": {
+   "operation": "R1-shield-remove",
+   "action": "ORIGINAL_LINES_RESTORED",
+   "commands": 3
+  }
+ },
+ {
+  "cfg_id": "CFG-033",
+  "device": "S1",
+  "phase": "COMPENSATE",
+  "status": "COMPENSATED",
+  "error": "",
+  "detail": {
+   "operation": "S1-shield-remove",
+   "action": "ORIGINAL_LINES_RESTORED",
+   "commands": 2
+  }
+ },
+ {
+  "cfg_id": "CFG-034",
+  "device": "S2",
+  "phase": "COMPENSATE",
+  "status": "COMPENSATED",
+  "error": "",
+  "detail": {
+   "operation": "S2-shield-install",
+   "action": "INVERSE_APPLIED",
+   "commands": 2
+  }
+ },
+ {
+  "cfg_id": "CFG-035",
+  "device": "R2",
+  "phase": "COMPENSATE",
+  "status": "COMPENSATED",
+  "error": "",
+  "detail": {
+   "operation": "R2-shield-install",
+   "action": "INVERSE_APPLIED",
+   "commands": 3
+  }
+ },
+ {
+  "cfg_id": "CFG-036",
+  "device": "S2",
+  "phase": "COMPENSATE",
+  "status": "COMPENSATED",
+  "error": "",
+  "detail": {
+   "operation": "S2-static-aggregate-remove",
+   "action": "ORIGINAL_LINES_RESTORED",
+   "commands": 1
+  }
+ },
+ {
+  "cfg_id": "CFG-037",
+  "device": "R2",
+  "phase": "COMPENSATE",
+  "status": "COMPENSATED",
+  "error": "",
+  "detail": {
+   "operation": "R2-floating-statics-add",
+   "action": "INVERSE_APPLIED",
+   "commands": 3
+  }
+ },
+ {
+  "cfg_id": "CFG-038",
+  "device": "R2",
+  "phase": "COMPENSATE",
+  "status": "COMPENSATED",
+  "error": "",
+  "detail": {
+   "operation": "R2-client-statics-remove",
+   "action": "ORIGINAL_LINES_RESTORED",
+   "commands": 3
+  }
+ },
+ {
+  "cfg_id": "CFG-039",
+  "device": "R2",
+  "phase": "COMPENSATE",
+  "status": "COMPENSATED",
+  "error": "",
+  "detail": {
+   "operation": "R2-floating-statics-remove",
+   "action": "ORIGINAL_LINES_RESTORED",
+   "commands": 3
+  }
+ },
+ {
+  "cfg_id": "CFG-040",
+  "device": "R2",
+  "phase": "COMPENSATE",
+  "status": "COMPENSATED",
+  "error": "",
+  "detail": {
+   "operation": "R2-old-redistribution-remove",
+   "action": "ORIGINAL_LINES_RESTORED",
+   "commands": 4
+  }
+ }
+]

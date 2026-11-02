@@ -1,0 +1,65 @@
+{% extends "core/base.html" %}
+{% load core_extras %}
+{% block title %}New device provisioning{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>New device provisioning</h1>
+  <p><a href="{% url 'core:automation_landing' %}">&larr; Automation</a> · <a href="{% url 'core:device_builder_capabilities' %}">Capability matrix</a> · <a href="{% url 'core:managed_devices' %}">Managed devices (identity, lifecycle, adoption)</a></p>
+  <p>A staged workflow for bringing a device NMAS does not manage yet under management. Creating a request writes application state only:
+     no device is contacted, nothing is reserved in NetBox and no Change exists until the matching stage is run.</p>
+</div>
+
+{% for r in refusals %}<div class="card" style="border-left:6px solid var(--danger);"><p><strong>{{ r.code }}</strong> — {{ r.message }} {{ r.remediation }}</p></div>{% endfor %}
+
+<div class="card-grid" style="margin-top:16px;">
+  <div class="card">
+    <h3>New provisioning request</h3>
+    <form method="post" action="{% url 'core:provisioning_create' %}">
+      {% csrf_token %}
+      <div class="field-row"><label class="field-row__label" for="p-name"><span>Device name</span></label>
+        <input class="form-control" id="p-name" type="text" name="device_name" placeholder="e.g. EDGE1" autocomplete="off" required></div>
+      <div class="field-row"><label class="field-row__label" for="p-platform"><span>Platform</span></label>
+        <select class="form-control" id="p-platform" name="platform">{% for value, label in platforms %}<option value="{{ value }}">{{ label }}</option>{% endfor %}</select></div>
+      <div class="field-row"><label class="field-row__label" for="p-role"><span>Intended role</span></label>
+        <select class="form-control" id="p-role" name="role">{% for role in roles %}<option value="{{ role }}">{{ role|title }}</option>{% endfor %}</select></div>
+      <div class="field-row"><label class="field-row__label" for="p-image"><span>Image reference (name / tag only)</span></label>
+        <input class="form-control" id="p-image" type="text" name="image_reference" autocomplete="off"></div>
+      <div class="field-row"><label class="field-row__label" for="p-site"><span>NetBox site (optional)</span></label>
+        <input class="form-control" id="p-site" type="text" name="site" autocomplete="off"></div>
+      <div class="field-row"><label><input type="checkbox" name="disposable"> Disposable proof device (separate lab; never joins the managed IaC scope)</label></div>
+      <button type="submit" class="btn btn--primary">Create request</button>
+    </form>
+  </div>
+
+  <div class="card">
+    <h3>Bootstrap support by platform</h3>
+    <p style="color:var(--text-muted); font-size:0.85rem;">A renderer or an executor is not bootstrap support. A platform is listed as supported only where the registered executor can really reach a device that has no inventory entry yet.</p>
+    <table class="data-table">
+      <thead><tr><th>Platform</th><th>Bootstrap</th><th>Basis</th></tr></thead>
+      <tbody>{% for value, label, support in transports %}<tr>
+        <td>{{ label }}</td>
+        <td><span class="badge badge--{% if support.0 %}success{% else %}danger{% endif %}">{% if support.0 %}SUPPORTED{% else %}UNSUPPORTED{% endif %}</span></td>
+        <td>{{ support.1 }}</td>
+      </tr>{% endfor %}</tbody>
+    </table>
+  </div>
+</div>
+
+<div class="card" style="margin-top:16px;">
+  <h3>Requests</h3>
+  <table class="data-table">
+    <thead><tr><th>Request</th><th>Device</th><th>Platform</th><th>Role</th><th>Status</th><th>Bootstrap</th><th>Change</th><th>Requested by</th><th>Created (UTC)</th></tr></thead>
+    <tbody>
+    {% for r in runs %}<tr>
+      <td><a href="{% url 'core:provisioning_detail' r.prov_id %}"><code>{{ r.prov_id }}</code></a></td>
+      <td>{{ r.device_name }}{% if r.disposable %} <span class="badge badge--neutral">disposable</span>{% endif %}</td>
+      <td>{{ r.get_platform_display }}</td><td>{{ r.role }}</td>
+      <td><span class="badge badge--{{ r.status|provisioning_badge_class }}">{{ r.get_status_display }}</span></td>
+      <td><span class="badge badge--{{ r.bootstrap_state|provisioning_badge_class }}">{{ r.bootstrap_state }}</span></td>
+      <td>{% if r.change %}<a href="{{ r.change.get_absolute_url }}"><code>{{ r.change.change_id }}</code></a>{% else %}—{% endif %}</td>
+      <td>{{ r.requested_by }}</td><td>{{ r.created_at|date:"Y-m-d H:i" }}</td>
+    </tr>{% empty %}<tr><td colspan="9">No provisioning request has been created.</td></tr>{% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

@@ -1,0 +1,23 @@
+services:
+  human-mfa-radius:
+    profiles: ["human-2fa"]
+    build:
+      context: ./freeradius
+    restart: unless-stopped
+    ports:
+      - "192.168.200.100:1812:1812/udp"
+    volumes:
+      - ../runtime/human-mfa/freeradius/clients.conf:/etc/freeradius/3.0/clients.conf:ro
+      - ../runtime/human-mfa/tls/privacyidea-ca.pem:/run/secrets/privacyidea-ca.pem:ro
+    networks:
+      - human-mfa-backend
+    healthcheck:
+      test: ["CMD", "freeradius", "-XC"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+networks:
+  human-mfa-backend:
+    name: nmas-human-mfa-backend
+    external: true

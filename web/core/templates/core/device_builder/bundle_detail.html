@@ -1,0 +1,130 @@
+{% extends "core/base.html" %}
+{% load core_extras %}
+{% block title %}{{ bundle.bundle_id }}{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1><code>{{ bundle.bundle_id }}</code> <span class="badge badge--{{ bundle.kind|bundle_badge_class }}">{{ bundle.get_kind_display }} bundle</span></h1>
+  <p><a href="{% url 'core:bundles_list' %}">&larr; All bundles</a> · <a href="{% url 'core:device_builder_change_detail' bundle.change.change_id %}">{{ bundle.change.change_id }}</a> · <a href="{% url 'core:bundle_manifest' bundle.bundle_id %}">Download manifest.json</a></p>
+  <p>Historical, read-only artifact. It cannot be edited or deleted, and opening it never contacts a device.</p>
+</div>
+
+{% if notice %}<div class="card" style="border-left:6px solid var(--{% if notice.0 == 'success' %}success{% elif notice.0 == 'danger' %}danger{% elif notice.0 == 'warning' %}warning{% else %}text-muted{% endif %});"><p>{{ notice.1 }}</p></div>{% endif %}
+
+{% if integrity.ok %}
+<div class="card" style="border-left:6px solid var(--success);">
+  <h3><span class="badge badge--success">INTEGRITY: INTACT</span></h3>
+  <p>Every digest, the lineage, the item rows and the pinned references were recomputed from the stored contents just now ({{ integrity.checks|join:", " }}). This is a read-only check; nothing was changed.</p>
+</div>
+{% else %}
+<div class="card" style="border-left:6px solid var(--danger);">
+  <h3><span class="badge badge--danger">INTEGRITY: FAILED</span></h3>
+  <p><strong>This bundle no longer verifies against its recorded digests.</strong> It must not be trusted, cannot be derived into another bundle and can never feed a Golden decision. Nothing was repaired.</p>
+  <ul>{% for f in integrity.findings %}<li><span class="badge badge--danger">{{ f.code }}</span> {{ f.message }}</li>{% endfor %}</ul>
+</div>
+{% endif %}
+
+<div class="card-grid" style="margin-top:16px;">
+  <div class="card"><h3>Identity and digests</h3>
+    <table class="data-table"><tbody>
+      <tr><th>Kind</th><td><span class="badge badge--{{ bundle.kind|bundle_badge_class }}">{{ bundle.get_kind_display }}</span></td></tr>
+      <tr><th>Bundle digest ({{ bundle.manifest.manifest_schema_version|default:"?" }} · SHA-256)</th><td><code>{{ bundle.bundle_digest }}</code><br><span style="color:var(--text-muted); font-size:0.8rem;">Tamper / provenance identity: payload digest + kind + lineage.</span></td></tr>
+      <tr><th>Payload digest</th><td><code>{{ bundle.payload_digest }}</code><br><span style="color:var(--text-muted); font-size:0.8rem;">The frozen configuration + its source provenance. A Probation bundle sealed from a UAT bundle has the SAME payload digest.</span></td></tr>
+      <tr><th>Manifest schema</th><td>{{ bundle.schema_version }} (built by {{ bundle.builder_version }})</td></tr>
+      <tr><th>Created</th><td>{{ bundle.created_at }} by {{ bundle.created_by|default:"—" }}</td></tr>
+    </tbody></table>
+  </div>
+  <div class="card"><h3>Sources (pinned, historical)</h3>
+    <table class="data-table"><tbody>
+      <tr><th>Change</th><td><a href="{% url 'core:device_builder_change_detail' bundle.change.change_id %}">{{ bundle.change.change_id }}</a></td></tr>
+      <tr><th>Validation run</th><td><a href="{% url 'core:change_validation_detail' bundle.change.change_id bundle.validation_run.run_id %}"><code>{{ bundle.validation_run.run_id }}</code></a></td></tr>
+      <tr><th>Plan</th><td><a href="{% url 'core:change_plan_detail' bundle.change.change_id bundle.plan.plan_id %}"><code>{{ bundle.plan.plan_id }}</code></a><br>plan hash <code>{{ bundle.payload.source.plan.plan_hash }}</code></td></tr>
+      <tr><th>Execution run</th><td><a href="{% url 'core:change_execution_detail' bundle.change.change_id bundle.execution_run.run_id %}"><code>{{ bundle.execution_run.run_id }}</code></a> ({{ bundle.payload.source.execution.mode }} · {{ bundle.payload.source.execution.outcome }})</td></tr>
+      <tr><th>Postcheck</th><td>{% if bundle.postcheck_run %}<a href="{% url 'core:health_run' bundle.postcheck_run.run_id %}"><code>{{ bundle.postcheck_run.run_id }}</code></a> ({{ bundle.verification.postcheck.result }}){% else %}none persisted ({{ bundle.verification.postcheck.result|default:"—" }}){% endif %}</td></tr>
+      <tr><th>Repository head at validation</th><td><code>{{ bundle.payload.source.git.repository_head }}</code> <span style="color:var(--text-muted); font-size:0.8rem;">as persisted then; UNKNOWN means it was never recorded.</span></td></tr>
+      <tr><th>Engines</th><td>validation {{ bundle.payload.source.engines.validation }} · planner {{ bundle.payload.source.engines.planner }} · execution {{ bundle.payload.source.engines.execution }} · postcheck {{ bundle.payload.source.engines.postcheck }}</td></tr>
+    </tbody></table>
+  </div>
+</div>
+
+<div class="card" style="margin-top:16px;"><h3>Lineage</h3>
+  <p>
+    <a href="{% url 'core:change_execution_detail' bundle.change.change_id bundle.execution_run.run_id %}">{% if root_is_deployed %}Complete{% else %}Partial (UAT){% endif %} execution <code>{{ lineage.execution.run_id|stringformat:"s"|slice:":8" }}</code></a>
+    &rarr; {% if lineage.uat %}{% if lineage.uat.pk == bundle.pk %}<strong>{{ root_label }} <code>{{ lineage.uat.bundle_id }}</code></strong>{% else %}<a href="{% url 'core:bundle_detail' lineage.uat.bundle_id %}">{{ root_label }} <code>{{ lineage.uat.bundle_id }}</code></a>{% endif %}{% else %}{{ root_label }} —{% endif %}
+    &rarr; {% if lineage.probation %}{% if lineage.probation.pk == bundle.pk %}<strong>Probation <code>{{ lineage.probation.bundle_id }}</code></strong>{% else %}<a href="{% url 'core:bundle_detail' lineage.probation.bundle_id %}">Probation <code>{{ lineage.probation.bundle_id }}</code></a>{% endif %}{% else %}Probation (not created){% endif %}
+    &rarr; {% if lineage.golden %}{% if lineage.golden.pk == bundle.pk %}<strong>Golden <code>{{ lineage.golden.bundle_id }}</code></strong>{% else %}<a href="{% url 'core:bundle_detail' lineage.golden.bundle_id %}">Golden <code>{{ lineage.golden.bundle_id }}</code></a>{% endif %}{% else %}Golden (needs a passed soak and your decision){% endif %}
+  </p>
+  {% if bundle.kind == 'GOLDEN' and decision %}<p>{{ root_label }} &rarr; Probation &rarr; <a href="{% url 'core:soak_detail' decision.run.soak_id %}">successful soak <code>{{ decision.run.soak_id }}</code></a> &rarr; operator decision <strong>{{ decision.decision }}</strong> ({{ decision.decided_by }}, {{ decision.decided_at|date:"Y-m-d H:i:s" }} UTC) &rarr; <strong>Golden <code>{{ bundle.bundle_id }}</code></strong></p>{% endif %}
+  <p style="color:var(--text-muted); font-size:0.85rem;">Each arrow creates a NEW artifact; an earlier bundle is never modified. There is no UAT / Deployed &rarr; Golden shortcut and no Golden &rarr; Probation.</p>
+</div>
+
+<div class="card-grid" style="margin-top:16px;">
+  <div class="card"><h3>Scope</h3>
+    <table class="data-table"><tbody>
+      <tr><th>Mode</th><td>{{ bundle.payload.scope.mode }} — an ordered prefix of the plan through <code>{{ bundle.payload.scope.through_cfg_id }}</code></td></tr>
+      <tr><th>Bundled (in order)</th><td>{{ bundle.payload.scope.requested|join:", " }}</td></tr>
+      <tr><th>Out of scope (NOT bundled)</th><td>{{ bundle.payload.scope.out_of_scope|join:", "|default:"—" }}</td></tr>
+      <tr><th>Devices</th><td>{{ bundle.payload.scope.devices|join:", " }}</td></tr>
+    </tbody></table>
+  </div>
+  <div class="card"><h3>Verification quality</h3>
+    <p><span class="badge badge--{{ bundle.verification_state|bundle_badge_class }}">{{ bundle.verification_state|default:"UNKNOWN" }}</span> execution outcome <code>{{ bundle.verification.execution_outcome }}</code>, postcheck <code>{{ bundle.verification.postcheck.result|default:"—" }}</code></p>
+    {% if not is_verified %}<p><strong>The applied scope was NOT verified.</strong> This is recorded honestly and cannot be upgraded. An UNVERIFIED bundle cannot enter Probation.</p>{% endif %}
+    {% if bundle.verification.unverified %}<p>Configlets the postcheck could not confirm:</p><ul>{% for u in bundle.verification.unverified %}<li><code>{{ u.cfg_id }}</code> — {{ u.requirement }} ({{ u.code }})</li>{% endfor %}</ul>{% endif %}
+    <p style="color:var(--text-muted); font-size:0.85rem;">Raw Configlet sandbox verification is SYNTAX ONLY. It is never operational verification. Engine-gate warnings recorded: {{ bundle.verification.execution_warning_codes|join:", "|default:"none" }}.</p>
+  </div>
+</div>
+
+<div class="card" style="margin-top:16px;"><h3>Ordered Configlets ({{ items|length }})</h3>
+  <table class="data-table">
+    <thead><tr><th>#</th><th>Configlet</th><th>Device</th><th>Origin</th><th>Operation</th><th>Prio</th><th>Depends on</th><th>Execution</th><th>Payload hash</th><th>Pinned raw revision</th></tr></thead>
+    <tbody>
+    {% for item in items %}
+      <tr>
+        <td>{{ item.sequence }}</td><td><code>{{ item.cfg_id }}</code></td><td>{{ item.device }} <span style="color:var(--text-muted);">{{ item.platform }}</span></td>
+        <td><span class="badge badge--{% if item.origin == 'RAW' %}warning{% else %}neutral{% endif %}">{{ item.origin }}</span></td>
+        <td>{{ item.operation }}</td><td>{{ item.priority }}</td>
+        <td>{{ item.record.depends_on|join:", "|default:"—" }}</td>
+        <td><span class="badge badge--{{ item.record.execution.status|execution_badge_class }}">{{ item.record.execution.status }}</span></td>
+        <td><code>{{ item.payload_hash|slice:":12" }}</code></td>
+        <td>{% if item.record.raw %}<code>{{ item.record.raw.raw_id }}</code> rev {{ item.record.raw.revision }}<br>content <code>{{ item.record.raw.revision_content_hash|slice:":12" }}</code><br>verification {{ item.record.raw.verification.result }} ({{ item.record.raw.verification.scope }}) <code>{{ item.record.raw.verification.run_id|slice:":8" }}</code>{% else %}—{% endif %}</td>
+      </tr>
+      <tr><td></td><td colspan="9"><details><summary>Frozen payload</summary><pre>{{ item.payload }}</pre></details></td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% if bundle.kind == 'UAT' or bundle.kind == 'DEPLOYED' %}
+<div class="card" style="margin-top:16px;"><h3>Create Probation bundle</h3>
+  <p>Seals this exact {{ root_label }} artifact into a <strong>new</strong> Probation bundle: <strong>the configuration payload will not change</strong>, and this {{ root_label }} bundle stays a {{ root_label }} bundle forever. It means "this artifact is the candidate entering probation" — it does <strong>not</strong> mean any time has passed, and it is <strong>not</strong> Golden. <strong>The seven-day soak is NOT part of this action</strong> (Phase 20). No device is contacted and no timer starts.</p>
+  {% if probation.existing %}
+    <p>A Probation bundle already exists for this {{ root_label }} bundle: <a href="{% url 'core:bundle_detail' probation.existing.bundle_id %}"><code>{{ probation.existing.bundle_id }}</code></a>. No duplicate can be created. Starting the seven-day soak is a separate, explicit action on that Probation bundle's page.</p>
+  {% elif probation.eligible %}
+    <form method="post" action="{% url 'core:bundle_derive_probation' bundle.bundle_id %}">{% csrf_token %}
+      <p><label><input type="checkbox" name="confirm" required> I understand this creates a Probation candidate artifact only: no soak starts and nothing is promoted.</label></p>
+      <button class="btn btn--primary" type="submit">Create Probation bundle</button>
+    </form>
+  {% else %}
+    <p><strong>Not eligible for Probation:</strong></p>
+    <ul>{% for b in probation.blockers %}<li><span class="badge badge--danger">{{ b.code }}</span> {{ b.message }} <em>{{ b.remediation }}</em></li>{% endfor %}</ul>
+  {% endif %}
+</div>
+{% elif bundle.kind == 'PROBATION' %}
+<div class="card" style="margin-top:16px;"><h3>Probation candidate</h3>
+  <p>This bundle records that the exact {{ root_label }} artifact <a href="{% url 'core:bundle_detail' bundle.source_uat.bundle_id %}"><code>{{ bundle.source_uat.bundle_id }}</code></a> entered the probation lifecycle boundary. Being in Probation is <strong>not</strong> evidence that any soak passed and it is <strong>not</strong> Golden: promotion requires a technically passed soak and your explicit Golden decision.</p>
+</div>
+{% include "core/device_builder/_soak_panel.html" %}
+{% else %}
+<div class="card" style="margin-top:16px;"><h3>Golden bundle</h3>
+  <p>A historical, read-only artifact sealed from Probation bundle {% if bundle.parent %}<a href="{% url 'core:bundle_detail' bundle.parent.bundle_id %}"><code>{{ bundle.parent.bundle_id }}</code></a>{% endif %}. It has the <strong>same configuration payload</strong> as that Probation bundle (payload digest <code>{{ bundle.payload_digest|slice:":16" }}…</code>). Approving it did not re-apply the configuration, contact a device or save any device's startup configuration.</p>
+  <table class="data-table"><tbody>
+    <tr><th>Successful soak</th><td>{% if decision %}<a href="{% url 'core:soak_detail' decision.run.soak_id %}"><code>{{ promotion.soak_id }}</code></a>{% else %}<code>{{ promotion.soak_id }}</code>{% endif %} (policy {{ promotion.soak_policy_version }}, {{ promotion.soak_duration_seconds|soak_duration }})</td></tr>
+    <tr><th>Observation</th><td>{{ promotion.observation_started_at }} &rarr; required end {{ promotion.observation_required_end_at }}; completed {{ promotion.observation_completed_at }}</td></tr>
+    <tr><th>Soak evidence digest</th><td><code>{{ promotion.evidence_digest }}</code></td></tr>
+    <tr><th>Probation digest pinned</th><td><code>{{ promotion.probation_bundle_digest }}</code></td></tr>
+    <tr><th>Operator decision</th><td><span class="badge badge--{{ promotion.decision|bundle_badge_class }}">{{ promotion.decision }}</span> by {{ promotion.decided_by }} at {{ promotion.decided_at }}{% if decision.reason %} — <em>{{ decision.reason }}</em>{% endif %}</td></tr>
+  </tbody></table>
+  <p style="color:var(--text-muted); font-size:0.85rem;">Golden means "approved as the known-good artifact under the implemented evidence contract" — expected-state descriptors, telemetry and interference checks — not a byte-for-byte comparison of each device's running configuration.</p>
+</div>
+{% endif %}
+{% endblock %}

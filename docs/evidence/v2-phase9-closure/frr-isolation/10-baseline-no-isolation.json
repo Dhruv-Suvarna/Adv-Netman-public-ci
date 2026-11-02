@@ -1,0 +1,172 @@
+{
+  "dhcp": {
+    "client_tail": "QUEST for 10.254.90.4 on eth1 to 255.255.255.255 port 67 (xid=0x51b62564)\nDHCPACK of 10.254.90.4 from 10.254.90.1 (xid=0x6425b651)\nbound to 10.254.90.4 -- renewal in 260 seconds.\n1982: eth1    inet 10.254.90.4/29 brd 10.254.90.7 scope global dynamic eth1\\       valid_lft 600sec preferred_lft 600sec\n",
+    "expect": "PERMIT",
+    "flow": "dev -> DHCP via relay 10.254.90.1 -> dhcpd 10.254.92.2",
+    "lease": "10.254.90.4",
+    "observed": "PERMIT"
+  },
+  "flows": [
+    {
+      "detail": "OPEN",
+      "expect": "PERMIT",
+      "flow": "dev -> bootstrap HTTP 10.254.92.2:8080",
+      "observed": "PERMIT"
+    },
+    {
+      "detail": "OPEN",
+      "expect": "PERMIT",
+      "flow": "NMAS service 10.254.92.2 -> 10.254.90.2:22 (NMAS management)",
+      "observed": "PERMIT"
+    },
+    {
+      "detail": "",
+      "expect": "DENY",
+      "flow": "dev -> production host 10.254.94.10 (ICMP)",
+      "observed": "PERMIT"
+    },
+    {
+      "detail": "",
+      "expect": "DENY",
+      "flow": "dev -> production host 2001:db8:fe94::10 (ICMPv6)",
+      "observed": "PERMIT"
+    },
+    {
+      "detail": "",
+      "expect": "DENY",
+      "flow": "dev -> core loopback 10.254.255.2 (ICMP, lateral)",
+      "observed": "PERMIT"
+    },
+    {
+      "detail": "REFUSED",
+      "expect": "DENY",
+      "flow": "dev -> 10.254.92.2:22 (not a bootstrap flow)",
+      "observed": "PERMIT"
+    },
+    {
+      "detail": "REFUSED; seen at service: 1",
+      "expect": "DENY",
+      "flow": "dev -> 10.254.92.2:22 from forged source port 22 (not an SSH reply)",
+      "observed": "PERMIT"
+    },
+    {
+      "detail": "OPEN",
+      "expect": "DENY",
+      "flow": "dev -> upstream's own SSH 10.254.90.1:22",
+      "observed": "PERMIT"
+    },
+    {
+      "detail": "OPEN",
+      "expect": "DENY",
+      "flow": "dev -> upstream's own SSH 10.254.255.4:22",
+      "observed": "PERMIT"
+    },
+    {
+      "detail": "",
+      "expect": "DENY",
+      "flow": "dev -> upstream 10.254.90.1 (ICMP)",
+      "observed": "PERMIT"
+    },
+    {
+      "detail": "",
+      "expect": "DENY",
+      "flow": "production host -> 10.254.90.2 (ICMP)",
+      "observed": "PERMIT"
+    },
+    {
+      "detail": "",
+      "expect": "DENY",
+      "flow": "production host -> 2001:db8:fe90::2 (ICMPv6)",
+      "observed": "PERMIT"
+    }
+  ],
+  "flows_port_b": [
+    {
+      "detail": "OPEN",
+      "expect": "PERMIT",
+      "flow": "dev2 -> bootstrap HTTP 10.254.92.2:8080",
+      "observed": "PERMIT"
+    },
+    {
+      "detail": "OPEN",
+      "expect": "PERMIT",
+      "flow": "NMAS service 10.254.92.2 -> 10.254.95.2:22 (NMAS management)",
+      "observed": "PERMIT"
+    },
+    {
+      "detail": "",
+      "expect": "DENY",
+      "flow": "dev2 -> production host 10.254.94.10 (ICMP)",
+      "observed": "PERMIT"
+    },
+    {
+      "detail": "",
+      "expect": "DENY",
+      "flow": "dev2 -> production host 2001:db8:fe94::10 (ICMPv6)",
+      "observed": "PERMIT"
+    },
+    {
+      "detail": "",
+      "expect": "DENY",
+      "flow": "dev2 -> core loopback 10.254.255.2 (ICMP, lateral)",
+      "observed": "PERMIT"
+    },
+    {
+      "detail": "REFUSED",
+      "expect": "DENY",
+      "flow": "dev2 -> 10.254.92.2:22 (not a bootstrap flow)",
+      "observed": "PERMIT"
+    },
+    {
+      "detail": "REFUSED; seen at service: 1",
+      "expect": "DENY",
+      "flow": "dev2 -> 10.254.92.2:22 from forged source port 22 (not an SSH reply)",
+      "observed": "PERMIT"
+    },
+    {
+      "detail": "OPEN",
+      "expect": "DENY",
+      "flow": "dev2 -> upstream's own SSH 10.254.95.1:22",
+      "observed": "PERMIT"
+    },
+    {
+      "detail": "OPEN",
+      "expect": "DENY",
+      "flow": "dev2 -> upstream's own SSH 10.254.255.4:22",
+      "observed": "PERMIT"
+    },
+    {
+      "detail": "",
+      "expect": "DENY",
+      "flow": "dev2 -> upstream 10.254.95.1 (ICMP)",
+      "observed": "PERMIT"
+    },
+    {
+      "detail": "",
+      "expect": "DENY",
+      "flow": "production host -> 10.254.95.2 (ICMP)",
+      "observed": "PERMIT"
+    },
+    {
+      "detail": "",
+      "expect": "DENY",
+      "flow": "production host -> 2001:db8:fe95::2 (ICMPv6)",
+      "observed": "PERMIT"
+    }
+  ],
+  "nft_ruleset": "",
+  "note": "NO isolation: every DENY-expected flow is observed PERMIT (the gap)",
+  "ospf": {
+    "core_route_to_device_loopback": "10.254.255.6 nhid 26 via 10.254.91.1 dev eth1 proto ospf metric 20",
+    "probe_hellos": {
+      "received": 11,
+      "sent": 11
+    },
+    "probe_neighbors": "\nNeighbor ID     Pri State           Up Time         Dead Time Address         Interface                        RXmtL RqstL DBsmL\n10.254.255.4      1 Full/DR         10.806s            3.189s 10.254.90.1     eth1:10.254.90.2                     1     0     0\n\n",
+    "probe_on_port": [
+      "10.254.255.6      1 Full/Backup     11.346s            3.131s 10.254.90.2     eth4:10.254.90.1                     0     0     0"
+    ],
+    "probe_ospfd_running": true,
+    "upstream_neighbors": "\nNeighbor ID     Pri State           Up Time         Dead Time Address         Interface                        RXmtL RqstL DBsmL\n10.254.255.2      1 Full/Backup     34.101s           33.692s 10.254.91.2     Vlan102:10.254.91.1                  0     0     0\n10.254.255.6      1 Full/Backup     11.013s            3.464s 10.254.90.2     eth4:10.254.90.1                     0     0     0\n\n"
+  }
+}

@@ -1,0 +1,7 @@
+# Repository-owned monitoring only; no FRR/forwarding settings.
+agentAddress udp:{{ address }}:161
+sysName {{ device }}
+engineID nmas-{{ device }}
+rouser {{ username }} priv .1
+# Link transitions are sent by the authPriv-only companion watcher.
+trapsess -v 3 -l authPriv -u {{ username }} -a SHA-256 -A {{ auth_password }} -x AES -X {{ privacy_password }} {{ receiver }}:162

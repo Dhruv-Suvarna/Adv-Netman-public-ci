@@ -1,0 +1,101 @@
+{
+ "status": "PASS",
+ "report": {
+  "schema": 1,
+  "engine": "route-shield-lifecycle-3",
+  "blockers": [],
+  "host": {
+   "load1": 23.02,
+   "cpus": 8,
+   "available_mb": 60660,
+   "swap_used_mb": 0
+  },
+  "probes": {
+   "lost": 0,
+   "answered": 17546,
+   "flows": 14,
+   "unanswered_flows": [],
+   "errors": []
+  },
+  "digests": {
+   "R1": {
+    "config": "f7e23531997fbe0c2600218ea7c7885f2591e40bad652ec900ac9558e2b0b0db",
+    "startup": "f7e23531997fbe0c2600218ea7c7885f2591e40bad652ec900ac9558e2b0b0db"
+   },
+   "R2": {
+    "config": "a76c51916fd1da35620973d9cd3e718d0c8bce96e215caf17f158319395beb23",
+    "startup": "a76c51916fd1da35620973d9cd3e718d0c8bce96e215caf17f158319395beb23"
+   },
+   "S1": {
+    "config": "f7e4fd4fdee0bb8346329a6add7e553851d7bba67c8a0b02db06e3c4ae6efa31",
+    "startup": "f7e4fd4fdee0bb8346329a6add7e553851d7bba67c8a0b02db06e3c4ae6efa31"
+   },
+   "S2": {
+    "config": "ee5f0cb47cb509c8548e6d213cec4d76666ab33768f56cbc53d0889a7b6a4909",
+    "startup": "ee5f0cb47cb509c8548e6d213cec4d76666ab33768f56cbc53d0889a7b6a4909"
+   },
+   "R3": {
+    "static_routes": "cfc1c90f6851d6ed268de708724e5ebfe83e8e6d9bc70385654abc39b6d01b3e",
+    "frr_config": "365d779636ea2f6ed76d802cd8217db03610ab3838c562bf56424933ffe3c1aa",
+    "persistent_config": "c779f912a770e264af011bb6d5237a170c770fed01141aa7b5d5d26e0c3360fe",
+    "adjacencies": [
+     [
+      "OSPFV2",
+      "eth0",
+      "192.168.255.1",
+      "FULL"
+     ],
+     [
+      "OSPFV2",
+      "eth1",
+      "192.168.255.2",
+      "FULL"
+     ],
+     [
+      "OSPFV3",
+      "eth0",
+      "192.168.255.1",
+      "FULL"
+     ],
+     [
+      "OSPFV3",
+      "eth1",
+      "192.168.255.2",
+      "FULL"
+     ]
+    ]
+   },
+   "R4": {
+    "static_routes": "1aee700a76565eb98f38b85f3599a11a663624d570b2d99003535ac354fafc26",
+    "frr_config": "1a24a9188b14d336902904b75cf36883ee47a801b802f7a73d3b1ed74379e10e",
+    "persistent_config": "562ad6c9311dfc442dc5cc30aa19c7fe56aa9f4bc900917a2ef99d93abf6e8ac",
+    "adjacencies": [
+     [
+      "OSPFV2",
+      "eth0",
+      "192.168.255.1",
+      "FULL"
+     ],
+     [
+      "OSPFV2",
+      "eth1",
+      "192.168.255.2",
+      "FULL"
+     ],
+     [
+      "OSPFV3",
+      "eth0",
+      "192.168.255.1",
+      "FULL"
+     ],
+     [
+      "OSPFV3",
+      "eth1",
+      "192.168.255.2",
+      "FULL"
+     ]
+    ]
+   }
+  }
+ }
+}

@@ -1,0 +1,25 @@
+{% extends "core/auth/auth_base.html" %}
+{% block title %}Set up Microsoft Authenticator · NMAS{% endblock %}
+{% block content %}
+<h1>Set up Microsoft Authenticator</h1>
+<p>Website MFA is required for NMAS. This is the NMAS <strong>website</strong> authenticator only &mdash; it is not your network-device (privacyIDEA / RADIUS) token.</p>
+<ol>
+  <li>In Microsoft Authenticator choose <em>Add account &rarr; Other account (Google, Facebook, etc.)</em>.</li>
+  <li>Scan this code, or choose <em>enter code manually</em> and type the key below.</li>
+  <li>Enter the 6-digit code the app shows to finish.</li>
+</ol>
+<img class="auth-qr" src="{{ qr_data_uri }}" alt="Authenticator enrollment QR code" width="220" height="220">
+<p>Account: <strong>{{ issuer }} ({{ account }})</strong><br>Key: <span class="auth-key">{{ manual_key }}</span></p>
+{% if error %}<div class="alert alert--warning" role="alert">{{ error }}</div>{% endif %}
+<form method="post" action="{% url 'core:mfa_enroll' %}" autocomplete="off">
+  {% csrf_token %}
+  <input type="hidden" name="next" value="{{ next }}">
+  <div class="form-field">
+    <label for="id_otp_code">Code from the app</label>
+    <input class="form-control" type="text" name="otp_code" id="id_otp_code" inputmode="numeric" pattern="[0-9 ]{6,7}" maxlength="7" autocomplete="one-time-code" required autofocus>
+  </div>
+  <button type="submit" class="btn btn--primary">Finish setup</button>
+</form>
+<form method="post" action="{% url 'core:logout' %}" style="margin-top:12px;">{% csrf_token %}<button type="submit" class="link-button">Sign out</button></form>
+<p class="wb-muted" style="margin-bottom:0;">This page is not cached and the key is never logged or shown again after setup.</p>
+{% endblock %}

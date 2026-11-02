@@ -1,0 +1,30 @@
+{% extends "core/base.html" %}
+{% block title %}{{ raw.raw_id }} rev {{ revision.revision }} · {{ change.change_id }}{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1><span class="badge badge--danger">RAW</span> <code>{{ raw.raw_id }}</code> revision {{ revision.revision }} <span style="font-weight:400;">· {{ change.change_id }}</span></h1>
+  <p><a href="{% url 'core:raw_configlet_detail' change.change_id raw.raw_id %}">&larr; Back to {{ raw.raw_id }}</a></p>
+  <p><strong>Read-only.</strong> A revision is immutable: it can be inspected but never edited. {% if not is_latest %}This is a <em>historical</em> revision; it is not part of the effective Change.{% else %}This is the latest revision; to change it, save a new revision from the editor.{% endif %}</p>
+</div>
+<div class="card">
+  <table class="data-table"><tbody>
+    <tr><th>Verification</th><td><span class="badge badge--{{ status_tone }}">{{ status_label }}</span>{% if status_reasons %} · {{ status_reasons|join:", " }}{% endif %}</td></tr>
+    <tr><th>Name</th><td>{{ revision.name }}</td></tr>
+    <tr><th>Description</th><td>{{ revision.description|default:"—" }}</td></tr>
+    <tr><th>Target / platform</th><td>{{ revision.target_device }} · {{ revision.platform }}</td></tr>
+    <tr><th>Priority</th><td>{{ revision.priority }}</td></tr>
+    <tr><th>Dependencies</th><td>{% for d in revision.dependencies %}<code>{{ d }}</code> {% empty %}—{% endfor %}</td></tr>
+    <tr><th>Assertions</th><td>{% for a in revision.assertions %}<code>{{ a.kind }}</code> {% empty %}—{% endfor %}</td></tr>
+    <tr><th>Content hash</th><td><code>{{ revision.content_hash }}</code> · {{ revision.content_bytes }} bytes · {{ revision.content_lines }} lines</td></tr>
+    <tr><th>Static policy at save</th><td><code>{{ revision.policy_version }}</code></td></tr>
+    <tr><th>Saved</th><td>{{ revision.created_at }} by {{ revision.created_by|default:"—" }}</td></tr>
+  </tbody></table>
+  <h3>Configuration</h3>
+  <pre style="white-space:pre-wrap;">{{ revision.content }}</pre>
+</div>
+<div class="card" style="margin-top:16px;"><h3>Verifications of this revision</h3>
+  <table class="data-table"><thead><tr><th>Run</th><th>Result</th><th>Adapter</th><th>Started</th></tr></thead><tbody>
+  {% for run in runs %}<tr><td><a href="{% url 'core:raw_configlet_verification' change.change_id raw.raw_id run.run_id %}"><code>{{ run.run_id|slice:":8" }}</code></a></td><td>{{ run.result|default:run.state }}</td><td>{{ run.adapter_id|default:"—" }}</td><td>{{ run.started_at }}</td></tr>
+  {% empty %}<tr><td colspan="4"><div class="empty-state">Never verified.</div></td></tr>{% endfor %}
+  </tbody></table></div>
+{% endblock %}

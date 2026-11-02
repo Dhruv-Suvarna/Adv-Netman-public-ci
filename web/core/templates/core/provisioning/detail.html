@@ -1,0 +1,179 @@
+{% extends "core/base.html" %}
+{% load core_extras %}
+{% block title %}Provisioning {{ run.prov_id }}{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>Provisioning <code>{{ run.prov_id }}</code> — {{ run.device_name }}</h1>
+  <p><a href="{% url 'core:provisioning_list' %}">&larr; New device provisioning</a>{% if run.change %} · Change <a href="{{ run.change.get_absolute_url }}"><code>{{ run.change.change_id }}</code></a>{% endif %}</p>
+  <p>
+    <span class="badge badge--{{ run.status|provisioning_badge_class }}">{{ run.get_status_display }}</span>
+    <span class="badge badge--{{ run.bootstrap_state|provisioning_badge_class }}">{{ run.get_bootstrap_state_display }}</span>
+    {% if run.disposable %}<span class="badge badge--neutral">disposable</span>{% endif %}
+  </p>
+</div>
+
+{% if run.failure %}<div class="card" style="border-left:6px solid var(--danger);">
+  <h3>{% if run.status == "CANCELLED" %}Cancelled{% else %}Failed at {{ run.failure.stage }}{% endif %}</h3>
+  <p><strong>{{ run.failure.code }}</strong>{% if run.failure.message %} — {{ run.failure.message }}{% endif %}</p>
+  {% if run.status != "CANCELLED" %}<p>Device restored: <strong>{{ run.failure.device_restored|yesno:"yes,no" }}</strong>.</p>{% endif %}
+  <p>NetBox reconciliation: <strong>{% if run.failure.reconciliation.clean %}clean — every object this request created was released{% else %}INCOMPLETE — objects listed below were not released and must be reconciled by hand{% endif %}</strong>; registry entry: {{ run.failure.reconciliation.registry }}.</p>
+  {% if run.failure.reconciliation.netbox %}<table class="data-table"><thead><tr><th>Object</th><th>Name</th><th>NetBox id</th><th>Released</th></tr></thead><tbody>
+    {% for item in run.failure.reconciliation.netbox %}<tr><td>{{ item.kind }}</td><td>{{ item.name }}</td><td>{{ item.id }}</td><td><span class="badge badge--{% if item.released %}success{% else %}danger{% endif %}">{{ item.released|yesno:"yes,NO" }}</span></td></tr>{% endfor %}
+  </tbody></table>{% endif %}
+</div>{% endif %}
+
+<div class="card-grid" style="margin-top:16px;">
+  <div class="card">
+    <h3>Request</h3>
+    <table class="data-table"><tbody>
+      <tr><th>Device</th><td>{{ run.device_name }}</td></tr>
+      <tr><th>Platform</th><td>{{ run.get_platform_display }}</td></tr>
+      <tr><th>Intended role</th><td>{{ run.role }}</td></tr>
+      <tr><th>Image reference</th><td>{{ run.image_reference|default:"—" }}</td></tr>
+      <tr><th>Requested by</th><td>{{ run.requested_by }}</td></tr>
+      <tr><th>Created (UTC)</th><td>{{ run.created_at|date:"Y-m-d H:i:s" }}</td></tr>
+      <tr><th>Repository HEAD</th><td><code>{{ run.repository_head|default:"—" }}</code></td></tr>
+      <tr><th>Bootstrap transport</th><td>{{ run.bootstrap_transport|default:"—" }}</td></tr>
+      <tr><th>Bootstrap target</th><td>{% if run.bootstrap_target %}<code>{{ run.bootstrap_target.container }}</code> in lab <code>{{ run.bootstrap_target.lab }}</code>{% else %}—{% endif %}</td></tr>
+      <tr><th>Management</th><td>{% if run.management %}{{ run.management.interface }}: {{ run.management.ipv4|default:"no IPv4" }}, {{ run.management.ipv6|default:"no IPv6" }} ({{ run.management.assignment|default:"static" }}){% else %}—{% endif %}</td></tr>
+      <tr><th>Registry</th><td>{% if registry %}<span class="badge badge--{{ registry.state|provisioning_badge_class }}">{{ registry.state }}</span>{% else %}not admitted{% endif %}</td></tr>
+    </tbody></table>
+  </div>
+
+  <div class="card">
+    <h3>Evidence</h3>
+    <table class="data-table"><tbody>
+      <tr><th>Candidate hash</th><td><code>{{ run.candidate_hash|default:"—" }}</code></td></tr>
+      <tr><th>Validation</th><td>{% if run.validation_run %}<a href="{% url 'core:change_validation_detail' run.change.change_id run.validation_run.run_id %}">{{ run.validation_run.status }}</a>{% else %}—{% endif %}</td></tr>
+      <tr><th>Network config validation</th><td>{% if run.network_config_validation_run %}<a href="{% url 'core:network_config_validation_detail' run.change.change_id run.network_config_validation_run.run_id %}">{{ run.network_config_validation_run.status }}</a>{% else %}—{% endif %}</td></tr>
+      <tr><th>Plan</th><td>{% if run.plan %}<a href="{% url 'core:change_plan_detail' run.change.change_id run.plan.plan_id %}"><code>{{ run.plan.plan_id }}</code></a>{% else %}—{% endif %}</td></tr>
+      <tr><th>Precheck</th><td>{% if run.precheck_run %}<a href="{% url 'core:change_precheck_detail' run.change.change_id run.precheck_run.run_id %}">{{ run.precheck_run.status }}</a>{% else %}—{% endif %}</td></tr>
+      <tr><th>Approval</th><td>{% if run.approval %}{{ run.approval.approved_by }} at {{ run.approval.approved_at }}{% else %}—{% endif %}</td></tr>
+      <tr><th>Execution</th><td>{% if run.execution_run %}<a href="{% url 'core:change_execution_detail' run.change.change_id run.execution_run.run_id %}">{{ run.execution_run.outcome }}</a>{% else %}—{% endif %}</td></tr>
+      <tr><th>Postcheck</th><td>{% if run.postcheck_run %}<a href="{% url 'core:health_run' run.postcheck_run.run_id %}">{{ run.postcheck_run.status }}</a>{% else %}—{% endif %}</td></tr>
+      <tr><th>Configuration digest before</th><td><code>{{ run.pre_config_digest|default:"—" }}</code></td></tr>
+      <tr><th>Configuration digest after</th><td><code>{{ run.post_config_digest|default:"—" }}</code></td></tr>
+      <tr><th>NetBox device</th><td>{% if run.netbox.device_id %}id {{ run.netbox.device_id }} ({{ run.netbox.status }}){% else %}—{% endif %}</td></tr>
+      <tr><th>Probation</th><td>{% if soak %}<a href="{{ soak.get_absolute_url }}"><code>{{ soak.soak_id }}</code></a> · started {{ soak.started_at|date:"Y-m-d H:i" }} UTC · due {{ soak.required_end_at|date:"Y-m-d H:i" }} UTC · policy {{ soak.duration_seconds|soak_duration }}{% else %}—{% endif %}</td></tr>
+    </tbody></table>
+  </div>
+</div>
+
+<div class="card" style="margin-top:16px;">
+  <h3>Workflow</h3>
+  <table class="data-table">
+    <thead><tr><th>#</th><th>Stage</th><th>State</th><th>Last recorded result</th><th>Action</th></tr></thead>
+    <tbody>
+    {% for s in stages %}<tr>
+      <td>{{ forloop.counter }}</td><td>{{ s.label }}</td>
+      <td><span class="badge badge--{{ s.state|provisioning_badge_class }}">{{ s.state }}</span></td>
+      <td>{% if s.event %}{{ s.event.outcome }} by {{ s.event.actor|default:"—" }} at {{ s.event.created_at|date:"Y-m-d H:i:s" }}
+          {% for b in s.event.blockers %}<br><strong>{{ b.code }}</strong> — {{ b.message }} <span style="color:var(--text-muted);">{{ b.remediation }}</span>{% if b.details.feature %} <code>{{ b.details.platform }} / {{ b.details.feature }}</code>: {{ b.details.reason }}{% elif b.details.reason %} {{ b.details.reason }}{% endif %}{% endfor %}
+          {% else %}—{% endif %}</td>
+      <td>
+      {% if s.name == next_stage %}
+        {% if s.name == "IDENTITY" %}
+          <form method="post" action="{% url 'core:provisioning_identity' run.prov_id %}">{% csrf_token %}
+            <div class="field-row"><label class="field-row__label" for="i-transport"><span>Bootstrap transport</span></label>
+              <select class="form-control" id="i-transport" name="bootstrap_transport">{% for value, label in transport_choices %}<option value="{{ value }}">{{ label }}</option>{% endfor %}</select></div>
+            <div class="field-row"><label class="field-row__label" for="i-container"><span>Container</span></label><input class="form-control" id="i-container" name="container" autocomplete="off"></div>
+            <div class="field-row"><label class="field-row__label" for="i-lab"><span>Lab name</span></label><input class="form-control" id="i-lab" name="lab" autocomplete="off"></div>
+            <div class="field-row"><label class="field-row__label" for="i-if"><span>Management interface</span></label><input class="form-control" id="i-if" name="mgmt_interface" autocomplete="off"></div>
+            <div class="field-row"><label class="field-row__label" for="i-v4"><span>Management IPv4 (with prefix length)</span></label><input class="form-control" id="i-v4" name="mgmt_ipv4" autocomplete="off"></div>
+            <div class="field-row"><label class="field-row__label" for="i-v6"><span>Management IPv6 (with prefix length)</span></label><input class="form-control" id="i-v6" name="mgmt_ipv6" autocomplete="off"></div>
+            <div class="field-row"><label class="field-row__label" for="i-vlan"><span>Management VLAN (optional)</span></label><input class="form-control" id="i-vlan" name="mgmt_vlan" inputmode="numeric" autocomplete="off"></div>
+            <p style="color:var(--text-muted); font-size:0.85rem;">Management addressing is static. VLAN 200 is static IPv4 + IPv6 only and is never DHCP or DHCPv6. No credential is entered or stored here.</p>
+            <button type="submit" class="btn btn--primary">Record identity</button>
+          </form>
+        {% elif s.name == "BOOTSTRAP" %}
+          <form method="post" action="{% url 'core:provisioning_bootstrap' run.prov_id %}">{% csrf_token %}<button type="submit" class="btn btn--primary">Probe device (read-only)</button></form>
+        {% elif s.name == "CAPABILITY" %}
+          <form method="post" action="{% url 'core:provisioning_capability' run.prov_id %}">{% csrf_token %}<button type="submit" class="btn btn--primary">Resolve capabilities</button></form>
+        {% elif s.name == "IPAM" %}
+          <form method="post" action="{% url 'core:provisioning_ipam' run.prov_id %}">{% csrf_token %}<button type="submit" class="btn btn--primary">Plan and reserve in NetBox</button></form>
+        {% elif s.name == "CANDIDATE" %}
+          <form method="post" action="{% url 'core:provisioning_candidate' run.prov_id %}">{% csrf_token %}
+            <div class="field-row"><label class="field-row__label" for="c-mode"><span>Execution mode</span></label>
+              <select class="form-control" id="c-mode" name="execution_mode"><option value="COMPLETE">Complete — whole plan, atomic, compensated on failure (normal)</option><option value="PARTIAL_UAT">Partial (UAT) — acknowledged ordered prefix, preserved on failure</option></select></div>
+            <button type="submit" class="btn btn--primary">Create candidate Change</button></form>
+        {% elif s.name == "VALIDATION" %}
+          <p><a href="{{ run.change.get_absolute_url }}">Edit the intended configuration in the Device Builder</a>, then:</p>
+          <form method="post" action="{% url 'core:provisioning_validation' run.prov_id %}">{% csrf_token %}<button type="submit" class="btn btn--primary">Validate candidate</button></form>
+        {% elif s.name == "PLAN" %}
+          <form method="post" action="{% url 'core:provisioning_plan' run.prov_id %}">{% csrf_token %}<button type="submit" class="btn btn--primary">Build provisioning plan</button></form>
+        {% elif s.name == "PRECHECK" %}
+          <form method="post" action="{% url 'core:provisioning_precheck' run.prov_id %}">{% csrf_token %}<button type="submit" class="btn btn--primary">Run precheck</button></form>
+          {% if run.bootstrap_state == "UNREACHABLE" %}<form method="post" action="{% url 'core:provisioning_bootstrap' run.prov_id %}" style="margin-top:8px;">{% csrf_token %}<button type="submit" class="btn">Probe device again</button></form>{% endif %}
+        {% elif s.name == "APPROVAL" %}
+          <form method="post" action="{% url 'core:provisioning_approve' run.prov_id %}">{% csrf_token %}
+            <input type="hidden" name="candidate_hash" value="{{ run.candidate_hash }}">
+            <div class="field-row"><label class="field-row__label" for="a-comment"><span>Comment (optional)</span></label><input class="form-control" id="a-comment" name="comment" maxlength="500" autocomplete="off"></div>
+            <div class="field-row"><label><input type="checkbox" name="confirm" required> I reviewed the candidate below and approve exactly this configuration for {{ run.device_name }}.</label></div>
+            <button type="submit" class="btn btn--primary">Approve</button></form>
+        {% elif s.name == "PROVISION" %}
+          <p>Execute the approved plan through the ordinary execution page. Its gate checks this approval; the result is recorded here automatically.</p>
+          <p><a class="btn btn--primary" href="{% url 'core:change_execute' run.change.change_id %}">Open execution page for {{ run.change.change_id }}</a></p>
+          <form method="post" action="{% url 'core:provisioning_precheck' run.prov_id %}" style="margin-top:8px;">{% csrf_token %}<button type="submit" class="btn">Refresh precheck</button></form>
+        {% elif s.name == "NSOT_SYNC" %}
+          <form method="post" action="{% url 'core:provisioning_nsot_sync' run.prov_id %}">{% csrf_token %}<button type="submit" class="btn btn--primary">Synchronize NetBox</button></form>
+        {% elif s.name == "PROBATION" %}
+          <form method="post" action="{% url 'core:provisioning_probation' run.prov_id %}">{% csrf_token %}
+            <div class="field-row"><label><input type="checkbox" name="confirm" required> Start the normal <strong>7-day</strong> Golden probation for this configuration.</label></div>
+            <button type="submit" class="btn btn--primary">Start 7-day probation</button></form>
+        {% endif %}
+      {% else %}—{% endif %}
+      </td>
+    </tr>{% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% if run.capability_resolution.plan %}<div class="card" style="margin-top:16px;">
+  <h3>Capability resolution (Phase 4 matrix)</h3>
+  <table class="data-table"><thead><tr><th>Feature</th><th>Status</th><th>Basis</th><th>Configlets</th></tr></thead><tbody>
+  {% for cell in run.capability_resolution.plan.cells %}<tr><td><code>{{ cell.feature }}</code></td>
+    <td><span class="badge badge--{{ cell.status|provisioning_badge_class }}">{{ cell.status }}</span></td><td>{{ cell.reason }}</td><td>{{ cell.configlets|join:", " }}</td></tr>{% endfor %}
+  </tbody></table>
+</div>{% endif %}
+
+{% if run.netbox.created %}<div class="card" style="margin-top:16px;">
+  <h3>NetBox objects created by this request</h3>
+  <table class="data-table"><thead><tr><th>Object</th><th>Name</th><th>NetBox id</th></tr></thead><tbody>
+  {% for item in run.netbox.created %}<tr><td>{{ item.kind }}</td><td>{{ item.name }}</td><td>{{ item.id }}</td></tr>{% endfor %}
+  </tbody></table>
+</div>{% endif %}
+
+{% if run.candidate_config %}<div class="card" style="margin-top:16px;">
+  <h3>Candidate configuration</h3>
+  <pre class="config-preview" style="max-height:480px; overflow:auto;">{{ run.candidate_config }}</pre>
+</div>{% endif %}
+
+<div class="card" style="margin-top:16px;">
+  <h3>Stage history</h3>
+  <p style="color:var(--text-muted); font-size:0.85rem;">Append-only. Every attempt is recorded, including refusals.</p>
+  <table class="data-table">
+    <thead><tr><th>#</th><th>Stage</th><th>Outcome</th><th>From</th><th>To</th><th>Actor</th><th>When (UTC)</th><th>Codes</th></tr></thead>
+    <tbody>{% for e in events %}<tr>
+      <td>{{ e.sequence }}</td><td>{{ e.stage }}</td><td><span class="badge badge--{{ e.outcome|provisioning_badge_class }}">{{ e.outcome }}</span></td>
+      <td>{{ e.from_status }}</td><td>{{ e.to_status }}</td><td>{{ e.actor|default:"—" }}</td><td>{{ e.created_at|date:"Y-m-d H:i:s" }}</td>
+      <td>{% for b in e.blockers %}<code>{{ b.code }}</code> {% empty %}—{% endfor %}</td>
+    </tr>{% empty %}<tr><td colspan="8">No stage has been attempted.</td></tr>{% endfor %}</tbody>
+  </table>
+</div>
+
+{% if not run.is_terminal and run.status != "PROVISIONING" and run.status != "POSTCHECKED" and run.status != "NSOT_SYNCED" %}<div class="card" style="margin-top:16px;">
+  <h3>Cancel request</h3>
+  <form method="post" action="{% url 'core:provisioning_cancel' run.prov_id %}">{% csrf_token %}
+    <div class="field-row"><label class="field-row__label" for="x-reason"><span>Reason (optional)</span></label><input class="form-control" id="x-reason" name="reason" maxlength="500" autocomplete="off"></div>
+    <div class="field-row"><label><input type="checkbox" name="confirm" required> Cancel this request and release everything it reserved in NetBox.</label></div>
+    <button type="submit" class="btn">Cancel request</button></form>
+</div>{% endif %}
+
+{% if registry and registry.state != "RETIRED" and run.status != "PROVISIONING" %}{% if run.status == "NSOT_SYNCED" or run.status == "PROBATION" %}<div class="card" style="margin-top:16px;">
+  <h3>Retire device from NMAS</h3>
+  <p>Removes {{ run.device_name }} from the managed-device registry and releases the NetBox objects this request created. It does not touch the device and does not edit this record.</p>
+  <form method="post" action="{% url 'core:provisioning_decommission' run.prov_id %}">{% csrf_token %}
+    <div class="field-row"><label><input type="checkbox" name="confirm" required> Retire {{ run.device_name }}.</label></div>
+    <button type="submit" class="btn">Retire device</button></form>
+</div>{% endif %}{% endif %}
+{% endblock %}

@@ -1,0 +1,540 @@
+compatibility:
+  constraints:
+    requires:
+    - layer-2 switching (access / trunk ports, SVIs)
+    - layer-3 routing
+  platforms:
+  - arista_ceos
+  required_features:
+  - interface.ACCESS
+  - interface.LOOPBACK
+  - interface.ROUTED_PHYSICAL
+  - interface.SVI
+  - interface.TRUNK
+  - routing.OSPFV2
+  - routing.RIPV2
+  - routing.STATIC_IPV6
+  - service_policy.ACL_IPV4_STANDARD
+  - service_policy.DHCP_RELAY_IPV4
+  - service_policy.DHCP_RELAY_IPV6
+  - service_policy.FHRP_VARP_IPV4
+  - service_policy.FHRP_VARP_IPV6
+exclusions: []
+intent:
+  acls:
+  - acl_type: STANDARD
+    entries:
+    - action: PERMIT
+      destination_type: ANY
+      logging: false
+      protocol: IP
+      sequence: 10
+      source_type: HOST
+      source_value: 192.168.200.100
+    family: IPV4
+    name: NMAS_SNMP
+  device:
+    hostname: '{{ hostname }}'
+  interfaces:
+  - addresses:
+    - cidr: '{{ ethernet1_ipv4_1 }}'
+      family: IPV4
+      role: PRIMARY
+    - cidr: '{{ ethernet1_ipv6_1 }}'
+      family: IPV6
+      role: PRIMARY
+    admin_state: ENABLED
+    description: '{{ ethernet1_description }}'
+    kind: ROUTED_PHYSICAL
+    name: Ethernet1
+  - admin_state: ENABLED
+    description: '{{ ethernet2_description }}'
+    kind: TRUNK
+    name: Ethernet2
+    trunk_allowed_vlans:
+    - 10
+    - 20
+    - 30
+    - 99
+  - access_vlan: 10
+    admin_state: ENABLED
+    description: '{{ ethernet3_description }}'
+    kind: ACCESS
+    name: Ethernet3
+  - access_vlan: '{{ ethernet4_access_vlan }}'
+    admin_state: ENABLED
+    description: '{{ ethernet4_description }}'
+    kind: ACCESS
+    name: Ethernet4
+  - access_vlan: 200
+    admin_state: ENABLED
+    description: MANAGEMENT
+    kind: ACCESS
+    name: Ethernet5
+  - addresses:
+    - cidr: '{{ loopback_ipv4 }}'
+      family: IPV4
+      role: PRIMARY
+    - cidr: '{{ loopback_ipv6 }}'
+      family: IPV6
+      role: PRIMARY
+    admin_state: ENABLED
+    description: ROUTER-ID
+    kind: LOOPBACK
+    name: Loopback0
+  - addresses:
+    - cidr: '{{ vlan10_ipv4_1 }}'
+      family: IPV4
+      role: PRIMARY
+    - cidr: '{{ vlan10_ipv6_1 }}'
+      family: IPV6
+      role: PRIMARY
+    admin_state: ENABLED
+    dhcp_relays:
+    - destination: 192.168.200.2
+      family: IPV4
+    - destination: 192.168.200.100
+      family: IPV4
+    - destination: 2001:db8:200::2
+      family: IPV6
+    - destination: 2001:db8:200::100
+      family: IPV6
+    fhrp:
+    - address: 192.168.10.1
+      address_family: IPV4
+      protocol: VARP
+      virtual_mac: 00:1c:73:00:00:99
+    - address: 2001:db8:10::1
+      address_family: IPV6
+      protocol: VARP
+      virtual_mac: 00:1c:73:00:00:99
+    kind: SVI
+    name: Vlan10
+    vlan_id: 10
+  - addresses:
+    - cidr: '{{ vlan20_ipv4_1 }}'
+      family: IPV4
+      role: PRIMARY
+    - cidr: '{{ vlan20_ipv6_1 }}'
+      family: IPV6
+      role: PRIMARY
+    admin_state: ENABLED
+    dhcp_relays:
+    - destination: 192.168.200.2
+      family: IPV4
+    - destination: 192.168.200.100
+      family: IPV4
+    - destination: 2001:db8:200::2
+      family: IPV6
+    - destination: 2001:db8:200::100
+      family: IPV6
+    fhrp:
+    - address: 192.168.20.1
+      address_family: IPV4
+      protocol: VARP
+      virtual_mac: 00:1c:73:00:00:99
+    - address: 2001:db8:20::1
+      address_family: IPV6
+      protocol: VARP
+      virtual_mac: 00:1c:73:00:00:99
+    kind: SVI
+    name: Vlan20
+    vlan_id: 20
+  - addresses:
+    - cidr: '{{ vlan30_ipv6_1 }}'
+      family: IPV6
+      role: PRIMARY
+    admin_state: ENABLED
+    dhcp_relays:
+    - destination: 2001:db8:200::2
+      family: IPV6
+    - destination: 2001:db8:200::100
+      family: IPV6
+    fhrp:
+    - address: 2001:db8:30::1
+      address_family: IPV6
+      protocol: VARP
+      virtual_mac: 00:1c:73:00:00:99
+    kind: SVI
+    name: Vlan30
+    vlan_id: 30
+  - addresses:
+    - cidr: '{{ vlan99_ipv4_1 }}'
+      family: IPV4
+      role: PRIMARY
+    admin_state: ENABLED
+    description: '{{ vlan99_description }}'
+    kind: SVI
+    name: Vlan99
+    vlan_id: 99
+  - addresses:
+    - cidr: '{{ mgmt_ipv4 }}'
+      family: IPV4
+      role: PRIMARY
+    - cidr: '{{ mgmt_ipv6 }}'
+      family: IPV6
+      role: PRIMARY
+    admin_state: ENABLED
+    kind: SVI
+    name: Vlan200
+    vlan_id: 200
+  - admin_state: ENABLED
+    description: OSPF_L2_FABRIC_TRUNK
+    kind: TRUNK
+    name: Ethernet6
+    trunk_allowed_vlans: '{{ ethernet6_trunk_allowed_vlans }}'
+  - addresses:
+    - cidr: '{{ ethernet7_ipv4_1 }}'
+      family: IPV4
+      role: PRIMARY
+    - cidr: '{{ ethernet7_ipv6_1 }}'
+      family: IPV6
+      role: PRIMARY
+    admin_state: ENABLED
+    description: '{{ ethernet7_description }}'
+    kind: ROUTED_PHYSICAL
+    name: Ethernet7
+  - _when: enable_vlan101
+    addresses:
+    - cidr: 192.168.100.0/31
+      family: IPV4
+      role: PRIMARY
+    - cidr: 2001:db8:100:101::1/64
+      family: IPV6
+      role: PRIMARY
+    admin_state: ENABLED
+    kind: SVI
+    name: Vlan101
+    vlan_id: 101
+  - _when: enable_vlan102
+    addresses:
+    - cidr: 192.168.100.2/31
+      family: IPV4
+      role: PRIMARY
+    - cidr: 2001:db8:100:102::1/64
+      family: IPV6
+      role: PRIMARY
+    admin_state: ENABLED
+    kind: SVI
+    name: Vlan102
+    vlan_id: 102
+  - _when: enable_vlan103
+    addresses:
+    - cidr: 192.168.100.4/31
+      family: IPV4
+      role: PRIMARY
+    - cidr: 2001:db8:100:103::1/64
+      family: IPV6
+      role: PRIMARY
+    admin_state: ENABLED
+    kind: SVI
+    name: Vlan103
+    vlan_id: 103
+  - _when: enable_vlan104
+    addresses:
+    - cidr: 192.168.100.6/31
+      family: IPV4
+      role: PRIMARY
+    - cidr: 2001:db8:100:104::1/64
+      family: IPV6
+      role: PRIMARY
+    admin_state: ENABLED
+    kind: SVI
+    name: Vlan104
+    vlan_id: 104
+  routing:
+  - bindings:
+    - interface_name: Vlan10
+      passive: false
+    - interface_name: Vlan20
+      passive: false
+    - interface_name: Ethernet1
+      passive: false
+    - interface_name: Vlan99
+      passive: false
+    - interface_name: Loopback0
+      passive: false
+    - interface_name: Ethernet7
+      passive: false
+    family: rip
+    fields:
+      address_family: IPV4
+      enabled: true
+  - bindings:
+    - _when: enable_ospf_bindings_vlan101
+      area: 0.0.0.0
+      interface_name: Vlan101
+      passive: false
+      version: OSPFV2
+    - _when: enable_ospf_bindings_vlan102
+      area: 0.0.0.0
+      interface_name: Vlan102
+      passive: false
+      version: OSPFV2
+    - _when: enable_ospf_bindings_vlan103
+      area: 0.0.0.0
+      interface_name: Vlan103
+      passive: false
+      version: OSPFV2
+    - _when: enable_ospf_bindings_vlan104
+      area: 0.0.0.0
+      interface_name: Vlan104
+      passive: false
+      version: OSPFV2
+    family: ospf
+    fields:
+      process_id: 10
+      router_id: '{{ ospf_router_id }}'
+      version: OSPFV2
+  static_routes:
+  - destination: 2001:db8:10::/64
+    family: IPV6
+    next_hop_address: '{{ static_routes_ipv6_2001_db8_10_64_next_hop_address }}'
+  - destination: 2001:db8:20::/64
+    family: IPV6
+    next_hop_address: '{{ static_routes_ipv6_2001_db8_20_64_next_hop_address }}'
+  - destination: 2001:db8:30::/64
+    family: IPV6
+    next_hop_address: '{{ static_routes_ipv6_2001_db8_30_64_next_hop_address }}'
+  - destination: 2001:db8::/32
+    family: IPV6
+    next_hop_address: '{{ static_routes_ipv6_2001_db8_32_next_hop_address }}'
+kind: nmas-configuration-template
+manifest:
+  created_at: '2026-10-03T10:05:41.669076+00:00'
+  created_by: dhruv
+  description: 'A device that both switches and routes: the semantic combination of the Access Layer Switch and Default Gateway
+    Router baselines (not a merge of their configurations).'
+  digest: 88cb1a3d8d06a3045833b369bc837ce018c5ab6142f45ca1c24cb80df1182727
+  digest_algorithm: sha256
+  family: MULTILAYER_SWITCH
+  name: Multilayer Switch
+  origin: BASELINE
+  template_id: TPL-BASELINE-MULTILAYER-SWITCH
+  version: 1
+notes: 'Semantic combination, not a configuration merge.  Port numbers of the routing role were re-homed where both roles
+  used the same port; every decision is listed under provenance.conflicts.  No parameter set is provided: no source device
+  is a multilayer switch.'
+parameter_sets: {}
+parameters:
+  enable_ospf_bindings_vlan101:
+    default: false
+    description: Include routing / ospf / bindings / Vlan101 (present only on R1)
+    required: false
+    type: boolean
+  enable_ospf_bindings_vlan102:
+    default: false
+    description: Include routing / ospf / bindings / Vlan102 (present only on R1)
+    required: false
+    type: boolean
+  enable_ospf_bindings_vlan103:
+    default: false
+    description: Include routing / ospf / bindings / Vlan103 (present only on R2)
+    required: false
+    type: boolean
+  enable_ospf_bindings_vlan104:
+    default: false
+    description: Include routing / ospf / bindings / Vlan104 (present only on R2)
+    required: false
+    type: boolean
+  enable_vlan101:
+    default: false
+    description: Include interfaces / Vlan101 (present only on R1)
+    required: false
+    type: boolean
+  enable_vlan102:
+    default: false
+    description: Include interfaces / Vlan102 (present only on R1)
+    required: false
+    type: boolean
+  enable_vlan103:
+    default: false
+    description: Include interfaces / Vlan103 (present only on R2)
+    required: false
+    type: boolean
+  enable_vlan104:
+    default: false
+    description: Include interfaces / Vlan104 (present only on R2)
+    required: false
+    type: boolean
+  ethernet1_description:
+    description: interfaces / Ethernet1 description
+    required: true
+    type: string
+  ethernet1_ipv4_1:
+    description: interfaces / Ethernet1 / addresses / ipv4_1 cidr
+    required: true
+    type: ipv4_interface
+  ethernet1_ipv6_1:
+    description: interfaces / Ethernet1 / addresses / ipv6_1 cidr
+    required: true
+    type: ipv6_interface
+  ethernet2_description:
+    default: ''
+    description: Description of Ethernet2 (names the device)
+    required: false
+    type: string
+  ethernet3_description:
+    description: interfaces / Ethernet3 description
+    required: true
+    type: string
+  ethernet4_access_vlan:
+    description: interfaces / Ethernet4 access_vlan
+    required: true
+    type: vlan_id
+  ethernet4_description:
+    description: interfaces / Ethernet4 description
+    required: true
+    type: string
+  ethernet6_trunk_allowed_vlans:
+    description: interfaces / Ethernet1 trunk_allowed_vlans
+    required: true
+    type: vlan_list
+  ethernet7_description:
+    description: interfaces / Ethernet2 description
+    required: true
+    type: string
+  ethernet7_ipv4_1:
+    description: interfaces / Ethernet2 / addresses / ipv4_1 cidr
+    required: true
+    type: ipv4_interface
+  ethernet7_ipv6_1:
+    description: interfaces / Ethernet2 / addresses / ipv6_1 cidr
+    required: true
+    type: ipv6_interface
+  hostname:
+    description: Device hostname
+    required: true
+    type: hostname
+  loopback_ipv4:
+    description: Loopback IPV4 address
+    required: true
+    type: ipv4_interface
+  loopback_ipv6:
+    description: Loopback IPV6 address
+    required: true
+    type: ipv6_interface
+  mgmt_ipv4:
+    description: Static IPV4 management address on Vlan200 (VLAN 200 stays static)
+    required: true
+    type: ipv4_interface
+  mgmt_ipv6:
+    description: Static IPV6 management address on Vlan200 (VLAN 200 stays static)
+    required: true
+    type: ipv6_interface
+  ospf_router_id:
+    description: OSPF router ID
+    required: true
+    type: ipv4_address
+  static_routes_ipv6_2001_db8_10_64_next_hop_address:
+    description: static_routes / ipv6_2001:db8:10::/64 next_hop_address
+    required: true
+    type: ipv6_address
+  static_routes_ipv6_2001_db8_20_64_next_hop_address:
+    description: static_routes / ipv6_2001:db8:20::/64 next_hop_address
+    required: true
+    type: ipv6_address
+  static_routes_ipv6_2001_db8_30_64_next_hop_address:
+    description: static_routes / ipv6_2001:db8:30::/64 next_hop_address
+    required: true
+    type: ipv6_address
+  static_routes_ipv6_2001_db8_32_next_hop_address:
+    description: static_routes / ipv6_2001:db8::/32 next_hop_address
+    required: true
+    type: ipv6_address
+  vlan10_ipv4_1:
+    description: interfaces / Vlan10 / addresses / ipv4_1 cidr
+    required: true
+    type: ipv4_interface
+  vlan10_ipv6_1:
+    description: interfaces / Vlan10 / addresses / ipv6_1 cidr
+    required: true
+    type: ipv6_interface
+  vlan20_ipv4_1:
+    description: interfaces / Vlan20 / addresses / ipv4_1 cidr
+    required: true
+    type: ipv4_interface
+  vlan20_ipv6_1:
+    description: interfaces / Vlan20 / addresses / ipv6_1 cidr
+    required: true
+    type: ipv6_interface
+  vlan30_ipv6_1:
+    description: interfaces / Vlan30 / addresses / ipv6_1 cidr
+    required: true
+    type: ipv6_interface
+  vlan99_description:
+    default: ''
+    description: Description of Vlan99 (names the device)
+    required: false
+    type: string
+  vlan99_ipv4_1:
+    description: interfaces / Vlan99 / addresses / ipv4_1 cidr
+    required: true
+    type: ipv4_interface
+provenance:
+  conflicts:
+  - code: DUPLICATE_INTERFACE
+    resolution: Both roles define Ethernet1; the access role keeps it and the gateway role's port moves to Ethernet6.
+    subject: Ethernet1
+  - code: DUPLICATE_INTERFACE
+    resolution: Both roles define Ethernet2; the access role keeps it and the gateway role's port moves to Ethernet7.
+    subject: Ethernet2
+  - code: DUPLICATE_MANAGEMENT
+    resolution: A second management access port is not needed; the access role's management port is kept.
+    subject: Ethernet3
+  - code: LOOPBACK_ROUTER_ID
+    resolution: One loopback is kept (1 address famil(ies) added from the gateway role); router ids reference it through the
+      shared router-id parameters.
+    subject: Loopback0
+  - code: DUPLICATE_MANAGEMENT
+    resolution: One static management SVI is kept (shared mgmt_ipv4 / mgmt_ipv6 parameters).
+    subject: Vlan200
+  - code: ROUTING_PROCESS_COLLISION
+    resolution: Both roles run this protocol; they are merged into ONE process (process fields agree).
+    subject: rip
+  - code: SVI_WITHOUT_PORT
+    resolution: SVI has no literal port membership in the template; assign a port or trunk it when cloning.
+    subject: Vlan101
+  - code: SVI_WITHOUT_PORT
+    resolution: SVI has no literal port membership in the template; assign a port or trunk it when cloning.
+    subject: Vlan102
+  - code: SVI_WITHOUT_PORT
+    resolution: SVI has no literal port membership in the template; assign a port or trunk it when cloning.
+    subject: Vlan103
+  - code: SVI_WITHOUT_PORT
+    resolution: SVI has no literal port membership in the template; assign a port or trunk it when cloning.
+    subject: Vlan104
+  derived_from:
+  - digest: 206713cb661ddc203a16fce7be76af1e42cf6b13251f61efd6fcb90ad1743ad7
+    role: access
+    template_id: TPL-BASELINE-ACCESS-SWITCH
+    version: 1
+  - digest: a3b4ada9f4af3e6057276679181c4b3c1091989a7b740868f7dc0a2750fceaca
+    role: gateway
+    template_id: TPL-BASELINE-GATEWAY-ROUTER
+    version: 1
+  extracted_at: '2026-10-03T10:05:28.001935+00:00'
+  method: semantic-combination
+  platforms:
+  - arista_ceos
+  repository_head: c92f33d
+  source_devices:
+  - R1
+  - R2
+  - S1
+  - S2
+rendering:
+  engine: jinja2
+  feature_templates:
+  - ceos/acl_ipv4.j2
+  - ceos/fhrp_varp.j2
+  - ceos/interface_access.j2
+  - ceos/interface_loopback.j2
+  - ceos/interface_routed_physical.j2
+  - ceos/interface_svi.j2
+  - ceos/interface_trunk.j2
+  - ceos/routing_ospfv2.j2
+  - ceos/routing_rip.j2
+  - ceos/routing_static_route.j2
+  pipeline: template intent -> Device Builder semantic candidate -> platform feature templates
+schema_version: 1

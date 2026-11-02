@@ -1,0 +1,80 @@
+{
+  "execute": {
+    "codes": [
+      "SESSION_LOST"
+    ],
+    "compensation": {
+      "attempted": true,
+      "not_compensated": [],
+      "status": "COMPENSATED",
+      "steps": [
+        {
+          "attempts": 1,
+          "cfg_id": "CFG-001",
+          "error": "",
+          "operation": "global",
+          "session": "fresh",
+          "status": "COMPENSATED"
+        }
+      ]
+    },
+    "failure": {
+      "code": "SESSION_LOST",
+      "detail": "ConnectionResetError",
+      "operation": ""
+    },
+    "ok": false,
+    "outcome": "FAILED_ROLLED_BACK"
+  },
+  "plan": {
+    "change": "CHG-20261027-0003",
+    "codes": [],
+    "intent": {
+      "circuit_id": "",
+      "enabled": true,
+      "interface": "Ethernet1",
+      "remote_id": ""
+    },
+    "ok": true,
+    "operations": [
+      {
+        "description": "DHCP relay agent information (option 82) enabled",
+        "inverse": [
+          "no ip dhcp relay information option"
+        ],
+        "key": "global",
+        "kind": "ADD",
+        "lines": [
+          "ip dhcp relay information option"
+        ],
+        "namespace": "services",
+        "object_type": "dhcp_relay_option82",
+        "paths": [
+          "ip dhcp relay information option"
+        ],
+        "priority": 6
+      }
+    ],
+    "plan_hash": "a5e7d01542201ad101baed89502c95338714fa8cf39cdea177196aae5bba2bbd",
+    "prior": {
+      "addresses": [
+        "10.254.60.1"
+      ],
+      "circuit_id": "",
+      "enabled": false,
+      "helpers": [
+        "10.254.61.2"
+      ],
+      "interface": "Ethernet1",
+      "present": true,
+      "remote_id": ""
+    },
+    "source": {
+      "relay": "dhcp_df47f9f6ff49479e",
+      "revision": "1"
+    }
+  },
+  "readbacks_recorded": 0,
+  "up1_digest_restored": true,
+  "up1_option82_section": "> show running-config | include dhcp relay information\n"
+}

@@ -1,0 +1,71 @@
+# gNMI Subscribe stream inventory for all 10 monitored devices. The eight
+# cEOS nodes expose these paths natively; R3/R4 expose the same deliberately
+# limited schema through the repository-owned Linux/FRR lab adapter.
+#
+# Every path below was verified live against the deployed cEOS 4.36.2F image
+# with `pygnmi` Capabilities/Get before being added here (see
+# docs/TELEMETRY_STREAMS.md for the verification transcript). Nothing here is
+# a guessed/vendor-doc-only OpenConfig path.
+#
+# sample_interval_ns applies to every entry (STREAM+SAMPLE mode -- ON_CHANGE
+# was evaluated and is not used; see docs/TELEMETRY_STREAMS.md "Subscription
+# mode" section for why).
+sample_interval_ns: 20000000000  # 20s
+
+streams:
+  - path: /system/state/hostname
+    category: system_identity
+    model: openconfig-system (openconfig-system.yang)
+    field: hostname
+    kind: string
+    measurement: gnmi_telemetry
+    description: Device identity string, used to cross-check the streaming source against inventory.
+
+  - path: /system/cpus/cpu[index=*]/state/total/instant
+    category: system_cpu
+    model: openconfig-system (openconfig-system.yang)
+    field: cpu_total_pct
+    kind: int
+    measurement: gnmi_telemetry
+    tags: [cpu_index]
+    description: Instantaneous total (user+system+nice+...) CPU utilization percentage per reported CPU index.
+
+  - path: /system/memory/state
+    category: system_memory
+    model: openconfig-system (openconfig-system.yang)
+    field: [mem_physical_bytes, mem_used_bytes, mem_free_bytes, mem_reserved_bytes]
+    kind: int
+    measurement: gnmi_telemetry
+    description: System memory counters in bytes (physical/used/free/reserved), one point per update.
+
+  - path: /interfaces/interface[name=*]/state/oper-status
+    category: interface_state
+    model: openconfig-interfaces (openconfig-interfaces.yang)
+    field: oper_status
+    kind: string
+    measurement: gnmi_telemetry
+    tags: [interface]
+    description: Per-interface operational state (UP/DOWN/...), all interfaces on the device.
+
+  - path: /interfaces/interface[name=*]/state/admin-status
+    category: interface_state
+    model: openconfig-interfaces (openconfig-interfaces.yang)
+    field: admin_status
+    kind: string
+    measurement: gnmi_telemetry
+    tags: [interface]
+    description: Per-interface administrative state (UP/DOWN/TESTING), all interfaces on the device.
+
+  - path: /interfaces/interface[name=*]/state/counters
+    category: interface_counters
+    model: openconfig-interfaces (openconfig-interfaces.yang)
+    field: [in_octets, out_octets, in_errors, out_errors, in_discards, out_discards]
+    kind: int
+    measurement: gnmi_telemetry
+    tags: [interface]
+    description: Per-interface byte/error/discard counters, all interfaces on the device.
+
+limitations:
+  - "R3/R4 have no native FRR gNMI implementation. Their management-only TCP 6030 endpoints are the explicitly labelled, repository-owned read-only lab adapter; they expose only the six paths above, backed by live /proc and /sys state."
+  - "Routing/control-plane OpenConfig state (e.g. openconfig-network-instance BGP/OSPF neighbor tables) is advertised in Capabilities but was not added to the streamed set in this phase, to keep the stream set small and stable per LAB_REQUIREMENTS Phase 3 guidance; it can be added the same way once needed."
+  - "ON_CHANGE subscription mode was accepted by the cEOS 4.36.2F gNMI Subscribe RPC (verified live: it returns an initial sync update and does not error), but this phase did not verify an actual change-triggered ON_CHANGE update, because doing so would require flapping a real topology interface, which is prohibited by AGENTS.md. STREAM+SAMPLE is used for all production streams here as the mode with fully verified live delivery; see docs/TELEMETRY_STREAMS.md."

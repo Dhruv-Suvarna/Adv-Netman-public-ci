@@ -1,0 +1,12 @@
+{% extends "core/base.html" %}
+{% block title %}Profile{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>Profile</h1>
+  <p>This page is intentionally not present in the sidebar — it is reached only from the header profile control.</p>
+</div>
+<div class="card">
+  <p>Signed in as <strong>{{ request.user.get_username }}</strong>.</p>
+  <p><a class="btn btn--secondary" href="{% url 'core:mfa_status' %}">Account security &amp; website MFA</a></p>
+</div>
+{% endblock %}

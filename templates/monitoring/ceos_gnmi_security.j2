@@ -1,0 +1,6 @@
+management security
+   ssl profile {{ ssl_profile }}
+      certificate node.crt key node.key
+   exit
+exit
+username {{ username }} role network-operator secret {{ password }}

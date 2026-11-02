@@ -1,0 +1,122 @@
+{
+  "change_state": "DEPLOYED",
+  "configlets": [
+    {
+      "cfg_id": "CFG-001",
+      "lines": [
+        "ip dhcp relay information option"
+      ],
+      "object_type": "dhcp_relay_option82",
+      "rollback": [
+        "no ip dhcp relay information option"
+      ]
+    }
+  ],
+  "execute": {
+    "codes": [],
+    "ok": true,
+    "outcome": "SUCCEEDED",
+    "steps": [
+      {
+        "at": "2026-10-27T23:39:29.570468+00:00",
+        "baseline": "8bee1760d0ffbb0402d7010f66017accac4eb3e9f1f7f78e9758f3850dc8b9e7",
+        "blockers": [],
+        "status": "PASS",
+        "step": "preflight"
+      },
+      {
+        "at": "2026-10-27T23:39:41.750618+00:00",
+        "cfg_id": "CFG-001",
+        "digest": "e5f6aa01103b1e75e0e7741dcf81279a731f5332155ab87c05a5b817b2a6ac8a",
+        "read_back": "SKIP_SATISFIED",
+        "status": "APPLIED",
+        "step": "global"
+      },
+      {
+        "at": "2026-10-27T23:39:43.178258+00:00",
+        "failed": [],
+        "status": "PASS",
+        "step": "postcheck"
+      }
+    ]
+  },
+  "gate_after": {
+    "check": "bootstrap_path_option82",
+    "code": "",
+    "detail": "UP1:Ethernet1 inserts its circuit id",
+    "ok": true
+  },
+  "plan": {
+    "change": "CHG-20261027-0005",
+    "codes": [],
+    "intent": {
+      "circuit_id": "",
+      "enabled": true,
+      "interface": "Ethernet1",
+      "remote_id": ""
+    },
+    "ok": true,
+    "operations": [
+      {
+        "description": "DHCP relay agent information (option 82) enabled",
+        "inverse": [
+          "no ip dhcp relay information option"
+        ],
+        "key": "global",
+        "kind": "ADD",
+        "lines": [
+          "ip dhcp relay information option"
+        ],
+        "namespace": "services",
+        "object_type": "dhcp_relay_option82",
+        "paths": [
+          "ip dhcp relay information option"
+        ],
+        "priority": 6
+      }
+    ],
+    "plan_hash": "a5e7d01542201ad101baed89502c95338714fa8cf39cdea177196aae5bba2bbd",
+    "prior": {
+      "addresses": [
+        "10.254.60.1"
+      ],
+      "circuit_id": "",
+      "enabled": false,
+      "helpers": [
+        "10.254.61.2"
+      ],
+      "interface": "Ethernet1",
+      "present": true,
+      "remote_id": ""
+    },
+    "source": {
+      "relay": "dhcp_64e25c357a364e55",
+      "revision": "2"
+    }
+  },
+  "precheck": [],
+  "readback": {
+    "change": "CHG-20261027-0005",
+    "enabled": true,
+    "port": {
+      "addresses": [
+        "10.254.60.1"
+      ],
+      "circuit_id": "",
+      "helpers": [
+        "10.254.61.2"
+      ],
+      "remote_id": ""
+    },
+    "run": "9fd96902-c4d5-492a-919e-2a52f9b03ad7",
+    "source": "POSTCHECK"
+  },
+  "self_approval": [
+    "SELF_APPROVAL"
+  ],
+  "up1_digest_changed": true,
+  "up1_option82_section": "> show running-config | include dhcp relay information\nip dhcp relay information option\n",
+  "wrong_hash": [
+    "CONFIRMATION_MISMATCH"
+  ]
+}

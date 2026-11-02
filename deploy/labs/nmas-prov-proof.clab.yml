@@ -1,0 +1,23 @@
+# DISPOSABLE lab for the V2 Phase 5A new-device provisioning proof.  NOT part of the production topology (srlceos01).
+#
+#   deploy:   sudo -n containerlab deploy  -t deploy/labs/nmas-prov-proof.clab.yml
+#   destroy:  sudo -n containerlab destroy -t deploy/labs/nmas-prov-proof.clab.yml --cleanup
+#
+# One Ubuntu/FRR node that starts as a bare bootstrap device: FRR's management plane (zebra + staticd) answers, and nothing is
+# configured.  It has its own management network; it never joins VLAN 200 and has no link to any production node.
+name: nmas-prov-proof
+mgmt:
+  network: nmas-prov-proof-mgmt
+  ipv4-subnet: 172.31.250.0/24
+  ipv6-subnet: fd00:ca:250::/64
+topology:
+  nodes:
+    edge1:
+      kind: linux
+      image: clab-raw-verifier-frr:8.4.4-1.1ubuntu6.7
+      cmd: sleep infinity
+      mgmt-ipv4: 172.31.250.11
+      mgmt-ipv6: fd00:ca:250::11
+      exec:
+        - /usr/lib/frr/zebra -d -u frr -g frr -A 127.0.0.1
+        - /usr/lib/frr/staticd -d -u frr -g frr -A 127.0.0.1

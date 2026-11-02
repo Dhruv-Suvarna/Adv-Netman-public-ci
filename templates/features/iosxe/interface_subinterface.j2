@@ -1,0 +1,7 @@
+! parent intent: {{ parent_name }}
+interface {{ accepted_parent_name }}.{{ encapsulation_vlan }}
+ description {{ description }}
+ encapsulation dot1Q {{ accepted_encapsulation_vlan }}
+{% if admin_disabled %} shutdown
+{% else %} no shutdown
+{% endif %}

@@ -1,0 +1,22 @@
+{% extends "core/base.html" %}
+{% block title %}{{ section.label }} · Automation{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>{{ section.label }}</h1>
+  <p>{{ section.description }}</p>
+</div>
+<p><a href="{% url 'core:automation_landing' %}">&larr; Back to Automation</a></p>
+{% if section.implemented %}
+<div class="card"><span class="badge badge--success">Implemented{% if section.read_only %} (read-only){% endif %}</span>
+  <p>This section is implemented. <a class="btn btn--primary" href="{% url section.url_name %}">Open {{ section.label }}</a></p></div>
+{% else %}
+<div class="alert alert--not-integrated">
+  <span aria-hidden="true">&#9881;</span>
+  <div><strong>Not implemented in this phase.</strong> No button on this page performs a live network change.</div>
+</div>
+{% endif %}
+{% if not section.implemented %}<div class="card" style="margin-top:16px;">
+  <button class="btn btn--primary btn--disabled" disabled title="Not implemented in this phase">Run {{ section.label }}</button>
+  <p style="color:var(--text-muted);margin-top:10px;">This control is intentionally disabled: it does not silently no-op, and it will not perform a real action until a later phase implements it.</p>
+</div>{% endif %}
+{% endblock %}

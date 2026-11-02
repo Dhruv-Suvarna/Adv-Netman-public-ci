@@ -1,0 +1,11 @@
+!
+interface {{ name }}
+   description {{ description }}
+   switchport
+   switchport mode access
+   switchport access vlan {{ access_vlan }}
+   mtu {{ mtu }}
+   ! admin intent: {{ admin_state }}
+{% if admin_disabled %}   shutdown
+{% else %}   no shutdown
+{% endif %}

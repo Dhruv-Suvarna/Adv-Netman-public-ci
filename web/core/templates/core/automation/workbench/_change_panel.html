@@ -1,0 +1,47 @@
+<div class="wb-change" data-component="change-panel">
+  <h2>Draft {{ change.change_id }}</h2>
+  <p>{{ change.title }} — lifecycle <span class="badge badge--neutral">{{ change.lifecycle_state }}</span>
+     {% if latest_intent %}current revision <span class="badge badge--info">{{ latest_intent.latest_revision.revision }}</span>{% endif %}
+     validation <span class="badge {% if latest_validation.status == 'PASS' or latest_validation.status == 'PASS_WITH_WARNINGS' %}badge--success{% elif latest_validation %}badge--danger{% else %}badge--neutral{% endif %}">{{ latest_validation.status|default:"NOT RUN" }}</span></p>
+  <p>
+    Field <span class="badge badge--success">VALIDATED</span>
+    Network config <span class="badge {% if network_config_currency.state == 'CURRENT' and network_config_currency.latest.status == 'PASS' %}badge--success{% elif network_config_currency.state == 'CURRENT' and network_config_currency.latest.status == 'WARNING' %}badge--warning{% else %}badge--danger{% endif %}">{{ network_config_currency.state }}{% if network_config_currency.latest %}/{{ network_config_currency.latest.status }}{% endif %}</span>
+    Whole Change <span class="badge badge--neutral">{{ validation_currency.state|default:"NEVER RUN" }}/{{ latest_validation.status|default:"NOT RUN" }}</span>
+    Plan <span class="badge badge--neutral">{{ plan_currency.state|default:"MISSING" }}</span>
+    Precheck <span class="badge badge--neutral">{{ latest_precheck.status|default:"NOT RUN" }}</span>
+    Execution <span class="badge badge--neutral">{{ latest_execution.outcome|default:"NOT RUN" }}</span>
+    Live validation <span class="badge {% if latest_live_validation.status == 'PASS' %}badge--success{% elif latest_live_validation.status == 'WARNING' %}badge--warning{% elif latest_live_validation %}badge--danger{% else %}badge--neutral{% endif %}">{{ latest_live_validation.status|default:"NOT RUN" }}</span>
+  </p>
+  {% if latest_validation and latest_validation.status != 'PASS' and latest_validation.status != 'PASS_WITH_WARNINGS' %}
+    <ul class="wb-list">{% for f in latest_validation.report.findings %}{% if f.severity == 'ERROR' %}<li><code>{{ f.code }}</code> {{ f.message }}</li>{% endif %}{% endfor %}</ul>
+  {% endif %}
+  <h3>Exact candidate patch (plan Configlets)</h3>
+  {% if plan_rows %}
+    <table class="data-table" data-component="patch-preview"><thead><tr><th>#</th><th>Operation</th><th>What</th><th>CLI</th></tr></thead><tbody>
+    {% for row in plan_rows %}<tr><td>{{ row.cfg_id }}</td><td><span class="badge badge--neutral">{{ row.operation }}</span></td><td>{{ row.label }}</td><td><pre class="code-panel wb-snippet">{{ row.rendered }}</pre></td></tr>{% endfor %}
+    </tbody></table>
+  {% else %}<p>No plan yet (validation must pass first).</p>{% endif %}
+  <div class="wb-actions">
+    <form method="post" action="{% url 'core:workbench_revalidate' change.change_id %}">{% csrf_token %}<button class="btn btn--secondary" type="submit">Validate &amp; plan again</button></form>
+    <a class="btn btn--secondary" href="{% url 'core:network_config_validation' change.change_id %}">Config validation evidence</a>
+    <a class="btn btn--secondary" href="{% url 'core:change_precheck' change.change_id %}">Precheck</a>
+    <a class="btn btn--primary" href="{% url 'core:change_execute' change.change_id %}" data-action="push">Push Validated Configuration…</a>
+    <a class="btn btn--secondary" href="{% url 'core:device_builder_change_detail' change.change_id %}">Change history</a>
+    {% if latest_intent and network_config_currency.state == 'CURRENT' %}{% if network_config_currency.latest.status == 'PASS' or network_config_currency.latest.status == 'WARNING' %}<a class="btn btn--secondary" href="{% url 'core:device_builder_candidate_download' change.change_id latest_intent.pk %}">Export validated candidate</a>{% endif %}{% endif %}
+    {% if workflow == 'CONFIGURATION_CHANGES' and snapshot %}<a class="btn btn--secondary" href="{% url 'core:workbench_remove' %}?device={{ device.name|urlencode }}&amp;snapshot={{ snapshot.snapshot_id }}">Remove configuration…</a>{% endif %}
+  </div>
+  {% if workflow == 'CONFIGURATION_CHANGES' %}
+  <form method="post" action="{% url 'core:workbench_revise' change.change_id %}" class="wb-actions">
+    {% csrf_token %}<label for="revise-title">Title for this revision</label>
+    <input id="revise-title" name="title" class="form-control" value="{{ change.title }}" maxlength="200">
+    <button class="btn btn--secondary" type="submit">Start New Revision</button>
+  </form>
+  <p class="rc-note">A new immutable revision opens in Device Builder. Earlier revisions and validation evidence remain unchanged; validation, plan and precheck become stale.</p>
+  {% endif %}
+  <form method="post" action="{% url 'core:workbench_archive' change.change_id %}" class="wb-actions">
+    {% csrf_token %}<label for="archive-confirmation">Type ARCHIVE</label>
+    <input id="archive-confirmation" name="confirmation" class="form-control" autocomplete="off">
+    <button class="btn btn--secondary" type="submit">Archive</button>
+  </form>
+  <p class="rc-note">Push / Execute opens the Change's execution page: explicit mode confirmation (and UAT acknowledgements), a current precheck and a current plan are required there. Nothing on this page sends configuration to a device.</p>
+</div>

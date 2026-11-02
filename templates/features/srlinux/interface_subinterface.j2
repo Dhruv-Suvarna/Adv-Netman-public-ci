@@ -1,0 +1,8 @@
+! parent intent: {{ parent_name }}
+set interface {{ accepted_parent_name }} vlan-tagging true
+set interface {{ accepted_parent_name }} subinterface {{ encapsulation_vlan }} type routed
+set interface {{ accepted_parent_name }} subinterface {{ accepted_encapsulation_vlan }} admin-state {{ "disable" if admin_disabled else "enable" }}
+{% if description %}set interface {{ accepted_parent_name }} subinterface {{ accepted_encapsulation_vlan }} description {{ description | tojson }}
+{% endif %}
+set interface {{ accepted_parent_name }} subinterface {{ accepted_encapsulation_vlan }} vlan encap single-tagged vlan-id {{ accepted_encapsulation_vlan }}
+set network-instance default interface {{ accepted_parent_name }}.{{ accepted_encapsulation_vlan }}

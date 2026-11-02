@@ -1,0 +1,146 @@
+{
+  "audit": {
+    "DECOMMISSION_CHANGED": 71,
+    "RESTORATION_CHANGED": 20
+  },
+  "decommissions": [
+    {
+      "device__name": "T1",
+      "id": 1,
+      "plan_hash": "5a0fb2913e54f85726642515a1168b7d1b3bafb521b082225390b4b6d8f7e0ec",
+      "readiness_mode": "REDUNDANT_TRANSITION",
+      "state": "DECOMMISSIONED"
+    },
+    {
+      "device__name": "T1",
+      "id": 2,
+      "plan_hash": "5a0fb2913e54f85726642515a1168b7d1b3bafb521b082225390b4b6d8f7e0ec",
+      "readiness_mode": "REDUNDANT_TRANSITION",
+      "state": "ROLLED_BACK"
+    },
+    {
+      "device__name": "T1",
+      "id": 3,
+      "plan_hash": "5a0fb2913e54f85726642515a1168b7d1b3bafb521b082225390b4b6d8f7e0ec",
+      "readiness_mode": "REDUNDANT_TRANSITION",
+      "state": "ROLLED_BACK"
+    },
+    {
+      "device__name": "T1",
+      "id": 4,
+      "plan_hash": "5a0fb2913e54f85726642515a1168b7d1b3bafb521b082225390b4b6d8f7e0ec",
+      "readiness_mode": "REDUNDANT_TRANSITION",
+      "state": "CANCELLED"
+    },
+    {
+      "device__name": "T1",
+      "id": 5,
+      "plan_hash": "5a0fb2913e54f85726642515a1168b7d1b3bafb521b082225390b4b6d8f7e0ec",
+      "readiness_mode": "REDUNDANT_TRANSITION",
+      "state": "ROLLED_BACK"
+    },
+    {
+      "device__name": "T1",
+      "id": 6,
+      "plan_hash": "5a0fb2913e54f85726642515a1168b7d1b3bafb521b082225390b4b6d8f7e0ec",
+      "readiness_mode": "REDUNDANT_TRANSITION",
+      "state": "CANCELLED"
+    },
+    {
+      "device__name": "T1",
+      "id": 7,
+      "plan_hash": "5a0fb2913e54f85726642515a1168b7d1b3bafb521b082225390b4b6d8f7e0ec",
+      "readiness_mode": "REDUNDANT_TRANSITION",
+      "state": "DECOMMISSIONED"
+    },
+    {
+      "device__name": "T1",
+      "id": 8,
+      "plan_hash": "5a0fb2913e54f85726642515a1168b7d1b3bafb521b082225390b4b6d8f7e0ec",
+      "readiness_mode": "REDUNDANT_TRANSITION",
+      "state": "ROLLED_BACK"
+    },
+    {
+      "device__name": "T1",
+      "id": 9,
+      "plan_hash": "5a0fb2913e54f85726642515a1168b7d1b3bafb521b082225390b4b6d8f7e0ec",
+      "readiness_mode": "REDUNDANT_TRANSITION",
+      "state": "ROLLED_BACK"
+    },
+    {
+      "device__name": "T1",
+      "id": 10,
+      "plan_hash": "5a0fb2913e54f85726642515a1168b7d1b3bafb521b082225390b4b6d8f7e0ec",
+      "readiness_mode": "REDUNDANT_TRANSITION",
+      "state": "CANCELLED"
+    },
+    {
+      "device__name": "T1",
+      "id": 11,
+      "plan_hash": "5a0fb2913e54f85726642515a1168b7d1b3bafb521b082225390b4b6d8f7e0ec",
+      "readiness_mode": "REDUNDANT_TRANSITION",
+      "state": "DECOMMISSIONED"
+    },
+    {
+      "device__name": "T1",
+      "id": 12,
+      "plan_hash": "5a0fb2913e54f85726642515a1168b7d1b3bafb521b082225390b4b6d8f7e0ec",
+      "readiness_mode": "REDUNDANT_TRANSITION",
+      "state": "ROLLED_BACK"
+    },
+    {
+      "device__name": "T1",
+      "id": 13,
+      "plan_hash": "5a0fb2913e54f85726642515a1168b7d1b3bafb521b082225390b4b6d8f7e0ec",
+      "readiness_mode": "REDUNDANT_TRANSITION",
+      "state": "ROLLED_BACK"
+    },
+    {
+      "device__name": "T1",
+      "id": 14,
+      "plan_hash": "5a0fb2913e54f85726642515a1168b7d1b3bafb521b082225390b4b6d8f7e0ec",
+      "readiness_mode": "REDUNDANT_TRANSITION",
+      "state": "CANCELLED"
+    },
+    {
+      "device__name": "STUB",
+      "id": 15,
+      "plan_hash": "9190ea3addb5b027192e5c8a22477270f5a683a6e98fa90c115836191da19ff6",
+      "readiness_mode": "QUIESCENT",
+      "state": "DECOMMISSIONED"
+    },
+    {
+      "device__name": "E2",
+      "id": 16,
+      "plan_hash": "",
+      "readiness_mode": "UNKNOWN",
+      "state": "CANCELLED"
+    }
+  ],
+  "restorations": [
+    {
+      "device__name": "T1",
+      "id": 1,
+      "state": "RESTORED",
+      "successor__name": "T1"
+    },
+    {
+      "device__name": "T1",
+      "id": 2,
+      "state": "RESTORED",
+      "successor__name": "T1"
+    },
+    {
+      "device__name": "T1",
+      "id": 3,
+      "state": "RESTORED",
+      "successor__name": "T1"
+    },
+    {
+      "device__name": "STUB",
+      "id": 4,
+      "state": "RESTORED",
+      "successor__name": "STUB"
+    }
+  ]
+}

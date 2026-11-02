@@ -1,0 +1,13 @@
+{
+  "files": [
+    "10-baseline.json",
+    "20-enable.json",
+    "30-disable.json",
+    "40-undo-disable.json",
+    "50-undo-enable.json"
+  ],
+  "finished": "2026-10-27T22:09:21Z",
+  "fixture": "labs/decommission-isolated (cEOS 4.36.2F), STUB under test, E2 the RIP peer",
+  "started": "2026-10-27T22:08:27Z",
+  "transport": "CeosExecutor over SSH as nmas-svc (key only) from the fixture NMAS namespace"
+}

@@ -1,0 +1,57 @@
+{% extends "core/base.html" %}
+{% block title %}Dynamic infrastructure{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>Dynamic infrastructure</h1>
+  <p>Lifecycle facts flow through the durable outbox to three consumers: NetBox (NSOT), the operational topology and monitoring.
+     This page is read-only; failures are shown as fixed codes. <a href="{{ json_url }}">JSON</a></p>
+</div>
+{% if result == "ok" %}<div class="card"><p>One dispatch batch ran.</p></div>{% endif %}
+{% if result == "denied" %}<div class="card" style="border-left:6px solid var(--danger);"><p>Unknown consumer.</p></div>{% endif %}
+
+<div class="card">
+  <h2>Outbox queue</h2>
+  <table class="table"><thead><tr><th>Consumer</th><th>Pending</th><th>Failed</th><th>Delivered</th></tr></thead><tbody>
+  {% for name, counts in status.queue.items %}<tr><td>{{ name }}</td><td>{{ counts.PENDING }}</td><td>{{ counts.FAILED }}</td><td>{{ counts.DELIVERED }}</td></tr>
+  {% empty %}<tr><td colspan="4">No outbox events yet.</td></tr>{% endfor %}
+  </tbody></table>
+  {% if status.failures %}<h3>Recent failures</h3><table class="table"><thead><tr><th>Event</th><th>Topic</th><th>Device</th><th>Attempts</th><th>Code</th><th>Next attempt</th></tr></thead><tbody>
+  {% for f in status.failures %}<tr><td>{{ f.event }}</td><td>{{ f.topic }}</td><td>{{ f.device }}</td><td>{{ f.attempts }}</td><td><code>{{ f.code }}</code></td><td>{{ f.next_attempt_at }}</td></tr>{% endfor %}
+  </tbody></table>{% endif %}
+  {% if can_dispatch %}
+  <form method="post" action="{{ dispatch_url }}">{% csrf_token %}
+    <label>Consumer <select name="consumer"><option value="">all</option>{% for c in consumers %}<option value="{{ c }}">{{ c }}</option>{% endfor %}</select></label>
+    <button type="submit">Run one dispatch batch</button>
+  </form>
+  {% endif %}
+</div>
+
+<div class="card">
+  <h2>Topology</h2>
+  <p>Nodes by state: {% for state, count in status.topology.nodes.items %}<strong>{{ state }}</strong> {{ count }}{% if not forloop.last %} · {% endif %}{% empty %}none{% endfor %}.
+     Edges: {% for key, count in status.topology.edges.items %}{{ key }} {{ count }}{% if not forloop.last %} · {% endif %}{% empty %}none{% endfor %}.</p>
+  <table class="table"><thead><tr><th>Node</th><th>Platform</th><th>State</th><th>Last fact</th></tr></thead><tbody>
+  {% for n in nodes %}<tr><td>{{ n.name }}</td><td>{{ n.platform }}</td><td>{{ n.state }}</td><td>{{ n.last_sequence }}</td></tr>{% empty %}<tr><td colspan="4">No nodes.</td></tr>{% endfor %}
+  </tbody></table>
+  <table class="table"><thead><tr><th>Device</th><th>Interface</th><th>Peer</th><th>Peer interface</th><th>Kind</th><th>Proof</th><th>Active</th></tr></thead><tbody>
+  {% for e in edges %}<tr><td>{{ e.device }}</td><td>{{ e.local_interface }}</td><td>{{ e.peer }}</td><td>{{ e.peer_interface }}</td><td>{{ e.kind }}</td><td>{{ e.source }}</td><td>{{ e.active|yesno:"yes,no" }}</td></tr>{% empty %}<tr><td colspan="7">No edges.</td></tr>{% endfor %}
+  </tbody></table>
+</div>
+
+<div class="card">
+  <h2>Monitoring targets</h2>
+  <table class="table"><thead><tr><th>Device</th><th>Platform</th><th>State</th><th>Address</th><th>Management path</th><th>Generation</th><th>Collectors</th></tr></thead><tbody>
+  {% for t in targets %}<tr><td>{{ t.name }}</td><td>{{ t.platform }}</td><td>{{ t.state }}</td><td>{{ t.address }}</td><td>{{ t.management_path }}</td><td>{{ t.generation }}</td><td>{{ t.collectors|join:", " }}</td></tr>{% empty %}<tr><td colspan="7">No monitoring targets.</td></tr>{% endfor %}
+  </tbody></table>
+</div>
+
+<div class="card">
+  <h2>NetBox projection</h2>
+  <table class="table"><thead><tr><th>Device</th><th>State</th><th>Planned operations</th><th>Discrepancies</th><th>Writes</th></tr></thead><tbody>
+  {% for p in projections %}<tr><td>{{ p.name }}</td><td>{{ p.state }}</td>
+    <td>{% for op in p.planned %}<code>{{ op.op }} {{ op.interface|default:"" }}{{ op.status|default:"" }}{{ op.address|default:"" }}</code><br>{% empty %}none{% endfor %}</td>
+    <td>{% for d in p.discrepancies %}<code>{{ d.code }}</code><br>{% empty %}none{% endfor %}</td><td>{{ p.write_enabled|yesno:"enabled,disabled (dry run)" }}</td></tr>
+  {% empty %}<tr><td colspan="5">No projections.</td></tr>{% endfor %}
+  </tbody></table>
+</div>
+{% endblock %}

@@ -1,0 +1,38 @@
+{% extends "core/base.html" %}
+{% load nsot_extras %}
+{% block title %}Routing / ASN · NSOT{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>Routing / ASN</h1>
+</div>
+{% include "core/nsot/_subnav.html" %}
+<div class="filter-bar">
+  <a class="btn btn--secondary" href="?refresh=1">Refresh NSOT</a>
+  {% include "core/nsot/_freshness.html" %}
+</div>
+
+<div class="card" style="margin-top:16px;">
+  <h3>ASN records <span class="badge NETBOX">NETBOX</span></h3>
+  {% if asns.status == "available" %}
+    {% if asns.data %}
+      <table class="data-table">
+        <thead><tr><th>ASN</th><th>Description</th><th>Sites</th></tr></thead>
+        <tbody>
+        {% for a in asns.data %}
+          <tr><td>{{ a.asn }}</td><td>{{ a.description|default:"—" }}</td><td>{{ a.sites|join:", " }}</td></tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <div class="empty-state"><div>No ASN objects are currently modeled in NetBox. Structured routing intent is Phase 8+ Device Builder scope.</div></div>
+    {% endif %}
+  {% else %}
+    <div class="alert alert--warning"><div>{{ asns.message }}</div></div>
+  {% endif %}
+</div>
+
+<div class="card" style="margin-top:16px;">
+  <h3>Frozen Lab 1 routing baseline <span class="badge GIT">GIT</span></h3>
+  <p style="color:var(--text-secondary);">{{ git_routing_summary.note }}</p>
+</div>
+{% endblock %}

@@ -1,0 +1,302 @@
+{
+  "apply": {
+    "codes": [],
+    "ok": true,
+    "outcome": "SUCCEEDED"
+  },
+  "attachment_retry": {
+    "codes": [],
+    "ok": true
+  },
+  "before_flows": [
+    {
+      "detail": "OPEN",
+      "expect": "PERMIT",
+      "flow": "probe-b -> NMAS bootstrap HTTP 10.254.61.2:8080",
+      "observed": "PERMIT"
+    },
+    {
+      "detail": "",
+      "expect": "DENY",
+      "flow": "probe-b -> production host 10.254.63.10 (ICMP)",
+      "observed": "PERMIT"
+    },
+    {
+      "detail": "",
+      "expect": "DENY",
+      "flow": "probe-b -> production host 2001:db8:254:63::10 (ICMPv6)",
+      "observed": "DENY"
+    },
+    {
+      "detail": "",
+      "expect": "DENY",
+      "flow": "probe-b -> CORE loopback 10.254.255.2 (ICMP)",
+      "observed": "PERMIT"
+    },
+    {
+      "detail": "TIMEOUT",
+      "expect": "DENY",
+      "flow": "probe-b -> upstream's own SSH 10.254.64.1:22",
+      "observed": "DENY"
+    },
+    {
+      "detail": "",
+      "expect": "DENY",
+      "flow": "production host -> bootstrap side 10.254.64.250 (ICMP)",
+      "observed": "PERMIT"
+    },
+    {
+      "detail": "REFUSED",
+      "expect": "PERMIT",
+      "flow": "NMAS service -> 10.254.64.250:22 (NMAS management)",
+      "observed": "PERMIT"
+    }
+  ],
+  "derived": [
+    "CommissioningDependency object (1)"
+  ],
+  "graph": {
+    "cycles": [],
+    "edges": [
+      {
+        "device": "NEW2",
+        "kind": "DECLARED",
+        "reason": "admitted by ADM-000002",
+        "satisfied": true,
+        "upstream": "NEW1"
+      }
+    ],
+    "nodes": [
+      {
+        "admission_state": "ADMITTED",
+        "device_id": "DEV-000002",
+        "lifecycle_state": "IN_SERVICE",
+        "name": "NEW1"
+      },
+      {
+        "admission_state": "NOT_ADMITTED",
+        "device_id": "DEV-000003",
+        "lifecycle_state": "REGISTERED",
+        "name": "NEW2"
+      }
+    ]
+  },
+  "network_b": [],
+  "new1_enforced": "\n> show running-config\n! Command: show running-config at line 1\n! device: NEW1 (cEOSLab, EOS-4.36.2F-49692632.4362F.1 (engineering build))\n!\nno aaa root\n!\n!\nno service interface inactive port-id allocation disabled\n!\nservice routing protocols model multi-agent\n!\nhostname NEW1\n!\nspanning-tree mode mstp\n!\nsystem l1\n   unsupported speed action error\n   unsupported error-correction action error\n!\naaa authorization exec default local\n!\ninterface Ethernet1\n   description NMAS bootstrap uplink ZTP-000001\n   no switchport\n   ip address 10.254.60.10/24\n   ip ospf area 0.0.0.0\n!\ninterface Ethernet2\n   no switchport\n   ip address 10.254.64.1/24\n   ip helper-address 10.254.61.2\n   ip access-group NMAS-ISO-DEV-000003-V4 in\n   ip access-group NMAS-ISO-DEV-000003-V4-OUT out\n   ipv6 access-group NMAS-ISO-DEV-000003-V6 in\n   ipv6 access-group NMAS-ISO-DEV-000003-V6-OUT out\n   ip ospf area 0.0.0.0\n!\ninterface Loopback0\n   ip address 10.254.255.11/32\n   ip ospf area 0.0.0.0\n!\nipv6 access-list NMAS-ISO-DEV-000003-V6\n   counters per-entry\n   10 permit icmpv6 fe80::/10 any\n   1000 deny ipv6 any any\n!\nipv6 access-list NMAS-ISO-DEV-000003-V6-OUT\n   counters per-entry\n   1000 deny ipv6 any any\n!\nip access-list NMAS-BOOTSTRAP-MGMT\n   10 permit tcp host 10.254.61.2 any eq ssh\n!\nip access-list NMAS-ISO-DEV-000003-V4\n   counters per-entry\n   10 permit udp any eq bootpc any eq bootps\n   20 permit tcp 10.254.64.0/24 host 10.254.61.2 eq 8080\n   30 permit tcp 10.254.64.0/24 eq ssh host 10.254.61.2\n   1000 deny ip any any\n!\nip access-list NMAS-ISO-DEV-000003-V4-OUT\n   counters per-entry\n   10 permit tcp host 10.254.61.2 eq 8080 10.254.64.0/24\n   20 permit tcp host 10.254.61.2 10.254.64.0/24 eq ssh\n   1000 deny ip any any\n!\nip routing\n!\nip route 10.254.61.0/30 10.254.60.1\n!\nrouter ospf 1\n   router-id 10.254.255.11\n   passive-interface Ethernet2\n   passive-interface Loopback0\n   max-lsa 12000\n!\nmanagement ssh\n   ip access-group NMAS-BOOTSTRAP-MGMT in\n!\nend",
+  "new2_authorization": {
+    "codes": [],
+    "ok": true
+  },
+  "new2_ztp_gate": [],
+  "plan": {
+    "codes": [],
+    "ok": true,
+    "ops": [
+      {
+        "description": "IPv4 isolation ACL (from the device)",
+        "inverse": [
+          "no ip access-list NMAS-ISO-DEV-000003-V4"
+        ],
+        "key": "acl-v4",
+        "kind": "ADD",
+        "lines": [
+          "ip access-list NMAS-ISO-DEV-000003-V4",
+          "   counters per-entry",
+          "   10 permit udp any eq bootpc any eq bootps",
+          "   20 permit tcp 10.254.64.0/24 host 10.254.61.2 eq 8080",
+          "   30 permit tcp 10.254.64.0/24 eq ssh host 10.254.61.2",
+          "   1000 deny ip any any"
+        ],
+        "paths": [
+          "ip access-list NMAS-ISO-DEV-000003-V4",
+          "ip access-list NMAS-ISO-DEV-000003-V4 > counters per-entry",
+          "ip access-list NMAS-ISO-DEV-000003-V4 > 10 permit udp any eq bootpc any eq bootps",
+          "ip access-list NMAS-ISO-DEV-000003-V4 > 20 permit tcp 10.254.64.0/24 host 10.254.61.2 eq 8080",
+          "ip access-list NMAS-ISO-DEV-000003-V4 > 30 permit tcp 10.254.64.0/24 eq ssh host 10.254.61.2",
+          "ip access-list NMAS-ISO-DEV-000003-V4 > 1000 deny ip any any"
+        ]
+      },
+      {
+        "description": "IPv6 isolation ACL (from the device)",
+        "inverse": [
+          "no ipv6 access-list NMAS-ISO-DEV-000003-V6"
+        ],
+        "key": "acl-v6",
+        "kind": "ADD",
+        "lines": [
+          "ipv6 access-list NMAS-ISO-DEV-000003-V6",
+          "   counters per-entry",
+          "   10 permit icmpv6 fe80::/10 any",
+          "   1000 deny ipv6 any any"
+        ],
+        "paths": [
+          "ipv6 access-list NMAS-ISO-DEV-000003-V6",
+          "ipv6 access-list NMAS-ISO-DEV-000003-V6 > counters per-entry",
+          "ipv6 access-list NMAS-ISO-DEV-000003-V6 > 10 permit icmpv6 fe80::/10 any",
+          "ipv6 access-list NMAS-ISO-DEV-000003-V6 > 1000 deny ipv6 any any"
+        ]
+      },
+      {
+        "description": "IPv4 isolation ACL (towards the device)",
+        "inverse": [
+          "no ip access-list NMAS-ISO-DEV-000003-V4-OUT"
+        ],
+        "key": "acl-v4-out",
+        "kind": "ADD",
+        "lines": [
+          "ip access-list NMAS-ISO-DEV-000003-V4-OUT",
+          "   counters per-entry",
+          "   10 permit tcp host 10.254.61.2 eq 8080 10.254.64.0/24",
+          "   20 permit tcp host 10.254.61.2 10.254.64.0/24 eq ssh",
+          "   1000 deny ip any any"
+        ],
+        "paths": [
+          "ip access-list NMAS-ISO-DEV-000003-V4-OUT",
+          "ip access-list NMAS-ISO-DEV-000003-V4-OUT > counters per-entry",
+          "ip access-list NMAS-ISO-DEV-000003-V4-OUT > 10 permit tcp host 10.254.61.2 eq 8080 10.254.64.0/24",
+          "ip access-list NMAS-ISO-DEV-000003-V4-OUT > 20 permit tcp host 10.254.61.2 10.254.64.0/24 eq ssh",
+          "ip access-list NMAS-ISO-DEV-000003-V4-OUT > 1000 deny ip any any"
+        ]
+      },
+      {
+        "description": "IPv6 isolation ACL (towards the device)",
+        "inverse": [
+          "no ipv6 access-list NMAS-ISO-DEV-000003-V6-OUT"
+        ],
+        "key": "acl-v6-out",
+        "kind": "ADD",
+        "lines": [
+          "ipv6 access-list NMAS-ISO-DEV-000003-V6-OUT",
+          "   counters per-entry",
+          "   1000 deny ipv6 any any"
+        ],
+        "paths": [
+          "ipv6 access-list NMAS-ISO-DEV-000003-V6-OUT",
+          "ipv6 access-list NMAS-ISO-DEV-000003-V6-OUT > counters per-entry",
+          "ipv6 access-list NMAS-ISO-DEV-000003-V6-OUT > 1000 deny ipv6 any any"
+        ]
+      },
+      {
+        "description": "IPv4 isolation ACL attached inbound on Ethernet2",
+        "inverse": [
+          "interface Ethernet2",
+          "   no ip access-group NMAS-ISO-DEV-000003-V4 in"
+        ],
+        "key": "attach-v4",
+        "kind": "ADD",
+        "lines": [
+          "interface Ethernet2",
+          "   ip access-group NMAS-ISO-DEV-000003-V4 in"
+        ],
+        "paths": [
+          "interface Ethernet2 > ip access-group NMAS-ISO-DEV-000003-V4 in"
+        ]
+      },
+      {
+        "description": "IPv6 isolation ACL attached inbound on Ethernet2",
+        "inverse": [
+          "interface Ethernet2",
+          "   no ipv6 access-group NMAS-ISO-DEV-000003-V6 in"
+        ],
+        "key": "attach-v6",
+        "kind": "ADD",
+        "lines": [
+          "interface Ethernet2",
+          "   ipv6 access-group NMAS-ISO-DEV-000003-V6 in"
+        ],
+        "paths": [
+          "interface Ethernet2 > ipv6 access-group NMAS-ISO-DEV-000003-V6 in"
+        ]
+      },
+      {
+        "description": "IPv4 isolation ACL attached outbound on Ethernet2",
+        "inverse": [
+          "interface Ethernet2",
+          "   no ip access-group NMAS-ISO-DEV-000003-V4-OUT out"
+        ],
+        "key": "attach-v4-out",
+        "kind": "ADD",
+        "lines": [
+          "interface Ethernet2",
+          "   ip access-group NMAS-ISO-DEV-000003-V4-OUT out"
+        ],
+        "paths": [
+          "interface Ethernet2 > ip access-group NMAS-ISO-DEV-000003-V4-OUT out"
+        ]
+      },
+      {
+        "description": "IPv6 isolation ACL attached outbound on Ethernet2",
+        "inverse": [
+          "interface Ethernet2",
+          "   no ipv6 access-group NMAS-ISO-DEV-000003-V6-OUT out"
+        ],
+        "key": "attach-v6-out",
+        "kind": "ADD",
+        "lines": [
+          "interface Ethernet2",
+          "   ipv6 access-group NMAS-ISO-DEV-000003-V6-OUT out"
+        ],
+        "paths": [
+          "interface Ethernet2 > ipv6 access-group NMAS-ISO-DEV-000003-V6-OUT out"
+        ]
+      }
+    ]
+  },
+  "require": {
+    "codes": [],
+    "ok": true
+  },
+  "unmet_after_upstream_admitted": [],
+  "upstream_satisfied": [
+    true,
+    "admitted by ADM-000002"
+  ],
+  "verify": {
+    "codes": [],
+    "flows": [
+      {
+        "detail": "OPEN",
+        "expect": "PERMIT",
+        "flow": "probe-b -> NMAS bootstrap HTTP 10.254.61.2:8080",
+        "observed": "PERMIT"
+      },
+      {
+        "detail": "",
+        "expect": "DENY",
+        "flow": "probe-b -> production host 10.254.63.10 (ICMP)",
+        "observed": "DENY"
+      },
+      {
+        "detail": "",
+        "expect": "DENY",
+        "flow": "probe-b -> production host 2001:db8:254:63::10 (ICMPv6)",
+        "observed": "DENY"
+      },
+      {
+        "detail": "",
+        "expect": "DENY",
+        "flow": "probe-b -> CORE loopback 10.254.255.2 (ICMP)",
+        "observed": "DENY"
+      },
+      {
+        "detail": "TIMEOUT",
+        "expect": "DENY",
+        "flow": "probe-b -> upstream's own SSH 10.254.64.1:22",
+        "observed": "DENY"
+      },
+      {
+        "detail": "",
+        "expect": "DENY",
+        "flow": "production host -> bootstrap side 10.254.64.250 (ICMP)",
+        "observed": "DENY"
+      },
+      {
+        "detail": "REFUSED",
+        "expect": "PERMIT",
+        "flow": "NMAS service -> 10.254.64.250:22 (NMAS management)",
+        "observed": "PERMIT"
+      }
+    ],
+    "ok": true
+  }
+}

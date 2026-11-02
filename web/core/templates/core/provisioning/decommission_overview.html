@@ -1,0 +1,20 @@
+{% extends "core/base.html" %}
+{% block title %}Decommissioning and restoration{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>Decommissioning and restoration</h1>
+  <p>Governed removal of managed devices (V2 Phase 7): dependency analysis, live traffic readiness, a second-operator approval of the
+     exact plan, a measured lossless transition, and restoration from a verified snapshot.
+     {% if not runtime_configured %}<strong>No live runtime is configured: readiness, execution and restoration refuse with DECOMMISSION_RUNTIME_UNAVAILABLE.</strong>{% endif %}</p>
+</div>
+<div class="card"><h2>Decommission records</h2>
+<table class="table"><thead><tr><th>Record</th><th>Device</th><th>State</th><th>Readiness</th><th>Requested by</th><th>Approved by</th><th>Updated</th></tr></thead><tbody>
+{% for r in records %}<tr><td><a href="{% url 'core:decommission_device' r.device.device_id %}">{{ r.record_id }}</a></td><td>{{ r.device.name }} ({{ r.device.device_id }})</td>
+<td><code>{{ r.state }}</code></td><td>{{ r.readiness_mode }}</td><td>{{ r.requested_by }}</td><td>{{ r.approved_by|default:"-" }}</td><td>{{ r.updated_at }}</td></tr>
+{% empty %}<tr><td colspan="7">No decommissioning yet.</td></tr>{% endfor %}</tbody></table></div>
+<div class="card"><h2>Restorations</h2>
+<table class="table"><thead><tr><th>Record</th><th>Device</th><th>State</th><th>Successor</th><th>Updated</th></tr></thead><tbody>
+{% for r in restorations %}<tr><td>{{ r.record_id }}</td><td>{{ r.device.name }} ({{ r.device.device_id }})</td><td><code>{{ r.state }}</code></td>
+<td>{% if r.successor %}{{ r.successor.device_id }}{% else %}-{% endif %}</td><td>{{ r.updated_at }}</td></tr>
+{% empty %}<tr><td colspan="5">No restoration yet.</td></tr>{% endfor %}</tbody></table></div>
+{% endblock %}

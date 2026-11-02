@@ -1,0 +1,27 @@
+{% extends "core/base.html" %}
+{% load nsot_extras %}
+{% block title %}{{ device_name }} · Running Config · NSOT{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>{{ device_name }} · Running configuration</h1>
+  <p><a href="{% url 'core:nsot_device_detail' device_name %}">&larr; Back to {{ device_name }}</a></p>
+</div>
+{% include "core/nsot/_subnav.html" %}
+
+<span class="badge LIVE">LIVE</span>
+<span class="badge {{ result.status|badge_class }}">{{ result.status }}</span>
+
+{% if result.status == "available" %}
+  <p style="color:var(--text-muted);">Observed at {{ result.observed_at }} · command: <code>{{ result.command }}</code> · secrets redacted below (pattern-based, not a universal detector — see docs/DJANGO_NSOT_INTEGRATION.md).</p>
+  <div class="card">
+    <pre class="code-panel">{{ result.data }}</pre>
+  </div>
+{% else %}
+  <div class="card" style="margin-top:16px;">
+    <div class="empty-state">
+      <div class="empty-state__icon" aria-hidden="true">&#9888;</div>
+      <div>{{ result.message }}</div>
+    </div>
+  </div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,665 @@
+[
+  {
+    "admission": "LEGACY_PREEXISTING",
+    "chain_ok": true,
+    "device_id": "DEV-000001",
+    "events": [
+      [
+        "ADOPT",
+        "ADVANCED",
+        "",
+        "IN_SERVICE"
+      ]
+    ],
+    "lifecycle": "IN_SERVICE",
+    "name": "E1",
+    "origin": "LEGACY_ADOPTION",
+    "predecessor": null
+  },
+  {
+    "admission": "LEGACY_PREEXISTING",
+    "chain_ok": true,
+    "device_id": "DEV-000002",
+    "events": [
+      [
+        "ADOPT",
+        "ADVANCED",
+        "",
+        "IN_SERVICE"
+      ],
+      [
+        "DECOMMISSION_REQUEST_RECORD",
+        "RECORDED",
+        "IN_SERVICE",
+        "IN_SERVICE"
+      ],
+      [
+        "DECOMMISSION_EVALUATE",
+        "RECORDED",
+        "IN_SERVICE",
+        "IN_SERVICE"
+      ],
+      [
+        "DECOMMISSION_APPROVE",
+        "REFUSED",
+        "IN_SERVICE",
+        "IN_SERVICE"
+      ],
+      [
+        "DECOMMISSION_APPROVE",
+        "RECORDED",
+        "IN_SERVICE",
+        "IN_SERVICE"
+      ],
+      [
+        "DECOMMISSION_REQUEST",
+        "ADVANCED",
+        "IN_SERVICE",
+        "DECOMMISSION_PENDING"
+      ],
+      [
+        "DECOMMISSION",
+        "ADVANCED",
+        "DECOMMISSION_PENDING",
+        "DECOMMISSIONED"
+      ]
+    ],
+    "lifecycle": "DECOMMISSIONED",
+    "name": "T1",
+    "origin": "LEGACY_ADOPTION",
+    "predecessor": null
+  },
+  {
+    "admission": "LEGACY_PREEXISTING",
+    "chain_ok": true,
+    "device_id": "DEV-000003",
+    "events": [
+      [
+        "ADOPT",
+        "ADVANCED",
+        "",
+        "IN_SERVICE"
+      ]
+    ],
+    "lifecycle": "IN_SERVICE",
+    "name": "T2",
+    "origin": "LEGACY_ADOPTION",
+    "predecessor": null
+  },
+  {
+    "admission": "LEGACY_PREEXISTING",
+    "chain_ok": true,
+    "device_id": "DEV-000004",
+    "events": [
+      [
+        "ADOPT",
+        "ADVANCED",
+        "",
+        "IN_SERVICE"
+      ],
+      [
+        "DECOMMISSION_REQUEST_RECORD",
+        "RECORDED",
+        "IN_SERVICE",
+        "IN_SERVICE"
+      ],
+      [
+        "DECOMMISSION_EVALUATE",
+        "REFUSED",
+        "IN_SERVICE",
+        "IN_SERVICE"
+      ],
+      [
+        "DECOMMISSION_CANCEL_RECORD",
+        "RECORDED",
+        "IN_SERVICE",
+        "IN_SERVICE"
+      ]
+    ],
+    "lifecycle": "IN_SERVICE",
+    "name": "E2",
+    "origin": "LEGACY_ADOPTION",
+    "predecessor": null
+  },
+  {
+    "admission": "LEGACY_PREEXISTING",
+    "chain_ok": true,
+    "device_id": "DEV-000005",
+    "events": [
+      [
+        "ADOPT",
+        "ADVANCED",
+        "",
+        "IN_SERVICE"
+      ],
+      [
+        "DECOMMISSION_REQUEST_RECORD",
+        "RECORDED",
+        "IN_SERVICE",
+        "IN_SERVICE"
+      ],
+      [
+        "DECOMMISSION_EVALUATE",
+        "RECORDED",
+        "IN_SERVICE",
+        "IN_SERVICE"
+      ],
+      [
+        "DECOMMISSION_APPROVE",
+        "REFUSED",
+        "IN_SERVICE",
+        "IN_SERVICE"
+      ],
+      [
+        "DECOMMISSION_APPROVE",
+        "RECORDED",
+        "IN_SERVICE",
+        "IN_SERVICE"
+      ],
+      [
+        "DECOMMISSION_REQUEST",
+        "ADVANCED",
+        "IN_SERVICE",
+        "DECOMMISSION_PENDING"
+      ],
+      [
+        "DECOMMISSION",
+        "ADVANCED",
+        "DECOMMISSION_PENDING",
+        "DECOMMISSIONED"
+      ]
+    ],
+    "lifecycle": "DECOMMISSIONED",
+    "name": "STUB",
+    "origin": "LEGACY_ADOPTION",
+    "predecessor": null
+  },
+  {
+    "admission": "LEGACY_PREEXISTING",
+    "chain_ok": true,
+    "device_id": "DEV-000006",
+    "events": [
+      [
+        "RESTORE",
+        "ADVANCED",
+        "",
+        "IN_SERVICE"
+      ],
+      [
+        "DECOMMISSION_REQUEST_RECORD",
+        "RECORDED",
+        "IN_SERVICE",
+        "IN_SERVICE"
+      ],
+      [
+        "DECOMMISSION_EVALUATE",
+        "RECORDED",
+        "IN_SERVICE",
+        "IN_SERVICE"
+      ],
+      [
+        "DECOMMISSION_APPROVE",
+        "REFUSED",
+        "IN_SERVICE",
+        "IN_SERVICE"
+      ],
+      [
+        "DECOMMISSION_APPROVE",
+        "RECORDED",
+        "IN_SERVICE",
+        "IN_SERVICE"
+      ],
+      [
+        "DECOMMISSION_REQUEST",
+        "ADVANCED",
+        "IN_SERVICE",
+        "DECOMMISSION_PENDING"
+      ],
+      [
+        "DECOMMISSION_CANCEL",
+        "ADVANCED",
+        "DECOMMISSION_PENDING",
+        "IN_SERVICE"
+      ],
+      [
+        "DECOMMISSION_REQUEST_RECORD",
+        "RECORDED",
+        "IN_SERVICE",
+        "IN_SERVICE"
+      ],
+      [
+        "DECOMMISSION_EVALUATE",
+        "RECORDED",
+        "IN_SERVICE",
+        "IN_SERVICE"
+      ],
+      [
+        "DECOMMISSION_APPROVE",
+        "REFUSED",
+        "IN_SERVICE",
+        "IN_SERVICE"
+      ],
+      [
+        "DECOMMISSION_APPROVE",
+        "RECORDED",
+        "IN_SERVICE",
+        "IN_SERVICE"
+      ],
+      [
+        "DECOMMISSION_REQUEST",
+        "ADVANCED",
+        "IN_SERVICE",
+        "DECOMMISSION_PENDING"
+      ],
+      [
+        "DECOMMISSION_RECOVERY_APPROVE",
+        "REFUSED",
+        "DECOMMISSION_PENDING",
+        "DECOMMISSION_PENDING"
+      ],
+      [
+        "DECOMMISSION_CANCEL",
+        "ADVANCED",
+        "DECOMMISSION_PENDING",
+        "IN_SERVICE"
+      ],
+      [
+        "DECOMMISSION_REQUEST_RECORD",
+        "RECORDED",
+        "IN_SERVICE",
+        "IN_SERVICE"
+      ],
+      [
+        "DECOMMISSION_EVALUATE",
+        "RECORDED",
+        "IN_SERVICE",
+        "IN_SERVICE"
+      ],
+      [
+        "DECOMMISSION_CANCEL_RECORD",
+        "RECORDED",
+        "IN_SERVICE",
+        "IN_SERVICE"
+      ],
+      [
+        "DECOMMISSION_REQUEST_RECORD",
+        "RECORDED",
+        "IN_SERVICE",
+        "IN_SERVICE"
+      ],
+      [
+        "DECOMMISSION_EVALUATE",
+        "RECORDED",
+        "IN_SERVICE",
+        "IN_SERVICE"
+      ],
+      [
+        "DECOMMISSION_APPROVE",
+        "REFUSED",
+        "IN_SERVICE",
+        "IN_SERVICE"
+      ],
+      [
+        "DECOMMISSION_APPROVE",
+        "RECORDED",
+        "IN_SERVICE",
+        "IN_SERVICE"
+      ],
+      [
+        "DECOMMISSION_REQUEST",
+        "ADVANCED",
+        "IN_SERVICE",
+        "DECOMMISSION_PENDING"
+      ],
+      [
+        "DECOMMISSION_RECOVERY_APPROVE",
+        "REFUSED",
+        "DECOMMISSION_PENDING",
+        "DECOMMISSION_PENDING"
+      ],
+      [
+        "DECOMMISSION_CANCEL",
+        "ADVANCED",
+        "DECOMMISSION_PENDING",
+        "IN_SERVICE"
+      ],
+      [
+        "DECOMMISSION_REQUEST_RECORD",
+        "RECORDED",
+        "IN_SERVICE",
+        "IN_SERVICE"
+      ],
+      [
+        "DECOMMISSION_EVALUATE",
+        "RECORDED",
+        "IN_SERVICE",
+        "IN_SERVICE"
+      ],
+      [
+        "DECOMMISSION_CANCEL_RECORD",
+        "RECORDED",
+        "IN_SERVICE",
+        "IN_SERVICE"
+      ],
+      [
+        "DECOMMISSION_REQUEST_RECORD",
+        "RECORDED",
+        "IN_SERVICE",
+        "IN_SERVICE"
+      ],
+      [
+        "DECOMMISSION_EVALUATE",
+        "RECORDED",
+        "IN_SERVICE",
+        "IN_SERVICE"
+      ],
+      [
+        "DECOMMISSION_APPROVE",
+        "REFUSED",
+        "IN_SERVICE",
+        "IN_SERVICE"
+      ],
+      [
+        "DECOMMISSION_APPROVE",
+        "RECORDED",
+        "IN_SERVICE",
+        "IN_SERVICE"
+      ],
+      [
+        "DECOMMISSION_REQUEST",
+        "ADVANCED",
+        "IN_SERVICE",
+        "DECOMMISSION_PENDING"
+      ],
+      [
+        "DECOMMISSION",
+        "ADVANCED",
+        "DECOMMISSION_PENDING",
+        "DECOMMISSIONED"
+      ]
+    ],
+    "lifecycle": "DECOMMISSIONED",
+    "name": "T1",
+    "origin": "RESTORED",
+    "predecessor": "DEV-000002"
+  },
+  {
+    "admission": "LEGACY_PREEXISTING",
+    "chain_ok": true,
+    "device_id": "DEV-000007",
+    "events": [
+      [
+        "RESTORE",
+        "ADVANCED",
+        "",
+        "IN_SERVICE"
+      ],
+      [
+        "DECOMMISSION_REQUEST_RECORD",
+        "RECORDED",
+        "IN_SERVICE",
+        "IN_SERVICE"
+      ],
+      [
+        "DECOMMISSION_EVALUATE",
+        "RECORDED",
+        "IN_SERVICE",
+        "IN_SERVICE"
+      ],
+      [
+        "DECOMMISSION_APPROVE",
+        "REFUSED",
+        "IN_SERVICE",
+        "IN_SERVICE"
+      ],
+      [
+        "DECOMMISSION_APPROVE",
+        "RECORDED",
+        "IN_SERVICE",
+        "IN_SERVICE"
+      ],
+      [
+        "DECOMMISSION_REQUEST",
+        "ADVANCED",
+        "IN_SERVICE",
+        "DECOMMISSION_PENDING"
+      ],
+      [
+        "DECOMMISSION_CANCEL",
+        "ADVANCED",
+        "DECOMMISSION_PENDING",
+        "IN_SERVICE"
+      ],
+      [
+        "DECOMMISSION_REQUEST_RECORD",
+        "RECORDED",
+        "IN_SERVICE",
+        "IN_SERVICE"
+      ],
+      [
+        "DECOMMISSION_EVALUATE",
+        "RECORDED",
+        "IN_SERVICE",
+        "IN_SERVICE"
+      ],
+      [
+        "DECOMMISSION_APPROVE",
+        "REFUSED",
+        "IN_SERVICE",
+        "IN_SERVICE"
+      ],
+      [
+        "DECOMMISSION_APPROVE",
+        "RECORDED",
+        "IN_SERVICE",
+        "IN_SERVICE"
+      ],
+      [
+        "DECOMMISSION_REQUEST",
+        "ADVANCED",
+        "IN_SERVICE",
+        "DECOMMISSION_PENDING"
+      ],
+      [
+        "DECOMMISSION_RECOVERY_APPROVE",
+        "REFUSED",
+        "DECOMMISSION_PENDING",
+        "DECOMMISSION_PENDING"
+      ],
+      [
+        "DECOMMISSION_CANCEL",
+        "ADVANCED",
+        "DECOMMISSION_PENDING",
+        "IN_SERVICE"
+      ],
+      [
+        "DECOMMISSION_REQUEST_RECORD",
+        "RECORDED",
+        "IN_SERVICE",
+        "IN_SERVICE"
+      ],
+      [
+        "DECOMMISSION_EVALUATE",
+        "RECORDED",
+        "IN_SERVICE",
+        "IN_SERVICE"
+      ],
+      [
+        "DECOMMISSION_CANCEL_RECORD",
+        "RECORDED",
+        "IN_SERVICE",
+        "IN_SERVICE"
+      ],
+      [
+        "DECOMMISSION_REQUEST_RECORD",
+        "RECORDED",
+        "IN_SERVICE",
+        "IN_SERVICE"
+      ],
+      [
+        "DECOMMISSION_EVALUATE",
+        "RECORDED",
+        "IN_SERVICE",
+        "IN_SERVICE"
+      ],
+      [
+        "DECOMMISSION_APPROVE",
+        "REFUSED",
+        "IN_SERVICE",
+        "IN_SERVICE"
+      ],
+      [
+        "DECOMMISSION_APPROVE",
+        "RECORDED",
+        "IN_SERVICE",
+        "IN_SERVICE"
+      ],
+      [
+        "DECOMMISSION_REQUEST",
+        "ADVANCED",
+        "IN_SERVICE",
+        "DECOMMISSION_PENDING"
+      ],
+      [
+        "DECOMMISSION",
+        "ADVANCED",
+        "DECOMMISSION_PENDING",
+        "DECOMMISSIONED"
+      ]
+    ],
+    "lifecycle": "DECOMMISSIONED",
+    "name": "T1",
+    "origin": "RESTORED",
+    "predecessor": "DEV-000006"
+  },
+  {
+    "admission": "LEGACY_PREEXISTING",
+    "chain_ok": true,
+    "device_id": "DEV-000008",
+    "events": [
+      [
+        "RESTORE",
+        "ADVANCED",
+        "",
+        "IN_SERVICE"
+      ],
+      [
+        "DECOMMISSION_REQUEST_RECORD",
+        "RECORDED",
+        "IN_SERVICE",
+        "IN_SERVICE"
+      ],
+      [
+        "DECOMMISSION_EVALUATE",
+        "RECORDED",
+        "IN_SERVICE",
+        "IN_SERVICE"
+      ],
+      [
+        "DECOMMISSION_APPROVE",
+        "REFUSED",
+        "IN_SERVICE",
+        "IN_SERVICE"
+      ],
+      [
+        "DECOMMISSION_APPROVE",
+        "RECORDED",
+        "IN_SERVICE",
+        "IN_SERVICE"
+      ],
+      [
+        "DECOMMISSION_REQUEST",
+        "ADVANCED",
+        "IN_SERVICE",
+        "DECOMMISSION_PENDING"
+      ],
+      [
+        "DECOMMISSION_CANCEL",
+        "ADVANCED",
+        "DECOMMISSION_PENDING",
+        "IN_SERVICE"
+      ],
+      [
+        "DECOMMISSION_REQUEST_RECORD",
+        "RECORDED",
+        "IN_SERVICE",
+        "IN_SERVICE"
+      ],
+      [
+        "DECOMMISSION_EVALUATE",
+        "RECORDED",
+        "IN_SERVICE",
+        "IN_SERVICE"
+      ],
+      [
+        "DECOMMISSION_APPROVE",
+        "REFUSED",
+        "IN_SERVICE",
+        "IN_SERVICE"
+      ],
+      [
+        "DECOMMISSION_APPROVE",
+        "RECORDED",
+        "IN_SERVICE",
+        "IN_SERVICE"
+      ],
+      [
+        "DECOMMISSION_REQUEST",
+        "ADVANCED",
+        "IN_SERVICE",
+        "DECOMMISSION_PENDING"
+      ],
+      [
+        "DECOMMISSION_RECOVERY_APPROVE",
+        "REFUSED",
+        "DECOMMISSION_PENDING",
+        "DECOMMISSION_PENDING"
+      ],
+      [
+        "DECOMMISSION_CANCEL",
+        "ADVANCED",
+        "DECOMMISSION_PENDING",
+        "IN_SERVICE"
+      ],
+      [
+        "DECOMMISSION_REQUEST_RECORD",
+        "RECORDED",
+        "IN_SERVICE",
+        "IN_SERVICE"
+      ],
+      [
+        "DECOMMISSION_EVALUATE",
+        "RECORDED",
+        "IN_SERVICE",
+        "IN_SERVICE"
+      ],
+      [
+        "DECOMMISSION_CANCEL_RECORD",
+        "RECORDED",
+        "IN_SERVICE",
+        "IN_SERVICE"
+      ]
+    ],
+    "lifecycle": "IN_SERVICE",
+    "name": "T1",
+    "origin": "RESTORED",
+    "predecessor": "DEV-000007"
+  },
+  {
+    "admission": "LEGACY_PREEXISTING",
+    "chain_ok": true,
+    "device_id": "DEV-000009",
+    "events": [
+      [
+        "RESTORE",
+        "ADVANCED",
+        "",
+        "IN_SERVICE"
+      ]
+    ],
+    "lifecycle": "IN_SERVICE",
+    "name": "STUB",
+    "origin": "RESTORED",
+    "predecessor": "DEV-000005"
+  }
+]

@@ -1,0 +1,163 @@
+{
+  "scenario": "NMAS web health endpoint pointed at a closed local port (the production nmas-web.service was NOT stopped); every other source is the live lab",
+  "override": {
+    "NMAS_CONSOLE_NMAS_WEB_HEALTH_URL": "http://127.0.0.1:59999/healthz"
+  },
+  "nmas_web_observations": [
+    {
+      "ts": "2026-10-06T11:41:30.883Z",
+      "state": "DOWN",
+      "checks": [
+        {
+          "name": "systemd",
+          "ok": true,
+          "detail": "active/running"
+        },
+        {
+          "name": "http",
+          "ok": false,
+          "detail": "CONNECTION_REFUSED"
+        }
+      ]
+    },
+    {
+      "ts": "2026-10-06T11:41:45.891Z",
+      "state": "DOWN",
+      "checks": [
+        {
+          "name": "systemd",
+          "ok": true,
+          "detail": "active/running"
+        },
+        {
+          "name": "http",
+          "ok": false,
+          "detail": "CONNECTION_REFUSED"
+        }
+      ]
+    }
+  ],
+  "services": {
+    "nmas-web": "DOWN",
+    "netbox": "UP",
+    "influxdb": "UP",
+    "grafana": "UP",
+    "freeradius": "UP",
+    "privacyidea": "UP",
+    "traffic-runner": "UP",
+    "soak-timer": "UP",
+    "topology": "UP",
+    "gnmi-collector": "UP",
+    "syslog-ingest": "UP",
+    "snmptrapd": "UP"
+  },
+  "collectors": {
+    "connectivity": {
+      "state": "STOPPED",
+      "cycles": 5,
+      "errors": 0,
+      "restarts": 0,
+      "events": 42
+    },
+    "services": {
+      "state": "STOPPED",
+      "cycles": 2,
+      "errors": 0,
+      "restarts": 0,
+      "events": 28
+    },
+    "nsot": {
+      "state": "STOPPED",
+      "cycles": 1,
+      "errors": 0,
+      "restarts": 0,
+      "events": 3
+    },
+    "automation": {
+      "state": "STOPPED",
+      "cycles": 2,
+      "errors": 0,
+      "restarts": 0,
+      "events": 4
+    },
+    "counters": {
+      "state": "STOPPED",
+      "cycles": 3,
+      "errors": 0,
+      "restarts": 0,
+      "events": 32
+    }
+  },
+  "connectivity": {
+    "H1/IPV4": {
+      "state": "UP",
+      "samples": 5,
+      "failures": 0
+    },
+    "H1/IPV6": {
+      "state": "UP",
+      "samples": 5,
+      "failures": 0
+    },
+    "H2/IPV4": {
+      "state": "UP",
+      "samples": 5,
+      "failures": 0
+    },
+    "H2/IPV6": {
+      "state": "UP",
+      "samples": 5,
+      "failures": 0
+    },
+    "H3/IPV4": {
+      "state": "UP",
+      "samples": 5,
+      "failures": 0
+    },
+    "H3/IPV6": {
+      "state": "UP",
+      "samples": 5,
+      "failures": 0
+    },
+    "H4/IPV6": {
+      "state": "UP",
+      "samples": 5,
+      "failures": 0
+    }
+  },
+  "telemetry": {
+    "R1": "FRESH",
+    "R2": "FRESH",
+    "R3": "FRESH",
+    "R4": "FRESH",
+    "S1": "FRESH",
+    "S2": "FRESH",
+    "S3": "FRESH",
+    "S4": "FRESH",
+    "mgmt_swt": "FRESH",
+    "R5": "FRESH"
+  },
+  "nsot": {
+    "available": true,
+    "stale": false,
+    "last_ok": "2026-10-06T11:41:30.854Z"
+  },
+  "automation": {
+    "available": true,
+    "stale": false,
+    "last_ok": "2026-10-06T11:41:50.852Z"
+  },
+  "counters_devices_ok": {
+    "R1": true,
+    "R2": true,
+    "R3": true,
+    "R4": true,
+    "S1": true,
+    "S2": true,
+    "S3": true,
+    "S4": true,
+    "mgmt_swt": true
+  },
+  "leftover_workers": [],
+  "session_records": 113
+}

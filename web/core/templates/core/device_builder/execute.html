@@ -1,0 +1,89 @@
+{% extends "core/base.html" %}
+{% load core_extras %}
+{% block title %}Execute · {{ change.change_id }}{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>Structured Execution <span style="font-weight:400;">· {{ change.change_id }}</span></h1>
+  <p><a href="{% url 'core:device_builder_change_detail' change.change_id %}">&larr; Back to {{ change.change_id }}</a> · <a href="{% url 'core:change_validation' change.change_id %}">Validation</a> · <a href="{% url 'core:change_plan' change.change_id %}">Plan</a> · <a href="{% url 'core:change_precheck' change.change_id %}">Precheck</a> · <a href="{% url 'core:change_executions' change.change_id %}">Execution history</a></p>
+  <p>{{ change.title }}</p>
+  <p><strong>This page changes nothing.</strong> Viewing it never validates, plans, prechecks or configures a device. Only the explicit <em>Execute</em> button below (a POST) reaches the execution engine, and it can deploy nothing except the structured Configlets of the CURRENT plan shown here.</p>
+  {% if request.GET.refused %}<p class="field-row__message">The attempt was refused before a plan existed. Nothing was changed; see the blockers below.</p>{% endif %}
+</div>
+
+<div class="card-grid">
+  <div class="card"><h3>Eligibility</h3>
+    <table class="data-table"><tbody>
+      <tr><th>Execution mode</th><td><span class="badge badge--info">{{ change.get_execution_mode_display }}</span></td></tr>
+      <tr><th>Change lifecycle</th><td>{{ change.get_lifecycle_state_display }} (execution never changes it)</td></tr>
+      <tr><th>Validation</th><td>{% if gate.validation_currency.state == "CURRENT" %}<span class="badge badge--success">CURRENT</span>{% elif gate.validation_currency.state == "STALE" %}<span class="badge badge--warning">STALE</span>{% else %}<span class="badge badge--neutral">NEVER RUN</span>{% endif %}{% if gate.validation_currency.last_status %} <span class="badge badge--neutral">{{ gate.validation_currency.last_status }}</span>{% endif %}</td></tr>
+      <tr><th>Network config validation</th><td><span class="badge {% if gate.network_config_currency.state == 'CURRENT' and gate.network_config_currency.latest.status == 'PASS' %}badge--success{% elif gate.network_config_currency.state == 'CURRENT' and gate.network_config_currency.latest.status == 'WARNING' %}badge--warning{% else %}badge--danger{% endif %}">{{ gate.network_config_currency.state }}{% if gate.network_config_currency.latest %} / {{ gate.network_config_currency.latest.status }}{% endif %}</span></td></tr>
+      <tr><th>Plan</th><td>{% if not plan %}<span class="badge badge--neutral">NO PLAN</span>{% elif gate.plan_currency.state == "CURRENT" %}<span class="badge badge--success">CURRENT</span>{% else %}<span class="badge badge--warning">STALE</span>{% endif %}{% if plan %} <code>{{ plan.plan_id }}</code>{% endif %}</td></tr>
+      <tr><th>Latest precheck</th><td>{% if precheck %}<span class="badge badge--neutral">{{ precheck.status }}</span> {{ precheck.finished_at }}{% else %}<span class="badge badge--neutral">NONE</span>{% endif %}</td></tr>
+      <tr><th>Affected devices</th><td>{{ scope.devices|join:", "|default:"—" }}</td></tr>
+      <tr><th>Configlets in plan</th><td>{% if scope %}{{ scope.ordered|length }}{% else %}0{% endif %}</td></tr>
+      <tr><th>Eligible now</th><td>{% if gate.eligible %}<span class="badge badge--success">YES</span>{% else %}<span class="badge badge--danger">NO</span>{% endif %}</td></tr>
+    </tbody></table>
+    <p style="font-size:0.85rem;">{% if sources_checked %}Source freshness was checked just now (read-only).{% else %}Intent currency is shown here; <a href="?check_sources=1">check source freshness</a> reads NetBox/topology (read-only). Executing always checks it.{% endif %}</p>
+    {% if gate.blockers %}
+    <h4>Blockers — nothing will run until these are resolved</h4>
+    <ul>
+      {% for b in gate.blockers %}<li><span class="badge badge--danger">{{ b.code }}</span> {{ b.message }} <em>{{ b.remediation }}</em></li>{% endfor %}
+    </ul>
+    {% endif %}
+    {% if gate.warnings %}<h4>Warnings</h4><ul>{% for w in gate.warnings %}<li><span class="badge badge--warning">{{ w.code }}</span> {{ w.message }}</li>{% endfor %}</ul>{% endif %}
+    <p style="font-size:0.85rem;color:var(--text-muted);">A stale validation, plan or precheck is never refreshed silently: refresh it yourself on its own page, then return here.</p>
+  </div>
+
+  <div class="card"><h3>What this mode means</h3>
+    {% if is_partial %}
+    <p><strong>Partial (UAT)</strong> runs an ordered PREFIX of the plan and stops at the first failure. Everything applied before that point is <strong>preserved — it is never rolled back automatically</strong>. The result records exactly what succeeded, where it stopped and what remains unapplied.</p>
+    {% else %}
+    <p><strong>Complete</strong> is application-level transactional: before the first change the engine proves it can undo every Configlet (exact inverse, verified by read-back). It applies in plan order, stops at the first failure, requires the postcheck to confirm the intended state, and otherwise <strong>compensates what THIS run applied, in reverse order</strong>. If that cannot be proven the run is refused before any device is touched. A distributed network has no native ACID transaction; this is a verified compensation contract, not a guarantee.</p>
+    {% endif %}
+    <p style="font-size:0.85rem;color:var(--text-muted);">Changes the RUNNING configuration only; the startup configuration is not written. This is not the later rollback/removal workflow.</p>
+  </div>
+</div>
+
+<div class="card" style="margin-top:16px;"><h3>Ordered execution scope</h3>
+  {% if capability_rows %}
+  <table class="data-table"><thead><tr><th>#</th><th>Configlet</th><th>Device</th><th>Object</th><th>Operation</th><th>Apply</th><th>Compensation (Complete)</th><th>Note</th></tr></thead><tbody>
+    {% for row in capability_rows %}<tr><td>{{ row.sequence }}</td><td><code>{{ row.cfg_id }}</code></td><td>{{ row.device }}</td><td>{{ row.object_type }}</td><td>{{ row.operation }}</td><td><span class="badge badge--{{ row.apply|execution_badge_class }}">{{ row.apply }}</span></td><td><span class="badge badge--{{ row.compensation|execution_badge_class }}">{{ row.compensation }}</span></td><td>{{ row.note }}</td></tr>{% endfor %}
+  </tbody></table>
+  {% elif scope %}
+  <table class="data-table"><thead><tr><th>#</th><th>Configlet</th><th>Device</th></tr></thead><tbody>
+    {% for c in scope.ordered %}<tr><td>{{ c.sequence }}</td><td><code>{{ c.cfg_id }}</code></td><td>{{ c.target_device }}</td></tr>{% endfor %}
+  </tbody></table>
+  {% else %}<p>There is no plan scope yet.</p>{% endif %}
+  <p style="font-size:0.85rem;color:var(--text-muted);">Order is the Phase-14 plan order (dependencies first). Nothing here can be edited or reordered, and no command can be entered.</p>
+</div>
+
+<div class="card" style="margin-top:16px;"><h3>Deployment Transport</h3>
+  <p style="font-size:0.85rem;color:var(--text-muted);">Capability-driven, not a choice: only an <strong>AVAILABLE</strong> transport this project has live-tested is ever used. Read-only, fixture-tested-but-disabled, unimplemented, and platform-unverified NETCONF/gNMI states are disclosed below but are never selectable.</p>
+  {% for entry in transport_matrix %}
+  <p style="margin-bottom:4px;"><strong>{{ entry.platform_display }}</strong>{% if entry.selected_transport %} -- this run will use <span class="badge badge--success">{{ entry.selected_transport }}</span>{% else %}<span class="badge badge--danger">No deployment transport available</span>{% endif %}</p>
+  <table class="data-table" style="margin-bottom:12px;"><thead><tr><th>Transport</th><th>Status</th><th>Evidence</th></tr></thead><tbody>
+    {% for row in entry.rows %}<tr><td>{{ row.label }}</td><td><span class="badge {% if row.status == 'AVAILABLE' %}badge--success{% else %}badge--neutral{% endif %}">{{ row.status }}</span></td><td style="font-size:0.85rem;color:var(--text-muted);">{{ row.evidence }}</td></tr>{% endfor %}
+  </tbody></table>
+  {% empty %}<p>No device platform resolved for this Change yet.</p>{% endfor %}
+</div>
+
+<div class="card" style="margin-top:16px;"><h3>Execute</h3>
+  <form method="post" action="{% url 'core:change_execute_run' change.change_id %}">{% csrf_token %}
+    <p><label><input type="checkbox" name="confirm_mode" value="{{ change.execution_mode }}" required> I confirm execution mode <strong>{{ change.get_execution_mode_display }}</strong> for {{ change.change_id }}.</label></p>
+    {% if is_partial %}
+    <p><label for="through_cfg_id"><strong>Execute through</strong> (the last Configlet of the prefix; everything after it stays unapplied):</label>
+      <select name="through_cfg_id" id="through_cfg_id" required>
+        <option value="">— choose —</option>
+        {% for c in scope.ordered %}<option value="{{ c.cfg_id }}">{{ c.cfg_id }} · {{ c.target_device }} · {{ c.description }}</option>{% endfor %}
+      </select></p>
+    <fieldset><legend>Partial (UAT) acknowledgements — all five are required</legend>
+      {% for name, label in uat_acks %}<p><label><input type="checkbox" name="{{ name }}"> {{ label }}</label></p>{% endfor %}
+    </fieldset>
+    {% endif %}
+    <button type="submit" class="btn btn--primary"{% if not gate.eligible %} disabled aria-disabled="true"{% endif %}>Execute</button>
+  </form>
+  <p style="font-size:0.85rem;color:var(--text-muted);">The button is only a convenience: the server re-checks every gate and refuses, with a recorded reason, whatever the browser sends. Devices, order and configuration come from the current plan — never from this form.</p>
+</div>
+
+<div class="card" style="margin-top:16px;"><h3>Execution history</h3>{% include "core/device_builder/_execution_history.html" with runs=history %}</div>
+{% endblock %}

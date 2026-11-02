@@ -1,0 +1,103 @@
+1791793517.425 START nmas-lifecycle window R2-client-statics-remove load 25.55 34.64 24.86
+1791793523.142 CONFIG start {"r1": "2bd8c040664c1216", "r2": "6284ec1a7270b9dd", "s1": "7d083ffd40ee3b4f", "s2": "a4f9a4a23f07a916"} covers {"c3": 0, "c4": 0}
+1791793523.142 STARTUP start {"R1": {"startup": "f7e23531997fbe0c2600218ea7c7885f2591e40bad652ec900ac9558e2b0b0db", "running": "f7e23531997fbe0c2600218ea7c7885f2591e40bad652ec900ac9558e2b0b0db"}, "R2": {"startup": "a76c51916fd1da35620973d9cd3e718d0c8bce96e215caf17f158319395beb23", "running": "a76c51916fd1da35620973d9cd3e718d0c8bce96e215caf17f158319395beb23"}, "S1": {"startup": "f7e4fd4fdee0bb8346329a6add7e553851d7bba67c8a0b02db06e3c4ae6efa31", "running": "f7e4fd4fdee0bb8346329a6add7e553851d7bba67c8a0b02db06e3c4ae6efa31"}, "S2": {"startup": "ee5f0cb47cb509c8548e6d213cec4d76666ab33768f56cbc53d0889a7b6a4909", "running": "ee5f0cb47cb509c8548e6d213cec4d76666ab33768f56cbc53d0889a7b6a4909"}} core-boot {"c3": "c779f912a770e264", "c4": "562ad6c9311dfc44"}
+1791793559.840 LIFECYCLE change CHG-20261012-0001 {"transition": {"kind": "BASELINE_STATIC_IPV6_TO_ISIS", "definition": "sandbox", "schema": 1}}
+1791793559.866 LIFECYCLE validation PASS findings=0
+1791793559.934 LIFECYCLE plan 65848450 operations=48 permanent=24 temporary=24
+1791793560.727 GATE general execution engine -> TRANSITION_CHANGE_NOT_GENERIC
+1791793616.239 LIFECYCLE precheck PASS {"status": "PASS", "blockers": []}
+1791793616.264 GATE execution before approval -> BLOCKED NOT_APPROVED,PRECHECK_NOT_PASSED
+1791793619.919 GATE approval without acknowledgements -> ACKNOWLEDGEMENT_MISSING
+1791793619.944 LIFECYCLE approved READY_TO_DEPLOY
+1791793619.944 GATE service entry point execute() -> REFUSED NOT_THIS_TRANSITION
+1791793624.118 LIFECYCLE execute begin load 23.74 31.24 24.67
+1791793690.579 NMAS before R3-cover-2001:db8:10::/63
+1791793691.424 NMAS after R3-cover-2001:db8:10::/63
+1791793699.317 NMAS before R3-cover-2001:db8:20::/63
+1791793700.309 NMAS after R3-cover-2001:db8:20::/63
+1791793708.323 NMAS before R3-cover-2001:db8:30::/63
+1791793710.744 NMAS after R3-cover-2001:db8:30::/63
+1791793718.811 NMAS before R4-cover-2001:db8:10::/63
+1791793719.671 NMAS after R4-cover-2001:db8:10::/63
+1791793728.107 NMAS before R4-cover-2001:db8:20::/63
+1791793729.029 NMAS after R4-cover-2001:db8:20::/63
+1791793737.710 NMAS before R4-cover-2001:db8:30::/63
+1791793740.106 NMAS after R4-cover-2001:db8:30::/63
+1791793758.430 NMAS before S1-vlan99-ipv6
+1791793775.183 NMAS after S1-vlan99-ipv6
+1791793795.101 NMAS before S2-vlan99-ipv6
+1791793813.461 NMAS after S2-vlan99-ipv6
+1791793824.811 NMAS before R1-isis-process
+1791793842.650 NMAS after R1-isis-process
+1791793849.148 NMAS before R2-isis-process
+1791793867.437 NMAS after R2-isis-process
+1791793874.045 NMAS before S1-isis-process
+1791793893.085 NMAS after S1-isis-process
+1791793899.958 NMAS before S2-isis-process
+1791793920.055 NMAS after S2-isis-process
+1791793927.975 NMAS before R1-isis-access
+1791793945.138 NMAS after R1-isis-access
+1791793952.872 NMAS before R2-isis-access
+1791793971.064 NMAS after R2-isis-access
+1791793980.176 NMAS before S1-isis-links
+1791793999.876 NMAS after S1-isis-links
+1791794008.723 NMAS before S2-isis-links
+1791794029.369 NMAS after S2-isis-links
+1791794054.664 NMAS before S1-client-svis-passive
+1791794072.170 NMAS after S1-client-svis-passive
+1791794077.395 NMAS before S2-client-svis-passive
+1791794094.928 NMAS after S2-client-svis-passive
+1791794100.920 NMAS before R1-boundary-policy
+1791794119.800 NMAS after R1-boundary-policy
+1791794126.811 NMAS before R1-aggregate-into-isis
+1791794142.987 NMAS after R1-aggregate-into-isis
+1791794150.321 NMAS before R1-isis-into-ospfv3
+1791794168.577 NMAS after R1-isis-into-ospfv3
+1791794176.510 NMAS before R2-boundary-policy
+1791794194.162 NMAS after R2-boundary-policy
+1791794201.754 NMAS before R2-aggregate-into-isis
+1791794219.372 NMAS after R2-aggregate-into-isis
+1791794227.620 NMAS before R2-isis-into-ospfv3
+1791794252.303 NMAS after R2-isis-into-ospfv3
+1791794274.486 NMAS before S1-shield-install
+1791794294.427 NMAS after S1-shield-install
+1791794315.197 NMAS before R1-shield-install
+1791794335.941 NMAS after R1-shield-install
+1791794350.405 NMAS before S1-static-aggregate-remove
+1791794354.138 NMAS after S1-static-aggregate-remove
+1791794359.878 NMAS before R1-floating-statics-add
+1791794377.148 NMAS after R1-floating-statics-add
+1791794385.218 NMAS before R1-client-statics-remove
+1791794390.024 NMAS after R1-client-statics-remove
+1791794399.613 NMAS before R1-floating-statics-remove
+1791794406.195 NMAS after R1-floating-statics-remove
+1791794418.708 NMAS before R1-old-redistribution-remove
+1791794423.156 NMAS after R1-old-redistribution-remove
+1791794438.157 NMAS before R1-shield-remove
+1791794446.010 NMAS after R1-shield-remove
+1791794454.296 NMAS before S1-shield-remove
+1791794462.335 NMAS after S1-shield-remove
+1791794482.116 NMAS before S2-shield-install
+1791794501.635 NMAS after S2-shield-install
+1791794510.455 NMAS before R2-shield-install
+1791794533.078 NMAS after R2-shield-install
+1791794556.054 NMAS before S2-static-aggregate-remove
+1791794560.472 NMAS after S2-static-aggregate-remove
+1791794582.589 NMAS before R2-floating-statics-add
+1791794599.411 NMAS after R2-floating-statics-add
+1791794606.828 NMAS before R2-client-statics-remove
+1791794611.707 NMAS after R2-client-statics-remove
+1791794611.707 INJECT window condition lost after R2-client-statics-remove
+1791794619.545 NMAS before R2-floating-statics-remove
+1791794624.921 NMAS after R2-floating-statics-remove
+1791794636.515 NMAS before R2-old-redistribution-remove
+1791794640.384 NMAS after R2-old-redistribution-remove
+1791794646.665 INJECT host gate sample 1 reported as failed
+1791794646.665 INJECT host gate sample 2 reported as failed
+1791794646.665 INJECT host gate sample 3 reported as failed
+1791795136.983 LIFECYCLE execute FAILED_ROLLED_BACK lifecycle=ROLLED_BACK probes_lost=0 applied=40 compensated=40 temporary_remaining=[] restored=True
+1791795144.419 CONFIG end {"r1": "2bd8c040664c1216", "r2": "6284ec1a7270b9dd", "s1": "7d083ffd40ee3b4f", "s2": "a4f9a4a23f07a916"} baseline-restored=True covers {"c3": 0, "c4": 0}
+1791795144.419 STARTUP end {"R1": {"startup": "f7e23531997fbe0c2600218ea7c7885f2591e40bad652ec900ac9558e2b0b0db", "running": "f7e23531997fbe0c2600218ea7c7885f2591e40bad652ec900ac9558e2b0b0db"}, "R2": {"startup": "a76c51916fd1da35620973d9cd3e718d0c8bce96e215caf17f158319395beb23", "running": "a76c51916fd1da35620973d9cd3e718d0c8bce96e215caf17f158319395beb23"}, "S1": {"startup": "f7e4fd4fdee0bb8346329a6add7e553851d7bba67c8a0b02db06e3c4ae6efa31", "running": "f7e4fd4fdee0bb8346329a6add7e553851d7bba67c8a0b02db06e3c4ae6efa31"}, "S2": {"startup": "ee5f0cb47cb509c8548e6d213cec4d76666ab33768f56cbc53d0889a7b6a4909", "running": "ee5f0cb47cb509c8548e6d213cec4d76666ab33768f56cbc53d0889a7b6a4909"}} startup-equals-running=True startup-unchanged=True core-boot-unchanged=True persistence="NOT_RUN"
+1791795144.746 WINDOW failure {"code": "WINDOW_CONDITION_LOST", "detail": "before SHIELD_REMOVE: INJECTED: host CPU at the critical condition with the probes running", "operation": "SHIELD_REMOVE"} host samples 3 window notes [["PASS", "CORE_COVER_INSTALL"], ["PASS", "VLAN99_IPV6"], ["PASS", "ISIS_FORMATION"], ["PASS", "BOUNDARY_POLICY"], ["PASS", "SHIELD_INSTALL"], ["PASS", "PROTECTED_STATIC_REMOVAL"], ["PASS", "SHIELD_REMOVE"], ["PASS", "SHIELD_INSTALL"], ["PASS", "PROTECTED_STATIC_REMOVAL"], ["FAIL", "SHIELD_REMOVE"]]
+1791795157.906 PROBES answered=908917 lost=0 errors=[]
+1791795177.672 END ok load 26.40 25.98 25.59

@@ -1,0 +1,89 @@
+{
+ "device": "PROVDUP4",
+ "mode": "success",
+ "run": {
+  "approval": {},
+  "bootstrap_state": "ALREADY_CONFIGURED",
+  "candidate_hash": "",
+  "capability": null,
+  "change_id": null,
+  "execution_outcome": null,
+  "execution_run": null,
+  "failure": {},
+  "netbox": {},
+  "network_config_validation_run": null,
+  "plan": null,
+  "platform": "ubuntu_frr",
+  "post_config_digest": "",
+  "postcheck_run": null,
+  "pre_config_digest": "",
+  "precheck_run": null,
+  "prov_id": "PROV-000007",
+  "registry": [],
+  "repository_head": "f1c4dbe079f12f548965b34fa695c8b48c2956aa",
+  "result": {},
+  "status": "IDENTIFIED",
+  "validation_run": null
+ },
+ "steps": [
+  {
+   "codes": [],
+   "evidence": null,
+   "http": 302,
+   "outcome": null,
+   "status": "DRAFT",
+   "step": "create"
+  },
+  {
+   "codes": [],
+   "evidence": {
+    "management": {
+     "assignment": "static",
+     "interface": "eth0",
+     "ipv4": "172.31.250.24/24",
+     "ipv6": "fd00:ca:250::24/64",
+     "vlan": null
+    },
+    "target": {
+     "container": "clab-nmas-prov-proof-edge1",
+     "lab": "nmas-prov-proof"
+    },
+    "transport": "DOCKER_EXEC"
+   },
+   "http": 302,
+   "outcome": "ADVANCED",
+   "status": "IDENTIFIED",
+   "step": "identity"
+  },
+  {
+   "codes": [
+    "DEVICE_ALREADY_CONFIGURED"
+   ],
+   "evidence": {
+    "answers": true,
+    "configured": true,
+    "error": "",
+    "exists": true,
+    "facts": {
+     "config_lines": 11,
+     "configured_interfaces": [
+      "loopback10"
+     ],
+     "image": "clab-raw-verifier-frr:8.4.4-1.1ubuntu6.7",
+     "interfaces": [
+      "eth0",
+      "lo",
+      "loopback10"
+     ],
+     "node_kind": "linux"
+    },
+    "lab": "nmas-prov-proof",
+    "running": true
+   },
+   "http": 302,
+   "outcome": "BLOCKED",
+   "status": "IDENTIFIED",
+   "step": "bootstrap"
+  }
+ ]
+}

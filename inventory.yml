@@ -1,0 +1,61 @@
+lab_name: srlceos01
+
+toggles:
+  include_r5: true
+  include_webserver: true
+  configure_hosts: true
+  configure_nmas_dhcp: true
+
+management:
+  host_interface: nmas-mgmt
+  nmas_ipv4: 192.168.200.100/24
+  nmas_ipv6: 2001:db8:200::100/64
+  primary_dhcp_ipv4: 192.168.200.100
+  primary_dhcp_ipv6: 2001:db8:200::100
+  backup_dhcp_ipv4: 192.168.200.2
+  backup_dhcp_ipv6: 2001:db8:200::2
+
+# `address_v6` is presentation/monitoring-wiring metadata only (dynamic
+# topology visualization + future dual-stack monitoring), never device
+# configuration. Each value is the literal, unmodified management-VLAN
+# (Vlan200) IPv6 already statically configured in the matching
+# templates/<device>.cfg.j2, cross-verified live via `docker exec <device>
+# ip -6 addr show dev Vlan200` (Linux) / `Cli -c "show ipv6 interface
+# brief"` (cEOS) on 2026-09-07. R5 has no Vlan200 SVI (see R5.cfg.j2) and is
+# intentionally omitted here; its dual-stack Management0 address is
+# Containerlab-assigned ("auto"), read from live inspect at snapshot time.
+network_devices:
+  # Managed cEOS nodes require a device-routed machine identity. There is no
+  # shared fallback. R5 remains outside managed scope and uses the explicit
+  # host-side console path for bootstrap/read-only inspection.
+  R1: {template: R1.cfg.j2, username: nmas-automation, credential_ref: runtime://device-credentials/r1-nmas-automation, monitoring: {platform: ceos, address: 192.168.200.1, address_v6: 2001:db8:200::1, source_interface: Vlan200}}
+  R2: {template: R2.cfg.j2, username: nmas-automation, credential_ref: runtime://device-credentials/r2-nmas-automation, monitoring: {platform: ceos, address: 192.168.200.2, address_v6: 2001:db8:200::2, source_interface: Vlan200}}
+  R3: {template: R3.cfg.j2, username: nmas-automation, ssh_key_ref: runtime://device-credentials/r3-nmas-automation-sshkey, monitoring: {platform: linux, address: 192.168.200.3, address_v6: 2001:db8:200::3, source_interface: Vlan200}}
+  R4: {template: R4.cfg.j2, username: nmas-automation, ssh_key_ref: runtime://device-credentials/r4-nmas-automation-sshkey, monitoring: {platform: linux, address: 192.168.200.4, address_v6: 2001:db8:200::4, source_interface: Vlan200}}
+  R5: {template: R5.cfg.j2, edge: true, monitoring: {platform: ceos, address: auto, source_interface: Management0}}
+  S1: {template: S1.cfg.j2, username: nmas-automation, credential_ref: runtime://device-credentials/s1-nmas-automation, monitoring: {platform: ceos, address: 192.168.200.11, address_v6: 2001:db8:200::11, source_interface: Vlan200}}
+  S2: {template: S2.cfg.j2, username: nmas-automation, credential_ref: runtime://device-credentials/s2-nmas-automation, monitoring: {platform: ceos, address: 192.168.200.12, address_v6: 2001:db8:200::12, source_interface: Vlan200}}
+  S3: {template: S3.cfg.j2, username: nmas-automation, credential_ref: runtime://device-credentials/s3-nmas-automation, monitoring: {platform: ceos, address: 192.168.200.13, address_v6: 2001:db8:200::13, source_interface: Vlan200}}
+  S4: {template: S4.cfg.j2, username: nmas-automation, credential_ref: runtime://device-credentials/s4-nmas-automation, monitoring: {platform: ceos, address: 192.168.200.14, address_v6: 2001:db8:200::14, source_interface: Vlan200}}
+  mgmt_swt: {template: mgmt_swt.cfg.j2, username: nmas-automation, credential_ref: runtime://device-credentials/mgmt_swt-nmas-automation, monitoring: {platform: ceos, address: 192.168.200.10, address_v6: 2001:db8:200::10, source_interface: Vlan200}}
+
+hosts:
+  H1: {ipv4: true, ipv6: true}
+  H2: {ipv4: true, ipv6: true}
+  H3: {ipv4: true, ipv6: true}
+  H4: {ipv4: false, ipv6: true}
+
+snmp:
+  username: nmas-monitor
+  auth: SHA-256
+  privacy: AES
+  receiver: 192.168.200.100
+  interval_seconds: 60
+
+syslog:
+  receiver: 192.168.200.100
+  port: 514
+  # emerg(0)/alert(1)/crit(2) only; matches EOS "logging trap critical" and
+  # the Linux/FRR forwarder's "if $syslogseverity <= 2" rule. See
+  # docs/SYSLOG_IMPLEMENTATION.md for the severity policy rationale.
+  max_severity: 2

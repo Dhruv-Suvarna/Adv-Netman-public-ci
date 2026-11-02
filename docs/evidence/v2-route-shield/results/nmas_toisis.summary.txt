@@ -1,0 +1,29 @@
+== sequence-numbered probes
+   c02: production 0/265980 lost   diagnostic 0/8318 lost
+   PRODUCTION TRANSIT: probes 265980 lost 0    DIAGNOSTIC (device-originated): probes 8318 lost 0
+== long-lived TCP sessions
+   h1_tcp4: UNINTERRUPTED CLOSE 1791736625.856 7372 7372 588  stalls>250ms: 12 (informational)
+   h1_tcp6: UNINTERRUPTED CLOSE 1791736625.776 7374 7374 606  stalls>250ms: 9 (informational)
+   h2_tcp4: UNINTERRUPTED CLOSE 1791736629.869 7404 7404 617  stalls>250ms: 8 (informational)
+   h2_tcp6: UNINTERRUPTED CLOSE 1791736629.892 7411 7411 728  stalls>250ms: 9 (informational)
+   h3_tcp4: UNINTERRUPTED CLOSE 1791736634.050 7440 7440 720  stalls>250ms: 8 (informational)
+   h3_tcp6: UNINTERRUPTED CLOSE 1791736634.011 7448 7448 750  stalls>250ms: 8 (informational)
+   h4_tcp6: UNINTERRUPTED CLOSE 1791736638.125 7483 7483 727  stalls>250ms: 10 (informational)
+== repeated new HTTP sessions
+   h1_http4: ALL OK CLOSE 1791736625.824 2961 0 5 1141  slow>400ms: 5 (informational)
+   h1_http6: ALL OK CLOSE 1791736625.887 2964 0 6 1138  slow>400ms: 6 (informational)
+   h2_http4: ALL OK CLOSE 1791736630.006 2975 0 6 1176  slow>400ms: 6 (informational)
+   h2_http6: ALL OK CLOSE 1791736629.897 2978 0 4 1045  slow>400ms: 4 (informational)
+   h3_http4: ALL OK CLOSE 1791736634.063 2990 0 5 1145  slow>400ms: 5 (informational)
+   h3_http6: ALL OK CLOSE 1791736634.026 2993 0 5 1612  slow>400ms: 5 (informational)
+   h4_http6: ALL OK CLOSE 1791736638.305 3008 0 5 1229  slow>400ms: 5 (informational)
+== completed: forward 1  rollback 0  drains 0  restores 0   failed-events: []
+   flows without evidence: none
+VERDICT: PASS (production transit loss 0, TCP uninterrupted, HTTP all successful)
+== c3
+     2  covered   | NMAS plan R2-clients-static-to-isis LESS_SPECIFIC_COVER spec
+== c4
+     2  covered   | NMAS plan R2-clients-static-to-isis LESS_SPECIFIC_COVER spec
+client /64 route replacements on the cores: 4   without a cover: 0
+CORE VERDICT: PASS
+edge router (pe) client-route events: 0

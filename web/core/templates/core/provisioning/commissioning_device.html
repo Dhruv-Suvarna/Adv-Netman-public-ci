@@ -1,0 +1,107 @@
+{% extends "core/base.html" %}
+{% block title %}Commissioning · {{ device.name }}{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>Isolation and commissioning · {{ device.name }}</h1>
+  <p><a href="{{ device.get_absolute_url }}">&larr; {{ device.device_id }}</a> · <a href="{% url 'core:commissioning_overview' %}">Isolation and commissioning</a> ·
+     <a href="{% url 'core:commissioning_device_json' device.device_id %}">Status (JSON)</a></p>
+  <p>Lifecycle <strong>{{ device.lifecycle_state }}</strong> · admission <strong>{{ device.admission_state }}</strong>.
+     Isolation is enforced on the TRUSTED upstream port, never on the new device. Production configuration is an ordinary provisioning
+     Change; admission releases the isolation and verifies routing and reachability, restoring the isolation on failure.
+     Every approval must come from a different operator and names the exact hash shown. No credential or private key is shown here.</p>
+</div>
+
+{% for r in refusals %}<div class="card" style="border-left:6px solid var(--danger);"><p><strong>{{ r.code }}</strong> — {{ r.message }} {{ r.remediation }}</p></div>{% endfor %}
+
+<div class="card" style="margin-top:16px;">
+  <h3>1 · Trusted-upstream isolation</h3>
+  {% for p in policies %}
+  <div class="address-card"><p><code>{{ p.policy }}</code> · <strong>{{ p.state }}</strong> · upstream {{ p.upstream }}
+    · requested {{ p.requested_by }}{% if p.approved_by %} · approved {{ p.approved_by }}{% endif %}</p>
+    <p><small>plan hash <code>{{ p.plan_hash|default:"—" }}</code>{% if p.apply_change %} · apply {{ p.apply_change }}{% endif %}{% if p.release_change %} · release {{ p.release_change }}{% endif %}</small></p>
+    <table class="data-table"><tbody>{% for kind, c in p.checks.items %}<tr><th>{{ kind }}</th><td>{% if c %}{% if c.ok %}✓{% else %}✗ <code>{{ c.code }}</code>{% endif %} · {{ c.at }}{% if c.with_device %} · with device{% endif %}{% else %}—{% endif %}</td></tr>{% endfor %}</tbody></table>
+    {% if p.failure %}<p><strong>{{ p.failure.code|default:'' }}{{ p.failure.codes|join:', '|default:'' }}</strong></p>{% endif %}
+    {% for l in p.limitations %}<p><small>{{ l }}</small></p>{% endfor %}
+    {% if p.state == 'REQUIRED' or p.state == 'PLANNED' %}<form method="post" action="{% url 'core:isolation_plan' device.device_id p.policy %}" style="display:inline">{% csrf_token %}<button class="btn" type="submit">Plan (reads the upstream)</button></form>{% endif %}
+    {% if p.state == 'PLANNED' %}<form method="post" action="{% url 'core:isolation_precheck' device.device_id p.policy %}" style="display:inline">{% csrf_token %}<button class="btn" type="submit">Precheck</button></form>
+      <form method="post" action="{% url 'core:isolation_approve' device.device_id p.policy %}" style="display:inline">{% csrf_token %}<input type="hidden" name="confirmation" value="{{ p.plan_hash }}"><button class="btn" type="submit">Approve plan</button></form>
+      <form method="post" action="{% url 'core:isolation_apply' device.device_id p.policy %}" style="display:inline">{% csrf_token %}<input type="hidden" name="confirmation" value="{{ p.plan_hash }}"><button class="btn btn--primary" type="submit">Apply on the upstream</button></form>{% endif %}
+    {% if p.state == 'ENFORCED' or p.state == 'VERIFIED' %}<form method="post" action="{% url 'core:isolation_verify' device.device_id p.policy %}" style="display:inline">{% csrf_token %}
+        <label><input type="checkbox" name="with_device" value="yes"> device attached</label><button class="btn" type="submit">Verify</button></form>
+      <form method="post" action="{% url 'core:isolation_drift' device.device_id p.policy %}" style="display:inline">{% csrf_token %}<button class="btn" type="submit">Check drift</button></form>{% endif %}
+    {% if p.state == 'DRIFTED' or p.state == 'UNCERTAIN' or p.state == 'APPLYING' %}<form method="post" action="{% url 'core:isolation_reconcile' device.device_id p.policy %}" style="display:inline">{% csrf_token %}<button class="btn" type="submit">Reconcile (read the upstream)</button></form>{% endif %}
+    {% if p.state == 'REQUIRED' or p.state == 'PLANNED' or p.state == 'BLOCKED' %}<form method="post" action="{% url 'core:isolation_cancel' device.device_id p.policy %}" style="display:inline">{% csrf_token %}<input class="form-control" name="reason" placeholder="reason" aria-label="Cancel reason" required><button class="btn" type="submit">Cancel</button></form>{% endif %}
+  </div>{% empty %}<p>No isolation policy exists for this device.</p>{% endfor %}
+  <h4>Require isolation</h4>
+  <form method="post" action="{% url 'core:isolation_require' device.device_id %}" class="collection-form">{% csrf_token %}
+    <select class="form-control" name="attachment_id" aria-label="Routed attachment" required>{% for a in attachments %}<option value="{{ a.pk }}">{{ a.local_interface }} → {{ a.upstream_device }}:{{ a.upstream_interface }} ({{ a.approval_state }})</option>{% empty %}<option value="">no routed attachment</option>{% endfor %}</select>
+    <select class="form-control" name="network" aria-label="Bootstrap network"><option value="">no bootstrap network</option>{% for n in networks %}<option value="{{ n.name }}">{{ n.name }}</option>{% endfor %}</select>
+    <button class="btn btn--primary" type="submit">Require isolation</button>
+  </form>
+</div>
+
+<div class="card" style="margin-top:16px;">
+  <h3>2 · Commissioning dependencies</h3>
+  <table class="data-table"><thead><tr><th>Upstream</th><th>Kind</th><th>Satisfied</th><th></th></tr></thead><tbody>
+  {% for d in dependency_rows %}<tr><td>{{ d.upstream.name }}</td><td>{{ d.kind }}</td><td>{% for e in dependencies.edges %}{% if e.upstream == d.upstream.name and e.device == device.name %}{{ e.satisfied|yesno:"yes,no" }} — {{ e.reason }}{% endif %}{% endfor %}</td>
+    <td><form method="post" action="{% url 'core:dependency_remove' device.device_id d.pk %}" style="display:inline">{% csrf_token %}<input class="form-control" name="reason" placeholder="reason" aria-label="Remove reason" required><button class="btn" type="submit">Remove</button></form></td></tr>
+  {% empty %}<tr><td colspan="4">This device depends on no other device.</td></tr>{% endfor %}
+  </tbody></table>
+  {% if dependencies.cycles %}<p><strong>Cycle detected:</strong> {% for c in dependencies.cycles %}{{ c|join:" → " }} {% endfor %}</p>{% endif %}
+  <form method="post" action="{% url 'core:dependency_add' device.device_id %}" class="collection-form">{% csrf_token %}
+    <select class="form-control" name="upstream_id" aria-label="Upstream device" required>{% for u in upstream_choices %}<option value="{{ u.pk }}">{{ u.name }} ({{ u.lifecycle_state }})</option>{% endfor %}</select>
+    <select class="form-control" name="kind" aria-label="Kind">{% for value, label in dependency_kinds %}<option value="{{ value }}">{{ label }}</option>{% endfor %}</select>
+    <input class="form-control" name="reason" placeholder="reason" aria-label="Reason">
+    <button class="btn" type="submit">Declare dependency</button>
+  </form>
+</div>
+
+<div class="card" style="margin-top:16px;">
+  <h3>3 · Commissioning</h3>
+  <form method="post" action="{% url 'core:commissioning_open' device.device_id %}" style="display:inline">{% csrf_token %}<button class="btn btn--primary" type="submit">Open commissioning</button></form>
+  {% for c in records %}
+  <div class="address-card"><p><code>{{ c.commissioning }}</code> · <strong>{{ c.state }}</strong> · isolation {{ c.policy }} ({{ c.isolation_state }})
+    · run {% if c.provisioning_run %}<a href="{% url 'core:provisioning_detail' c.provisioning_run %}">{{ c.provisioning_run }}</a> ({{ c.provisioning_status }}){% else %}—{% endif %}
+    · requested {{ c.requested_by }}{% if c.approved_by %} · approved {{ c.approved_by }}{% endif %}</p>
+    <p><small>evidence digest <code>{{ c.evidence_digest|default:"—" }}</code>{% if c.candidate_hash %} · candidate <code>{{ c.candidate_hash }}</code>{% endif %}</small></p>
+    <table class="data-table"><tbody>{% for row in c.readiness.checks %}<tr><th>{{ row.check }}</th><td>{% if row.ok %}✓{% else %}✗ <code>{{ row.code }}</code>{% endif %}</td></tr>{% endfor %}</tbody></table>
+    {% if c.failure %}<p><strong>{{ c.failure.code|default:'' }}{{ c.failure.codes|join:', '|default:'' }}</strong></p>{% endif %}
+    {% if c.state == 'OPEN' or c.state == 'READY' %}<form method="post" action="{% url 'core:commissioning_assess' device.device_id c.commissioning %}" style="display:inline">{% csrf_token %}<button class="btn" type="submit">Assess readiness</button></form>{% endif %}
+    {% if c.state == 'READY' %}<form method="post" action="{% url 'core:commissioning_approve' device.device_id c.commissioning %}" style="display:inline">{% csrf_token %}<input type="hidden" name="confirmation" value="{{ c.evidence_digest }}">
+        <input class="form-control" name="comment" placeholder="comment" aria-label="Approval comment"><button class="btn btn--primary" type="submit">Approve production configuration</button></form>{% endif %}
+    {% if c.state == 'CONFIGURING' %}<form method="post" action="{% url 'core:commissioning_record' device.device_id c.commissioning %}" style="display:inline">{% csrf_token %}<button class="btn" type="submit">Record configuration outcome</button></form>{% endif %}
+    {% if c.state == 'UNCERTAIN' %}<form method="post" action="{% url 'core:commissioning_reconcile' device.device_id c.commissioning %}" style="display:inline">{% csrf_token %}<button class="btn" type="submit">Reconcile</button></form>{% endif %}
+    {% if c.state == 'OPEN' or c.state == 'READY' or c.state == 'APPROVED' or c.state == 'CONFIGURED' %}<form method="post" action="{% url 'core:commissioning_abort' device.device_id c.commissioning %}" style="display:inline">{% csrf_token %}<input class="form-control" name="reason" placeholder="reason" aria-label="Abort reason" required><button class="btn" type="submit">Abort</button></form>{% endif %}
+    {% if c.state == 'CONFIGURED' %}<h4>Plan production admission</h4>
+    <form method="post" action="{% url 'core:admission_plan' device.device_id c.commissioning %}" class="collection-form">{% csrf_token %}
+      <select class="form-control" name="routing" aria-label="Routing protocol"><option value="OSPF">OSPF</option><option value="RIP">RIP</option></select>
+      <input class="form-control" name="ospf_neighbors" placeholder="OSPF neighbor router IDs (comma separated)" aria-label="OSPF neighbors">
+      <input class="form-control" name="routes_v4" placeholder="IPv4 routes expected via the upstream" aria-label="IPv4 routes">
+      <input class="form-control" name="routes_v6" placeholder="IPv6 routes expected via the upstream" aria-label="IPv6 routes">
+      <input class="form-control" name="reachable" placeholder="addresses the upstream must reach" aria-label="Reachable addresses">
+      <button class="btn btn--primary" type="submit">Plan admission</button>
+    </form>{% endif %}
+  </div>{% empty %}<p>No commissioning has been opened.</p>{% endfor %}
+</div>
+
+<div class="card" style="margin-top:16px;">
+  <h3>4 · Production admission</h3>
+  <p>Verification from this page proves configuration, routing adjacency, routes and reachability from the upstream. It does not run a traffic probe.</p>
+  {% for a in admissions %}
+  <div class="address-card"><p><code>{{ a.admission }}</code> · <strong>{{ a.state }}</strong> · {{ a.commissioning }} · isolation {{ a.policy }}
+    {% if a.release_change %} · release {{ a.release_change }}{% endif %} · requested {{ a.requested_by }}{% if a.approved_by %} · approved {{ a.approved_by }}{% endif %}</p>
+    <p><small>evidence digest <code>{{ a.evidence_digest }}</code></small></p>
+    {% if a.failure %}<p><strong>{{ a.failure.code|default:'' }}{{ a.failure.codes|join:', '|default:'' }}</strong></p>{% endif %}
+    {% if a.state == 'PLANNED' %}<form method="post" action="{% url 'core:admission_precheck' device.device_id a.admission %}" style="display:inline">{% csrf_token %}<button class="btn" type="submit">Precheck</button></form>
+      <form method="post" action="{% url 'core:admission_approve' device.device_id a.admission %}" style="display:inline">{% csrf_token %}<input type="hidden" name="confirmation" value="{{ a.evidence_digest }}"><button class="btn" type="submit">Approve admission</button></form>{% endif %}
+    {% if a.state == 'APPROVED' %}<form method="post" action="{% url 'core:admission_execute' device.device_id a.admission %}" style="display:inline">{% csrf_token %}<button class="btn btn--primary" type="submit">Release isolation and verify</button></form>{% endif %}
+    {% if a.state == 'RELEASING' or a.state == 'UNCERTAIN' %}<form method="post" action="{% url 'core:admission_reconcile' device.device_id a.admission %}" style="display:inline">{% csrf_token %}<button class="btn" type="submit">Reconcile</button></form>{% endif %}
+    {% if a.state == 'PLANNED' or a.state == 'APPROVED' %}<form method="post" action="{% url 'core:admission_cancel' device.device_id a.admission %}" style="display:inline">{% csrf_token %}<input class="form-control" name="reason" placeholder="reason" aria-label="Cancel reason" required><button class="btn" type="submit">Cancel</button></form>{% endif %}
+  </div>{% empty %}<p>No admission has been planned.</p>{% endfor %}
+  <h4>Hand-offs</h4>
+  <table class="data-table"><tbody>
+  {% for e in outbox %}<tr><td>{{ e.topic }}</td><td>{{ e.state }}</td><td><code>{{ e.payload_digest|truncatechars:20 }}</code></td><td>{{ e.created_at }}</td></tr>
+  {% empty %}<tr><td>No hand-off recorded.</td></tr>{% endfor %}
+  </tbody></table>
+</div>
+{% endblock %}

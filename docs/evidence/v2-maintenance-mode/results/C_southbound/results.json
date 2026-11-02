@@ -1,0 +1,103 @@
+{
+ "05b_southbound_metric_without_covers_measured": {
+  "ok": true,
+  "lossless": true,
+  "state_after_entry": "ACTIVE",
+  "entry_outcome": "SUCCEEDED",
+  "failure": {},
+  "applied": [
+   "S1-shield-install-drain",
+   "S1-uplink-metric-drain",
+   "S1-shield-remove-drain",
+   "R1-external-metric-drain"
+  ],
+  "compensation": [],
+  "probes_lost_in_run": 0,
+  "probe_totals_entry": {
+   "answered": 147916,
+   "lost": 0,
+   "flows": 14
+  },
+  "state_after_restore": "RESTORED",
+  "probes_lost_in_restore": 0,
+  "baseline_restored": true,
+  "chain_ok": true,
+  "cores_unchanged": true
+ },
+ "11b_worker_crash_recovery": {
+  "ok": true,
+  "after_step_boundary": {
+   "killed": {
+    "state": "ENTERING",
+    "claim": true,
+    "locks": [
+     "S1"
+    ]
+   },
+   "tick_while_claim_fresh": [],
+   "recovery": [
+    {
+     "record": "MNT-000002",
+     "item": "RECOVER",
+     "state": "ENTRY_ABORTED_RESTORED",
+     "outcome": "DONE",
+     "escalated": false
+    }
+   ],
+   "state": "ENTRY_ABORTED_RESTORED",
+   "escalated": false,
+   "maintenance_only_state": [],
+   "findings": [],
+   "baseline_restored": true,
+   "chain_ok": true
+  },
+  "inside_stage": {
+   "killed": {
+    "state": "ENTERING",
+    "claim": true,
+    "locks": [
+     "S1"
+    ]
+   },
+   "tick_while_claim_fresh": [],
+   "recovery": [
+    {
+     "record": "MNT-000003",
+     "item": "RECOVER",
+     "state": "RESTORE_FAILED_ESCALATED",
+     "outcome": "DONE",
+     "escalated": true
+    }
+   ],
+   "state": "RESTORE_FAILED_ESCALATED",
+   "escalated": true,
+   "maintenance_only_state": [
+    "S1: interface Ethernet1 > isis metric 1000",
+    "S1: ipv6 route 2001:db8:8000::/33 2001:db8:110:3::2",
+    "S1: ipv6 route 2001:db8::/33 2001:db8:110:3::2"
+   ],
+   "findings": [
+    {
+     "code": "GATE_FAILED",
+     "family": "",
+     "direction": "",
+     "traffic_class": "",
+     "workloads": [],
+     "detail": "after: S1 2001:db8::/33 owned by static via Ethernet1: 2001:db8::/33: static via Ethernet1,Vlan99 programmed=True"
+    },
+    {
+     "code": "RESTORE_COMPENSATION_INCOMPLETE",
+     "family": "",
+     "direction": "",
+     "traffic_class": "",
+     "workloads": [],
+     "detail": "the device is neither drained nor restored"
+    }
+   ],
+   "operator_recovery": "configure replace startup-config on S1 (startup is the unpersisted pre-state)",
+   "after_operator_retry": "ENTRY_ABORTED_RESTORED",
+   "baseline_restored": true,
+   "chain_ok": true
+  }
+ }
+}

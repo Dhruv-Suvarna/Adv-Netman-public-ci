@@ -1,0 +1,707 @@
+{
+  "description": "Canonical dashboard for the future Django 'Resources' page: device/system health -- CPU, memory, telemetry freshness, device uptime, and collector CPU-threshold alerts. Sources: gnmi_telemetry (continuous per-device state/metrics), snmp_poll (uptime/cross-check CPU), collector_alert (event-optional), syslog_event (event-optional). See docs/GRAFANA_MONITORING_TAXONOMY.md.",
+  "editable": false,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 1,
+  "id": null,
+  "links": [],
+  "liveNow": true,
+  "panels": [
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "nmas-influxdb"
+      },
+      "description": "Count of devices with a real hostname telemetry sample in the last five minutes. Missing data is not treated as UP.",
+      "eventOptional": false,
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 1
+              },
+              {
+                "color": "green",
+                "value": 10
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 0,
+        "y": 0
+      },
+      "id": 1,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "nmas-influxdb"
+          },
+          "query": "from(bucket: \"network-monitoring\")\n          |> range(start: -5m)\n          |> filter(fn: (r) => r._measurement == \"gnmi_telemetry\" and r.category == \"system_identity\" and r._field == \"hostname\")\n          |> filter(fn: (r) => r.device =~ /^${device:regex}$/ and r.platform =~ /^${platform:regex}$/)\n          |> group()\n          |> unique(column: \"device\")\n          |> count(column: \"device\")\n          |> rename(columns: {device: \"_value\"})",
+          "refId": "A"
+        }
+      ],
+      "title": "Devices reporting (5m)",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "nmas-influxdb"
+      },
+      "description": "Age of the stalest last-received identity sample. Green <60s, amber 60-120s, red >120s.",
+      "eventOptional": false,
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 1,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 60
+              },
+              {
+                "color": "red",
+                "value": 120
+              }
+            ]
+          },
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 6,
+        "y": 0
+      },
+      "id": 2,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "nmas-influxdb"
+          },
+          "query": "from(bucket: \"network-monitoring\")\n          |> range(start: -30d)\n          |> filter(fn: (r) => r._measurement == \"gnmi_telemetry\" and r.category == \"system_identity\" and r._field == \"hostname\")\n          |> filter(fn: (r) => r.device =~ /^${device:regex}$/ and r.platform =~ /^${platform:regex}$/)\n          |> group(columns: [\"device\"])\n          |> last()\n          |> map(fn: (r) => ({r with _value: float(v: int(v: now()) - int(v: r._time)) / 1000000000.0}))\n          |> group()\n          |> max()",
+          "refId": "A"
+        }
+      ],
+      "title": "Worst telemetry age",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "nmas-influxdb"
+      },
+      "description": "",
+      "eventOptional": false,
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 1,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 70
+              },
+              {
+                "color": "red",
+                "value": 90
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 12,
+        "y": 0
+      },
+      "id": 3,
+      "options": {
+        "displayMode": "gradient",
+        "minVizHeight": 10,
+        "minVizWidth": 0,
+        "namePlacement": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true,
+        "sizing": "auto",
+        "valueMode": "color"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "nmas-influxdb"
+          },
+          "query": "from(bucket: \"network-monitoring\")\n          |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n          |> filter(fn: (r) => r._measurement == \"gnmi_telemetry\" and r.category == \"system_cpu\" and r._field == \"cpu_total_pct\")\n          |> filter(fn: (r) => r.device =~ /^${device:regex}$/ and r.platform =~ /^${platform:regex}$/)\n          |> group(columns: [\"device\"])\n          |> aggregateWindow(every: 1m, fn: mean, createEmpty: false)\n          |> last()",
+          "refId": "A"
+        }
+      ],
+      "title": "Latest CPU by device",
+      "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "nmas-influxdb"
+      },
+      "description": "Count of collector-generated CPU threshold ALERT transitions in the selected range (measurement collector_alert, source=collector) -- distinct from device-originated SNMP traps. Legitimately zero when no device has crossed the configured threshold.",
+      "eventOptional": true,
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 1
+              },
+              {
+                "color": "red",
+                "value": 3
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 18,
+        "y": 0
+      },
+      "id": 4,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "nmas-influxdb"
+          },
+          "query": "from(bucket: \"network-monitoring\")\n          |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n          |> filter(fn: (r) => r._measurement == \"collector_alert\" and r.alert_type == \"cpu_threshold\" and r.transition == \"alert\")\n          |> filter(fn: (r) => r.device =~ /^${device:regex}$/ and r.platform =~ /^${platform:regex}$/)\n          |> group()\n          |> count()",
+          "refId": "A"
+        }
+      ],
+      "title": "NMAS Collector CPU Alerts (range)",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "nmas-influxdb"
+      },
+      "description": "Health is based only on observed telemetry age; absent devices are never fabricated as healthy. 'Unhealthy only' hides HEALTHY rows -- this can legitimately empty the table when the whole fleet is healthy.",
+      "eventOptional": true,
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "filterable": true
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 4
+      },
+      "id": 5,
+      "options": {
+        "cellHeight": "sm",
+        "showHeader": true,
+        "sortBy": []
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "nmas-influxdb"
+          },
+          "query": "from(bucket: \"network-monitoring\")\n          |> range(start: -30d)\n          |> filter(fn: (r) => r._measurement == \"gnmi_telemetry\" and r.category == \"system_identity\" and r._field == \"hostname\")\n          |> filter(fn: (r) => r.device =~ /^${device:regex}$/ and r.platform =~ /^${platform:regex}$/)\n          |> group(columns: [\"device\", \"platform\"])\n          |> last()\n          |> map(fn: (r) => ({r with age_seconds: float(v: int(v: now()) - int(v: r._time)) / 1000000000.0, status: if int(v: now()) - int(v: r._time) < 60000000000 then \"HEALTHY\" else if int(v: now()) - int(v: r._time) < 120000000000 then \"STALE\" else \"OFFLINE\"}))\n          |> filter(fn: (r) => (\"${unhealthy_only}\" == \"false\") or r.status != \"HEALTHY\")\n          |> keep(columns: [\"device\", \"platform\", \"_time\", \"age_seconds\", \"status\"])\n          |> group()\n          |> sort(columns: [\"device\"])",
+          "refId": "A"
+        }
+      ],
+      "title": "Per-device health & freshness",
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "nmas-influxdb"
+      },
+      "description": "",
+      "eventOptional": false,
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "decimals": 1,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 70
+              },
+              {
+                "color": "red",
+                "value": 90
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 12
+      },
+      "id": 6,
+      "options": {
+        "legend": {
+          "calcs": [
+            "lastNotNull",
+            "max"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "nmas-influxdb"
+          },
+          "query": "from(bucket: \"network-monitoring\")\n          |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n          |> filter(fn: (r) => r._measurement == \"gnmi_telemetry\" and r.category == \"system_cpu\" and r._field == \"cpu_total_pct\")\n          |> filter(fn: (r) => r.device =~ /^${device:regex}$/ and r.platform =~ /^${platform:regex}$/)\n          |> group(columns: [\"device\"])\n          |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)",
+          "refId": "A"
+        }
+      ],
+      "title": "CPU utilization",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "nmas-influxdb"
+      },
+      "description": "",
+      "eventOptional": false,
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "decimals": 1,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 75
+              },
+              {
+                "color": "red",
+                "value": 90
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 12
+      },
+      "id": 7,
+      "options": {
+        "legend": {
+          "calcs": [
+            "lastNotNull",
+            "max"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "nmas-influxdb"
+          },
+          "query": "from(bucket: \"network-monitoring\")\n          |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n          |> filter(fn: (r) => r._measurement == \"gnmi_telemetry\" and r.category == \"system_memory\" and (r._field == \"mem_used_bytes\" or r._field == \"mem_physical_bytes\"))\n          |> filter(fn: (r) => r.device =~ /^${device:regex}$/ and r.platform =~ /^${platform:regex}$/)\n          |> pivot(rowKey: [\"_time\", \"device\", \"platform\"], columnKey: [\"_field\"], valueColumn: \"_value\")\n          |> filter(fn: (r) => exists r.mem_physical_bytes and exists r.mem_used_bytes and r.mem_physical_bytes > 0)\n          |> map(fn: (r) => ({r with _value: 100.0 * float(v: r.mem_used_bytes) / float(v: r.mem_physical_bytes)}))\n          |> group(columns: [\"device\"])\n          |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)",
+          "refId": "A"
+        }
+      ],
+      "title": "Memory utilization",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "nmas-influxdb"
+      },
+      "description": "Device uptime and last SNMP poll age (HOST-RESOURCES-MIB sysUpTime) -- the only stored source of device uptime; gNMI does not stream an uptime leaf in the current schema.",
+      "eventOptional": false,
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "filterable": true
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 20
+      },
+      "id": 8,
+      "options": {
+        "cellHeight": "sm",
+        "showHeader": true,
+        "sortBy": []
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "nmas-influxdb"
+          },
+          "query": "from(bucket: \"network-monitoring\")\n          |> range(start: -30d)\n          |> filter(fn: (r) => r._measurement == \"snmp_poll\" and r.metric == \"sysUpTime\" and r._field == \"value\")\n          |> filter(fn: (r) => r.device =~ /^${device:regex}$/)\n          |> group(columns: [\"device\", \"platform\", \"management_ip\"])\n          |> last()\n          |> map(fn: (r) => ({r with uptime_seconds: float(v: r._value) / 100.0, poll_age_seconds: float(v: int(v: now()) - int(v: r._time)) / 1000000000.0}))\n          |> keep(columns: [\"device\", \"platform\", \"management_ip\", \"_time\", \"poll_age_seconds\", \"uptime_seconds\"])\n          |> group()\n          |> sort(columns: [\"device\"])",
+          "refId": "A"
+        }
+      ],
+      "title": "SNMP-polled CPU & device uptime",
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "nmas-influxdb"
+      },
+      "description": "Critical-or-worse syslog for the selected device/severity. syslog_event has no topic tag separating resource from interface/link messages, so this is the full matching feed, not a topic-specific subset -- a disclosed limitation, not a fabricated split.",
+      "eventOptional": true,
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "filterable": true
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 24,
+        "x": 0,
+        "y": 28
+      },
+      "id": 9,
+      "options": {
+        "cellHeight": "sm",
+        "showHeader": true,
+        "sortBy": []
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "nmas-influxdb"
+          },
+          "query": "from(bucket: \"network-monitoring\")\n      |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n      |> filter(fn: (r) => r._measurement == \"syslog_event\" and r._field == \"message\")\n      |> map(fn: (r) => ({r with device: if r.device == \"mgmt-swt\" then \"mgmt_swt\" else r.device, platform: if exists r.platform then r.platform else \"unknown\"}))\n      |> filter(fn: (r) => r.device =~ /^${device:regex}$/ and r.severity =~ /^${severity:regex}$/)\n      |> keep(columns: [\"_time\", \"device\", \"platform\", \"source_ip\", \"severity\", \"facility\", \"_value\"])\n      |> rename(columns: {_value: \"message\"})\n      |> group()\n      |> sort(columns: [\"_time\"], desc: true)\n      |> limit(n: 200)",
+          "refId": "A"
+        }
+      ],
+      "title": "Resource-related critical syslog",
+      "type": "table"
+    }
+  ],
+  "refresh": "20s",
+  "schemaVersion": 40,
+  "tags": [
+    "nmas",
+    "network-monitoring",
+    "iac",
+    "canonical"
+  ],
+  "templating": {
+    "list": [
+      {
+        "allValue": ".*",
+        "current": {
+          "selected": true,
+          "text": "All",
+          "value": "$__all"
+        },
+        "datasource": {
+          "type": "influxdb",
+          "uid": "nmas-influxdb"
+        },
+        "definition": "from(bucket: \"network-monitoring\")\n      |> range(start: -30d)\n      |> filter(fn: (r) => r._measurement == \"gnmi_telemetry\" and r.category == \"system_identity\" and r._field == \"hostname\")\n      |> keep(columns: [\"device\"])\n      |> group()\n      |> distinct(column: \"device\")\n      |> sort(columns: [\"device\"])",
+        "hide": 0,
+        "includeAll": true,
+        "label": "Device",
+        "multi": true,
+        "name": "device",
+        "query": "from(bucket: \"network-monitoring\")\n      |> range(start: -30d)\n      |> filter(fn: (r) => r._measurement == \"gnmi_telemetry\" and r.category == \"system_identity\" and r._field == \"hostname\")\n      |> keep(columns: [\"device\"])\n      |> group()\n      |> distinct(column: \"device\")\n      |> sort(columns: [\"device\"])",
+        "refresh": 2,
+        "skipUrlSync": false,
+        "sort": 1,
+        "type": "query"
+      },
+      {
+        "allValue": ".*",
+        "current": {
+          "selected": true,
+          "text": "All",
+          "value": "$__all"
+        },
+        "datasource": {
+          "type": "influxdb",
+          "uid": "nmas-influxdb"
+        },
+        "definition": "from(bucket: \"network-monitoring\")\n      |> range(start: -30d)\n      |> filter(fn: (r) => r._measurement == \"gnmi_telemetry\" and r.category == \"system_identity\" and r._field == \"hostname\")\n      |> keep(columns: [\"platform\"])\n      |> group()\n      |> distinct(column: \"platform\")\n      |> sort(columns: [\"platform\"])",
+        "hide": 0,
+        "includeAll": true,
+        "label": "Platform",
+        "multi": true,
+        "name": "platform",
+        "query": "from(bucket: \"network-monitoring\")\n      |> range(start: -30d)\n      |> filter(fn: (r) => r._measurement == \"gnmi_telemetry\" and r.category == \"system_identity\" and r._field == \"hostname\")\n      |> keep(columns: [\"platform\"])\n      |> group()\n      |> distinct(column: \"platform\")\n      |> sort(columns: [\"platform\"])",
+        "refresh": 2,
+        "skipUrlSync": false,
+        "sort": 1,
+        "type": "query"
+      },
+      {
+        "allValue": ".*",
+        "current": {
+          "selected": true,
+          "text": "All",
+          "value": "$__all"
+        },
+        "datasource": {
+          "type": "influxdb",
+          "uid": "nmas-influxdb"
+        },
+        "definition": "from(bucket: \"network-monitoring\")\n      |> range(start: -30d)\n      |> filter(fn: (r) => r._measurement == \"syslog_event\" and r._field == \"message\")\n      |> keep(columns: [\"severity\"])\n      |> group()\n      |> distinct(column: \"severity\")\n      |> sort(columns: [\"severity\"])",
+        "hide": 0,
+        "includeAll": true,
+        "label": "Severity",
+        "multi": true,
+        "name": "severity",
+        "query": "from(bucket: \"network-monitoring\")\n      |> range(start: -30d)\n      |> filter(fn: (r) => r._measurement == \"syslog_event\" and r._field == \"message\")\n      |> keep(columns: [\"severity\"])\n      |> group()\n      |> distinct(column: \"severity\")\n      |> sort(columns: [\"severity\"])",
+        "refresh": 2,
+        "skipUrlSync": false,
+        "sort": 1,
+        "type": "query"
+      },
+      {
+        "current": {
+          "selected": true,
+          "text": "false",
+          "value": "false"
+        },
+        "hide": 0,
+        "includeAll": false,
+        "label": "Unhealthy only",
+        "multi": false,
+        "name": "unhealthy_only",
+        "options": [
+          {
+            "selected": true,
+            "text": "false",
+            "value": "false"
+          },
+          {
+            "selected": false,
+            "text": "true",
+            "value": "true"
+          }
+        ],
+        "query": "false,true",
+        "skipUrlSync": false,
+        "type": "custom"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
+  "timepicker": {
+    "refresh_intervals": [
+      "10s",
+      "20s",
+      "30s",
+      "1m",
+      "5m"
+    ]
+  },
+  "timezone": "browser",
+  "title": "NMAS Resources",
+  "uid": "nmas-resources",
+  "version": 1,
+  "weekStart": ""
+}

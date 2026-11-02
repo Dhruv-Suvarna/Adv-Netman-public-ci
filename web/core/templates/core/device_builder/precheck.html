@@ -1,0 +1,45 @@
+{% extends "core/base.html" %}
+{% load core_extras %}
+{% block title %}Precheck · {{ change.change_id }}{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>Change Precheck <span style="font-weight:400;">· {{ change.change_id }}</span></h1>
+  <p><a href="{% url 'core:device_builder_change_detail' change.change_id %}">&larr; Back to {{ change.change_id }}</a> · <a href="{% url 'core:change_validation' change.change_id %}">Change Validation</a> · <a href="{% url 'core:change_plan' change.change_id %}">Change Plan</a></p>
+  <p>{{ change.title }}</p>
+  <p><strong>A precheck asks whether the CURRENT validated CURRENT plan is operationally safe to attempt right now.</strong> It deploys nothing, does not re-run validation or rebuild the plan, and does not change the Change lifecycle. There is no deployment control on this page.</p>
+</div>
+
+<div class="card-grid">
+  <div class="card"><h3>Prerequisites</h3>
+    <table class="data-table"><tbody>
+      <tr><th>Change lifecycle</th><td><span class="badge badge--info">{{ change.get_lifecycle_state_display }}</span> (a precheck does not change it)</td></tr>
+      <tr><th>Validation</th><td>{% if validation_currency.state == "CURRENT" %}<span class="badge badge--success">CURRENT</span>{% elif validation_currency.state == "STALE" %}<span class="badge badge--warning">STALE</span>{% else %}<span class="badge badge--neutral">NEVER RUN</span>{% endif %}{% if validation_currency.last_status %} <span class="badge badge--{{ validation_currency.last_status|health_badge_class }}">{{ validation_currency.last_status }}</span>{% endif %}</td></tr>
+      <tr><th>Plan</th><td>{% if not currency %}<span class="badge badge--neutral">NO PLAN</span>{% elif currency.state == "CURRENT" %}<span class="badge badge--success">CURRENT</span>{% else %}<span class="badge badge--warning">STALE</span>{% endif %}{% if plan %} <code>{{ plan.plan_id }}</code>{% endif %}</td></tr>
+      <tr><th>Verification requirements</th><td>{{ requirement_summary.requirements }} ({{ requirement_summary.unverifiable }} without an evaluator)</td></tr>
+    </tbody></table>
+    {% for reason in currency.reasons %}<p class="field-row__message"><code>{{ reason }}</code></p>{% endfor %}
+    <p style="font-size:0.85rem;">{% if sources_checked %}Source freshness was checked just now (read-only).{% else %}Intent currency is checked here; <a href="?check_sources=1">check source freshness</a> reads NetBox/topology (read-only). Running the precheck always checks it.{% endif %}</p>
+    <form method="post" action="{% url 'core:change_precheck_run' change.change_id %}">{% csrf_token %}
+      <button type="submit" class="btn btn--primary">Run Precheck</button>
+    </form>
+    <p style="font-size:0.85rem;color:var(--text-muted);">Running the precheck makes bounded, read-only queries to the devices in the affected scope. If validation or the plan is not current it refuses and records the reason; it never repairs them.</p>
+  </div>
+  <div class="card"><h3>Affected devices</h3>
+    {% if scope %}
+    <table class="data-table"><thead><tr><th>Device</th><th>Role</th><th>Why</th></tr></thead><tbody>
+      {% for d in scope.devices %}<tr><td>{{ d.device }}{% if not d.managed %} <span class="badge badge--warning">not a managed device</span>{% endif %}</td><td><span class="badge badge--neutral">{{ d.role }}</span></td><td>{{ d.reasons|join:", " }}</td></tr>{% endfor %}
+    </tbody></table>
+    <p style="font-size:0.85rem;color:var(--text-muted);">Derived from the plan only. TARGET devices can block; PEER devices (from the validation's resolved peers) never do. Devices outside this scope are never considered.</p>
+    {% else %}<p>No plan has been built for this Change, so there is no scope.</p>{% endif %}
+  </div>
+</div>
+
+<div class="card" style="margin-top:16px;">
+  <h3>Latest precheck</h3>
+  {% if latest %}
+    <p><span class="badge badge--{{ latest.status|health_badge_class }}">{{ latest.status }}</span> {{ latest.created_at }} by {{ latest.created_by|default:"—" }} · <a href="{% url 'core:change_precheck_detail' change.change_id latest.run_id %}">Open run</a></p>
+    {% include "core/health/_results.html" with rows=report.results %}
+  {% else %}<p>No precheck has been run for this Change.</p>{% endif %}
+</div>
+<div class="card" style="margin-top:16px;"><h3>History</h3>{% include "core/health/_history.html" with runs=history %}</div>
+{% endblock %}

@@ -1,0 +1,25 @@
+{% load core_extras %}
+<div class="dropdown-panel" id="notification-dropdown" data-dropdown-panel hidden role="menu" aria-label="Notifications">
+  <div class="dropdown-panel__title">Notifications</div>
+  {% recent_notifications as header_notifications %}
+  {% if header_notifications %}
+    {% for note in header_notifications %}
+      {% include "core/components/notification_item.html" %}
+    {% endfor %}
+  {% else %}
+    <div class="empty-state">
+      <div class="empty-state__icon" aria-hidden="true">&#128276;</div>
+      <div>No notifications yet.</div>
+    </div>
+  {% endif %}
+  <div class="dropdown-panel__footer">
+    <a href="{% url 'core:notifications' %}">More&hellip;</a>
+    {% if header_notifications %}
+      <form method="post" action="{% url 'core:notification_mark_all_read' %}">
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{{ request.path }}">
+        <button type="submit" class="link-button">Mark all read</button>
+      </form>
+    {% endif %}
+  </div>
+</div>

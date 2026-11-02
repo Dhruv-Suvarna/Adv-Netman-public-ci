@@ -1,0 +1,9 @@
+<table class="data-table"><thead><tr><th>#</th><th>Stage</th><th>Device</th><th>Kind</th><th>Sent</th><th>Undone / restored by</th><th>Must hold before</th><th>Must hold after</th><th>Undo gates</th></tr></thead><tbody>
+{% for op in ops %}<tr>
+  <td>{{ op.sequence }}</td><td>{{ op.stage }}</td><td>{{ op.device }}</td><td>{{ op.state }} {{ op.action }}</td>
+  <td>{% for line in op.lines %}<code>{{ line }}</code><br>{% endfor %}</td>
+  <td>{% for line in op.inverse %}<code>{{ line }}</code><br>{% endfor %}</td>
+  <td>{{ op.before|join:"; "|default:"—" }}</td><td>{{ op.after|join:"; "|default:"—" }}{% if op.pause %} · then {{ op.pause }} s{% endif %}</td>
+  <td>{{ op.undo_before|join:"; "|default:"—" }}{% if op.undo_after %} → {{ op.undo_after|join:"; " }}{% endif %}</td>
+</tr>{% empty %}<tr><td colspan="9">No operation: nothing has to move.</td></tr>{% endfor %}
+</tbody></table>

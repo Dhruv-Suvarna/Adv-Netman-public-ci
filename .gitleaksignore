@@ -1,0 +1,43 @@
+# Reviewed current-tree false positives from the 2026-10-30 public-repository
+# audit.  Entries are exact path/rule/line fingerprints, so moving or changing
+# the source forces a fresh review.  Secret values are not stored here.
+docs/evidence/v2-route-shield/closure/fc_abort/plan.json:generic-api-key:1045
+docs/evidence/v2-route-shield/closure/fc_abort/plan.json:generic-api-key:1164
+docs/evidence/v2-route-shield/closure/fc_abort_persist/plan.json:generic-api-key:1045
+docs/evidence/v2-route-shield/closure/fc_abort_persist/plan.json:generic-api-key:1164
+docs/evidence/v2-route-shield/closure/fc_revert/plan.json:generic-api-key:1351
+docs/evidence/v2-route-shield/closure/fc_revert/plan.json:generic-api-key:1452
+docs/evidence/v2-route-shield/closure/fc_revert/plan.json:generic-api-key:1831
+docs/evidence/v2-route-shield/closure/fc_revert/plan.json:generic-api-key:1862
+docs/evidence/v2-route-shield/closure/fc_forward/plan.json:generic-api-key:1045
+docs/evidence/v2-route-shield/closure/fc_forward/plan.json:generic-api-key:1164
+docs/evidence/v2-route-shield/lifecycle/lc_forward/plan.json:generic-api-key:1031
+docs/evidence/v2-route-shield/lifecycle/lc_forward/plan.json:generic-api-key:1150
+docs/evidence/v2-route-shield/lifecycle/lc_abort1/plan.json:generic-api-key:1029
+docs/evidence/v2-route-shield/lifecycle/lc_abort1/plan.json:generic-api-key:1148
+docs/evidence/v2-route-shield/lifecycle/lc_abort2/plan.json:generic-api-key:1029
+docs/evidence/v2-route-shield/lifecycle/lc_abort2/plan.json:generic-api-key:1148
+docs/evidence/v2-route-shield/gonogo/gn_window/plan.json:generic-api-key:1045
+docs/evidence/v2-route-shield/gonogo/gn_window/plan.json:generic-api-key:1164
+web/core/services/credentials/mfa.py:generic-api-key:474
+web/core/services/credentials/mfa.py:generic-api-key:483
+web/core/tests/fixtures/test_governance/cell_golden.json:generic-api-key:2
+web/core/tests/fixtures/test_governance/template_golden.json:generic-api-key:16
+web/core/services/credentials/engine.py:generic-api-key:389
+web/core/services/credentials/engine.py:generic-api-key:395
+web/core/services/credentials/engine.py:generic-api-key:420
+web/core/tests/test_execution_executors.py:generic-api-key:24
+web/core/tests/test_credential_rotation.py:generic-api-key:506
+web/core/tests/test_credential_rotation.py:generic-api-key:518
+web/core/tests/test_tg_credentials_linux_closure.py:generic-api-key:26
+web/core/tests/test_tg_raw_closure.py:generic-api-key:64
+web/core/tests/test_tg_identity_mfa_units.py:generic-api-key:140
+
+# Full-history false positives after the reviewed sensitive-data rewrite.
+# These are exact rewritten commit/path/rule/line fingerprints: an MFA test
+# setting, a deliberate wrong-password probe, and sanitized status codes.
+8eaca9e67ce82576e88f6cf4196e47aecca1f0c0:web/core/tests/test_tg_identity_mfa_units.py:generic-api-key:113
+4a4748b335ef24d9aac1f903bb4b91ab5b4fc0d9:web/core/services/credentials/mfa.py:generic-api-key:294
+4a4748b335ef24d9aac1f903bb4b91ab5b4fc0d9:web/core/services/credentials/engine.py:generic-api-key:253
+4a4748b335ef24d9aac1f903bb4b91ab5b4fc0d9:web/core/services/credentials/engine.py:generic-api-key:264
+4a4748b335ef24d9aac1f903bb4b91ab5b4fc0d9:web/core/services/credentials/engine.py:generic-api-key:278

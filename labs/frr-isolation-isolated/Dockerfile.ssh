@@ -1,0 +1,7 @@
+# The FRR isolation fixture image plus sudo: NMAS logs in to the trusted upstream as the dedicated, key-only "nmas-svc"
+# account, which may run exactly nft and vtysh as root (see fixture.sh: sudoers drop-in).  Nothing else changes.
+FROM nmas-frr-iso-fx:1
+RUN apt-get update -qq \
+ && DEBIAN_FRONTEND=noninteractive apt-get install -y -qq --no-install-recommends sudo \
+ && rm -rf /var/lib/apt/lists/*
+LABEL nmas-fixture=frr-isolation-ssh

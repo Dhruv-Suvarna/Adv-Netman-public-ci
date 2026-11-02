@@ -1,0 +1,1095 @@
+{
+ "authorization": {
+  "anonymous_post": {
+   "location": "/accounts/login/",
+   "status": 302
+  },
+  "viewer_post": {
+   "location": "",
+   "status": 403
+  }
+ },
+ "date_utc": "2026-10-06",
+ "leftover_containers_after_matrix": 0,
+ "proof": "Traffic Workbench through the final architecture: authenticated HTTP POST -> hardened Gunicorn/Django (NoNewPrivileges) -> Unix socket -> traffic runner -> pinned tools image -> endpoint network namespace",
+ "restart_reconciliation": {
+  "abandoned_container": "nmas-traffic-de98e5069fb44cdabe0b2b12d5120927-server",
+  "present_after_runner_restart": false,
+  "present_before_runner_restart": true,
+  "runner_log_event": "abandoned_container_removed"
+ },
+ "runner_layer_two_refusals_direct_on_socket": {
+  "arbitrary-container-name": {
+   "code": "UNKNOWN_ENDPOINT",
+   "field": "source_endpoint_id",
+   "ok": false,
+   "refused": true
+  },
+  "bandwidth-overflow": {
+   "code": "PARAMETER_OUT_OF_BOUNDS",
+   "field": "bandwidth_kbps",
+   "ok": false,
+   "refused": true
+  },
+  "duration-overflow": {
+   "code": "PARAMETER_OUT_OF_BOUNDS",
+   "field": "duration",
+   "ok": false,
+   "refused": true
+  },
+  "extra-key-argv": {
+   "code": "MALFORMED_REQUEST",
+   "field": null,
+   "ok": false,
+   "refused": true
+  },
+  "extra-key-container": {
+   "code": "MALFORMED_REQUEST",
+   "field": null,
+   "ok": false,
+   "refused": true
+  },
+  "extra-key-image": {
+   "code": "MALFORMED_REQUEST",
+   "field": null,
+   "ok": false,
+   "refused": true
+  },
+  "extra-parameter-command": {
+   "code": "MALFORMED_REQUEST",
+   "field": "parameters",
+   "ok": false,
+   "refused": true
+  },
+  "ipv4-to-h4": {
+   "code": "FAMILY_NOT_SUPPORTED_BY_ENDPOINT",
+   "field": null,
+   "ok": false,
+   "refused": true
+  },
+  "managed-router-id": {
+   "code": "UNKNOWN_ENDPOINT",
+   "field": "source_endpoint_id",
+   "ok": false,
+   "refused": true
+  },
+  "not-json": {
+   "code": "MALFORMED_REQUEST",
+   "field": null,
+   "ok": false,
+   "refused": true
+  },
+  "port-violation": {
+   "code": "PARAMETER_OUT_OF_BOUNDS",
+   "field": "port",
+   "ok": false,
+   "refused": true
+  },
+  "string-integer": {
+   "code": "PARAMETER_OUT_OF_BOUNDS",
+   "field": "count",
+   "ok": false,
+   "refused": true
+  },
+  "unsupported-test-type": {
+   "code": "UNSUPPORTED_TEST_TYPE",
+   "field": null,
+   "ok": false,
+   "refused": true
+  }
+ },
+ "runner_service": {
+  "CapBnd": "0000000000000000",
+  "DynamicUser": true,
+  "NoNewPrivileges": true,
+  "ProtectSystem": "strict",
+  "RestrictAddressFamilies": "AF_UNIX",
+  "groups": [
+   "docker",
+   "own dynamic group"
+  ],
+  "socket": "root:student 0660",
+  "uid": 64085,
+  "unit": "temporary nmas-p5proof-traffic-runner.socket/.service rendered from deploy/systemd/nmas-traffic-runner.* (code and config as root-owned copies under /run/nmas-p5proof)"
+ },
+ "runs": [
+  {
+   "address_family": "IPV4",
+   "case": "icmp-ipv4-h1-h2",
+   "destination": "H2",
+   "destination_address": "192.168.20.101",
+   "engine_version": "traffic-2",
+   "failure_reason": "",
+   "family": "ICMP",
+   "finished_at": "2026-10-06 01:38:44.854871+00:00",
+   "http_status": 302,
+   "metrics": {
+    "loss_percent": 0.0,
+    "received": 5,
+    "rtt_avg_ms": 2.865,
+    "rtt_max_ms": 6.265,
+    "rtt_mdev_ms": 1.733,
+    "rtt_min_ms": 1.647,
+    "transmitted": 5
+   },
+   "operation": {
+    "arguments": [
+     "-4",
+     "-n",
+     "-c",
+     "5",
+     "-s",
+     "56",
+     "-W",
+     "2",
+     "192.168.20.101"
+    ],
+    "namespace": "H1",
+    "runtime": {
+     "cleanup": {
+      "containers": [
+       "nmas-traffic-3161fc4824944d7383c88eb4b5c49cd1-asrc",
+       "nmas-traffic-3161fc4824944d7383c88eb4b5c49cd1-adst",
+       "nmas-traffic-3161fc4824944d7383c88eb4b5c49cd1-tool"
+      ],
+      "left_behind": [],
+      "verified": true
+     },
+     "image": "sha256:45ccc0565571b4aef2ef06c54871ecf719559f04ae9d764ffa663728fc3073de",
+     "runner": "traffic-runner-1"
+    },
+    "tool": "ping"
+   },
+   "operator": "p5proof-executor",
+   "parameters": {
+    "count": 5,
+    "size": 56
+   },
+   "protocol": "ICMP",
+   "repository_head": "def98b1abc20b267f5a59eed71656444f0c95748",
+   "run_id": "3161fc48-2494-4d73-83c8-8eb4b5c49cd1",
+   "runner_audit": {
+    "cleanup_verified": true,
+    "containers": 3,
+    "destination": "H2",
+    "duration_ms": 5351,
+    "outcome": "OK",
+    "peer_uid": 1001,
+    "source": "H1",
+    "test_type": "ICMP"
+   },
+   "seconds": 5.69,
+   "source": "H1",
+   "source_address": "192.168.10.102",
+   "started_at": "2026-10-06 01:38:39.212322+00:00",
+   "status": "PASSED"
+  },
+  {
+   "address_family": "IPV6",
+   "case": "icmp-ipv6-h1-h2",
+   "destination": "H2",
+   "destination_address": "2001:db8:20::2001",
+   "engine_version": "traffic-2",
+   "failure_reason": "",
+   "family": "ICMP",
+   "finished_at": "2026-10-06 01:38:50.273585+00:00",
+   "http_status": 302,
+   "metrics": {
+    "loss_percent": 0.0,
+    "received": 5,
+    "rtt_avg_ms": 3.368,
+    "rtt_max_ms": 8.016,
+    "rtt_mdev_ms": 2.37,
+    "rtt_min_ms": 1.757,
+    "transmitted": 5
+   },
+   "operation": {
+    "arguments": [
+     "-6",
+     "-n",
+     "-c",
+     "5",
+     "-s",
+     "56",
+     "-W",
+     "2",
+     "2001:db8:20::2001"
+    ],
+    "namespace": "H1",
+    "runtime": {
+     "cleanup": {
+      "containers": [
+       "nmas-traffic-3ef5296e4650402aba95c111599d5464-asrc",
+       "nmas-traffic-3ef5296e4650402aba95c111599d5464-adst",
+       "nmas-traffic-3ef5296e4650402aba95c111599d5464-tool"
+      ],
+      "left_behind": [],
+      "verified": true
+     },
+     "image": "sha256:45ccc0565571b4aef2ef06c54871ecf719559f04ae9d764ffa663728fc3073de",
+     "runner": "traffic-runner-1"
+    },
+    "tool": "ping"
+   },
+   "operator": "p5proof-executor",
+   "parameters": {
+    "count": 5,
+    "size": 56
+   },
+   "protocol": "ICMP",
+   "repository_head": "def98b1abc20b267f5a59eed71656444f0c95748",
+   "run_id": "3ef5296e-4650-402a-ba95-c111599d5464",
+   "runner_audit": {
+    "cleanup_verified": true,
+    "containers": 3,
+    "destination": "H2",
+    "duration_ms": 5315,
+    "outcome": "OK",
+    "peer_uid": 1001,
+    "source": "H1",
+    "test_type": "ICMP"
+   },
+   "seconds": 5.38,
+   "source": "H1",
+   "source_address": "2001:db8:10::2001",
+   "started_at": "2026-10-06 01:38:44.949245+00:00",
+   "status": "PASSED"
+  },
+  {
+   "address_family": "IPV6",
+   "case": "icmp-ipv6-h1-h4",
+   "destination": "H4",
+   "destination_address": "2001:db8:30::18e5",
+   "engine_version": "traffic-2",
+   "failure_reason": "",
+   "family": "ICMP",
+   "finished_at": "2026-10-06 01:38:53.741373+00:00",
+   "http_status": 302,
+   "metrics": {
+    "loss_percent": 0.0,
+    "received": 3,
+    "rtt_avg_ms": 5.141,
+    "rtt_max_ms": 7.087,
+    "rtt_mdev_ms": 1.379,
+    "rtt_min_ms": 4.049,
+    "transmitted": 3
+   },
+   "operation": {
+    "arguments": [
+     "-6",
+     "-n",
+     "-c",
+     "3",
+     "-s",
+     "56",
+     "-W",
+     "2",
+     "2001:db8:30::18e5"
+    ],
+    "namespace": "H1",
+    "runtime": {
+     "cleanup": {
+      "containers": [
+       "nmas-traffic-c63b8fea9b0e45d692d1a0d0e3fbb82a-asrc",
+       "nmas-traffic-c63b8fea9b0e45d692d1a0d0e3fbb82a-adst",
+       "nmas-traffic-c63b8fea9b0e45d692d1a0d0e3fbb82a-tool"
+      ],
+      "left_behind": [],
+      "verified": true
+     },
+     "image": "sha256:45ccc0565571b4aef2ef06c54871ecf719559f04ae9d764ffa663728fc3073de",
+     "runner": "traffic-runner-1"
+    },
+    "tool": "ping"
+   },
+   "operator": "p5proof-executor",
+   "parameters": {
+    "count": 3,
+    "size": 56
+   },
+   "protocol": "ICMP",
+   "repository_head": "def98b1abc20b267f5a59eed71656444f0c95748",
+   "run_id": "c63b8fea-9b0e-45d6-92d1-a0d0e3fbb82a",
+   "runner_audit": {
+    "cleanup_verified": true,
+    "containers": 3,
+    "destination": "H4",
+    "duration_ms": 3371,
+    "outcome": "OK",
+    "peer_uid": 1001,
+    "source": "H1",
+    "test_type": "ICMP"
+   },
+   "seconds": 3.43,
+   "source": "H1",
+   "source_address": "2001:db8:10::2001",
+   "started_at": "2026-10-06 01:38:50.363656+00:00",
+   "status": "PASSED"
+  },
+  {
+   "address_family": "IPV4",
+   "case": "traceroute-ipv4-h1-h2",
+   "destination": "H2",
+   "destination_address": "192.168.20.101",
+   "engine_version": "traffic-2",
+   "failure_reason": "",
+   "family": "TRACEROUTE",
+   "finished_at": "2026-10-06 01:38:57.227778+00:00",
+   "http_status": 302,
+   "metrics": {
+    "hop_count": 2,
+    "hops": [
+     {
+      "address": null,
+      "hop": 1,
+      "rtt_ms": null
+     },
+     {
+      "address": "192.168.20.101",
+      "hop": 2,
+      "rtt_ms": 12.877
+     }
+    ],
+    "reached": true,
+    "silent_hops": 1
+   },
+   "operation": {
+    "arguments": [
+     "-4",
+     "-n",
+     "-q",
+     "1",
+     "-w",
+     "2",
+     "-m",
+     "15",
+     "-I",
+     "192.168.20.101"
+    ],
+    "namespace": "H1",
+    "runtime": {
+     "cleanup": {
+      "containers": [
+       "nmas-traffic-1a7d060f3cd34ac389b5c53b0f7aee9b-asrc",
+       "nmas-traffic-1a7d060f3cd34ac389b5c53b0f7aee9b-adst",
+       "nmas-traffic-1a7d060f3cd34ac389b5c53b0f7aee9b-tool"
+      ],
+      "left_behind": [],
+      "verified": true
+     },
+     "image": "sha256:45ccc0565571b4aef2ef06c54871ecf719559f04ae9d764ffa663728fc3073de",
+     "runner": "traffic-runner-1"
+    },
+    "tool": "traceroute"
+   },
+   "operator": "p5proof-executor",
+   "parameters": {
+    "max_hops": 15
+   },
+   "protocol": "ICMP",
+   "repository_head": "def98b1abc20b267f5a59eed71656444f0c95748",
+   "run_id": "1a7d060f-3cd3-4ac3-89b5-c53b0f7aee9b",
+   "runner_audit": {
+    "cleanup_verified": true,
+    "containers": 3,
+    "destination": "H2",
+    "duration_ms": 3380,
+    "outcome": "OK",
+    "peer_uid": 1001,
+    "source": "H1",
+    "test_type": "TRACEROUTE"
+   },
+   "seconds": 3.45,
+   "source": "H1",
+   "source_address": "192.168.10.102",
+   "started_at": "2026-10-06 01:38:53.837319+00:00",
+   "status": "PASSED"
+  },
+  {
+   "address_family": "IPV6",
+   "case": "traceroute-ipv6-h1-h2",
+   "destination": "H2",
+   "destination_address": "2001:db8:20::2001",
+   "engine_version": "traffic-2",
+   "failure_reason": "",
+   "family": "TRACEROUTE",
+   "finished_at": "2026-10-06 01:39:00.747907+00:00",
+   "http_status": 302,
+   "metrics": {
+    "hop_count": 2,
+    "hops": [
+     {
+      "address": null,
+      "hop": 1,
+      "rtt_ms": null
+     },
+     {
+      "address": "2001:db8:20::2001",
+      "hop": 2,
+      "rtt_ms": 18.074
+     }
+    ],
+    "reached": true,
+    "silent_hops": 1
+   },
+   "operation": {
+    "arguments": [
+     "-6",
+     "-n",
+     "-q",
+     "1",
+     "-w",
+     "2",
+     "-m",
+     "15",
+     "-I",
+     "2001:db8:20::2001"
+    ],
+    "namespace": "H1",
+    "runtime": {
+     "cleanup": {
+      "containers": [
+       "nmas-traffic-06cccdab60614dc991c64db0c81c753d-asrc",
+       "nmas-traffic-06cccdab60614dc991c64db0c81c753d-adst",
+       "nmas-traffic-06cccdab60614dc991c64db0c81c753d-tool"
+      ],
+      "left_behind": [],
+      "verified": true
+     },
+     "image": "sha256:45ccc0565571b4aef2ef06c54871ecf719559f04ae9d764ffa663728fc3073de",
+     "runner": "traffic-runner-1"
+    },
+    "tool": "traceroute"
+   },
+   "operator": "p5proof-executor",
+   "parameters": {
+    "max_hops": 15
+   },
+   "protocol": "ICMP",
+   "repository_head": "def98b1abc20b267f5a59eed71656444f0c95748",
+   "run_id": "06cccdab-6061-4dc9-91c6-4db0c81c753d",
+   "runner_audit": {
+    "cleanup_verified": true,
+    "containers": 3,
+    "destination": "H2",
+    "duration_ms": 3409,
+    "outcome": "OK",
+    "peer_uid": 1001,
+    "source": "H1",
+    "test_type": "TRACEROUTE"
+   },
+   "seconds": 3.48,
+   "source": "H1",
+   "source_address": "2001:db8:10::2001",
+   "started_at": "2026-10-06 01:38:57.329823+00:00",
+   "status": "PASSED"
+  },
+  {
+   "address_family": "IPV4",
+   "case": "iperf3-tcp-ipv4",
+   "destination": "H2",
+   "destination_address": "192.168.20.101",
+   "engine_version": "traffic-2",
+   "failure_reason": "",
+   "family": "IPERF3",
+   "finished_at": "2026-10-06 01:39:05.880928+00:00",
+   "http_status": 302,
+   "metrics": {
+    "bits_per_second": 2094691.4357934212,
+    "bytes": 786432,
+    "requested_bits_per_second": 2000000,
+    "retransmits": 0,
+    "seconds": 3.003524,
+    "sent_bits_per_second": 2096161.2144659623,
+    "server": {
+     "exit_code": 0,
+     "ready": true,
+     "started": true,
+     "stopped": true,
+     "terminated": false
+    }
+   },
+   "operation": {
+    "client": {
+     "arguments": [
+      "-c",
+      "192.168.20.101",
+      "-4",
+      "-p",
+      "5201",
+      "-t",
+      "3",
+      "-b",
+      "2000K",
+      "-P",
+      "1",
+      "-J",
+      "--connect-timeout",
+      "3000"
+     ],
+     "namespace": "H1"
+    },
+    "runtime": {
+     "cleanup": {
+      "containers": [
+       "nmas-traffic-a871e425f81d4cf0ae654b21d62c7cb6-asrc",
+       "nmas-traffic-a871e425f81d4cf0ae654b21d62c7cb6-adst",
+       "nmas-traffic-a871e425f81d4cf0ae654b21d62c7cb6-server",
+       "nmas-traffic-a871e425f81d4cf0ae654b21d62c7cb6-tool"
+      ],
+      "left_behind": [],
+      "verified": true
+     },
+     "image": "sha256:45ccc0565571b4aef2ef06c54871ecf719559f04ae9d764ffa663728fc3073de",
+     "runner": "traffic-runner-1"
+    },
+    "server": {
+     "arguments": [
+      "-s",
+      "-1",
+      "-4",
+      "-B",
+      "192.168.20.101",
+      "-p",
+      "5201",
+      "--idle-timeout",
+      "13",
+      "--forceflush"
+     ],
+     "namespace": "H2"
+    },
+    "tool": "iperf3"
+   },
+   "operator": "p5proof-executor",
+   "parameters": {
+    "bandwidth_kbps": 2000,
+    "duration": 3,
+    "parallel": 1,
+    "port": 5201
+   },
+   "protocol": "TCP",
+   "repository_head": "def98b1abc20b267f5a59eed71656444f0c95748",
+   "run_id": "a871e425-f81d-4cf0-ae65-4b21d62c7cb6",
+   "runner_audit": {
+    "cleanup_verified": true,
+    "containers": 4,
+    "destination": "H2",
+    "duration_ms": 5025,
+    "outcome": "OK",
+    "peer_uid": 1001,
+    "source": "H1",
+    "test_type": "IPERF3"
+   },
+   "seconds": 5.09,
+   "source": "H1",
+   "source_address": "192.168.10.102",
+   "started_at": "2026-10-06 01:39:00.846976+00:00",
+   "status": "PASSED"
+  },
+  {
+   "address_family": "IPV6",
+   "case": "iperf3-tcp-ipv6",
+   "destination": "H2",
+   "destination_address": "2001:db8:20::2001",
+   "engine_version": "traffic-2",
+   "failure_reason": "",
+   "family": "IPERF3",
+   "finished_at": "2026-10-06 01:39:10.913471+00:00",
+   "http_status": 302,
+   "metrics": {
+    "bits_per_second": 2093983.1055669088,
+    "bytes": 786432,
+    "requested_bits_per_second": 2000000,
+    "retransmits": 0,
+    "seconds": 3.00454,
+    "sent_bits_per_second": 2096259.6921243859,
+    "server": {
+     "exit_code": 0,
+     "ready": true,
+     "started": true,
+     "stopped": true,
+     "terminated": false
+    }
+   },
+   "operation": {
+    "client": {
+     "arguments": [
+      "-c",
+      "2001:db8:20::2001",
+      "-6",
+      "-p",
+      "5201",
+      "-t",
+      "3",
+      "-b",
+      "2000K",
+      "-P",
+      "1",
+      "-J",
+      "--connect-timeout",
+      "3000"
+     ],
+     "namespace": "H1"
+    },
+    "runtime": {
+     "cleanup": {
+      "containers": [
+       "nmas-traffic-419669886350403e836915c0a1742869-asrc",
+       "nmas-traffic-419669886350403e836915c0a1742869-adst",
+       "nmas-traffic-419669886350403e836915c0a1742869-server",
+       "nmas-traffic-419669886350403e836915c0a1742869-tool"
+      ],
+      "left_behind": [],
+      "verified": true
+     },
+     "image": "sha256:45ccc0565571b4aef2ef06c54871ecf719559f04ae9d764ffa663728fc3073de",
+     "runner": "traffic-runner-1"
+    },
+    "server": {
+     "arguments": [
+      "-s",
+      "-1",
+      "-6",
+      "-B",
+      "2001:db8:20::2001",
+      "-p",
+      "5201",
+      "--idle-timeout",
+      "13",
+      "--forceflush"
+     ],
+     "namespace": "H2"
+    },
+    "tool": "iperf3"
+   },
+   "operator": "p5proof-executor",
+   "parameters": {
+    "bandwidth_kbps": 2000,
+    "duration": 3,
+    "parallel": 1,
+    "port": 5201
+   },
+   "protocol": "TCP",
+   "repository_head": "def98b1abc20b267f5a59eed71656444f0c95748",
+   "run_id": "41966988-6350-403e-8369-15c0a1742869",
+   "runner_audit": {
+    "cleanup_verified": true,
+    "containers": 4,
+    "destination": "H2",
+    "duration_ms": 4929,
+    "outcome": "OK",
+    "peer_uid": 1001,
+    "source": "H1",
+    "test_type": "IPERF3"
+   },
+   "seconds": 4.99,
+   "source": "H1",
+   "source_address": "2001:db8:10::2001",
+   "started_at": "2026-10-06 01:39:05.976010+00:00",
+   "status": "PASSED"
+  },
+  {
+   "address_family": "IPV4",
+   "case": "iperf3-udp-ipv4",
+   "destination": "H2",
+   "destination_address": "192.168.20.101",
+   "engine_version": "traffic-2",
+   "failure_reason": "",
+   "family": "IPERF3",
+   "finished_at": "2026-10-06 01:39:15.869995+00:00",
+   "http_status": 302,
+   "metrics": {
+    "bits_per_second": 1000340.571220833,
+    "bytes": 375600,
+    "jitter_ms": 0.491651345809734,
+    "loss_percent": 0.0,
+    "lost_packets": 0,
+    "packets": 313,
+    "requested_bits_per_second": 1000000,
+    "seconds": 3.008415,
+    "server": {
+     "exit_code": 0,
+     "ready": true,
+     "started": true,
+     "stopped": true,
+     "terminated": false
+    }
+   },
+   "operation": {
+    "client": {
+     "arguments": [
+      "-c",
+      "192.168.20.101",
+      "-4",
+      "-p",
+      "5201",
+      "-t",
+      "3",
+      "-b",
+      "1000K",
+      "-P",
+      "1",
+      "-J",
+      "--connect-timeout",
+      "3000",
+      "-u",
+      "-l",
+      "1200"
+     ],
+     "namespace": "H1"
+    },
+    "runtime": {
+     "cleanup": {
+      "containers": [
+       "nmas-traffic-928c63fb0d3049389f6d065334137155-asrc",
+       "nmas-traffic-928c63fb0d3049389f6d065334137155-adst",
+       "nmas-traffic-928c63fb0d3049389f6d065334137155-server",
+       "nmas-traffic-928c63fb0d3049389f6d065334137155-tool"
+      ],
+      "left_behind": [],
+      "verified": true
+     },
+     "image": "sha256:45ccc0565571b4aef2ef06c54871ecf719559f04ae9d764ffa663728fc3073de",
+     "runner": "traffic-runner-1"
+    },
+    "server": {
+     "arguments": [
+      "-s",
+      "-1",
+      "-4",
+      "-B",
+      "192.168.20.101",
+      "-p",
+      "5201",
+      "--idle-timeout",
+      "13",
+      "--forceflush"
+     ],
+     "namespace": "H2"
+    },
+    "tool": "iperf3"
+   },
+   "operator": "p5proof-executor",
+   "parameters": {
+    "bandwidth_kbps": 1000,
+    "duration": 3,
+    "length": 1200,
+    "parallel": 1,
+    "port": 5201
+   },
+   "protocol": "UDP",
+   "repository_head": "def98b1abc20b267f5a59eed71656444f0c95748",
+   "run_id": "928c63fb-0d30-4938-9f6d-065334137155",
+   "runner_audit": {
+    "cleanup_verified": true,
+    "containers": 4,
+    "destination": "H2",
+    "duration_ms": 4829,
+    "outcome": "OK",
+    "peer_uid": 1001,
+    "source": "H1",
+    "test_type": "IPERF3"
+   },
+   "seconds": 4.89,
+   "source": "H1",
+   "source_address": "192.168.10.102",
+   "started_at": "2026-10-06 01:39:11.034125+00:00",
+   "status": "PASSED"
+  },
+  {
+   "address_family": "IPV6",
+   "case": "iperf3-udp-ipv6",
+   "destination": "H4",
+   "destination_address": "2001:db8:30::18e5",
+   "engine_version": "traffic-2",
+   "failure_reason": "",
+   "family": "IPERF3",
+   "finished_at": "2026-10-06 01:39:20.872625+00:00",
+   "http_status": 302,
+   "metrics": {
+    "bits_per_second": 502185.9014106986,
+    "bytes": 188400,
+    "jitter_ms": 1.3883243137915995,
+    "loss_percent": 0.0,
+    "lost_packets": 0,
+    "packets": 157,
+    "requested_bits_per_second": 500000,
+    "seconds": 3.008383,
+    "server": {
+     "exit_code": 0,
+     "ready": true,
+     "started": true,
+     "stopped": true,
+     "terminated": false
+    }
+   },
+   "operation": {
+    "client": {
+     "arguments": [
+      "-c",
+      "2001:db8:30::18e5",
+      "-6",
+      "-p",
+      "5201",
+      "-t",
+      "3",
+      "-b",
+      "500K",
+      "-P",
+      "1",
+      "-J",
+      "--connect-timeout",
+      "3000",
+      "-u",
+      "-l",
+      "1200"
+     ],
+     "namespace": "H2"
+    },
+    "runtime": {
+     "cleanup": {
+      "containers": [
+       "nmas-traffic-f926f73b74574684a3615bd85b0d7c7b-asrc",
+       "nmas-traffic-f926f73b74574684a3615bd85b0d7c7b-adst",
+       "nmas-traffic-f926f73b74574684a3615bd85b0d7c7b-server",
+       "nmas-traffic-f926f73b74574684a3615bd85b0d7c7b-tool"
+      ],
+      "left_behind": [],
+      "verified": true
+     },
+     "image": "sha256:45ccc0565571b4aef2ef06c54871ecf719559f04ae9d764ffa663728fc3073de",
+     "runner": "traffic-runner-1"
+    },
+    "server": {
+     "arguments": [
+      "-s",
+      "-1",
+      "-6",
+      "-B",
+      "2001:db8:30::18e5",
+      "-p",
+      "5201",
+      "--idle-timeout",
+      "13",
+      "--forceflush"
+     ],
+     "namespace": "H4"
+    },
+    "tool": "iperf3"
+   },
+   "operator": "p5proof-executor",
+   "parameters": {
+    "bandwidth_kbps": 500,
+    "duration": 3,
+    "length": 1200,
+    "parallel": 1,
+    "port": 5201
+   },
+   "protocol": "UDP",
+   "repository_head": "def98b1abc20b267f5a59eed71656444f0c95748",
+   "run_id": "f926f73b-7457-4684-a361-5bd85b0d7c7b",
+   "runner_audit": {
+    "cleanup_verified": true,
+    "containers": 4,
+    "destination": "H4",
+    "duration_ms": 4898,
+    "outcome": "OK",
+    "peer_uid": 1001,
+    "source": "H2",
+    "test_type": "IPERF3"
+   },
+   "seconds": 4.96,
+   "source": "H2",
+   "source_address": "2001:db8:20::2001",
+   "started_at": "2026-10-06 01:39:15.965066+00:00",
+   "status": "PASSED"
+  },
+  {
+   "address_family": "IPV4",
+   "case": "tcp-closed-port",
+   "destination": "H2",
+   "destination_address": "192.168.20.101",
+   "engine_version": "traffic-2",
+   "failure_reason": "CONNECTION_REFUSED",
+   "family": "TCP_CONNECT",
+   "finished_at": "2026-10-06 01:39:22.458146+00:00",
+   "http_status": 302,
+   "metrics": {
+    "elapsed_ms": 2.068,
+    "result": "refused"
+   },
+   "operation": {
+    "arguments": [
+     "192.168.20.101",
+     "81",
+     "3"
+    ],
+    "namespace": "H1",
+    "runtime": {
+     "cleanup": {
+      "containers": [
+       "nmas-traffic-0b6b751c1d264bee9f3e3dc2869542e9-asrc",
+       "nmas-traffic-0b6b751c1d264bee9f3e3dc2869542e9-adst",
+       "nmas-traffic-0b6b751c1d264bee9f3e3dc2869542e9-tool"
+      ],
+      "left_behind": [],
+      "verified": true
+     },
+     "image": "sha256:45ccc0565571b4aef2ef06c54871ecf719559f04ae9d764ffa663728fc3073de",
+     "runner": "traffic-runner-1"
+    },
+    "tool": "tcp_connect"
+   },
+   "operator": "p5proof-executor",
+   "parameters": {
+    "port": 81,
+    "timeout": 3
+   },
+   "protocol": "TCP",
+   "repository_head": "def98b1abc20b267f5a59eed71656444f0c95748",
+   "run_id": "0b6b751c-1d26-4bee-9f3e-3dc2869542e9",
+   "runner_audit": {
+    "cleanup_verified": true,
+    "containers": 3,
+    "destination": "H2",
+    "duration_ms": 1462,
+    "outcome": "OK",
+    "peer_uid": 1001,
+    "source": "H1",
+    "test_type": "TCP_CONNECT"
+   },
+   "seconds": 1.54,
+   "source": "H1",
+   "source_address": "192.168.10.102",
+   "started_at": "2026-10-06 01:39:20.987595+00:00",
+   "status": "FAILED"
+  },
+  {
+   "address_family": "IPV4",
+   "case": "udp-closed-port",
+   "destination": "H2",
+   "destination_address": "192.168.20.101",
+   "engine_version": "traffic-2",
+   "failure_reason": "CONNECTION_REFUSED",
+   "family": "UDP_PROBE",
+   "finished_at": "2026-10-06 01:39:24.131510+00:00",
+   "http_status": 302,
+   "metrics": {
+    "elapsed_ms": 2.19,
+    "replies": 0,
+    "result": "refused",
+    "sent": 1
+   },
+   "operation": {
+    "arguments": [
+     "192.168.20.101",
+     "5353",
+     "2",
+     "3",
+     "64"
+    ],
+    "namespace": "H1",
+    "runtime": {
+     "cleanup": {
+      "containers": [
+       "nmas-traffic-30d47b323e874d49afb9a6786d67e082-asrc",
+       "nmas-traffic-30d47b323e874d49afb9a6786d67e082-adst",
+       "nmas-traffic-30d47b323e874d49afb9a6786d67e082-tool"
+      ],
+      "left_behind": [],
+      "verified": true
+     },
+     "image": "sha256:45ccc0565571b4aef2ef06c54871ecf719559f04ae9d764ffa663728fc3073de",
+     "runner": "traffic-runner-1"
+    },
+    "tool": "udp_probe"
+   },
+   "operator": "p5proof-executor",
+   "parameters": {
+    "count": 3,
+    "port": 5353,
+    "size": 64,
+    "timeout": 2
+   },
+   "protocol": "UDP",
+   "repository_head": "def98b1abc20b267f5a59eed71656444f0c95748",
+   "run_id": "30d47b32-3e87-4d49-afb9-a6786d67e082",
+   "runner_audit": {
+    "cleanup_verified": true,
+    "containers": 3,
+    "destination": "H2",
+    "duration_ms": 1513,
+    "outcome": "OK",
+    "peer_uid": 1001,
+    "source": "H1",
+    "test_type": "UDP_PROBE"
+   },
+   "seconds": 1.58,
+   "source": "H1",
+   "source_address": "192.168.10.102",
+   "started_at": "2026-10-06 01:39:22.610359+00:00",
+   "status": "FAILED"
+  },
+  {
+   "case": "refuse-ipv4-to-h4",
+   "http_status": 302,
+   "refused": {
+    "codes": "FAMILY_NOT_SUPPORTED_BY_ENDPOINT"
+   },
+   "seconds": 0.04
+  },
+  {
+   "case": "refuse-duration-3600",
+   "http_status": 302,
+   "refused": {
+    "codes": "PARAMETER_OUT_OF_BOUNDS",
+    "field": "duration"
+   },
+   "seconds": 0.03
+  },
+  {
+   "case": "refuse-router-source",
+   "http_status": 302,
+   "refused": {
+    "codes": "SOURCE_NOT_AN_ENDPOINT"
+   },
+   "seconds": 0.04
+  },
+  {
+   "case": "refuse-injected-fields",
+   "http_status": 302,
+   "refused": {
+    "codes": "PARAMETER_OUT_OF_BOUNDS",
+    "field": "count"
+   },
+   "seconds": 0.03
+  }
+ ],
+ "socket_peer_checks": {
+  "uid_nobody_connect": "PermissionError (socket mode)",
+  "uid_root": "UNAUTHORIZED (SO_PEERCRED uid not allowed)"
+ },
+ "tools_image": {
+  "base": "alpine:3.24.1@sha256:28bd5fe8b56d1bd048e5babf5b10710ebe0bae67db86916198a6eec434943f8b",
+  "id": "sha256:45ccc0565571b4aef2ef06c54871ecf719559f04ae9d764ffa663728fc3073de",
+  "packages": [
+   "iputils-ping=20250605-r2",
+   "traceroute=2.1.6-r0",
+   "iperf3=3.20-r0",
+   "iproute2-minimal=7.0.0-r0",
+   "python3=3.14.8-r0"
+  ],
+  "tag": "nmas-traffic-tools:1"
+ },
+ "web_service": {
+  "CapEff": "0000000000000000",
+  "NoNewPrivileges": true,
+  "NoNewPrivs_in_proc_status_master_and_workers": 1,
+  "PrivateTmp": true,
+  "ProtectSystem": "full",
+  "app_mfa_required": true,
+  "bind": "127.0.0.1:8012",
+  "unit": "temporary nmas-p5proof-web.service rendered from deploy/systemd/nmas-web.service (runtime unit under /run/systemd/system; only EnvironmentFile, gunicorn config path and bind port differ)",
+  "user": "student"
+ }
+}

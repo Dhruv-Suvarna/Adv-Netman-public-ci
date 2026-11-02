@@ -1,0 +1,208 @@
+{
+  "approve": {
+    "codes": [],
+    "ok": true
+  },
+  "check": {
+    "checks": {
+      "attachments": {
+        "ports": 0,
+        "taken": []
+      },
+      "credentials": {
+        "session": "authenticated",
+        "transport": "CeosExecutor"
+      },
+      "drift": {
+        "since_decommission": false
+      },
+      "identity": {
+        "basis": "decommission-time session host key",
+        "expected_known": true,
+        "match": true,
+        "observed_known": true
+      },
+      "integrity": true,
+      "isolation": {
+        "basis": "identity re-observed in place and prior admission LEGACY_PREEXISTING",
+        "required": false
+      },
+      "platform": true
+    },
+    "codes": [],
+    "ok": true,
+    "plan": {
+      "facts": {
+        "management_interfaces": [
+          "Ethernet5"
+        ]
+      },
+      "operations": [
+        {
+          "description": "restore router ospf 1",
+          "inverse": [
+            "no router ospf 1"
+          ],
+          "key": "restore-router-ospf-1",
+          "kind": "ADD",
+          "lines": [
+            "router ospf 1",
+            "   router-id 10.254.255.2",
+            "   network 10.254.81.0/31 area 0.0.0.0",
+            "   network 10.254.83.0/31 area 0.0.0.0",
+            "   network 10.254.255.2/32 area 0.0.0.0",
+            "   max-lsa 12000"
+          ],
+          "paths": [
+            "router ospf 1",
+            "router ospf 1 > router-id 10.254.255.2",
+            "router ospf 1 > network 10.254.81.0/31 area 0.0.0.0",
+            "router ospf 1 > network 10.254.83.0/31 area 0.0.0.0",
+            "router ospf 1 > network 10.254.255.2/32 area 0.0.0.0",
+            "router ospf 1 > max-lsa 12000"
+          ]
+        },
+        {
+          "description": "restore ipv6 router ospf 1",
+          "inverse": [
+            "no ipv6 router ospf 1"
+          ],
+          "key": "restore-ipv6-router-ospf-1",
+          "kind": "ADD",
+          "lines": [
+            "ipv6 router ospf 1",
+            "   router-id 10.254.255.2"
+          ],
+          "paths": [
+            "ipv6 router ospf 1",
+            "ipv6 router ospf 1 > router-id 10.254.255.2"
+          ]
+        },
+        {
+          "description": "Ethernet1: administratively up",
+          "inverse": [
+            "interface Ethernet1",
+            "   shutdown"
+          ],
+          "key": "no-shutdown-Ethernet1",
+          "kind": "REMOVE",
+          "lines": [
+            "interface Ethernet1",
+            "   no shutdown"
+          ],
+          "paths": [
+            "interface Ethernet1 > shutdown"
+          ]
+        },
+        {
+          "description": "Ethernet2: administratively up",
+          "inverse": [
+            "interface Ethernet2",
+            "   shutdown"
+          ],
+          "key": "no-shutdown-Ethernet2",
+          "kind": "REMOVE",
+          "lines": [
+            "interface Ethernet2",
+            "   no shutdown"
+          ],
+          "paths": [
+            "interface Ethernet2 > shutdown"
+          ]
+        }
+      ]
+    },
+    "state": "PLANNED"
+  },
+  "execute": {
+    "codes": [],
+    "exact_digest": true,
+    "ok": true,
+    "outcome": "SUCCEEDED",
+    "outcome_detail": {
+      "adjacencies": {
+        "IPV4": {
+          "device": [
+            "E1",
+            "E2"
+          ],
+          "graph": [
+            [
+              "E1",
+              "T1"
+            ],
+            [
+              "E1",
+              "T2"
+            ],
+            [
+              "E2",
+              "STUB"
+            ],
+            [
+              "E2",
+              "T1"
+            ],
+            [
+              "E2",
+              "T2"
+            ]
+          ]
+        },
+        "IPV6": {
+          "device": [
+            "E1",
+            "E2"
+          ],
+          "graph": [
+            [
+              "E1",
+              "T1"
+            ],
+            [
+              "E1",
+              "T2"
+            ],
+            [
+              "E2",
+              "STUB"
+            ],
+            [
+              "E2",
+              "T1"
+            ],
+            [
+              "E2",
+              "T2"
+            ]
+          ]
+        }
+      },
+      "blockers": [],
+      "digest": "c249d56d6ea2cbc8e57d82831c551ab6141b20f9b54f711cf9c0c51275e81b27",
+      "expected_digest": "c249d56d6ea2cbc8e57d82831c551ab6141b20f9b54f711cf9c0c51275e81b27",
+      "outcome": "SUCCEEDED",
+      "run": "9a93287d-0f31-4d42-b02d-4fd3bbabaa89"
+    },
+    "state": "RESTORED",
+    "successor": {
+      "admission": "LEGACY_PREEXISTING",
+      "device_id": "DEV-000007",
+      "lifecycle": "IN_SERVICE",
+      "origin": "RESTORED",
+      "predecessor": "DEV-000002"
+    }
+  },
+  "label": "T1 restore",
+  "request": {
+    "codes": [],
+    "ok": true
+  },
+  "routes_after_restore": [
+    " O        10.254.85.0/24 [110/30]",
+    "           via 10.254.81.1, Ethernet2"
+  ],
+  "self_approval": [
+    "RESTORATION_SELF_APPROVAL"
+  ]
+}

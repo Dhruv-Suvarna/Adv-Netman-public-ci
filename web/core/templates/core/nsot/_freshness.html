@@ -1,0 +1,6 @@
+{% load nsot_extras %}
+<span class="badge {{ freshness.state|default:"CURRENT"|badge_class }}">{{ freshness.state|default:"CURRENT" }}</span>
+<span style="color:var(--text-muted);">Fetched at {{ fetched_at|default:"unknown" }}{% if freshness.age_seconds != None %} &middot; {{ freshness.age_seconds|floatformat:0 }}s ago{% endif %}{% if cache == "hit" %} &middot; cached{% endif %}</span>
+{% if refresh_error %}
+<span class="badge badge--danger" title="{{ refresh_error }}">Refresh failed — showing last known good data</span>
+{% endif %}

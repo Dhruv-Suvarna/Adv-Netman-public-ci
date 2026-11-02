@@ -1,0 +1,12 @@
+{% load static %}
+<nav class="subnav" aria-label="NSOT sections">
+  <a href="{% url 'core:nsot' %}" class="{% if request.resolver_match.url_name == 'nsot' %}is-active{% endif %}">Overview</a>
+  <a href="{% url 'core:nsot_devices' %}" class="{% if request.resolver_match.url_name == 'nsot_devices' or request.resolver_match.url_name == 'nsot_device_detail' or request.resolver_match.url_name == 'nsot_device_running_config' %}is-active{% endif %}">Devices</a>
+  <a href="{% url 'core:nsot_interfaces' %}" class="{% if request.resolver_match.url_name == 'nsot_interfaces' %}is-active{% endif %}">Interfaces</a>
+  <a href="{% url 'core:nsot_ipam' %}" class="{% if request.resolver_match.url_name == 'nsot_ipam' %}is-active{% endif %}">IPAM</a>
+  <a href="{% url 'core:nsot_vlans' %}" class="{% if request.resolver_match.url_name == 'nsot_vlans' %}is-active{% endif %}">VLANs / Prefixes</a>
+  <a href="{% url 'core:nsot_routing' %}" class="{% if request.resolver_match.url_name == 'nsot_routing' %}is-active{% endif %}">Routing / ASN</a>
+  <a href="{% url 'core:nsot_platforms' %}" class="{% if request.resolver_match.url_name == 'nsot_platforms' %}is-active{% endif %}">Platforms</a>
+  <a href="{% url 'core:nsot_templates' %}" class="{% if request.resolver_match.url_name == 'nsot_templates' %}is-active{% endif %}">Templates / Code</a>
+  <a href="{% url 'core:nsot_drift' %}" class="{% if request.resolver_match.url_name == 'nsot_drift' %}is-active{% endif %}">Drift / Consistency</a>
+</nav>

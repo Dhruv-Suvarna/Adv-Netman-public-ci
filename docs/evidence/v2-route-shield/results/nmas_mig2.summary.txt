@@ -1,0 +1,30 @@
+== sequence-numbered probes
+   c01: production 0/278715 lost   diagnostic 0/8318 lost
+   c02: production 0/246979 lost   diagnostic 0/8318 lost
+   PRODUCTION TRANSIT: probes 525694 lost 0    DIAGNOSTIC (device-originated): probes 16636 lost 0
+== long-lived TCP sessions
+   h1_tcp4: UNINTERRUPTED CLOSE 1791735269.120 14524 14524 619  stalls>250ms: 13 (informational)
+   h1_tcp6: UNINTERRUPTED CLOSE 1791735269.098 14546 14546 538  stalls>250ms: 9 (informational)
+   h2_tcp4: UNINTERRUPTED CLOSE 1791735273.136 14558 14558 608  stalls>250ms: 14 (informational)
+   h2_tcp6: UNINTERRUPTED CLOSE 1791735273.138 14568 14568 673  stalls>250ms: 18 (informational)
+   h3_tcp4: UNINTERRUPTED CLOSE 1791735277.284 14598 14598 533  stalls>250ms: 19 (informational)
+   h3_tcp6: UNINTERRUPTED CLOSE 1791735277.287 14611 14611 474  stalls>250ms: 15 (informational)
+   h4_tcp6: UNINTERRUPTED CLOSE 1791735281.379 14649 14649 507  stalls>250ms: 13 (informational)
+== repeated new HTTP sessions
+   h1_http4: ALL OK CLOSE 1791735269.162 5843 0 17 745  slow>400ms: 17 (informational)
+   h1_http6: ALL OK CLOSE 1791735269.141 5849 0 14 678  slow>400ms: 14 (informational)
+   h2_http4: ALL OK CLOSE 1791735273.247 5855 0 15 687  slow>400ms: 15 (informational)
+   h2_http6: ALL OK CLOSE 1791735273.242 5864 0 14 645  slow>400ms: 14 (informational)
+   h3_http4: ALL OK CLOSE 1791735277.507 5873 0 12 820  slow>400ms: 12 (informational)
+   h3_http6: ALL OK CLOSE 1791735277.320 5881 0 8 633  slow>400ms: 8 (informational)
+   h4_http6: ALL OK CLOSE 1791735281.605 5895 0 8 749  slow>400ms: 8 (informational)
+== completed: forward 1  rollback 1  drains 0  restores 0   failed-events: []
+   flows without evidence: none
+VERDICT: PASS (production transit loss 0, TCP uninterrupted, HTTP all successful)
+== c3
+     1  covered   | NMAS plan R2-clients-isis-to-static LESS_SPECIFIC_COVER spec
+== c4
+     1  covered   | NMAS plan R2-clients-isis-to-static LESS_SPECIFIC_COVER spec
+client /64 route replacements on the cores: 2   without a cover: 0
+CORE VERDICT: PASS
+edge router (pe) client-route events: 0

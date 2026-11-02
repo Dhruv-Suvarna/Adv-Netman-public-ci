@@ -1,0 +1,154 @@
+# Capability matrix assessment summary
+
+Generated from `progress-ledger.json` by `nmas_capabilities verify-matrix` / `report-matrix`; do not edit by hand.
+
+**COMPLETE** — total 396, assessed 396, unassessed 0, supported 47, unsupported 349 (unassessed cells are fail-closed unsupported).
+
+| Platform | Total | Assessed | Unassessed | Supported | Runtime-investigated | Prerequisite-gated |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| arista_ceos | 66 | 66 | 0 | 22 | 25 | 41 |
+| cisco_c8000v_iosxe | 66 | 66 | 0 | 5 | 6 | 60 |
+| cisco_iosxr | 66 | 66 | 0 | 0 | 66 | 0 |
+| nokia_srlinux | 66 | 66 | 0 | 5 | 6 | 60 |
+| sonic | 66 | 66 | 0 | 0 | 1 | 65 |
+| ubuntu_frr | 66 | 66 | 0 | 15 | 15 | 51 |
+
+## Capability status
+
+Derived from the binary ledger: SUPPORTED is unchanged; UNSUPPORTED means a demonstrated platform limitation; every other unsupported cell is NOT_IMPLEMENTED (an NMAS gap, unknown feasibility, or unassessed).
+
+| Status | Cells |
+| --- | ---: |
+| NOT_IMPLEMENTED | 346 |
+| OUT_OF_SCOPE | 0 |
+| SUPPORTED | 47 |
+| UNSUPPORTED | 3 |
+
+## Supported cells
+
+- `arista_ceos` `interface.ACCESS`
+- `arista_ceos` `interface.LOOPBACK`
+- `arista_ceos` `interface.MANAGEMENT`
+- `arista_ceos` `interface.ROUTED_PHYSICAL`
+- `arista_ceos` `interface.SUBINTERFACE`
+- `arista_ceos` `interface.SVI`
+- `arista_ceos` `interface.TRUNK`
+- `arista_ceos` `routing.BGP_IPV4`
+- `arista_ceos` `routing.BGP_IPV6`
+- `arista_ceos` `routing.ISIS`
+- `arista_ceos` `routing.OSPFV2`
+- `arista_ceos` `routing.OSPFV3`
+- `arista_ceos` `routing.RIPV2`
+- `arista_ceos` `routing.STATIC_IPV4`
+- `arista_ceos` `routing.STATIC_IPV6`
+- `arista_ceos` `service_policy.ACL_ATTACH_IPV4`
+- `arista_ceos` `service_policy.ACL_IPV4_EXTENDED`
+- `arista_ceos` `service_policy.ACL_IPV4_STANDARD`
+- `arista_ceos` `service_policy.DHCP_RELAY_IPV4`
+- `arista_ceos` `service_policy.DHCP_RELAY_IPV6`
+- `arista_ceos` `service_policy.FHRP_VARP_IPV4`
+- `arista_ceos` `service_policy.FHRP_VARP_IPV6`
+- `cisco_c8000v_iosxe` `interface.LOOPBACK`
+- `cisco_c8000v_iosxe` `interface.ROUTED_PHYSICAL`
+- `cisco_c8000v_iosxe` `interface.SUBINTERFACE`
+- `cisco_c8000v_iosxe` `routing.STATIC_IPV4`
+- `cisco_c8000v_iosxe` `routing.STATIC_IPV6`
+- `nokia_srlinux` `interface.LOOPBACK`
+- `nokia_srlinux` `interface.ROUTED_PHYSICAL`
+- `nokia_srlinux` `interface.SUBINTERFACE`
+- `nokia_srlinux` `routing.STATIC_IPV4`
+- `nokia_srlinux` `routing.STATIC_IPV6`
+- `ubuntu_frr` `interface.LOOPBACK`
+- `ubuntu_frr` `interface.MANAGEMENT`
+- `ubuntu_frr` `interface.ROUTED_PHYSICAL`
+- `ubuntu_frr` `interface.SUBINTERFACE`
+- `ubuntu_frr` `interface.SVI`
+- `ubuntu_frr` `routing.BGP_IPV4`
+- `ubuntu_frr` `routing.BGP_IPV6`
+- `ubuntu_frr` `routing.OSPFV2`
+- `ubuntu_frr` `routing.OSPFV3`
+- `ubuntu_frr` `routing.RIPNG`
+- `ubuntu_frr` `routing.RIPV2`
+- `ubuntu_frr` `routing.STATIC_IPV4`
+- `ubuntu_frr` `routing.STATIC_IPV6`
+- `ubuntu_frr` `service_policy.NAT_NAT44_PAT`
+- `ubuntu_frr` `service_policy.NAT_NAT44_STATEFUL`
+
+## Unsupported reason groups (completed assessments)
+
+A cell is listed under every reason one of its probes recorded.
+
+| Platform | Reason | Cells |
+| --- | --- | ---: |
+| arista_ceos | CONFIG_VALIDATION_FAILED | 44 |
+| arista_ceos | EXECUTOR_REFUSED | 44 |
+| arista_ceos | FIELD_VALIDATION_FAILED | 9 |
+| arista_ceos | FUNCTIONAL_TEST_FAILED | 9 |
+| arista_ceos | PARSER_ABSENT | 44 |
+| arista_ceos | PLATFORM_DOES_NOT_SUPPORT | 3 |
+| arista_ceos | RENDERER_ABSENT | 44 |
+| arista_ceos | UI_ABSENT | 43 |
+| cisco_c8000v_iosxe | COMPENSATION_ABSENT | 1 |
+| cisco_c8000v_iosxe | CONFIG_VALIDATION_FAILED | 56 |
+| cisco_c8000v_iosxe | EXECUTOR_REFUSED | 60 |
+| cisco_c8000v_iosxe | FIELD_VALIDATION_FAILED | 12 |
+| cisco_c8000v_iosxe | FUNCTIONAL_TEST_FAILED | 13 |
+| cisco_c8000v_iosxe | LIVE_READ_ABSENT | 1 |
+| cisco_c8000v_iosxe | PARSER_ABSENT | 61 |
+| cisco_c8000v_iosxe | POSTCHECK_ABSENT | 1 |
+| cisco_c8000v_iosxe | RENDERER_ABSENT | 56 |
+| cisco_c8000v_iosxe | UI_ABSENT | 56 |
+| cisco_iosxr | COMPENSATION_ABSENT | 66 |
+| cisco_iosxr | CONFIG_VALIDATION_FAILED | 48 |
+| cisco_iosxr | EXECUTOR_ABSENT | 66 |
+| cisco_iosxr | FIELD_VALIDATION_FAILED | 12 |
+| cisco_iosxr | FUNCTIONAL_TEST_FAILED | 12 |
+| cisco_iosxr | PARSER_ABSENT | 49 |
+| cisco_iosxr | POSTCHECK_ABSENT | 66 |
+| cisco_iosxr | RENDERER_ABSENT | 47 |
+| cisco_iosxr | RUNTIME_IMAGE_UNAVAILABLE | 66 |
+| cisco_iosxr | UI_ABSENT | 46 |
+| nokia_srlinux | CONFIG_VALIDATION_FAILED | 48 |
+| nokia_srlinux | EXECUTOR_REFUSED | 60 |
+| nokia_srlinux | FIELD_VALIDATION_FAILED | 12 |
+| nokia_srlinux | FUNCTIONAL_TEST_FAILED | 13 |
+| nokia_srlinux | LIVE_READ_ABSENT | 1 |
+| nokia_srlinux | PARSER_ABSENT | 55 |
+| nokia_srlinux | PARSER_FAILED | 1 |
+| nokia_srlinux | POSTCHECK_ABSENT | 1 |
+| nokia_srlinux | RENDERER_ABSENT | 48 |
+| nokia_srlinux | UI_ABSENT | 47 |
+| sonic | COMPENSATION_ABSENT | 1 |
+| sonic | CONFIG_VALIDATION_FAILED | 51 |
+| sonic | EXECUTOR_ABSENT | 66 |
+| sonic | FIELD_VALIDATION_FAILED | 9 |
+| sonic | FUNCTIONAL_TEST_FAILED | 9 |
+| sonic | PARSER_ABSENT | 15 |
+| sonic | PARSER_FAILED | 38 |
+| sonic | POSTCHECK_ABSENT | 1 |
+| sonic | RENDERER_ABSENT | 51 |
+| sonic | UI_ABSENT | 49 |
+| ubuntu_frr | CONFIG_VALIDATION_FAILED | 51 |
+| ubuntu_frr | EXECUTOR_REFUSED | 51 |
+| ubuntu_frr | FIELD_VALIDATION_FAILED | 11 |
+| ubuntu_frr | FUNCTIONAL_TEST_FAILED | 11 |
+| ubuntu_frr | PARSER_ABSENT | 49 |
+| ubuntu_frr | RENDERER_ABSENT | 51 |
+| ubuntu_frr | UI_ABSENT | 51 |
+
+## Live-stage blocker of prerequisite-gated cells
+
+| Platform | First missing NMAS layer | Cells |
+| --- | --- | ---: |
+| arista_ceos | RENDERER_ABSENT | 41 |
+| cisco_c8000v_iosxe | EXECUTOR_REFUSED | 4 |
+| cisco_c8000v_iosxe | RENDERER_ABSENT | 56 |
+| nokia_srlinux | EXECUTOR_REFUSED | 12 |
+| nokia_srlinux | RENDERER_ABSENT | 48 |
+| sonic | EXECUTOR_ABSENT | 14 |
+| sonic | RENDERER_ABSENT | 51 |
+| ubuntu_frr | RENDERER_ABSENT | 51 |
+
+## Unassessed cells
+
+- none

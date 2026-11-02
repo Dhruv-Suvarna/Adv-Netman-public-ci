@@ -1,0 +1,562 @@
+{
+  "commissioning": [
+    "ADMITTED",
+    true
+  ],
+  "device": [
+    "IN_SERVICE",
+    "ADMITTED",
+    "VERIFIED",
+    "UNKNOWN"
+  ],
+  "final_netbox": {
+    "exists": true,
+    "iac_managed": true,
+    "id": 12,
+    "name": "NEW1",
+    "status": "active",
+    "tags": [
+      "csci5840-iac",
+      "managed",
+      "nmas-provisioning"
+    ]
+  },
+  "idempotent_reactivation": {
+    "after": {
+      "exists": true,
+      "iac_managed": true,
+      "id": 12,
+      "name": "NEW1",
+      "status": "active",
+      "tags": [
+        "csci5840-iac",
+        "managed",
+        "nmas-provisioning"
+      ]
+    },
+    "before": {
+      "exists": true,
+      "iac_managed": true,
+      "id": 12,
+      "name": "NEW1",
+      "status": "active",
+      "tags": [
+        "csci5840-iac",
+        "managed",
+        "nmas-provisioning"
+      ]
+    },
+    "managed_scope": true
+  },
+  "mismatched_record_refused": {
+    "after_refusal": {
+      "exists": true,
+      "iac_managed": true,
+      "id": 12,
+      "name": "NEW1",
+      "status": "active",
+      "tags": [
+        "csci5840-iac",
+        "managed",
+        "nmas-provisioning",
+        "unmanaged"
+      ]
+    },
+    "refused": "IpamUnavailable",
+    "restored": {
+      "exists": true,
+      "iac_managed": true,
+      "id": 12,
+      "name": "NEW1",
+      "status": "active",
+      "tags": [
+        "csci5840-iac",
+        "managed",
+        "nmas-provisioning"
+      ]
+    },
+    "tagged": {
+      "exists": true,
+      "iac_managed": true,
+      "id": 12,
+      "name": "NEW1",
+      "status": "active",
+      "tags": [
+        "csci5840-iac",
+        "managed",
+        "nmas-provisioning",
+        "unmanaged"
+      ]
+    }
+  },
+  "negative": [
+    {
+      "active_managed": false,
+      "case": "inactive registry entry (ADMITTED, not ACTIVE)",
+      "config_validation": {
+        "evidence": {
+          "outside_scope": [
+            "NEW1"
+          ]
+        },
+        "status": "BLOCKED"
+      },
+      "execution_gate": [
+        "TARGET_DEVICE_OUTSIDE_MANAGED_SCOPE",
+        "TARGET_DEVICE_UNRESOLVABLE"
+      ],
+      "expected": "NOT_ACTIVE_PROVISIONED",
+      "refusal": "NOT_ACTIVE_PROVISIONED"
+    },
+    {
+      "active_managed": false,
+      "case": "stale registration (registry entry RETIRED)",
+      "config_validation": {
+        "evidence": {
+          "outside_scope": [
+            "NEW1"
+          ]
+        },
+        "status": "BLOCKED"
+      },
+      "execution_gate": [
+        "TARGET_DEVICE_OUTSIDE_MANAGED_SCOPE",
+        "TARGET_DEVICE_UNRESOLVABLE"
+      ],
+      "expected": "NOT_ACTIVE_PROVISIONED",
+      "refusal": "NOT_ACTIVE_PROVISIONED"
+    },
+    {
+      "active_managed": false,
+      "case": "disposable device",
+      "config_validation": {
+        "evidence": {
+          "outside_scope": [
+            "NEW1"
+          ]
+        },
+        "status": "BLOCKED"
+      },
+      "execution_gate": [
+        "TARGET_DEVICE_OUTSIDE_MANAGED_SCOPE"
+      ],
+      "expected": "DISPOSABLE",
+      "refusal": "DISPOSABLE"
+    },
+    {
+      "active_managed": false,
+      "case": "missing NetBox identity on the registry entry",
+      "config_validation": {
+        "evidence": {
+          "outside_scope": [
+            "NEW1"
+          ]
+        },
+        "status": "BLOCKED"
+      },
+      "execution_gate": [
+        "TARGET_DEVICE_OUTSIDE_MANAGED_SCOPE"
+      ],
+      "expected": "NETBOX_ID_MISSING",
+      "refusal": "NETBOX_ID_MISSING"
+    },
+    {
+      "active_managed": false,
+      "case": "unsynchronized run (POSTCHECKED)",
+      "config_validation": {
+        "evidence": {
+          "outside_scope": [
+            "NEW1"
+          ]
+        },
+        "status": "BLOCKED"
+      },
+      "execution_gate": [
+        "TARGET_DEVICE_OUTSIDE_MANAGED_SCOPE"
+      ],
+      "expected": "NOT_SYNCHRONIZED",
+      "refusal": "NOT_SYNCHRONIZED"
+    },
+    {
+      "active_managed": false,
+      "case": "no recorded NetBox identity",
+      "config_validation": {
+        "evidence": {
+          "outside_scope": [
+            "NEW1"
+          ]
+        },
+        "status": "BLOCKED"
+      },
+      "execution_gate": [
+        "TARGET_DEVICE_OUTSIDE_MANAGED_SCOPE"
+      ],
+      "expected": "NOT_SYNCHRONIZED",
+      "refusal": "NOT_SYNCHRONIZED"
+    },
+    {
+      "active_managed": false,
+      "case": "planned-only NetBox identity",
+      "config_validation": {
+        "evidence": {
+          "outside_scope": [
+            "NEW1"
+          ]
+        },
+        "status": "BLOCKED"
+      },
+      "execution_gate": [
+        "TARGET_DEVICE_OUTSIDE_MANAGED_SCOPE"
+      ],
+      "expected": "NETBOX_IDENTITY_MISMATCH",
+      "refusal": "NETBOX_IDENTITY_MISMATCH"
+    },
+    {
+      "active_managed": false,
+      "case": "wrong NetBox identity (another real NetBox device)",
+      "config_validation": {
+        "evidence": {
+          "outside_scope": [
+            "NEW1"
+          ]
+        },
+        "status": "BLOCKED"
+      },
+      "execution_gate": [
+        "TARGET_DEVICE_OUTSIDE_MANAGED_SCOPE"
+      ],
+      "expected": "NETBOX_IDENTITY_MISMATCH",
+      "refusal": "NETBOX_IDENTITY_MISMATCH"
+    },
+    {
+      "active_managed": false,
+      "case": "NetBox identity of another name",
+      "config_validation": {
+        "evidence": {
+          "outside_scope": [
+            "NEW1"
+          ]
+        },
+        "status": "BLOCKED"
+      },
+      "execution_gate": [
+        "TARGET_DEVICE_OUTSIDE_MANAGED_SCOPE"
+      ],
+      "expected": "NETBOX_IDENTITY_MISMATCH",
+      "refusal": "NETBOX_IDENTITY_MISMATCH"
+    },
+    {
+      "active_managed": false,
+      "case": "NetBox scope not confirmed",
+      "config_validation": {
+        "evidence": {
+          "outside_scope": [
+            "NEW1"
+          ]
+        },
+        "status": "BLOCKED"
+      },
+      "execution_gate": [
+        "TARGET_DEVICE_OUTSIDE_MANAGED_SCOPE"
+      ],
+      "expected": "MANAGED_SCOPE_MISSING",
+      "refusal": "MANAGED_SCOPE_MISSING"
+    },
+    {
+      "active_managed": false,
+      "case": "conflicting NetBox association on the device",
+      "config_validation": {
+        "evidence": {
+          "outside_scope": [
+            "NEW1"
+          ]
+        },
+        "status": "BLOCKED"
+      },
+      "execution_gate": [
+        "TARGET_DEVICE_OUTSIDE_MANAGED_SCOPE"
+      ],
+      "expected": "NETBOX_IDENTITY_MISMATCH",
+      "refusal": "NETBOX_IDENTITY_MISMATCH"
+    },
+    {
+      "active_managed": false,
+      "case": "missing admission evidence (NOT_ADMITTED)",
+      "config_validation": {
+        "evidence": {
+          "outside_scope": [
+            "NEW1"
+          ]
+        },
+        "status": "BLOCKED"
+      },
+      "execution_gate": [
+        "TARGET_DEVICE_OUTSIDE_MANAGED_SCOPE"
+      ],
+      "expected": "DEVICE_NOT_ADMITTED",
+      "refusal": "DEVICE_NOT_ADMITTED"
+    },
+    {
+      "active_managed": false,
+      "case": "revoked lifecycle (DECOMMISSION_PENDING)",
+      "config_validation": {
+        "evidence": {
+          "outside_scope": [
+            "NEW1"
+          ]
+        },
+        "status": "BLOCKED"
+      },
+      "execution_gate": [
+        "TARGET_DEVICE_OUTSIDE_MANAGED_SCOPE"
+      ],
+      "expected": "DEVICE_NOT_ADMITTED",
+      "refusal": "DEVICE_NOT_ADMITTED"
+    },
+    {
+      "active_managed": false,
+      "case": "revoked lifecycle (FAILED)",
+      "config_validation": {
+        "evidence": {
+          "outside_scope": [
+            "NEW1"
+          ]
+        },
+        "status": "BLOCKED"
+      },
+      "execution_gate": [
+        "TARGET_DEVICE_OUTSIDE_MANAGED_SCOPE"
+      ],
+      "expected": "DEVICE_NOT_ADMITTED",
+      "refusal": "DEVICE_NOT_ADMITTED"
+    },
+    {
+      "active_managed": false,
+      "case": "revoked lifecycle (DECOMMISSIONED)",
+      "config_validation": {
+        "evidence": {
+          "outside_scope": [
+            "NEW1"
+          ]
+        },
+        "status": "BLOCKED"
+      },
+      "execution_gate": [
+        "TARGET_DEVICE_OUTSIDE_MANAGED_SCOPE"
+      ],
+      "expected": "DEVICE_NOT_ADMITTED",
+      "refusal": "DEVICE_NOT_ADMITTED"
+    },
+    {
+      "active_managed": false,
+      "case": "identity no longer verified (MISMATCH)",
+      "config_validation": {
+        "evidence": {
+          "outside_scope": [
+            "NEW1"
+          ]
+        },
+        "status": "BLOCKED"
+      },
+      "execution_gate": [
+        "TARGET_DEVICE_OUTSIDE_MANAGED_SCOPE"
+      ],
+      "expected": "IDENTITY_NOT_VERIFIED",
+      "refusal": "IDENTITY_NOT_VERIFIED"
+    },
+    {
+      "active_managed": false,
+      "case": "pinned host key cleared",
+      "config_validation": {
+        "evidence": {
+          "outside_scope": [
+            "NEW1"
+          ]
+        },
+        "status": "BLOCKED"
+      },
+      "execution_gate": [
+        "TARGET_DEVICE_OUTSIDE_MANAGED_SCOPE"
+      ],
+      "expected": "IDENTITY_NOT_VERIFIED",
+      "refusal": "IDENTITY_NOT_VERIFIED"
+    },
+    {
+      "active_managed": false,
+      "case": "configuration drift recorded",
+      "config_validation": {
+        "evidence": {
+          "outside_scope": [
+            "NEW1"
+          ]
+        },
+        "status": "BLOCKED"
+      },
+      "execution_gate": [
+        "TARGET_DEVICE_OUTSIDE_MANAGED_SCOPE"
+      ],
+      "expected": "CONFIGURATION_DRIFT",
+      "refusal": "CONFIGURATION_DRIFT"
+    },
+    {
+      "active_managed": false,
+      "case": "aborted commissioning",
+      "config_validation": {
+        "evidence": {
+          "outside_scope": [
+            "NEW1"
+          ]
+        },
+        "status": "BLOCKED"
+      },
+      "execution_gate": [
+        "TARGET_DEVICE_OUTSIDE_MANAGED_SCOPE"
+      ],
+      "expected": "COMMISSIONING_NOT_BOUND",
+      "refusal": "COMMISSIONING_NOT_BOUND"
+    },
+    {
+      "active_managed": false,
+      "case": "commissioning bound to another run",
+      "config_validation": {
+        "evidence": {
+          "outside_scope": [
+            "NEW1"
+          ]
+        },
+        "status": "BLOCKED"
+      },
+      "execution_gate": [
+        "TARGET_DEVICE_OUTSIDE_MANAGED_SCOPE"
+      ],
+      "expected": "COMMISSIONING_NOT_BOUND",
+      "refusal": "COMMISSIONING_NOT_BOUND"
+    }
+  ],
+  "netbox": {
+    "exists": true,
+    "iac_managed": true,
+    "id": 12,
+    "name": "NEW1",
+    "status": "active",
+    "tags": [
+      "csci5840-iac",
+      "managed",
+      "nmas-provisioning"
+    ]
+  },
+  "netbox_identity": {
+    "device_id": 12,
+    "managed_scope": true,
+    "name": "NEW1",
+    "status": "active"
+  },
+  "netbox_managed_devices": [
+    "NEW1",
+    "R1",
+    "R2",
+    "R3",
+    "R4",
+    "S1",
+    "S2",
+    "S3",
+    "S4",
+    "mgmt_swt"
+  ],
+  "netbox_objects": [
+    {
+      "id": 12,
+      "kind": "device",
+      "name": "NEW1"
+    },
+    {
+      "id": 42,
+      "kind": "interface",
+      "name": "Ethernet1"
+    },
+    {
+      "id": 86,
+      "kind": "ip_address",
+      "name": "10.254.60.10/24"
+    }
+  ],
+  "partial_failure_recovery": {
+    "activation_with_a_missing_object": "IpamUnavailable",
+    "after_retry": {
+      "exists": true,
+      "iac_managed": true,
+      "id": 12,
+      "name": "NEW1",
+      "status": "active",
+      "tags": [
+        "csci5840-iac",
+        "managed",
+        "nmas-provisioning"
+      ]
+    },
+    "managed_list_after_retry": [
+      "NEW1",
+      "R1",
+      "R2",
+      "R3",
+      "R4",
+      "S1",
+      "S2",
+      "S3",
+      "S4",
+      "mgmt_swt"
+    ],
+    "managed_list_while_lost": [
+      "R1",
+      "R2",
+      "R3",
+      "R4",
+      "S1",
+      "S2",
+      "S3",
+      "S4",
+      "mgmt_swt"
+    ],
+    "retry": true,
+    "scope_lost": {
+      "exists": true,
+      "iac_managed": false,
+      "id": 12,
+      "name": "NEW1",
+      "status": "active",
+      "tags": [
+        "csci5840-iac",
+        "nmas-provisioning"
+      ]
+    },
+    "unchanged_after_that_refusal": true
+  },
+  "positive_frozen_netbox_list": {
+    "active_managed": true,
+    "config_validation": {
+      "evidence": {
+        "nmas_active": [
+          "NEW1"
+        ],
+        "outside_scope": []
+      },
+      "status": "PASS"
+    },
+    "execution_gate": [],
+    "refusal": ""
+  },
+  "positive_live_netbox_list": {
+    "active_managed": true,
+    "config_validation": {
+      "evidence": {
+        "outside_scope": []
+      },
+      "status": "PASS"
+    },
+    "execution_gate": [],
+    "refusal": ""
+  },
+  "registry_state": "ACTIVE",
+  "restored": "",
+  "run_status": "NSOT_SYNCED"
+}

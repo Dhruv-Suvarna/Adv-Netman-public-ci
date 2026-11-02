@@ -1,0 +1,48 @@
+{
+ "device": "PROVDUP2",
+ "mode": "success",
+ "run": {
+  "approval": {},
+  "bootstrap_state": "UNKNOWN",
+  "candidate_hash": "",
+  "capability": null,
+  "change_id": null,
+  "execution_outcome": null,
+  "execution_run": null,
+  "failure": {},
+  "netbox": {},
+  "network_config_validation_run": null,
+  "plan": null,
+  "platform": "ubuntu_frr",
+  "post_config_digest": "",
+  "postcheck_run": null,
+  "pre_config_digest": "",
+  "precheck_run": null,
+  "prov_id": "PROV-000005",
+  "registry": [],
+  "repository_head": "f1c4dbe079f12f548965b34fa695c8b48c2956aa",
+  "result": {},
+  "status": "DRAFT",
+  "validation_run": null
+ },
+ "steps": [
+  {
+   "codes": [],
+   "evidence": null,
+   "http": 302,
+   "outcome": null,
+   "status": "DRAFT",
+   "step": "create"
+  },
+  {
+   "codes": [
+    "BOOTSTRAP_TARGET_IN_USE"
+   ],
+   "evidence": {},
+   "http": 302,
+   "outcome": "BLOCKED",
+   "status": "DRAFT",
+   "step": "identity"
+  }
+ ]
+}

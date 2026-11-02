@@ -1,0 +1,254 @@
+{
+ "device": "PROVGHOST2",
+ "mode": "success",
+ "run": {
+  "approval": {},
+  "bootstrap_state": "UNREACHABLE",
+  "candidate_hash": "ec9a0b97c4fbac5f90d11132f658e203e24797cb3bf03b8e41ba5fd8f6a9a36c",
+  "capability": {
+   "cells": [
+    {
+     "configlets": [
+      "CFG-001",
+      "CFG-002",
+      "CFG-003"
+     ],
+     "feature": "interface.LOOPBACK",
+     "reason": "All mandatory implementation and empirical axes are satisfied.",
+     "status": "SUPPORTED"
+    }
+   ],
+   "platform": "ubuntu_frr",
+   "unclassified": []
+  },
+  "change_id": "CHG-20261006-0002",
+  "execution_outcome": null,
+  "execution_run": null,
+  "failure": {},
+  "netbox": {
+   "created": [
+    {
+     "id": 25,
+     "kind": "device",
+     "name": "PROVGHOST2"
+    },
+    {
+     "id": 85,
+     "kind": "interface",
+     "name": "eth0"
+    },
+    {
+     "id": 171,
+     "kind": "ip_address",
+     "name": "172.31.250.22/24"
+    },
+    {
+     "id": 172,
+     "kind": "ip_address",
+     "name": "fd00:ca:250::22/64"
+    }
+   ],
+   "device_id": 25,
+   "device_name": "PROVGHOST2",
+   "plan": {
+    "addresses": [
+     {
+      "address": "172.31.250.22/24",
+      "family": 4,
+      "interface": "eth0",
+      "prefix": "172.31.250.0/24",
+      "role": "management"
+     },
+     {
+      "address": "fd00:ca:250::22/64",
+      "family": 6,
+      "interface": "eth0",
+      "prefix": "fd00:ca:250::/64",
+      "role": "management"
+     }
+    ],
+    "assignment": "static",
+    "device": {
+     "name": "PROVGHOST2",
+     "platform": "ubuntu_frr",
+     "role": "router",
+     "site": "",
+     "status": "planned"
+    },
+    "interfaces": [
+     {
+      "management": true,
+      "name": "eth0",
+      "vlan": null
+     }
+    ],
+    "new_prefixes": [],
+    "tags": [
+     "nmas-provisioning",
+     "nmas-disposable"
+    ]
+   },
+   "status": "planned"
+  },
+  "network_config_validation_run": "7c5ddfa3-957a-44a6-92a8-0671f8f83b07",
+  "plan": "2c02befc-227f-4f08-a88c-1cd0fe21f1ea",
+  "platform": "ubuntu_frr",
+  "post_config_digest": "",
+  "postcheck_run": null,
+  "pre_config_digest": "",
+  "precheck_run": null,
+  "prov_id": "PROV-000004",
+  "registry": [
+   {
+    "container": "clab-nmas-prov-proof-ghost",
+    "lab": "nmas-prov-proof",
+    "name": "PROVGHOST2",
+    "netbox_device_id": 25,
+    "state": "ADMITTED"
+   }
+  ],
+  "repository_head": "f1c4dbe079f12f548965b34fa695c8b48c2956aa",
+  "result": {},
+  "status": "PLANNED",
+  "validation_run": "93b70fd5-87e6-4dc1-acac-8087409d638d"
+ },
+ "steps": [
+  {
+   "codes": [],
+   "evidence": null,
+   "http": 302,
+   "outcome": null,
+   "status": "DRAFT",
+   "step": "create"
+  },
+  {
+   "codes": [],
+   "evidence": {
+    "management": {
+     "assignment": "static",
+     "interface": "eth0",
+     "ipv4": "172.31.250.22/24",
+     "ipv6": "fd00:ca:250::22/64",
+     "vlan": null
+    },
+    "target": {
+     "container": "clab-nmas-prov-proof-ghost",
+     "lab": "nmas-prov-proof"
+    },
+    "transport": "DOCKER_EXEC"
+   },
+   "http": 302,
+   "outcome": "ADVANCED",
+   "status": "IDENTIFIED",
+   "step": "identity"
+  },
+  {
+   "codes": [],
+   "evidence": {
+    "answers": false,
+    "configured": false,
+    "error": "NOT_FOUND",
+    "exists": false,
+    "facts": {},
+    "lab": "",
+    "running": false,
+    "state": "UNREACHABLE"
+   },
+   "http": 302,
+   "outcome": "ADVANCED",
+   "status": "BOOTSTRAP_CLASSIFIED",
+   "step": "bootstrap"
+  },
+  {
+   "codes": [],
+   "evidence": {
+    "supported_count": 15
+   },
+   "http": 302,
+   "outcome": "ADVANCED",
+   "status": "CAPABILITY_RESOLVED",
+   "step": "capability"
+  },
+  {
+   "codes": [],
+   "evidence": {
+    "created": [
+     {
+      "id": 25,
+      "kind": "device",
+      "name": "PROVGHOST2"
+     },
+     {
+      "id": 85,
+      "kind": "interface",
+      "name": "eth0"
+     },
+     {
+      "id": 171,
+      "kind": "ip_address",
+      "name": "172.31.250.22/24"
+     },
+     {
+      "id": 172,
+      "kind": "ip_address",
+      "name": "fd00:ca:250::22/64"
+     }
+    ],
+    "device_id": 25
+   },
+   "http": 302,
+   "outcome": "ADVANCED",
+   "status": "IPAM_PLANNED",
+   "step": "ipam"
+  },
+  {
+   "codes": [],
+   "evidence": {
+    "change_id": "CHG-20261006-0002",
+    "execution_mode": "COMPLETE",
+    "registry": "ADMITTED"
+   },
+   "http": 302,
+   "outcome": "ADVANCED",
+   "status": "CANDIDATE_READY",
+   "step": "candidate"
+  },
+  {
+   "codes": [],
+   "evidence": {
+    "network_config_status": "WARNING",
+    "network_config_validation_run_id": "7c5ddfa3-957a-44a6-92a8-0671f8f83b07",
+    "validation_run_id": "93b70fd5-87e6-4dc1-acac-8087409d638d",
+    "validation_status": "PASS"
+   },
+   "http": 302,
+   "outcome": "ADVANCED",
+   "status": "VALIDATED",
+   "step": "validation"
+  },
+  {
+   "codes": [],
+   "evidence": {
+    "candidate_hash": "ec9a0b97c4fbac5f90d11132f658e203e24797cb3bf03b8e41ba5fd8f6a9a36c",
+    "features": [
+     "interface.LOOPBACK"
+    ],
+    "plan_id": "2c02befc-227f-4f08-a88c-1cd0fe21f1ea"
+   },
+   "http": 302,
+   "outcome": "ADVANCED",
+   "status": "PLANNED",
+   "step": "plan"
+  },
+  {
+   "codes": [
+    "DEVICE_UNREACHABLE"
+   ],
+   "evidence": {},
+   "http": 302,
+   "outcome": "BLOCKED",
+   "status": "PLANNED",
+   "step": "precheck"
+  }
+ ]
+}

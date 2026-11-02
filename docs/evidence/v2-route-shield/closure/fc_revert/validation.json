@@ -1,0 +1,147 @@
+{
+ "status": "PASS",
+ "input_hash": "f9b64784b7833abd7e3c3ef54628cf090b20868848ec750f81013c6072f6449c",
+ "report": {
+  "schema": 1,
+  "kind": "REVERT_COMPLETED_BASELINE_MIGRATION",
+  "definition": "sandbox",
+  "findings": [],
+  "reverts": {
+   "change": "CHG-20261012-0002",
+   "run_id": "6341bf45-eff8-47ff-9fcb-5d74e9869981"
+  },
+  "operations": 48,
+  "permanent": 24,
+  "temporary": 24,
+  "cover_inventory": [
+   {
+    "core": "R3",
+    "prefix": "2001:db8:10::/63",
+    "protects": "2001:db8:10::/64",
+    "next_hops": [
+     [
+      "fe80::42:aff:fefb:1703",
+      "eth1"
+     ],
+     [
+      "fe80::42:aff:fefb:1503",
+      "eth0"
+     ]
+    ]
+   },
+   {
+    "core": "R3",
+    "prefix": "2001:db8:20::/63",
+    "protects": "2001:db8:20::/64",
+    "next_hops": [
+     [
+      "fe80::42:aff:fefb:1703",
+      "eth1"
+     ],
+     [
+      "fe80::42:aff:fefb:1503",
+      "eth0"
+     ]
+    ]
+   },
+   {
+    "core": "R3",
+    "prefix": "2001:db8:30::/63",
+    "protects": "2001:db8:30::/64",
+    "next_hops": [
+     [
+      "fe80::42:aff:fefb:1703",
+      "eth1"
+     ],
+     [
+      "fe80::42:aff:fefb:1503",
+      "eth0"
+     ]
+    ]
+   },
+   {
+    "core": "R4",
+    "prefix": "2001:db8:10::/63",
+    "protects": "2001:db8:10::/64",
+    "next_hops": [
+     [
+      "fe80::42:aff:fefb:1603",
+      "eth0"
+     ],
+     [
+      "fe80::42:aff:fefb:1803",
+      "eth1"
+     ]
+    ]
+   },
+   {
+    "core": "R4",
+    "prefix": "2001:db8:20::/63",
+    "protects": "2001:db8:20::/64",
+    "next_hops": [
+     [
+      "fe80::42:aff:fefb:1603",
+      "eth0"
+     ],
+     [
+      "fe80::42:aff:fefb:1803",
+      "eth1"
+     ]
+    ]
+   },
+   {
+    "core": "R4",
+    "prefix": "2001:db8:30::/63",
+    "protects": "2001:db8:30::/64",
+    "next_hops": [
+     [
+      "fe80::42:aff:fefb:1603",
+      "eth0"
+     ],
+     [
+      "fe80::42:aff:fefb:1803",
+      "eth1"
+     ]
+    ]
+   }
+  ],
+  "temporary_lines": [
+   "ip -6 route add 2001:db8:30::/63 nexthop via fe80::42:aff:fefb:1603 dev eth0 nexthop via fe80::42:aff:fefb:1803 dev eth1",
+   "ip -6 route add 2001:db8:20::/63 nexthop via fe80::42:aff:fefb:1603 dev eth0 nexthop via fe80::42:aff:fefb:1803 dev eth1",
+   "ip -6 route add 2001:db8:10::/63 nexthop via fe80::42:aff:fefb:1603 dev eth0 nexthop via fe80::42:aff:fefb:1803 dev eth1",
+   "ip -6 route add 2001:db8:30::/63 nexthop via fe80::42:aff:fefb:1703 dev eth1 nexthop via fe80::42:aff:fefb:1503 dev eth0",
+   "ip -6 route add 2001:db8:20::/63 nexthop via fe80::42:aff:fefb:1703 dev eth1 nexthop via fe80::42:aff:fefb:1503 dev eth0",
+   "ip -6 route add 2001:db8:10::/63 nexthop via fe80::42:aff:fefb:1703 dev eth1 nexthop via fe80::42:aff:fefb:1503 dev eth0",
+   "ipv6 route 2001:db8::/33 2001:db8:110:2::1",
+   "ipv6 route 2001:db8:8000::/33 2001:db8:110:2::1",
+   "ipv6 route 2001:db8:10::/63 2001:db8:110:2::2",
+   "ipv6 route 2001:db8:20::/63 2001:db8:110:2::2",
+   "ipv6 route 2001:db8:30::/63 2001:db8:110:2::2",
+   "ipv6 route 2001:db8:10::/64 2001:db8:110:2::2 250",
+   "ipv6 route 2001:db8:20::/64 2001:db8:110:2::2 250",
+   "ipv6 route 2001:db8:30::/64 2001:db8:110:2::2 250",
+   "ipv6 route 2001:db8::/33 2001:db8:110:1::1",
+   "ipv6 route 2001:db8:8000::/33 2001:db8:110:1::1",
+   "ipv6 route 2001:db8:10::/63 2001:db8:110:1::2",
+   "ipv6 route 2001:db8:20::/63 2001:db8:110:1::2",
+   "ipv6 route 2001:db8:30::/63 2001:db8:110:1::2",
+   "ipv6 route 2001:db8:10::/64 2001:db8:110:1::2 250",
+   "ipv6 route 2001:db8:20::/64 2001:db8:110:1::2 250",
+   "ipv6 route 2001:db8:30::/64 2001:db8:110:1::2 250"
+  ],
+  "readiness": "PROVEN_NOT_AUTHORIZED",
+  "persistence": {
+   "devices": [
+    "R1",
+    "R2",
+    "S1",
+    "S2"
+   ],
+   "command": "copy running-config startup-config",
+   "not_persisted": [
+    "R3",
+    "R4"
+   ]
+  }
+ }
+}

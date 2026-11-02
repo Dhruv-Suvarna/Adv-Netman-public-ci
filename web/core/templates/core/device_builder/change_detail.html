@@ -1,0 +1,217 @@
+{% extends "core/base.html" %}
+{% block title %}{{ change.change_id }} · Device Builder{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>{{ change.change_id }}</h1>
+  <p><a href="{% url 'core:device_builder_changes' %}">&larr; Back to Changes</a></p>
+  <p>{{ change.title }}</p>
+  {% if delete_error %}<div class="alert alert--warning">{{ delete_error }}</div>{% endif %}
+</div>
+
+{% if can_delete_draft %}
+<div class="card" style="margin-top:16px;">
+  <h3>Delete Draft</h3>
+  <p style="color:var(--text-muted); font-size:0.85rem;">Permanently discards this application-state-only draft. This can never alter a device, NetBox, or a Golden/Probation/UAT bundle -- it is refused if this Change has any execution, precheck, or bundle history.</p>
+  <form method="post" action="{% url 'core:device_builder_delete_change' change.change_id %}">
+    {% csrf_token %}
+    <label><input type="checkbox" name="confirmation" value="DELETE" required> Confirm permanent deletion of {{ change.change_id }}</label>
+    <button type="submit" class="btn btn--secondary">Delete Draft</button>
+  </form>
+</div>
+{% endif %}
+
+<div class="card-grid">
+  <div class="card">
+    <h3>Summary</h3>
+    <table class="data-table">
+      <tbody>
+        <tr><th>Category</th><td>{{ change.get_category_display }}</td></tr>
+        <tr><th>Execution mode</th><td><span class="badge badge--neutral">{{ change.get_execution_mode_display }}</span></td></tr>
+        <tr><th>Lifecycle state</th><td><span class="badge badge--info">{{ change.get_lifecycle_state_display }}</span></td></tr>
+        <tr><th>Validation state</th><td>{{ change.get_validation_state_display }}</td></tr>
+        <tr><th>Created by</th><td>{{ change.created_by|default:"—" }}</td></tr>
+        <tr><th>Created</th><td>{{ change.created_at }}</td></tr>
+        <tr><th>Candidate revision</th><td>{{ change.candidate_revision|default:"—" }}</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3>Partial (UAT) acknowledgement</h3>
+    {% if change.execution_mode == "PARTIAL_UAT" %}
+      <table class="data-table">
+        <tbody>
+          <tr><th>Target authorized non-prod</th><td>{{ change.uat_ack_target_is_authorized_nonprod }}</td></tr>
+          <tr><th>Partial success may remain applied</th><td>{{ change.uat_ack_partial_success_may_remain_applied }}</td></tr>
+          <tr><th>Dependent stages may stop</th><td>{{ change.uat_ack_dependent_stages_may_stop }}</td></tr>
+          <tr><th>Adjacent traffic may be affected</th><td>{{ change.uat_ack_adjacent_traffic_may_be_affected }}</td></tr>
+          <tr><th>Operator accepts risk</th><td>{{ change.uat_ack_operator_accepts_risk }}</td></tr>
+          <tr><th>Acknowledged by</th><td>{{ change.uat_acknowledged_by|default:"—" }}</td></tr>
+        </tbody>
+      </table>
+    {% else %}
+      <p style="color:var(--text-muted);">Not applicable — execution mode is Complete.</p>
+    {% endif %}
+  </div>
+
+  <div class="card">
+    <h3>Future integration references</h3>
+    <table class="data-table">
+      <tbody>
+        <tr><th>Git branch</th><td>{{ change.git_branch_ref|default:"—" }}</td></tr>
+        <tr><th>Git commit</th><td>{{ change.git_commit_ref|default:"—" }}</td></tr>
+        <tr><th>GitHub Actions run</th><td>{{ change.github_actions_run_ref|default:"—" }}</td></tr>
+        <tr><th>Deployment reference</th><td>{{ change.deployment_reference|default:"—" }}</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="card" style="margin-top:16px;">
+  <h3>Validation and push readiness</h3>
+  <table class="data-table"><tbody>
+    <tr><th>Field validation</th><td><span class="badge badge--success">COMMITTED FIELDS</span></td></tr>
+    <tr><th>Network config validation</th><td><span class="badge {% if network_config_currency.state == 'CURRENT' and network_config_currency.latest.status == 'PASS' %}badge--success{% elif network_config_currency.state == 'CURRENT' and network_config_currency.latest.status == 'WARNING' %}badge--warning{% else %}badge--danger{% endif %}">{{ network_config_currency.state }}{% if network_config_currency.latest %} / {{ network_config_currency.latest.status }}{% endif %}</span></td></tr>
+    <tr><th>Whole Change validation</th><td><span class="badge badge--neutral">{{ whole_validation_currency.state }} / {{ latest_whole_validation.status|default:"NOT RUN" }}</span></td></tr>
+    <tr><th>Plan</th><td><span class="badge badge--neutral">{{ plan_currency.state|default:"MISSING" }}</span></td></tr>
+    <tr><th>Precheck</th><td><span class="badge badge--neutral">{{ latest_precheck.status|default:"NOT RUN" }}</span></td></tr>
+    <tr><th>Execution</th><td><span class="badge badge--neutral">{{ latest_execution.outcome|default:"NOT RUN" }}</span></td></tr>
+    <tr><th>Live validation</th><td><span class="badge badge--neutral">{% if latest_execution and latest_execution.network_config_validation_runs.first %}{{ latest_execution.network_config_validation_runs.first.status }}{% else %}NOT RUN{% endif %}</span></td></tr>
+  </tbody></table>
+  <p><a class="btn btn--primary" href="{% url 'core:network_config_validation' change.change_id %}">Network Config Validation</a></p>
+  <p style="color:var(--text-muted); font-size:0.85rem;">Tier-2 whole-Change validation against NetBox, topology, inventory and the capability registry. Uses committed/accepted intent only. Never deploys.</p>
+  <a class="btn btn--secondary" href="{% url 'core:change_validation' change.change_id %}">Open Change Validation</a>
+</div>
+
+<div class="card-grid" style="margin-top:16px;">
+  {% include "core/device_builder/_configuration_validation_card.html" with cv=configuration_validation %}
+</div>
+
+<div class="card" style="margin-top:16px;">
+  <h3>Change plan</h3>
+  <p style="color:var(--text-muted); font-size:0.85rem;">Ordered, dependency-aware Configlets generated from a CURRENT passing validation. A plan is never executed on this page; execution is a separate, explicit action and never changes the lifecycle.</p>
+  <a class="btn btn--secondary" href="{% url 'core:raw_configlets' change.change_id %}">Open Raw Configlets</a>
+  <a class="btn btn--secondary" href="{% url 'core:change_plan' change.change_id %}">Open Change Plan</a>
+  <a class="btn btn--secondary" href="{% url 'core:change_precheck' change.change_id %}">Open Change Precheck</a>
+  <a class="btn btn--primary" href="{% url 'core:change_execute' change.change_id %}">Push Validated Configuration</a>
+  <a class="btn btn--secondary" href="{% url 'core:bundles_list' %}?change={{ change.change_id }}">Open Configuration Bundles</a>
+</div>
+
+<div class="card" style="margin-top:16px;">
+  <h3>Affected devices</h3>
+  <table class="data-table">
+    <thead><tr><th>Device</th><th>NetBox reference</th><th>Site</th></tr></thead>
+    <tbody>
+    {% for target in targets %}
+      <tr><td>{{ target.device_name }}</td><td>{{ target.netbox_device_ref|default:"—" }}</td><td>{{ target.site|default:"—" }}</td></tr>
+    {% empty %}
+      <tr><td colspan="3"><div class="empty-state">No targets recorded.</div></td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<div class="card" style="margin-top:16px;">
+  <h3>Device Intents</h3>
+  <table class="data-table">
+    <thead><tr><th>Device</th><th>Target type</th><th>Platform</th><th>Latest revision</th><th>Schema version</th><th></th></tr></thead>
+    <tbody>
+    {% for intent in device_intents %}
+      <tr>
+        <td>{{ intent.device_name }}</td>
+        <td>{{ intent.get_target_type_display }}</td>
+        <td>{{ intent.get_platform_display }}</td>
+        <td>{{ intent.latest_revision.revision|default:"—" }}</td>
+        <td>{{ intent.latest_revision.schema_version|default:"—" }}</td>
+        <td>
+          {% if intent.latest_revision %}
+            <a href="{% url 'core:device_builder_edit' change.change_id intent.pk %}">Edit</a>
+          {% endif %}
+        </td>
+      </tr>
+    {% empty %}
+      <tr><td colspan="6"><div class="empty-state">No Device Intents recorded.</div></td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<div class="card" style="margin-top:16px;">
+  <h3>Add Device Intent</h3>
+  <p style="color:var(--text-muted); font-size:0.85rem;">Application state only -- does not create a NetBox object, configure a device, or change topology.</p>
+  <form method="post" action="{% url 'core:device_builder_create_intent' change.change_id %}">
+    {% csrf_token %}
+    <div class="field-row">
+      <label class="field-row__label"><span>Target type</span></label>
+      <select class="form-control" name="target_type">
+        <option value="EXISTING_DEVICE">Existing Device</option>
+        <option value="NEW_DEVICE">New Device</option>
+      </select>
+    </div>
+    <div class="field-row">
+      <label class="field-row__label"><span>Device name / hostname</span></label>
+      <input class="form-control" type="text" name="device_name" placeholder="e.g. R1" autocomplete="off">
+    </div>
+    <div class="field-row">
+      <label class="field-row__label"><span>Platform</span></label>
+      <select class="form-control" name="platform">
+        <option value="arista_ceos">Arista cEOS</option>
+        <option value="nokia_srlinux">Nokia SR Linux</option>
+        <option value="ubuntu_frr">Ubuntu / FRR</option>
+        <option value="cisco_c8000v_iosxe">Cisco Catalyst 8000V / IOS XE</option>
+        <option value="cisco_iosxr">Cisco IOS XR</option>
+        <option value="sonic">SONiC</option>
+      </select>
+    </div>
+    <div class="field-row">
+      <label class="field-row__label"><span>Image reference (New Device only)</span></label>
+      <input class="form-control" type="text" name="image_reference" placeholder="e.g. sonic:2024.05" autocomplete="off">
+    </div>
+    <button type="submit" class="btn btn--primary">Add Device Intent</button>
+  </form>
+</div>
+
+<div class="card" style="margin-top:16px;">
+  <h3>Configlets</h3>
+  <table class="data-table">
+    <thead><tr><th>CFG ID</th><th>Target device</th><th>Feature</th><th>Operation</th><th>Priority</th><th>Status</th><th>Depends on</th></tr></thead>
+    <tbody>
+    {% for configlet in configlets %}
+      <tr>
+        <td>{{ configlet.cfg_id }}</td>
+        <td>{{ configlet.target_device }}</td>
+        <td>{{ configlet.get_feature_namespace_display }}</td>
+        <td>{{ configlet.get_operation_type_display }}</td>
+        <td>{{ configlet.get_deployment_priority_display }}</td>
+        <td><span class="badge badge--neutral">{{ configlet.get_execution_status_display }}</span></td>
+        <td>
+          {% for dependency in configlet.dependencies.all %}{{ dependency.depends_on.cfg_id }}{% if not forloop.last %}, {% endif %}{% empty %}—{% endfor %}
+        </td>
+      </tr>
+    {% empty %}
+      <tr><td colspan="7"><div class="empty-state">No Configlets recorded.</div></td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<div class="card" style="margin-top:16px;">
+  <h3>Lifecycle history</h3>
+  <table class="data-table">
+    <thead><tr><th>From</th><th>To</th><th>Actor</th><th>Reason</th><th>Occurred</th></tr></thead>
+    <tbody>
+    {% for event in lifecycle_events %}
+      <tr>
+        <td>{{ event.from_state|default:"—" }}</td>
+        <td>{{ event.to_state }}</td>
+        <td>{{ event.actor|default:"—" }}</td>
+        <td>{{ event.reason|default:"—" }}</td>
+        <td>{{ event.occurred_at }}</td>
+      </tr>
+    {% empty %}
+      <tr><td colspan="5"><div class="empty-state">No lifecycle events recorded.</div></td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

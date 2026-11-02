@@ -1,0 +1,57 @@
+<div class="card" style="margin-top:16px;">
+  <h3>Native zero-touch provisioning</h3>
+  <p>Each evidence stage is shown separately: a DHCP lease is not identity, a served file is not an applied configuration, a bootstrapped device is not admitted to production (Phases 5–6).</p>
+  {% if ztp.adapter %}
+  <table class="data-table"><tbody>
+    <tr><th>Adapter</th><td><code>{{ ztp.adapter.adapter }}</code> · {{ ztp.adapter.mechanism }}</td></tr>
+    <tr><th>Evidence</th><td><span class="badge badge--{% if ztp.adapter.evidence_status == 'SUPPORTED_AND_LIVE_VERIFIED' %}success{% else %}warning{% endif %}">{{ ztp.adapter.evidence_status }}</span> <small>{{ ztp.adapter.version_support }}</small></td></tr>
+    <tr><th>Transport</th><td>{{ ztp.adapter.transport_decision.selected|default:"none" }} <small>{{ ztp.adapter.transport_decision.reason }}</small></td></tr>
+    <tr><th>Discovery</th><td>{{ ztp.adapter.discovery }}</td></tr>
+    <tr><th>Enrollment</th><td>{{ ztp.adapter.enrollment }}{% if ztp.adapter.enrollment_requirements.blocked %} · <strong>blocked</strong>{% endif %}</td></tr>
+    <tr><th>Native retry</th><td>{{ ztp.adapter.retry.ztp_retry }} <small>({{ ztp.adapter.retry.evidence }})</small></td></tr>
+    <tr><th>Recovery</th><td>{% for a in ztp.adapter.recovery %}{{ a.label }}{% if a.command %} <code>{{ a.command }}</code>{% endif %} <small>— needs {{ a.requires }}</small>{% if not forloop.last %}<br>{% endif %}{% endfor %}</td></tr>
+    <tr><th>Limitations</th><td>{{ ztp.adapter.limitations|join:"; "|default:"—" }}</td></tr>
+  </tbody></table>
+  {% else %}<p><strong>No native ZTP adapter exists for {{ device.platform }}.</strong> Onboard by an operator-controlled procedure.</p>{% endif %}
+
+  {% if ztp.open %}
+  <h4>Open session <code>{{ ztp.open.session }}</code> · {{ ztp.open.stage }}</h4>
+  <table class="data-table"><tbody>
+    <tr><th>Network / address</th><td>{{ ztp.open.network }} · {{ ztp.open.reserved_address }} · transport {{ ztp.open.transport.selected }}</td></tr>
+    <tr><th>Discovery</th><td>{% if ztp.open.discovery.correlated %}correlated through a trusted relay{% else %}no trusted discovery yet{% endif %}
+      {% for l in ztp.open.discovery.leases %}<br><small>{{ l.address }} {{ l.outcome }} {{ l.code }} {{ l.upstream }} ×{{ l.seen_count }}</small>{% endfor %}</td></tr>
+    <tr><th>Authorization</th><td>{{ ztp.open.authorization.auth_id }} {{ ztp.open.authorization.state }} · uses {{ ztp.open.authorization.use_count }}/{{ ztp.open.authorization.max_uses }}</td></tr>
+    <tr><th>Delivery</th><td>served {{ ztp.open.delivery.served }} · refused {{ ztp.open.delivery.refused }} <small>(delivery is not application)</small></td></tr>
+    <tr><th>Management</th><td>first-seen host key {{ ztp.open.management.observed_host_key|default:"—" }}<br>enrolled {{ ztp.open.management.enrolled_host_key|default:"not enrolled" }}{% if ztp.open.management.enrolled_by %} by {{ ztp.open.management.enrolled_by }}{% endif %}</td></tr>
+    <tr><th>Failure / retry</th><td>{% if ztp.open.failure.code %}<code>{{ ztp.open.failure.code }}</code> retryable={{ ztp.open.failure.retryable }} · attempts {{ ztp.open.attempts }}{% else %}—{% endif %}</td></tr>
+    <tr><th>Production admission</th><td>{{ ztp.open.production_admission.state }} — not available in bootstrap</td></tr>
+  </tbody></table>
+  <form method="post" action="{% url 'core:ztp_session_contact' device.device_id ztp.open.session %}">{% csrf_token %}<button type="submit" class="btn">Read host key (key exchange only)</button></form>
+  <form method="post" action="{% url 'core:ztp_session_enroll' device.device_id ztp.open.session %}">{% csrf_token %}
+    <input class="form-control" type="text" name="fingerprint" placeholder="SHA256:… confirmed on the console" aria-label="Host key fingerprint" autocomplete="off" required>
+    <input class="form-control" type="text" name="basis" placeholder="how it was confirmed out of band" aria-label="Enrollment basis" required>
+    <button type="submit" class="btn">Enroll host key</button></form>
+  <form method="post" action="{% url 'core:ztp_session_verify' device.device_id ztp.open.session %}">{% csrf_token %}<button type="submit" class="btn">Verify management bootstrap</button></form>
+  <form method="post" action="{% url 'core:ztp_session_cancel' device.device_id ztp.open.session %}">{% csrf_token %}
+    <input class="form-control" type="text" name="reason" placeholder="reason" aria-label="Cancel reason" required><button type="submit" class="btn">Cancel session</button></form>
+  <p><a href="{% url 'core:ztp_session_json' device.device_id ztp.open.session %}">Session evidence (JSON)</a></p>
+  {% elif ztp.adapter and device.origin == 'REGISTERED_NEW' and not device.is_terminal %}
+  {% for p in ztp.paths %}<p><small>{{ p.auth }} via {{ p.network }}: {% for c in p.checks %}{{ c.check }} {% if c.ok %}✓{% else %}<strong>✗ {{ c.code }}</strong>{% endif %}{% if not forloop.last %} · {% endif %}{% endfor %}</small></p>{% endfor %}
+  {% if ztp.approved and ztp.networks %}
+  <form method="post" action="{% url 'core:ztp_session_open' device.device_id %}">{% csrf_token %}
+    <select class="form-control" name="auth_id" aria-label="Approved authorization">{% for a in ztp.approved %}<option value="{{ a.auth_id }}">{{ a.auth_id }}</option>{% endfor %}</select>
+    <select class="form-control" name="network" aria-label="Bootstrap network">{% for n in ztp.networks %}<option value="{{ n.name }}">{{ n.name }} ({{ n.ipv4_prefix }})</option>{% endfor %}</select>
+    <button type="submit" class="btn">Open ZTP session</button></form>
+  {% else %}<p>An approved bootstrap authorization and an active <a href="{% url 'core:ztp_networks' %}">bootstrap network</a> are required to open a session.</p>{% endif %}
+  {% endif %}
+
+  {% if ztp.downstream %}<p>Devices waiting on this device as their upstream: {% for d in ztp.downstream %}{{ d.name }} ({{ d.upstream_interface }}){% if not forloop.last %}, {% endif %}{% endfor %}</p>{% endif %}
+
+  <h4>Sessions</h4>
+  <table class="data-table"><thead><tr><th>Id</th><th>Stage</th><th>Network</th><th>Adapter / transport</th><th>Address</th><th>Failure</th><th></th></tr></thead>
+    <tbody>{% for s in ztp.sessions %}<tr><td><code>{{ s.session_id }}</code></td><td>{{ s.stage }}</td><td>{{ s.network.name }}</td><td>{{ s.adapter }} / {{ s.transport }}</td>
+      <td>{{ s.reserved_address }}</td><td>{{ s.failure.code|default:"—" }}</td>
+      <td>{% if s.stage == 'FAILED' and device.lifecycle_state == 'DISCOVERED' %}<form method="post" action="{% url 'core:ztp_session_fail_device' device.device_id s.session_id %}">{% csrf_token %}
+        <input class="form-control" type="text" name="confirm_name" placeholder="type {{ device.name }}" aria-label="Confirm device name" required><button type="submit" class="btn btn--danger">Mark device FAILED</button></form>{% endif %}</td></tr>
+    {% empty %}<tr><td colspan="7">No ZTP session.</td></tr>{% endfor %}</tbody></table>
+</div>

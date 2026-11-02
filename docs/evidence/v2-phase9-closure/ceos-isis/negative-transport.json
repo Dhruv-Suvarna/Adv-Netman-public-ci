@@ -1,0 +1,8 @@
+{
+  "checks": {
+    "wrong_management_route": true,
+    "wrong_pinned_host_key": true
+  },
+  "device_mutated": false,
+  "schema": "nmas.v2.phase9.ceos-isis-negative/1"
+}

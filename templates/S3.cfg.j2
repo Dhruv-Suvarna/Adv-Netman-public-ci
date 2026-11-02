@@ -1,0 +1,37 @@
+hostname S3
+!
+no ip routing
+!
+vlan 101
+   name R1_R3
+vlan 102
+   name R1_R4
+vlan 103
+   name R2_R3
+vlan 200
+   name MANAGEMENT
+!
+interface Ethernet1
+   description R3_TRUNK
+   switchport mode trunk
+   switchport trunk allowed vlan 101,103
+!
+interface Ethernet2
+   description S3_S4_TRANSIT
+   switchport mode trunk
+   switchport trunk allowed vlan 102,103
+!
+interface Ethernet3
+   description R1_TRUNK
+   switchport mode trunk
+   switchport trunk allowed vlan 101,102
+!
+interface Ethernet4
+   description MANAGEMENT
+   switchport access vlan 200
+   spanning-tree bpdufilter enable
+!
+interface Vlan200
+   ip address 192.168.200.13/24
+   ipv6 address 2001:db8:200::13/64
+!

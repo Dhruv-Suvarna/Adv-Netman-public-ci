@@ -1,0 +1,43 @@
+{#-
+  Phase 3C/3D: R2's DESIRED secondary DHCPv4/DHCPv6 server configuration --
+  the "dhcp server" global config-mode block ONLY.
+
+  Phase 3D integrated this fragment into the real push path: it is now
+  `{% include %}`-d directly from templates/R2.cfg.j2 (guarded by
+  `{% if dhcp is defined %}`), the same file master.py's push_eos()
+  renders and pushes for every other device -- there is exactly ONE
+  authoritative desired R2 configuration, not two independently applied
+  templates. The companion `interface Vlan200 / dhcp server ipv4/ipv6`
+  enable lines live directly in templates/R2.cfg.j2's OWN existing
+  `interface Vlan200` stanza (not duplicated here as a second stanza) --
+  see docs/NETBOX_IPAM.md "Phase 3D" for why. This file is also still
+  rendered standalone by netbox/scripts/render_r2_dhcp.py for its
+  narrower nested-grammar structural check (Step 11).
+
+  Every address/pool value below comes from the `dhcp` context built by
+  modules/ipam_context.build_and_validate_r2_dhcp_context() (itself
+  sourced entirely from NetBox ipam.IPRange/Prefix/VLAN objects) -- nothing
+  here is a literal pool boundary.
+
+  EOS command grammar verified read-only against the live cEOS 4.36.2F
+  image (CliPlugin/DhcpServerCli.py) -- see docs/NETBOX_IPAM.md "Phase 3C".
+  Phase 3D additionally proved this exact candidate (including the
+  Vlan200 enable lines) via a live, NEVER-COMMITTED EOS configuration
+  session on R2 -- zero parser errors, and the session diff touched only
+  the intended DHCP lines (see docs/NETBOX_IPAM.md "Phase 3D").
+-#}
+dhcp server
+   lease time ipv4 0 days 8 hours 0 minutes
+   lease time ipv6 0 days 8 hours 0 minutes
+{% for pool in dhcp.ipv4_subnets %}
+   subnet {{ pool.prefix }}
+      name VLAN{{ pool.vlan }}-v4-secondary
+      default-gateway {{ pool.gateway }}
+      range {{ pool.start }} {{ pool.end }}
+{% endfor %}
+{% for pool in dhcp.ipv6_subnets %}
+   subnet {{ pool.prefix }}
+      name VLAN{{ pool.vlan }}-v6-secondary
+      range {{ pool.start }} {{ pool.end }}
+{% endfor %}
+!

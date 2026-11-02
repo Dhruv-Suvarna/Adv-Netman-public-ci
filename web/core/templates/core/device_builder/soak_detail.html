@@ -1,0 +1,107 @@
+{% extends "core/base.html" %}
+{% load core_extras %}
+{% block title %}{{ run.soak_id }}{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1><code>{{ run.soak_id }}</code> <span class="badge badge--{{ run.state|bundle_badge_class }}">{{ run.state }}</span>{% if run.result %} <span class="badge badge--{{ run.result|bundle_badge_class }}">{{ run.result }}</span>{% endif %}</h1>
+  <p><a href="{% url 'core:soaks_list' %}">&larr; All soaks</a> · Probation bundle <a href="{% url 'core:bundle_detail' bundle.bundle_id %}"><code>{{ bundle.bundle_id }}</code></a> · <a href="{% url 'core:device_builder_change_detail' bundle.change.change_id %}">{{ bundle.change.change_id }}</a></p>
+  <p>Historical, append-only evidence. Opening this page contacts no device and changes nothing. All times are server UTC; nothing on this page counts down on your browser's clock.</p>
+</div>
+
+{% if notice %}<div class="card" style="border-left:6px solid var(--{% if notice.0 == 'success' %}success{% elif notice.0 == 'danger' %}danger{% elif notice.0 == 'warning' %}warning{% else %}text-muted{% endif %});"><p>{{ notice.1 }}</p>
+  {% if refusals %}<ul>{% for b in refusals %}<li><span class="badge badge--danger">{{ b.code }}</span> {{ b.message }} <em>{{ b.remediation }}</em></li>{% endfor %}</ul>{% endif %}</div>{% endif %}
+
+{% if run.state == 'RUNNING' %}
+<div class="card" style="border-left:6px solid var(--info);"><h3>Observation in progress</h3>
+  <p>The collector samples on a schedule (no device lock, no session and no transaction is held between samples). Required end <strong>{{ run.required_end_at|date:"Y-m-d H:i:s" }} UTC</strong> — {{ progress.remaining_seconds|soak_duration }} remaining as of this page load.</p>
+</div>
+{% elif run.result == 'PASS' and not decision %}
+<div class="card" style="border-left:6px solid var(--success);"><h3><span class="badge badge--success">TECHNICAL SOAK PASSED</span></h3>
+  <p><strong>Operator Golden decision required.</strong> The observation window elapsed with sufficient healthy evidence. Nothing has been promoted: no Golden bundle exists until you approve below.</p></div>
+{% elif run.result == 'PASS' and decision %}
+<div class="card" style="border-left:6px solid var(--success);"><h3><span class="badge badge--success">TECHNICAL SOAK PASSED</span> · decision recorded</h3></div>
+{% else %}
+<div class="card" style="border-left:6px solid var(--danger);"><h3><span class="badge badge--danger">{{ run.state }}{% if run.result %} / {{ run.result }}{% endif %}</span> — this soak can never become Golden</h3>
+  <p>{{ reasons|get_item:run.terminal_reason }}</p>
+  <p>Nothing was rolled back or repaired automatically (rollback and remediation belong to Phase 21). To try again after the cause is resolved, start a NEW soak; if the configuration itself changed, a new UAT / Probation lifecycle is required.</p></div>
+{% endif %}
+
+<div class="card-grid" style="margin-top:16px;">
+  <div class="card"><h3>Run</h3><table class="data-table"><tbody>
+    <tr><th>Probation bundle</th><td><code>{{ bundle.bundle_id }}</code><br>digest <code>{{ run.bundle_digest }}</code></td></tr>
+    <tr><th>Started</th><td>{{ run.started_at|date:"Y-m-d H:i:s" }} UTC by {{ run.started_by }}</td></tr>
+    <tr><th>Required end</th><td>{{ run.required_end_at|date:"Y-m-d H:i:s" }} UTC (pinned at start: {{ run.duration_seconds|soak_duration }})</td></tr>
+    <tr><th>Finished</th><td>{{ run.finished_at|date:"Y-m-d H:i:s"|default:"—" }}{% if run.finished_at %} UTC by {{ run.ended_by }}{% endif %}</td></tr>
+    <tr><th>Elapsed</th><td>{{ progress.elapsed_seconds|soak_duration }} ({{ progress.percent_elapsed }}%)</td></tr>
+    <tr><th>Reason</th><td>{{ run.terminal_reason|default:"—" }}</td></tr>
+    <tr><th>Evidence digest</th><td>{% if run.evidence_digest %}<code>{{ run.evidence_digest }}</code>{% else %}— (computed when the soak ends){% endif %}</td></tr>
+    <tr><th>Current integrity</th><td><span class="badge badge--{% if integrity.ok %}success{% else %}danger{% endif %}">{{ integrity.state }}</span></td></tr>
+  </tbody></table></div>
+  <div class="card"><h3>Policy (pinned when this soak started)</h3><table class="data-table"><tbody>
+    <tr><th>Policy version</th><td>{{ run.policy_version }}</td></tr>
+    <tr><th>Duration</th><td>{{ progress.policy.duration_seconds|soak_duration }}{% if not progress.policy.is_production_duration %} <span class="badge badge--danger">NOT A PRODUCTION DURATION</span>{% endif %}</td></tr>
+    <tr><th>Sample interval</th><td>{{ progress.policy.sample_interval_seconds|soak_duration }}</td></tr>
+    <tr><th>Maximum unobserved gap</th><td>{{ progress.policy.max_gap_seconds|soak_duration }}</td></tr>
+    <tr><th>Minimum coverage</th><td>{{ progress.policy.min_coverage_percent }}% of intervals</td></tr>
+    <tr><th>Critical CPU / memory</th><td>ends the soak after {{ progress.policy.resource_consecutive_samples }} consecutive samples (the project's alert policy)</td></tr>
+    <tr><th>Decision window</th><td>{{ progress.policy.decision_max_age_seconds|soak_duration }} after completion</td></tr>
+  </tbody></table></div>
+</div>
+
+<div class="card" style="margin-top:16px;"><h3>Evidence coverage</h3>
+  <table class="data-table"><tbody>
+    <tr><th>Samples</th><td>{{ progress.stats.samples }} ({{ progress.stats.usable_samples }} usable · {{ progress.stats.warning_samples }} with warnings · {{ progress.stats.incomplete_samples }} incomplete · {{ progress.stats.failed_samples }} failed · {{ progress.stats.invalidated_samples }} invalidated)</td></tr>
+    <tr><th>Covered intervals</th><td>{{ progress.stats.covered_intervals }} of {{ progress.stats.expected_intervals }} ({{ progress.stats.coverage_percent }}%)</td></tr>
+    <tr><th>Longest gap (leading / trailing)</th><td>{{ progress.stats.max_gap_seconds|soak_duration }} ({{ progress.stats.leading_gap_seconds|soak_duration }} / {{ progress.stats.trailing_gap_seconds|soak_duration }})</td></tr>
+    <tr><th>First / last sample</th><td>{{ progress.stats.first_sample_at|default:"—" }} / {{ progress.stats.last_sample_at|default:"—" }}</td></tr>
+    <tr><th>Warning findings / blocking findings</th><td>{{ progress.stats.warning_findings }} / {{ progress.stats.blocking_findings }}</td></tr>
+    <tr><th>Clock anomalies</th><td>{{ progress.stats.clock_anomalies }}</td></tr>
+  </tbody></table>
+</div>
+
+{% if run.result == 'PASS' and not decision %}
+<div class="card" style="margin-top:16px;border-left:6px solid var(--warning);"><h3>Golden decision</h3>
+  {% if golden.eligible %}
+    <p>You are deciding on <strong>this exact artifact</strong>: Probation bundle <code>{{ bundle.bundle_id }}</code>, digest <code>{{ run.bundle_digest }}</code>, after soak <code>{{ run.soak_id }}</code> ({{ run.duration_seconds|soak_duration }}, {{ progress.stats.coverage_percent }}% coverage, {{ progress.stats.warning_findings }} warning finding(s), integrity {{ integrity.state }}, no interference).</p>
+    <p>Approving creates a NEW immutable Golden bundle with the identical payload and this soak and decision pinned in its lineage. It does <strong>not</strong> re-apply the configuration, contact a device or save any device's startup configuration. Rejecting records your decision and creates nothing; it deletes nothing and rolls nothing back.</p>
+    <form method="post" action="{% url 'core:soak_decision' run.soak_id %}">{% csrf_token %}
+      <input type="hidden" name="expected_soak_id" value="{{ run.soak_id }}"><input type="hidden" name="expected_bundle_id" value="{{ bundle.bundle_id }}"><input type="hidden" name="expected_bundle_digest" value="{{ run.bundle_digest }}">
+      <p><label>Comment (optional, up to {{ max_reason }} characters; never enter a secret)<br><textarea name="reason" maxlength="{{ max_reason }}" rows="3" cols="70"></textarea></label></p>
+      <p><label><input type="checkbox" name="confirm" required> I have reviewed the exact Probation bundle, digest and soak evidence above and make this decision explicitly.</label></p>
+      <button class="btn btn--primary" type="submit" name="decision" value="APPROVE">Approve Golden</button>
+      <button class="btn btn--secondary" type="submit" name="decision" value="REJECT">Reject Golden</button>
+    </form>
+  {% else %}
+    <p><strong>The Golden decision is blocked right now:</strong></p>
+    <ul>{% for b in golden.blockers %}<li><span class="badge badge--danger">{{ b.code }}</span> {{ b.message }} <em>{{ b.remediation }}</em></li>{% endfor %}</ul>
+  {% endif %}
+</div>
+{% elif decision %}
+<div class="card" style="margin-top:16px;"><h3>Golden decision</h3>
+  <p><span class="badge badge--{{ decision.decision|bundle_badge_class }}">{{ decision.decision }}</span> by {{ decision.decided_by }} at {{ decision.decided_at|date:"Y-m-d H:i:s" }} UTC. {% if decision.reason %}Comment: <em>{{ decision.reason }}</em>{% endif %}</p>
+  <p>Probation digest <code>{{ decision.probation_bundle_digest }}</code> · evidence digest <code>{{ decision.evidence_digest }}</code></p>
+  {% if decision.golden_bundle %}<p>Golden bundle: <a href="{% url 'core:bundle_detail' decision.golden_bundle.bundle_id %}"><code>{{ decision.golden_bundle.bundle_id }}</code></a></p>{% else %}<p>No Golden bundle was created. A decision is immutable; reconsidering requires a new soak.</p>{% endif %}
+</div>
+{% endif %}
+
+<div class="card" style="margin-top:16px;"><h3>Sample timeline (newest {{ timeline|length }} of {{ progress.stats.samples }})</h3>
+  <table class="data-table"><thead><tr><th>#</th><th>Sampled (UTC)</th><th>Result</th><th>Expected state</th><th>Telemetry</th><th>Monitoring</th><th>Health</th><th>Findings</th></tr></thead><tbody>
+  {% for s in timeline %}<tr>
+    <td>{{ s.bucket }}</td><td>{{ s.sampled_at|date:"Y-m-d H:i:s" }}</td><td><span class="badge badge--{{ s.result|bundle_badge_class }}">{{ s.result }}</span></td>
+    <td>{{ s.expected_state_result|default:"—" }}</td><td><span class="badge badge--{{ s.telemetry_freshness|bundle_badge_class }}">{{ s.telemetry_freshness|default:"—" }}</span></td><td>{{ s.monitoring_state|default:"—" }}</td><td>{{ s.device_health|default:"—" }}</td>
+    <td>{% if s.findings %}<details><summary>{{ s.findings|length }}</summary><ul>{% for f in s.findings %}<li><span class="badge badge--neutral">{{ f.class }}</span> {{ f.device }} <code>{{ f.check_code }}</code> {{ f.message }}</li>{% endfor %}</ul></details>{% else %}—{% endif %}</td>
+  </tr>{% empty %}<tr><td colspan="8">No sample has been collected yet.</td></tr>{% endfor %}
+  </tbody></table>
+  <p style="color:var(--text-muted); font-size:0.85rem;">Each row is a bounded, sanitized evidence record. Raw telemetry stays in InfluxDB; nothing here is a copy of the monitoring database.</p>
+</div>
+
+{% if run.state == 'RUNNING' %}
+<div class="card" style="margin-top:16px;"><h3>Cancel this soak</h3>
+  <p>Cancelling keeps every sample, does not modify the Probation bundle, contacts no device, can never be undone and means this soak can never become Golden. Starting again creates a new soak (if the candidate is still eligible).</p>
+  <form method="post" action="{% url 'core:soak_cancel' run.soak_id %}">{% csrf_token %}
+    <p><label><input type="checkbox" name="confirm" required> I understand this soak will end and can not be resumed.</label></p>
+    <button class="btn btn--secondary" type="submit">Cancel soak</button>
+  </form>
+</div>
+{% endif %}
+{% endblock %}

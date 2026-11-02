@@ -1,0 +1,25 @@
+{% extends "core/base.html" %}
+{% load core_extras %}
+{% block title %}Probation soaks{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>Probation soaks</h1>
+  <p><a href="{% url 'core:device_builder' %}">&larr; Device Builder</a> · <a href="{% url 'core:bundles_list' %}">Configuration bundles</a> · <a href="{% url 'core:probation_overview' %}">Golden and probation overview</a></p>
+  <p>Read-only history of every observation window. Opening this page contacts no device and changes nothing.</p>
+</div>
+<div class="card">
+  <table class="data-table">
+    <thead><tr><th>Soak</th><th>Probation bundle</th><th>State</th><th>Result</th><th>Started (UTC)</th><th>Required end (UTC)</th><th>Finished (UTC)</th><th>Duration</th><th>Reason</th></tr></thead>
+    <tbody>
+    {% for r in runs %}<tr>
+      <td><a href="{% url 'core:soak_detail' r.soak_id %}"><code>{{ r.soak_id }}</code></a></td>
+      <td><a href="{% url 'core:bundle_detail' r.bundle.bundle_id %}"><code>{{ r.bundle.bundle_id }}</code></a></td>
+      <td><span class="badge badge--{{ r.state|bundle_badge_class }}">{{ r.state }}</span></td>
+      <td>{% if r.result %}<span class="badge badge--{{ r.result|bundle_badge_class }}">{{ r.result }}</span>{% else %}—{% endif %}</td>
+      <td>{{ r.started_at|date:"Y-m-d H:i" }}</td><td>{{ r.required_end_at|date:"Y-m-d H:i" }}</td><td>{{ r.finished_at|date:"Y-m-d H:i"|default:"—" }}</td>
+      <td>{{ r.duration_seconds|soak_duration }}</td><td>{{ r.terminal_reason|default:"—" }}</td>
+    </tr>{% empty %}<tr><td colspan="9">No soak has been started.</td></tr>{% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

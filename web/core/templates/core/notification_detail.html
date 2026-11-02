@@ -1,0 +1,78 @@
+{% extends "core/base.html" %}
+{% load core_extras %}
+{% block title %}Notification · {{ notification.title }}{% endblock %}
+{% block content %}
+<div class="page-header">
+  <p><a href="{% url 'core:notifications' %}">&larr; Back to Notifications</a></p>
+  <h1>{{ notification.title }}</h1>
+</div>
+
+<div class="card">
+  <div class="notification-item__meta">
+    <span class="badge badge--{{ notification.severity|severity_badge_class }}">{{ notification.severity|severity_icon }} {{ notification.get_severity_display }}</span>
+    <span class="badge badge--neutral">{{ notification.get_event_type_display }}</span>
+    {% if notification.is_read %}
+      <span class="badge badge--neutral">Read</span>
+    {% else %}
+      <span class="badge badge--info">Unread</span>
+    {% endif %}
+    {% if notification.is_test %}<span class="badge badge--not-implemented">TEST</span>{% endif %}
+  </div>
+
+  <p>{{ notification.message }}</p>
+  {% if notification.detail %}
+    <div class="code-panel code-panel--log">{{ notification.detail }}</div>
+  {% endif %}
+
+  <table class="data-table">
+    <tbody>
+      <tr><th>Event ID</th><td>{{ notification.pk }}</td></tr>
+      <tr><th>Event type</th><td>{{ notification.event_type }}</td></tr>
+      <tr><th>Source</th><td>{{ notification.source|default:"—" }}</td></tr>
+      <tr><th>Created</th><td>{{ notification.created_at }}</td></tr>
+      <tr><th>Updated</th><td>{{ notification.updated_at }}</td></tr>
+      {% if notification.device %}<tr><th>Device</th><td>{{ notification.device }}</td></tr>{% endif %}
+      {% if notification.interface %}<tr><th>Interface</th><td>{{ notification.interface }}</td></tr>{% endif %}
+      {% if notification.change_id %}<tr><th>Change ID</th><td>{{ notification.change_id }}</td></tr>{% endif %}
+      {% if notification.lifecycle_state %}<tr><th>Lifecycle state</th><td>{{ notification.lifecycle_state }}</td></tr>{% endif %}
+      {% if notification.correlation_key %}<tr><th>Correlation key</th><td>{{ notification.correlation_key }}</td></tr>{% endif %}
+      {% if notification.detail_url %}<tr><th>External link</th><td><a href="{{ notification.detail_url }}">{{ notification.detail_url }}</a></td></tr>{% endif %}
+    </tbody>
+  </table>
+
+  {% if notification.metadata %}
+    <h2>Metadata</h2>
+    <table class="data-table">
+      <tbody>
+        {% for key, value in notification.metadata.items %}
+          <tr><th>{{ key }}</th><td>{{ value }}</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% endif %}
+
+  <h2>Slack delivery</h2>
+  <p>
+    <span class="badge badge--{{ notification.slack_status|slack_status_badge_class }}">{{ notification.get_slack_status_display }}</span>
+    {% if notification.slack_attempted_at %}<span class="notification-item__time"> attempted {{ notification.slack_attempted_at }}</span>{% endif %}
+  </p>
+  {% if notification.slack_error %}
+    <div class="code-panel">{{ notification.slack_error }}</div>
+  {% endif %}
+  {% if notification.slack_status == "FAILED" %}
+    <form method="post" action="{% url 'core:notification_retry_slack' notification.pk %}">
+      {% csrf_token %}
+      <input type="hidden" name="next" value="{% url 'core:notification_detail' notification.pk %}">
+      <button type="submit" class="btn btn--secondary">Retry Slack delivery</button>
+    </form>
+  {% endif %}
+
+  {% if not notification.is_read %}
+    <form method="post" action="{% url 'core:notification_mark_read' notification.pk %}" id="mark-read-form" data-auto-mark-read>
+      {% csrf_token %}
+      <input type="hidden" name="next" value="{% url 'core:notification_detail' notification.pk %}">
+      <button type="submit" class="btn btn--primary">Mark as read</button>
+    </form>
+  {% endif %}
+</div>
+{% endblock %}

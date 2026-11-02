@@ -1,0 +1,154 @@
+1791728578.634 START nmas-pipeline migrate 3 load 24.51 25.42 23.81
+1791728579.831 NMAS service-gate execute() -> TRANSITION_PROVEN_NOT_AUTHORIZED sent-nothing
+1791728581.056 CONFIG start {"r1": "2bd8c040664c1216", "r2": "6284ec1a7270b9dd", "s1": "7d083ffd40ee3b4f", "s2": "a4f9a4a23f07a916"}
+1791728596.431 C1 begin load 24.35 25.35 23.81
+1791728599.361 F1 core-cover-installed 2001:db8:10::/63 2001:db8:20::/63 2001:db8:30::/63
+1791728599.361 FP1 stage1 vlan99-ipv6+isis start
+1791728604.636 FP1 stage2 adjacencies wait
+1791728619.822 FP1 stage3 advertise start
+1791728624.615 FP1 stage4 isis-available wait (static still owns)
+1791728632.437 FP1 stage12 final-config r1=8a14f83b0377eeb2 r2=10b230dc33e345c7 s1=ca72c15194707f3f s2=d6346702cc2b566b
+1791728639.434 NMAS plan S1-aggregate-static-to-isis MORE_SPECIFIC_PAIR specs=install,remove,remove
+1791728721.194 NMAS-S1-aggregate-static-to-isis takeover-nexthop s1 2001:db8::/32 isisL2 fe80::42:aff:fefb:1b02%eth1 before=DELAY after=DELAY
+1791728755.042 NMAS result S1-aggregate-static-to-isis ok=True aborted=- restored=None lost=0 [["precheck", "PASS"], ["shield-install", "APPLIED"], ["shield-verify", "PASS"], ["transition", "APPLIED"], ["transition-verify", "PASS"], ["shield-remove", "APPLIED"], ["final-verify", "PASS"]]
+1791728755.042 NMAS plan R1-clients-static-to-isis LESS_SPECIFIC_COVER specs=install,add,remove,remove,remove,remove
+1791728896.809 NMAS-R1-clients-static-to-isis takeover-nexthop r1 2001:db8:10::/64 isisL2 fe80::42:aff:fefb:1b03%eth3 before=REACHABLE after=REACHABLE
+1791728898.182 NMAS-R1-clients-static-to-isis takeover-nexthop r1 2001:db8:20::/64 isisL2 fe80::42:aff:fefb:1b03%eth3 before=REACHABLE after=REACHABLE
+1791728899.424 NMAS-R1-clients-static-to-isis takeover-nexthop r1 2001:db8:30::/64 isisL2 fe80::42:aff:fefb:1b03%eth3 before=REACHABLE after=REACHABLE
+1791728942.435 NMAS result R1-clients-static-to-isis ok=True aborted=- restored=None lost=0 [["precheck", "PASS"], ["shield-install", "APPLIED"], ["shield-verify", "PASS"], ["transition", "APPLIED"], ["transition", "APPLIED"], ["transition", "APPLIED"], ["transition", "APPLIED"], ["transition-verify", "PASS"], ["shield-remove", "APPLIED"], ["final-verify", "PASS"]]
+1791728942.436 NMAS plan S2-aggregate-static-to-isis MORE_SPECIFIC_PAIR specs=install,remove,remove
+1791729042.379 NMAS-S2-aggregate-static-to-isis takeover-nexthop s2 2001:db8::/32 isisL2 fe80::42:aff:fefb:1c02%eth1 before=REACHABLE after=REACHABLE
+1791729095.113 NMAS result S2-aggregate-static-to-isis ok=True aborted=- restored=None lost=0 [["precheck", "PASS"], ["shield-install", "APPLIED"], ["shield-verify", "PASS"], ["transition", "APPLIED"], ["transition-verify", "PASS"], ["shield-remove", "APPLIED"], ["final-verify", "PASS"]]
+1791729095.113 NMAS plan R2-clients-static-to-isis LESS_SPECIFIC_COVER specs=install,add,remove,remove,remove,remove
+1791729297.623 NMAS-R2-clients-static-to-isis takeover-nexthop r2 2001:db8:10::/64 isisL2 fe80::42:aff:fefb:1c03%eth3 before=REACHABLE after=REACHABLE
+1791729298.693 NMAS-R2-clients-static-to-isis takeover-nexthop r2 2001:db8:20::/64 isisL2 fe80::42:aff:fefb:1c03%eth3 before=REACHABLE after=REACHABLE
+1791729299.626 NMAS-R2-clients-static-to-isis takeover-nexthop r2 2001:db8:30::/64 isisL2 fe80::42:aff:fefb:1c03%eth3 before=REACHABLE after=REACHABLE
+1791729363.795 NMAS result R2-clients-static-to-isis ok=True aborted=- restored=None lost=0 [["precheck", "PASS"], ["shield-install", "APPLIED"], ["shield-verify", "PASS"], ["transition", "APPLIED"], ["transition", "APPLIED"], ["transition", "APPLIED"], ["transition", "APPLIED"], ["transition-verify", "PASS"], ["shield-remove", "APPLIED"], ["final-verify", "PASS"]]
+1791729492.108 F1 core-quiet 283
+1791729493.693 F1 core-cover-removed
+1791729495.632 F1 nmas-forward-complete {"r1": "5408a3ab57b34d17", "r2": "4d5eb24485271374", "s1": "c14991f826026d59", "s2": "9e1955c8185575b0"}
+1791729518.672 B1 core-cover-installed 2001:db8:10::/63 2001:db8:20::/63 2001:db8:30::/63
+1791729518.672 NMAS plan R2-clients-isis-to-static LESS_SPECIFIC_COVER specs=install,restore,restore,remove
+1791729620.778 NMAS-R2-clients-isis-to-static takeover-nexthop r2 2001:db8:10::/64 static 2001:db8:110:2::2 before=REACHABLE after=REACHABLE
+1791729621.886 NMAS-R2-clients-isis-to-static takeover-nexthop r2 2001:db8:20::/64 static 2001:db8:110:2::2 before=REACHABLE after=REACHABLE
+1791729622.878 NMAS-R2-clients-isis-to-static takeover-nexthop r2 2001:db8:30::/64 static 2001:db8:110:2::2 before=REACHABLE after=REACHABLE
+1791729655.185 NMAS result R2-clients-isis-to-static ok=True aborted=- restored=None lost=0 [["precheck", "PASS"], ["shield-install", "APPLIED"], ["shield-verify", "PASS"], ["transition", "APPLIED"], ["transition", "APPLIED"], ["transition-verify", "PASS"], ["shield-remove", "APPLIED"], ["final-verify", "PASS"]]
+1791729655.185 NMAS plan S2-aggregate-isis-to-static MORE_SPECIFIC_PAIR specs=install,restore,remove
+1791729746.029 NMAS-S2-aggregate-isis-to-static takeover-nexthop s2 2001:db8::/32 static 2001:db8:110:2::1 before=REACHABLE after=REACHABLE
+1791729784.680 NMAS result S2-aggregate-isis-to-static ok=True aborted=- restored=None lost=0 [["precheck", "PASS"], ["shield-install", "APPLIED"], ["shield-verify", "PASS"], ["transition", "APPLIED"], ["transition-verify", "PASS"], ["shield-remove", "APPLIED"], ["final-verify", "PASS"]]
+1791729784.681 NMAS plan R1-clients-isis-to-static LESS_SPECIFIC_COVER specs=install,restore,restore,remove
+1791729920.115 NMAS-R1-clients-isis-to-static takeover-nexthop r1 2001:db8:10::/64 static 2001:db8:110:1::2 before=REACHABLE after=REACHABLE
+1791729921.175 NMAS-R1-clients-isis-to-static takeover-nexthop r1 2001:db8:20::/64 static 2001:db8:110:1::2 before=REACHABLE after=REACHABLE
+1791729922.107 NMAS-R1-clients-isis-to-static takeover-nexthop r1 2001:db8:30::/64 static 2001:db8:110:1::2 before=REACHABLE after=REACHABLE
+1791729974.091 NMAS result R1-clients-isis-to-static ok=True aborted=- restored=None lost=0 [["precheck", "PASS"], ["shield-install", "APPLIED"], ["shield-verify", "PASS"], ["transition", "APPLIED"], ["transition", "APPLIED"], ["transition-verify", "PASS"], ["shield-remove", "APPLIED"], ["final-verify", "PASS"]]
+1791729974.091 NMAS plan S1-aggregate-isis-to-static MORE_SPECIFIC_PAIR specs=install,restore,remove
+1791730099.918 NMAS-S1-aggregate-isis-to-static takeover-nexthop s1 2001:db8::/32 static 2001:db8:110:1::1 before=REACHABLE after=REACHABLE
+1791730160.617 NMAS result S1-aggregate-isis-to-static ok=True aborted=- restored=None lost=0 [["precheck", "PASS"], ["shield-install", "APPLIED"], ["shield-verify", "PASS"], ["transition", "APPLIED"], ["transition-verify", "PASS"], ["shield-remove", "APPLIED"], ["final-verify", "PASS"]]
+1791730160.618 BW1 rb4 withdraw-advertisements start
+1791730164.292 BW1 rb5 isis-removal start
+1791730174.023 BW1 rb6 baseline-config r1=2bd8c040664c1216 r2=6284ec1a7270b9dd s1=7d083ffd40ee3b4f s2=a4f9a4a23f07a916
+1791730302.878 B1 core-quiet 419
+1791730304.478 B1 core-cover-removed
+1791730310.129 B1 baseline-restored True {"r1": "2bd8c040664c1216", "r2": "6284ec1a7270b9dd", "s1": "7d083ffd40ee3b4f", "s2": "a4f9a4a23f07a916"}
+1791730317.594 C1 end load 20.43 21.54 22.87
+1791730336.557 C2 begin load 22.81 22.06 23.02
+1791730340.069 F2 core-cover-installed 2001:db8:10::/63 2001:db8:20::/63 2001:db8:30::/63
+1791730340.069 FP2 stage1 vlan99-ipv6+isis start
+1791730345.383 FP2 stage2 adjacencies wait
+1791730364.393 FP2 stage3 advertise start
+1791730369.135 FP2 stage4 isis-available wait (static still owns)
+1791730376.697 FP2 stage12 final-config r1=8a14f83b0377eeb2 r2=10b230dc33e345c7 s1=ca72c15194707f3f s2=d6346702cc2b566b
+1791730383.536 NMAS plan S1-aggregate-static-to-isis MORE_SPECIFIC_PAIR specs=install,remove,remove
+1791730452.101 NMAS-S1-aggregate-static-to-isis takeover-nexthop s1 2001:db8::/32 isisL2 fe80::42:aff:fefb:1b02%eth1 before=DELAY after=DELAY
+1791730490.234 NMAS result S1-aggregate-static-to-isis ok=True aborted=- restored=None lost=0 [["precheck", "PASS"], ["shield-install", "APPLIED"], ["shield-verify", "PASS"], ["transition", "APPLIED"], ["transition-verify", "PASS"], ["shield-remove", "APPLIED"], ["final-verify", "PASS"]]
+1791730490.234 NMAS plan R1-clients-static-to-isis LESS_SPECIFIC_COVER specs=install,add,remove,remove,remove,remove
+1791730634.444 NMAS-R1-clients-static-to-isis takeover-nexthop r1 2001:db8:10::/64 isisL2 fe80::42:aff:fefb:1b03%eth3 before=REACHABLE after=REACHABLE
+1791730635.816 NMAS-R1-clients-static-to-isis takeover-nexthop r1 2001:db8:20::/64 isisL2 fe80::42:aff:fefb:1b03%eth3 before=REACHABLE after=REACHABLE
+1791730637.131 NMAS-R1-clients-static-to-isis takeover-nexthop r1 2001:db8:30::/64 isisL2 fe80::42:aff:fefb:1b03%eth3 before=REACHABLE after=REACHABLE
+1791730680.869 NMAS result R1-clients-static-to-isis ok=True aborted=- restored=None lost=0 [["precheck", "PASS"], ["shield-install", "APPLIED"], ["shield-verify", "PASS"], ["transition", "APPLIED"], ["transition", "APPLIED"], ["transition", "APPLIED"], ["transition", "APPLIED"], ["transition-verify", "PASS"], ["shield-remove", "APPLIED"], ["final-verify", "PASS"]]
+1791730680.870 NMAS plan S2-aggregate-static-to-isis MORE_SPECIFIC_PAIR specs=install,remove,remove
+1791730776.128 NMAS-S2-aggregate-static-to-isis takeover-nexthop s2 2001:db8::/32 isisL2 fe80::42:aff:fefb:1c02%eth1 before=REACHABLE after=REACHABLE
+1791730828.723 NMAS result S2-aggregate-static-to-isis ok=True aborted=- restored=None lost=0 [["precheck", "PASS"], ["shield-install", "APPLIED"], ["shield-verify", "PASS"], ["transition", "APPLIED"], ["transition-verify", "PASS"], ["shield-remove", "APPLIED"], ["final-verify", "PASS"]]
+1791730828.723 NMAS plan R2-clients-static-to-isis LESS_SPECIFIC_COVER specs=install,add,remove,remove,remove,remove
+1791731026.260 NMAS-R2-clients-static-to-isis takeover-nexthop r2 2001:db8:10::/64 isisL2 fe80::42:aff:fefb:1c03%eth3 before=REACHABLE after=REACHABLE
+1791731027.324 NMAS-R2-clients-static-to-isis takeover-nexthop r2 2001:db8:20::/64 isisL2 fe80::42:aff:fefb:1c03%eth3 before=REACHABLE after=REACHABLE
+1791731028.365 NMAS-R2-clients-static-to-isis takeover-nexthop r2 2001:db8:30::/64 isisL2 fe80::42:aff:fefb:1c03%eth3 before=REACHABLE after=REACHABLE
+1791731094.656 NMAS result R2-clients-static-to-isis ok=True aborted=- restored=None lost=0 [["precheck", "PASS"], ["shield-install", "APPLIED"], ["shield-verify", "PASS"], ["transition", "APPLIED"], ["transition", "APPLIED"], ["transition", "APPLIED"], ["transition", "APPLIED"], ["transition-verify", "PASS"], ["shield-remove", "APPLIED"], ["final-verify", "PASS"]]
+1791731221.337 F2 core-quiet 1337
+1791731222.884 F2 core-cover-removed
+1791731224.855 F2 nmas-forward-complete {"r1": "5408a3ab57b34d17", "r2": "4d5eb24485271374", "s1": "c14991f826026d59", "s2": "9e1955c8185575b0"}
+1791731248.318 B2 core-cover-installed 2001:db8:10::/63 2001:db8:20::/63 2001:db8:30::/63
+1791731248.319 NMAS plan R2-clients-isis-to-static LESS_SPECIFIC_COVER specs=install,restore,restore,remove
+1791731345.906 NMAS-R2-clients-isis-to-static takeover-nexthop r2 2001:db8:10::/64 static 2001:db8:110:2::2 before=REACHABLE after=REACHABLE
+1791731346.977 NMAS-R2-clients-isis-to-static takeover-nexthop r2 2001:db8:20::/64 static 2001:db8:110:2::2 before=REACHABLE after=REACHABLE
+1791731348.048 NMAS-R2-clients-isis-to-static takeover-nexthop r2 2001:db8:30::/64 static 2001:db8:110:2::2 before=REACHABLE after=REACHABLE
+1791731380.103 NMAS result R2-clients-isis-to-static ok=True aborted=- restored=None lost=0 [["precheck", "PASS"], ["shield-install", "APPLIED"], ["shield-verify", "PASS"], ["transition", "APPLIED"], ["transition", "APPLIED"], ["transition-verify", "PASS"], ["shield-remove", "APPLIED"], ["final-verify", "PASS"]]
+1791731380.104 NMAS plan S2-aggregate-isis-to-static MORE_SPECIFIC_PAIR specs=install,restore,remove
+1791731471.693 NMAS-S2-aggregate-isis-to-static takeover-nexthop s2 2001:db8::/32 static 2001:db8:110:2::1 before=REACHABLE after=REACHABLE
+1791731513.094 NMAS result S2-aggregate-isis-to-static ok=True aborted=- restored=None lost=0 [["precheck", "PASS"], ["shield-install", "APPLIED"], ["shield-verify", "PASS"], ["transition", "APPLIED"], ["transition-verify", "PASS"], ["shield-remove", "APPLIED"], ["final-verify", "PASS"]]
+1791731513.096 NMAS plan R1-clients-isis-to-static LESS_SPECIFIC_COVER specs=install,restore,restore,remove
+1791731643.228 NMAS-R1-clients-isis-to-static takeover-nexthop r1 2001:db8:10::/64 static 2001:db8:110:1::2 before=REACHABLE after=REACHABLE
+1791731644.322 NMAS-R1-clients-isis-to-static takeover-nexthop r1 2001:db8:20::/64 static 2001:db8:110:1::2 before=REACHABLE after=REACHABLE
+1791731645.322 NMAS-R1-clients-isis-to-static takeover-nexthop r1 2001:db8:30::/64 static 2001:db8:110:1::2 before=REACHABLE after=REACHABLE
+1791731694.942 NMAS result R1-clients-isis-to-static ok=True aborted=- restored=None lost=0 [["precheck", "PASS"], ["shield-install", "APPLIED"], ["shield-verify", "PASS"], ["transition", "APPLIED"], ["transition", "APPLIED"], ["transition-verify", "PASS"], ["shield-remove", "APPLIED"], ["final-verify", "PASS"]]
+1791731694.943 NMAS plan S1-aggregate-isis-to-static MORE_SPECIFIC_PAIR specs=install,restore,remove
+1791731816.782 NMAS-S1-aggregate-isis-to-static takeover-nexthop s1 2001:db8::/32 static 2001:db8:110:1::1 before=REACHABLE after=REACHABLE
+1791731874.570 NMAS result S1-aggregate-isis-to-static ok=True aborted=- restored=None lost=0 [["precheck", "PASS"], ["shield-install", "APPLIED"], ["shield-verify", "PASS"], ["transition", "APPLIED"], ["transition-verify", "PASS"], ["shield-remove", "APPLIED"], ["final-verify", "PASS"]]
+1791731874.570 BW2 rb4 withdraw-advertisements start
+1791731879.001 BW2 rb5 isis-removal start
+1791731888.711 BW2 rb6 baseline-config r1=2bd8c040664c1216 r2=6284ec1a7270b9dd s1=7d083ffd40ee3b4f s2=a4f9a4a23f07a916
+1791732014.117 B2 core-quiet 403
+1791732015.551 B2 core-cover-removed
+1791732019.362 B2 baseline-restored True {"r1": "2bd8c040664c1216", "r2": "6284ec1a7270b9dd", "s1": "7d083ffd40ee3b4f", "s2": "a4f9a4a23f07a916"}
+1791732026.011 C2 end load 25.52 24.49 24.05
+1791732041.296 C3 begin load 22.13 23.79 23.83
+1791732044.166 F3 core-cover-installed 2001:db8:10::/63 2001:db8:20::/63 2001:db8:30::/63
+1791732044.166 FP3 stage1 vlan99-ipv6+isis start
+1791732049.594 FP3 stage2 adjacencies wait
+1791732068.128 FP3 stage3 advertise start
+1791732072.229 FP3 stage4 isis-available wait (static still owns)
+1791732080.396 FP3 stage12 final-config r1=8a14f83b0377eeb2 r2=10b230dc33e345c7 s1=ca72c15194707f3f s2=d6346702cc2b566b
+1791732086.952 NMAS plan S1-aggregate-static-to-isis MORE_SPECIFIC_PAIR specs=install,remove,remove
+1791732157.909 NMAS-S1-aggregate-static-to-isis takeover-nexthop s1 2001:db8::/32 isisL2 fe80::42:aff:fefb:1b02%eth1 before=DELAY after=DELAY
+1791732190.301 NMAS result S1-aggregate-static-to-isis ok=True aborted=- restored=None lost=0 [["precheck", "PASS"], ["shield-install", "APPLIED"], ["shield-verify", "PASS"], ["transition", "APPLIED"], ["transition-verify", "PASS"], ["shield-remove", "APPLIED"], ["final-verify", "PASS"]]
+1791732190.302 NMAS plan R1-clients-static-to-isis LESS_SPECIFIC_COVER specs=install,add,remove,remove,remove,remove
+1791732334.101 NMAS-R1-clients-static-to-isis takeover-nexthop r1 2001:db8:10::/64 isisL2 fe80::42:aff:fefb:1b03%eth3 before=REACHABLE after=REACHABLE
+1791732335.136 NMAS-R1-clients-static-to-isis takeover-nexthop r1 2001:db8:20::/64 isisL2 fe80::42:aff:fefb:1b03%eth3 before=REACHABLE after=REACHABLE
+1791732336.295 NMAS-R1-clients-static-to-isis takeover-nexthop r1 2001:db8:30::/64 isisL2 fe80::42:aff:fefb:1b03%eth3 before=REACHABLE after=REACHABLE
+1791732379.083 NMAS result R1-clients-static-to-isis ok=True aborted=- restored=None lost=0 [["precheck", "PASS"], ["shield-install", "APPLIED"], ["shield-verify", "PASS"], ["transition", "APPLIED"], ["transition", "APPLIED"], ["transition", "APPLIED"], ["transition", "APPLIED"], ["transition-verify", "PASS"], ["shield-remove", "APPLIED"], ["final-verify", "PASS"]]
+1791732379.084 NMAS plan S2-aggregate-static-to-isis MORE_SPECIFIC_PAIR specs=install,remove,remove
+1791732477.715 NMAS-S2-aggregate-static-to-isis takeover-nexthop s2 2001:db8::/32 isisL2 fe80::42:aff:fefb:1c02%eth1 before=REACHABLE after=REACHABLE
+1791732528.205 NMAS result S2-aggregate-static-to-isis ok=True aborted=- restored=None lost=0 [["precheck", "PASS"], ["shield-install", "APPLIED"], ["shield-verify", "PASS"], ["transition", "APPLIED"], ["transition-verify", "PASS"], ["shield-remove", "APPLIED"], ["final-verify", "PASS"]]
+1791732528.206 NMAS plan R2-clients-static-to-isis LESS_SPECIFIC_COVER specs=install,add,remove,remove,remove,remove
+1791732726.207 NMAS-R2-clients-static-to-isis takeover-nexthop r2 2001:db8:10::/64 isisL2 fe80::42:aff:fefb:1c03%eth3 before=REACHABLE after=REACHABLE
+1791732727.319 NMAS-R2-clients-static-to-isis takeover-nexthop r2 2001:db8:20::/64 isisL2 fe80::42:aff:fefb:1c03%eth3 before=REACHABLE after=REACHABLE
+1791732728.348 NMAS-R2-clients-static-to-isis takeover-nexthop r2 2001:db8:30::/64 isisL2 fe80::42:aff:fefb:1c03%eth3 before=REACHABLE after=REACHABLE
+1791732792.343 NMAS result R2-clients-static-to-isis ok=True aborted=- restored=None lost=0 [["precheck", "PASS"], ["shield-install", "APPLIED"], ["shield-verify", "PASS"], ["transition", "APPLIED"], ["transition", "APPLIED"], ["transition", "APPLIED"], ["transition", "APPLIED"], ["transition-verify", "PASS"], ["shield-remove", "APPLIED"], ["final-verify", "PASS"]]
+1791732918.872 F3 core-quiet 641
+1791732920.265 F3 core-cover-removed
+1791732922.040 F3 nmas-forward-complete {"r1": "5408a3ab57b34d17", "r2": "4d5eb24485271374", "s1": "c14991f826026d59", "s2": "9e1955c8185575b0"}
+1791732945.003 B3 core-cover-installed 2001:db8:10::/63 2001:db8:20::/63 2001:db8:30::/63
+1791732945.004 NMAS plan R2-clients-isis-to-static LESS_SPECIFIC_COVER specs=install,restore,restore,remove
+1791733045.607 NMAS-R2-clients-isis-to-static takeover-nexthop r2 2001:db8:10::/64 static 2001:db8:110:2::2 before=REACHABLE after=REACHABLE
+1791733046.731 NMAS-R2-clients-isis-to-static takeover-nexthop r2 2001:db8:20::/64 static 2001:db8:110:2::2 before=REACHABLE after=REACHABLE
+1791733047.870 NMAS-R2-clients-isis-to-static takeover-nexthop r2 2001:db8:30::/64 static 2001:db8:110:2::2 before=REACHABLE after=REACHABLE
+1791733078.879 NMAS result R2-clients-isis-to-static ok=True aborted=- restored=None lost=0 [["precheck", "PASS"], ["shield-install", "APPLIED"], ["shield-verify", "PASS"], ["transition", "APPLIED"], ["transition", "APPLIED"], ["transition-verify", "PASS"], ["shield-remove", "APPLIED"], ["final-verify", "PASS"]]
+1791733078.879 NMAS plan S2-aggregate-isis-to-static MORE_SPECIFIC_PAIR specs=install,restore,remove
+1791733170.180 NMAS-S2-aggregate-isis-to-static takeover-nexthop s2 2001:db8::/32 static 2001:db8:110:2::1 before=REACHABLE after=REACHABLE
+1791733208.662 NMAS result S2-aggregate-isis-to-static ok=True aborted=- restored=None lost=0 [["precheck", "PASS"], ["shield-install", "APPLIED"], ["shield-verify", "PASS"], ["transition", "APPLIED"], ["transition-verify", "PASS"], ["shield-remove", "APPLIED"], ["final-verify", "PASS"]]
+1791733208.663 NMAS plan R1-clients-isis-to-static LESS_SPECIFIC_COVER specs=install,restore,restore,remove
+1791733340.388 NMAS-R1-clients-isis-to-static takeover-nexthop r1 2001:db8:10::/64 static 2001:db8:110:1::2 before=REACHABLE after=REACHABLE
+1791733341.377 NMAS-R1-clients-isis-to-static takeover-nexthop r1 2001:db8:20::/64 static 2001:db8:110:1::2 before=REACHABLE after=REACHABLE
+1791733342.639 NMAS-R1-clients-isis-to-static takeover-nexthop r1 2001:db8:30::/64 static 2001:db8:110:1::2 before=REACHABLE after=REACHABLE
+1791733391.270 NMAS result R1-clients-isis-to-static ok=True aborted=- restored=None lost=0 [["precheck", "PASS"], ["shield-install", "APPLIED"], ["shield-verify", "PASS"], ["transition", "APPLIED"], ["transition", "APPLIED"], ["transition-verify", "PASS"], ["shield-remove", "APPLIED"], ["final-verify", "PASS"]]
+1791733391.270 NMAS plan S1-aggregate-isis-to-static MORE_SPECIFIC_PAIR specs=install,restore,remove
+1791733514.760 NMAS-S1-aggregate-isis-to-static takeover-nexthop s1 2001:db8::/32 static 2001:db8:110:1::1 before=REACHABLE after=REACHABLE
+1791733575.565 NMAS result S1-aggregate-isis-to-static ok=True aborted=- restored=None lost=0 [["precheck", "PASS"], ["shield-install", "APPLIED"], ["shield-verify", "PASS"], ["transition", "APPLIED"], ["transition-verify", "PASS"], ["shield-remove", "APPLIED"], ["final-verify", "PASS"]]
+1791733575.565 BW3 rb4 withdraw-advertisements start
+1791733579.503 BW3 rb5 isis-removal start
+1791733588.548 BW3 rb6 baseline-config r1=2bd8c040664c1216 r2=6284ec1a7270b9dd s1=7d083ffd40ee3b4f s2=a4f9a4a23f07a916
+1791733716.142 B3 core-quiet 1438
+1791733717.656 B3 core-cover-removed
+1791733721.190 B3 baseline-restored True {"r1": "2bd8c040664c1216", "r2": "6284ec1a7270b9dd", "s1": "7d083ffd40ee3b4f", "s2": "a4f9a4a23f07a916"}
+1791733727.901 C3 end load 23.13 25.48 25.02
+1791733754.082 END ok load 18.90 24.25 24.63

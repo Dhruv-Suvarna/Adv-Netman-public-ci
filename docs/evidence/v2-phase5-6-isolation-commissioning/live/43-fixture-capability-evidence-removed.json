@@ -1,0 +1,360 @@
+{
+  "correction": "The first clean-up removed every 'network-config-live' row (84).  51 of them were copies of the DEPLOYED database's own live evidence (the first copy restamped recorded_at, so the date did not separate them).  Corrected by re-copying both capability tables from the deployed database (read-only) with the deployed recorded_at and order: the fixture's capability authority is again exactly the deployed one, and only the 33 rows of the failed fixture run (below) are absent.  Nothing was added beyond the copy.",
+  "recopied_rows": 1028,
+  "removed_fixture_run_rows": [
+    {
+      "axis": "LIVE_WRITE",
+      "detail": "Execution 603daf0d-6b09-47d0-b2a7-f5222a525d9c: FAIL",
+      "evidence_ref": "517fcb62-b87e-4a18-9e30-5974e306aa77",
+      "feature": "interface.LOOPBACK",
+      "id": 969,
+      "platform": "arista_ceos",
+      "recorded_at": "2026-10-26 14:46:34.825241+00:00",
+      "status": "FAILED"
+    },
+    {
+      "axis": "LIVE_POST_WRITE_VALIDATION",
+      "detail": "Execution 603daf0d-6b09-47d0-b2a7-f5222a525d9c: FAIL",
+      "evidence_ref": "517fcb62-b87e-4a18-9e30-5974e306aa77",
+      "feature": "interface.LOOPBACK",
+      "id": 970,
+      "platform": "arista_ceos",
+      "recorded_at": "2026-10-26 14:46:34.835013+00:00",
+      "status": "FAILED"
+    },
+    {
+      "axis": "RUNTIME_VALIDATION",
+      "detail": "Execution 603daf0d-6b09-47d0-b2a7-f5222a525d9c: FAIL",
+      "evidence_ref": "517fcb62-b87e-4a18-9e30-5974e306aa77",
+      "feature": "interface.LOOPBACK",
+      "id": 971,
+      "platform": "arista_ceos",
+      "recorded_at": "2026-10-26 14:46:34.845498+00:00",
+      "status": "FAILED"
+    },
+    {
+      "axis": "LIVE_WRITE",
+      "detail": "Execution 603daf0d-6b09-47d0-b2a7-f5222a525d9c: FAIL",
+      "evidence_ref": "517fcb62-b87e-4a18-9e30-5974e306aa77",
+      "feature": "interface.ROUTED_PHYSICAL",
+      "id": 972,
+      "platform": "arista_ceos",
+      "recorded_at": "2026-10-26 14:46:34.858708+00:00",
+      "status": "FAILED"
+    },
+    {
+      "axis": "LIVE_POST_WRITE_VALIDATION",
+      "detail": "Execution 603daf0d-6b09-47d0-b2a7-f5222a525d9c: FAIL",
+      "evidence_ref": "517fcb62-b87e-4a18-9e30-5974e306aa77",
+      "feature": "interface.ROUTED_PHYSICAL",
+      "id": 973,
+      "platform": "arista_ceos",
+      "recorded_at": "2026-10-26 14:46:34.867567+00:00",
+      "status": "FAILED"
+    },
+    {
+      "axis": "RUNTIME_VALIDATION",
+      "detail": "Execution 603daf0d-6b09-47d0-b2a7-f5222a525d9c: FAIL",
+      "evidence_ref": "517fcb62-b87e-4a18-9e30-5974e306aa77",
+      "feature": "interface.ROUTED_PHYSICAL",
+      "id": 974,
+      "platform": "arista_ceos",
+      "recorded_at": "2026-10-26 14:46:34.875456+00:00",
+      "status": "FAILED"
+    },
+    {
+      "axis": "LIVE_WRITE",
+      "detail": "Execution 603daf0d-6b09-47d0-b2a7-f5222a525d9c: FAIL",
+      "evidence_ref": "517fcb62-b87e-4a18-9e30-5974e306aa77",
+      "feature": "interface.ROUTED_PHYSICAL",
+      "id": 975,
+      "platform": "arista_ceos",
+      "recorded_at": "2026-10-26 14:46:34.883069+00:00",
+      "status": "FAILED"
+    },
+    {
+      "axis": "LIVE_POST_WRITE_VALIDATION",
+      "detail": "Execution 603daf0d-6b09-47d0-b2a7-f5222a525d9c: FAIL",
+      "evidence_ref": "517fcb62-b87e-4a18-9e30-5974e306aa77",
+      "feature": "interface.ROUTED_PHYSICAL",
+      "id": 976,
+      "platform": "arista_ceos",
+      "recorded_at": "2026-10-26 14:46:34.890855+00:00",
+      "status": "FAILED"
+    },
+    {
+      "axis": "RUNTIME_VALIDATION",
+      "detail": "Execution 603daf0d-6b09-47d0-b2a7-f5222a525d9c: FAIL",
+      "evidence_ref": "517fcb62-b87e-4a18-9e30-5974e306aa77",
+      "feature": "interface.ROUTED_PHYSICAL",
+      "id": 977,
+      "platform": "arista_ceos",
+      "recorded_at": "2026-10-26 14:46:34.898640+00:00",
+      "status": "FAILED"
+    },
+    {
+      "axis": "LIVE_WRITE",
+      "detail": "Execution 603daf0d-6b09-47d0-b2a7-f5222a525d9c: FAIL",
+      "evidence_ref": "517fcb62-b87e-4a18-9e30-5974e306aa77",
+      "feature": "interface.LOOPBACK",
+      "id": 978,
+      "platform": "arista_ceos",
+      "recorded_at": "2026-10-26 14:46:34.908049+00:00",
+      "status": "FAILED"
+    },
+    {
+      "axis": "LIVE_POST_WRITE_VALIDATION",
+      "detail": "Execution 603daf0d-6b09-47d0-b2a7-f5222a525d9c: FAIL",
+      "evidence_ref": "517fcb62-b87e-4a18-9e30-5974e306aa77",
+      "feature": "interface.LOOPBACK",
+      "id": 979,
+      "platform": "arista_ceos",
+      "recorded_at": "2026-10-26 14:46:34.916530+00:00",
+      "status": "FAILED"
+    },
+    {
+      "axis": "RUNTIME_VALIDATION",
+      "detail": "Execution 603daf0d-6b09-47d0-b2a7-f5222a525d9c: FAIL",
+      "evidence_ref": "517fcb62-b87e-4a18-9e30-5974e306aa77",
+      "feature": "interface.LOOPBACK",
+      "id": 980,
+      "platform": "arista_ceos",
+      "recorded_at": "2026-10-26 14:46:34.924399+00:00",
+      "status": "FAILED"
+    },
+    {
+      "axis": "LIVE_WRITE",
+      "detail": "Execution 603daf0d-6b09-47d0-b2a7-f5222a525d9c: FAIL",
+      "evidence_ref": "517fcb62-b87e-4a18-9e30-5974e306aa77",
+      "feature": "interface.ROUTED_PHYSICAL",
+      "id": 981,
+      "platform": "arista_ceos",
+      "recorded_at": "2026-10-26 14:46:34.934265+00:00",
+      "status": "FAILED"
+    },
+    {
+      "axis": "LIVE_POST_WRITE_VALIDATION",
+      "detail": "Execution 603daf0d-6b09-47d0-b2a7-f5222a525d9c: FAIL",
+      "evidence_ref": "517fcb62-b87e-4a18-9e30-5974e306aa77",
+      "feature": "interface.ROUTED_PHYSICAL",
+      "id": 982,
+      "platform": "arista_ceos",
+      "recorded_at": "2026-10-26 14:46:34.945371+00:00",
+      "status": "FAILED"
+    },
+    {
+      "axis": "RUNTIME_VALIDATION",
+      "detail": "Execution 603daf0d-6b09-47d0-b2a7-f5222a525d9c: FAIL",
+      "evidence_ref": "517fcb62-b87e-4a18-9e30-5974e306aa77",
+      "feature": "interface.ROUTED_PHYSICAL",
+      "id": 983,
+      "platform": "arista_ceos",
+      "recorded_at": "2026-10-26 14:46:34.960250+00:00",
+      "status": "FAILED"
+    },
+    {
+      "axis": "LIVE_WRITE",
+      "detail": "Execution 603daf0d-6b09-47d0-b2a7-f5222a525d9c: FAIL",
+      "evidence_ref": "517fcb62-b87e-4a18-9e30-5974e306aa77",
+      "feature": "interface.ROUTED_PHYSICAL",
+      "id": 984,
+      "platform": "arista_ceos",
+      "recorded_at": "2026-10-26 14:46:34.976262+00:00",
+      "status": "FAILED"
+    },
+    {
+      "axis": "LIVE_POST_WRITE_VALIDATION",
+      "detail": "Execution 603daf0d-6b09-47d0-b2a7-f5222a525d9c: FAIL",
+      "evidence_ref": "517fcb62-b87e-4a18-9e30-5974e306aa77",
+      "feature": "interface.ROUTED_PHYSICAL",
+      "id": 985,
+      "platform": "arista_ceos",
+      "recorded_at": "2026-10-26 14:46:34.988084+00:00",
+      "status": "FAILED"
+    },
+    {
+      "axis": "RUNTIME_VALIDATION",
+      "detail": "Execution 603daf0d-6b09-47d0-b2a7-f5222a525d9c: FAIL",
+      "evidence_ref": "517fcb62-b87e-4a18-9e30-5974e306aa77",
+      "feature": "interface.ROUTED_PHYSICAL",
+      "id": 986,
+      "platform": "arista_ceos",
+      "recorded_at": "2026-10-26 14:46:34.997546+00:00",
+      "status": "FAILED"
+    },
+    {
+      "axis": "LIVE_WRITE",
+      "detail": "Execution 603daf0d-6b09-47d0-b2a7-f5222a525d9c: FAIL",
+      "evidence_ref": "517fcb62-b87e-4a18-9e30-5974e306aa77",
+      "feature": "routing.OSPFV2",
+      "id": 987,
+      "platform": "arista_ceos",
+      "recorded_at": "2026-10-26 14:46:35.006774+00:00",
+      "status": "FAILED"
+    },
+    {
+      "axis": "LIVE_POST_WRITE_VALIDATION",
+      "detail": "Execution 603daf0d-6b09-47d0-b2a7-f5222a525d9c: FAIL",
+      "evidence_ref": "517fcb62-b87e-4a18-9e30-5974e306aa77",
+      "feature": "routing.OSPFV2",
+      "id": 988,
+      "platform": "arista_ceos",
+      "recorded_at": "2026-10-26 14:46:35.019244+00:00",
+      "status": "FAILED"
+    },
+    {
+      "axis": "RUNTIME_VALIDATION",
+      "detail": "Execution 603daf0d-6b09-47d0-b2a7-f5222a525d9c: FAIL",
+      "evidence_ref": "517fcb62-b87e-4a18-9e30-5974e306aa77",
+      "feature": "routing.OSPFV2",
+      "id": 989,
+      "platform": "arista_ceos",
+      "recorded_at": "2026-10-26 14:46:35.038698+00:00",
+      "status": "FAILED"
+    },
+    {
+      "axis": "LIVE_WRITE",
+      "detail": "Execution 603daf0d-6b09-47d0-b2a7-f5222a525d9c: FAIL",
+      "evidence_ref": "517fcb62-b87e-4a18-9e30-5974e306aa77",
+      "feature": "routing.OSPFV2",
+      "id": 990,
+      "platform": "arista_ceos",
+      "recorded_at": "2026-10-26 14:46:35.051694+00:00",
+      "status": "FAILED"
+    },
+    {
+      "axis": "LIVE_POST_WRITE_VALIDATION",
+      "detail": "Execution 603daf0d-6b09-47d0-b2a7-f5222a525d9c: FAIL",
+      "evidence_ref": "517fcb62-b87e-4a18-9e30-5974e306aa77",
+      "feature": "routing.OSPFV2",
+      "id": 991,
+      "platform": "arista_ceos",
+      "recorded_at": "2026-10-26 14:46:35.062441+00:00",
+      "status": "FAILED"
+    },
+    {
+      "axis": "RUNTIME_VALIDATION",
+      "detail": "Execution 603daf0d-6b09-47d0-b2a7-f5222a525d9c: FAIL",
+      "evidence_ref": "517fcb62-b87e-4a18-9e30-5974e306aa77",
+      "feature": "routing.OSPFV2",
+      "id": 992,
+      "platform": "arista_ceos",
+      "recorded_at": "2026-10-26 14:46:35.071141+00:00",
+      "status": "FAILED"
+    },
+    {
+      "axis": "LIVE_WRITE",
+      "detail": "Execution 603daf0d-6b09-47d0-b2a7-f5222a525d9c: FAIL",
+      "evidence_ref": "517fcb62-b87e-4a18-9e30-5974e306aa77",
+      "feature": "routing.OSPFV2",
+      "id": 993,
+      "platform": "arista_ceos",
+      "recorded_at": "2026-10-26 14:46:35.083528+00:00",
+      "status": "FAILED"
+    },
+    {
+      "axis": "LIVE_POST_WRITE_VALIDATION",
+      "detail": "Execution 603daf0d-6b09-47d0-b2a7-f5222a525d9c: FAIL",
+      "evidence_ref": "517fcb62-b87e-4a18-9e30-5974e306aa77",
+      "feature": "routing.OSPFV2",
+      "id": 994,
+      "platform": "arista_ceos",
+      "recorded_at": "2026-10-26 14:46:35.095588+00:00",
+      "status": "FAILED"
+    },
+    {
+      "axis": "RUNTIME_VALIDATION",
+      "detail": "Execution 603daf0d-6b09-47d0-b2a7-f5222a525d9c: FAIL",
+      "evidence_ref": "517fcb62-b87e-4a18-9e30-5974e306aa77",
+      "feature": "routing.OSPFV2",
+      "id": 995,
+      "platform": "arista_ceos",
+      "recorded_at": "2026-10-26 14:46:35.108793+00:00",
+      "status": "FAILED"
+    },
+    {
+      "axis": "LIVE_WRITE",
+      "detail": "Execution 603daf0d-6b09-47d0-b2a7-f5222a525d9c: FAIL",
+      "evidence_ref": "517fcb62-b87e-4a18-9e30-5974e306aa77",
+      "feature": "routing.OSPFV2",
+      "id": 996,
+      "platform": "arista_ceos",
+      "recorded_at": "2026-10-26 14:46:35.117786+00:00",
+      "status": "FAILED"
+    },
+    {
+      "axis": "LIVE_POST_WRITE_VALIDATION",
+      "detail": "Execution 603daf0d-6b09-47d0-b2a7-f5222a525d9c: FAIL",
+      "evidence_ref": "517fcb62-b87e-4a18-9e30-5974e306aa77",
+      "feature": "routing.OSPFV2",
+      "id": 997,
+      "platform": "arista_ceos",
+      "recorded_at": "2026-10-26 14:46:35.127274+00:00",
+      "status": "FAILED"
+    },
+    {
+      "axis": "RUNTIME_VALIDATION",
+      "detail": "Execution 603daf0d-6b09-47d0-b2a7-f5222a525d9c: FAIL",
+      "evidence_ref": "517fcb62-b87e-4a18-9e30-5974e306aa77",
+      "feature": "routing.OSPFV2",
+      "id": 998,
+      "platform": "arista_ceos",
+      "recorded_at": "2026-10-26 14:46:35.135440+00:00",
+      "status": "FAILED"
+    },
+    {
+      "axis": "LIVE_WRITE",
+      "detail": "Execution 603daf0d-6b09-47d0-b2a7-f5222a525d9c: FAIL",
+      "evidence_ref": "517fcb62-b87e-4a18-9e30-5974e306aa77",
+      "feature": "service_policy.DHCP_RELAY_IPV4",
+      "id": 999,
+      "platform": "arista_ceos",
+      "recorded_at": "2026-10-26 14:46:35.146573+00:00",
+      "status": "FAILED"
+    },
+    {
+      "axis": "LIVE_POST_WRITE_VALIDATION",
+      "detail": "Execution 603daf0d-6b09-47d0-b2a7-f5222a525d9c: FAIL",
+      "evidence_ref": "517fcb62-b87e-4a18-9e30-5974e306aa77",
+      "feature": "service_policy.DHCP_RELAY_IPV4",
+      "id": 1000,
+      "platform": "arista_ceos",
+      "recorded_at": "2026-10-26 14:46:35.158075+00:00",
+      "status": "FAILED"
+    },
+    {
+      "axis": "RUNTIME_VALIDATION",
+      "detail": "Execution 603daf0d-6b09-47d0-b2a7-f5222a525d9c: FAIL",
+      "evidence_ref": "517fcb62-b87e-4a18-9e30-5974e306aa77",
+      "feature": "service_policy.DHCP_RELAY_IPV4",
+      "id": 1001,
+      "platform": "arista_ceos",
+      "recorded_at": "2026-10-26 14:46:35.175223+00:00",
+      "status": "FAILED"
+    }
+  ],
+  "supported_after": [
+    "interface.ROUTED_PHYSICAL",
+    "interface.ACCESS",
+    "interface.TRUNK",
+    "interface.SUBINTERFACE",
+    "interface.SVI",
+    "interface.MANAGEMENT",
+    "interface.LOOPBACK",
+    "routing.STATIC_IPV4",
+    "routing.STATIC_IPV6",
+    "routing.RIPV2",
+    "routing.OSPFV2",
+    "routing.OSPFV3",
+    "routing.BGP_IPV4",
+    "routing.BGP_IPV6",
+    "service_policy.FHRP_VARP_IPV4",
+    "service_policy.FHRP_VARP_IPV6",
+    "service_policy.DHCP_RELAY_IPV4",
+    "service_policy.DHCP_RELAY_IPV6",
+    "service_policy.ACL_IPV4_STANDARD",
+    "service_policy.ACL_IPV4_EXTENDED",
+    "service_policy.ACL_ATTACH_IPV4"
+  ],
+  "why": "Recorded by the fixture's failed commissioning execution (PROV-000002) under code defects since fixed in this branch: the postcheck compared un-normalized OSPF areas ('0.0.0.0' vs '0'), demanded an adjacency on the port held by trusted isolation, and the cEOS executor inverted configuration blocks against the pre-plan state (compensation could not be proven although the device was restored).  The rows existed only in the disposable fixture database; the capability gate's authority there is the read-only copy of the deployed database's evidence.  Removed so the corrected run is judged on that authority; nothing was added."
+}

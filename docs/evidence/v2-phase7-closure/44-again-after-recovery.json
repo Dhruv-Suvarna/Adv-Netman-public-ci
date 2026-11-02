@@ -1,0 +1,31 @@
+{
+  "blockers": [],
+  "cancelled": {
+    "ok": true,
+    "state": "CANCELLED"
+  },
+  "dependencies": {
+    "blockers": [],
+    "conflicts": [],
+    "downstream": [],
+    "isolation": [],
+    "management": [],
+    "references": {
+      "attachments": 0,
+      "credential_references": 0,
+      "management_paths": 0,
+      "monitoring": null,
+      "netbox_device_id": null
+    }
+  },
+  "evaluate": {
+    "codes": [],
+    "ok": true
+  },
+  "readiness_mode": "REDUNDANT_TRANSITION",
+  "request": {
+    "codes": [],
+    "ok": true
+  },
+  "state": "READY"
+}

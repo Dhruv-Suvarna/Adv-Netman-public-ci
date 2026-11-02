@@ -1,0 +1,817 @@
+{
+  "affected_subsystems": {
+    "direct": [
+      "challenge_console",
+      "tests_django",
+      "ci_engine",
+      "documentation"
+    ],
+    "impacted": []
+  },
+  "blocking_checks": [],
+  "changed_files": [
+    {
+      "path": "challenge_console/__init__.py",
+      "status": "added",
+      "subsystems": [
+        "challenge_console"
+      ]
+    },
+    {
+      "path": "challenge_console/__main__.py",
+      "status": "added",
+      "subsystems": [
+        "challenge_console"
+      ]
+    },
+    {
+      "path": "challenge_console/adapters/__init__.py",
+      "status": "added",
+      "subsystems": [
+        "challenge_console"
+      ]
+    },
+    {
+      "path": "challenge_console/adapters/automation_db.py",
+      "status": "added",
+      "subsystems": [
+        "challenge_console"
+      ]
+    },
+    {
+      "path": "challenge_console/adapters/counters.py",
+      "status": "added",
+      "subsystems": [
+        "challenge_console"
+      ]
+    },
+    {
+      "path": "challenge_console/adapters/endpoints.py",
+      "status": "added",
+      "subsystems": [
+        "challenge_console"
+      ]
+    },
+    {
+      "path": "challenge_console/adapters/http.py",
+      "status": "added",
+      "subsystems": [
+        "challenge_console"
+      ]
+    },
+    {
+      "path": "challenge_console/adapters/inventory.py",
+      "status": "added",
+      "subsystems": [
+        "challenge_console"
+      ]
+    },
+    {
+      "path": "challenge_console/adapters/netbox.py",
+      "status": "added",
+      "subsystems": [
+        "challenge_console"
+      ]
+    },
+    {
+      "path": "challenge_console/adapters/process.py",
+      "status": "added",
+      "subsystems": [
+        "challenge_console"
+      ]
+    },
+    {
+      "path": "challenge_console/adapters/services.py",
+      "status": "added",
+      "subsystems": [
+        "challenge_console"
+      ]
+    },
+    {
+      "path": "challenge_console/adapters/telemetry.py",
+      "status": "added",
+      "subsystems": [
+        "challenge_console"
+      ]
+    },
+    {
+      "path": "challenge_console/collectors/__init__.py",
+      "status": "added",
+      "subsystems": [
+        "challenge_console"
+      ]
+    },
+    {
+      "path": "challenge_console/collectors/automation.py",
+      "status": "added",
+      "subsystems": [
+        "challenge_console"
+      ]
+    },
+    {
+      "path": "challenge_console/collectors/connectivity.py",
+      "status": "added",
+      "subsystems": [
+        "challenge_console"
+      ]
+    },
+    {
+      "path": "challenge_console/collectors/counters.py",
+      "status": "added",
+      "subsystems": [
+        "challenge_console"
+      ]
+    },
+    {
+      "path": "challenge_console/collectors/nsot.py",
+      "status": "added",
+      "subsystems": [
+        "challenge_console"
+      ]
+    },
+    {
+      "path": "challenge_console/collectors/services.py",
+      "status": "added",
+      "subsystems": [
+        "challenge_console"
+      ]
+    },
+    {
+      "path": "challenge_console/config.py",
+      "status": "added",
+      "subsystems": [
+        "challenge_console"
+      ]
+    },
+    {
+      "path": "challenge_console/filters.py",
+      "status": "added",
+      "subsystems": [
+        "challenge_console"
+      ]
+    },
+    {
+      "path": "challenge_console/models.py",
+      "status": "added",
+      "subsystems": [
+        "challenge_console"
+      ]
+    },
+    {
+      "path": "challenge_console/redact.py",
+      "status": "added",
+      "subsystems": [
+        "challenge_console"
+      ]
+    },
+    {
+      "path": "challenge_console/runtime.py",
+      "status": "added",
+      "subsystems": [
+        "challenge_console"
+      ]
+    },
+    {
+      "path": "challenge_console/sessionlog.py",
+      "status": "added",
+      "subsystems": [
+        "challenge_console"
+      ]
+    },
+    {
+      "path": "challenge_console/state.py",
+      "status": "added",
+      "subsystems": [
+        "challenge_console"
+      ]
+    },
+    {
+      "path": "challenge_console/supervisor.py",
+      "status": "added",
+      "subsystems": [
+        "challenge_console"
+      ]
+    },
+    {
+      "path": "challenge_console/tests/__init__.py",
+      "status": "added",
+      "subsystems": [
+        "challenge_console"
+      ]
+    },
+    {
+      "path": "challenge_console/tests/helpers.py",
+      "status": "added",
+      "subsystems": [
+        "challenge_console"
+      ]
+    },
+    {
+      "path": "challenge_console/tests/test_automation.py",
+      "status": "added",
+      "subsystems": [
+        "challenge_console"
+      ]
+    },
+    {
+      "path": "challenge_console/tests/test_connectivity.py",
+      "status": "added",
+      "subsystems": [
+        "challenge_console"
+      ]
+    },
+    {
+      "path": "challenge_console/tests/test_core.py",
+      "status": "added",
+      "subsystems": [
+        "challenge_console"
+      ]
+    },
+    {
+      "path": "challenge_console/tests/test_counters.py",
+      "status": "added",
+      "subsystems": [
+        "challenge_console"
+      ]
+    },
+    {
+      "path": "challenge_console/tests/test_nsot.py",
+      "status": "added",
+      "subsystems": [
+        "challenge_console"
+      ]
+    },
+    {
+      "path": "challenge_console/tests/test_readonly_contract.py",
+      "status": "added",
+      "subsystems": [
+        "challenge_console"
+      ]
+    },
+    {
+      "path": "challenge_console/tests/test_services.py",
+      "status": "added",
+      "subsystems": [
+        "challenge_console"
+      ]
+    },
+    {
+      "path": "challenge_console/tests/test_ui.py",
+      "status": "added",
+      "subsystems": [
+        "challenge_console"
+      ]
+    },
+    {
+      "path": "challenge_console/ui/__init__.py",
+      "status": "added",
+      "subsystems": [
+        "challenge_console"
+      ]
+    },
+    {
+      "path": "challenge_console/ui/app.py",
+      "status": "added",
+      "subsystems": [
+        "challenge_console"
+      ]
+    },
+    {
+      "path": "challenge_console/ui/bridge.py",
+      "status": "added",
+      "subsystems": [
+        "challenge_console"
+      ]
+    },
+    {
+      "path": "challenge_console/ui/live_proof.py",
+      "status": "added",
+      "subsystems": [
+        "challenge_console"
+      ]
+    },
+    {
+      "path": "challenge_console/ui/views/__init__.py",
+      "status": "added",
+      "subsystems": [
+        "challenge_console"
+      ]
+    },
+    {
+      "path": "challenge_console/ui/views/automation.py",
+      "status": "added",
+      "subsystems": [
+        "challenge_console"
+      ]
+    },
+    {
+      "path": "challenge_console/ui/views/connectivity.py",
+      "status": "added",
+      "subsystems": [
+        "challenge_console"
+      ]
+    },
+    {
+      "path": "challenge_console/ui/views/counters.py",
+      "status": "added",
+      "subsystems": [
+        "challenge_console"
+      ]
+    },
+    {
+      "path": "challenge_console/ui/views/nsot.py",
+      "status": "added",
+      "subsystems": [
+        "challenge_console"
+      ]
+    },
+    {
+      "path": "challenge_console/ui/views/telemetry.py",
+      "status": "added",
+      "subsystems": [
+        "challenge_console"
+      ]
+    },
+    {
+      "path": "challenge_console/ui/widgets.py",
+      "status": "added",
+      "subsystems": [
+        "challenge_console"
+      ]
+    },
+    {
+      "path": "docs/GITHUB_ACTIONS_TIER3_VALIDATION.md",
+      "status": "modified",
+      "subsystems": [
+        "documentation"
+      ]
+    },
+    {
+      "path": "docs/V2_PHASE6_STANDALONE_CHALLENGE_CONSOLE.md",
+      "status": "added",
+      "subsystems": [
+        "documentation"
+      ]
+    },
+    {
+      "path": "docs/evidence/v2-phase6/extended-run.json",
+      "status": "added",
+      "subsystems": [
+        "documentation"
+      ]
+    },
+    {
+      "path": "docs/evidence/v2-phase6/live-proof.json",
+      "status": "added",
+      "subsystems": [
+        "documentation"
+      ]
+    },
+    {
+      "path": "docs/evidence/v2-phase6/nmas-web-down.json",
+      "status": "added",
+      "subsystems": [
+        "documentation"
+      ]
+    },
+    {
+      "path": "docs/evidence/v2-phase6/tier3-local.json",
+      "status": "added",
+      "subsystems": [
+        "documentation"
+      ]
+    },
+    {
+      "path": "scripts/run_challenge_console.sh",
+      "status": "added",
+      "subsystems": [
+        "challenge_console"
+      ]
+    },
+    {
+      "path": "web/core/services/ci/rules.py",
+      "status": "modified",
+      "subsystems": [
+        "ci_engine"
+      ]
+    },
+    {
+      "path": "web/core/tests/test_challenge_console.py",
+      "status": "added",
+      "subsystems": [
+        "challenge_console",
+        "tests_django"
+      ]
+    },
+    {
+      "path": "web/core/tests/test_tier3_selection.py",
+      "status": "modified",
+      "subsystems": [
+        "tests_django",
+        "ci_engine"
+      ]
+    }
+  ],
+  "changed_files_total": 57,
+  "changed_files_truncated": false,
+  "checks": [
+    {
+      "counts": {
+        "files_considered": 57,
+        "lines_scanned": 8432,
+        "scan_truncated": false
+      },
+      "duration_seconds": 0.067,
+      "gate": "static",
+      "id": "static.hygiene",
+      "reasons": [
+        "baseline gate: runs for every change"
+      ],
+      "required": true,
+      "status": "PASS",
+      "summary": "8432 added line(s) scanned; no credential format or conflict marker",
+      "title": "Credential formats, conflict markers, credential-store files (added content)"
+    },
+    {
+      "counts": {
+        "files_checked": 717,
+        "jinja_files": 70,
+        "json_files": 24,
+        "python_files": 590,
+        "shell_files": 13,
+        "yaml_files": 20
+      },
+      "duration_seconds": 2.215,
+      "gate": "static",
+      "id": "static.syntax",
+      "reasons": [
+        "baseline gate: runs for every change"
+      ],
+      "required": true,
+      "status": "PASS",
+      "summary": "717 file(s) parsed cleanly",
+      "title": "Python / JSON / YAML / Jinja / shell syntax"
+    },
+    {
+      "counts": {},
+      "duration_seconds": 0.944,
+      "gate": "static",
+      "id": "django.check",
+      "reasons": [
+        "baseline gate: runs for every change"
+      ],
+      "required": true,
+      "status": "PASS",
+      "summary": "passed",
+      "title": "Django system check"
+    },
+    {
+      "counts": {},
+      "duration_seconds": 1.182,
+      "gate": "static",
+      "id": "django.migrations",
+      "reasons": [
+        "baseline gate: runs for every change"
+      ],
+      "required": true,
+      "status": "PASS",
+      "summary": "passed",
+      "title": "Django migration drift (makemigrations --check --dry-run)"
+    },
+    {
+      "counts": {
+        "tests_run": 2276
+      },
+      "duration_seconds": 572.234,
+      "gate": "repository",
+      "id": "django.tests",
+      "reasons": [
+        "full regression was requested"
+      ],
+      "required": true,
+      "status": "PASS",
+      "summary": "2276 test(s) passed",
+      "title": "Django regression tests"
+    },
+    {
+      "counts": {
+        "tests_run": 476
+      },
+      "duration_seconds": 2.461,
+      "gate": "repository",
+      "id": "monitoring.unit",
+      "reasons": [
+        "full regression was requested"
+      ],
+      "required": true,
+      "status": "PASS",
+      "summary": "476 test(s) passed",
+      "title": "Monitoring / NetBox / topology unit tests"
+    },
+    {
+      "counts": {},
+      "duration_seconds": 0.055,
+      "gate": "repository",
+      "id": "grafana.drift",
+      "reasons": [
+        "full regression was requested"
+      ],
+      "required": true,
+      "status": "PASS",
+      "summary": "passed",
+      "title": "Generated Grafana dashboard JSON drift"
+    },
+    {
+      "counts": {},
+      "duration_seconds": 0.0,
+      "gate": "lab",
+      "id": "lab.grafana",
+      "reasons": [
+        "full regression: lab-backed verifier in the final gate"
+      ],
+      "required": false,
+      "status": "NOT_RUN",
+      "summary": "lab-backed verifier: not executed by the offline gate (run with --lab from a lab-connected machine)",
+      "title": "LAB: Grafana dashboards / datasource / queries"
+    },
+    {
+      "counts": {},
+      "duration_seconds": 0.0,
+      "gate": "lab",
+      "id": "lab.topology",
+      "reasons": [
+        "full regression: lab-backed verifier in the final gate"
+      ],
+      "required": false,
+      "status": "NOT_RUN",
+      "summary": "lab-backed verifier: not executed by the offline gate (run with --lab from a lab-connected machine)",
+      "title": "LAB: NetworkX topology service"
+    },
+    {
+      "counts": {},
+      "duration_seconds": 0.0,
+      "gate": "lab",
+      "id": "lab.netbox_model",
+      "reasons": [
+        "full regression: lab-backed verifier in the final gate"
+      ],
+      "required": false,
+      "status": "NOT_RUN",
+      "summary": "lab-backed verifier: not executed by the offline gate (run with --lab from a lab-connected machine)",
+      "title": "LAB: NetBox model"
+    },
+    {
+      "counts": {},
+      "duration_seconds": 0.0,
+      "gate": "lab",
+      "id": "lab.netbox_populate",
+      "reasons": [
+        "full regression: lab-backed verifier in the final gate"
+      ],
+      "required": false,
+      "status": "NOT_RUN",
+      "summary": "lab-backed verifier: not executed by the offline gate (run with --lab from a lab-connected machine)",
+      "title": "LAB: NetBox seed drift (dry run)"
+    },
+    {
+      "counts": {},
+      "duration_seconds": 0.0,
+      "gate": "lab",
+      "id": "lab.reservations",
+      "reasons": [
+        "full regression: lab-backed verifier in the final gate"
+      ],
+      "required": false,
+      "status": "NOT_RUN",
+      "summary": "lab-backed verifier: not executed by the offline gate (run with --lab from a lab-connected machine)",
+      "title": "LAB: DHCP reservations / VLAN 200 static"
+    },
+    {
+      "counts": {},
+      "duration_seconds": 0.0,
+      "gate": "lab",
+      "id": "lab.dhcp",
+      "reasons": [
+        "full regression: lab-backed verifier in the final gate"
+      ],
+      "required": false,
+      "status": "NOT_RUN",
+      "summary": "lab-backed verifier: not executed by the offline gate (run with --lab from a lab-connected machine)",
+      "title": "LAB: DHCP servers (NMAS / R2)"
+    },
+    {
+      "counts": {},
+      "duration_seconds": 0.0,
+      "gate": "lab",
+      "id": "lab.nmas",
+      "reasons": [
+        "full regression: lab-backed verifier in the final gate"
+      ],
+      "required": false,
+      "status": "NOT_RUN",
+      "summary": "lab-backed verifier: not executed by the offline gate (run with --lab from a lab-connected machine)",
+      "title": "LAB: NMAS monitoring infrastructure"
+    }
+  ],
+  "coverage": {
+    "lab": "NOT_RUN",
+    "repository": "EXECUTED",
+    "static": "EXECUTED"
+  },
+  "engine_version": "16.0.0",
+  "exit_code": 0,
+  "mode": {
+    "effective": "full",
+    "reasons": [
+      "full regression was requested"
+    ],
+    "requested": "full"
+  },
+  "notes": [],
+  "plan": {
+    "optional_checks": [
+      {
+        "gate": "lab",
+        "id": "lab.grafana",
+        "reasons": [
+          "full regression: lab-backed verifier in the final gate"
+        ],
+        "required": false,
+        "title": "LAB: Grafana dashboards / datasource / queries"
+      },
+      {
+        "gate": "lab",
+        "id": "lab.topology",
+        "reasons": [
+          "full regression: lab-backed verifier in the final gate"
+        ],
+        "required": false,
+        "title": "LAB: NetworkX topology service"
+      },
+      {
+        "gate": "lab",
+        "id": "lab.netbox_model",
+        "reasons": [
+          "full regression: lab-backed verifier in the final gate"
+        ],
+        "required": false,
+        "title": "LAB: NetBox model"
+      },
+      {
+        "gate": "lab",
+        "id": "lab.netbox_populate",
+        "reasons": [
+          "full regression: lab-backed verifier in the final gate"
+        ],
+        "required": false,
+        "title": "LAB: NetBox seed drift (dry run)"
+      },
+      {
+        "gate": "lab",
+        "id": "lab.reservations",
+        "reasons": [
+          "full regression: lab-backed verifier in the final gate"
+        ],
+        "required": false,
+        "title": "LAB: DHCP reservations / VLAN 200 static"
+      },
+      {
+        "gate": "lab",
+        "id": "lab.dhcp",
+        "reasons": [
+          "full regression: lab-backed verifier in the final gate"
+        ],
+        "required": false,
+        "title": "LAB: DHCP servers (NMAS / R2)"
+      },
+      {
+        "gate": "lab",
+        "id": "lab.nmas",
+        "reasons": [
+          "full regression: lab-backed verifier in the final gate"
+        ],
+        "required": false,
+        "title": "LAB: NMAS monitoring infrastructure"
+      }
+    ],
+    "plan_hash": "73c03dff03f25ce8678e16cf8d9678aefb543d76ed2730bdd1c0710a3810fab6",
+    "required_checks": [
+      {
+        "gate": "static",
+        "id": "static.hygiene",
+        "reasons": [
+          "baseline gate: runs for every change"
+        ],
+        "required": true,
+        "title": "Credential formats, conflict markers, credential-store files (added content)"
+      },
+      {
+        "gate": "static",
+        "id": "static.syntax",
+        "reasons": [
+          "baseline gate: runs for every change"
+        ],
+        "required": true,
+        "title": "Python / JSON / YAML / Jinja / shell syntax"
+      },
+      {
+        "gate": "static",
+        "id": "django.check",
+        "reasons": [
+          "baseline gate: runs for every change"
+        ],
+        "required": true,
+        "title": "Django system check"
+      },
+      {
+        "gate": "static",
+        "id": "django.migrations",
+        "reasons": [
+          "baseline gate: runs for every change"
+        ],
+        "required": true,
+        "title": "Django migration drift (makemigrations --check --dry-run)"
+      },
+      {
+        "gate": "repository",
+        "id": "django.tests",
+        "params": {
+          "labels": [
+            "core"
+          ]
+        },
+        "reasons": [
+          "full regression was requested"
+        ],
+        "required": true,
+        "title": "Django regression tests"
+      },
+      {
+        "gate": "repository",
+        "id": "monitoring.unit",
+        "reasons": [
+          "full regression was requested"
+        ],
+        "required": true,
+        "title": "Monitoring / NetBox / topology unit tests"
+      },
+      {
+        "gate": "repository",
+        "id": "grafana.drift",
+        "reasons": [
+          "full regression was requested"
+        ],
+        "required": true,
+        "title": "Generated Grafana dashboard JSON drift"
+      }
+    ],
+    "test_selection": {
+      "core.tests.test_challenge_console": [
+        "standalone challenge console changed (its own suite plus the schema / vocabulary contract with the website) [challenge_console/__init__.py +48 more]",
+        "test module itself changed [web/core/tests/test_challenge_console.py]"
+      ],
+      "core.tests.test_contracts": [
+        "Tier-3 validation engine changed [web/core/services/ci/rules.py +1 more]"
+      ],
+      "core.tests.test_tier3_changes": [
+        "Tier-3 validation engine changed [web/core/services/ci/rules.py +1 more]"
+      ],
+      "core.tests.test_tier3_execution": [
+        "Tier-3 validation engine changed [web/core/services/ci/rules.py +1 more]",
+        "a test asserts this document's content [docs/GITHUB_ACTIONS_TIER3_VALIDATION.md]"
+      ],
+      "core.tests.test_tier3_selection": [
+        "Tier-3 validation engine changed [web/core/services/ci/rules.py +1 more]",
+        "test module itself changed [web/core/tests/test_tier3_selection.py]"
+      ]
+    }
+  },
+  "provenance": {
+    "base_sha": "d3c572f59a3e64dc9ff76316196d1cac5b239757",
+    "checkout_sha": null,
+    "compare_from_sha": "d3c572f59a3e64dc9ff76316196d1cac5b239757",
+    "engine_version": "16.0.0",
+    "event": null,
+    "head_sha": "e5554da6909004ab2043c55bc80e0f417baa19d7",
+    "lab_gate_requested": false,
+    "python_version": "3.12.3",
+    "ref_name": null,
+    "repository": null,
+    "run_id": null,
+    "strategy": "merge-base",
+    "working_tree": false
+  },
+  "result": "PASS",
+  "schema_version": 1,
+  "summary": {
+    "errored": 0,
+    "executed": 7,
+    "failed": 0,
+    "not_run": 7,
+    "passed": 7,
+    "selected": 14,
+    "warned": 0
+  },
+  "unclassified_paths": [],
+  "warnings": []
+}

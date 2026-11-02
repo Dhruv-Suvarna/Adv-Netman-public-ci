@@ -1,0 +1,9 @@
+{% extends "core/base.html" %}
+{% block title %}Access denied{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>Access denied</h1>
+  <p>Your NMAS role does not permit this action. The attempt has been recorded in the audit log.</p>
+</div>
+<div class="card"><p><a class="btn btn--secondary" href="{% url 'core:mfa_status' %}">View my permissions</a></p></div>
+{% endblock %}

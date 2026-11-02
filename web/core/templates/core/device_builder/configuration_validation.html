@@ -1,0 +1,38 @@
+{% extends "core/base.html" %}
+{% block title %}Configuration Validation · {{ change.change_id }}{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>Configuration Validation <span style="font-weight:400;">· {{ change.change_id }}</span></h1>
+  <p><a href="{% url 'core:device_builder_change_detail' change.change_id %}">&larr; Back to {{ change.change_id }}</a></p>
+  <p>The external test of this Change's candidate by the GitHub Actions workflow <strong>Configuration Validation</strong>. NMAS dispatches it when the Change passes Tier-2 Change Validation and reads the result back from GitHub. It validates only: nothing here, and nothing in that workflow, contacts a device.</p>
+</div>
+
+<div class="card-grid">
+  {% include "core/device_builder/_configuration_validation_card.html" with cv=configuration_validation %}
+</div>
+
+<div class="card" style="margin-top:16px;">
+  <h3>Runs</h3>
+  <table class="data-table">
+    <thead><tr><th>Triggered</th><th>Status</th><th>Correlation</th><th>Candidate</th><th>Snapshot</th><th>Tier-2 run</th><th>GitHub run</th><th>Tested SHA</th><th>Completed</th><th>Note</th></tr></thead>
+    <tbody>
+      {% for row in configuration_validation.history %}
+      <tr>
+        <td>{{ row.triggered_at|date:"Y-m-d H:i:s T"|default:"—" }}</td>
+        <td><span class="badge badge--neutral">{{ row.status }}</span>{% if row.demonstration %} demonstration{% endif %}</td>
+        <td><code>{{ row.correlation_id }}</code></td>
+        <td><code>{{ row.candidate_hash|slice:":12"|default:"—" }}</code></td>
+        <td><code>{{ row.snapshot_hash|slice:":12" }}</code></td>
+        <td><code>{{ row.validation_run.run_id|stringformat:"s"|slice:":8" }}</code></td>
+        <td>{% if row.run_url %}<a href="{{ row.run_url }}" target="_blank" rel="noopener noreferrer">#{{ row.github_run_id }}</a>{% else %}—{% endif %}</td>
+        <td><code>{{ row.tested_sha|slice:":12"|default:"—" }}</code></td>
+        <td>{{ row.completed_at|date:"Y-m-d H:i:s T"|default:"—" }}</td>
+        <td>{{ row.failure_summary }}</td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="10" style="color:var(--text-muted);">No Configuration Validation has been dispatched for this Change.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

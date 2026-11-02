@@ -1,0 +1,19 @@
+{% if findings %}
+<table class="data-table">
+  <thead><tr><th>Severity</th><th>Code</th><th>Stage</th><th>Line</th><th>Finding</th><th>Remediation</th></tr></thead>
+  <tbody>
+  {% for f in findings %}
+    <tr>
+      <td><span class="badge badge--{% if f.blocking %}danger{% elif f.incomplete %}warning{% elif f.severity == 'WARNING' %}warning{% else %}neutral{% endif %}">{{ f.severity }}{% if f.blocking %} · blocking{% elif f.incomplete %} · incomplete{% endif %}</span></td>
+      <td><code>{{ f.code }}</code></td>
+      <td>{{ f.stage|default:"—" }}</td>
+      <td>{{ f.line|default_if_none:"—" }}</td>
+      <td>{{ f.message }}{% if f.evidence.reason %}<br><code>{{ f.evidence.reason }}</code>{% endif %}</td>
+      <td>{{ f.remediation|default:"—" }}</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p style="color:var(--text-muted);">No findings.</p>
+{% endif %}

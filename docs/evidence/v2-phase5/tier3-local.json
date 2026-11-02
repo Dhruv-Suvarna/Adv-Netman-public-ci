@@ -1,0 +1,1652 @@
+{
+  "affected_subsystems": {
+    "direct": [
+      "models_schema",
+      "migrations",
+      "django_project",
+      "network_config_validation",
+      "health",
+      "execution",
+      "bundles",
+      "probation_soak",
+      "legacy_bootstrap",
+      "traffic",
+      "provisioning",
+      "identity_security",
+      "web_deployment",
+      "django_views_api",
+      "ui_presentation",
+      "tests_django",
+      "tests_support",
+      "ci_engine",
+      "documentation"
+    ],
+    "impacted": [
+      {
+        "id": "control_plane",
+        "reason": "Change / intent persistence is model-backed",
+        "via": [
+          "models_schema",
+          "control_plane"
+        ]
+      },
+      {
+        "id": "device_builder",
+        "reason": "Django project configuration is foundational: every Django subsystem consumes it",
+        "via": [
+          "django_project",
+          "device_builder"
+        ]
+      },
+      {
+        "id": "candidate_rendering",
+        "reason": "Django project configuration is foundational: every Django subsystem consumes it",
+        "via": [
+          "django_project",
+          "candidate_rendering"
+        ]
+      },
+      {
+        "id": "platform_drivers",
+        "reason": "Django project configuration is foundational: every Django subsystem consumes it",
+        "via": [
+          "django_project",
+          "platform_drivers"
+        ]
+      },
+      {
+        "id": "validation",
+        "reason": "validation reads accepted intent and persists ChangeValidationRun",
+        "via": [
+          "models_schema",
+          "validation"
+        ]
+      },
+      {
+        "id": "planning",
+        "reason": "ChangePlan / Configlet persistence is model-backed",
+        "via": [
+          "models_schema",
+          "planning"
+        ]
+      },
+      {
+        "id": "raw_configlets",
+        "reason": "Raw Configlet / revision / verification-run persistence is model-backed",
+        "via": [
+          "models_schema",
+          "raw_configlets"
+        ]
+      },
+      {
+        "id": "config_workbench",
+        "reason": "Django project configuration is foundational: every Django subsystem consumes it",
+        "via": [
+          "django_project",
+          "config_workbench"
+        ]
+      },
+      {
+        "id": "config_templates",
+        "reason": "templates and their immutable versions are model-backed",
+        "via": [
+          "models_schema",
+          "config_templates"
+        ]
+      },
+      {
+        "id": "credentials",
+        "reason": "credential policy and rotation audit persistence are model-backed",
+        "via": [
+          "models_schema",
+          "credentials"
+        ]
+      },
+      {
+        "id": "capability_framework",
+        "reason": "empirical capability evidence is model-backed",
+        "via": [
+          "models_schema",
+          "capability_framework"
+        ]
+      },
+      {
+        "id": "netbox_ipam",
+        "reason": "Django project configuration is foundational: every Django subsystem consumes it",
+        "via": [
+          "django_project",
+          "netbox_ipam"
+        ]
+      },
+      {
+        "id": "nsot",
+        "reason": "Django project configuration is foundational: every Django subsystem consumes it",
+        "via": [
+          "django_project",
+          "nsot"
+        ]
+      },
+      {
+        "id": "topology",
+        "reason": "Django project configuration is foundational: every Django subsystem consumes it",
+        "via": [
+          "django_project",
+          "topology"
+        ]
+      },
+      {
+        "id": "notifications",
+        "reason": "Notification persistence is model-backed",
+        "via": [
+          "models_schema",
+          "notifications"
+        ]
+      }
+    ]
+  },
+  "blocking_checks": [],
+  "changed_files": [
+    {
+      "path": "deploy/README.md",
+      "status": "modified",
+      "subsystems": [
+        "web_deployment"
+      ]
+    },
+    {
+      "path": "deploy/env/nmas-web.env.example",
+      "status": "modified",
+      "subsystems": [
+        "web_deployment"
+      ]
+    },
+    {
+      "path": "deploy/labs/nmas-prov-proof.clab.yml",
+      "status": "added",
+      "subsystems": [
+        "web_deployment"
+      ]
+    },
+    {
+      "path": "deploy/scripts/install_soak_timer.sh",
+      "status": "added",
+      "subsystems": [
+        "web_deployment"
+      ]
+    },
+    {
+      "path": "deploy/scripts/install_traffic_runner.sh",
+      "status": "added",
+      "subsystems": [
+        "traffic",
+        "web_deployment"
+      ]
+    },
+    {
+      "path": "deploy/systemd/nmas-probation-soak-tick.service",
+      "status": "added",
+      "subsystems": [
+        "web_deployment"
+      ]
+    },
+    {
+      "path": "deploy/systemd/nmas-probation-soak-tick.timer",
+      "status": "added",
+      "subsystems": [
+        "web_deployment"
+      ]
+    },
+    {
+      "path": "deploy/systemd/nmas-traffic-runner.service",
+      "status": "added",
+      "subsystems": [
+        "traffic",
+        "web_deployment"
+      ]
+    },
+    {
+      "path": "deploy/systemd/nmas-traffic-runner.socket",
+      "status": "added",
+      "subsystems": [
+        "traffic",
+        "web_deployment"
+      ]
+    },
+    {
+      "path": "deploy/traffic-tools/Dockerfile",
+      "status": "added",
+      "subsystems": [
+        "traffic",
+        "web_deployment"
+      ]
+    },
+    {
+      "path": "deploy/traffic-tools/probes/tcp_connect.py",
+      "status": "added",
+      "subsystems": [
+        "traffic",
+        "web_deployment"
+      ]
+    },
+    {
+      "path": "deploy/traffic-tools/probes/udp_probe.py",
+      "status": "added",
+      "subsystems": [
+        "traffic",
+        "web_deployment"
+      ]
+    },
+    {
+      "path": "docs/CURRENT_STATE.md",
+      "status": "modified",
+      "subsystems": [
+        "documentation"
+      ]
+    },
+    {
+      "path": "docs/PROBATION_SOAK_AND_PROMOTION.md",
+      "status": "modified",
+      "subsystems": [
+        "documentation"
+      ]
+    },
+    {
+      "path": "docs/V2_PHASE5_PROVISIONING_TRAFFIC_SOAK.md",
+      "status": "added",
+      "subsystems": [
+        "documentation"
+      ]
+    },
+    {
+      "path": "docs/evidence/v2-phase5/provisioning/prov-decommission.json",
+      "status": "added",
+      "subsystems": [
+        "documentation"
+      ]
+    },
+    {
+      "path": "docs/evidence/v2-phase5/provisioning/prov-fail-cleanup.json",
+      "status": "added",
+      "subsystems": [
+        "documentation"
+      ]
+    },
+    {
+      "path": "docs/evidence/v2-phase5/provisioning/prov-fail-configured-cleanup.json",
+      "status": "added",
+      "subsystems": [
+        "documentation"
+      ]
+    },
+    {
+      "path": "docs/evidence/v2-phase5/provisioning/prov-fail-configured.json",
+      "status": "added",
+      "subsystems": [
+        "documentation"
+      ]
+    },
+    {
+      "path": "docs/evidence/v2-phase5/provisioning/prov-fail-inuse.json",
+      "status": "added",
+      "subsystems": [
+        "documentation"
+      ]
+    },
+    {
+      "path": "docs/evidence/v2-phase5/provisioning/prov-fail-ipconflict.json",
+      "status": "added",
+      "subsystems": [
+        "documentation"
+      ]
+    },
+    {
+      "path": "docs/evidence/v2-phase5/provisioning/prov-fail-unreachable.json",
+      "status": "added",
+      "subsystems": [
+        "documentation"
+      ]
+    },
+    {
+      "path": "docs/evidence/v2-phase5/provisioning/prov-success.json",
+      "status": "added",
+      "subsystems": [
+        "documentation"
+      ]
+    },
+    {
+      "path": "docs/evidence/v2-phase5/traffic/traffic-hardened-web.json",
+      "status": "added",
+      "subsystems": [
+        "documentation"
+      ]
+    },
+    {
+      "path": "docs/evidence/v2-phase5/traffic/traffic-live.json",
+      "status": "added",
+      "subsystems": [
+        "documentation"
+      ]
+    },
+    {
+      "path": "web/config/settings.py",
+      "status": "modified",
+      "subsystems": [
+        "django_project"
+      ]
+    },
+    {
+      "path": "web/core/management/commands/traffic_reconcile.py",
+      "status": "added",
+      "subsystems": [
+        "traffic"
+      ]
+    },
+    {
+      "path": "web/core/management/commands/traffic_runner_config.py",
+      "status": "added",
+      "subsystems": [
+        "traffic"
+      ]
+    },
+    {
+      "path": "web/core/migrations/0024_v2_phase5_provisioning.py",
+      "status": "added",
+      "subsystems": [
+        "migrations"
+      ]
+    },
+    {
+      "path": "web/core/migrations/0025_v2_phase5_deployed_bundle_decommission.py",
+      "status": "added",
+      "subsystems": [
+        "migrations"
+      ]
+    },
+    {
+      "path": "web/core/migrations/0026_v2_phase5_traffic_run.py",
+      "status": "added",
+      "subsystems": [
+        "migrations"
+      ]
+    },
+    {
+      "path": "web/core/migrations/0027_v2_phase5_soak_baseline.py",
+      "status": "added",
+      "subsystems": [
+        "migrations"
+      ]
+    },
+    {
+      "path": "web/core/models.py",
+      "status": "modified",
+      "subsystems": [
+        "models_schema"
+      ]
+    },
+    {
+      "path": "web/core/services/automation_service.py",
+      "status": "modified",
+      "subsystems": [
+        "django_views_api"
+      ]
+    },
+    {
+      "path": "web/core/services/bootstrap/evaluator.py",
+      "status": "modified",
+      "subsystems": [
+        "legacy_bootstrap"
+      ]
+    },
+    {
+      "path": "web/core/services/bootstrap/evidence.py",
+      "status": "modified",
+      "subsystems": [
+        "legacy_bootstrap"
+      ]
+    },
+    {
+      "path": "web/core/services/bundle_service.py",
+      "status": "modified",
+      "subsystems": [
+        "bundles"
+      ]
+    },
+    {
+      "path": "web/core/services/bundles/codes.py",
+      "status": "modified",
+      "subsystems": [
+        "bundles"
+      ]
+    },
+    {
+      "path": "web/core/services/bundles/eligibility.py",
+      "status": "modified",
+      "subsystems": [
+        "bundles"
+      ]
+    },
+    {
+      "path": "web/core/services/bundles/integrity.py",
+      "status": "modified",
+      "subsystems": [
+        "bundles"
+      ]
+    },
+    {
+      "path": "web/core/services/bundles/persistence.py",
+      "status": "modified",
+      "subsystems": [
+        "bundles"
+      ]
+    },
+    {
+      "path": "web/core/services/bundles/snapshot.py",
+      "status": "modified",
+      "subsystems": [
+        "bundles"
+      ]
+    },
+    {
+      "path": "web/core/services/ci/rules.py",
+      "status": "modified",
+      "subsystems": [
+        "ci_engine"
+      ]
+    },
+    {
+      "path": "web/core/services/execution/codes.py",
+      "status": "modified",
+      "subsystems": [
+        "execution"
+      ]
+    },
+    {
+      "path": "web/core/services/execution/eligibility.py",
+      "status": "modified",
+      "subsystems": [
+        "execution"
+      ]
+    },
+    {
+      "path": "web/core/services/execution/engine.py",
+      "status": "modified",
+      "subsystems": [
+        "execution"
+      ]
+    },
+    {
+      "path": "web/core/services/health/inventory.py",
+      "status": "modified",
+      "subsystems": [
+        "health"
+      ]
+    },
+    {
+      "path": "web/core/services/identity/policy.py",
+      "status": "modified",
+      "subsystems": [
+        "identity_security"
+      ]
+    },
+    {
+      "path": "web/core/services/network_config_validation.py",
+      "status": "modified",
+      "subsystems": [
+        "network_config_validation"
+      ]
+    },
+    {
+      "path": "web/core/services/provisioning/__init__.py",
+      "status": "added",
+      "subsystems": [
+        "provisioning"
+      ]
+    },
+    {
+      "path": "web/core/services/provisioning/bootstrap.py",
+      "status": "added",
+      "subsystems": [
+        "provisioning"
+      ]
+    },
+    {
+      "path": "web/core/services/provisioning/capability_gate.py",
+      "status": "added",
+      "subsystems": [
+        "provisioning"
+      ]
+    },
+    {
+      "path": "web/core/services/provisioning/codes.py",
+      "status": "added",
+      "subsystems": [
+        "provisioning"
+      ]
+    },
+    {
+      "path": "web/core/services/provisioning/gate.py",
+      "status": "added",
+      "subsystems": [
+        "provisioning"
+      ]
+    },
+    {
+      "path": "web/core/services/provisioning/ipam.py",
+      "status": "added",
+      "subsystems": [
+        "provisioning"
+      ]
+    },
+    {
+      "path": "web/core/services/provisioning/lifecycle.py",
+      "status": "added",
+      "subsystems": [
+        "provisioning"
+      ]
+    },
+    {
+      "path": "web/core/services/provisioning/registry.py",
+      "status": "added",
+      "subsystems": [
+        "provisioning"
+      ]
+    },
+    {
+      "path": "web/core/services/provisioning_service.py",
+      "status": "added",
+      "subsystems": [
+        "provisioning"
+      ]
+    },
+    {
+      "path": "web/core/services/soak/assessment.py",
+      "status": "modified",
+      "subsystems": [
+        "probation_soak"
+      ]
+    },
+    {
+      "path": "web/core/services/soak/baseline.py",
+      "status": "added",
+      "subsystems": [
+        "probation_soak"
+      ]
+    },
+    {
+      "path": "web/core/services/soak/codes.py",
+      "status": "modified",
+      "subsystems": [
+        "probation_soak"
+      ]
+    },
+    {
+      "path": "web/core/services/soak/config_state.py",
+      "status": "added",
+      "subsystems": [
+        "probation_soak"
+      ]
+    },
+    {
+      "path": "web/core/services/soak/evaluator.py",
+      "status": "modified",
+      "subsystems": [
+        "probation_soak"
+      ]
+    },
+    {
+      "path": "web/core/services/soak/lifecycle.py",
+      "status": "modified",
+      "subsystems": [
+        "probation_soak"
+      ]
+    },
+    {
+      "path": "web/core/services/soak/overview.py",
+      "status": "added",
+      "subsystems": [
+        "probation_soak"
+      ]
+    },
+    {
+      "path": "web/core/services/soak/sampling.py",
+      "status": "modified",
+      "subsystems": [
+        "probation_soak"
+      ]
+    },
+    {
+      "path": "web/core/services/soak_service.py",
+      "status": "modified",
+      "subsystems": [
+        "probation_soak"
+      ]
+    },
+    {
+      "path": "web/core/services/traffic/__init__.py",
+      "status": "added",
+      "subsystems": [
+        "traffic"
+      ]
+    },
+    {
+      "path": "web/core/services/traffic/client.py",
+      "status": "added",
+      "subsystems": [
+        "traffic"
+      ]
+    },
+    {
+      "path": "web/core/services/traffic/endpoints.py",
+      "status": "added",
+      "subsystems": [
+        "traffic"
+      ]
+    },
+    {
+      "path": "web/core/services/traffic/limits.py",
+      "status": "added",
+      "subsystems": [
+        "traffic"
+      ]
+    },
+    {
+      "path": "web/core/services/traffic/parsers.py",
+      "status": "added",
+      "subsystems": [
+        "traffic"
+      ]
+    },
+    {
+      "path": "web/core/services/traffic/runner/__init__.py",
+      "status": "added",
+      "subsystems": [
+        "traffic"
+      ]
+    },
+    {
+      "path": "web/core/services/traffic/runner/__main__.py",
+      "status": "added",
+      "subsystems": [
+        "traffic"
+      ]
+    },
+    {
+      "path": "web/core/services/traffic/runner/config.py",
+      "status": "added",
+      "subsystems": [
+        "traffic"
+      ]
+    },
+    {
+      "path": "web/core/services/traffic/runner/engine.py",
+      "status": "added",
+      "subsystems": [
+        "traffic"
+      ]
+    },
+    {
+      "path": "web/core/services/traffic/runner/policy.py",
+      "status": "added",
+      "subsystems": [
+        "traffic"
+      ]
+    },
+    {
+      "path": "web/core/services/traffic/runner/runtime.py",
+      "status": "added",
+      "subsystems": [
+        "traffic"
+      ]
+    },
+    {
+      "path": "web/core/services/traffic/runner/server.py",
+      "status": "added",
+      "subsystems": [
+        "traffic"
+      ]
+    },
+    {
+      "path": "web/core/services/traffic/service.py",
+      "status": "added",
+      "subsystems": [
+        "traffic"
+      ]
+    },
+    {
+      "path": "web/core/services/traffic_service.py",
+      "status": "added",
+      "subsystems": [
+        "traffic"
+      ]
+    },
+    {
+      "path": "web/core/templates/core/device_builder/probation_overview.html",
+      "status": "added",
+      "subsystems": [
+        "ui_presentation"
+      ]
+    },
+    {
+      "path": "web/core/templates/core/device_builder/soaks.html",
+      "status": "modified",
+      "subsystems": [
+        "ui_presentation"
+      ]
+    },
+    {
+      "path": "web/core/templates/core/provisioning/detail.html",
+      "status": "added",
+      "subsystems": [
+        "provisioning",
+        "ui_presentation"
+      ]
+    },
+    {
+      "path": "web/core/templates/core/provisioning/list.html",
+      "status": "added",
+      "subsystems": [
+        "provisioning",
+        "ui_presentation"
+      ]
+    },
+    {
+      "path": "web/core/templates/core/traffic/_summary.html",
+      "status": "added",
+      "subsystems": [
+        "traffic",
+        "ui_presentation"
+      ]
+    },
+    {
+      "path": "web/core/templates/core/traffic/run_detail.html",
+      "status": "added",
+      "subsystems": [
+        "traffic",
+        "ui_presentation"
+      ]
+    },
+    {
+      "path": "web/core/templates/core/traffic/workbench.html",
+      "status": "added",
+      "subsystems": [
+        "traffic",
+        "ui_presentation"
+      ]
+    },
+    {
+      "path": "web/core/templatetags/core_extras.py",
+      "status": "modified",
+      "subsystems": [
+        "django_views_api"
+      ]
+    },
+    {
+      "path": "web/core/tests/helpers/health.py",
+      "status": "modified",
+      "subsystems": [
+        "tests_support"
+      ]
+    },
+    {
+      "path": "web/core/tests/helpers/provisioning.py",
+      "status": "added",
+      "subsystems": [
+        "tests_support"
+      ]
+    },
+    {
+      "path": "web/core/tests/helpers/traffic.py",
+      "status": "added",
+      "subsystems": [
+        "tests_support"
+      ]
+    },
+    {
+      "path": "web/core/tests/runner.py",
+      "status": "modified",
+      "subsystems": [
+        "tests_support"
+      ]
+    },
+    {
+      "path": "web/core/tests/test_bundles.py",
+      "status": "modified",
+      "subsystems": [
+        "tests_django"
+      ]
+    },
+    {
+      "path": "web/core/tests/test_contracts.py",
+      "status": "modified",
+      "subsystems": [
+        "tests_django"
+      ]
+    },
+    {
+      "path": "web/core/tests/test_provisioning.py",
+      "status": "added",
+      "subsystems": [
+        "tests_django"
+      ]
+    },
+    {
+      "path": "web/core/tests/test_provisioning_views.py",
+      "status": "added",
+      "subsystems": [
+        "tests_django"
+      ]
+    },
+    {
+      "path": "web/core/tests/test_services.py",
+      "status": "modified",
+      "subsystems": [
+        "tests_django"
+      ]
+    },
+    {
+      "path": "web/core/tests/test_soak_baseline.py",
+      "status": "added",
+      "subsystems": [
+        "tests_django"
+      ]
+    },
+    {
+      "path": "web/core/tests/test_traffic.py",
+      "status": "added",
+      "subsystems": [
+        "tests_django"
+      ]
+    },
+    {
+      "path": "web/core/tests/test_traffic_runner.py",
+      "status": "added",
+      "subsystems": [
+        "tests_django"
+      ]
+    },
+    {
+      "path": "web/core/tests/test_traffic_views.py",
+      "status": "added",
+      "subsystems": [
+        "tests_django"
+      ]
+    },
+    {
+      "path": "web/core/tests/test_web_deployment.py",
+      "status": "modified",
+      "subsystems": [
+        "tests_django"
+      ]
+    },
+    {
+      "path": "web/core/urls.py",
+      "status": "modified",
+      "subsystems": [
+        "django_views_api"
+      ]
+    },
+    {
+      "path": "web/core/views.py",
+      "status": "modified",
+      "subsystems": [
+        "django_views_api"
+      ]
+    }
+  ],
+  "changed_files_total": 105,
+  "changed_files_truncated": false,
+  "checks": [
+    {
+      "counts": {
+        "files_considered": 105,
+        "lines_scanned": 12061,
+        "scan_truncated": false
+      },
+      "duration_seconds": 0.099,
+      "gate": "static",
+      "id": "static.hygiene",
+      "reasons": [
+        "baseline gate: runs for every change"
+      ],
+      "required": true,
+      "status": "PASS",
+      "summary": "12061 added line(s) scanned; no credential format or conflict marker",
+      "title": "Credential formats, conflict markers, credential-store files (added content)"
+    },
+    {
+      "counts": {
+        "files_checked": 662,
+        "jinja_files": 70,
+        "json_files": 19,
+        "python_files": 541,
+        "shell_files": 12,
+        "yaml_files": 20
+      },
+      "duration_seconds": 2.358,
+      "gate": "static",
+      "id": "static.syntax",
+      "reasons": [
+        "baseline gate: runs for every change"
+      ],
+      "required": true,
+      "status": "PASS",
+      "summary": "662 file(s) parsed cleanly",
+      "title": "Python / JSON / YAML / Jinja / shell syntax"
+    },
+    {
+      "counts": {},
+      "duration_seconds": 1.055,
+      "gate": "static",
+      "id": "django.check",
+      "reasons": [
+        "baseline gate: runs for every change"
+      ],
+      "required": true,
+      "status": "PASS",
+      "summary": "passed",
+      "title": "Django system check"
+    },
+    {
+      "counts": {},
+      "duration_seconds": 1.108,
+      "gate": "static",
+      "id": "django.migrations",
+      "reasons": [
+        "baseline gate: runs for every change"
+      ],
+      "required": true,
+      "status": "PASS",
+      "summary": "passed",
+      "title": "Django migration drift (makemigrations --check --dry-run)"
+    },
+    {
+      "counts": {
+        "tests_run": 2134
+      },
+      "duration_seconds": 558.842,
+      "gate": "repository",
+      "id": "django.tests",
+      "reasons": [
+        "full regression was requested"
+      ],
+      "required": true,
+      "status": "PASS",
+      "summary": "2134 test(s) passed",
+      "title": "Django regression tests"
+    },
+    {
+      "counts": {
+        "tests_run": 476
+      },
+      "duration_seconds": 2.471,
+      "gate": "repository",
+      "id": "monitoring.unit",
+      "reasons": [
+        "full regression was requested"
+      ],
+      "required": true,
+      "status": "PASS",
+      "summary": "476 test(s) passed",
+      "title": "Monitoring / NetBox / topology unit tests"
+    },
+    {
+      "counts": {},
+      "duration_seconds": 0.079,
+      "gate": "repository",
+      "id": "grafana.drift",
+      "reasons": [
+        "full regression was requested"
+      ],
+      "required": true,
+      "status": "PASS",
+      "summary": "passed",
+      "title": "Generated Grafana dashboard JSON drift"
+    },
+    {
+      "counts": {},
+      "duration_seconds": 0.0,
+      "gate": "lab",
+      "id": "lab.grafana",
+      "reasons": [
+        "full regression: lab-backed verifier in the final gate"
+      ],
+      "required": false,
+      "status": "NOT_RUN",
+      "summary": "lab-backed verifier: not executed by the offline gate (run with --lab from a lab-connected machine)",
+      "title": "LAB: Grafana dashboards / datasource / queries"
+    },
+    {
+      "counts": {},
+      "duration_seconds": 0.0,
+      "gate": "lab",
+      "id": "lab.topology",
+      "reasons": [
+        "full regression: lab-backed verifier in the final gate"
+      ],
+      "required": false,
+      "status": "NOT_RUN",
+      "summary": "lab-backed verifier: not executed by the offline gate (run with --lab from a lab-connected machine)",
+      "title": "LAB: NetworkX topology service"
+    },
+    {
+      "counts": {},
+      "duration_seconds": 0.0,
+      "gate": "lab",
+      "id": "lab.netbox_model",
+      "reasons": [
+        "full regression: lab-backed verifier in the final gate"
+      ],
+      "required": false,
+      "status": "NOT_RUN",
+      "summary": "lab-backed verifier: not executed by the offline gate (run with --lab from a lab-connected machine)",
+      "title": "LAB: NetBox model"
+    },
+    {
+      "counts": {},
+      "duration_seconds": 0.0,
+      "gate": "lab",
+      "id": "lab.netbox_populate",
+      "reasons": [
+        "full regression: lab-backed verifier in the final gate"
+      ],
+      "required": false,
+      "status": "NOT_RUN",
+      "summary": "lab-backed verifier: not executed by the offline gate (run with --lab from a lab-connected machine)",
+      "title": "LAB: NetBox seed drift (dry run)"
+    },
+    {
+      "counts": {},
+      "duration_seconds": 0.0,
+      "gate": "lab",
+      "id": "lab.reservations",
+      "reasons": [
+        "full regression: lab-backed verifier in the final gate"
+      ],
+      "required": false,
+      "status": "NOT_RUN",
+      "summary": "lab-backed verifier: not executed by the offline gate (run with --lab from a lab-connected machine)",
+      "title": "LAB: DHCP reservations / VLAN 200 static"
+    },
+    {
+      "counts": {},
+      "duration_seconds": 0.0,
+      "gate": "lab",
+      "id": "lab.dhcp",
+      "reasons": [
+        "full regression: lab-backed verifier in the final gate"
+      ],
+      "required": false,
+      "status": "NOT_RUN",
+      "summary": "lab-backed verifier: not executed by the offline gate (run with --lab from a lab-connected machine)",
+      "title": "LAB: DHCP servers (NMAS / R2)"
+    },
+    {
+      "counts": {},
+      "duration_seconds": 0.0,
+      "gate": "lab",
+      "id": "lab.nmas",
+      "reasons": [
+        "full regression: lab-backed verifier in the final gate"
+      ],
+      "required": false,
+      "status": "NOT_RUN",
+      "summary": "lab-backed verifier: not executed by the offline gate (run with --lab from a lab-connected machine)",
+      "title": "LAB: NMAS monitoring infrastructure"
+    }
+  ],
+  "coverage": {
+    "lab": "NOT_RUN",
+    "repository": "EXECUTED",
+    "static": "EXECUTED"
+  },
+  "engine_version": "16.0.0",
+  "exit_code": 0,
+  "mode": {
+    "effective": "full",
+    "reasons": [
+      "full regression was requested"
+    ],
+    "requested": "full"
+  },
+  "notes": [],
+  "plan": {
+    "optional_checks": [
+      {
+        "gate": "lab",
+        "id": "lab.grafana",
+        "reasons": [
+          "full regression: lab-backed verifier in the final gate"
+        ],
+        "required": false,
+        "title": "LAB: Grafana dashboards / datasource / queries"
+      },
+      {
+        "gate": "lab",
+        "id": "lab.topology",
+        "reasons": [
+          "full regression: lab-backed verifier in the final gate"
+        ],
+        "required": false,
+        "title": "LAB: NetworkX topology service"
+      },
+      {
+        "gate": "lab",
+        "id": "lab.netbox_model",
+        "reasons": [
+          "full regression: lab-backed verifier in the final gate"
+        ],
+        "required": false,
+        "title": "LAB: NetBox model"
+      },
+      {
+        "gate": "lab",
+        "id": "lab.netbox_populate",
+        "reasons": [
+          "full regression: lab-backed verifier in the final gate"
+        ],
+        "required": false,
+        "title": "LAB: NetBox seed drift (dry run)"
+      },
+      {
+        "gate": "lab",
+        "id": "lab.reservations",
+        "reasons": [
+          "full regression: lab-backed verifier in the final gate"
+        ],
+        "required": false,
+        "title": "LAB: DHCP reservations / VLAN 200 static"
+      },
+      {
+        "gate": "lab",
+        "id": "lab.dhcp",
+        "reasons": [
+          "full regression: lab-backed verifier in the final gate"
+        ],
+        "required": false,
+        "title": "LAB: DHCP servers (NMAS / R2)"
+      },
+      {
+        "gate": "lab",
+        "id": "lab.nmas",
+        "reasons": [
+          "full regression: lab-backed verifier in the final gate"
+        ],
+        "required": false,
+        "title": "LAB: NMAS monitoring infrastructure"
+      }
+    ],
+    "plan_hash": "04df6028b36a0e4b789fec58df0069fbaf3f89c2fb827fc37dd914f0d0733ce5",
+    "required_checks": [
+      {
+        "gate": "static",
+        "id": "static.hygiene",
+        "reasons": [
+          "baseline gate: runs for every change"
+        ],
+        "required": true,
+        "title": "Credential formats, conflict markers, credential-store files (added content)"
+      },
+      {
+        "gate": "static",
+        "id": "static.syntax",
+        "reasons": [
+          "baseline gate: runs for every change"
+        ],
+        "required": true,
+        "title": "Python / JSON / YAML / Jinja / shell syntax"
+      },
+      {
+        "gate": "static",
+        "id": "django.check",
+        "reasons": [
+          "baseline gate: runs for every change"
+        ],
+        "required": true,
+        "title": "Django system check"
+      },
+      {
+        "gate": "static",
+        "id": "django.migrations",
+        "reasons": [
+          "baseline gate: runs for every change"
+        ],
+        "required": true,
+        "title": "Django migration drift (makemigrations --check --dry-run)"
+      },
+      {
+        "gate": "repository",
+        "id": "django.tests",
+        "params": {
+          "labels": [
+            "core"
+          ]
+        },
+        "reasons": [
+          "full regression was requested"
+        ],
+        "required": true,
+        "title": "Django regression tests"
+      },
+      {
+        "gate": "repository",
+        "id": "monitoring.unit",
+        "reasons": [
+          "full regression was requested"
+        ],
+        "required": true,
+        "title": "Monitoring / NetBox / topology unit tests"
+      },
+      {
+        "gate": "repository",
+        "id": "grafana.drift",
+        "reasons": [
+          "full regression was requested"
+        ],
+        "required": true,
+        "title": "Generated Grafana dashboard JSON drift"
+      }
+    ],
+    "test_selection": {
+      "core": [
+        "Django project configuration affects the whole application [web/config/settings.py]",
+        "a migration changes the schema every consumer relies on [web/core/migrations/0024_v2_phase5_provisioning.py +3 more]",
+        "models are foundational: model, migration and every consumer contract [web/core/models.py]",
+        "shared test helpers are used by most Django test modules [web/core/tests/helpers/health.py +3 more]",
+        "the access middleware / identity layer sits in front of every view [web/core/services/identity/policy.py]"
+      ],
+      "core.tests.test_admin_surface": [
+        "Django route / view boundary changed [web/core/services/automation_service.py +3 more]",
+        "managed-device credential metadata, rotation policy / engine / scheduler and device-login 2FA policy is affected via models_schema -> credentials: credential policy and rotation audit persistence are model-backed"
+      ],
+      "core.tests.test_artwork": [
+        "template / static / theme asset changed [web/core/templates/core/device_builder/probation_overview.html +6 more]"
+      ],
+      "core.tests.test_bootstrap": [
+        "one-time legacy baseline bootstrap capture / observation / approval changed [web/core/services/bootstrap/evaluator.py +1 more]"
+      ],
+      "core.tests.test_bootstrap_views": [
+        "Django route / view boundary changed [web/core/services/automation_service.py +3 more]",
+        "one-time legacy baseline bootstrap capture / observation / approval changed [web/core/services/bootstrap/evaluator.py +1 more]",
+        "template / static / theme asset changed [web/core/templates/core/device_builder/probation_overview.html +6 more]"
+      ],
+      "core.tests.test_bundle_views": [
+        "Django route / view boundary changed [web/core/services/automation_service.py +3 more]",
+        "immutable configuration bundle service / integrity / export changed [web/core/services/bundle_service.py +5 more]",
+        "one-time legacy baseline bootstrap capture / observation / approval changed [web/core/services/bootstrap/evaluator.py +1 more]",
+        "probation soak evidence / evaluator / collector / operator decision changed [web/core/services/soak/assessment.py +8 more]",
+        "template / static / theme asset changed [web/core/templates/core/device_builder/probation_overview.html +6 more]"
+      ],
+      "core.tests.test_bundles": [
+        "immutable configuration bundle service / integrity / export changed [web/core/services/bundle_service.py +5 more]",
+        "one-time legacy baseline bootstrap capture / observation / approval changed [web/core/services/bootstrap/evaluator.py +1 more]",
+        "probation soak evidence / evaluator / collector / operator decision changed [web/core/services/soak/assessment.py +8 more]",
+        "test module itself changed [web/core/tests/test_bundles.py]"
+      ],
+      "core.tests.test_candidate_renderer": [
+        "candidate rendering / feature templates is affected via django_project -> candidate_rendering: Django project configuration is foundational: every Django subsystem consumes it",
+        "platform drivers and capability matrices is affected via django_project -> platform_drivers: Django project configuration is foundational: every Django subsystem consumes it"
+      ],
+      "core.tests.test_capabilities": [
+        "Device Builder (Tier-1 validators, intent services) is affected via django_project -> device_builder: Django project configuration is foundational: every Django subsystem consumes it",
+        "capability evidence framework (aggregation over the capability registries + empirical evidence) is affected via models_schema -> capability_framework: empirical capability evidence is model-backed",
+        "platform drivers and capability matrices is affected via django_project -> platform_drivers: Django project configuration is foundational: every Django subsystem consumes it"
+      ],
+      "core.tests.test_capability_framework": [
+        "Intent-based configuration templates: extraction, parameterization, baselines, portable packages, clone is affected via models_schema -> config_templates: templates and their immutable versions are model-backed",
+        "capability evidence framework (aggregation over the capability registries + empirical evidence) is affected via models_schema -> capability_framework: empirical capability evidence is model-backed"
+      ],
+      "core.tests.test_ceos_mfa_rollout": [
+        "managed-device credential metadata, rotation policy / engine / scheduler and device-login 2FA policy is affected via models_schema -> credentials: credential policy and rotation audit persistence are model-backed"
+      ],
+      "core.tests.test_change_plan_service": [
+        "Configuration Changes / Remove Configuration workbench: snapshots, line index, semantic removal analysis is affected via django_project -> config_workbench: Django project configuration is foundational: every Django subsystem consumes it",
+        "health / precheck / postcheck code changed [web/core/services/health/inventory.py]",
+        "plan builder / Configlets is affected via models_schema -> planning: ChangePlan / Configlet persistence is model-backed"
+      ],
+      "core.tests.test_change_plan_views": [
+        "Django route / view boundary changed [web/core/services/automation_service.py +3 more]",
+        "plan builder / Configlets is affected via models_schema -> planning: ChangePlan / Configlet persistence is model-backed",
+        "template / static / theme asset changed [web/core/templates/core/device_builder/probation_overview.html +6 more]"
+      ],
+      "core.tests.test_change_precheck": [
+        "health / precheck / postcheck code changed [web/core/services/health/inventory.py]",
+        "plan builder / Configlets is affected via models_schema -> planning: ChangePlan / Configlet persistence is model-backed",
+        "structured execution engine / executors changed [web/core/services/execution/codes.py +2 more]"
+      ],
+      "core.tests.test_config_import": [
+        "Intent-based configuration templates: extraction, parameterization, baselines, portable packages, clone is affected via models_schema -> config_templates: templates and their immutable versions are model-backed"
+      ],
+      "core.tests.test_config_templates": [
+        "Intent-based configuration templates: extraction, parameterization, baselines, portable packages, clone is affected via models_schema -> config_templates: templates and their immutable versions are model-backed"
+      ],
+      "core.tests.test_config_templates_views": [
+        "Intent-based configuration templates: extraction, parameterization, baselines, portable packages, clone is affected via models_schema -> config_templates: templates and their immutable versions are model-backed"
+      ],
+      "core.tests.test_config_workbench": [
+        "Configuration Changes / Remove Configuration workbench: snapshots, line index, semantic removal analysis is affected via django_project -> config_workbench: Django project configuration is foundational: every Django subsystem consumes it"
+      ],
+      "core.tests.test_config_workflows": [
+        "Configuration Changes / Remove Configuration workbench: snapshots, line index, semantic removal analysis is affected via django_project -> config_workbench: Django project configuration is foundational: every Django subsystem consumes it",
+        "Intent-based configuration templates: extraction, parameterization, baselines, portable packages, clone is affected via models_schema -> config_templates: templates and their immutable versions are model-backed",
+        "network-device configuration validation or live validation evidence changed [web/core/services/network_config_validation.py]"
+      ],
+      "core.tests.test_contracts": [
+        "Change / intent control plane is affected via models_schema -> control_plane: Change / intent persistence is model-backed",
+        "Device Builder (Tier-1 validators, intent services) is affected via django_project -> device_builder: Django project configuration is foundational: every Django subsystem consumes it",
+        "Django route / view boundary changed [web/core/services/automation_service.py +3 more]",
+        "Intent-based configuration templates: extraction, parameterization, baselines, portable packages, clone is affected via models_schema -> config_templates: templates and their immutable versions are model-backed",
+        "NSOT aggregation is affected via django_project -> nsot: Django project configuration is foundational: every Django subsystem consumes it",
+        "NetBox / IPAM integration is affected via django_project -> netbox_ipam: Django project configuration is foundational: every Django subsystem consumes it",
+        "Raw Configlets + isolated verifier / sandbox is affected via models_schema -> raw_configlets: Raw Configlet / revision / verification-run persistence is model-backed",
+        "Tier-2 Change validation engine is affected via models_schema -> validation: validation reads accepted intent and persists ChangeValidationRun",
+        "Tier-3 validation engine changed [web/core/services/ci/rules.py]",
+        "candidate rendering / feature templates is affected via django_project -> candidate_rendering: Django project configuration is foundational: every Django subsystem consumes it",
+        "capability evidence framework (aggregation over the capability registries + empirical evidence) is affected via models_schema -> capability_framework: empirical capability evidence is model-backed",
+        "health / precheck / postcheck code changed [web/core/services/health/inventory.py]",
+        "immutable configuration bundle service / integrity / export changed [web/core/services/bundle_service.py +5 more]",
+        "managed-device credential metadata, rotation policy / engine / scheduler and device-login 2FA policy is affected via models_schema -> credentials: credential policy and rotation audit persistence are model-backed",
+        "network-device configuration validation or live validation evidence changed [web/core/services/network_config_validation.py]",
+        "new-device provisioning workflow / capability gate / IPAM reservation / device registry changed [web/core/services/provisioning/__init__.py +10 more]",
+        "one-time legacy baseline bootstrap capture / observation / approval changed [web/core/services/bootstrap/evaluator.py +1 more]",
+        "plan builder / Configlets is affected via models_schema -> planning: ChangePlan / Configlet persistence is model-backed",
+        "platform drivers and capability matrices is affected via django_project -> platform_drivers: Django project configuration is foundational: every Django subsystem consumes it",
+        "probation soak evidence / evaluator / collector / operator decision changed [web/core/services/soak/assessment.py +8 more]",
+        "structured execution engine / executors changed [web/core/services/execution/codes.py +2 more]",
+        "test module itself changed [web/core/tests/test_contracts.py]",
+        "traffic workbench validation / bounds / runner IPC / process boundary / parsers / run evidence changed [deploy/scripts/install_traffic_runner.sh +24 more]"
+      ],
+      "core.tests.test_control_plane": [
+        "Change / intent control plane is affected via models_schema -> control_plane: Change / intent persistence is model-backed",
+        "plan builder / Configlets is affected via models_schema -> planning: ChangePlan / Configlet persistence is model-backed"
+      ],
+      "core.tests.test_credential_rotation": [
+        "managed-device credential metadata, rotation policy / engine / scheduler and device-login 2FA policy is affected via models_schema -> credentials: credential policy and rotation audit persistence are model-backed"
+      ],
+      "core.tests.test_device_mfa": [
+        "managed-device credential metadata, rotation policy / engine / scheduler and device-login 2FA policy is affected via models_schema -> credentials: credential policy and rotation audit persistence are model-backed"
+      ],
+      "core.tests.test_editor_views": [
+        "Device Builder (Tier-1 validators, intent services) is affected via django_project -> device_builder: Django project configuration is foundational: every Django subsystem consumes it",
+        "Django route / view boundary changed [web/core/services/automation_service.py +3 more]",
+        "template / static / theme asset changed [web/core/templates/core/device_builder/probation_overview.html +6 more]"
+      ],
+      "core.tests.test_execution_engine": [
+        "Configuration Changes / Remove Configuration workbench: snapshots, line index, semantic removal analysis is affected via django_project -> config_workbench: Django project configuration is foundational: every Django subsystem consumes it",
+        "network-device configuration validation or live validation evidence changed [web/core/services/network_config_validation.py]",
+        "structured execution engine / executors changed [web/core/services/execution/codes.py +2 more]"
+      ],
+      "core.tests.test_execution_executors": [
+        "Configuration Changes / Remove Configuration workbench: snapshots, line index, semantic removal analysis is affected via django_project -> config_workbench: Django project configuration is foundational: every Django subsystem consumes it",
+        "structured execution engine / executors changed [web/core/services/execution/codes.py +2 more]"
+      ],
+      "core.tests.test_execution_views": [
+        "Django route / view boundary changed [web/core/services/automation_service.py +3 more]",
+        "structured execution engine / executors changed [web/core/services/execution/codes.py +2 more]",
+        "template / static / theme asset changed [web/core/templates/core/device_builder/probation_overview.html +6 more]"
+      ],
+      "core.tests.test_field_commit": [
+        "Change / intent control plane is affected via models_schema -> control_plane: Change / intent persistence is model-backed",
+        "Device Builder (Tier-1 validators, intent services) is affected via django_project -> device_builder: Django project configuration is foundational: every Django subsystem consumes it"
+      ],
+      "core.tests.test_field_validators": [
+        "Device Builder (Tier-1 validators, intent services) is affected via django_project -> device_builder: Django project configuration is foundational: every Django subsystem consumes it"
+      ],
+      "core.tests.test_health_engine": [
+        "Configuration Changes / Remove Configuration workbench: snapshots, line index, semantic removal analysis is affected via django_project -> config_workbench: Django project configuration is foundational: every Django subsystem consumes it",
+        "health / precheck / postcheck code changed [web/core/services/health/inventory.py]",
+        "one-time legacy baseline bootstrap capture / observation / approval changed [web/core/services/bootstrap/evaluator.py +1 more]",
+        "probation soak evidence / evaluator / collector / operator decision changed [web/core/services/soak/assessment.py +8 more]"
+      ],
+      "core.tests.test_health_sources": [
+        "health / precheck / postcheck code changed [web/core/services/health/inventory.py]",
+        "one-time legacy baseline bootstrap capture / observation / approval changed [web/core/services/bootstrap/evaluator.py +1 more]",
+        "topology (NetworkX / topology service) is affected via django_project -> topology: Django project configuration is foundational: every Django subsystem consumes it"
+      ],
+      "core.tests.test_health_views": [
+        "Django route / view boundary changed [web/core/services/automation_service.py +3 more]",
+        "health / precheck / postcheck code changed [web/core/services/health/inventory.py]",
+        "template / static / theme asset changed [web/core/templates/core/device_builder/probation_overview.html +6 more]"
+      ],
+      "core.tests.test_interface_renderer": [
+        "candidate rendering / feature templates is affected via django_project -> candidate_rendering: Django project configuration is foundational: every Django subsystem consumes it",
+        "platform drivers and capability matrices is affected via django_project -> platform_drivers: Django project configuration is foundational: every Django subsystem consumes it"
+      ],
+      "core.tests.test_interface_service": [
+        "Device Builder (Tier-1 validators, intent services) is affected via django_project -> device_builder: Django project configuration is foundational: every Django subsystem consumes it"
+      ],
+      "core.tests.test_ipam_refresh": [
+        "NetBox / IPAM integration is affected via django_project -> netbox_ipam: Django project configuration is foundational: every Django subsystem consumes it"
+      ],
+      "core.tests.test_js_contract": [
+        "Device Builder (Tier-1 validators, intent services) is affected via django_project -> device_builder: Django project configuration is foundational: every Django subsystem consumes it",
+        "template / static / theme asset changed [web/core/templates/core/device_builder/probation_overview.html +6 more]"
+      ],
+      "core.tests.test_linux_mfa_rollout": [
+        "managed-device credential metadata, rotation policy / engine / scheduler and device-login 2FA policy is affected via models_schema -> credentials: credential policy and rotation audit persistence are model-backed"
+      ],
+      "core.tests.test_monitoring_integration": [
+        "template / static / theme asset changed [web/core/templates/core/device_builder/probation_overview.html +6 more]"
+      ],
+      "core.tests.test_navigation": [
+        "Django route / view boundary changed [web/core/services/automation_service.py +3 more]",
+        "template / static / theme asset changed [web/core/templates/core/device_builder/probation_overview.html +6 more]"
+      ],
+      "core.tests.test_network_config_validation": [
+        "network-device configuration validation or live validation evidence changed [web/core/services/network_config_validation.py]"
+      ],
+      "core.tests.test_notification_commands": [
+        "notifications / Slack is affected via models_schema -> notifications: Notification persistence is model-backed"
+      ],
+      "core.tests.test_notification_model": [
+        "notifications / Slack is affected via models_schema -> notifications: Notification persistence is model-backed"
+      ],
+      "core.tests.test_notification_views": [
+        "Django route / view boundary changed [web/core/services/automation_service.py +3 more]",
+        "notifications / Slack is affected via models_schema -> notifications: Notification persistence is model-backed",
+        "template / static / theme asset changed [web/core/templates/core/device_builder/probation_overview.html +6 more]"
+      ],
+      "core.tests.test_notifications": [
+        "notifications / Slack is affected via models_schema -> notifications: Notification persistence is model-backed"
+      ],
+      "core.tests.test_nsot": [
+        "NSOT aggregation is affected via django_project -> nsot: Django project configuration is foundational: every Django subsystem consumes it",
+        "NetBox / IPAM integration is affected via django_project -> netbox_ipam: Django project configuration is foundational: every Django subsystem consumes it",
+        "template / static / theme asset changed [web/core/templates/core/device_builder/probation_overview.html +6 more]"
+      ],
+      "core.tests.test_phase12_service_policy": [
+        "Device Builder (Tier-1 validators, intent services) is affected via django_project -> device_builder: Django project configuration is foundational: every Django subsystem consumes it",
+        "candidate rendering / feature templates is affected via django_project -> candidate_rendering: Django project configuration is foundational: every Django subsystem consumes it",
+        "platform drivers and capability matrices is affected via django_project -> platform_drivers: Django project configuration is foundational: every Django subsystem consumes it"
+      ],
+      "core.tests.test_phase13_addressing": [
+        "NetBox / IPAM integration is affected via django_project -> netbox_ipam: Django project configuration is foundational: every Django subsystem consumes it",
+        "Tier-2 Change validation engine is affected via models_schema -> validation: validation reads accepted intent and persists ChangeValidationRun",
+        "network-device configuration validation or live validation evidence changed [web/core/services/network_config_validation.py]"
+      ],
+      "core.tests.test_phase13_architecture": [
+        "Tier-2 Change validation engine is affected via models_schema -> validation: validation reads accepted intent and persists ChangeValidationRun",
+        "a test asserts this document's Phase-13 note [docs/CURRENT_STATE.md]"
+      ],
+      "core.tests.test_phase13_capabilities": [
+        "Tier-2 Change validation engine is affected via models_schema -> validation: validation reads accepted intent and persists ChangeValidationRun",
+        "platform drivers and capability matrices is affected via django_project -> platform_drivers: Django project configuration is foundational: every Django subsystem consumes it"
+      ],
+      "core.tests.test_phase13_dependencies": [
+        "Tier-2 Change validation engine is affected via models_schema -> validation: validation reads accepted intent and persists ChangeValidationRun"
+      ],
+      "core.tests.test_phase13_engine": [
+        "Tier-2 Change validation engine is affected via models_schema -> validation: validation reads accepted intent and persists ChangeValidationRun"
+      ],
+      "core.tests.test_phase13_routing": [
+        "Tier-2 Change validation engine is affected via models_schema -> validation: validation reads accepted intent and persists ChangeValidationRun",
+        "network-device configuration validation or live validation evidence changed [web/core/services/network_config_validation.py]"
+      ],
+      "core.tests.test_phase13_services_policy": [
+        "Tier-2 Change validation engine is affected via models_schema -> validation: validation reads accepted intent and persists ChangeValidationRun"
+      ],
+      "core.tests.test_phase13_snapshot": [
+        "Tier-2 Change validation engine is affected via models_schema -> validation: validation reads accepted intent and persists ChangeValidationRun"
+      ],
+      "core.tests.test_phase13_sources": [
+        "NetBox / IPAM integration is affected via django_project -> netbox_ipam: Django project configuration is foundational: every Django subsystem consumes it",
+        "Tier-2 Change validation engine is affected via models_schema -> validation: validation reads accepted intent and persists ChangeValidationRun"
+      ],
+      "core.tests.test_phase13_topology": [
+        "Tier-2 Change validation engine is affected via models_schema -> validation: validation reads accepted intent and persists ChangeValidationRun",
+        "topology (NetworkX / topology service) is affected via django_project -> topology: Django project configuration is foundational: every Django subsystem consumes it"
+      ],
+      "core.tests.test_phase13_validation_runs": [
+        "Tier-2 Change validation engine is affected via models_schema -> validation: validation reads accepted intent and persists ChangeValidationRun"
+      ],
+      "core.tests.test_phase13_views": [
+        "Django route / view boundary changed [web/core/services/automation_service.py +3 more]",
+        "Tier-2 Change validation engine is affected via models_schema -> validation: validation reads accepted intent and persists ChangeValidationRun",
+        "template / static / theme asset changed [web/core/templates/core/device_builder/probation_overview.html +6 more]"
+      ],
+      "core.tests.test_phase2_ospf_networks": [
+        "network-device configuration validation or live validation evidence changed [web/core/services/network_config_validation.py]"
+      ],
+      "core.tests.test_provisioning": [
+        "new-device provisioning workflow / capability gate / IPAM reservation / device registry changed [web/core/services/provisioning/__init__.py +10 more]",
+        "test module itself changed [web/core/tests/test_provisioning.py]"
+      ],
+      "core.tests.test_provisioning_views": [
+        "new-device provisioning workflow / capability gate / IPAM reservation / device registry changed [web/core/services/provisioning/__init__.py +10 more]",
+        "test module itself changed [web/core/tests/test_provisioning_views.py]"
+      ],
+      "core.tests.test_r1_mfa_pilot": [
+        "managed-device credential metadata, rotation policy / engine / scheduler and device-login 2FA policy is affected via models_schema -> credentials: credential policy and rotation audit persistence are model-backed"
+      ],
+      "core.tests.test_raw_configlets": [
+        "Raw Configlets + isolated verifier / sandbox is affected via models_schema -> raw_configlets: Raw Configlet / revision / verification-run persistence is model-backed"
+      ],
+      "core.tests.test_raw_integration": [
+        "Raw Configlets + isolated verifier / sandbox is affected via models_schema -> raw_configlets: Raw Configlet / revision / verification-run persistence is model-backed",
+        "Tier-2 Change validation engine is affected via models_schema -> validation: validation reads accepted intent and persists ChangeValidationRun",
+        "plan builder / Configlets is affected via models_schema -> planning: ChangePlan / Configlet persistence is model-backed",
+        "structured execution engine / executors changed [web/core/services/execution/codes.py +2 more]"
+      ],
+      "core.tests.test_raw_sandbox": [
+        "Raw Configlets + isolated verifier / sandbox is affected via models_schema -> raw_configlets: Raw Configlet / revision / verification-run persistence is model-backed"
+      ],
+      "core.tests.test_raw_views": [
+        "Django route / view boundary changed [web/core/services/automation_service.py +3 more]",
+        "Raw Configlets + isolated verifier / sandbox is affected via models_schema -> raw_configlets: Raw Configlet / revision / verification-run persistence is model-backed",
+        "template / static / theme asset changed [web/core/templates/core/device_builder/probation_overview.html +6 more]"
+      ],
+      "core.tests.test_routes": [
+        "Django route / view boundary changed [web/core/services/automation_service.py +3 more]",
+        "managed-device credential metadata, rotation policy / engine / scheduler and device-login 2FA policy is affected via models_schema -> credentials: credential policy and rotation audit persistence are model-backed",
+        "template / static / theme asset changed [web/core/templates/core/device_builder/probation_overview.html +6 more]"
+      ],
+      "core.tests.test_routing_renderer": [
+        "candidate rendering / feature templates is affected via django_project -> candidate_rendering: Django project configuration is foundational: every Django subsystem consumes it",
+        "platform drivers and capability matrices is affected via django_project -> platform_drivers: Django project configuration is foundational: every Django subsystem consumes it"
+      ],
+      "core.tests.test_routing_service": [
+        "Device Builder (Tier-1 validators, intent services) is affected via django_project -> device_builder: Django project configuration is foundational: every Django subsystem consumes it"
+      ],
+      "core.tests.test_secret_policy": [
+        "notifications / Slack is affected via models_schema -> notifications: Notification persistence is model-backed"
+      ],
+      "core.tests.test_services": [
+        "Django route / view boundary changed [web/core/services/automation_service.py +3 more]",
+        "test module itself changed [web/core/tests/test_services.py]"
+      ],
+      "core.tests.test_slack_service": [
+        "notifications / Slack is affected via models_schema -> notifications: Notification persistence is model-backed"
+      ],
+      "core.tests.test_soak": [
+        "a test asserts this document's content [docs/PROBATION_SOAK_AND_PROMOTION.md]",
+        "immutable configuration bundle service / integrity / export changed [web/core/services/bundle_service.py +5 more]",
+        "one-time legacy baseline bootstrap capture / observation / approval changed [web/core/services/bootstrap/evaluator.py +1 more]",
+        "probation soak evidence / evaluator / collector / operator decision changed [web/core/services/soak/assessment.py +8 more]"
+      ],
+      "core.tests.test_soak_baseline": [
+        "test module itself changed [web/core/tests/test_soak_baseline.py]"
+      ],
+      "core.tests.test_soak_decision": [
+        "immutable configuration bundle service / integrity / export changed [web/core/services/bundle_service.py +5 more]",
+        "probation soak evidence / evaluator / collector / operator decision changed [web/core/services/soak/assessment.py +8 more]"
+      ],
+      "core.tests.test_soak_views": [
+        "Django route / view boundary changed [web/core/services/automation_service.py +3 more]",
+        "probation soak evidence / evaluator / collector / operator decision changed [web/core/services/soak/assessment.py +8 more]",
+        "template / static / theme asset changed [web/core/templates/core/device_builder/probation_overview.html +6 more]"
+      ],
+      "core.tests.test_themes": [
+        "template / static / theme asset changed [web/core/templates/core/device_builder/probation_overview.html +6 more]"
+      ],
+      "core.tests.test_tier3_changes": [
+        "Tier-3 validation engine changed [web/core/services/ci/rules.py]"
+      ],
+      "core.tests.test_tier3_execution": [
+        "Tier-3 validation engine changed [web/core/services/ci/rules.py]"
+      ],
+      "core.tests.test_tier3_selection": [
+        "Tier-3 validation engine changed [web/core/services/ci/rules.py]"
+      ],
+      "core.tests.test_topology_integration": [
+        "template / static / theme asset changed [web/core/templates/core/device_builder/probation_overview.html +6 more]",
+        "topology (NetworkX / topology service) is affected via django_project -> topology: Django project configuration is foundational: every Django subsystem consumes it"
+      ],
+      "core.tests.test_topology_source": [
+        "topology (NetworkX / topology service) is affected via django_project -> topology: Django project configuration is foundational: every Django subsystem consumes it"
+      ],
+      "core.tests.test_traffic": [
+        "test module itself changed [web/core/tests/test_traffic.py]",
+        "traffic workbench validation / bounds / runner IPC / process boundary / parsers / run evidence changed [deploy/scripts/install_traffic_runner.sh +24 more]"
+      ],
+      "core.tests.test_traffic_runner": [
+        "test module itself changed [web/core/tests/test_traffic_runner.py]",
+        "traffic workbench validation / bounds / runner IPC / process boundary / parsers / run evidence changed [deploy/scripts/install_traffic_runner.sh +24 more]"
+      ],
+      "core.tests.test_traffic_views": [
+        "test module itself changed [web/core/tests/test_traffic_views.py]",
+        "traffic workbench validation / bounds / runner IPC / process boundary / parsers / run evidence changed [deploy/scripts/install_traffic_runner.sh +24 more]"
+      ],
+      "core.tests.test_transport_capability": [
+        "capability evidence framework (aggregation over the capability registries + empirical evidence) is affected via models_schema -> capability_framework: empirical capability evidence is model-backed"
+      ],
+      "core.tests.test_view_boundaries": [
+        "Change / intent control plane is affected via models_schema -> control_plane: Change / intent persistence is model-backed",
+        "Device Builder (Tier-1 validators, intent services) is affected via django_project -> device_builder: Django project configuration is foundational: every Django subsystem consumes it",
+        "Django route / view boundary changed [web/core/services/automation_service.py +3 more]",
+        "template / static / theme asset changed [web/core/templates/core/device_builder/probation_overview.html +6 more]"
+      ],
+      "core.tests.test_web_deployment": [
+        "test module itself changed [web/core/tests/test_web_deployment.py]",
+        "traffic workbench validation / bounds / runner IPC / process boundary / parsers / run evidence changed [deploy/scripts/install_traffic_runner.sh +24 more]",
+        "website hosting templates changed (static safety checks + deploy check) [deploy/README.md +11 more]"
+      ]
+    }
+  },
+  "provenance": {
+    "base_sha": "e50f1cd75e868166958efd7ce6e638d9ec118b46",
+    "checkout_sha": null,
+    "compare_from_sha": "e50f1cd75e868166958efd7ce6e638d9ec118b46",
+    "engine_version": "16.0.0",
+    "event": null,
+    "head_sha": "cbc6820814945f032824be36628d1722c4906ab3",
+    "lab_gate_requested": false,
+    "python_version": "3.12.3",
+    "ref_name": null,
+    "repository": null,
+    "run_id": null,
+    "strategy": "merge-base",
+    "working_tree": false
+  },
+  "result": "PASS",
+  "schema_version": 1,
+  "summary": {
+    "errored": 0,
+    "executed": 7,
+    "failed": 0,
+    "not_run": 7,
+    "passed": 7,
+    "selected": 14,
+    "warned": 0
+  },
+  "unclassified_paths": [],
+  "warnings": []
+}

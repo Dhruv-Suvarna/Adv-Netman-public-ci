@@ -1,0 +1,132 @@
+{
+  "admission_checks": [
+    []
+  ],
+  "after": {
+    "flows": [
+      {
+        "detail": "OPEN",
+        "expect": "PERMIT",
+        "flow": "dev -> bootstrap HTTP 10.254.92.2:8080",
+        "observed": "PERMIT"
+      },
+      {
+        "detail": "OPEN",
+        "expect": "PERMIT",
+        "flow": "NMAS service 10.254.92.2 -> 10.254.90.2:22 (NMAS management)",
+        "observed": "PERMIT"
+      },
+      {
+        "detail": "",
+        "expect": "DENY",
+        "flow": "dev -> production host 10.254.94.10 (ICMP)",
+        "observed": "PERMIT"
+      },
+      {
+        "detail": "",
+        "expect": "DENY",
+        "flow": "dev -> production host 2001:db8:fe94::10 (ICMPv6)",
+        "observed": "PERMIT"
+      },
+      {
+        "detail": "",
+        "expect": "DENY",
+        "flow": "dev -> core loopback 10.254.255.2 (ICMP, lateral)",
+        "observed": "PERMIT"
+      },
+      {
+        "detail": "REFUSED",
+        "expect": "DENY",
+        "flow": "dev -> 10.254.92.2:22 (not a bootstrap flow)",
+        "observed": "PERMIT"
+      },
+      {
+        "detail": "TIMEOUT; seen at service: 0",
+        "expect": "DENY",
+        "flow": "dev -> 10.254.92.2:22 from forged source port 22 (not an SSH reply)",
+        "observed": "DENY"
+      },
+      {
+        "detail": "OPEN",
+        "expect": "DENY",
+        "flow": "dev -> upstream's own SSH 10.254.90.1:22",
+        "observed": "PERMIT"
+      },
+      {
+        "detail": "OPEN",
+        "expect": "DENY",
+        "flow": "dev -> upstream's own SSH 10.254.255.4:22",
+        "observed": "PERMIT"
+      },
+      {
+        "detail": "",
+        "expect": "DENY",
+        "flow": "dev -> upstream 10.254.90.1 (ICMP)",
+        "observed": "PERMIT"
+      },
+      {
+        "detail": "",
+        "expect": "DENY",
+        "flow": "production host -> 10.254.90.2 (ICMP)",
+        "observed": "PERMIT"
+      },
+      {
+        "detail": "",
+        "expect": "DENY",
+        "flow": "production host -> 2001:db8:fe90::2 (ICMPv6)",
+        "observed": "PERMIT"
+      }
+    ],
+    "ospf": {
+      "core_route_to_device_loopback": "10.254.255.6 nhid 26 via 10.254.91.1 dev eth1 proto ospf metric 20",
+      "probe_hellos": {
+        "received": 67,
+        "sent": 130
+      },
+      "probe_neighbors": "\nNeighbor ID     Pri State           Up Time         Dead Time Address         Interface                        RXmtL RqstL DBsmL\n10.254.255.4      1 Full/Backup     54.100s            3.899s 10.254.90.1     eth1:10.254.90.2                     0     0     0\n\n",
+      "probe_on_port": [
+        "10.254.255.6      1 Full/DR         54.580s            3.134s 10.254.90.2     eth4:10.254.90.1                     0     0     0"
+      ],
+      "probe_ospfd_running": true,
+      "upstream_neighbors": "\nNeighbor ID     Pri State           Up Time         Dead Time Address         Interface                        RXmtL RqstL DBsmL\n10.254.255.2      1 Full/Backup     4m40s             37.314s 10.254.91.2     Vlan102:10.254.91.1                  0     0     0\n10.254.255.6      1 Full/DR         54.283s            3.431s 10.254.90.2     eth4:10.254.90.1                     0     0     0\n\n"
+    },
+    "ruleset": ""
+  },
+  "production_during_release": {
+    "core_ospf_adjacency": {
+      "after": {
+        "neighbor": "10.254.255.2",
+        "state": "Full/Backup",
+        "up_ms": 279889
+      },
+      "before": {
+        "neighbor": "10.254.255.2",
+        "state": "Full/Backup",
+        "up_ms": 222709
+      },
+      "no_flap": true
+    },
+    "prod->svc v4 (forwarded by up)": {
+      "received": 275,
+      "sent": 275
+    },
+    "prod->up Vlan102 v6 (up's input)": {
+      "received": 275,
+      "sent": 275
+    },
+    "zero_loss": true
+  },
+  "release": {
+    "codes": [],
+    "compensation": {
+      "attempted": false,
+      "not_compensated": [],
+      "status": "NOT_ATTEMPTED",
+      "steps": []
+    },
+    "ok": true,
+    "outcome": "SUCCEEDED",
+    "restored": false,
+    "state": "RELEASED"
+  }
+}

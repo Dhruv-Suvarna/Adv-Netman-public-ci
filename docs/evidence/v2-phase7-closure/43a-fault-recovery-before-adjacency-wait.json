@@ -1,0 +1,170 @@
+{
+  "approve": {
+    "codes": [],
+    "ok": true
+  },
+  "device_lifecycle": "IN_SERVICE",
+  "digest_after": "3aacbdd9d55347be460c9d40bf0b996ba39381f887ba91e93f948179f88310f9",
+  "digest_before": "80b6a3f847442b4ca176c381fb782b51ddf21bcd915f3e7488f8976b6807a424",
+  "digest_equals_baseline": true,
+  "execute": {
+    "codes": [],
+    "ok": true,
+    "outcome": "SUCCEEDED",
+    "report": {
+      "baseline_digest": "80b6a3f847442b4ca176c381fb782b51ddf21bcd915f3e7488f8976b6807a424",
+      "failure": {},
+      "final_digest": "3aacbdd9d55347be460c9d40bf0b996ba39381f887ba91e93f948179f88310f9",
+      "outcome": "SUCCEEDED",
+      "postcheck": {
+        "result": "PASS"
+      },
+      "steps": [
+        {
+          "at": "2026-10-27T13:43:22.754482+00:00",
+          "baseline": "80b6a3f847442b4ca176c381fb782b51ddf21bcd915f3e7488f8976b6807a424",
+          "blockers": [],
+          "status": "PASS",
+          "step": "preflight"
+        },
+        {
+          "at": "2026-10-27T13:43:24.853565+00:00",
+          "cfg_id": "CFG-001",
+          "digest": "66b373cf9e0f3c8dd23970ec384b3f7a24474a7eac6bebe9c9fb02659f20778e",
+          "read_back": "SKIP_SATISFIED",
+          "status": "APPLIED",
+          "step": "undo-shutdown-Ethernet2"
+        },
+        {
+          "at": "2026-10-27T13:43:27.240530+00:00",
+          "cfg_id": "CFG-002",
+          "digest": "89ce66d055282fed51d18d31bb19d628f6f804984ebe18bb672531843eb38ac6",
+          "read_back": "SKIP_SATISFIED",
+          "status": "APPLIED",
+          "step": "undo-shutdown-Ethernet1"
+        },
+        {
+          "at": "2026-10-27T13:43:29.596112+00:00",
+          "cfg_id": "CFG-003",
+          "digest": "0035b301787af7cb9bb111586e65c43dc3173a4314506503fb828081d89da56c",
+          "read_back": "SKIP_SATISFIED",
+          "status": "APPLIED",
+          "step": "undo-cost-out-ipv6"
+        },
+        {
+          "at": "2026-10-27T13:43:31.976815+00:00",
+          "cfg_id": "CFG-004",
+          "digest": "3aacbdd9d55347be460c9d40bf0b996ba39381f887ba91e93f948179f88310f9",
+          "read_back": "SKIP_SATISFIED",
+          "status": "APPLIED",
+          "step": "undo-cost-out-ipv4"
+        },
+        {
+          "at": "2026-10-27T13:43:32.919898+00:00",
+          "failed": [],
+          "status": "PASS",
+          "step": "postcheck"
+        }
+      ]
+    }
+  },
+  "plan": {
+    "change": "CHG-20261027-0005",
+    "codes": [],
+    "ok": true,
+    "operations": [
+      {
+        "description": "undo: Ethernet2: administratively down",
+        "inverse": [
+          "interface Ethernet2",
+          "   shutdown"
+        ],
+        "key": "undo-shutdown-Ethernet2",
+        "kind": "REMOVE",
+        "lines": [
+          "interface Ethernet2",
+          "   no shutdown"
+        ],
+        "paths": [
+          "interface Ethernet2 > shutdown"
+        ]
+      },
+      {
+        "description": "undo: Ethernet1: administratively down",
+        "inverse": [
+          "interface Ethernet1",
+          "   shutdown"
+        ],
+        "key": "undo-shutdown-Ethernet1",
+        "kind": "REMOVE",
+        "lines": [
+          "interface Ethernet1",
+          "   no shutdown"
+        ],
+        "paths": [
+          "interface Ethernet1 > shutdown"
+        ]
+      },
+      {
+        "description": "undo: IPV6: OSPF stub-router cost-out (ipv6 router ospf 1)",
+        "inverse": [
+          "ipv6 router ospf 1",
+          "   max-metric router-lsa"
+        ],
+        "key": "undo-cost-out-ipv6",
+        "kind": "REMOVE",
+        "lines": [
+          "ipv6 router ospf 1",
+          "   no max-metric router-lsa"
+        ],
+        "paths": [
+          "ipv6 router ospf 1 > max-metric router-lsa"
+        ]
+      },
+      {
+        "description": "undo: IPV4: OSPF stub-router cost-out (router ospf 1)",
+        "inverse": [
+          "router ospf 1",
+          "   max-metric router-lsa"
+        ],
+        "key": "undo-cost-out-ipv4",
+        "kind": "REMOVE",
+        "lines": [
+          "router ospf 1",
+          "   no max-metric router-lsa"
+        ],
+        "paths": [
+          "router ospf 1 > max-metric router-lsa"
+        ]
+      }
+    ],
+    "plan_hash": "47b9ad845ebd2272577126459cd233f618c68df30a19eda7960a4086294509c4"
+  },
+  "probe_during_recovery": {
+    "HA->HB IPV4": {
+      "received": 1200,
+      "sent": 1200
+    },
+    "HA->HB IPV6": {
+      "received": 1145,
+      "sent": 1200
+    },
+    "_seconds": 61.2
+  },
+  "recovery_state": "SUCCEEDED",
+  "routes_to_hb": {
+    "E1": [
+      " O        10.254.85.0/24 [110/30]",
+      "           via 10.254.81.1, Ethernet2"
+    ]
+  },
+  "self_approval": [
+    "DECOMMISSION_SELF_APPROVAL"
+  ],
+  "state_after": "ROLLED_BACK",
+  "state_before": "UNCERTAIN",
+  "unresolved_after": [],
+  "unresolved_before": [
+    "CHG-20261027-0004"
+  ]
+}

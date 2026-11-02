@@ -1,0 +1,12 @@
+{
+  "rip_available_after_seconds": {
+    "e2": 0.6,
+    "stub": 0.4
+  },
+  "routes": {
+    "E2 learns STUB": "",
+    "STUB learns peer": ""
+  },
+  "stub_digest": "bdab9a298a8b5ada20b83e3dd350a8ce4f64dc3a22d31eddacb235c9a3ce752f",
+  "stub_rip_section": []
+}

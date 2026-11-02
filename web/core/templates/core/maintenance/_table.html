@@ -1,0 +1,14 @@
+<table class="data-table">
+  <thead><tr><th>Maintenance</th><th>Device</th><th>State</th><th>Requested by</th><th>Reason</th><th>Requested (h)</th><th>Entered (UTC)</th><th>Safety deadline (UTC)</th><th>Queued</th></tr></thead>
+  <tbody>
+  {% for item in items %}{% with r=item.row %}<tr>
+    <td><a href="{% url 'core:maintenance_detail' r.record_id %}"><code>{{ r.record_id }}</code></a></td>
+    <td>{{ r.device_name }}</td>
+    <td><span class="badge badge--{{ item.tone }}">{{ r.state }}</span>{% if r.escalated %} <span class="badge badge--danger">ESCALATED</span>{% endif %}</td>
+    <td>{{ r.requested_by }}</td><td>{{ r.reason|truncatechars:80 }}</td>
+    <td>{% widthratio r.requested_duration_seconds 3600 1 %}</td>
+    <td>{{ r.entered_at|date:"Y-m-d H:i"|default:"—" }}</td><td>{{ r.deadline_at|date:"Y-m-d H:i"|default:"—" }}</td>
+    <td>{{ r.queued_action|default:"—" }}</td>
+  </tr>{% endwith %}{% empty %}<tr><td colspan="9">{{ empty }}</td></tr>{% endfor %}
+  </tbody>
+</table>

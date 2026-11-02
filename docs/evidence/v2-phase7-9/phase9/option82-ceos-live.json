@@ -1,0 +1,390 @@
+{
+  "schema": "nmas.v2.phase9.option82.live/1",
+  "started_at": "2026-10-26T21:52:36.867399+00:00",
+  "fixture": "labs/phase9-option82-isolated (docker --network none + veth; cEOS relay, ISC dhcpd, alpine udhcpc)",
+  "relay_version": [
+    "Arista cEOSLab",
+    "Software image version: 4.36.2F-49692632.4362F.1 (engineering build)"
+  ],
+  "pre": {
+    "digest": "4c98c23bf66f728e434e526230e76738075965af6160304b95210fd8456aa860",
+    "readback": {
+      "enabled": false,
+      "interfaces": {
+        "Ethernet1": {
+          "circuit_id": "",
+          "remote_id": "",
+          "helpers": [
+            "10.254.91.2"
+          ],
+          "addresses": [
+            "10.254.90.1"
+          ]
+        },
+        "Ethernet2": {
+          "circuit_id": "",
+          "remote_id": "",
+          "helpers": [],
+          "addresses": [
+            "10.254.91.1"
+          ]
+        }
+      }
+    }
+  },
+  "intent": {
+    "interface": "Ethernet1",
+    "circuit_id": "",
+    "remote_id": "P9-R6",
+    "enabled": true
+  },
+  "validation": [],
+  "rendered": [
+    "ip dhcp relay information option",
+    "interface Ethernet1",
+    "   no ip dhcp relay information option circuit-id",
+    "   ip dhcp relay information option remote-id P9-R6"
+  ],
+  "isc": {
+    "config_sha256": "e694727860b7b01db33a23718f032dee3d0f96a513b840d4952ec8f2cf9bae44",
+    "match_lines": [
+      "match if packet(24, 4) = 0a:fe:5a:01 and option agent.circuit-id = \"Ethernet1\";"
+    ],
+    "dhcpd_t": 0,
+    "dhcpd_running": true
+  },
+  "negative_before_apply": {
+    "client": {
+      "rc": 1,
+      "lease_obtained": false,
+      "output": [
+        "udhcpc: started, v1.37.0",
+        "udhcpc: broadcasting discover",
+        "udhcpc: broadcasting discover",
+        "udhcpc: broadcasting discover",
+        "udhcpc: no lease, failing"
+      ]
+    },
+    "packets": [
+      "10.254.90.1.67 > 10.254.91.2.67: [udp sum ok] BOOTP/DHCP, Request from 02:5a:79:00:00:99, length 300, hops 1, xid 0x76ba0577, Flags [none] (0x0000)",
+      "Gateway-IP 10.254.90.1",
+      "DHCP-Message (53), length 1: Discover",
+      "10.254.90.1.67 > 10.254.91.2.67: [udp sum ok] BOOTP/DHCP, Request from 02:5a:79:00:00:99, length 300, hops 1, xid 0x76ba0577, secs 2, Flags [none] (0x0000)",
+      "Gateway-IP 10.254.90.1",
+      "DHCP-Message (53), length 1: Discover",
+      "10.254.90.1.67 > 10.254.91.2.67: [udp sum ok] BOOTP/DHCP, Request from 02:5a:79:00:00:99, length 300, hops 1, xid 0x76ba0577, secs 4, Flags [none] (0x0000)",
+      "Gateway-IP 10.254.90.1",
+      "DHCP-Message (53), length 1: Discover"
+    ]
+  },
+  "apply": {
+    "rc": 0,
+    "output": "",
+    "lines": [
+      "ip dhcp relay information option",
+      "interface Ethernet1",
+      "   no ip dhcp relay information option circuit-id",
+      "   ip dhcp relay information option remote-id P9-R6"
+    ]
+  },
+  "post": {
+    "digest": "ec9891b8184cc4d2f0bf20c959381fa8b63cb7090ed989a7009d4c7931e7a71a",
+    "readback": {
+      "enabled": true,
+      "interfaces": {
+        "Ethernet1": {
+          "circuit_id": "",
+          "remote_id": "P9-R6",
+          "helpers": [
+            "10.254.91.2"
+          ],
+          "addresses": [
+            "10.254.90.1"
+          ]
+        },
+        "Ethernet2": {
+          "circuit_id": "",
+          "remote_id": "",
+          "helpers": [],
+          "addresses": [
+            "10.254.91.1"
+          ]
+        }
+      }
+    },
+    "postcheck": [],
+    "effective_circuit_id": "Ethernet1",
+    "ztp_relay_trust_problems": [],
+    "interface_section": [
+      "   no switchport",
+      "   ip address 10.254.90.1/24",
+      "   ip helper-address 10.254.91.2",
+      "   ip dhcp relay information option remote-id P9-R6"
+    ]
+  },
+  "positive": {
+    "client": {
+      "rc": 0,
+      "lease_obtained": true,
+      "output": [
+        "udhcpc: started, v1.37.0",
+        "udhcpc: broadcasting discover",
+        "udhcpc: broadcasting select for 10.254.90.10, server 10.254.91.2",
+        "udhcpc: lease of 10.254.90.10 obtained from 10.254.91.2, lease time 600"
+      ]
+    },
+    "packets": [
+      "10.254.90.1.67 > 10.254.91.2.67: [udp sum ok] BOOTP/DHCP, Request from 02:5a:79:00:00:99, length 300, hops 1, xid 0x6201472f, Flags [none] (0x0000)",
+      "Gateway-IP 10.254.90.1",
+      "DHCP-Message (53), length 1: Discover",
+      "Agent-Information (82), length 11:",
+      "Circuit-ID SubOption 1, length 9: Ethernet1",
+      "10.254.91.2.67 > 10.254.90.1.67: [udp sum ok] BOOTP/DHCP, Reply, length 300, hops 1, xid 0x6201472f, Flags [none] (0x0000)",
+      "Your-IP 10.254.90.10",
+      "Gateway-IP 10.254.90.1",
+      "DHCP-Message (53), length 1: Offer",
+      "Agent-Information (82), length 11:",
+      "Circuit-ID SubOption 1, length 9: Ethernet1",
+      "10.254.90.1.67 > 10.254.91.2.67: [udp sum ok] BOOTP/DHCP, Request from 02:5a:79:00:00:99, length 305, hops 1, xid 0x6201472f, secs 1, Flags [none] (0x0000)",
+      "Gateway-IP 10.254.90.1",
+      "DHCP-Message (53), length 1: Request",
+      "Agent-Information (82), length 11:",
+      "Circuit-ID SubOption 1, length 9: Ethernet1",
+      "10.254.91.2.67 > 10.254.90.1.67: [udp sum ok] BOOTP/DHCP, Reply, length 300, hops 1, xid 0x6201472f, secs 1, Flags [none] (0x0000)",
+      "Your-IP 10.254.90.10",
+      "Gateway-IP 10.254.90.1",
+      "DHCP-Message (53), length 1: ACK",
+      "Agent-Information (82), length 11:",
+      "Circuit-ID SubOption 1, length 9: Ethernet1"
+    ],
+    "dhcpd_log": [],
+    "parsed_leases": [
+      {
+        "address": "10.254.90.10",
+        "relay_address": "10.254.90.1",
+        "circuit_id": "Ethernet1",
+        "remote_id": "",
+        "binding_state": "active"
+      },
+      {
+        "address": "10.254.90.10",
+        "relay_address": "",
+        "circuit_id": "",
+        "remote_id": "",
+        "binding_state": "free"
+      },
+      {
+        "address": "10.254.90.10",
+        "relay_address": "10.254.90.1",
+        "circuit_id": "Ethernet1",
+        "remote_id": "",
+        "binding_state": "active"
+      }
+    ]
+  },
+  "forged_client_option82_relay_on": {
+    "client": {
+      "rc": 0,
+      "lease_obtained": true,
+      "output": [
+        "udhcpc: started, v1.37.0",
+        "udhcpc: broadcasting discover",
+        "udhcpc: broadcasting select for 10.254.90.10, server 10.254.91.2",
+        "udhcpc: lease of 10.254.90.10 obtained from 10.254.91.2, lease time 596"
+      ]
+    },
+    "packets": [
+      "10.254.90.1.67 > 10.254.91.2.67: [udp sum ok] BOOTP/DHCP, Request from 02:5a:79:00:00:99, length 300, hops 1, xid 0x300de504, Flags [none] (0x0000)",
+      "Gateway-IP 10.254.90.1",
+      "DHCP-Message (53), length 1: Discover",
+      "Agent-Information (82), length 18:",
+      "Circuit-ID SubOption 1, length 9: Ethernet1",
+      "Remote-ID SubOption 2, length 5: FORGE",
+      "10.254.91.2.67 > 10.254.90.1.67: [udp sum ok] BOOTP/DHCP, Reply, length 300, hops 1, xid 0x300de504, Flags [none] (0x0000)",
+      "Your-IP 10.254.90.10",
+      "Gateway-IP 10.254.90.1",
+      "DHCP-Message (53), length 1: Offer",
+      "Agent-Information (82), length 18:",
+      "Circuit-ID SubOption 1, length 9: Ethernet1",
+      "Remote-ID SubOption 2, length 5: FORGE",
+      "10.254.90.1.67 > 10.254.91.2.67: [udp sum ok] BOOTP/DHCP, Request from 02:5a:79:00:00:99, length 312, hops 1, xid 0x300de504, Flags [none] (0x0000)",
+      "Gateway-IP 10.254.90.1",
+      "DHCP-Message (53), length 1: Request",
+      "Agent-Information (82), length 18:",
+      "Circuit-ID SubOption 1, length 9: Ethernet1",
+      "Remote-ID SubOption 2, length 5: FORGE",
+      "10.254.91.2.67 > 10.254.90.1.67: [udp sum ok] BOOTP/DHCP, Reply, length 300, hops 1, xid 0x300de504, Flags [none] (0x0000)",
+      "Your-IP 10.254.90.10",
+      "Gateway-IP 10.254.90.1",
+      "DHCP-Message (53), length 1: ACK",
+      "Agent-Information (82), length 18:",
+      "Circuit-ID SubOption 1, length 9: Ethernet1",
+      "Remote-ID SubOption 2, length 5: FORGE"
+    ]
+  },
+  "shared_giaddr_forged_circuit": {
+    "reservation_circuit": "Ethernet7",
+    "client_port": "Ethernet1",
+    "client": {
+      "rc": 0,
+      "lease_obtained": true,
+      "output": [
+        "udhcpc: started, v1.37.0",
+        "udhcpc: broadcasting discover",
+        "udhcpc: broadcasting select for 10.254.90.17, server 10.254.91.2",
+        "udhcpc: lease of 10.254.90.17 obtained from 10.254.91.2, lease time 600"
+      ]
+    },
+    "packets": [
+      "10.254.90.1.67 > 10.254.91.2.67: [udp sum ok] BOOTP/DHCP, Request from 02:5a:79:00:00:99, length 300, hops 1, xid 0xf65ec002, Flags [none] (0x0000)",
+      "Gateway-IP 10.254.90.1",
+      "DHCP-Message (53), length 1: Discover",
+      "Agent-Information (82), length 11:",
+      "Circuit-ID SubOption 1, length 9: Ethernet7",
+      "10.254.91.2.67 > 10.254.90.1.67: [udp sum ok] BOOTP/DHCP, Reply, length 300, hops 1, xid 0xf65ec002, Flags [none] (0x0000)",
+      "Your-IP 10.254.90.17",
+      "Gateway-IP 10.254.90.1",
+      "DHCP-Message (53), length 1: Offer",
+      "Agent-Information (82), length 11:",
+      "Circuit-ID SubOption 1, length 9: Ethernet7",
+      "10.254.90.1.67 > 10.254.91.2.67: [udp sum ok] BOOTP/DHCP, Request from 02:5a:79:00:00:99, length 305, hops 1, xid 0xf65ec002, secs 1, Flags [none] (0x0000)",
+      "Gateway-IP 10.254.90.1",
+      "DHCP-Message (53), length 1: Request",
+      "Agent-Information (82), length 11:",
+      "Circuit-ID SubOption 1, length 9: Ethernet7",
+      "10.254.91.2.67 > 10.254.90.1.67: [udp sum ok] BOOTP/DHCP, Reply, length 300, hops 1, xid 0xf65ec002, secs 1, Flags [none] (0x0000)",
+      "Your-IP 10.254.90.17",
+      "Gateway-IP 10.254.90.1",
+      "DHCP-Message (53), length 1: ACK",
+      "Agent-Information (82), length 11:",
+      "Circuit-ID SubOption 1, length 9: Ethernet7"
+    ]
+  },
+  "shared_giaddr_honest_client": {
+    "client": {
+      "rc": 1,
+      "lease_obtained": false,
+      "output": [
+        "udhcpc: started, v1.37.0",
+        "udhcpc: broadcasting discover",
+        "udhcpc: broadcasting discover",
+        "udhcpc: broadcasting discover",
+        "udhcpc: no lease, failing"
+      ]
+    }
+  },
+  "ztp_gate_refuses_shared_giaddr_port": [
+    {
+      "code": "RELAY_UNTRUSTED",
+      "reason": "giaddr must identify exactly one routed relay port: the relay forwards client-supplied option 82 unchanged, so the circuit id alone is forgeable"
+    }
+  ],
+  "compensation": {
+    "rc": 0,
+    "output": "",
+    "lines": [
+      "interface Ethernet1",
+      "   no ip dhcp relay information option circuit-id",
+      "   no ip dhcp relay information option remote-id",
+      "no ip dhcp relay information option"
+    ]
+  },
+  "restored": {
+    "digest": "4c98c23bf66f728e434e526230e76738075965af6160304b95210fd8456aa860",
+    "equals_pre": true,
+    "readback": {
+      "enabled": false,
+      "interfaces": {
+        "Ethernet1": {
+          "circuit_id": "",
+          "remote_id": "",
+          "helpers": [
+            "10.254.91.2"
+          ],
+          "addresses": [
+            "10.254.90.1"
+          ]
+        },
+        "Ethernet2": {
+          "circuit_id": "",
+          "remote_id": "",
+          "helpers": [],
+          "addresses": [
+            "10.254.91.1"
+          ]
+        }
+      }
+    },
+    "ztp_relay_trust_problems": [
+      {
+        "code": "RELAY_UNTRUSTED",
+        "reason": "option 82 (relay agent information) is not enabled on the relay"
+      }
+    ]
+  },
+  "forged_client_option82_relay_off": {
+    "client": {
+      "rc": 0,
+      "lease_obtained": true,
+      "output": [
+        "udhcpc: started, v1.37.0",
+        "udhcpc: broadcasting discover",
+        "udhcpc: broadcasting select for 10.254.90.10, server 10.254.91.2",
+        "udhcpc: lease of 10.254.90.10 obtained from 10.254.91.2, lease time 600"
+      ]
+    },
+    "packets": [
+      "10.254.90.1.67 > 10.254.91.2.67: [udp sum ok] BOOTP/DHCP, Request from 02:5a:79:00:00:99, length 300, hops 1, xid 0xf13f897c, Flags [none] (0x0000)",
+      "Gateway-IP 10.254.90.1",
+      "DHCP-Message (53), length 1: Discover",
+      "Agent-Information (82), length 18:",
+      "Circuit-ID SubOption 1, length 9: Ethernet1",
+      "Remote-ID SubOption 2, length 5: FORGE",
+      "10.254.91.2.67 > 10.254.90.1.67: [udp sum ok] BOOTP/DHCP, Reply, length 300, hops 1, xid 0xf13f897c, Flags [none] (0x0000)",
+      "Your-IP 10.254.90.10",
+      "Gateway-IP 10.254.90.1",
+      "DHCP-Message (53), length 1: Offer",
+      "Agent-Information (82), length 18:",
+      "Circuit-ID SubOption 1, length 9: Ethernet1",
+      "Remote-ID SubOption 2, length 5: FORGE",
+      "10.254.90.1.67 > 10.254.91.2.67: [udp sum ok] BOOTP/DHCP, Request from 02:5a:79:00:00:99, length 312, hops 1, xid 0xf13f897c, secs 1, Flags [none] (0x0000)",
+      "Gateway-IP 10.254.90.1",
+      "DHCP-Message (53), length 1: Request",
+      "Agent-Information (82), length 18:",
+      "Circuit-ID SubOption 1, length 9: Ethernet1",
+      "Remote-ID SubOption 2, length 5: FORGE",
+      "10.254.91.2.67 > 10.254.90.1.67: [udp sum ok] BOOTP/DHCP, Reply, length 300, hops 1, xid 0xf13f897c, secs 1, Flags [none] (0x0000)",
+      "Your-IP 10.254.90.10",
+      "Gateway-IP 10.254.90.1",
+      "DHCP-Message (53), length 1: ACK",
+      "Agent-Information (82), length 18:",
+      "Circuit-ID SubOption 1, length 9: Ethernet1",
+      "Remote-ID SubOption 2, length 5: FORGE"
+    ]
+  },
+  "negative_after_compensation": {
+    "client": {
+      "rc": 1,
+      "lease_obtained": false,
+      "output": [
+        "udhcpc: started, v1.37.0",
+        "udhcpc: broadcasting discover",
+        "udhcpc: broadcasting discover",
+        "udhcpc: broadcasting discover",
+        "udhcpc: no lease, failing"
+      ]
+    },
+    "packets": [
+      "10.254.90.1.67 > 10.254.91.2.67: [udp sum ok] BOOTP/DHCP, Request from 02:5a:79:00:00:99, length 300, hops 1, xid 0x1c488668, Flags [none] (0x0000)",
+      "Gateway-IP 10.254.90.1",
+      "DHCP-Message (53), length 1: Discover",
+      "10.254.90.1.67 > 10.254.91.2.67: [udp sum ok] BOOTP/DHCP, Request from 02:5a:79:00:00:99, length 300, hops 1, xid 0x1c488668, secs 2, Flags [none] (0x0000)",
+      "Gateway-IP 10.254.90.1",
+      "DHCP-Message (53), length 1: Discover",
+      "10.254.90.1.67 > 10.254.91.2.67: [udp sum ok] BOOTP/DHCP, Request from 02:5a:79:00:00:99, length 300, hops 1, xid 0x1c488668, secs 4, Flags [none] (0x0000)",
+      "Gateway-IP 10.254.90.1",
+      "DHCP-Message (53), length 1: Discover"
+    ]
+  },
+  "finished_at": "2026-10-26T21:53:44.936475+00:00"
+}

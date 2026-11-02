@@ -1,0 +1,99 @@
+{% extends "core/base.html" %}
+{% block title %}Management · {{ device.name }}{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>Management paths · {{ device.name }}</h1>
+  <p><a href="{{ device.get_absolute_url }}">&larr; {{ device.device_id }}</a> · <a href="{% url 'core:management_overview' %}">Management multihoming</a> ·
+     <a href="{% url 'core:management_device_json' device.device_id %}">Status (JSON)</a></p>
+  <p>Paths are expectations: registering one changes no device and no network, and a different operator must approve it.
+     Probes contact only an approved path's endpoint, over SSH with the pinned host key. No password or private key is shown here.</p>
+  <p>Registering a path ends inventory-address access for this device. New connections wait for an approved, verified path.
+     Revoking every path keeps access blocked; it never restores the inventory address.</p>
+</div>
+
+{% for r in refusals %}<div class="card" style="border-left:6px solid var(--danger);"><p><strong>{{ r.code }}</strong> — {{ r.message }} {{ r.remediation }}</p></div>{% endfor %}
+
+<div class="card" style="margin-top:16px;">
+  <h3>Selection</h3>
+  <table class="data-table"><tbody>
+    <tr><th>Status</th><td>{{ state.status|default:"LEGACY" }}{% if state.reconciliation_required %} · <strong>reconciliation required</strong>: {{ state.reconciliation_reason }}{% endif %}</td></tr>
+    <tr><th>Active path</th><td>{{ state.active_path.path_id|default:"—" }}{% if state.failback_not_before %} · no failback before {{ state.failback_not_before }}{% endif %}</td></tr>
+    <tr><th>Consumers use</th><td>{{ endpoint.source }}{% if endpoint.address %} · {{ endpoint.address }}:{{ endpoint.port }}{% endif %}</td></tr>
+    <tr><th>Write in flight</th><td>{% if in_flight %}{{ in_flight.kind }} {{ in_flight.holder }} — switching is deferred{% else %}none{% endif %}</td></tr>
+  </tbody></table>
+  <form method="post" action="{% url 'core:management_evaluate' device.device_id %}" style="display:inline">{% csrf_token %}<button class="btn" type="submit">Probe all approved paths and select</button></form>
+  {% if state.reconciliation_required %}<form method="post" action="{% url 'core:management_reconcile' device.device_id %}" style="display:inline">{% csrf_token %}
+    <input class="form-control" name="reason" placeholder="how the device was reconciled" aria-label="Reconciliation reason" required><button class="btn" type="submit">Acknowledge reconciliation</button></form>{% endif %}
+</div>
+
+<div class="card" style="margin-top:16px;">
+  <h3>Paths (priority order)</h3>
+  <table class="data-table"><thead><tr><th>Id</th><th>Class</th><th>Type</th><th>Via / VRF</th><th>Endpoint</th><th>Credential source</th><th>Approval</th><th>Health</th><th></th></tr></thead><tbody>
+  {% for p in paths %}<tr><td><code>{{ p.path_id }}</code>{% if p.is_active %} <span class="badge badge--success">active</span>{% endif %}</td><td>{{ p.preference_class }}</td><td>{{ p.path_type }}</td>
+    <td>{{ p.via_device|default:"" }}{% if p.vlan %} VLAN {{ p.vlan }}{% endif %}{% if p.vrf %} VRF {{ p.vrf }}{% endif %}</td><td>{{ p.endpoint_address }}:{{ p.port }}</td>
+    <td>{{ p.credential_source }}</td><td>{{ p.approval_state }}</td>
+    <td>{{ p.health_state }}{% if p.last_failure_code %} · <code>{{ p.last_failure_code }}</code>{% endif %} <small>(fail {{ p.consecutive_failures }} / ok {{ p.consecutive_successes }}, L{{ p.last_layer_passed }})</small></td>
+    <td>{% if p.approval_state == 'PENDING' %}<form method="post" action="{% url 'core:management_path_approve' device.device_id p.path_id %}" style="display:inline">{% csrf_token %}<button class="btn" type="submit">Approve</button></form>{% endif %}
+      {% if p.approval_state == 'APPROVED' %}<form method="post" action="{% url 'core:management_path_probe' device.device_id p.path_id %}" style="display:inline">{% csrf_token %}<button class="btn" type="submit">Probe</button></form>{% endif %}
+      <form method="post" action="{% url 'core:management_path_revoke' device.device_id p.path_id %}" style="display:inline">{% csrf_token %}
+        <input class="form-control" name="reason" placeholder="reason" aria-label="Revoke reason" required>
+        {% if p.is_active %}<label><input type="checkbox" name="acknowledge_active" value="yes"> revoke the ACTIVE path</label>{% endif %}
+        <button class="btn" type="submit">Revoke</button></form></td></tr>
+  {% empty %}<tr><td colspan="9">No management path is registered; consumers use the inventory address.</td></tr>{% endfor %}
+  </tbody></table>
+
+  <h4>Register a path</h4>
+  <form method="post" action="{% url 'core:management_path_register' device.device_id %}" class="collection-form">{% csrf_token %}
+    <select class="form-control" name="path_type" aria-label="Path type">{% for value, label in path_types %}<option value="{{ value }}">{{ label }}</option>{% endfor %}</select>
+    <input class="form-control" name="endpoint_address" placeholder="endpoint address" aria-label="Endpoint address" required>
+    <select class="form-control" name="nmas_attachment_id" aria-label="NMAS attachment" required>{% for a in nmas_attachments %}<option value="{{ a.pk }}">{{ a.attachment_id }} {{ a.host_interface }} → {{ a.upstream_device }}</option>{% empty %}<option value="">no approved NMAS attachment</option>{% endfor %}</select>
+    <select class="form-control" name="attachment_id" aria-label="Device attachment"><option value="">device management attachment (not for a routed VRF)</option>{% for a in attachments %}<option value="{{ a.pk }}">{{ a.local_interface }} → {{ a.upstream_device }}:{{ a.upstream_interface }} ({{ a.approval_state }})</option>{% endfor %}</select>
+    <input class="form-control" name="via_device" placeholder="adjacent switch (VLAN path)" aria-label="Adjacent switch">
+    <input class="form-control" name="vlan" placeholder="VLAN (200)" aria-label="VLAN" inputmode="numeric">
+    <input class="form-control" name="vrf" placeholder="VRF (routed path)" aria-label="VRF">
+    <select class="form-control" name="credential_source" aria-label="Credential source">{% for value, label in credential_sources %}<option value="{{ value }}">{{ label }}</option>{% endfor %}</select>
+    <input class="form-control" name="credential_reference" placeholder="credential reference (inventory name / ZTP session)" aria-label="Credential reference">
+    <select class="form-control" name="device_credential_id" aria-label="Service credential"><option value="">service credential (DEVICE_CREDENTIAL)</option>{% for c in credentials %}<option value="{{ c.pk }}">{{ c.username }} · {{ c.get_auth_method_display }}</option>{% endfor %}</select>
+    <input class="form-control" name="expected_host_key" placeholder="SHA256:… host key (blank = the verified one)" aria-label="Expected host key" autocomplete="off">
+    <input class="form-control" name="reason" placeholder="reason" aria-label="Reason">
+    <button class="btn btn--primary" type="submit">Register path</button>
+  </form>
+</div>
+
+<div class="card" style="margin-top:16px;">
+  <h3>Bootstrap credential retirement</h3>
+  <p>Replaces the ZTP enrollment account with a key-only SERVICE credential, revokes the bootstrap account under a timed commit,
+     proves the device rejects the bootstrap key, and only then retires the enrollment secret. Deleting a key file alone is never retirement.</p>
+  {% if bootstrap_session %}<p>Enrollment session <code>{{ bootstrap_session.session_id }}</code> · key {{ bootstrap_session.enrollment_key_fingerprint }}</p>
+  <form method="post" action="{% url 'core:bcred_plan' device.device_id %}" class="collection-form">{% csrf_token %}
+    <select class="form-control" name="replacement_credential_id" aria-label="Replacement credential" required>{% for c in credentials %}<option value="{{ c.pk }}">{{ c.username }} · {{ c.get_auth_method_display }}</option>{% empty %}<option value="">no SERVICE credential for this device</option>{% endfor %}</select>
+    <select class="form-control" name="path_id" aria-label="Path"><option value="">enrollment session address</option>{% for p in paths %}{% if p.approval_state == 'APPROVED' and p.credential_source == 'DEVICE_CREDENTIAL' %}<option value="{{ p.pk }}">{{ p.path_id }}</option>{% endif %}{% endfor %}</select>
+    <input class="form-control" name="reason" placeholder="reason" aria-label="Reason">
+    <button class="btn btn--primary" type="submit">Plan transition</button>
+  </form>{% else %}<p>No verified bootstrap (ZTP enrollment) credential exists for this device.</p>{% endif %}
+  {% for t in bcred %}
+  <div class="address-card"><p><code>{{ t.id }}</code> · <strong>{{ t.state }}</strong> · {{ t.bootstrap_username }} → {{ t.replacement_username }} ({{ t.replacement_key_fingerprint }})
+    · requested {{ t.requested_by }}{% if t.approved_by %} · approved {{ t.approved_by }}{% endif %}</p>
+    <p><small>digest <code>{{ t.digest }}</code></small></p>
+    {% for s in t.steps %}<p><small>{{ s.at }} · {{ s.step }} {% if s.ok %}✓{% else %}✗ <code>{{ s.code }}</code>{% endif %}</small></p>{% endfor %}
+    {% if t.failure.code %}<p><strong>{{ t.failure.code }}</strong>{% if t.failure.note %} — {{ t.failure.note }}{% endif %}</p>{% endif %}
+    {% if t.state == 'PLANNED' %}<form method="post" action="{% url 'core:bcred_approve' device.device_id t.id %}" style="display:inline">{% csrf_token %}<input type="hidden" name="digest" value="{{ t.digest }}"><button class="btn" type="submit">Approve</button></form>{% endif %}
+    {% if t.state == 'PLANNED' or t.state == 'APPROVED' %}<form method="post" action="{% url 'core:bcred_cancel' device.device_id t.id %}" style="display:inline">{% csrf_token %}<input class="form-control" name="reason" placeholder="reason" aria-label="Cancel reason" required><button class="btn" type="submit">Cancel</button></form>{% endif %}
+    {% if t.state != 'PLANNED' and t.state != 'COMPLETE' and t.state != 'FAILED' and t.state != 'CANCELLED' %}<form method="post" action="{% url 'core:bcred_execute' device.device_id t.id %}" style="display:inline">{% csrf_token %}<button class="btn" type="submit">Execute / resume</button></form>{% endif %}
+  </div>{% endfor %}
+</div>
+
+<div class="card" style="margin-top:16px;">
+  <h3>Recent probes</h3>
+  <table class="data-table"><thead><tr><th>When</th><th>Path</th><th>Purpose</th><th>Result</th><th>Layers</th></tr></thead><tbody>
+  {% for p in probes %}<tr><td>{{ p.created_at }}</td><td>{{ p.path.path_id }}</td><td>{{ p.purpose }}</td><td>{% if p.passed %}PASS{% else %}<code>{{ p.failure_code }}</code>{% endif %} (L{{ p.highest_layer }})</td>
+    <td>{% for l in p.layers %}L{{ l.layer }} {% if l.ok %}✓{% else %}✗{% endif %} {% endfor %}</td></tr>
+  {% empty %}<tr><td colspan="5">No probe recorded.</td></tr>{% endfor %}
+  </tbody></table>
+  <h3>Path transitions</h3>
+  <table class="data-table"><tbody>
+  {% for t in transitions %}<tr><td>{{ t.created_at }}</td><td>{{ t.kind }}</td><td>{{ t.from_path.path_id|default:"—" }} → {{ t.to_path.path_id|default:"—" }}</td><td><code>{{ t.reason_code }}</code></td><td>{{ t.actor }}</td></tr>
+  {% empty %}<tr><td>No transition recorded.</td></tr>{% endfor %}
+  </tbody></table>
+</div>
+{% endblock %}

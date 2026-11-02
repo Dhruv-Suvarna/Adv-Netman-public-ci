@@ -1,0 +1,97 @@
+1792279466.510 START maintenance-sandbox ['04_05_06', '07', '08', '14', '13', '11b', '05b'] load 21.74 20.99 19.12
+1792279466.510 SCENARIO 04_05_06 begin load 21.74 20.99 19.12
+1792279644.928 NMAS before S1-shield-install-drain
+1792279668.170 NMAS after S1-shield-install-drain
+1792279675.053 NMAS before S1-uplink-metric-drain
+1792279701.523 NMAS after S1-uplink-metric-drain
+1792279713.204 NMAS before S1-shield-remove-drain
+1792279724.188 NMAS after S1-shield-remove-drain
+1792279742.247 NMAS before FINAL_VALIDATION
+1792279748.987 NMAS before PERSISTENCE-S1
+1792279750.661 NMAS after PERSISTENCE-S1
+1792279896.631 NMAS before S1-shield-install-restore
+1792279934.860 NMAS after S1-shield-install-restore
+1792279947.832 NMAS before S1-uplink-metric-restore
+1792279988.520 NMAS after S1-uplink-metric-restore
+1792280007.753 NMAS before S1-shield-remove-restore
+1792280025.710 NMAS after S1-shield-remove-restore
+1792280059.139 NMAS before FINAL_VALIDATION
+1792280072.212 NMAS before PERSISTENCE-S1
+1792280074.896 NMAS after PERSISTENCE-S1
+1792280074.919 NMAS before PERSISTENCE-R1
+1792280077.631 NMAS after PERSISTENCE-R1
+1792280160.574 RESULT 04_quiesced_traffic_permits_progression PASS {"steps": [{"family": "IPV6", "direction": "NORTHBOUND", "mechanism": "ISIS_ACCESS_METRIC_STEER", "workloads": []}], "note": "all hosts quiet; northbound READY (sandbox input), southbound NOT_READY: only the northbound cell is drained"}
+1792280160.575 RESULT 05_drain_syntax_readback_traffic_moved_zero_loss PASS {"entry_outcome": "SUCCEEDED", "applied": ["S1-shield-install-drain", "S1-uplink-metric-drain", "S1-shield-remove-drain"], "probes_lost_in_run": 0, "probe_totals_entry": {"answered": 121086, "lost": 0, "flows": 14}, "proofs": [{"family": "IPV6", "direction": "NORTHBOUND", "moved": true, "probes_lost": 0, "alternate_healthy": true, "detail": ""}], "after_paths": {"h1-v4-north": "S1 > R1 > R3|R4 > R5", "h1-v4-south": "R5 > R3 > R1|R2 > S1|S2", "h1-v6-north": "S1 > S2 > R2 > R3|R4 > R5", "h1-v6-south": "R5 > R3 > R1|R2 > S1|S2", "h2-v4-north": "S1 > R1 > R3|R4 > R5", "h2-v4-south": "R5 > R3 > R1|R2 > S1|S2", "h2-v6-north": "S1 > S2 > R2 > R3|R4 > R5", "h2-v6-south": "R5 > R3 > R1|R2 > S1|S2", "h3-v4-north": "S2 > R2 > R3|R4 > R5", "h3-v4-south": "R5 > R3 > R1|R2 > S1|S2", "h3-v6-north": "S2 > R2 > R3|R4 > R5", "h3-v6-south": "R5 > R3 > R1|R2 > S1|S2", "h4-v6-north": "S2 > R2 > R3|R4 > R5", 
+1792280160.575 RESULT 06_successful_restore_exact_baseline PASS {"state_after_restore": "RESTORED", "restore_outcome": "SUCCEEDED", "probes_lost_in_restore": 0, "probe_totals_restore": {"answered": 132607, "lost": 0, "flows": 14}, "verification": [], "baseline_restored": true, "chain_ok": true, "end_running_equals_startup": {"R1": true, "R2": true, "S1": true, "S2": true}}
+1792280160.578 SCENARIO 07 begin load 29.22 29.45 24.62
+1792280378.166 NMAS before S1-shield-install-drain
+1792280402.667 NMAS after S1-shield-install-drain
+1792280409.191 NMAS before S1-uplink-metric-drain
+1792280429.834 NMAS after S1-uplink-metric-drain
+1792280429.834 INJECT failure after S1-uplink-metric-drain
+1792280517.953 ENTER refused/aborted ENTRY_ABORTED ENTRY_ABORTED: DRAIN_PROOF_MISSING IPV6 NORTHBOUND PRODUCTION
+1792280528.788 RESULT 07_entry_failure_compensated_newest_first PASS {"state": "ENTRY_ABORTED_RESTORED", "failure": {"code": "INTERNAL_ERROR", "detail": "Injected", "operation": ""}, "compensation": [{"operation": "S1-uplink-metric-drain", "device": "S1", "state": "MAINTENANCE", "status": "COMPENSATED", "error": ""}, {"operation": "S1-shield-install-drain", "device": "S1", "state": "TEMPORARY", "status": "COMPENSATED", "error": ""}], "probes_lost_in_run": 0, "baseline_restored": true, "chain_ok": true}
+1792280528.789 SCENARIO 08 begin load 19.78 23.25 23.36
+1792280707.228 NMAS before S1-shield-install-drain
+1792280738.701 NMAS after S1-shield-install-drain
+1792280751.684 NMAS before S1-uplink-metric-drain
+1792280786.677 NMAS after S1-uplink-metric-drain
+1792280806.867 NMAS before S1-shield-remove-drain
+1792280823.662 NMAS after S1-shield-remove-drain
+1792280848.133 NMAS before FINAL_VALIDATION
+1792280857.414 NMAS before PERSISTENCE-S1
+1792280859.513 NMAS after PERSISTENCE-S1
+1792281085.687 NMAS before S1-shield-install-restore
+1792281113.594 NMAS after S1-shield-install-restore
+1792281121.480 NMAS before S1-uplink-metric-restore
+1792281150.190 NMAS after S1-uplink-metric-restore
+1792281163.826 NMAS before S1-shield-remove-restore
+1792281172.569 NMAS after S1-shield-remove-restore
+1792281192.380 NMAS before FINAL_VALIDATION
+1792281199.952 NMAS before PERSISTENCE-S1
+1792281201.393 NMAS after PERSISTENCE-S1
+1792281201.408 NMAS before PERSISTENCE-R1
+1792281202.975 NMAS after PERSISTENCE-R1
+1792281259.211 RESULT 08_restore_failure_escalates PASS {"failed_state": "RESTORE_FAILED_ESCALATED", "failed_findings": [{"code": "PRECHECK_FAILED", "family": "", "direction": "", "traffic_class": "", "workloads": [], "detail": "S2 is unchanged since the maintenance became active (or, for an aborted entry, since the pre-state was captured): running configuration differs"}], "drained_state_kept": ["isis metric 1000"], "locks_after_failure": [], "entry_on_intersecting_device": [], "retried_state": "RESTORED", "baseline_restored": true, "chain_ok": true}
+1792281259.213 SCENARIO 14 begin load 27.59 31.21 28.16
+1792281445.018 NMAS before S1-shield-install-drain
+1792281475.830 NMAS after S1-shield-install-drain
+1792281485.067 NMAS before S1-uplink-metric-drain
+1792281505.752 NMAS after S1-uplink-metric-drain
+1792281518.405 NMAS before S1-shield-remove-drain
+1792281527.190 NMAS after S1-shield-remove-drain
+1792281554.982 NMAS before FINAL_VALIDATION
+1792281565.877 NMAS before PERSISTENCE-S1
+1792281567.628 NMAS after PERSISTENCE-S1
+1792281684.576 NMAS before S1-shield-install-restore
+1792281707.741 NMAS after S1-shield-install-restore
+1792281714.734 NMAS before S1-uplink-metric-restore
+1792281742.508 NMAS after S1-uplink-metric-restore
+1792281756.780 NMAS before S1-shield-remove-restore
+1792281766.337 NMAS after S1-shield-remove-restore
+1792281787.088 NMAS before FINAL_VALIDATION
+1792281794.189 NMAS before PERSISTENCE-S1
+1792281795.669 NMAS after PERSISTENCE-S1
+1792281795.682 NMAS before PERSISTENCE-R1
+1792281797.278 NMAS after PERSISTENCE-R1
+1792281853.660 RESULT 14_deadline_restore PASS {"tick": [{"record": "MNT-000005", "item": "DEADLINE", "state": "RESTORED", "outcome": "DONE", "escalated": false}], "state": "RESTORED", "trigger": "DEADLINE", "deadline_at": "2026-10-17 23:59:30.219789+00:00", "baseline_restored": true, "chain_ok": true}
+1792281853.662 SCENARIO 13 begin load 22.05 24.94 26.21
+1792282254.601 NMAS before S1-shield-install-restore
+1792282277.591 NMAS after S1-shield-install-restore
+1792282284.188 NMAS before S1-uplink-metric-restore
+1792282306.971 NMAS after S1-uplink-metric-restore
+1792282319.840 NMAS before S1-shield-remove-restore
+1792282331.160 NMAS after S1-shield-remove-restore
+1792282350.652 NMAS before FINAL_VALIDATION
+1792282363.024 NMAS before PERSISTENCE-S1
+1792282367.714 NMAS after PERSISTENCE-S1
+1792282367.738 NMAS before PERSISTENCE-R1
+1792282370.291 NMAS after PERSISTENCE-R1
+1792282435.594 RESULT 13_worker_retry_idempotent PASS {"second_queue": "RECORD_BUSY", "concurrent_workers": [["[{\"record\": \"MNT-000006\", \"item\": \"ENTER\", \"state\": \"ACTIVE\", \"outcome\": \"DONE\", \"escalated\": false}]"], ["[]"]], "entry_runs": 1, "state_after_workers": "ACTIVE", "tick_again": [], "restore_tick": [{"record": "MNT-000006", "item": "RESTORE", "state": "RESTORED", "outcome": "DONE", "escalated": false}], "idle_tick": [], "final": "RESTORED", "baseline_restored": true}
+1792282435.595 SCENARIO 11b begin load 26.08 26.96 26.46
+1792282871.216 SCENARIO 11b CRASHED MaintenanceError MAINTENANCE_ALREADY_OPEN: R1 is RESTORE_FAILED_ESCALATED
+1792282871.219 RESULT 11b FAIL {"crashed": "ipts/clab_dualstack_lab-v2-maintenance-mode/docs/evidence/v2-maintenance-mode/sandbox/run.py\", line 581, in s11b_crash_recovery\n    row, _rt = approved(\"R1\", NORTH_READY)\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/student/Scripts/clab_dualstack_lab-v2-maintenance-mode/docs/evidence/v2-maintenance-mode/sandbox/run.py\", line 241, in approved\n    row, rt = planned(device, states)\n              ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/student/Scripts/clab_dualstack_lab-v2-maintenance-mode/docs/evidence/v2-maintenance-mode/sandbox/run.py\", line 235, in planned\n    row = service.request(device, \"sandbox-operator\", \"sandbox scenario\", timedelta(hours=1), now=now(), runtime=rt)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/student/Scripts/clab_dualstack_lab-v2-mainten
+1792282871.223 SCENARIO 05b begin load 24.01 23.52 24.75
+1792282885.399 SCENARIO 05b CRASHED MaintenanceError MAINTENANCE_ALREADY_OPEN: R1 is RESTORE_FAILED_ESCALATED
+1792282885.400 RESULT 05b FAIL {"crashed": "ile \"/home/student/Scripts/clab_dualstack_lab-v2-maintenance-mode/docs/evidence/v2-maintenance-mode/sandbox/run.py\", line 407, in cycle\n    row, rt = approved(device, states)\n              ^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/student/Scripts/clab_dualstack_lab-v2-maintenance-mode/docs/evidence/v2-maintenance-mode/sandbox/run.py\", line 241, in approved\n    row, rt = planned(device, states)\n              ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/student/Scripts/clab_dualstack_lab-v2-maintenance-mode/docs/evidence/v2-maintenance-mode/sandbox/run.py\", line 235, in planned\n    row = service.request(device, \"sandbox-operator\", \"sandbox scenario\", timedelta(hours=1), now=now(), runtime=rt)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/student/Scripts/clab_dualstack_lab-v2-maintena
+1792282885.401 END {"04_quiesced_traffic_permits_progression": true, "05_drain_syntax_readback_traffic_moved_zero_loss": true, "06_successful_restore_exact_baseline": true, "07_entry_failure_compensated_newest_first": true, "08_restore_failure_escalates": true, "14_deadline_restore": true, "13_worker_retry_idempotent": true, "11b": false, "05b": false} load 23.25 23.36 24.68

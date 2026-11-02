@@ -1,0 +1,55 @@
+{% load static core_extras %}<!doctype html>
+<html lang="en" data-theme="{{ active_theme }}" data-theme-context="{{ active_theme_context }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}NMAS Control Plane{% endblock %}</title>
+  <link rel="stylesheet" href="{% versioned_static 'core/css/tokens.css' %}">
+  <link rel="stylesheet" href="{% versioned_static 'core/css/base.css' %}">
+  {% block extra_head %}{% endblock %}
+</head>
+<body>
+<div class="app-shell">
+  <nav class="sidebar" data-sidebar aria-label="Primary navigation">
+    <div class="sidebar__brand">
+      <span>NMAS Control Plane</span>
+    </div>
+    <div class="sidebar__nav">
+      <a class="sidebar__link {% if page_key == 'home' %}is-active{% endif %}" href="{% url 'core:home' %}">
+        <span class="icon" aria-hidden="true">&#8962;</span> Home
+      </a>
+      <a class="sidebar__link {% if page_key == 'monitoring' %}is-active{% endif %}" href="{% url 'core:monitoring_landing' %}">
+        <span class="icon" aria-hidden="true">&#128200;</span> Monitoring
+      </a>
+      <a class="sidebar__link {% if page_key == 'health' %}is-active{% endif %}" href="{% url 'core:health_fleet' %}">
+        <span class="icon" aria-hidden="true">&#9829;</span> Health
+      </a>
+      <a class="sidebar__link {% if page_key == 'device_builder' %}is-active{% endif %}" href="{% url 'core:device_builder' %}">
+        <span class="icon" aria-hidden="true">&#128736;</span> Device Builder
+      </a>
+      <a class="sidebar__link {% if page_key == 'nsot' %}is-active{% endif %}" href="{% url 'core:nsot' %}">
+        <span class="icon" aria-hidden="true">&#128203;</span> NSOT
+      </a>
+      <a class="sidebar__link {% if page_key == 'automation' %}is-active{% endif %}" href="{% url 'core:automation_landing' %}">
+        <span class="icon" aria-hidden="true">&#9881;</span> Automation
+      </a>
+    </div>
+  </nav>
+
+  <div class="main-column">
+    {% include "core/components/header.html" %}
+    <main class="page-content">
+      <div class="theme-watermark {% if watermark_url %}{% else %}theme-watermark--fallback{% endif %}"
+           {% if watermark_url %}style="background-image:url('{{ watermark_url }}');"{% endif %}
+           aria-hidden="true"></div>
+      {% for notice in maintenance_notices %}
+      <p class="maintenance-notice" role="alert"><strong>Maintenance:</strong> {{ notice.warning }}{% if notice.block_reasons %} ({{ notice.block_reasons|join:"; " }}){% endif %}</p>
+      {% endfor %}
+      {% block content %}{% endblock %}
+    </main>
+  </div>
+</div>
+<script src="{% versioned_static 'core/js/app.js' %}"></script>
+{% block extra_scripts %}{% endblock %}
+</body>
+</html>

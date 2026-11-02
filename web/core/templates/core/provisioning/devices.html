@@ -1,0 +1,96 @@
+{% extends "core/base.html" %}
+{% block title %}Managed devices{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>Managed devices</h1>
+  <p><a href="{% url 'core:provisioning_list' %}">&larr; New device provisioning</a> · <a href="{% url 'core:managed_devices_json' %}">JSON</a> · <a href="{% url 'core:ztp_networks' %}">Bootstrap networks (native ZTP)</a></p>
+  <p>One resolver decides which devices NMAS manages and how. <code>inventory.yml</code> is authoritative for the devices it lists; the
+     provisioning registry and the lifecycle registry can only add names. Every action on this page writes the NMAS database only:
+     no device is contacted, nothing is written to NetBox and no credential is created.</p>
+</div>
+
+{% for r in refusals %}<div class="card" style="border-left:6px solid var(--danger);"><p><strong>{{ r.code }}</strong> — {{ r.message }} {{ r.remediation }}</p></div>{% endfor %}
+
+<div class="card" style="margin-top:16px;">
+  <h3>Resolved devices</h3>
+  <table class="data-table">
+    <thead><tr><th>Device</th><th>Lifecycle id</th><th>Authority</th><th>Scope</th><th>Platform</th><th>Management candidates</th><th>Transports</th><th>Lifecycle</th></tr></thead>
+    <tbody>{% for t in targets %}<tr>
+      <td>{{ t.name }}</td>
+      <td>{% if t.device_id %}<a href="{% url 'core:managed_device_detail' t.device_id %}"><code>{{ t.device_id }}</code></a>{% else %}—{% endif %}</td>
+      <td>{{ t.authority }}</td>
+      <td><span class="badge badge--{% if t.writable %}success{% elif t.scope == 'READ_ONLY' %}neutral{% else %}warning{% endif %}">{{ t.scope }}</span></td>
+      <td>{{ t.platform|default:"(unmapped)" }}</td>
+      <td>{% for c in t.management_candidates %}<code>{{ c.address }}</code> <small>{{ c.network }}</small>{% if not forloop.last %}<br>{% endif %}{% empty %}none declared{% endfor %}</td>
+      <td>{{ t.transports|join:", "|default:"—" }}</td>
+      <td>{% if t.lifecycle %}{{ t.lifecycle.lifecycle_state }} · {{ t.lifecycle.identity_state }} · {{ t.lifecycle.admission_state }}{% else %}not in the lifecycle registry{% endif %}</td>
+    </tr>{% endfor %}</tbody>
+  </table>
+  {% if discrepancies %}<h4>Discrepancies (recorded, never merged)</h4>
+  <ul>{% for d in discrepancies %}<li><code>{{ d.code }}</code> {{ d.name }} {{ d.detail }}</li>{% endfor %}</ul>{% endif %}
+</div>
+
+<div class="card-grid" style="margin-top:16px;">
+  <div class="card">
+    <h3>Adopt an existing device</h3>
+    <p style="color:var(--text-muted); font-size:0.85rem;">Adoption records an <code>inventory.yml</code> device that NMAS already writes to as a
+       LEGACY_ADOPTION, IN_SERVICE asset. Its identity stays UNVERIFIED and no ZTP or commissioning history is created. Read-only devices
+       (R5), hosts and the WebServer are refused. Repeating it changes nothing.</p>
+    <table class="data-table">
+      <thead><tr><th>Device</th><th>Eligibility</th><th></th></tr></thead>
+      <tbody>{% for row in candidates %}<tr>
+        <td>{{ row.target.name }}</td>
+        <td>{% if row.adopted %}<span class="badge badge--success">adopted</span>{% elif row.refusal %}<span class="badge badge--danger">{{ row.refusal }}</span>{% else %}eligible{% endif %}</td>
+        <td>{% if not row.adopted and not row.refusal %}
+          <form method="post" action="{% url 'core:managed_device_adopt' %}">{% csrf_token %}
+            <input type="hidden" name="name" value="{{ row.target.name }}">
+            <select class="form-control" name="role" aria-label="Role">{% for role in roles %}<option value="{{ role }}">{{ role }}</option>{% endfor %}</select>
+            <input class="form-control" type="text" name="confirm_name" placeholder="type {{ row.target.name }} to confirm" autocomplete="off" required>
+            <button type="submit" class="btn">Adopt</button>
+          </form>{% endif %}</td>
+      </tr>{% endfor %}</tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3>Register a new device</h3>
+    <p style="color:var(--text-muted); font-size:0.85rem;">The operator-authorized expected identity. Leave a field blank when it is unknown — nothing is derived from the name.</p>
+    <form method="post" action="{% url 'core:managed_device_register' %}">{% csrf_token %}
+      <div class="field-row"><label class="field-row__label" for="d-name"><span>Device name</span></label><input class="form-control" id="d-name" type="text" name="name" autocomplete="off" required></div>
+      <div class="field-row"><label class="field-row__label" for="d-platform"><span>Platform</span></label>
+        <select class="form-control" id="d-platform" name="platform">{% for value, label in platforms %}<option value="{{ value }}">{{ label }}</option>{% endfor %}</select></div>
+      <div class="field-row"><label class="field-row__label" for="d-role"><span>Role</span></label>
+        <select class="form-control" id="d-role" name="role">{% for role in roles %}<option value="{{ role }}">{{ role }}</option>{% endfor %}</select></div>
+      <div class="field-row"><label class="field-row__label" for="d-serial"><span>Expected serial</span></label><input class="form-control" id="d-serial" type="text" name="expected_serial" autocomplete="off"></div>
+      <div class="field-row"><label class="field-row__label" for="d-mac"><span>Expected base MAC</span></label><input class="form-control" id="d-mac" type="text" name="expected_base_mac" autocomplete="off"></div>
+      <div class="field-row"><label class="field-row__label" for="d-mfr"><span>Manufacturer</span></label><input class="form-control" id="d-mfr" type="text" name="manufacturer" autocomplete="off"></div>
+      <div class="field-row"><label class="field-row__label" for="d-model"><span>Model</span></label><input class="form-control" id="d-model" type="text" name="model" autocomplete="off"></div>
+      <div class="field-row"><label class="field-row__label" for="d-nb"><span>NetBox device id (optional)</span></label><input class="form-control" id="d-nb" type="text" name="netbox_device_id" inputmode="numeric" autocomplete="off"></div>
+      <button type="submit" class="btn btn--primary">Register</button>
+    </form>
+  </div>
+</div>
+
+<div class="card" style="margin-top:16px;">
+  <h3>Lifecycle registry</h3>
+  <table class="data-table">
+    <thead><tr><th>Id</th><th>Device</th><th>Origin</th><th>Lifecycle</th><th>Identity</th><th>Production admission</th><th>Registered by</th></tr></thead>
+    <tbody>{% for d in registered %}<tr>
+      <td><a href="{% url 'core:managed_device_detail' d.device_id %}"><code>{{ d.device_id }}</code></a></td>
+      <td>{{ d.name }}</td><td>{{ d.get_origin_display }}</td><td>{{ d.lifecycle_state }}</td><td>{{ d.identity_state }}</td>
+      <td>{{ d.admission_state }}</td><td>{{ d.registered_by }}</td>
+    </tr>{% empty %}<tr><td colspan="7">No device has been registered or adopted.</td></tr>{% endfor %}</tbody>
+  </table>
+</div>
+
+<div class="card" style="margin-top:16px;">
+  <h3>Lifecycle capabilities</h3>
+  <table class="data-table">
+    <thead><tr><th>Capability</th><th>Status</th><th>Feasibility</th><th>Owner phase</th><th>Basis</th></tr></thead>
+    <tbody>{% for c in lifecycle_capabilities %}<tr>
+      <td>{{ c.label }} <code>{{ c.key }}</code></td><td><span class="badge badge--warning">{{ c.capability_status }}</span></td>
+      <td>{{ c.feasibility }}</td><td>{{ c.owner_phase }}</td><td>{{ c.basis }}</td>
+    </tr>{% endfor %}</tbody>
+  </table>
+</div>
+{% endblock %}

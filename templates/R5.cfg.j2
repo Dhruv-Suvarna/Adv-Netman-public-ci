@@ -1,0 +1,65 @@
+hostname R5
+!
+ip routing
+ipv6 unicast-routing
+!
+default interface Ethernet1
+default interface Ethernet2
+default interface Ethernet3
+!
+interface Ethernet1
+   description EBGP_TO_R3
+   no switchport
+   ip address 172.20.5.1/31
+   ipv6 address 2001:db8:205:1::2/64
+!
+interface Ethernet2
+   description EBGP_TO_R4
+   no switchport
+   ip address 172.20.5.3/31
+   ipv6 address 2001:db8:205:2::2/64
+!
+interface Ethernet3
+   description WEBSERVER_TRANSIT
+   no switchport
+   ip address 172.31.50.0/31
+   ipv6 address 2001:db8:3150::1/64
+!
+interface Loopback0
+   ip address 192.168.255.5/32
+   ipv6 address 2001:db8:255::5/128
+!
+ip route 172.30.50.10/32 172.31.50.1
+ipv6 route 2001:db8:3050::10/128 2001:db8:3150::2
+!
+ip prefix-list WEB-V4
+   seq 10 permit 172.30.50.10/32
+!
+ipv6 prefix-list WEB-V6
+   seq 10 permit 2001:db8:3050::10/128
+!
+route-map WEB-V4-OUT permit 10
+   match ip address prefix-list WEB-V4
+!
+route-map WEB-V6-OUT permit 10
+   match ipv6 address prefix-list WEB-V6
+!
+router bgp 65005
+   router-id 192.168.255.5
+   neighbor 172.20.5.0 remote-as 65003
+   neighbor 172.20.5.2 remote-as 65004
+   neighbor 2001:db8:205:1::1 remote-as 65003
+   neighbor 2001:db8:205:2::1 remote-as 65004
+   address-family ipv4
+      neighbor 172.20.5.0 activate
+      neighbor 172.20.5.2 activate
+      neighbor 172.20.5.0 route-map WEB-V4-OUT out
+      neighbor 172.20.5.2 route-map WEB-V4-OUT out
+      network 172.30.50.10/32
+   address-family ipv6
+      neighbor 2001:db8:205:1::1 activate
+      neighbor 2001:db8:205:2::1 activate
+      neighbor 2001:db8:205:1::1 route-map WEB-V6-OUT out
+      neighbor 2001:db8:205:2::1 route-map WEB-V6-OUT out
+      network 2001:db8:3050::10/128
+!

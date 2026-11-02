@@ -1,0 +1,117 @@
+{% extends "core/base.html" %}
+{% load core_extras %}
+{% block title %}{{ run.run_id }}{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1><code>{{ run.run_id }}</code> <span class="badge badge--{{ run.state|bundle_badge_class }}">{{ run.state }}</span>{% if run.result %} <span class="badge badge--{{ run.result|bundle_badge_class }}">{{ run.result }}</span>{% endif %} <span class="badge badge--warning">LEGACY BOOTSTRAP · ONE-TIME</span></h1>
+  <p><a href="{% url 'core:bootstrap_home' %}">&larr; Initial Golden Bootstrap</a> · candidate <a href="{% url 'core:bundle_detail' candidate.bundle_id %}"><code>{{ candidate.bundle_id }}</code></a></p>
+  <p>Historical, append-only evidence. Opening this page contacts no device and changes nothing. All times are server UTC.</p>
+</div>
+
+{% if notice %}<div class="card" style="border-left:6px solid var(--{% if notice.0 == 'success' %}success{% elif notice.0 == 'danger' %}danger{% elif notice.0 == 'warning' %}warning{% else %}text-muted{% endif %});"><p>{{ notice.1 }}</p>
+  {% if refusals %}<ul>{% for b in refusals %}<li><span class="badge badge--danger">{{ b.code }}</span> {{ b.message }} <em>{{ b.remediation }}</em></li>{% endfor %}</ul>{% endif %}</div>{% endif %}
+
+{% if run.state == 'RUNNING' %}
+<div class="card" style="border-left:6px solid var(--info);"><h3>Observation in progress</h3>
+  <p>Required end <strong>{{ run.required_end_at|date:"Y-m-d H:i:s" }} UTC</strong> — {{ progress.remaining_seconds|soak_duration }} remaining as of this page load. Samples are taken by the operator's <code>legacy_bootstrap observe</code> command; this page never counts down on your browser's clock.</p></div>
+{% elif run.result == 'PASS' and not decision %}
+<div class="card" style="border-left:6px solid var(--success);"><h3><span class="badge badge--success">TECHNICAL OBSERVATION PASSED</span> — operator approval required</h3>
+  <p>The 30-minute observation elapsed with sufficient healthy evidence and no configuration drift. Nothing has been promoted: no Golden bundle exists until you approve below.</p></div>
+{% elif decision %}
+<div class="card" style="border-left:6px solid var(--success);"><h3><span class="badge badge--success">TECHNICAL OBSERVATION PASSED</span> · initial Golden approved</h3></div>
+{% else %}
+<div class="card" style="border-left:6px solid var(--danger);"><h3><span class="badge badge--danger">{{ run.state }}{% if run.result %} / {{ run.result }}{% endif %}</span> — this observation can never become Golden</h3>
+  <p>{{ reasons|get_item:run.terminal_reason }}</p>
+  <p>Nothing was repaired or adopted automatically. To try again, capture a NEW baseline from what is running now and observe that; the changed configuration is never adopted for you.</p></div>
+{% endif %}
+
+<div class="card-grid" style="margin-top:16px;">
+  <div class="card"><h3>Run</h3><table class="data-table"><tbody>
+    <tr><th>Candidate baseline</th><td><code>{{ candidate.bundle_id }}</code><br>baseline (payload) digest <code>{{ candidate.payload_digest }}</code><br>bundle digest <code>{{ run.candidate_digest }}</code></td></tr>
+    <tr><th>Included devices</th><td>{% for d in devices %}{{ d.device }} ({{ d.platform }}){% if not forloop.last %}, {% endif %}{% endfor %}</td></tr>
+    <tr><th>Baseline captured</th><td>{{ candidate.payload.baseline.captured_at }}</td></tr>
+    <tr><th>Started</th><td>{{ run.started_at|date:"Y-m-d H:i:s" }} UTC by {{ run.started_by }}</td></tr>
+    <tr><th>Required end</th><td>{{ run.required_end_at|date:"Y-m-d H:i:s" }} UTC (pinned at start: {{ run.duration_seconds|soak_duration }})</td></tr>
+    <tr><th>Completed</th><td>{{ run.finished_at|date:"Y-m-d H:i:s"|default:"—" }}{% if run.finished_at %} UTC by {{ run.ended_by }}{% endif %}</td></tr>
+    <tr><th>Actual elapsed</th><td>{{ progress.elapsed_seconds|soak_duration }} ({{ progress.percent_elapsed }}%)</td></tr>
+    <tr><th>Reason</th><td>{{ run.terminal_reason|default:"—" }}</td></tr>
+    <tr><th>Evidence digest</th><td>{% if run.evidence_digest %}<code>{{ run.evidence_digest }}</code>{% else %}— (computed when the observation ends){% endif %}</td></tr>
+    <tr><th>Current baseline integrity</th><td><span class="badge badge--{% if integrity.ok %}success{% else %}danger{% endif %}">{{ integrity.state }}</span></td></tr>
+  </tbody></table></div>
+  <div class="card"><h3>Policy (pinned when this observation started)</h3><table class="data-table"><tbody>
+    <tr><th>Policy</th><td><code>{{ run.policy_version }}</code></td></tr>
+    <tr><th>Duration</th><td>{{ progress.policy.duration_seconds|soak_duration }} <span class="badge badge--warning">ONE-TIME BOOTSTRAP EXCEPTION</span></td></tr>
+    <tr><th>Normal future probation</th><td>{{ production.duration_seconds|soak_duration }} — unchanged</td></tr>
+    <tr><th>Sample interval</th><td>{{ progress.policy.sample_interval_seconds|soak_duration }}</td></tr>
+    <tr><th>Maximum unobserved gap</th><td>{{ progress.policy.max_gap_seconds|soak_duration }}</td></tr>
+    <tr><th>Minimum coverage</th><td>{{ progress.policy.min_coverage_percent }}% of intervals</td></tr>
+    <tr><th>Critical CPU / memory</th><td>ends the run after {{ progress.policy.resource_consecutive_samples }} consecutive samples</td></tr>
+    <tr><th>Decision window</th><td>{{ progress.policy.decision_max_age_seconds|soak_duration }} after completion</td></tr>
+  </tbody></table></div>
+</div>
+
+<div class="card" style="margin-top:16px;"><h3>Evidence summary</h3>
+  <table class="data-table"><tbody>
+    <tr><th>Samples</th><td>{{ progress.stats.samples }} ({{ progress.stats.usable_samples }} usable · {{ progress.stats.warning_samples }} with warnings · {{ progress.stats.incomplete_samples }} incomplete · {{ progress.stats.failed_samples }} failed · {{ progress.stats.invalidated_samples }} invalidated)</td></tr>
+    <tr><th>Coverage</th><td>{{ progress.stats.covered_intervals }} of {{ progress.stats.expected_intervals }} intervals ({{ progress.stats.coverage_percent }}%)</td></tr>
+    <tr><th>Longest gap (leading / trailing)</th><td>{{ progress.stats.max_gap_seconds|soak_duration }} ({{ progress.stats.leading_gap_seconds|soak_duration }} / {{ progress.stats.trailing_gap_seconds|soak_duration }})</td></tr>
+    <tr><th>Configuration drift</th><td>{{ run.evaluation.config_drift|default:"— (final result pending)" }}{% if run.evaluation.resources %} · {{ run.evaluation.resources.samples_with_config_comparison }} sample(s) compared every device against the baseline{% endif %}</td></tr>
+    <tr><th>Execution interference</th><td>{{ run.evaluation.interference|default:"—" }}</td></tr>
+    <tr><th>Routing, connectivity, interfaces, links</th><td>expected state: {% for k, v in run.evaluation.expected_state.items %}{{ k }} ×{{ v }} {% empty %}—{% endfor %}</td></tr>
+    <tr><th>CPU / memory (peak)</th><td>{{ run.evaluation.resources.max_cpu_percent|default:"—" }}% / {{ run.evaluation.resources.max_memory_percent|default:"—" }}%</td></tr>
+    <tr><th>Telemetry freshness</th><td>{% for k, v in run.evaluation.telemetry_freshness.items %}{{ k }} ×{{ v }} {% empty %}—{% endfor %}</td></tr>
+    <tr><th>Warnings</th><td>{{ run.evaluation.resources.warning_findings|default:"0" }} warning finding(s)</td></tr>
+  </tbody></table>
+  <p style="color:var(--text-muted); font-size:0.85rem;">IP connectivity here means management-plane reachability of every device plus interface, adjacency, route and link evidence; no synthetic data-plane traffic is generated (documented limitation). Stored configuration is <strong>{{ sanitization.stored_text }}</strong>: {{ sanitization.redacted_lines }} secret-bearing line(s) were redacted, so the baseline represents managed configuration semantics, not literal secret bytes.</p>
+</div>
+
+{% if run.result == 'PASS' and not decision %}
+<div class="card" style="margin-top:16px;border-left:6px solid var(--warning);"><h3>Approve Initial Golden</h3>
+  {% if approval_blockers %}
+    <p><strong>Approval is blocked right now:</strong></p>
+    <ul>{% for b in approval_blockers %}<li><span class="badge badge--danger">{{ b.code }}</span> {{ b.message }} <em>{{ b.remediation }}</em></li>{% endfor %}</ul>
+  {% else %}
+    <p>You are approving <strong>this exact baseline</strong>: candidate <code>{{ candidate.bundle_id }}</code>, baseline digest <code>{{ candidate.payload_digest }}</code>, {{ devices|length }} devices, observed for {{ run.duration_seconds|soak_duration }} ({{ progress.stats.coverage_percent }}% coverage, integrity {{ integrity.state }}, no drift, no interference).</p>
+    <p>Immediately before sealing, the server <strong>re-reads every device's running configuration</strong> (read-only) and refuses if any differs from this baseline. Approving creates ONE immutable Golden bundle with <code>LEGACY_BOOTSTRAP</code> provenance, pinned to this exact baseline. It does not deploy anything, contact a device to change it, or save any startup configuration. This can happen exactly once.</p>
+    <form method="post" action="{% url 'core:bootstrap_approve' run.run_id %}">{% csrf_token %}
+      <input type="hidden" name="expected_run_id" value="{{ run.run_id }}"><input type="hidden" name="expected_candidate_id" value="{{ candidate.bundle_id }}">
+      <input type="hidden" name="expected_candidate_digest" value="{{ run.candidate_digest }}"><input type="hidden" name="expected_baseline_digest" value="{{ candidate.payload_digest }}">
+      <p><label>Comment (optional, up to {{ max_reason }} characters; never enter a secret)<br><textarea name="reason" maxlength="{{ max_reason }}" rows="3" cols="70"></textarea></label></p>
+      <p><label><input type="checkbox" name="confirm" required> I have reviewed the exact baseline, digest and evidence above and approve it as the initial Golden. I understand this is a one-time exception (30 minutes) and that normal probation stays {{ production.duration_seconds|soak_duration }}.</label></p>
+      <button class="btn btn--primary" type="submit">Approve Initial Golden</button>
+    </form>
+  {% endif %}
+</div>
+{% elif decision %}
+<div class="card" style="margin-top:16px;"><h3>Operator approval</h3>
+  <p><span class="badge badge--success">APPROVED</span> by {{ decision.decided_by }} at {{ decision.decided_at|date:"Y-m-d H:i:s" }} UTC. {% if decision.reason %}Comment: <em>{{ decision.reason }}</em>{% endif %}</p>
+  <p>Initial Golden: <a href="{% url 'core:bundle_detail' golden.bundle_id %}"><code>{{ golden.bundle_id }}</code></a> · provenance <span class="badge badge--warning">LEGACY_BOOTSTRAP</span></p></div>
+{% endif %}
+
+<div class="card" style="margin-top:16px;"><h3>Captured baseline</h3>
+  <table class="data-table"><thead><tr><th>Device</th><th>Platform</th><th>Captured (UTC)</th><th>Method</th><th>Sections</th><th>Config digest</th></tr></thead><tbody>
+  {% for d in devices %}<tr><td>{{ d.device }}</td><td>{{ d.platform }}</td><td>{{ d.captured_at }}</td><td>{{ d.capture_method }}</td>
+    <td>{% for s in d.sections %}{{ s.name }} ({{ s.kept_lines }} lines, {{ s.redacted_lines }} redacted)<br>{% endfor %}</td><td><code>{{ d.config_digest|slice:":16" }}</code></td></tr>{% endfor %}
+  </tbody></table>
+</div>
+
+<div class="card" style="margin-top:16px;"><h3>Sample timeline (newest {{ timeline|length }} of {{ progress.stats.samples }})</h3>
+  <table class="data-table"><thead><tr><th>#</th><th>Sampled (UTC)</th><th>Result</th><th>Expected state</th><th>Telemetry</th><th>Config drift</th><th>Health</th><th>Findings</th></tr></thead><tbody>
+  {% for s in timeline %}<tr>
+    <td>{{ s.bucket }}</td><td>{{ s.sampled_at|date:"Y-m-d H:i:s" }}</td><td><span class="badge badge--{{ s.result|bundle_badge_class }}">{{ s.result }}</span></td>
+    <td>{{ s.expected_state_result|default:"—" }}</td><td><span class="badge badge--{{ s.telemetry_freshness|bundle_badge_class }}">{{ s.telemetry_freshness|default:"—" }}</span></td>
+    <td>{% if s.config_drift %}<span class="badge badge--danger">DRIFT</span>{% else %}<span class="badge badge--success">none</span>{% endif %}</td><td>{{ s.device_health|default:"—" }}</td>
+    <td>{% if s.findings %}<details><summary>{{ s.findings|length }}</summary><ul>{% for f in s.findings %}<li><span class="badge badge--neutral">{{ f.class }}</span> {{ f.device }} <code>{{ f.check_code }}</code> {{ f.message }}</li>{% endfor %}</ul></details>{% else %}—{% endif %}</td>
+  </tr>{% empty %}<tr><td colspan="8">No sample has been collected yet.</td></tr>{% endfor %}
+  </tbody></table>
+</div>
+
+{% if run.state == 'RUNNING' %}
+<div class="card" style="margin-top:16px;"><h3>Cancel this observation</h3>
+  <p>Cancelling keeps every sample, contacts no device, can never be undone and means this observation can never become Golden.</p>
+  <form method="post" action="{% url 'core:bootstrap_cancel' run.run_id %}">{% csrf_token %}
+    <p><label><input type="checkbox" name="confirm" required> I understand this observation will end and cannot be resumed.</label></p>
+    <button class="btn btn--secondary" type="submit">Cancel observation</button></form>
+</div>
+{% endif %}
+{% endblock %}

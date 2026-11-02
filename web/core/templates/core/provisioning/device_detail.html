@@ -1,0 +1,167 @@
+{% extends "core/base.html" %}
+{% block title %}{{ device.device_id }} · Managed device{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>{{ device.name }} <code>{{ device.device_id }}</code></h1>
+  <p><a href="{% url 'core:managed_devices' %}">&larr; Managed devices</a> · <a href="{% url 'core:managed_device_json' device.device_id %}">JSON</a></p>
+  <p>Nothing on this page contacts the device. Bootstrap authorization grants bootstrap scope only and never production admission.</p>
+</div>
+
+{% for r in refusals %}<div class="card" style="border-left:6px solid var(--danger);"><p><strong>{{ r.code }}</strong> — {{ r.message }} {{ r.remediation }}</p></div>{% endfor %}
+{% if decision %}<div class="card" style="border-left:6px solid var(--{% if decision == 'AUTHORIZED' %}success{% else %}warning{% endif %});"><p>Dry-run decision: <strong>{{ decision }}</strong> · production admission: NO</p></div>{% endif %}
+
+<div class="card-grid" style="margin-top:16px;">
+  <div class="card">
+    <h3>State</h3>
+    <table class="data-table"><tbody>
+      <tr><th>Origin</th><td>{{ device.get_origin_display }} ({{ device.inventory_authority }})</td></tr>
+      <tr><th>Lifecycle</th><td><span class="badge badge--neutral">{{ device.lifecycle_state }}</span></td></tr>
+      <tr><th>Identity</th><td>{{ device.identity_state }}{% if device.identity_verified_at %} · verified {{ device.identity_verified_at|date:"Y-m-d H:i" }} by {{ device.identity_verified_by }}{% endif %}</td></tr>
+      <tr><th>Production admission</th><td>{{ device.admission_state }}</td></tr>
+      <tr><th>ZTP / compliance</th><td>{{ device.ztp_state }} / {{ device.compliance_state }}</td></tr>
+      <tr><th>Maintenance</th><td>{% if maintenance %}<a href="{% url 'core:maintenance_detail' maintenance.record_id %}">{{ maintenance.record_id }}</a> {{ maintenance.state }}{% else %}no maintenance record{% endif %}</td></tr>
+      <tr><th>Resolver scope</th><td>{% if target %}{{ target.authority }} · {{ target.scope }}{% else %}not resolvable{% endif %}</td></tr>
+      <tr><th>NetBox projection</th><td>{{ projection.status|default:"(no NetBox device)" }}</td></tr>
+      <tr><th>Event chain</th><td>{% if chain_ok %}<span class="badge badge--success">intact</span>{% else %}<span class="badge badge--danger">BROKEN</span>{% endif %}</td></tr>
+      <tr><th>Version</th><td>{{ device.version }}</td></tr>
+    </tbody></table>
+    <h4>Lifecycle edges from {{ device.lifecycle_state }}</h4>
+    <ul>{% for e in allowed %}<li>{{ e.action }} &rarr; {{ e.to }}: {% if e.available %}available{% else %}not available until Phase {{ e.owner_phase }}{% endif %}</li>{% empty %}<li>none (terminal)</li>{% endfor %}</ul>
+  </div>
+
+  <div class="card">
+    <h3>Identity</h3>
+    <table class="data-table"><tbody>
+      <tr><th></th><th>Expected (operator-authorized)</th><th>Verified (observed)</th></tr>
+      <tr><th>Serial</th><td>{{ device.expected_serial|default:"unknown" }}</td><td>{{ device.verified_serial|default:"—" }}</td></tr>
+      <tr><th>Base MAC</th><td>{{ device.expected_base_mac|default:"unknown" }}</td><td>{{ device.verified_base_mac|default:"—" }}</td></tr>
+      <tr><th>SSH host key</th><td>—</td><td><code>{{ device.verified_host_key|default:"—" }}</code></td></tr>
+      <tr><th>Manufacturer / model</th><td colspan="2">{{ device.manufacturer|default:"—" }} / {{ device.model|default:"—" }}</td></tr>
+    </tbody></table>
+    {% if device.origin == 'REGISTERED_NEW' and not device.is_terminal %}
+    <form method="post" action="{% url 'core:managed_device_identity' device.device_id %}">{% csrf_token %}
+      <input type="hidden" name="expected_version" value="{{ device.version }}">
+      <input class="form-control" type="text" name="expected_serial" value="{{ device.expected_serial }}" placeholder="expected serial" aria-label="Expected serial" autocomplete="off">
+      <input class="form-control" type="text" name="expected_base_mac" value="{{ device.expected_base_mac }}" placeholder="expected base MAC" aria-label="Expected base MAC" autocomplete="off">
+      <input class="form-control" type="text" name="manufacturer" value="{{ device.manufacturer }}" placeholder="manufacturer" aria-label="Manufacturer" autocomplete="off">
+      <input class="form-control" type="text" name="model" value="{{ device.model }}" placeholder="model" aria-label="Model" autocomplete="off">
+      <button type="submit" class="btn">Save expected identity</button>
+    </form>
+    <form method="post" action="{% url 'core:managed_device_verify_identity' device.device_id %}" style="margin-top:8px;">{% csrf_token %}
+      <input type="hidden" name="expected_version" value="{{ device.version }}">
+      <input class="form-control" type="text" name="observation_id" placeholder="observation # (authenticated session)" aria-label="Observation" inputmode="numeric" autocomplete="off" required>
+      <button type="submit" class="btn">Verify identity from observation</button>
+    </form>{% endif %}
+  </div>
+</div>
+
+<div class="card" style="margin-top:16px;">
+  <h3>Expected attachments</h3>
+  <table class="data-table">
+    <thead><tr><th>#</th><th>Upstream</th><th>Local</th><th>Purpose</th><th>Connectivity</th><th>VLAN</th><th>Source</th><th>Approval</th><th>Verification</th><th></th></tr></thead>
+    <tbody>{% for a in attachments %}<tr>
+      <td>{{ a.pk }}</td><td>{{ a.upstream_device }}:{{ a.upstream_interface }}</td><td>{{ a.local_interface|default:"—" }}</td>
+      <td>{{ a.purpose }}</td><td>{{ a.connectivity }}</td><td>{{ a.vlan|default:"—" }}</td><td>{{ a.source }}</td>
+      <td>{{ a.approval_state }}{% if a.approved_by %} ({{ a.approved_by }}){% endif %}</td><td>{{ a.verification_state }}</td>
+      <td>{% if a.approval_state == 'PENDING' %}<form method="post" action="{% url 'core:managed_device_attachment_approve' device.device_id a.pk %}">{% csrf_token %}<button type="submit" class="btn">Approve</button></form>{% endif %}
+          {% if a.approval_state != 'REVOKED' %}<form method="post" action="{% url 'core:managed_device_attachment_revoke' device.device_id a.pk %}">{% csrf_token %}
+            <input class="form-control" type="text" name="reason" placeholder="reason" aria-label="Revocation reason" required><button type="submit" class="btn">Revoke</button></form>{% endif %}</td>
+    </tr>{% empty %}<tr><td colspan="10">No expected attachment is recorded.</td></tr>{% endfor %}</tbody>
+  </table>
+  {% if not device.is_terminal %}
+  <form method="post" action="{% url 'core:managed_device_attachment_add' device.device_id %}" style="margin-top:8px;">{% csrf_token %}
+    <input class="form-control" type="text" name="upstream_device" placeholder="upstream device (adopted, writable)" aria-label="Upstream device" autocomplete="off" required>
+    <input class="form-control" type="text" name="upstream_interface" placeholder="upstream interface" aria-label="Upstream interface" autocomplete="off" required>
+    <input class="form-control" type="text" name="local_interface" placeholder="local interface (optional)" aria-label="Local interface" autocomplete="off">
+    <select class="form-control" name="purpose" aria-label="Purpose">{% for value, label in purposes %}<option value="{{ value }}">{{ label }}</option>{% endfor %}</select>
+    <select class="form-control" name="connectivity" aria-label="Connectivity">{% for value, label in connectivities %}<option value="{{ value }}">{{ label }}</option>{% endfor %}</select>
+    <input class="form-control" type="text" name="vlan" placeholder="VLAN (access / trunk / subinterface)" aria-label="VLAN" inputmode="numeric" autocomplete="off">
+    <button type="submit" class="btn">Record expected attachment</button>
+  </form>
+  <form method="post" action="{% url 'core:managed_device_netbox_import' device.device_id %}" style="margin-top:8px; display:inline;">{% csrf_token %}<button type="submit" class="btn">Import NetBox cables as pending attachments (read-only toward NetBox)</button></form>
+  {% endif %}
+  <form method="post" action="{% url 'core:managed_device_netbox_compare' device.device_id %}" style="margin-top:8px; display:inline;">{% csrf_token %}<button type="submit" class="btn">Compare with NetBox (read-only)</button></form>
+</div>
+
+<div class="card" style="margin-top:16px;">
+  <h3>Bootstrap authorizations</h3>
+  <table class="data-table">
+    <thead><tr><th>Id</th><th>State</th><th>Attachment</th><th>Scope</th><th>Window (UTC)</th><th>Uses</th><th>Requested / approved</th><th>Binding digest</th><th></th></tr></thead>
+    <tbody>{% for z in authorizations %}<tr>
+      <td><code>{{ z.auth_id }}</code></td><td>{{ z.state }}</td><td>#{{ z.attachment_id }}</td><td>{{ z.scope|join:", " }}</td>
+      <td>{{ z.valid_from|date:"Y-m-d H:i" }} – {{ z.valid_until|date:"Y-m-d H:i" }}</td><td>{{ z.use_count }}/{{ z.max_uses }}</td>
+      <td>{{ z.requested_by }}{% if z.approved_by %} / {{ z.approved_by }}{% endif %}</td><td><code>{{ z.binding_digest }}</code></td>
+      <td>{% if z.state == 'PENDING_APPROVAL' %}<form method="post" action="{% url 'core:bootstrap_authorization_approve' device.device_id z.auth_id %}">{% csrf_token %}
+            <input class="form-control" type="text" name="confirm_digest" placeholder="paste the binding digest to confirm" aria-label="Binding digest" autocomplete="off" required>
+            <button type="submit" class="btn">Approve</button></form>{% endif %}
+          {% if z.is_open %}<form method="post" action="{% url 'core:bootstrap_authorization_revoke' device.device_id z.auth_id %}">{% csrf_token %}
+            <input class="form-control" type="text" name="reason" placeholder="reason" aria-label="Revocation reason" required><button type="submit" class="btn">Revoke</button></form>
+          <form method="post" action="{% url 'core:bootstrap_authorization_evaluate' device.device_id z.auth_id %}">{% csrf_token %}
+            <select class="form-control" name="scope" aria-label="Requested scope">{% for token in scope_tokens %}<option value="{{ token }}">{{ token }}</option>{% endfor %}</select>
+            <input class="form-control" type="text" name="serial" placeholder="claimed serial" aria-label="Claimed serial" autocomplete="off">
+            <input class="form-control" type="text" name="base_mac" placeholder="claimed MAC" aria-label="Claimed MAC" autocomplete="off">
+            <input class="form-control" type="text" name="upstream_device" placeholder="seen on upstream device" aria-label="Seen on upstream device" autocomplete="off">
+            <input class="form-control" type="text" name="upstream_interface" placeholder="seen on upstream interface" aria-label="Seen on upstream interface" autocomplete="off">
+            <select class="form-control" name="attachment_source" aria-label="Attachment evidence source"><option value="">(no attachment evidence)</option>{% for value, label in observation_sources %}<option value="{{ value }}">{{ label }}</option>{% endfor %}</select>
+            <button type="submit" class="btn">Dry-run decision</button></form>{% endif %}</td>
+    </tr>{% empty %}<tr><td colspan="9">No bootstrap authorization exists.</td></tr>{% endfor %}</tbody>
+  </table>
+  {% if device.origin == 'REGISTERED_NEW' and not device.is_terminal %}
+  <form method="post" action="{% url 'core:bootstrap_authorization_request' device.device_id %}" style="margin-top:8px;">{% csrf_token %}
+    <select class="form-control" name="attachment_id" aria-label="Bound attachment">{% for a in attachments %}{% if a.approval_state == 'APPROVED' %}<option value="{{ a.pk }}">#{{ a.pk }} {{ a.upstream_device }}:{{ a.upstream_interface }}</option>{% endif %}{% endfor %}</select>
+    {% for token in scope_tokens %}<label><input type="checkbox" name="scope" value="{{ token }}"> {{ token }}</label>{% endfor %}
+    <input class="form-control" type="text" name="duration_minutes" value="60" aria-label="Duration in minutes" inputmode="numeric">
+    <input class="form-control" type="text" name="max_uses" value="1" aria-label="Maximum uses" inputmode="numeric">
+    <input class="form-control" type="text" name="reason" placeholder="reason" aria-label="Reason" required>
+    <button type="submit" class="btn">Request bootstrap authorization</button>
+  </form>{% endif %}
+</div>
+
+<div class="card" style="margin-top:16px;">
+  <h3>Observations</h3>
+  <table class="data-table">
+    <thead><tr><th>#</th><th>Kind</th><th>Source</th><th>Trust</th><th>Result</th><th>Claimed keys</th><th>Upstream</th><th>Observed (UTC)</th></tr></thead>
+    <tbody>{% for o in observations %}<tr>
+      <td>{{ o.pk }}</td><td>{{ o.kind }}</td><td>{{ o.source }}</td><td>{{ o.trust }}</td><td>{{ o.result }}</td>
+      <td>{{ o.claims.keys|join:", "|default:"—" }}</td><td>{% if o.upstream_device %}{{ o.upstream_device }}:{{ o.upstream_interface }}{% else %}—{% endif %}</td>
+      <td>{{ o.observed_at|date:"Y-m-d H:i:s" }}</td>
+    </tr>{% empty %}<tr><td colspan="8">No observation has been recorded. DHCP discovery (through a trusted relay) and authenticated management verification record them.</td></tr>{% endfor %}</tbody>
+  </table>
+</div>
+
+{% include "core/provisioning/_ztp_panel.html" %}
+
+<div class="card" style="margin-top:16px;">
+  <h3>Management paths</h3>
+  <p><a href="{% url 'core:management_device' device.device_id %}">Management paths, failover and bootstrap credential retirement</a></p>
+</div>
+
+<div class="card" style="margin-top:16px;">
+  <h3>Isolation and commissioning</h3>
+  <p><a href="{% url 'core:commissioning_device' device.device_id %}">Trusted-upstream isolation, commissioning and production admission</a></p>
+</div>
+
+{% if device.origin == 'REGISTERED_NEW' and not device.is_terminal %}
+<div class="card" style="margin-top:16px;">
+  <h3>Withdraw registration</h3>
+  <p>Terminal. Revokes every open bootstrap authorization of this device. Available only before service.</p>
+  <form method="post" action="{% url 'core:managed_device_withdraw' device.device_id %}">{% csrf_token %}
+    <input type="hidden" name="expected_version" value="{{ device.version }}">
+    <input class="form-control" type="text" name="reason" placeholder="reason" aria-label="Reason" required>
+    <input class="form-control" type="text" name="confirm_name" placeholder="type {{ device.name }} to confirm" aria-label="Confirm device name" autocomplete="off" required>
+    <button type="submit" class="btn btn--danger">Withdraw</button>
+  </form>
+</div>
+{% endif %}
+
+<div class="card" style="margin-top:16px;">
+  <h3>Lifecycle events</h3>
+  <table class="data-table">
+    <thead><tr><th>#</th><th>Action</th><th>Outcome</th><th>From → to</th><th>Actor</th><th>Codes</th><th>When (UTC)</th></tr></thead>
+    <tbody>{% for e in events %}<tr>
+      <td>{{ e.sequence }}</td><td>{{ e.action }}</td><td>{{ e.outcome }}</td><td>{{ e.from_state|default:"—" }} → {{ e.to_state|default:"—" }}</td>
+      <td>{{ e.actor }} <small>{{ e.actor_kind }}</small></td><td>{% for b in e.blockers %}<code>{{ b.code }}</code> {% endfor %}</td><td>{{ e.created_at|date:"Y-m-d H:i:s" }}</td>
+    </tr>{% endfor %}</tbody>
+  </table>
+</div>
+{% endblock %}

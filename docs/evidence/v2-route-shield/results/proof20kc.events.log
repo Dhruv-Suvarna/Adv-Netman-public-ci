@@ -1,0 +1,1943 @@
+1791715910.984 START migrate 20 load 24.53 22.78 21.07
+1791715912.489 CONFIG start r1=2bd8c040664c1216 r2=6284ec1a7270b9dd s1=7d083ffd40ee3b4f s2=a4f9a4a23f07a916
+1791715926.693 C1 begin load 24.05 22.76 21.09
+1791715929.482 F1 core-cover-installed 2001:db8:10::/63 2001:db8:20::/63 2001:db8:30::/63
+1791715929.482 F1 stage1 vlan99-ipv6+isis start
+1791715935.647 F1 stage2 adjacencies wait
+1791715955.408 F1 stage3 advertise start
+1791715960.168 F1 stage4 isis-available wait (static still owns)
+1791715968.849 F1-r1 stage5 shield
+1791715969.261 F1-r1 shield-install s1 2001:db8:110:1::1
+1791715970.921 F1-r1 shield-verified s1
+1791715971.291 F1-r1 shield-install r1 2001:db8:110:1::2
+1791715973.591 F1-r1 shield-verified r1
+1791715973.591 F1-r1 stage6 shield-forwarding verify
+1791715979.365 F1-r1 stage7 static-removal start
+1791715979.775 F1-r1 stage7 switch-static-removed
+1791715980.369 F1-r1 stage7 router-floating-statics-added
+1791715982.901 F1-r1 stage7 router-statics-removed
+1791715986.877 F1-r1 stage7 router-floating-statics-removed
+1791715986.877 F1-r1 stage9 isis-ownership wait
+1791715994.254 F1-r1 stage10 shield-removal
+1791715995.543 F1-r1 takeover-nexthop r1 2001:db8:10::/64 isisL2 fe80::42:aff:fefb:1b03%eth3 before=REACHABLE after=REACHABLE
+1791715996.664 F1-r1 takeover-nexthop r1 2001:db8:20::/64 isisL2 fe80::42:aff:fefb:1b03%eth3 before=REACHABLE after=REACHABLE
+1791715997.830 F1-r1 takeover-nexthop r1 2001:db8:30::/64 isisL2 fe80::42:aff:fefb:1b03%eth3 before=REACHABLE after=REACHABLE
+1791715997.831 F1-r1 shield-remove r1
+1791716000.239 F1-r1 shield-removed r1
+1791716001.343 F1-r1 takeover-nexthop s1 2001:db8::/32 isisL2 fe80::42:aff:fefb:1b02%eth1 before=DELAY after=DELAY
+1791716001.343 F1-r1 shield-remove s1
+1791716003.295 F1-r1 shield-removed s1
+1791716003.295 F1-r1 stage11 final-forwarding verify
+1791716008.268 F1-r2 stage5 shield
+1791716008.641 F1-r2 shield-install s2 2001:db8:110:2::1
+1791716010.178 F1-r2 shield-verified s2
+1791716010.575 F1-r2 shield-install r2 2001:db8:110:2::2
+1791716012.773 F1-r2 shield-verified r2
+1791716012.773 F1-r2 stage6 shield-forwarding verify
+1791716018.873 F1-r2 stage7 static-removal start
+1791716019.353 F1-r2 stage7 switch-static-removed
+1791716020.070 F1-r2 stage7 router-floating-statics-added
+1791716022.732 F1-r2 stage7 router-statics-removed
+1791716026.901 F1-r2 stage7 router-floating-statics-removed
+1791716026.901 F1-r2 stage9 isis-ownership wait
+1791716034.082 F1-r2 stage10 shield-removal
+1791716035.116 F1-r2 takeover-nexthop r2 2001:db8:10::/64 isisL2 fe80::42:aff:fefb:1c03%eth3 before=REACHABLE after=REACHABLE
+1791716036.136 F1-r2 takeover-nexthop r2 2001:db8:20::/64 isisL2 fe80::42:aff:fefb:1c03%eth3 before=REACHABLE after=REACHABLE
+1791716037.085 F1-r2 takeover-nexthop r2 2001:db8:30::/64 isisL2 fe80::42:aff:fefb:1c03%eth3 before=REACHABLE after=REACHABLE
+1791716037.085 F1-r2 shield-remove r2
+1791716039.068 F1-r2 shield-removed r2
+1791716039.974 F1-r2 takeover-nexthop s2 2001:db8::/32 isisL2 fe80::42:aff:fefb:1c02%eth1 before=DELAY after=DELAY
+1791716039.974 F1-r2 shield-remove s2
+1791716041.837 F1-r2 shield-removed s2
+1791716041.837 F1-r2 stage11 final-forwarding verify
+1791716051.083 F1 stage12 final-config r1=5408a3ab57b34d17 r2=4d5eb24485271374 s1=c14991f826026d59 s2=9e1955c8185575b0
+1791716178.967 F1 core-quiet 155
+1791716180.434 F1 core-cover-removed
+1791716200.136 F1 final-equals-first-final True
+1791716206.136 C1 between forward and rollback
+1791716209.297 B1 core-cover-installed 2001:db8:10::/63 2001:db8:20::/63 2001:db8:30::/63
+1791716209.297 B1-r2 rb1 shield
+1791716209.715 B1-r2 shield-install s2 2001:db8:110:2::1
+1791716211.330 B1-r2 shield-verified s2
+1791716211.720 B1-r2 shield-install r2 2001:db8:110:2::2
+1791716213.914 B1-r2 shield-verified r2
+1791716216.914 B1-r2 rb2 static-restore start
+1791716219.674 B1-r2 rb2 router-statics-restored
+1791716220.092 B1-r2 rb2 switch-static-restored
+1791716226.826 B1-r2 rb3 shield-removal
+1791716227.873 B1-r2 takeover-nexthop r2 2001:db8:10::/64 static 2001:db8:110:2::2 before=DELAY after=DELAY
+1791716228.893 B1-r2 takeover-nexthop r2 2001:db8:20::/64 static 2001:db8:110:2::2 before=DELAY after=DELAY
+1791716229.937 B1-r2 takeover-nexthop r2 2001:db8:30::/64 static 2001:db8:110:2::2 before=DELAY after=DELAY
+1791716229.937 B1-r2 shield-remove r2
+1791716232.070 B1-r2 shield-removed r2
+1791716233.079 B1-r2 takeover-nexthop s2 2001:db8::/32 static 2001:db8:110:2::1 before=REACHABLE after=REACHABLE
+1791716233.079 B1-r2 shield-remove s2
+1791716234.801 B1-r2 shield-removed s2
+1791716237.801 B1-r1 rb1 shield
+1791716238.192 B1-r1 shield-install s1 2001:db8:110:1::1
+1791716239.766 B1-r1 shield-verified s1
+1791716240.129 B1-r1 shield-install r1 2001:db8:110:1::2
+1791716242.569 B1-r1 shield-verified r1
+1791716245.569 B1-r1 rb2 static-restore start
+1791716248.380 B1-r1 rb2 router-statics-restored
+1791716248.899 B1-r1 rb2 switch-static-restored
+1791716255.363 B1-r1 rb3 shield-removal
+1791716256.443 B1-r1 takeover-nexthop r1 2001:db8:10::/64 static 2001:db8:110:1::2 before=REACHABLE after=REACHABLE
+1791716257.664 B1-r1 takeover-nexthop r1 2001:db8:20::/64 static 2001:db8:110:1::2 before=REACHABLE after=REACHABLE
+1791716258.773 B1-r1 takeover-nexthop r1 2001:db8:30::/64 static 2001:db8:110:1::2 before=REACHABLE after=REACHABLE
+1791716258.773 B1-r1 shield-remove r1
+1791716261.083 B1-r1 shield-removed r1
+1791716262.247 B1-r1 takeover-nexthop s1 2001:db8::/32 static 2001:db8:110:1::1 before=REACHABLE after=REACHABLE
+1791716262.247 B1-r1 shield-remove s1
+1791716264.451 B1-r1 shield-removed s1
+1791716267.451 B1 rb4 withdraw-advertisements start
+1791716271.029 B1 rb5 isis-removal start
+1791716280.413 B1 rb6 baseline-config r1=2bd8c040664c1216 r2=6284ec1a7270b9dd s1=7d083ffd40ee3b4f s2=a4f9a4a23f07a916
+1791716406.188 B1 core-quiet 186
+1791716407.605 B1 core-cover-removed
+1791716409.130 B1 baseline-restored True
+1791716414.130 C1 end load 21.06 21.42 21.28
+1791716428.402 C2 begin load 22.88 21.86 21.43
+1791716431.127 F2 core-cover-installed 2001:db8:10::/63 2001:db8:20::/63 2001:db8:30::/63
+1791716431.127 F2 stage1 vlan99-ipv6+isis start
+1791716435.776 F2 stage2 adjacencies wait
+1791716452.161 F2 stage3 advertise start
+1791716457.406 F2 stage4 isis-available wait (static still owns)
+1791716465.788 F2-r1 stage5 shield
+1791716466.103 F2-r1 shield-install s1 2001:db8:110:1::1
+1791716467.829 F2-r1 shield-verified s1
+1791716468.156 F2-r1 shield-install r1 2001:db8:110:1::2
+1791716470.275 F2-r1 shield-verified r1
+1791716470.276 F2-r1 stage6 shield-forwarding verify
+1791716476.492 F2-r1 stage7 static-removal start
+1791716477.060 F2-r1 stage7 switch-static-removed
+1791716477.602 F2-r1 stage7 router-floating-statics-added
+1791716480.112 F2-r1 stage7 router-statics-removed
+1791716483.789 F2-r1 stage7 router-floating-statics-removed
+1791716483.789 F2-r1 stage9 isis-ownership wait
+1791716490.609 F2-r1 stage10 shield-removal
+1791716491.681 F2-r1 takeover-nexthop r1 2001:db8:10::/64 isisL2 fe80::42:aff:fefb:1b03%eth3 before=REACHABLE after=REACHABLE
+1791716492.589 F2-r1 takeover-nexthop r1 2001:db8:20::/64 isisL2 fe80::42:aff:fefb:1b03%eth3 before=REACHABLE after=REACHABLE
+1791716493.485 F2-r1 takeover-nexthop r1 2001:db8:30::/64 isisL2 fe80::42:aff:fefb:1b03%eth3 before=REACHABLE after=REACHABLE
+1791716493.485 F2-r1 shield-remove r1
+1791716495.742 F2-r1 shield-removed r1
+1791716496.888 F2-r1 takeover-nexthop s1 2001:db8::/32 isisL2 fe80::42:aff:fefb:1b02%eth1 before=DELAY after=DELAY
+1791716496.888 F2-r1 shield-remove s1
+1791716498.943 F2-r1 shield-removed s1
+1791716498.943 F2-r1 stage11 final-forwarding verify
+1791716504.323 F2-r2 stage5 shield
+1791716504.731 F2-r2 shield-install s2 2001:db8:110:2::1
+1791716507.056 F2-r2 shield-verified s2
+1791716507.421 F2-r2 shield-install r2 2001:db8:110:2::2
+1791716510.083 F2-r2 shield-verified r2
+1791716510.083 F2-r2 stage6 shield-forwarding verify
+1791716516.091 F2-r2 stage7 static-removal start
+1791716516.601 F2-r2 stage7 switch-static-removed
+1791716517.074 F2-r2 stage7 router-floating-statics-added
+1791716519.515 F2-r2 stage7 router-statics-removed
+1791716523.131 F2-r2 stage7 router-floating-statics-removed
+1791716523.131 F2-r2 stage9 isis-ownership wait
+1791716529.949 F2-r2 stage10 shield-removal
+1791716531.044 F2-r2 takeover-nexthop r2 2001:db8:10::/64 isisL2 fe80::42:aff:fefb:1c03%eth3 before=REACHABLE after=REACHABLE
+1791716532.131 F2-r2 takeover-nexthop r2 2001:db8:20::/64 isisL2 fe80::42:aff:fefb:1c03%eth3 before=REACHABLE after=REACHABLE
+1791716533.084 F2-r2 takeover-nexthop r2 2001:db8:30::/64 isisL2 fe80::42:aff:fefb:1c03%eth3 before=REACHABLE after=REACHABLE
+1791716533.084 F2-r2 shield-remove r2
+1791716535.042 F2-r2 shield-removed r2
+1791716536.389 F2-r2 takeover-nexthop s2 2001:db8::/32 isisL2 fe80::42:aff:fefb:1c02%eth1 before=DELAY after=DELAY
+1791716536.389 F2-r2 shield-remove s2
+1791716538.402 F2-r2 shield-removed s2
+1791716538.402 F2-r2 stage11 final-forwarding verify
+1791716547.876 F2 stage12 final-config r1=5408a3ab57b34d17 r2=4d5eb24485271374 s1=c14991f826026d59 s2=9e1955c8185575b0
+1791716674.020 F2 core-quiet 453
+1791716675.436 F2 core-cover-removed
+1791716694.508 F2 final-equals-first-final True
+1791716700.508 C2 between forward and rollback
+1791716703.256 B2 core-cover-installed 2001:db8:10::/63 2001:db8:20::/63 2001:db8:30::/63
+1791716703.256 B2-r2 rb1 shield
+1791716703.594 B2-r2 shield-install s2 2001:db8:110:2::1
+1791716705.276 B2-r2 shield-verified s2
+1791716705.589 B2-r2 shield-install r2 2001:db8:110:2::2
+1791716707.738 B2-r2 shield-verified r2
+1791716710.738 B2-r2 rb2 static-restore start
+1791716713.573 B2-r2 rb2 router-statics-restored
+1791716714.066 B2-r2 rb2 switch-static-restored
+1791716720.804 B2-r2 rb3 shield-removal
+1791716721.874 B2-r2 takeover-nexthop r2 2001:db8:10::/64 static 2001:db8:110:2::2 before=DELAY after=DELAY
+1791716722.917 B2-r2 takeover-nexthop r2 2001:db8:20::/64 static 2001:db8:110:2::2 before=DELAY after=DELAY
+1791716723.947 B2-r2 takeover-nexthop r2 2001:db8:30::/64 static 2001:db8:110:2::2 before=DELAY after=DELAY
+1791716723.947 B2-r2 shield-remove r2
+1791716726.074 B2-r2 shield-removed r2
+1791716727.277 B2-r2 takeover-nexthop s2 2001:db8::/32 static 2001:db8:110:2::1 before=REACHABLE after=REACHABLE
+1791716727.277 B2-r2 shield-remove s2
+1791716728.970 B2-r2 shield-removed s2
+1791716731.970 B2-r1 rb1 shield
+1791716732.281 B2-r1 shield-install s1 2001:db8:110:1::1
+1791716733.758 B2-r1 shield-verified s1
+1791716734.067 B2-r1 shield-install r1 2001:db8:110:1::2
+1791716736.083 B2-r1 shield-verified r1
+1791716739.084 B2-r1 rb2 static-restore start
+1791716741.831 B2-r1 rb2 router-statics-restored
+1791716742.378 B2-r1 rb2 switch-static-restored
+1791716748.987 B2-r1 rb3 shield-removal
+1791716750.352 B2-r1 takeover-nexthop r1 2001:db8:10::/64 static 2001:db8:110:1::2 before=REACHABLE after=REACHABLE
+1791716751.654 B2-r1 takeover-nexthop r1 2001:db8:20::/64 static 2001:db8:110:1::2 before=REACHABLE after=REACHABLE
+1791716752.835 B2-r1 takeover-nexthop r1 2001:db8:30::/64 static 2001:db8:110:1::2 before=REACHABLE after=REACHABLE
+1791716752.835 B2-r1 shield-remove r1
+1791716755.422 B2-r1 shield-removed r1
+1791716756.643 B2-r1 takeover-nexthop s1 2001:db8::/32 static 2001:db8:110:1::1 before=REACHABLE after=REACHABLE
+1791716756.643 B2-r1 shield-remove s1
+1791716758.600 B2-r1 shield-removed s1
+1791716761.600 B2 rb4 withdraw-advertisements start
+1791716765.649 B2 rb5 isis-removal start
+1791716776.266 B2 rb6 baseline-config r1=2bd8c040664c1216 r2=6284ec1a7270b9dd s1=7d083ffd40ee3b4f s2=a4f9a4a23f07a916
+1791716902.860 B2 core-quiet 188
+1791716904.361 B2 core-cover-removed
+1791716906.105 B2 baseline-restored True
+1791716911.105 C2 end load 28.19 23.37 21.84
+1791716925.172 C3 begin load 28.87 23.67 21.95
+1791716928.392 F3 core-cover-installed 2001:db8:10::/63 2001:db8:20::/63 2001:db8:30::/63
+1791716928.392 F3 stage1 vlan99-ipv6+isis start
+1791716934.324 F3 stage2 adjacencies wait
+1791716958.086 F3 stage3 advertise start
+1791716963.631 F3 stage4 isis-available wait (static still owns)
+1791716972.253 F3-r1 stage5 shield
+1791716972.571 F3-r1 shield-install s1 2001:db8:110:1::1
+1791716974.299 F3-r1 shield-verified s1
+1791716974.614 F3-r1 shield-install r1 2001:db8:110:1::2
+1791716976.598 F3-r1 shield-verified r1
+1791716976.598 F3-r1 stage6 shield-forwarding verify
+1791716982.213 F3-r1 stage7 static-removal start
+1791716982.564 F3-r1 stage7 switch-static-removed
+1791716982.965 F3-r1 stage7 router-floating-statics-added
+1791716985.517 F3-r1 stage7 router-statics-removed
+1791716989.163 F3-r1 stage7 router-floating-statics-removed
+1791716989.163 F3-r1 stage9 isis-ownership wait
+1791716996.484 F3-r1 stage10 shield-removal
+1791716997.595 F3-r1 takeover-nexthop r1 2001:db8:10::/64 isisL2 fe80::42:aff:fefb:1b03%eth3 before=REACHABLE after=REACHABLE
+1791716998.887 F3-r1 takeover-nexthop r1 2001:db8:20::/64 isisL2 fe80::42:aff:fefb:1b03%eth3 before=REACHABLE after=REACHABLE
+1791717000.204 F3-r1 takeover-nexthop r1 2001:db8:30::/64 isisL2 fe80::42:aff:fefb:1b03%eth3 before=REACHABLE after=REACHABLE
+1791717000.204 F3-r1 shield-remove r1
+1791717002.571 F3-r1 shield-removed r1
+1791717003.703 F3-r1 takeover-nexthop s1 2001:db8::/32 isisL2 fe80::42:aff:fefb:1b02%eth1 before=DELAY after=DELAY
+1791717003.704 F3-r1 shield-remove s1
+1791717005.108 F3-r1 shield-removed s1
+1791717005.108 F3-r1 stage11 final-forwarding verify
+1791717009.466 F3-r2 stage5 shield
+1791717009.810 F3-r2 shield-install s2 2001:db8:110:2::1
+1791717011.281 F3-r2 shield-verified s2
+1791717011.645 F3-r2 shield-install r2 2001:db8:110:2::2
+1791717013.920 F3-r2 shield-verified r2
+1791717013.920 F3-r2 stage6 shield-forwarding verify
+1791717019.945 F3-r2 stage7 static-removal start
+1791717020.386 F3-r2 stage7 switch-static-removed
+1791717020.857 F3-r2 stage7 router-floating-statics-added
+1791717023.251 F3-r2 stage7 router-statics-removed
+1791717027.271 F3-r2 stage7 router-floating-statics-removed
+1791717027.271 F3-r2 stage9 isis-ownership wait
+1791717034.312 F3-r2 stage10 shield-removal
+1791717035.302 F3-r2 takeover-nexthop r2 2001:db8:10::/64 isisL2 fe80::42:aff:fefb:1c03%eth3 before=REACHABLE after=REACHABLE
+1791717036.295 F3-r2 takeover-nexthop r2 2001:db8:20::/64 isisL2 fe80::42:aff:fefb:1c03%eth3 before=REACHABLE after=REACHABLE
+1791717037.372 F3-r2 takeover-nexthop r2 2001:db8:30::/64 isisL2 fe80::42:aff:fefb:1c03%eth3 before=REACHABLE after=REACHABLE
+1791717037.372 F3-r2 shield-remove r2
+1791717039.549 F3-r2 shield-removed r2
+1791717040.664 F3-r2 takeover-nexthop s2 2001:db8::/32 isisL2 fe80::42:aff:fefb:1c02%eth1 before=DELAY after=DELAY
+1791717040.664 F3-r2 shield-remove s2
+1791717042.257 F3-r2 shield-removed s2
+1791717042.257 F3-r2 stage11 final-forwarding verify
+1791717053.279 F3 stage12 final-config r1=5408a3ab57b34d17 r2=4d5eb24485271374 s1=c14991f826026d59 s2=9e1955c8185575b0
+1791717179.632 F3 core-quiet 465
+1791717181.072 F3 core-cover-removed
+1791717199.519 F3 final-equals-first-final True
+1791717205.519 C3 between forward and rollback
+1791717208.687 B3 core-cover-installed 2001:db8:10::/63 2001:db8:20::/63 2001:db8:30::/63
+1791717208.687 B3-r2 rb1 shield
+1791717209.074 B3-r2 shield-install s2 2001:db8:110:2::1
+1791717210.994 B3-r2 shield-verified s2
+1791717211.461 B3-r2 shield-install r2 2001:db8:110:2::2
+1791717213.623 B3-r2 shield-verified r2
+1791717216.623 B3-r2 rb2 static-restore start
+1791717219.535 B3-r2 rb2 router-statics-restored
+1791717220.015 B3-r2 rb2 switch-static-restored
+1791717226.723 B3-r2 rb3 shield-removal
+1791717227.862 B3-r2 takeover-nexthop r2 2001:db8:10::/64 static 2001:db8:110:2::2 before=DELAY after=DELAY
+1791717229.073 B3-r2 takeover-nexthop r2 2001:db8:20::/64 static 2001:db8:110:2::2 before=DELAY after=DELAY
+1791717230.037 B3-r2 takeover-nexthop r2 2001:db8:30::/64 static 2001:db8:110:2::2 before=DELAY after=DELAY
+1791717230.037 B3-r2 shield-remove r2
+1791717232.530 B3-r2 shield-removed r2
+1791717233.715 B3-r2 takeover-nexthop s2 2001:db8::/32 static 2001:db8:110:2::1 before=REACHABLE after=REACHABLE
+1791717233.715 B3-r2 shield-remove s2
+1791717235.439 B3-r2 shield-removed s2
+1791717238.441 B3-r1 rb1 shield
+1791717238.822 B3-r1 shield-install s1 2001:db8:110:1::1
+1791717240.551 B3-r1 shield-verified s1
+1791717240.889 B3-r1 shield-install r1 2001:db8:110:1::2
+1791717243.333 B3-r1 shield-verified r1
+1791717246.335 B3-r1 rb2 static-restore start
+1791717249.232 B3-r1 rb2 router-statics-restored
+1791717249.623 B3-r1 rb2 switch-static-restored
+1791717256.160 B3-r1 rb3 shield-removal
+1791717257.165 B3-r1 takeover-nexthop r1 2001:db8:10::/64 static 2001:db8:110:1::2 before=REACHABLE after=REACHABLE
+1791717258.267 B3-r1 takeover-nexthop r1 2001:db8:20::/64 static 2001:db8:110:1::2 before=REACHABLE after=REACHABLE
+1791717259.406 B3-r1 takeover-nexthop r1 2001:db8:30::/64 static 2001:db8:110:1::2 before=REACHABLE after=REACHABLE
+1791717259.406 B3-r1 shield-remove r1
+1791717262.113 B3-r1 shield-removed r1
+1791717263.558 B3-r1 takeover-nexthop s1 2001:db8::/32 static 2001:db8:110:1::1 before=REACHABLE after=REACHABLE
+1791717263.558 B3-r1 shield-remove s1
+1791717265.254 B3-r1 shield-removed s1
+1791717268.254 B3 rb4 withdraw-advertisements start
+1791717272.120 B3 rb5 isis-removal start
+1791717280.992 B3 rb6 baseline-config r1=2bd8c040664c1216 r2=6284ec1a7270b9dd s1=7d083ffd40ee3b4f s2=a4f9a4a23f07a916
+1791717407.440 B3 core-quiet 158
+1791717408.833 B3 core-cover-removed
+1791717411.136 B3 baseline-restored True
+1791717416.136 C3 end load 23.61 25.25 23.63
+1791717429.815 C4 begin load 25.04 25.51 23.73
+1791717432.594 F4 core-cover-installed 2001:db8:10::/63 2001:db8:20::/63 2001:db8:30::/63
+1791717432.594 F4 stage1 vlan99-ipv6+isis start
+1791717437.720 F4 stage2 adjacencies wait
+1791717453.378 F4 stage3 advertise start
+1791717458.089 F4 stage4 isis-available wait (static still owns)
+1791717466.313 F4-r1 stage5 shield
+1791717466.638 F4-r1 shield-install s1 2001:db8:110:1::1
+1791717468.777 F4-r1 shield-verified s1
+1791717469.145 F4-r1 shield-install r1 2001:db8:110:1::2
+1791717471.897 F4-r1 shield-verified r1
+1791717471.897 F4-r1 stage6 shield-forwarding verify
+1791717478.095 F4-r1 stage7 static-removal start
+1791717478.564 F4-r1 stage7 switch-static-removed
+1791717479.179 F4-r1 stage7 router-floating-statics-added
+1791717482.339 F4-r1 stage7 router-statics-removed
+1791717486.610 F4-r1 stage7 router-floating-statics-removed
+1791717486.610 F4-r1 stage9 isis-ownership wait
+1791717493.573 F4-r1 stage10 shield-removal
+1791717494.649 F4-r1 takeover-nexthop r1 2001:db8:10::/64 isisL2 fe80::42:aff:fefb:1b03%eth3 before=REACHABLE after=REACHABLE
+1791717495.883 F4-r1 takeover-nexthop r1 2001:db8:20::/64 isisL2 fe80::42:aff:fefb:1b03%eth3 before=REACHABLE after=REACHABLE
+1791717497.124 F4-r1 takeover-nexthop r1 2001:db8:30::/64 isisL2 fe80::42:aff:fefb:1b03%eth3 before=REACHABLE after=REACHABLE
+1791717497.124 F4-r1 shield-remove r1
+1791717499.588 F4-r1 shield-removed r1
+1791717500.812 F4-r1 takeover-nexthop s1 2001:db8::/32 isisL2 fe80::42:aff:fefb:1b02%eth1 before=DELAY after=DELAY
+1791717500.812 F4-r1 shield-remove s1
+1791717503.271 F4-r1 shield-removed s1
+1791717503.271 F4-r1 stage11 final-forwarding verify
+1791717508.309 F4-r2 stage5 shield
+1791717508.701 F4-r2 shield-install s2 2001:db8:110:2::1
+1791717510.295 F4-r2 shield-verified s2
+1791717510.616 F4-r2 shield-install r2 2001:db8:110:2::2
+1791717513.079 F4-r2 shield-verified r2
+1791717513.079 F4-r2 stage6 shield-forwarding verify
+1791717519.096 F4-r2 stage7 static-removal start
+1791717519.451 F4-r2 stage7 switch-static-removed
+1791717519.857 F4-r2 stage7 router-floating-statics-added
+1791717522.263 F4-r2 stage7 router-statics-removed
+1791717525.824 F4-r2 stage7 router-floating-statics-removed
+1791717525.824 F4-r2 stage9 isis-ownership wait
+1791717533.329 F4-r2 stage10 shield-removal
+1791717534.379 F4-r2 takeover-nexthop r2 2001:db8:10::/64 isisL2 fe80::42:aff:fefb:1c03%eth3 before=REACHABLE after=REACHABLE
+1791717535.575 F4-r2 takeover-nexthop r2 2001:db8:20::/64 isisL2 fe80::42:aff:fefb:1c03%eth3 before=REACHABLE after=REACHABLE
+1791717536.653 F4-r2 takeover-nexthop r2 2001:db8:30::/64 isisL2 fe80::42:aff:fefb:1c03%eth3 before=REACHABLE after=REACHABLE
+1791717536.654 F4-r2 shield-remove r2
+1791717538.932 F4-r2 shield-removed r2
+1791717540.060 F4-r2 takeover-nexthop s2 2001:db8::/32 isisL2 fe80::42:aff:fefb:1c02%eth1 before=DELAY after=DELAY
+1791717540.060 F4-r2 shield-remove s2
+1791717542.064 F4-r2 shield-removed s2
+1791717542.064 F4-r2 stage11 final-forwarding verify
+1791717551.397 F4 stage12 final-config r1=5408a3ab57b34d17 r2=4d5eb24485271374 s1=c14991f826026d59 s2=9e1955c8185575b0
+1791717679.134 F4 core-quiet 429
+1791717680.543 F4 core-cover-removed
+1791717698.976 F4 final-equals-first-final True
+1791717704.977 C4 between forward and rollback
+1791717707.974 B4 core-cover-installed 2001:db8:10::/63 2001:db8:20::/63 2001:db8:30::/63
+1791717707.974 B4-r2 rb1 shield
+1791717708.384 B4-r2 shield-install s2 2001:db8:110:2::1
+1791717710.091 B4-r2 shield-verified s2
+1791717710.387 B4-r2 shield-install r2 2001:db8:110:2::2
+1791717713.143 B4-r2 shield-verified r2
+1791717716.143 B4-r2 rb2 static-restore start
+1791717719.096 B4-r2 rb2 router-statics-restored
+1791717719.436 B4-r2 rb2 switch-static-restored
+1791717726.236 B4-r2 rb3 shield-removal
+1791717727.354 B4-r2 takeover-nexthop r2 2001:db8:10::/64 static 2001:db8:110:2::2 before=DELAY after=DELAY
+1791717728.536 B4-r2 takeover-nexthop r2 2001:db8:20::/64 static 2001:db8:110:2::2 before=DELAY after=DELAY
+1791717729.584 B4-r2 takeover-nexthop r2 2001:db8:30::/64 static 2001:db8:110:2::2 before=DELAY after=DELAY
+1791717729.584 B4-r2 shield-remove r2
+1791717731.627 B4-r2 shield-removed r2
+1791717732.685 B4-r2 takeover-nexthop s2 2001:db8::/32 static 2001:db8:110:2::1 before=REACHABLE after=REACHABLE
+1791717732.685 B4-r2 shield-remove s2
+1791717734.300 B4-r2 shield-removed s2
+1791717737.301 B4-r1 rb1 shield
+1791717737.674 B4-r1 shield-install s1 2001:db8:110:1::1
+1791717739.323 B4-r1 shield-verified s1
+1791717739.719 B4-r1 shield-install r1 2001:db8:110:1::2
+1791717741.940 B4-r1 shield-verified r1
+1791717744.940 B4-r1 rb2 static-restore start
+1791717748.183 B4-r1 rb2 router-statics-restored
+1791717748.467 B4-r1 rb2 switch-static-restored
+1791717755.356 B4-r1 rb3 shield-removal
+1791717756.406 B4-r1 takeover-nexthop r1 2001:db8:10::/64 static 2001:db8:110:1::2 before=REACHABLE after=REACHABLE
+1791717757.408 B4-r1 takeover-nexthop r1 2001:db8:20::/64 static 2001:db8:110:1::2 before=REACHABLE after=REACHABLE
+1791717758.392 B4-r1 takeover-nexthop r1 2001:db8:30::/64 static 2001:db8:110:1::2 before=REACHABLE after=REACHABLE
+1791717758.392 B4-r1 shield-remove r1
+1791717760.315 B4-r1 shield-removed r1
+1791717761.215 B4-r1 takeover-nexthop s1 2001:db8::/32 static 2001:db8:110:1::1 before=REACHABLE after=REACHABLE
+1791717761.215 B4-r1 shield-remove s1
+1791717762.828 B4-r1 shield-removed s1
+1791717765.829 B4 rb4 withdraw-advertisements start
+1791717769.816 B4 rb5 isis-removal start
+1791717779.580 B4 rb6 baseline-config r1=2bd8c040664c1216 r2=6284ec1a7270b9dd s1=7d083ffd40ee3b4f s2=a4f9a4a23f07a916
+1791717907.464 B4 core-quiet 658
+1791717908.870 B4 core-cover-removed
+1791717910.627 B4 baseline-restored True
+1791717915.628 C4 end load 16.73 18.67 21.06
+1791717929.503 C5 begin load 17.51 18.78 21.07
+1791717932.380 F5 core-cover-installed 2001:db8:10::/63 2001:db8:20::/63 2001:db8:30::/63
+1791717932.380 F5 stage1 vlan99-ipv6+isis start
+1791717937.876 F5 stage2 adjacencies wait
+1791717953.615 F5 stage3 advertise start
+1791717959.550 F5 stage4 isis-available wait (static still owns)
+1791717968.905 F5-r1 stage5 shield
+1791717969.297 F5-r1 shield-install s1 2001:db8:110:1::1
+1791717970.756 F5-r1 shield-verified s1
+1791717971.094 F5-r1 shield-install r1 2001:db8:110:1::2
+1791717973.094 F5-r1 shield-verified r1
+1791717973.094 F5-r1 stage6 shield-forwarding verify
+1791717978.829 F5-r1 stage7 static-removal start
+1791717979.366 F5-r1 stage7 switch-static-removed
+1791717979.695 F5-r1 stage7 router-floating-statics-added
+1791717982.175 F5-r1 stage7 router-statics-removed
+1791717985.758 F5-r1 stage7 router-floating-statics-removed
+1791717985.758 F5-r1 stage9 isis-ownership wait
+1791717993.082 F5-r1 stage10 shield-removal
+1791717994.355 F5-r1 takeover-nexthop r1 2001:db8:10::/64 isisL2 fe80::42:aff:fefb:1b03%eth3 before=REACHABLE after=REACHABLE
+1791717995.617 F5-r1 takeover-nexthop r1 2001:db8:20::/64 isisL2 fe80::42:aff:fefb:1b03%eth3 before=REACHABLE after=REACHABLE
+1791717996.697 F5-r1 takeover-nexthop r1 2001:db8:30::/64 isisL2 fe80::42:aff:fefb:1b03%eth3 before=REACHABLE after=REACHABLE
+1791717996.697 F5-r1 shield-remove r1
+1791717998.791 F5-r1 shield-removed r1
+1791717999.875 F5-r1 takeover-nexthop s1 2001:db8::/32 isisL2 fe80::42:aff:fefb:1b02%eth1 before=DELAY after=DELAY
+1791717999.875 F5-r1 shield-remove s1
+1791718001.344 F5-r1 shield-removed s1
+1791718001.344 F5-r1 stage11 final-forwarding verify
+1791718005.894 F5-r2 stage5 shield
+1791718006.296 F5-r2 shield-install s2 2001:db8:110:2::1
+1791718007.846 F5-r2 shield-verified s2
+1791718008.178 F5-r2 shield-install r2 2001:db8:110:2::2
+1791718010.340 F5-r2 shield-verified r2
+1791718010.340 F5-r2 stage6 shield-forwarding verify
+1791718016.519 F5-r2 stage7 static-removal start
+1791718016.905 F5-r2 stage7 switch-static-removed
+1791718017.388 F5-r2 stage7 router-floating-statics-added
+1791718019.877 F5-r2 stage7 router-statics-removed
+1791718024.334 F5-r2 stage7 router-floating-statics-removed
+1791718024.334 F5-r2 stage9 isis-ownership wait
+1791718031.887 F5-r2 stage10 shield-removal
+1791718032.909 F5-r2 takeover-nexthop r2 2001:db8:10::/64 isisL2 fe80::42:aff:fefb:1c03%eth3 before=REACHABLE after=REACHABLE
+1791718033.874 F5-r2 takeover-nexthop r2 2001:db8:20::/64 isisL2 fe80::42:aff:fefb:1c03%eth3 before=REACHABLE after=REACHABLE
+1791718034.921 F5-r2 takeover-nexthop r2 2001:db8:30::/64 isisL2 fe80::42:aff:fefb:1c03%eth3 before=REACHABLE after=REACHABLE
+1791718034.921 F5-r2 shield-remove r2
+1791718037.884 F5-r2 shield-removed r2
+1791718039.082 F5-r2 takeover-nexthop s2 2001:db8::/32 isisL2 fe80::42:aff:fefb:1c02%eth1 before=DELAY after=DELAY
+1791718039.082 F5-r2 shield-remove s2
+1791718040.497 F5-r2 shield-removed s2
+1791718040.498 F5-r2 stage11 final-forwarding verify
+1791718050.378 F5 stage12 final-config r1=5408a3ab57b34d17 r2=4d5eb24485271374 s1=c14991f826026d59 s2=9e1955c8185575b0
+1791718176.608 F5 core-quiet 927
+1791718178.193 F5 core-cover-removed
+1791718197.501 F5 final-equals-first-final True
+1791718203.502 C5 between forward and rollback
+1791718206.779 B5 core-cover-installed 2001:db8:10::/63 2001:db8:20::/63 2001:db8:30::/63
+1791718206.779 B5-r2 rb1 shield
+1791718207.193 B5-r2 shield-install s2 2001:db8:110:2::1
+1791718208.778 B5-r2 shield-verified s2
+1791718209.159 B5-r2 shield-install r2 2001:db8:110:2::2
+1791718211.323 B5-r2 shield-verified r2
+1791718214.323 B5-r2 rb2 static-restore start
+1791718217.136 B5-r2 rb2 router-statics-restored
+1791718217.610 B5-r2 rb2 switch-static-restored
+1791718224.578 B5-r2 rb3 shield-removal
+1791718225.770 B5-r2 takeover-nexthop r2 2001:db8:10::/64 static 2001:db8:110:2::2 before=DELAY after=DELAY
+1791718227.312 B5-r2 takeover-nexthop r2 2001:db8:20::/64 static 2001:db8:110:2::2 before=DELAY after=DELAY
+1791718228.579 B5-r2 takeover-nexthop r2 2001:db8:30::/64 static 2001:db8:110:2::2 before=DELAY after=DELAY
+1791718228.579 B5-r2 shield-remove r2
+1791718231.036 B5-r2 shield-removed r2
+1791718232.170 B5-r2 takeover-nexthop s2 2001:db8::/32 static 2001:db8:110:2::1 before=REACHABLE after=REACHABLE
+1791718232.170 B5-r2 shield-remove s2
+1791718233.998 B5-r2 shield-removed s2
+1791718236.999 B5-r1 rb1 shield
+1791718237.346 B5-r1 shield-install s1 2001:db8:110:1::1
+1791718239.559 B5-r1 shield-verified s1
+1791718239.883 B5-r1 shield-install r1 2001:db8:110:1::2
+1791718242.128 B5-r1 shield-verified r1
+1791718245.128 B5-r1 rb2 static-restore start
+1791718248.285 B5-r1 rb2 router-statics-restored
+1791718248.756 B5-r1 rb2 switch-static-restored
+1791718255.613 B5-r1 rb3 shield-removal
+1791718257.147 B5-r1 takeover-nexthop r1 2001:db8:10::/64 static 2001:db8:110:1::2 before=REACHABLE after=REACHABLE
+1791718258.744 B5-r1 takeover-nexthop r1 2001:db8:20::/64 static 2001:db8:110:1::2 before=REACHABLE after=REACHABLE
+1791718259.984 B5-r1 takeover-nexthop r1 2001:db8:30::/64 static 2001:db8:110:1::2 before=REACHABLE after=REACHABLE
+1791718259.984 B5-r1 shield-remove r1
+1791718262.340 B5-r1 shield-removed r1
+1791718263.618 B5-r1 takeover-nexthop s1 2001:db8::/32 static 2001:db8:110:1::1 before=REACHABLE after=REACHABLE
+1791718263.618 B5-r1 shield-remove s1
+1791718265.535 B5-r1 shield-removed s1
+1791718268.535 B5 rb4 withdraw-advertisements start
+1791718271.603 B5 rb5 isis-removal start
+1791718280.418 B5 rb6 baseline-config r1=2bd8c040664c1216 r2=6284ec1a7270b9dd s1=7d083ffd40ee3b4f s2=a4f9a4a23f07a916
+1791718407.915 B5 core-quiet 1158
+1791718409.570 B5 core-cover-removed
+1791718411.620 B5 baseline-restored True
+1791718416.620 C5 end load 23.76 24.01 22.99
+1791718429.846 C6 begin load 24.33 24.12 23.04
+1791718432.637 F6 core-cover-installed 2001:db8:10::/63 2001:db8:20::/63 2001:db8:30::/63
+1791718432.637 F6 stage1 vlan99-ipv6+isis start
+1791718440.028 F6 stage2 adjacencies wait
+1791718455.388 F6 stage3 advertise start
+1791718459.681 F6 stage4 isis-available wait (static still owns)
+1791718468.118 F6-r1 stage5 shield
+1791718468.563 F6-r1 shield-install s1 2001:db8:110:1::1
+1791718470.581 F6-r1 shield-verified s1
+1791718470.928 F6-r1 shield-install r1 2001:db8:110:1::2
+1791718473.126 F6-r1 shield-verified r1
+1791718473.126 F6-r1 stage6 shield-forwarding verify
+1791718478.909 F6-r1 stage7 static-removal start
+1791718479.389 F6-r1 stage7 switch-static-removed
+1791718479.713 F6-r1 stage7 router-floating-statics-added
+1791718482.133 F6-r1 stage7 router-statics-removed
+1791718485.655 F6-r1 stage7 router-floating-statics-removed
+1791718485.655 F6-r1 stage9 isis-ownership wait
+1791718492.439 F6-r1 stage10 shield-removal
+1791718493.520 F6-r1 takeover-nexthop r1 2001:db8:10::/64 isisL2 fe80::42:aff:fefb:1b03%eth3 before=REACHABLE after=REACHABLE
+1791718494.699 F6-r1 takeover-nexthop r1 2001:db8:20::/64 isisL2 fe80::42:aff:fefb:1b03%eth3 before=REACHABLE after=REACHABLE
+1791718495.779 F6-r1 takeover-nexthop r1 2001:db8:30::/64 isisL2 fe80::42:aff:fefb:1b03%eth3 before=REACHABLE after=REACHABLE
+1791718495.779 F6-r1 shield-remove r1
+1791718498.244 F6-r1 shield-removed r1
+1791718499.376 F6-r1 takeover-nexthop s1 2001:db8::/32 isisL2 fe80::42:aff:fefb:1b02%eth1 before=DELAY after=DELAY
+1791718499.377 F6-r1 shield-remove s1
+1791718501.215 F6-r1 shield-removed s1
+1791718501.215 F6-r1 stage11 final-forwarding verify
+1791718506.000 F6-r2 stage5 shield
+1791718506.340 F6-r2 shield-install s2 2001:db8:110:2::1
+1791718508.333 F6-r2 shield-verified s2
+1791718508.691 F6-r2 shield-install r2 2001:db8:110:2::2
+1791718510.657 F6-r2 shield-verified r2
+1791718510.657 F6-r2 stage6 shield-forwarding verify
+1791718516.458 F6-r2 stage7 static-removal start
+1791718516.920 F6-r2 stage7 switch-static-removed
+1791718517.295 F6-r2 stage7 router-floating-statics-added
+1791718519.827 F6-r2 stage7 router-statics-removed
+1791718523.444 F6-r2 stage7 router-floating-statics-removed
+1791718523.445 F6-r2 stage9 isis-ownership wait
+1791718530.740 F6-r2 stage10 shield-removal
+1791718531.882 F6-r2 takeover-nexthop r2 2001:db8:10::/64 isisL2 fe80::42:aff:fefb:1c03%eth3 before=REACHABLE after=REACHABLE
+1791718532.904 F6-r2 takeover-nexthop r2 2001:db8:20::/64 isisL2 fe80::42:aff:fefb:1c03%eth3 before=REACHABLE after=REACHABLE
+1791718533.875 F6-r2 takeover-nexthop r2 2001:db8:30::/64 isisL2 fe80::42:aff:fefb:1c03%eth3 before=REACHABLE after=REACHABLE
+1791718533.875 F6-r2 shield-remove r2
+1791718536.267 F6-r2 shield-removed r2
+1791718537.371 F6-r2 takeover-nexthop s2 2001:db8::/32 isisL2 fe80::42:aff:fefb:1c02%eth1 before=DELAY after=DELAY
+1791718537.371 F6-r2 shield-remove s2
+1791718539.384 F6-r2 shield-removed s2
+1791718539.384 F6-r2 stage11 final-forwarding verify
+1791718549.287 F6 stage12 final-config r1=5408a3ab57b34d17 r2=4d5eb24485271374 s1=c14991f826026d59 s2=9e1955c8185575b0
+1791718675.157 F6 core-quiet 1425
+1791718676.571 F6 core-cover-removed
+1791718695.185 F6 final-equals-first-final True
+1791718701.186 C6 between forward and rollback
+1791718704.191 B6 core-cover-installed 2001:db8:10::/63 2001:db8:20::/63 2001:db8:30::/63
+1791718704.191 B6-r2 rb1 shield
+1791718704.515 B6-r2 shield-install s2 2001:db8:110:2::1
+1791718706.008 B6-r2 shield-verified s2
+1791718706.354 B6-r2 shield-install r2 2001:db8:110:2::2
+1791718709.540 B6-r2 shield-verified r2
+1791718712.541 B6-r2 rb2 static-restore start
+1791718715.382 B6-r2 rb2 router-statics-restored
+1791718715.861 B6-r2 rb2 switch-static-restored
+1791718722.616 B6-r2 rb3 shield-removal
+1791718723.663 B6-r2 takeover-nexthop r2 2001:db8:10::/64 static 2001:db8:110:2::2 before=DELAY after=DELAY
+1791718724.689 B6-r2 takeover-nexthop r2 2001:db8:20::/64 static 2001:db8:110:2::2 before=DELAY after=DELAY
+1791718725.632 B6-r2 takeover-nexthop r2 2001:db8:30::/64 static 2001:db8:110:2::2 before=DELAY after=DELAY
+1791718725.632 B6-r2 shield-remove r2
+1791718727.853 B6-r2 shield-removed r2
+1791718729.033 B6-r2 takeover-nexthop s2 2001:db8::/32 static 2001:db8:110:2::1 before=REACHABLE after=REACHABLE
+1791718729.033 B6-r2 shield-remove s2
+1791718730.489 B6-r2 shield-removed s2
+1791718733.490 B6-r1 rb1 shield
+1791718733.785 B6-r1 shield-install s1 2001:db8:110:1::1
+1791718735.305 B6-r1 shield-verified s1
+1791718735.651 B6-r1 shield-install r1 2001:db8:110:1::2
+1791718737.774 B6-r1 shield-verified r1
+1791718740.774 B6-r1 rb2 static-restore start
+1791718743.874 B6-r1 rb2 router-statics-restored
+1791718744.410 B6-r1 rb2 switch-static-restored
+1791718751.137 B6-r1 rb3 shield-removal
+1791718752.272 B6-r1 takeover-nexthop r1 2001:db8:10::/64 static 2001:db8:110:1::2 before=REACHABLE after=REACHABLE
+1791718753.470 B6-r1 takeover-nexthop r1 2001:db8:20::/64 static 2001:db8:110:1::2 before=REACHABLE after=REACHABLE
+1791718754.496 B6-r1 takeover-nexthop r1 2001:db8:30::/64 static 2001:db8:110:1::2 before=REACHABLE after=REACHABLE
+1791718754.497 B6-r1 shield-remove r1
+1791718756.781 B6-r1 shield-removed r1
+1791718757.770 B6-r1 takeover-nexthop s1 2001:db8::/32 static 2001:db8:110:1::1 before=REACHABLE after=REACHABLE
+1791718757.770 B6-r1 shield-remove s1
+1791718759.304 B6-r1 shield-removed s1
+1791718762.304 B6 rb4 withdraw-advertisements start
+1791718765.775 B6 rb5 isis-removal start
+1791718775.886 B6 rb6 baseline-config r1=2bd8c040664c1216 r2=6284ec1a7270b9dd s1=7d083ffd40ee3b4f s2=a4f9a4a23f07a916
+1791718902.043 B6 core-quiet 1652
+1791718903.562 B6 core-cover-removed
+1791718905.113 B6 baseline-restored True
+1791718910.113 C6 end load 19.34 22.12 22.84
+1791718923.508 C7 begin load 19.41 22.00 22.78
+1791718926.623 F7 core-cover-installed 2001:db8:10::/63 2001:db8:20::/63 2001:db8:30::/63
+1791718926.623 F7 stage1 vlan99-ipv6+isis start
+1791718931.751 F7 stage2 adjacencies wait
+1791718946.858 F7 stage3 advertise start
+1791718952.031 F7 stage4 isis-available wait (static still owns)
+1791718960.228 F7-r1 stage5 shield
+1791718960.600 F7-r1 shield-install s1 2001:db8:110:1::1
+1791718962.382 F7-r1 shield-verified s1
+1791718962.807 F7-r1 shield-install r1 2001:db8:110:1::2
+1791718965.020 F7-r1 shield-verified r1
+1791718965.020 F7-r1 stage6 shield-forwarding verify
+1791718970.647 F7-r1 stage7 static-removal start
+1791718971.172 F7-r1 stage7 switch-static-removed
+1791718971.844 F7-r1 stage7 router-floating-statics-added
+1791718974.242 F7-r1 stage7 router-statics-removed
+1791718977.782 F7-r1 stage7 router-floating-statics-removed
+1791718977.782 F7-r1 stage9 isis-ownership wait
+1791718984.703 F7-r1 stage10 shield-removal
+1791718985.788 F7-r1 takeover-nexthop r1 2001:db8:10::/64 isisL2 fe80::42:aff:fefb:1b03%eth3 before=REACHABLE after=REACHABLE
+1791718987.094 F7-r1 takeover-nexthop r1 2001:db8:20::/64 isisL2 fe80::42:aff:fefb:1b03%eth3 before=REACHABLE after=REACHABLE
+1791718988.159 F7-r1 takeover-nexthop r1 2001:db8:30::/64 isisL2 fe80::42:aff:fefb:1b03%eth3 before=REACHABLE after=REACHABLE
+1791718988.159 F7-r1 shield-remove r1
+1791718990.779 F7-r1 shield-removed r1
+1791718992.130 F7-r1 takeover-nexthop s1 2001:db8::/32 isisL2 fe80::42:aff:fefb:1b02%eth1 before=DELAY after=DELAY
+1791718992.130 F7-r1 shield-remove s1
+1791718993.917 F7-r1 shield-removed s1
+1791718993.917 F7-r1 stage11 final-forwarding verify
+1791718998.780 F7-r2 stage5 shield
+1791718999.115 F7-r2 shield-install s2 2001:db8:110:2::1
+1791719000.633 F7-r2 shield-verified s2
+1791719001.037 F7-r2 shield-install r2 2001:db8:110:2::2
+1791719003.547 F7-r2 shield-verified r2
+1791719003.547 F7-r2 stage6 shield-forwarding verify
+1791719009.737 F7-r2 stage7 static-removal start
+1791719010.333 F7-r2 stage7 switch-static-removed
+1791719010.935 F7-r2 stage7 router-floating-statics-added
+1791719013.652 F7-r2 stage7 router-statics-removed
+1791719017.549 F7-r2 stage7 router-floating-statics-removed
+1791719017.549 F7-r2 stage9 isis-ownership wait
+1791719024.439 F7-r2 stage10 shield-removal
+1791719025.436 F7-r2 takeover-nexthop r2 2001:db8:10::/64 isisL2 fe80::42:aff:fefb:1c03%eth3 before=REACHABLE after=REACHABLE
+1791719026.574 F7-r2 takeover-nexthop r2 2001:db8:20::/64 isisL2 fe80::42:aff:fefb:1c03%eth3 before=REACHABLE after=REACHABLE
+1791719027.767 F7-r2 takeover-nexthop r2 2001:db8:30::/64 isisL2 fe80::42:aff:fefb:1c03%eth3 before=REACHABLE after=REACHABLE
+1791719027.767 F7-r2 shield-remove r2
+1791719029.910 F7-r2 shield-removed r2
+1791719031.010 F7-r2 takeover-nexthop s2 2001:db8::/32 isisL2 fe80::42:aff:fefb:1c02%eth1 before=DELAY after=DELAY
+1791719031.010 F7-r2 shield-remove s2
+1791719032.844 F7-r2 shield-removed s2
+1791719032.844 F7-r2 stage11 final-forwarding verify
+1791719043.693 F7 stage12 final-config r1=5408a3ab57b34d17 r2=4d5eb24485271374 s1=c14991f826026d59 s2=9e1955c8185575b0
+1791719170.868 F7 core-quiet 1921
+1791719172.300 F7 core-cover-removed
+1791719189.945 F7 final-equals-first-final True
+1791719195.945 C7 between forward and rollback
+1791719198.902 B7 core-cover-installed 2001:db8:10::/63 2001:db8:20::/63 2001:db8:30::/63
+1791719198.902 B7-r2 rb1 shield
+1791719199.330 B7-r2 shield-install s2 2001:db8:110:2::1
+1791719200.968 B7-r2 shield-verified s2
+1791719201.310 B7-r2 shield-install r2 2001:db8:110:2::2
+1791719203.526 B7-r2 shield-verified r2
+1791719206.526 B7-r2 rb2 static-restore start
+1791719209.464 B7-r2 rb2 router-statics-restored
+1791719209.960 B7-r2 rb2 switch-static-restored
+1791719216.319 B7-r2 rb3 shield-removal
+1791719217.519 B7-r2 takeover-nexthop r2 2001:db8:10::/64 static 2001:db8:110:2::2 before=DELAY after=DELAY
+1791719218.594 B7-r2 takeover-nexthop r2 2001:db8:20::/64 static 2001:db8:110:2::2 before=DELAY after=DELAY
+1791719219.641 B7-r2 takeover-nexthop r2 2001:db8:30::/64 static 2001:db8:110:2::2 before=DELAY after=DELAY
+1791719219.641 B7-r2 shield-remove r2
+1791719222.450 B7-r2 shield-removed r2
+1791719223.925 B7-r2 takeover-nexthop s2 2001:db8::/32 static 2001:db8:110:2::1 before=REACHABLE after=REACHABLE
+1791719223.926 B7-r2 shield-remove s2
+1791719225.839 B7-r2 shield-removed s2
+1791719228.839 B7-r1 rb1 shield
+1791719229.161 B7-r1 shield-install s1 2001:db8:110:1::1
+1791719230.875 B7-r1 shield-verified s1
+1791719231.240 B7-r1 shield-install r1 2001:db8:110:1::2
+1791719233.297 B7-r1 shield-verified r1
+1791719236.297 B7-r1 rb2 static-restore start
+1791719239.210 B7-r1 rb2 router-statics-restored
+1791719239.690 B7-r1 rb2 switch-static-restored
+1791719246.236 B7-r1 rb3 shield-removal
+1791719247.343 B7-r1 takeover-nexthop r1 2001:db8:10::/64 static 2001:db8:110:1::2 before=REACHABLE after=REACHABLE
+1791719248.465 B7-r1 takeover-nexthop r1 2001:db8:20::/64 static 2001:db8:110:1::2 before=REACHABLE after=REACHABLE
+1791719249.439 B7-r1 takeover-nexthop r1 2001:db8:30::/64 static 2001:db8:110:1::2 before=REACHABLE after=REACHABLE
+1791719249.439 B7-r1 shield-remove r1
+1791719251.524 B7-r1 shield-removed r1
+1791719252.962 B7-r1 takeover-nexthop s1 2001:db8::/32 static 2001:db8:110:1::1 before=REACHABLE after=REACHABLE
+1791719252.962 B7-r1 shield-remove s1
+1791719255.294 B7-r1 shield-removed s1
+1791719258.295 B7 rb4 withdraw-advertisements start
+1791719261.814 B7 rb5 isis-removal start
+1791719271.037 B7 rb6 baseline-config r1=2bd8c040664c1216 r2=6284ec1a7270b9dd s1=7d083ffd40ee3b4f s2=a4f9a4a23f07a916
+1791719398.390 B7 core-quiet 2149
+1791719399.789 B7 core-cover-removed
+1791719401.711 B7 baseline-restored True
+1791719406.711 C7 end load 29.08 24.15 22.97
+1791719420.549 C8 begin load 29.48 24.41 23.07
+1791719423.241 F8 core-cover-installed 2001:db8:10::/63 2001:db8:20::/63 2001:db8:30::/63
+1791719423.241 F8 stage1 vlan99-ipv6+isis start
+1791719428.318 F8 stage2 adjacencies wait
+1791719454.489 F8 stage3 advertise start
+1791719459.132 F8 stage4 isis-available wait (static still owns)
+1791719468.731 F8-r1 stage5 shield
+1791719469.063 F8-r1 shield-install s1 2001:db8:110:1::1
+1791719471.286 F8-r1 shield-verified s1
+1791719471.637 F8-r1 shield-install r1 2001:db8:110:1::2
+1791719474.123 F8-r1 shield-verified r1
+1791719474.123 F8-r1 stage6 shield-forwarding verify
+1791719480.611 F8-r1 stage7 static-removal start
+1791719481.348 F8-r1 stage7 switch-static-removed
+1791719481.871 F8-r1 stage7 router-floating-statics-added
+1791719484.339 F8-r1 stage7 router-statics-removed
+1791719488.741 F8-r1 stage7 router-floating-statics-removed
+1791719488.741 F8-r1 stage9 isis-ownership wait
+1791719496.037 F8-r1 stage10 shield-removal
+1791719497.611 F8-r1 takeover-nexthop r1 2001:db8:10::/64 isisL2 fe80::42:aff:fefb:1b03%eth3 before=REACHABLE after=REACHABLE
+1791719498.977 F8-r1 takeover-nexthop r1 2001:db8:20::/64 isisL2 fe80::42:aff:fefb:1b03%eth3 before=REACHABLE after=REACHABLE
+1791719500.393 F8-r1 takeover-nexthop r1 2001:db8:30::/64 isisL2 fe80::42:aff:fefb:1b03%eth3 before=REACHABLE after=REACHABLE
+1791719500.393 F8-r1 shield-remove r1
+1791719504.385 F8-r1 shield-removed r1
+1791719506.176 F8-r1 takeover-nexthop s1 2001:db8::/32 isisL2 fe80::42:aff:fefb:1b02%eth1 before=DELAY after=DELAY
+1791719506.176 F8-r1 shield-remove s1
+1791719508.656 F8-r1 shield-removed s1
+1791719508.656 F8-r1 stage11 final-forwarding verify
+1791719514.503 F8-r2 stage5 shield
+1791719514.811 F8-r2 shield-install s2 2001:db8:110:2::1
+1791719516.737 F8-r2 shield-verified s2
+1791719517.192 F8-r2 shield-install r2 2001:db8:110:2::2
+1791719520.070 F8-r2 shield-verified r2
+1791719520.070 F8-r2 stage6 shield-forwarding verify
+1791719528.261 F8-r2 stage7 static-removal start
+1791719529.197 F8-r2 stage7 switch-static-removed
+1791719529.909 F8-r2 stage7 router-floating-statics-added
+1791719532.447 F8-r2 stage7 router-statics-removed
+1791719536.582 F8-r2 stage7 router-floating-statics-removed
+1791719536.582 F8-r2 stage9 isis-ownership wait
+1791719544.070 F8-r2 stage10 shield-removal
+1791719545.310 F8-r2 takeover-nexthop r2 2001:db8:10::/64 isisL2 fe80::42:aff:fefb:1c03%eth3 before=REACHABLE after=REACHABLE
+1791719546.470 F8-r2 takeover-nexthop r2 2001:db8:20::/64 isisL2 fe80::42:aff:fefb:1c03%eth3 before=REACHABLE after=REACHABLE
+1791719547.679 F8-r2 takeover-nexthop r2 2001:db8:30::/64 isisL2 fe80::42:aff:fefb:1c03%eth3 before=REACHABLE after=REACHABLE
+1791719547.679 F8-r2 shield-remove r2
+1791719549.690 F8-r2 shield-removed r2
+1791719550.755 F8-r2 takeover-nexthop s2 2001:db8::/32 isisL2 fe80::42:aff:fefb:1c02%eth1 before=DELAY after=DELAY
+1791719550.755 F8-r2 shield-remove s2
+1791719552.397 F8-r2 shield-removed s2
+1791719552.397 F8-r2 stage11 final-forwarding verify
+1791719562.023 F8 stage12 final-config r1=5408a3ab57b34d17 r2=4d5eb24485271374 s1=c14991f826026d59 s2=9e1955c8185575b0
+1791719689.955 F8 core-quiet 2440
+1791719691.352 F8 core-cover-removed
+1791719710.670 F8 final-equals-first-final True
+1791719716.670 C8 between forward and rollback
+1791719719.381 B8 core-cover-installed 2001:db8:10::/63 2001:db8:20::/63 2001:db8:30::/63
+1791719719.381 B8-r2 rb1 shield
+1791719719.748 B8-r2 shield-install s2 2001:db8:110:2::1
+1791719721.234 B8-r2 shield-verified s2
+1791719721.555 B8-r2 shield-install r2 2001:db8:110:2::2
+1791719723.635 B8-r2 shield-verified r2
+1791719726.635 B8-r2 rb2 static-restore start
+1791719729.505 B8-r2 rb2 router-statics-restored
+1791719729.845 B8-r2 rb2 switch-static-restored
+1791719736.891 B8-r2 rb3 shield-removal
+1791719738.172 B8-r2 takeover-nexthop r2 2001:db8:10::/64 static 2001:db8:110:2::2 before=DELAY after=DELAY
+1791719739.305 B8-r2 takeover-nexthop r2 2001:db8:20::/64 static 2001:db8:110:2::2 before=DELAY after=DELAY
+1791719740.415 B8-r2 takeover-nexthop r2 2001:db8:30::/64 static 2001:db8:110:2::2 before=DELAY after=DELAY
+1791719740.415 B8-r2 shield-remove r2
+1791719742.786 B8-r2 shield-removed r2
+1791719744.071 B8-r2 takeover-nexthop s2 2001:db8::/32 static 2001:db8:110:2::1 before=REACHABLE after=REACHABLE
+1791719744.072 B8-r2 shield-remove s2
+1791719745.839 B8-r2 shield-removed s2
+1791719748.839 B8-r1 rb1 shield
+1791719749.229 B8-r1 shield-install s1 2001:db8:110:1::1
+1791719750.870 B8-r1 shield-verified s1
+1791719751.173 B8-r1 shield-install r1 2001:db8:110:1::2
+1791719753.597 B8-r1 shield-verified r1
+1791719756.597 B8-r1 rb2 static-restore start
+1791719759.509 B8-r1 rb2 router-statics-restored
+1791719759.874 B8-r1 rb2 switch-static-restored
+1791719766.610 B8-r1 rb3 shield-removal
+1791719768.024 B8-r1 takeover-nexthop r1 2001:db8:10::/64 static 2001:db8:110:1::2 before=REACHABLE after=REACHABLE
+1791719769.088 B8-r1 takeover-nexthop r1 2001:db8:20::/64 static 2001:db8:110:1::2 before=REACHABLE after=REACHABLE
+1791719770.382 B8-r1 takeover-nexthop r1 2001:db8:30::/64 static 2001:db8:110:1::2 before=REACHABLE after=REACHABLE
+1791719770.382 B8-r1 shield-remove r1
+1791719772.606 B8-r1 shield-removed r1
+1791719773.785 B8-r1 takeover-nexthop s1 2001:db8::/32 static 2001:db8:110:1::1 before=REACHABLE after=REACHABLE
+1791719773.785 B8-r1 shield-remove s1
+1791719775.578 B8-r1 shield-removed s1
+1791719778.578 B8 rb4 withdraw-advertisements start
+1791719782.007 B8 rb5 isis-removal start
+1791719791.089 B8 rb6 baseline-config r1=2bd8c040664c1216 r2=6284ec1a7270b9dd s1=7d083ffd40ee3b4f s2=a4f9a4a23f07a916
+1791719919.219 B8 core-quiet 159
+1791719920.677 B8 core-cover-removed
+1791719922.549 B8 baseline-restored True
+1791719927.549 C8 end load 22.54 25.34 24.56
+1791719940.908 C9 begin load 21.33 24.93 24.44
+1791719943.811 F9 core-cover-installed 2001:db8:10::/63 2001:db8:20::/63 2001:db8:30::/63
+1791719943.811 F9 stage1 vlan99-ipv6+isis start
+1791719949.663 F9 stage2 adjacencies wait
+1791719964.816 F9 stage3 advertise start
+1791719969.894 F9 stage4 isis-available wait (static still owns)
+1791719978.137 F9-r1 stage5 shield
+1791719978.483 F9-r1 shield-install s1 2001:db8:110:1::1
+1791719980.376 F9-r1 shield-verified s1
+1791719980.733 F9-r1 shield-install r1 2001:db8:110:1::2
+1791719983.258 F9-r1 shield-verified r1
+1791719983.258 F9-r1 stage6 shield-forwarding verify
+1791719989.153 F9-r1 stage7 static-removal start
+1791719989.584 F9-r1 stage7 switch-static-removed
+1791719990.134 F9-r1 stage7 router-floating-statics-added
+1791719992.550 F9-r1 stage7 router-statics-removed
+1791719996.169 F9-r1 stage7 router-floating-statics-removed
+1791719996.169 F9-r1 stage9 isis-ownership wait
+1791720003.293 F9-r1 stage10 shield-removal
+1791720004.397 F9-r1 takeover-nexthop r1 2001:db8:10::/64 isisL2 fe80::42:aff:fefb:1b03%eth3 before=REACHABLE after=REACHABLE
+1791720005.601 F9-r1 takeover-nexthop r1 2001:db8:20::/64 isisL2 fe80::42:aff:fefb:1b03%eth3 before=REACHABLE after=REACHABLE
+1791720006.550 F9-r1 takeover-nexthop r1 2001:db8:30::/64 isisL2 fe80::42:aff:fefb:1b03%eth3 before=REACHABLE after=REACHABLE
+1791720006.550 F9-r1 shield-remove r1
+1791720009.362 F9-r1 shield-removed r1
+1791720010.719 F9-r1 takeover-nexthop s1 2001:db8::/32 isisL2 fe80::42:aff:fefb:1b02%eth1 before=DELAY after=DELAY
+1791720010.719 F9-r1 shield-remove s1
+1791720012.615 F9-r1 shield-removed s1
+1791720012.615 F9-r1 stage11 final-forwarding verify
+1791720017.414 F9-r2 stage5 shield
+1791720017.796 F9-r2 shield-install s2 2001:db8:110:2::1
+1791720019.623 F9-r2 shield-verified s2
+1791720020.021 F9-r2 shield-install r2 2001:db8:110:2::2
+1791720022.070 F9-r2 shield-verified r2
+1791720022.070 F9-r2 stage6 shield-forwarding verify
+1791720027.800 F9-r2 stage7 static-removal start
+1791720028.212 F9-r2 stage7 switch-static-removed
+1791720028.667 F9-r2 stage7 router-floating-statics-added
+1791720031.135 F9-r2 stage7 router-statics-removed
+1791720034.757 F9-r2 stage7 router-floating-statics-removed
+1791720034.757 F9-r2 stage9 isis-ownership wait
+1791720041.814 F9-r2 stage10 shield-removal
+1791720042.936 F9-r2 takeover-nexthop r2 2001:db8:10::/64 isisL2 fe80::42:aff:fefb:1c03%eth3 before=REACHABLE after=REACHABLE
+1791720044.162 F9-r2 takeover-nexthop r2 2001:db8:20::/64 isisL2 fe80::42:aff:fefb:1c03%eth3 before=REACHABLE after=REACHABLE
+1791720045.311 F9-r2 takeover-nexthop r2 2001:db8:30::/64 isisL2 fe80::42:aff:fefb:1c03%eth3 before=REACHABLE after=REACHABLE
+1791720045.311 F9-r2 shield-remove r2
+1791720048.033 F9-r2 shield-removed r2
+1791720049.284 F9-r2 takeover-nexthop s2 2001:db8::/32 isisL2 fe80::42:aff:fefb:1c02%eth1 before=DELAY after=DELAY
+1791720049.284 F9-r2 shield-remove s2
+1791720051.100 F9-r2 shield-removed s2
+1791720051.100 F9-r2 stage11 final-forwarding verify
+1791720060.238 F9 stage12 final-config r1=5408a3ab57b34d17 r2=4d5eb24485271374 s1=c14991f826026d59 s2=9e1955c8185575b0
+1791720181.734 F9 core-quiet 421
+1791720183.375 F9 core-cover-removed
+1791720202.139 F9 final-equals-first-final True
+1791720208.139 C9 between forward and rollback
+1791720211.031 B9 core-cover-installed 2001:db8:10::/63 2001:db8:20::/63 2001:db8:30::/63
+1791720211.031 B9-r2 rb1 shield
+1791720211.333 B9-r2 shield-install s2 2001:db8:110:2::1
+1791720212.811 B9-r2 shield-verified s2
+1791720213.155 B9-r2 shield-install r2 2001:db8:110:2::2
+1791720215.319 B9-r2 shield-verified r2
+1791720218.319 B9-r2 rb2 static-restore start
+1791720221.240 B9-r2 rb2 router-statics-restored
+1791720221.637 B9-r2 rb2 switch-static-restored
+1791720228.312 B9-r2 rb3 shield-removal
+1791720229.467 B9-r2 takeover-nexthop r2 2001:db8:10::/64 static 2001:db8:110:2::2 before=DELAY after=DELAY
+1791720230.542 B9-r2 takeover-nexthop r2 2001:db8:20::/64 static 2001:db8:110:2::2 before=DELAY after=DELAY
+1791720231.709 B9-r2 takeover-nexthop r2 2001:db8:30::/64 static 2001:db8:110:2::2 before=DELAY after=DELAY
+1791720231.709 B9-r2 shield-remove r2
+1791720233.605 B9-r2 shield-removed r2
+1791720234.666 B9-r2 takeover-nexthop s2 2001:db8::/32 static 2001:db8:110:2::1 before=REACHABLE after=REACHABLE
+1791720234.666 B9-r2 shield-remove s2
+1791720236.287 B9-r2 shield-removed s2
+1791720239.287 B9-r1 rb1 shield
+1791720239.603 B9-r1 shield-install s1 2001:db8:110:1::1
+1791720241.182 B9-r1 shield-verified s1
+1791720241.588 B9-r1 shield-install r1 2001:db8:110:1::2
+1791720243.766 B9-r1 shield-verified r1
+1791720246.766 B9-r1 rb2 static-restore start
+1791720249.667 B9-r1 rb2 router-statics-restored
+1791720250.274 B9-r1 rb2 switch-static-restored
+1791720257.170 B9-r1 rb3 shield-removal
+1791720258.180 B9-r1 takeover-nexthop r1 2001:db8:10::/64 static 2001:db8:110:1::2 before=REACHABLE after=REACHABLE
+1791720259.589 B9-r1 takeover-nexthop r1 2001:db8:20::/64 static 2001:db8:110:1::2 before=REACHABLE after=REACHABLE
+1791720260.746 B9-r1 takeover-nexthop r1 2001:db8:30::/64 static 2001:db8:110:1::2 before=REACHABLE after=REACHABLE
+1791720260.746 B9-r1 shield-remove r1
+1791720262.832 B9-r1 shield-removed r1
+1791720263.807 B9-r1 takeover-nexthop s1 2001:db8::/32 static 2001:db8:110:1::1 before=REACHABLE after=REACHABLE
+1791720263.807 B9-r1 shield-remove s1
+1791720265.511 B9-r1 shield-removed s1
+1791720268.511 B9 rb4 withdraw-advertisements start
+1791720272.066 B9 rb5 isis-removal start
+1791720281.796 B9 rb6 baseline-config r1=2bd8c040664c1216 r2=6284ec1a7270b9dd s1=7d083ffd40ee3b4f s2=a4f9a4a23f07a916
+1791720408.760 B9 core-quiet 648
+1791720410.268 B9 core-cover-removed
+1791720412.333 B9 baseline-restored True
+1791720417.333 C9 end load 24.77 20.85 22.36
+1791720430.820 C10 begin load 24.40 20.90 22.36
+1791720433.857 F10 core-cover-installed 2001:db8:10::/63 2001:db8:20::/63 2001:db8:30::/63
+1791720433.857 F10 stage1 vlan99-ipv6+isis start
+1791720438.966 F10 stage2 adjacencies wait
+1791720463.392 F10 stage3 advertise start
+1791720468.094 F10 stage4 isis-available wait (static still owns)
+1791720477.040 F10-r1 stage5 shield
+1791720477.406 F10-r1 shield-install s1 2001:db8:110:1::1
+1791720479.186 F10-r1 shield-verified s1
+1791720479.564 F10-r1 shield-install r1 2001:db8:110:1::2
+1791720482.053 F10-r1 shield-verified r1
+1791720482.053 F10-r1 stage6 shield-forwarding verify
+1791720488.165 F10-r1 stage7 static-removal start
+1791720488.585 F10-r1 stage7 switch-static-removed
+1791720489.132 F10-r1 stage7 router-floating-statics-added
+1791720491.556 F10-r1 stage7 router-statics-removed
+1791720495.706 F10-r1 stage7 router-floating-statics-removed
+1791720495.706 F10-r1 stage9 isis-ownership wait
+1791720503.374 F10-r1 stage10 shield-removal
+1791720504.416 F10-r1 takeover-nexthop r1 2001:db8:10::/64 isisL2 fe80::42:aff:fefb:1b03%eth3 before=REACHABLE after=REACHABLE
+1791720505.570 F10-r1 takeover-nexthop r1 2001:db8:20::/64 isisL2 fe80::42:aff:fefb:1b03%eth3 before=REACHABLE after=REACHABLE
+1791720506.644 F10-r1 takeover-nexthop r1 2001:db8:30::/64 isisL2 fe80::42:aff:fefb:1b03%eth3 before=REACHABLE after=REACHABLE
+1791720506.644 F10-r1 shield-remove r1
+1791720508.717 F10-r1 shield-removed r1
+1791720509.770 F10-r1 takeover-nexthop s1 2001:db8::/32 isisL2 fe80::42:aff:fefb:1b02%eth1 before=DELAY after=DELAY
+1791720509.770 F10-r1 shield-remove s1
+1791720511.314 F10-r1 shield-removed s1
+1791720511.314 F10-r1 stage11 final-forwarding verify
+1791720516.221 F10-r2 stage5 shield
+1791720516.556 F10-r2 shield-install s2 2001:db8:110:2::1
+1791720518.143 F10-r2 shield-verified s2
+1791720518.513 F10-r2 shield-install r2 2001:db8:110:2::2
+1791720520.858 F10-r2 shield-verified r2
+1791720520.858 F10-r2 stage6 shield-forwarding verify
+1791720526.967 F10-r2 stage7 static-removal start
+1791720527.442 F10-r2 stage7 switch-static-removed
+1791720527.894 F10-r2 stage7 router-floating-statics-added
+1791720530.343 F10-r2 stage7 router-statics-removed
+1791720534.182 F10-r2 stage7 router-floating-statics-removed
+1791720534.183 F10-r2 stage9 isis-ownership wait
+1791720541.069 F10-r2 stage10 shield-removal
+1791720542.602 F10-r2 takeover-nexthop r2 2001:db8:10::/64 isisL2 fe80::42:aff:fefb:1c03%eth3 before=REACHABLE after=REACHABLE
+1791720543.648 F10-r2 takeover-nexthop r2 2001:db8:20::/64 isisL2 fe80::42:aff:fefb:1c03%eth3 before=REACHABLE after=REACHABLE
+1791720544.848 F10-r2 takeover-nexthop r2 2001:db8:30::/64 isisL2 fe80::42:aff:fefb:1c03%eth3 before=REACHABLE after=REACHABLE
+1791720544.848 F10-r2 shield-remove r2
+1791720547.046 F10-r2 shield-removed r2
+1791720548.065 F10-r2 takeover-nexthop s2 2001:db8::/32 isisL2 fe80::42:aff:fefb:1c02%eth1 before=DELAY after=DELAY
+1791720548.065 F10-r2 shield-remove s2
+1791720549.356 F10-r2 shield-removed s2
+1791720549.356 F10-r2 stage11 final-forwarding verify
+1791720559.598 F10 stage12 final-config r1=5408a3ab57b34d17 r2=4d5eb24485271374 s1=c14991f826026d59 s2=9e1955c8185575b0
+1791720686.596 F10 core-quiet 926
+1791720688.163 F10 core-cover-removed
+1791720707.144 F10 final-equals-first-final True
+1791720713.144 C10 between forward and rollback
+1791720715.943 B10 core-cover-installed 2001:db8:10::/63 2001:db8:20::/63 2001:db8:30::/63
+1791720715.943 B10-r2 rb1 shield
+1791720716.273 B10-r2 shield-install s2 2001:db8:110:2::1
+1791720717.843 B10-r2 shield-verified s2
+1791720718.281 B10-r2 shield-install r2 2001:db8:110:2::2
+1791720720.299 B10-r2 shield-verified r2
+1791720723.299 B10-r2 rb2 static-restore start
+1791720726.186 B10-r2 rb2 router-statics-restored
+1791720726.654 B10-r2 rb2 switch-static-restored
+1791720733.290 B10-r2 rb3 shield-removal
+1791720734.320 B10-r2 takeover-nexthop r2 2001:db8:10::/64 static 2001:db8:110:2::2 before=DELAY after=DELAY
+1791720735.428 B10-r2 takeover-nexthop r2 2001:db8:20::/64 static 2001:db8:110:2::2 before=DELAY after=DELAY
+1791720736.488 B10-r2 takeover-nexthop r2 2001:db8:30::/64 static 2001:db8:110:2::2 before=DELAY after=DELAY
+1791720736.488 B10-r2 shield-remove r2
+1791720738.863 B10-r2 shield-removed r2
+1791720740.122 B10-r2 takeover-nexthop s2 2001:db8::/32 static 2001:db8:110:2::1 before=REACHABLE after=REACHABLE
+1791720740.122 B10-r2 shield-remove s2
+1791720741.716 B10-r2 shield-removed s2
+1791720744.717 B10-r1 rb1 shield
+1791720745.017 B10-r1 shield-install s1 2001:db8:110:1::1
+1791720746.583 B10-r1 shield-verified s1
+1791720746.940 B10-r1 shield-install r1 2001:db8:110:1::2
+1791720749.074 B10-r1 shield-verified r1
+1791720752.075 B10-r1 rb2 static-restore start
+1791720754.888 B10-r1 rb2 router-statics-restored
+1791720755.333 B10-r1 rb2 switch-static-restored
+1791720762.129 B10-r1 rb3 shield-removal
+1791720763.558 B10-r1 takeover-nexthop r1 2001:db8:10::/64 static 2001:db8:110:1::2 before=REACHABLE after=REACHABLE
+1791720764.922 B10-r1 takeover-nexthop r1 2001:db8:20::/64 static 2001:db8:110:1::2 before=REACHABLE after=REACHABLE
+1791720766.116 B10-r1 takeover-nexthop r1 2001:db8:30::/64 static 2001:db8:110:1::2 before=REACHABLE after=REACHABLE
+1791720766.116 B10-r1 shield-remove r1
+1791720768.742 B10-r1 shield-removed r1
+1791720769.950 B10-r1 takeover-nexthop s1 2001:db8::/32 static 2001:db8:110:1::1 before=REACHABLE after=REACHABLE
+1791720769.950 B10-r1 shield-remove s1
+1791720771.770 B10-r1 shield-removed s1
+1791720774.770 B10 rb4 withdraw-advertisements start
+1791720778.547 B10 rb5 isis-removal start
+1791720788.686 B10 rb6 baseline-config r1=2bd8c040664c1216 r2=6284ec1a7270b9dd s1=7d083ffd40ee3b4f s2=a4f9a4a23f07a916
+1791720915.521 B10 core-quiet 1155
+1791720916.874 B10 core-cover-removed
+1791720918.878 B10 baseline-restored True
+1791720923.879 C10 end load 27.58 27.00 24.99
+1791720937.262 C11 begin load 26.82 26.86 24.97
+1791720940.765 F11 core-cover-installed 2001:db8:10::/63 2001:db8:20::/63 2001:db8:30::/63
+1791720940.765 F11 stage1 vlan99-ipv6+isis start
+1791720948.592 F11 stage2 adjacencies wait
+1791720967.601 F11 stage3 advertise start
+1791720971.880 F11 stage4 isis-available wait (static still owns)
+1791720980.839 F11-r1 stage5 shield
+1791720981.173 F11-r1 shield-install s1 2001:db8:110:1::1
+1791720982.852 F11-r1 shield-verified s1
+1791720983.225 F11-r1 shield-install r1 2001:db8:110:1::2
+1791720985.553 F11-r1 shield-verified r1
+1791720985.554 F11-r1 stage6 shield-forwarding verify
+1791720991.434 F11-r1 stage7 static-removal start
+1791720991.907 F11-r1 stage7 switch-static-removed
+1791720992.338 F11-r1 stage7 router-floating-statics-added
+1791720994.835 F11-r1 stage7 router-statics-removed
+1791720998.389 F11-r1 stage7 router-floating-statics-removed
+1791720998.389 F11-r1 stage9 isis-ownership wait
+1791721005.669 F11-r1 stage10 shield-removal
+1791721006.782 F11-r1 takeover-nexthop r1 2001:db8:10::/64 isisL2 fe80::42:aff:fefb:1b03%eth3 before=REACHABLE after=REACHABLE
+1791721007.841 F11-r1 takeover-nexthop r1 2001:db8:20::/64 isisL2 fe80::42:aff:fefb:1b03%eth3 before=REACHABLE after=REACHABLE
+1791721009.063 F11-r1 takeover-nexthop r1 2001:db8:30::/64 isisL2 fe80::42:aff:fefb:1b03%eth3 before=REACHABLE after=REACHABLE
+1791721009.063 F11-r1 shield-remove r1
+1791721011.473 F11-r1 shield-removed r1
+1791721012.521 F11-r1 takeover-nexthop s1 2001:db8::/32 isisL2 fe80::42:aff:fefb:1b02%eth1 before=DELAY after=DELAY
+1791721012.521 F11-r1 shield-remove s1
+1791721014.695 F11-r1 shield-removed s1
+1791721014.695 F11-r1 stage11 final-forwarding verify
+1791721019.523 F11-r2 stage5 shield
+1791721019.860 F11-r2 shield-install s2 2001:db8:110:2::1
+1791721021.368 F11-r2 shield-verified s2
+1791721021.725 F11-r2 shield-install r2 2001:db8:110:2::2
+1791721023.782 F11-r2 shield-verified r2
+1791721023.782 F11-r2 stage6 shield-forwarding verify
+1791721029.946 F11-r2 stage7 static-removal start
+1791721030.336 F11-r2 stage7 switch-static-removed
+1791721030.727 F11-r2 stage7 router-floating-statics-added
+1791721033.390 F11-r2 stage7 router-statics-removed
+1791721037.108 F11-r2 stage7 router-floating-statics-removed
+1791721037.108 F11-r2 stage9 isis-ownership wait
+1791721044.751 F11-r2 stage10 shield-removal
+1791721045.823 F11-r2 takeover-nexthop r2 2001:db8:10::/64 isisL2 fe80::42:aff:fefb:1c03%eth3 before=REACHABLE after=REACHABLE
+1791721046.900 F11-r2 takeover-nexthop r2 2001:db8:20::/64 isisL2 fe80::42:aff:fefb:1c03%eth3 before=REACHABLE after=REACHABLE
+1791721047.938 F11-r2 takeover-nexthop r2 2001:db8:30::/64 isisL2 fe80::42:aff:fefb:1c03%eth3 before=REACHABLE after=REACHABLE
+1791721047.938 F11-r2 shield-remove r2
+1791721049.799 F11-r2 shield-removed r2
+1791721050.921 F11-r2 takeover-nexthop s2 2001:db8::/32 isisL2 fe80::42:aff:fefb:1c02%eth1 before=DELAY after=DELAY
+1791721050.921 F11-r2 shield-remove s2
+1791721052.495 F11-r2 shield-removed s2
+1791721052.495 F11-r2 stage11 final-forwarding verify
+1791721062.024 F11 stage12 final-config r1=5408a3ab57b34d17 r2=4d5eb24485271374 s1=c14991f826026d59 s2=9e1955c8185575b0
+1791721188.933 F11 core-quiet 1429
+1791721190.335 F11 core-cover-removed
+1791721208.359 F11 final-equals-first-final True
+1791721214.360 C11 between forward and rollback
+1791721217.281 B11 core-cover-installed 2001:db8:10::/63 2001:db8:20::/63 2001:db8:30::/63
+1791721217.281 B11-r2 rb1 shield
+1791721217.653 B11-r2 shield-install s2 2001:db8:110:2::1
+1791721219.322 B11-r2 shield-verified s2
+1791721219.689 B11-r2 shield-install r2 2001:db8:110:2::2
+1791721221.792 B11-r2 shield-verified r2
+1791721224.792 B11-r2 rb2 static-restore start
+1791721227.743 B11-r2 rb2 router-statics-restored
+1791721228.227 B11-r2 rb2 switch-static-restored
+1791721234.883 B11-r2 rb3 shield-removal
+1791721236.042 B11-r2 takeover-nexthop r2 2001:db8:10::/64 static 2001:db8:110:2::2 before=DELAY after=DELAY
+1791721237.406 B11-r2 takeover-nexthop r2 2001:db8:20::/64 static 2001:db8:110:2::2 before=DELAY after=DELAY
+1791721238.513 B11-r2 takeover-nexthop r2 2001:db8:30::/64 static 2001:db8:110:2::2 before=DELAY after=DELAY
+1791721238.513 B11-r2 shield-remove r2
+1791721240.586 B11-r2 shield-removed r2
+1791721241.639 B11-r2 takeover-nexthop s2 2001:db8::/32 static 2001:db8:110:2::1 before=REACHABLE after=REACHABLE
+1791721241.639 B11-r2 shield-remove s2
+1791721243.352 B11-r2 shield-removed s2
+1791721246.352 B11-r1 rb1 shield
+1791721246.662 B11-r1 shield-install s1 2001:db8:110:1::1
+1791721249.102 B11-r1 shield-verified s1
+1791721249.463 B11-r1 shield-install r1 2001:db8:110:1::2
+1791721251.807 B11-r1 shield-verified r1
+1791721254.807 B11-r1 rb2 static-restore start
+1791721257.753 B11-r1 rb2 router-statics-restored
+1791721258.183 B11-r1 rb2 switch-static-restored
+1791721264.573 B11-r1 rb3 shield-removal
+1791721265.639 B11-r1 takeover-nexthop r1 2001:db8:10::/64 static 2001:db8:110:1::2 before=REACHABLE after=REACHABLE
+1791721267.033 B11-r1 takeover-nexthop r1 2001:db8:20::/64 static 2001:db8:110:1::2 before=REACHABLE after=REACHABLE
+1791721268.082 B11-r1 takeover-nexthop r1 2001:db8:30::/64 static 2001:db8:110:1::2 before=REACHABLE after=REACHABLE
+1791721268.082 B11-r1 shield-remove r1
+1791721270.100 B11-r1 shield-removed r1
+1791721271.194 B11-r1 takeover-nexthop s1 2001:db8::/32 static 2001:db8:110:1::1 before=REACHABLE after=REACHABLE
+1791721271.194 B11-r1 shield-remove s1
+1791721272.578 B11-r1 shield-removed s1
+1791721275.579 B11 rb4 withdraw-advertisements start
+1791721279.452 B11 rb5 isis-removal start
+1791721288.791 B11 rb6 baseline-config r1=2bd8c040664c1216 r2=6284ec1a7270b9dd s1=7d083ffd40ee3b4f s2=a4f9a4a23f07a916
+1791721415.199 B11 core-quiet 1655
+1791721416.584 B11 core-cover-removed
+1791721418.281 B11 baseline-restored True
+1791721423.281 C11 end load 22.46 22.60 23.68
+1791721437.214 C12 begin load 22.63 22.65 23.68
+1791721439.918 F12 core-cover-installed 2001:db8:10::/63 2001:db8:20::/63 2001:db8:30::/63
+1791721439.918 F12 stage1 vlan99-ipv6+isis start
+1791721445.456 F12 stage2 adjacencies wait
+1791721461.354 F12 stage3 advertise start
+1791721466.948 F12 stage4 isis-available wait (static still owns)
+1791721475.608 F12-r1 stage5 shield
+1791721475.985 F12-r1 shield-install s1 2001:db8:110:1::1
+1791721477.894 F12-r1 shield-verified s1
+1791721478.252 F12-r1 shield-install r1 2001:db8:110:1::2
+1791721480.927 F12-r1 shield-verified r1
+1791721480.927 F12-r1 stage6 shield-forwarding verify
+1791721487.663 F12-r1 stage7 static-removal start
+1791721488.199 F12-r1 stage7 switch-static-removed
+1791721488.788 F12-r1 stage7 router-floating-statics-added
+1791721491.176 F12-r1 stage7 router-statics-removed
+1791721495.175 F12-r1 stage7 router-floating-statics-removed
+1791721495.175 F12-r1 stage9 isis-ownership wait
+1791721502.882 F12-r1 stage10 shield-removal
+1791721503.848 F12-r1 takeover-nexthop r1 2001:db8:10::/64 isisL2 fe80::42:aff:fefb:1b03%eth3 before=REACHABLE after=REACHABLE
+1791721504.948 F12-r1 takeover-nexthop r1 2001:db8:20::/64 isisL2 fe80::42:aff:fefb:1b03%eth3 before=REACHABLE after=REACHABLE
+1791721506.052 F12-r1 takeover-nexthop r1 2001:db8:30::/64 isisL2 fe80::42:aff:fefb:1b03%eth3 before=REACHABLE after=REACHABLE
+1791721506.052 F12-r1 shield-remove r1
+1791721508.385 F12-r1 shield-removed r1
+1791721509.552 F12-r1 takeover-nexthop s1 2001:db8::/32 isisL2 fe80::42:aff:fefb:1b02%eth1 before=DELAY after=DELAY
+1791721509.552 F12-r1 shield-remove s1
+1791721511.322 F12-r1 shield-removed s1
+1791721511.322 F12-r1 stage11 final-forwarding verify
+1791721515.915 F12-r2 stage5 shield
+1791721516.310 F12-r2 shield-install s2 2001:db8:110:2::1
+1791721518.412 F12-r2 shield-verified s2
+1791721518.870 F12-r2 shield-install r2 2001:db8:110:2::2
+1791721521.459 F12-r2 shield-verified r2
+1791721521.459 F12-r2 stage6 shield-forwarding verify
+1791721527.455 F12-r2 stage7 static-removal start
+1791721527.952 F12-r2 stage7 switch-static-removed
+1791721528.517 F12-r2 stage7 router-floating-statics-added
+1791721530.978 F12-r2 stage7 router-statics-removed
+1791721534.766 F12-r2 stage7 router-floating-statics-removed
+1791721534.767 F12-r2 stage9 isis-ownership wait
+1791721541.894 F12-r2 stage10 shield-removal
+1791721543.012 F12-r2 takeover-nexthop r2 2001:db8:10::/64 isisL2 fe80::42:aff:fefb:1c03%eth3 before=REACHABLE after=REACHABLE
+1791721544.167 F12-r2 takeover-nexthop r2 2001:db8:20::/64 isisL2 fe80::42:aff:fefb:1c03%eth3 before=REACHABLE after=REACHABLE
+1791721545.181 F12-r2 takeover-nexthop r2 2001:db8:30::/64 isisL2 fe80::42:aff:fefb:1c03%eth3 before=REACHABLE after=REACHABLE
+1791721545.181 F12-r2 shield-remove r2
+1791721548.095 F12-r2 shield-removed r2
+1791721549.415 F12-r2 takeover-nexthop s2 2001:db8::/32 isisL2 fe80::42:aff:fefb:1c02%eth1 before=DELAY after=DELAY
+1791721549.416 F12-r2 shield-remove s2
+1791721551.151 F12-r2 shield-removed s2
+1791721551.151 F12-r2 stage11 final-forwarding verify
+1791721561.092 F12 stage12 final-config r1=5408a3ab57b34d17 r2=4d5eb24485271374 s1=c14991f826026d59 s2=9e1955c8185575b0
+1791721689.084 F12 core-quiet 1929
+1791721690.557 F12 core-cover-removed
+1791721709.325 F12 final-equals-first-final True
+1791721715.325 C12 between forward and rollback
+1791721718.071 B12 core-cover-installed 2001:db8:10::/63 2001:db8:20::/63 2001:db8:30::/63
+1791721718.071 B12-r2 rb1 shield
+1791721718.396 B12-r2 shield-install s2 2001:db8:110:2::1
+1791721720.084 B12-r2 shield-verified s2
+1791721720.439 B12-r2 shield-install r2 2001:db8:110:2::2
+1791721722.403 B12-r2 shield-verified r2
+1791721725.403 B12-r2 rb2 static-restore start
+1791721728.469 B12-r2 rb2 router-statics-restored
+1791721729.103 B12-r2 rb2 switch-static-restored
+1791721736.038 B12-r2 rb3 shield-removal
+1791721737.042 B12-r2 takeover-nexthop r2 2001:db8:10::/64 static 2001:db8:110:2::2 before=DELAY after=DELAY
+1791721738.047 B12-r2 takeover-nexthop r2 2001:db8:20::/64 static 2001:db8:110:2::2 before=DELAY after=DELAY
+1791721739.114 B12-r2 takeover-nexthop r2 2001:db8:30::/64 static 2001:db8:110:2::2 before=DELAY after=DELAY
+1791721739.114 B12-r2 shield-remove r2
+1791721741.045 B12-r2 shield-removed r2
+1791721742.241 B12-r2 takeover-nexthop s2 2001:db8::/32 static 2001:db8:110:2::1 before=REACHABLE after=REACHABLE
+1791721742.241 B12-r2 shield-remove s2
+1791721743.576 B12-r2 shield-removed s2
+1791721746.576 B12-r1 rb1 shield
+1791721747.045 B12-r1 shield-install s1 2001:db8:110:1::1
+1791721748.577 B12-r1 shield-verified s1
+1791721748.956 B12-r1 shield-install r1 2001:db8:110:1::2
+1791721751.168 B12-r1 shield-verified r1
+1791721754.168 B12-r1 rb2 static-restore start
+1791721757.170 B12-r1 rb2 router-statics-restored
+1791721757.753 B12-r1 rb2 switch-static-restored
+1791721764.813 B12-r1 rb3 shield-removal
+1791721765.847 B12-r1 takeover-nexthop r1 2001:db8:10::/64 static 2001:db8:110:1::2 before=REACHABLE after=REACHABLE
+1791721766.919 B12-r1 takeover-nexthop r1 2001:db8:20::/64 static 2001:db8:110:1::2 before=REACHABLE after=REACHABLE
+1791721768.031 B12-r1 takeover-nexthop r1 2001:db8:30::/64 static 2001:db8:110:1::2 before=REACHABLE after=REACHABLE
+1791721768.031 B12-r1 shield-remove r1
+1791721770.137 B12-r1 shield-removed r1
+1791721771.299 B12-r1 takeover-nexthop s1 2001:db8::/32 static 2001:db8:110:1::1 before=REACHABLE after=REACHABLE
+1791721771.299 B12-r1 shield-remove s1
+1791721772.820 B12-r1 shield-removed s1
+1791721775.820 B12 rb4 withdraw-advertisements start
+1791721779.243 B12 rb5 isis-removal start
+1791721789.463 B12 rb6 baseline-config r1=2bd8c040664c1216 r2=6284ec1a7270b9dd s1=7d083ffd40ee3b4f s2=a4f9a4a23f07a916
+1791721915.751 B12 core-quiet 187
+1791721917.239 B12 core-cover-removed
+1791721919.233 B12 baseline-restored True
+1791721924.233 C12 end load 25.57 23.35 23.31
+1791721937.533 C13 begin load 25.15 23.35 23.31
+1791721940.712 F13 core-cover-installed 2001:db8:10::/63 2001:db8:20::/63 2001:db8:30::/63
+1791721940.712 F13 stage1 vlan99-ipv6+isis start
+1791721945.446 F13 stage2 adjacencies wait
+1791721964.152 F13 stage3 advertise start
+1791721969.802 F13 stage4 isis-available wait (static still owns)
+1791721978.803 F13-r1 stage5 shield
+1791721979.125 F13-r1 shield-install s1 2001:db8:110:1::1
+1791721981.076 F13-r1 shield-verified s1
+1791721981.610 F13-r1 shield-install r1 2001:db8:110:1::2
+1791721984.487 F13-r1 shield-verified r1
+1791721984.488 F13-r1 stage6 shield-forwarding verify
+1791721990.652 F13-r1 stage7 static-removal start
+1791721991.163 F13-r1 stage7 switch-static-removed
+1791721991.510 F13-r1 stage7 router-floating-statics-added
+1791721994.087 F13-r1 stage7 router-statics-removed
+1791721997.905 F13-r1 stage7 router-floating-statics-removed
+1791721997.905 F13-r1 stage9 isis-ownership wait
+1791722005.529 F13-r1 stage10 shield-removal
+1791722006.600 F13-r1 takeover-nexthop r1 2001:db8:10::/64 isisL2 fe80::42:aff:fefb:1b03%eth3 before=REACHABLE after=REACHABLE
+1791722007.802 F13-r1 takeover-nexthop r1 2001:db8:20::/64 isisL2 fe80::42:aff:fefb:1b03%eth3 before=REACHABLE after=REACHABLE
+1791722008.903 F13-r1 takeover-nexthop r1 2001:db8:30::/64 isisL2 fe80::42:aff:fefb:1b03%eth3 before=REACHABLE after=REACHABLE
+1791722008.904 F13-r1 shield-remove r1
+1791722011.445 F13-r1 shield-removed r1
+1791722012.597 F13-r1 takeover-nexthop s1 2001:db8::/32 isisL2 fe80::42:aff:fefb:1b02%eth1 before=DELAY after=DELAY
+1791722012.597 F13-r1 shield-remove s1
+1791722014.331 F13-r1 shield-removed s1
+1791722014.331 F13-r1 stage11 final-forwarding verify
+1791722019.071 F13-r2 stage5 shield
+1791722019.473 F13-r2 shield-install s2 2001:db8:110:2::1
+1791722021.480 F13-r2 shield-verified s2
+1791722021.821 F13-r2 shield-install r2 2001:db8:110:2::2
+1791722023.917 F13-r2 shield-verified r2
+1791722023.917 F13-r2 stage6 shield-forwarding verify
+1791722030.285 F13-r2 stage7 static-removal start
+1791722030.807 F13-r2 stage7 switch-static-removed
+1791722031.388 F13-r2 stage7 router-floating-statics-added
+1791722033.920 F13-r2 stage7 router-statics-removed
+1791722037.828 F13-r2 stage7 router-floating-statics-removed
+1791722037.828 F13-r2 stage9 isis-ownership wait
+1791722044.749 F13-r2 stage10 shield-removal
+1791722045.773 F13-r2 takeover-nexthop r2 2001:db8:10::/64 isisL2 fe80::42:aff:fefb:1c03%eth3 before=REACHABLE after=REACHABLE
+1791722046.868 F13-r2 takeover-nexthop r2 2001:db8:20::/64 isisL2 fe80::42:aff:fefb:1c03%eth3 before=REACHABLE after=REACHABLE
+1791722047.953 F13-r2 takeover-nexthop r2 2001:db8:30::/64 isisL2 fe80::42:aff:fefb:1c03%eth3 before=REACHABLE after=REACHABLE
+1791722047.954 F13-r2 shield-remove r2
+1791722050.130 F13-r2 shield-removed r2
+1791722051.328 F13-r2 takeover-nexthop s2 2001:db8::/32 isisL2 fe80::42:aff:fefb:1c02%eth1 before=DELAY after=DELAY
+1791722051.328 F13-r2 shield-remove s2
+1791722052.950 F13-r2 shield-removed s2
+1791722052.950 F13-r2 stage11 final-forwarding verify
+1791722064.456 F13 stage12 final-config r1=5408a3ab57b34d17 r2=4d5eb24485271374 s1=c14991f826026d59 s2=9e1955c8185575b0
+1791722191.869 F13 core-quiet 157
+1791722193.156 F13 core-cover-removed
+1791722211.248 F13 final-equals-first-final True
+1791722217.248 C13 between forward and rollback
+1791722220.085 B13 core-cover-installed 2001:db8:10::/63 2001:db8:20::/63 2001:db8:30::/63
+1791722220.085 B13-r2 rb1 shield
+1791722220.422 B13-r2 shield-install s2 2001:db8:110:2::1
+1791722221.884 B13-r2 shield-verified s2
+1791722222.282 B13-r2 shield-install r2 2001:db8:110:2::2
+1791722224.517 B13-r2 shield-verified r2
+1791722227.517 B13-r2 rb2 static-restore start
+1791722230.397 B13-r2 rb2 router-statics-restored
+1791722230.817 B13-r2 rb2 switch-static-restored
+1791722237.339 B13-r2 rb3 shield-removal
+1791722238.625 B13-r2 takeover-nexthop r2 2001:db8:10::/64 static 2001:db8:110:2::2 before=DELAY after=DELAY
+1791722239.755 B13-r2 takeover-nexthop r2 2001:db8:20::/64 static 2001:db8:110:2::2 before=DELAY after=DELAY
+1791722241.245 B13-r2 takeover-nexthop r2 2001:db8:30::/64 static 2001:db8:110:2::2 before=DELAY after=DELAY
+1791722241.245 B13-r2 shield-remove r2
+1791722243.340 B13-r2 shield-removed r2
+1791722244.497 B13-r2 takeover-nexthop s2 2001:db8::/32 static 2001:db8:110:2::1 before=REACHABLE after=REACHABLE
+1791722244.497 B13-r2 shield-remove s2
+1791722246.087 B13-r2 shield-removed s2
+1791722249.087 B13-r1 rb1 shield
+1791722249.389 B13-r1 shield-install s1 2001:db8:110:1::1
+1791722251.203 B13-r1 shield-verified s1
+1791722251.589 B13-r1 shield-install r1 2001:db8:110:1::2
+1791722253.591 B13-r1 shield-verified r1
+1791722256.591 B13-r1 rb2 static-restore start
+1791722259.426 B13-r1 rb2 router-statics-restored
+1791722259.822 B13-r1 rb2 switch-static-restored
+1791722266.425 B13-r1 rb3 shield-removal
+1791722267.645 B13-r1 takeover-nexthop r1 2001:db8:10::/64 static 2001:db8:110:1::2 before=REACHABLE after=REACHABLE
+1791722268.854 B13-r1 takeover-nexthop r1 2001:db8:20::/64 static 2001:db8:110:1::2 before=REACHABLE after=REACHABLE
+1791722270.245 B13-r1 takeover-nexthop r1 2001:db8:30::/64 static 2001:db8:110:1::2 before=REACHABLE after=REACHABLE
+1791722270.245 B13-r1 shield-remove r1
+1791722273.144 B13-r1 shield-removed r1
+1791722274.430 B13-r1 takeover-nexthop s1 2001:db8::/32 static 2001:db8:110:1::1 before=REACHABLE after=REACHABLE
+1791722274.430 B13-r1 shield-remove s1
+1791722276.307 B13-r1 shield-removed s1
+1791722279.307 B13 rb4 withdraw-advertisements start
+1791722283.509 B13 rb5 isis-removal start
+1791722293.819 B13 rb6 baseline-config r1=2bd8c040664c1216 r2=6284ec1a7270b9dd s1=7d083ffd40ee3b4f s2=a4f9a4a23f07a916
+1791722420.089 B13 core-quiet 386
+1791722421.825 B13 core-cover-removed
+1791722424.020 B13 baseline-restored True
+1791722429.020 C13 end load 22.28 23.67 23.66
+1791722442.876 C14 begin load 22.03 23.56 23.62
+1791722445.781 F14 core-cover-installed 2001:db8:10::/63 2001:db8:20::/63 2001:db8:30::/63
+1791722445.781 F14 stage1 vlan99-ipv6+isis start
+1791722450.331 F14 stage2 adjacencies wait
+1791722468.624 F14 stage3 advertise start
+1791722472.963 F14 stage4 isis-available wait (static still owns)
+1791722480.848 F14-r1 stage5 shield
+1791722481.264 F14-r1 shield-install s1 2001:db8:110:1::1
+1791722483.076 F14-r1 shield-verified s1
+1791722483.507 F14-r1 shield-install r1 2001:db8:110:1::2
+1791722485.829 F14-r1 shield-verified r1
+1791722485.829 F14-r1 stage6 shield-forwarding verify
+1791722492.024 F14-r1 stage7 static-removal start
+1791722492.589 F14-r1 stage7 switch-static-removed
+1791722493.160 F14-r1 stage7 router-floating-statics-added
+1791722495.602 F14-r1 stage7 router-statics-removed
+1791722499.297 F14-r1 stage7 router-floating-statics-removed
+1791722499.297 F14-r1 stage9 isis-ownership wait
+1791722506.326 F14-r1 stage10 shield-removal
+1791722507.632 F14-r1 takeover-nexthop r1 2001:db8:10::/64 isisL2 fe80::42:aff:fefb:1b03%eth3 before=REACHABLE after=REACHABLE
+1791722508.661 F14-r1 takeover-nexthop r1 2001:db8:20::/64 isisL2 fe80::42:aff:fefb:1b03%eth3 before=REACHABLE after=REACHABLE
+1791722509.660 F14-r1 takeover-nexthop r1 2001:db8:30::/64 isisL2 fe80::42:aff:fefb:1b03%eth3 before=REACHABLE after=REACHABLE
+1791722509.661 F14-r1 shield-remove r1
+1791722511.879 F14-r1 shield-removed r1
+1791722513.077 F14-r1 takeover-nexthop s1 2001:db8::/32 isisL2 fe80::42:aff:fefb:1b02%eth1 before=DELAY after=DELAY
+1791722513.077 F14-r1 shield-remove s1
+1791722514.860 F14-r1 shield-removed s1
+1791722514.860 F14-r1 stage11 final-forwarding verify
+1791722519.735 F14-r2 stage5 shield
+1791722520.065 F14-r2 shield-install s2 2001:db8:110:2::1
+1791722522.553 F14-r2 shield-verified s2
+1791722522.899 F14-r2 shield-install r2 2001:db8:110:2::2
+1791722525.085 F14-r2 shield-verified r2
+1791722525.086 F14-r2 stage6 shield-forwarding verify
+1791722531.086 F14-r2 stage7 static-removal start
+1791722531.556 F14-r2 stage7 switch-static-removed
+1791722532.008 F14-r2 stage7 router-floating-statics-added
+1791722534.460 F14-r2 stage7 router-statics-removed
+1791722538.135 F14-r2 stage7 router-floating-statics-removed
+1791722538.135 F14-r2 stage9 isis-ownership wait
+1791722545.479 F14-r2 stage10 shield-removal
+1791722546.693 F14-r2 takeover-nexthop r2 2001:db8:10::/64 isisL2 fe80::42:aff:fefb:1c03%eth3 before=REACHABLE after=REACHABLE
+1791722547.789 F14-r2 takeover-nexthop r2 2001:db8:20::/64 isisL2 fe80::42:aff:fefb:1c03%eth3 before=REACHABLE after=REACHABLE
+1791722548.873 F14-r2 takeover-nexthop r2 2001:db8:30::/64 isisL2 fe80::42:aff:fefb:1c03%eth3 before=REACHABLE after=REACHABLE
+1791722548.873 F14-r2 shield-remove r2
+1791722551.180 F14-r2 shield-removed r2
+1791722552.281 F14-r2 takeover-nexthop s2 2001:db8::/32 isisL2 fe80::42:aff:fefb:1c02%eth1 before=DELAY after=DELAY
+1791722552.281 F14-r2 shield-remove s2
+1791722553.905 F14-r2 shield-removed s2
+1791722553.905 F14-r2 stage11 final-forwarding verify
+1791722562.658 F14 stage12 final-config r1=5408a3ab57b34d17 r2=4d5eb24485271374 s1=c14991f826026d59 s2=9e1955c8185575b0
+1791722689.113 F14 core-quiet 655
+1791722690.429 F14 core-cover-removed
+1791722709.475 F14 final-equals-first-final True
+1791722715.476 C14 between forward and rollback
+1791722718.314 B14 core-cover-installed 2001:db8:10::/63 2001:db8:20::/63 2001:db8:30::/63
+1791722718.314 B14-r2 rb1 shield
+1791722718.914 B14-r2 shield-install s2 2001:db8:110:2::1
+1791722720.519 B14-r2 shield-verified s2
+1791722720.852 B14-r2 shield-install r2 2001:db8:110:2::2
+1791722723.358 B14-r2 shield-verified r2
+1791722726.358 B14-r2 rb2 static-restore start
+1791722729.434 B14-r2 rb2 router-statics-restored
+1791722729.964 B14-r2 rb2 switch-static-restored
+1791722736.780 B14-r2 rb3 shield-removal
+1791722737.817 B14-r2 takeover-nexthop r2 2001:db8:10::/64 static 2001:db8:110:2::2 before=DELAY after=DELAY
+1791722738.894 B14-r2 takeover-nexthop r2 2001:db8:20::/64 static 2001:db8:110:2::2 before=DELAY after=DELAY
+1791722739.935 B14-r2 takeover-nexthop r2 2001:db8:30::/64 static 2001:db8:110:2::2 before=DELAY after=DELAY
+1791722739.935 B14-r2 shield-remove r2
+1791722742.019 B14-r2 shield-removed r2
+1791722743.253 B14-r2 takeover-nexthop s2 2001:db8::/32 static 2001:db8:110:2::1 before=REACHABLE after=REACHABLE
+1791722743.253 B14-r2 shield-remove s2
+1791722744.699 B14-r2 shield-removed s2
+1791722747.700 B14-r1 rb1 shield
+1791722748.081 B14-r1 shield-install s1 2001:db8:110:1::1
+1791722749.933 B14-r1 shield-verified s1
+1791722750.293 B14-r1 shield-install r1 2001:db8:110:1::2
+1791722752.522 B14-r1 shield-verified r1
+1791722755.523 B14-r1 rb2 static-restore start
+1791722758.438 B14-r1 rb2 router-statics-restored
+1791722758.920 B14-r1 rb2 switch-static-restored
+1791722765.725 B14-r1 rb3 shield-removal
+1791722766.837 B14-r1 takeover-nexthop r1 2001:db8:10::/64 static 2001:db8:110:1::2 before=REACHABLE after=REACHABLE
+1791722767.796 B14-r1 takeover-nexthop r1 2001:db8:20::/64 static 2001:db8:110:1::2 before=REACHABLE after=REACHABLE
+1791722768.848 B14-r1 takeover-nexthop r1 2001:db8:30::/64 static 2001:db8:110:1::2 before=REACHABLE after=REACHABLE
+1791722768.848 B14-r1 shield-remove r1
+1791722771.017 B14-r1 shield-removed r1
+1791722771.995 B14-r1 takeover-nexthop s1 2001:db8::/32 static 2001:db8:110:1::1 before=REACHABLE after=REACHABLE
+1791722771.995 B14-r1 shield-remove s1
+1791722773.557 B14-r1 shield-removed s1
+1791722776.557 B14 rb4 withdraw-advertisements start
+1791722780.238 B14 rb5 isis-removal start
+1791722790.176 B14 rb6 baseline-config r1=2bd8c040664c1216 r2=6284ec1a7270b9dd s1=7d083ffd40ee3b4f s2=a4f9a4a23f07a916
+1791722917.784 B14 core-quiet 883
+1791722919.233 B14 core-cover-removed
+1791722920.825 B14 baseline-restored True
+1791722925.825 C14 end load 20.35 20.41 22.03
+1791722939.722 C15 begin load 19.80 20.29 21.97
+1791722942.741 F15 core-cover-installed 2001:db8:10::/63 2001:db8:20::/63 2001:db8:30::/63
+1791722942.741 F15 stage1 vlan99-ipv6+isis start
+1791722948.238 F15 stage2 adjacencies wait
+1791722963.135 F15 stage3 advertise start
+1791722967.941 F15 stage4 isis-available wait (static still owns)
+1791722976.392 F15-r1 stage5 shield
+1791722976.762 F15-r1 shield-install s1 2001:db8:110:1::1
+1791722978.689 F15-r1 shield-verified s1
+1791722979.057 F15-r1 shield-install r1 2001:db8:110:1::2
+1791722980.932 F15-r1 shield-verified r1
+1791722980.932 F15-r1 stage6 shield-forwarding verify
+1791722986.710 F15-r1 stage7 static-removal start
+1791722987.090 F15-r1 stage7 switch-static-removed
+1791722987.743 F15-r1 stage7 router-floating-statics-added
+1791722990.242 F15-r1 stage7 router-statics-removed
+1791722993.918 F15-r1 stage7 router-floating-statics-removed
+1791722993.918 F15-r1 stage9 isis-ownership wait
+1791723001.319 F15-r1 stage10 shield-removal
+1791723002.655 F15-r1 takeover-nexthop r1 2001:db8:10::/64 isisL2 fe80::42:aff:fefb:1b03%eth3 before=REACHABLE after=REACHABLE
+1791723003.812 F15-r1 takeover-nexthop r1 2001:db8:20::/64 isisL2 fe80::42:aff:fefb:1b03%eth3 before=REACHABLE after=REACHABLE
+1791723004.844 F15-r1 takeover-nexthop r1 2001:db8:30::/64 isisL2 fe80::42:aff:fefb:1b03%eth3 before=REACHABLE after=REACHABLE
+1791723004.844 F15-r1 shield-remove r1
+1791723007.197 F15-r1 shield-removed r1
+1791723008.186 F15-r1 takeover-nexthop s1 2001:db8::/32 isisL2 fe80::42:aff:fefb:1b02%eth1 before=DELAY after=DELAY
+1791723008.186 F15-r1 shield-remove s1
+1791723009.765 F15-r1 shield-removed s1
+1791723009.765 F15-r1 stage11 final-forwarding verify
+1791723014.421 F15-r2 stage5 shield
+1791723014.767 F15-r2 shield-install s2 2001:db8:110:2::1
+1791723016.674 F15-r2 shield-verified s2
+1791723017.183 F15-r2 shield-install r2 2001:db8:110:2::2
+1791723019.558 F15-r2 shield-verified r2
+1791723019.558 F15-r2 stage6 shield-forwarding verify
+1791723025.729 F15-r2 stage7 static-removal start
+1791723026.363 F15-r2 stage7 switch-static-removed
+1791723026.904 F15-r2 stage7 router-floating-statics-added
+1791723029.386 F15-r2 stage7 router-statics-removed
+1791723033.375 F15-r2 stage7 router-floating-statics-removed
+1791723033.375 F15-r2 stage9 isis-ownership wait
+1791723040.701 F15-r2 stage10 shield-removal
+1791723041.713 F15-r2 takeover-nexthop r2 2001:db8:10::/64 isisL2 fe80::42:aff:fefb:1c03%eth3 before=REACHABLE after=REACHABLE
+1791723042.791 F15-r2 takeover-nexthop r2 2001:db8:20::/64 isisL2 fe80::42:aff:fefb:1c03%eth3 before=REACHABLE after=REACHABLE
+1791723043.831 F15-r2 takeover-nexthop r2 2001:db8:30::/64 isisL2 fe80::42:aff:fefb:1c03%eth3 before=REACHABLE after=REACHABLE
+1791723043.831 F15-r2 shield-remove r2
+1791723045.887 F15-r2 shield-removed r2
+1791723047.052 F15-r2 takeover-nexthop s2 2001:db8::/32 isisL2 fe80::42:aff:fefb:1c02%eth1 before=DELAY after=DELAY
+1791723047.052 F15-r2 shield-remove s2
+1791723048.660 F15-r2 shield-removed s2
+1791723048.660 F15-r2 stage11 final-forwarding verify
+1791723059.084 F15 stage12 final-config r1=5408a3ab57b34d17 r2=4d5eb24485271374 s1=c14991f826026d59 s2=9e1955c8185575b0
+1791723184.278 F15 core-quiet 154
+1791723186.089 F15 core-cover-removed
+1791723204.338 F15 final-equals-first-final True
+1791723210.338 C15 between forward and rollback
+1791723213.140 B15 core-cover-installed 2001:db8:10::/63 2001:db8:20::/63 2001:db8:30::/63
+1791723213.141 B15-r2 rb1 shield
+1791723213.493 B15-r2 shield-install s2 2001:db8:110:2::1
+1791723215.059 B15-r2 shield-verified s2
+1791723215.401 B15-r2 shield-install r2 2001:db8:110:2::2
+1791723217.561 B15-r2 shield-verified r2
+1791723220.562 B15-r2 rb2 static-restore start
+1791723223.377 B15-r2 rb2 router-statics-restored
+1791723223.770 B15-r2 rb2 switch-static-restored
+1791723230.403 B15-r2 rb3 shield-removal
+1791723231.605 B15-r2 takeover-nexthop r2 2001:db8:10::/64 static 2001:db8:110:2::2 before=DELAY after=DELAY
+1791723232.803 B15-r2 takeover-nexthop r2 2001:db8:20::/64 static 2001:db8:110:2::2 before=DELAY after=DELAY
+1791723233.847 B15-r2 takeover-nexthop r2 2001:db8:30::/64 static 2001:db8:110:2::2 before=DELAY after=DELAY
+1791723233.847 B15-r2 shield-remove r2
+1791723236.221 B15-r2 shield-removed r2
+1791723237.439 B15-r2 takeover-nexthop s2 2001:db8::/32 static 2001:db8:110:2::1 before=REACHABLE after=REACHABLE
+1791723237.439 B15-r2 shield-remove s2
+1791723239.217 B15-r2 shield-removed s2
+1791723242.217 B15-r1 rb1 shield
+1791723242.669 B15-r1 shield-install s1 2001:db8:110:1::1
+1791723244.268 B15-r1 shield-verified s1
+1791723244.600 B15-r1 shield-install r1 2001:db8:110:1::2
+1791723246.768 B15-r1 shield-verified r1
+1791723249.768 B15-r1 rb2 static-restore start
+1791723252.968 B15-r1 rb2 router-statics-restored
+1791723253.394 B15-r1 rb2 switch-static-restored
+1791723260.357 B15-r1 rb3 shield-removal
+1791723261.789 B15-r1 takeover-nexthop r1 2001:db8:10::/64 static 2001:db8:110:1::2 before=REACHABLE after=REACHABLE
+1791723263.088 B15-r1 takeover-nexthop r1 2001:db8:20::/64 static 2001:db8:110:1::2 before=REACHABLE after=REACHABLE
+1791723264.316 B15-r1 takeover-nexthop r1 2001:db8:30::/64 static 2001:db8:110:1::2 before=REACHABLE after=REACHABLE
+1791723264.316 B15-r1 shield-remove r1
+1791723267.762 B15-r1 shield-removed r1
+1791723269.084 B15-r1 takeover-nexthop s1 2001:db8::/32 static 2001:db8:110:1::1 before=REACHABLE after=REACHABLE
+1791723269.084 B15-r1 shield-remove s1
+1791723270.897 B15-r1 shield-removed s1
+1791723273.897 B15 rb4 withdraw-advertisements start
+1791723279.258 B15 rb5 isis-removal start
+1791723289.847 B15 rb6 baseline-config r1=2bd8c040664c1216 r2=6284ec1a7270b9dd s1=7d083ffd40ee3b4f s2=a4f9a4a23f07a916
+1791723415.340 B15 core-quiet 386
+1791723416.936 B15 core-cover-removed
+1791723419.180 B15 baseline-restored True
+1791723424.180 C15 end load 27.77 27.60 25.08
+1791723437.714 C16 begin load 26.63 27.36 25.04
+1791723440.754 F16 core-cover-installed 2001:db8:10::/63 2001:db8:20::/63 2001:db8:30::/63
+1791723440.754 F16 stage1 vlan99-ipv6+isis start
+1791723445.405 F16 stage2 adjacencies wait
+1791723461.609 F16 stage3 advertise start
+1791723466.302 F16 stage4 isis-available wait (static still owns)
+1791723475.035 F16-r1 stage5 shield
+1791723475.390 F16-r1 shield-install s1 2001:db8:110:1::1
+1791723477.533 F16-r1 shield-verified s1
+1791723477.988 F16-r1 shield-install r1 2001:db8:110:1::2
+1791723480.953 F16-r1 shield-verified r1
+1791723480.953 F16-r1 stage6 shield-forwarding verify
+1791723487.375 F16-r1 stage7 static-removal start
+1791723488.064 F16-r1 stage7 switch-static-removed
+1791723488.842 F16-r1 stage7 router-floating-statics-added
+1791723491.202 F16-r1 stage7 router-statics-removed
+1791723494.965 F16-r1 stage7 router-floating-statics-removed
+1791723494.965 F16-r1 stage9 isis-ownership wait
+1791723502.168 F16-r1 stage10 shield-removal
+1791723503.381 F16-r1 takeover-nexthop r1 2001:db8:10::/64 isisL2 fe80::42:aff:fefb:1b03%eth3 before=REACHABLE after=REACHABLE
+1791723504.542 F16-r1 takeover-nexthop r1 2001:db8:20::/64 isisL2 fe80::42:aff:fefb:1b03%eth3 before=REACHABLE after=REACHABLE
+1791723505.696 F16-r1 takeover-nexthop r1 2001:db8:30::/64 isisL2 fe80::42:aff:fefb:1b03%eth3 before=REACHABLE after=REACHABLE
+1791723505.697 F16-r1 shield-remove r1
+1791723508.396 F16-r1 shield-removed r1
+1791723509.860 F16-r1 takeover-nexthop s1 2001:db8::/32 isisL2 fe80::42:aff:fefb:1b02%eth1 before=DELAY after=DELAY
+1791723509.860 F16-r1 shield-remove s1
+1791723511.315 F16-r1 shield-removed s1
+1791723511.315 F16-r1 stage11 final-forwarding verify
+1791723515.887 F16-r2 stage5 shield
+1791723516.280 F16-r2 shield-install s2 2001:db8:110:2::1
+1791723517.624 F16-r2 shield-verified s2
+1791723517.971 F16-r2 shield-install r2 2001:db8:110:2::2
+1791723520.113 F16-r2 shield-verified r2
+1791723520.113 F16-r2 stage6 shield-forwarding verify
+1791723525.949 F16-r2 stage7 static-removal start
+1791723526.335 F16-r2 stage7 switch-static-removed
+1791723526.949 F16-r2 stage7 router-floating-statics-added
+1791723529.430 F16-r2 stage7 router-statics-removed
+1791723533.283 F16-r2 stage7 router-floating-statics-removed
+1791723533.283 F16-r2 stage9 isis-ownership wait
+1791723540.513 F16-r2 stage10 shield-removal
+1791723541.704 F16-r2 takeover-nexthop r2 2001:db8:10::/64 isisL2 fe80::42:aff:fefb:1c03%eth3 before=REACHABLE after=REACHABLE
+1791723542.931 F16-r2 takeover-nexthop r2 2001:db8:20::/64 isisL2 fe80::42:aff:fefb:1c03%eth3 before=REACHABLE after=REACHABLE
+1791723543.917 F16-r2 takeover-nexthop r2 2001:db8:30::/64 isisL2 fe80::42:aff:fefb:1c03%eth3 before=REACHABLE after=REACHABLE
+1791723543.917 F16-r2 shield-remove r2
+1791723546.031 F16-r2 shield-removed r2
+1791723547.211 F16-r2 takeover-nexthop s2 2001:db8::/32 isisL2 fe80::42:aff:fefb:1c02%eth1 before=DELAY after=DELAY
+1791723547.211 F16-r2 shield-remove s2
+1791723549.201 F16-r2 shield-removed s2
+1791723549.201 F16-r2 stage11 final-forwarding verify
+1791723558.549 F16 stage12 final-config r1=5408a3ab57b34d17 r2=4d5eb24485271374 s1=c14991f826026d59 s2=9e1955c8185575b0
+1791723685.740 F16 core-quiet 656
+1791723687.078 F16 core-cover-removed
+1791723705.605 F16 final-equals-first-final True
+1791723711.605 C16 between forward and rollback
+1791723714.566 B16 core-cover-installed 2001:db8:10::/63 2001:db8:20::/63 2001:db8:30::/63
+1791723714.566 B16-r2 rb1 shield
+1791723714.927 B16-r2 shield-install s2 2001:db8:110:2::1
+1791723716.576 B16-r2 shield-verified s2
+1791723716.916 B16-r2 shield-install r2 2001:db8:110:2::2
+1791723719.264 B16-r2 shield-verified r2
+1791723722.264 B16-r2 rb2 static-restore start
+1791723725.216 B16-r2 rb2 router-statics-restored
+1791723725.650 B16-r2 rb2 switch-static-restored
+1791723732.418 B16-r2 rb3 shield-removal
+1791723733.511 B16-r2 takeover-nexthop r2 2001:db8:10::/64 static 2001:db8:110:2::2 before=DELAY after=DELAY
+1791723734.524 B16-r2 takeover-nexthop r2 2001:db8:20::/64 static 2001:db8:110:2::2 before=DELAY after=DELAY
+1791723735.526 B16-r2 takeover-nexthop r2 2001:db8:30::/64 static 2001:db8:110:2::2 before=DELAY after=DELAY
+1791723735.526 B16-r2 shield-remove r2
+1791723737.596 B16-r2 shield-removed r2
+1791723738.708 B16-r2 takeover-nexthop s2 2001:db8::/32 static 2001:db8:110:2::1 before=REACHABLE after=REACHABLE
+1791723738.708 B16-r2 shield-remove s2
+1791723740.329 B16-r2 shield-removed s2
+1791723743.329 B16-r1 rb1 shield
+1791723743.732 B16-r1 shield-install s1 2001:db8:110:1::1
+1791723745.270 B16-r1 shield-verified s1
+1791723745.580 B16-r1 shield-install r1 2001:db8:110:1::2
+1791723747.900 B16-r1 shield-verified r1
+1791723750.900 B16-r1 rb2 static-restore start
+1791723753.730 B16-r1 rb2 router-statics-restored
+1791723754.199 B16-r1 rb2 switch-static-restored
+1791723760.926 B16-r1 rb3 shield-removal
+1791723762.193 B16-r1 takeover-nexthop r1 2001:db8:10::/64 static 2001:db8:110:1::2 before=REACHABLE after=REACHABLE
+1791723763.131 B16-r1 takeover-nexthop r1 2001:db8:20::/64 static 2001:db8:110:1::2 before=REACHABLE after=REACHABLE
+1791723764.104 B16-r1 takeover-nexthop r1 2001:db8:30::/64 static 2001:db8:110:1::2 before=REACHABLE after=REACHABLE
+1791723764.104 B16-r1 shield-remove r1
+1791723766.498 B16-r1 shield-removed r1
+1791723767.654 B16-r1 takeover-nexthop s1 2001:db8::/32 static 2001:db8:110:1::1 before=REACHABLE after=REACHABLE
+1791723767.654 B16-r1 shield-remove s1
+1791723769.577 B16-r1 shield-removed s1
+1791723772.577 B16 rb4 withdraw-advertisements start
+1791723776.700 B16 rb5 isis-removal start
+1791723787.776 B16 rb6 baseline-config r1=2bd8c040664c1216 r2=6284ec1a7270b9dd s1=7d083ffd40ee3b4f s2=a4f9a4a23f07a916
+1791723914.319 B16 core-quiet 884
+1791723915.834 B16 core-cover-removed
+1791723917.424 B16 baseline-restored True
+1791723922.424 C16 end load 17.36 21.89 23.62
+1791723936.678 C17 begin load 17.87 21.78 23.55
+1791723939.573 F17 core-cover-installed 2001:db8:10::/63 2001:db8:20::/63 2001:db8:30::/63
+1791723939.573 F17 stage1 vlan99-ipv6+isis start
+1791723944.593 F17 stage2 adjacencies wait
+1791723963.902 F17 stage3 advertise start
+1791723968.860 F17 stage4 isis-available wait (static still owns)
+1791723977.140 F17-r1 stage5 shield
+1791723977.548 F17-r1 shield-install s1 2001:db8:110:1::1
+1791723979.069 F17-r1 shield-verified s1
+1791723979.410 F17-r1 shield-install r1 2001:db8:110:1::2
+1791723981.383 F17-r1 shield-verified r1
+1791723981.383 F17-r1 stage6 shield-forwarding verify
+1791723987.273 F17-r1 stage7 static-removal start
+1791723987.804 F17-r1 stage7 switch-static-removed
+1791723988.305 F17-r1 stage7 router-floating-statics-added
+1791723990.812 F17-r1 stage7 router-statics-removed
+1791723994.880 F17-r1 stage7 router-floating-statics-removed
+1791723994.880 F17-r1 stage9 isis-ownership wait
+1791724002.008 F17-r1 stage10 shield-removal
+1791724003.347 F17-r1 takeover-nexthop r1 2001:db8:10::/64 isisL2 fe80::42:aff:fefb:1b03%eth3 before=REACHABLE after=REACHABLE
+1791724004.441 F17-r1 takeover-nexthop r1 2001:db8:20::/64 isisL2 fe80::42:aff:fefb:1b03%eth3 before=REACHABLE after=REACHABLE
+1791724005.579 F17-r1 takeover-nexthop r1 2001:db8:30::/64 isisL2 fe80::42:aff:fefb:1b03%eth3 before=REACHABLE after=REACHABLE
+1791724005.579 F17-r1 shield-remove r1
+1791724007.853 F17-r1 shield-removed r1
+1791724009.209 F17-r1 takeover-nexthop s1 2001:db8::/32 isisL2 fe80::42:aff:fefb:1b02%eth1 before=DELAY after=DELAY
+1791724009.209 F17-r1 shield-remove s1
+1791724010.738 F17-r1 shield-removed s1
+1791724010.739 F17-r1 stage11 final-forwarding verify
+1791724015.636 F17-r2 stage5 shield
+1791724015.961 F17-r2 shield-install s2 2001:db8:110:2::1
+1791724017.553 F17-r2 shield-verified s2
+1791724017.919 F17-r2 shield-install r2 2001:db8:110:2::2
+1791724020.165 F17-r2 shield-verified r2
+1791724020.165 F17-r2 stage6 shield-forwarding verify
+1791724026.870 F17-r2 stage7 static-removal start
+1791724027.268 F17-r2 stage7 switch-static-removed
+1791724027.693 F17-r2 stage7 router-floating-statics-added
+1791724030.119 F17-r2 stage7 router-statics-removed
+1791724034.188 F17-r2 stage7 router-floating-statics-removed
+1791724034.188 F17-r2 stage9 isis-ownership wait
+1791724041.132 F17-r2 stage10 shield-removal
+1791724042.281 F17-r2 takeover-nexthop r2 2001:db8:10::/64 isisL2 fe80::42:aff:fefb:1c03%eth3 before=REACHABLE after=REACHABLE
+1791724043.333 F17-r2 takeover-nexthop r2 2001:db8:20::/64 isisL2 fe80::42:aff:fefb:1c03%eth3 before=REACHABLE after=REACHABLE
+1791724044.330 F17-r2 takeover-nexthop r2 2001:db8:30::/64 isisL2 fe80::42:aff:fefb:1c03%eth3 before=REACHABLE after=REACHABLE
+1791724044.330 F17-r2 shield-remove r2
+1791724046.370 F17-r2 shield-removed r2
+1791724047.541 F17-r2 takeover-nexthop s2 2001:db8::/32 isisL2 fe80::42:aff:fefb:1c02%eth1 before=REACHABLE after=REACHABLE
+1791724047.541 F17-r2 shield-remove s2
+1791724049.319 F17-r2 shield-removed s2
+1791724049.319 F17-r2 stage11 final-forwarding verify
+1791724059.641 F17 stage12 final-config r1=5408a3ab57b34d17 r2=4d5eb24485271374 s1=c14991f826026d59 s2=9e1955c8185575b0
+1791724187.341 F17 core-quiet 157
+1791724188.794 F17 core-cover-removed
+1791724207.149 F17 final-equals-first-final True
+1791724213.149 C17 between forward and rollback
+1791724216.323 B17 core-cover-installed 2001:db8:10::/63 2001:db8:20::/63 2001:db8:30::/63
+1791724216.324 B17-r2 rb1 shield
+1791724216.668 B17-r2 shield-install s2 2001:db8:110:2::1
+1791724218.161 B17-r2 shield-verified s2
+1791724218.505 B17-r2 shield-install r2 2001:db8:110:2::2
+1791724220.858 B17-r2 shield-verified r2
+1791724223.859 B17-r2 rb2 static-restore start
+1791724226.917 B17-r2 rb2 router-statics-restored
+1791724227.394 B17-r2 rb2 switch-static-restored
+1791724234.253 B17-r2 rb3 shield-removal
+1791724235.586 B17-r2 takeover-nexthop r2 2001:db8:10::/64 static 2001:db8:110:2::2 before=DELAY after=DELAY
+1791724236.739 B17-r2 takeover-nexthop r2 2001:db8:20::/64 static 2001:db8:110:2::2 before=DELAY after=DELAY
+1791724237.754 B17-r2 takeover-nexthop r2 2001:db8:30::/64 static 2001:db8:110:2::2 before=DELAY after=DELAY
+1791724237.754 B17-r2 shield-remove r2
+1791724239.893 B17-r2 shield-removed r2
+1791724241.019 B17-r2 takeover-nexthop s2 2001:db8::/32 static 2001:db8:110:2::1 before=REACHABLE after=REACHABLE
+1791724241.019 B17-r2 shield-remove s2
+1791724242.783 B17-r2 shield-removed s2
+1791724245.783 B17-r1 rb1 shield
+1791724246.136 B17-r1 shield-install s1 2001:db8:110:1::1
+1791724248.075 B17-r1 shield-verified s1
+1791724248.370 B17-r1 shield-install r1 2001:db8:110:1::2
+1791724251.796 B17-r1 shield-verified r1
+1791724254.796 B17-r1 rb2 static-restore start
+1791724257.777 B17-r1 rb2 router-statics-restored
+1791724258.113 B17-r1 rb2 switch-static-restored
+1791724264.849 B17-r1 rb3 shield-removal
+1791724265.999 B17-r1 takeover-nexthop r1 2001:db8:10::/64 static 2001:db8:110:1::2 before=REACHABLE after=REACHABLE
+1791724267.100 B17-r1 takeover-nexthop r1 2001:db8:20::/64 static 2001:db8:110:1::2 before=REACHABLE after=REACHABLE
+1791724268.289 B17-r1 takeover-nexthop r1 2001:db8:30::/64 static 2001:db8:110:1::2 before=REACHABLE after=REACHABLE
+1791724268.289 B17-r1 shield-remove r1
+1791724270.416 B17-r1 shield-removed r1
+1791724271.557 B17-r1 takeover-nexthop s1 2001:db8::/32 static 2001:db8:110:1::1 before=REACHABLE after=REACHABLE
+1791724271.557 B17-r1 shield-remove s1
+1791724273.631 B17-r1 shield-removed s1
+1791724276.631 B17 rb4 withdraw-advertisements start
+1791724279.969 B17 rb5 isis-removal start
+1791724290.061 B17 rb6 baseline-config r1=2bd8c040664c1216 r2=6284ec1a7270b9dd s1=7d083ffd40ee3b4f s2=a4f9a4a23f07a916
+1791724416.743 B17 core-quiet 386
+1791724418.127 B17 core-cover-removed
+1791724419.993 B17 baseline-restored True
+1791724424.993 C17 end load 28.52 25.86 24.55
+1791724438.128 C18 begin load 28.06 25.89 24.58
+1791724440.874 F18 core-cover-installed 2001:db8:10::/63 2001:db8:20::/63 2001:db8:30::/63
+1791724440.874 F18 stage1 vlan99-ipv6+isis start
+1791724445.999 F18 stage2 adjacencies wait
+1791724465.269 F18 stage3 advertise start
+1791724469.683 F18 stage4 isis-available wait (static still owns)
+1791724478.276 F18-r1 stage5 shield
+1791724478.600 F18-r1 shield-install s1 2001:db8:110:1::1
+1791724480.514 F18-r1 shield-verified s1
+1791724480.888 F18-r1 shield-install r1 2001:db8:110:1::2
+1791724483.289 F18-r1 shield-verified r1
+1791724483.289 F18-r1 stage6 shield-forwarding verify
+1791724489.781 F18-r1 stage7 static-removal start
+1791724490.189 F18-r1 stage7 switch-static-removed
+1791724490.598 F18-r1 stage7 router-floating-statics-added
+1791724492.955 F18-r1 stage7 router-statics-removed
+1791724496.603 F18-r1 stage7 router-floating-statics-removed
+1791724496.603 F18-r1 stage9 isis-ownership wait
+1791724503.953 F18-r1 stage10 shield-removal
+1791724505.490 F18-r1 takeover-nexthop r1 2001:db8:10::/64 isisL2 fe80::42:aff:fefb:1b03%eth3 before=REACHABLE after=REACHABLE
+1791724506.646 F18-r1 takeover-nexthop r1 2001:db8:20::/64 isisL2 fe80::42:aff:fefb:1b03%eth3 before=REACHABLE after=REACHABLE
+1791724508.011 F18-r1 takeover-nexthop r1 2001:db8:30::/64 isisL2 fe80::42:aff:fefb:1b03%eth3 before=REACHABLE after=REACHABLE
+1791724508.011 F18-r1 shield-remove r1
+1791724510.668 F18-r1 shield-removed r1
+1791724511.896 F18-r1 takeover-nexthop s1 2001:db8::/32 isisL2 fe80::42:aff:fefb:1b02%eth1 before=DELAY after=DELAY
+1791724511.896 F18-r1 shield-remove s1
+1791724513.457 F18-r1 shield-removed s1
+1791724513.457 F18-r1 stage11 final-forwarding verify
+1791724518.629 F18-r2 stage5 shield
+1791724519.010 F18-r2 shield-install s2 2001:db8:110:2::1
+1791724520.581 F18-r2 shield-verified s2
+1791724520.941 F18-r2 shield-install r2 2001:db8:110:2::2
+1791724522.846 F18-r2 shield-verified r2
+1791724522.846 F18-r2 stage6 shield-forwarding verify
+1791724528.836 F18-r2 stage7 static-removal start
+1791724529.274 F18-r2 stage7 switch-static-removed
+1791724529.840 F18-r2 stage7 router-floating-statics-added
+1791724532.412 F18-r2 stage7 router-statics-removed
+1791724536.426 F18-r2 stage7 router-floating-statics-removed
+1791724536.426 F18-r2 stage9 isis-ownership wait
+1791724543.658 F18-r2 stage10 shield-removal
+1791724544.867 F18-r2 takeover-nexthop r2 2001:db8:10::/64 isisL2 fe80::42:aff:fefb:1c03%eth3 before=REACHABLE after=REACHABLE
+1791724545.938 F18-r2 takeover-nexthop r2 2001:db8:20::/64 isisL2 fe80::42:aff:fefb:1c03%eth3 before=REACHABLE after=REACHABLE
+1791724547.125 F18-r2 takeover-nexthop r2 2001:db8:30::/64 isisL2 fe80::42:aff:fefb:1c03%eth3 before=REACHABLE after=REACHABLE
+1791724547.125 F18-r2 shield-remove r2
+1791724549.304 F18-r2 shield-removed r2
+1791724550.382 F18-r2 takeover-nexthop s2 2001:db8::/32 isisL2 fe80::42:aff:fefb:1c02%eth1 before=REACHABLE after=REACHABLE
+1791724550.382 F18-r2 shield-remove s2
+1791724551.913 F18-r2 shield-removed s2
+1791724551.913 F18-r2 stage11 final-forwarding verify
+1791724561.877 F18 stage12 final-config r1=5408a3ab57b34d17 r2=4d5eb24485271374 s1=c14991f826026d59 s2=9e1955c8185575b0
+1791724689.095 F18 core-quiet 659
+1791724690.887 F18 core-cover-removed
+1791724709.035 F18 final-equals-first-final True
+1791724715.036 C18 between forward and rollback
+1791724717.879 B18 core-cover-installed 2001:db8:10::/63 2001:db8:20::/63 2001:db8:30::/63
+1791724717.880 B18-r2 rb1 shield
+1791724718.317 B18-r2 shield-install s2 2001:db8:110:2::1
+1791724720.080 B18-r2 shield-verified s2
+1791724720.459 B18-r2 shield-install r2 2001:db8:110:2::2
+1791724723.111 B18-r2 shield-verified r2
+1791724726.111 B18-r2 rb2 static-restore start
+1791724729.072 B18-r2 rb2 router-statics-restored
+1791724729.473 B18-r2 rb2 switch-static-restored
+1791724735.976 B18-r2 rb3 shield-removal
+1791724737.147 B18-r2 takeover-nexthop r2 2001:db8:10::/64 static 2001:db8:110:2::2 before=REACHABLE after=REACHABLE
+1791724738.281 B18-r2 takeover-nexthop r2 2001:db8:20::/64 static 2001:db8:110:2::2 before=REACHABLE after=REACHABLE
+1791724739.328 B18-r2 takeover-nexthop r2 2001:db8:30::/64 static 2001:db8:110:2::2 before=REACHABLE after=REACHABLE
+1791724739.328 B18-r2 shield-remove r2
+1791724741.383 B18-r2 shield-removed r2
+1791724742.592 B18-r2 takeover-nexthop s2 2001:db8::/32 static 2001:db8:110:2::1 before=REACHABLE after=REACHABLE
+1791724742.592 B18-r2 shield-remove s2
+1791724744.317 B18-r2 shield-removed s2
+1791724747.318 B18-r1 rb1 shield
+1791724747.781 B18-r1 shield-install s1 2001:db8:110:1::1
+1791724749.630 B18-r1 shield-verified s1
+1791724750.020 B18-r1 shield-install r1 2001:db8:110:1::2
+1791724752.277 B18-r1 shield-verified r1
+1791724755.278 B18-r1 rb2 static-restore start
+1791724758.380 B18-r1 rb2 router-statics-restored
+1791724758.876 B18-r1 rb2 switch-static-restored
+1791724765.600 B18-r1 rb3 shield-removal
+1791724766.598 B18-r1 takeover-nexthop r1 2001:db8:10::/64 static 2001:db8:110:1::2 before=REACHABLE after=REACHABLE
+1791724767.608 B18-r1 takeover-nexthop r1 2001:db8:20::/64 static 2001:db8:110:1::2 before=REACHABLE after=REACHABLE
+1791724768.610 B18-r1 takeover-nexthop r1 2001:db8:30::/64 static 2001:db8:110:1::2 before=REACHABLE after=REACHABLE
+1791724768.610 B18-r1 shield-remove r1
+1791724770.661 B18-r1 shield-removed r1
+1791724771.830 B18-r1 takeover-nexthop s1 2001:db8::/32 static 2001:db8:110:1::1 before=REACHABLE after=REACHABLE
+1791724771.830 B18-r1 shield-remove s1
+1791724773.410 B18-r1 shield-removed s1
+1791724776.410 B18 rb4 withdraw-advertisements start
+1791724780.125 B18 rb5 isis-removal start
+1791724789.757 B18 rb6 baseline-config r1=2bd8c040664c1216 r2=6284ec1a7270b9dd s1=7d083ffd40ee3b4f s2=a4f9a4a23f07a916
+1791724916.331 B18 core-quiet 187
+1791724917.625 B18 core-cover-removed
+1791724919.222 B18 baseline-restored True
+1791724924.223 C18 end load 24.57 26.31 25.63
+1791724938.355 C19 begin load 24.36 26.18 25.60
+1791724941.156 F19 core-cover-installed 2001:db8:10::/63 2001:db8:20::/63 2001:db8:30::/63
+1791724941.156 F19 stage1 vlan99-ipv6+isis start
+1791724945.647 F19 stage2 adjacencies wait
+1791724960.994 F19 stage3 advertise start
+1791724965.926 F19 stage4 isis-available wait (static still owns)
+1791724974.890 F19-r1 stage5 shield
+1791724975.326 F19-r1 shield-install s1 2001:db8:110:1::1
+1791724977.160 F19-r1 shield-verified s1
+1791724977.585 F19-r1 shield-install r1 2001:db8:110:1::2
+1791724979.776 F19-r1 shield-verified r1
+1791724979.776 F19-r1 stage6 shield-forwarding verify
+1791724985.595 F19-r1 stage7 static-removal start
+1791724985.954 F19-r1 stage7 switch-static-removed
+1791724986.533 F19-r1 stage7 router-floating-statics-added
+1791724989.120 F19-r1 stage7 router-statics-removed
+1791724993.133 F19-r1 stage7 router-floating-statics-removed
+1791724993.133 F19-r1 stage9 isis-ownership wait
+1791725000.204 F19-r1 stage10 shield-removal
+1791725001.117 F19-r1 takeover-nexthop r1 2001:db8:10::/64 isisL2 fe80::42:aff:fefb:1b03%eth3 before=REACHABLE after=REACHABLE
+1791725002.172 F19-r1 takeover-nexthop r1 2001:db8:20::/64 isisL2 fe80::42:aff:fefb:1b03%eth3 before=REACHABLE after=REACHABLE
+1791725003.271 F19-r1 takeover-nexthop r1 2001:db8:30::/64 isisL2 fe80::42:aff:fefb:1b03%eth3 before=REACHABLE after=REACHABLE
+1791725003.271 F19-r1 shield-remove r1
+1791725005.369 F19-r1 shield-removed r1
+1791725006.409 F19-r1 takeover-nexthop s1 2001:db8::/32 isisL2 fe80::42:aff:fefb:1b02%eth1 before=DELAY after=DELAY
+1791725006.409 F19-r1 shield-remove s1
+1791725008.334 F19-r1 shield-removed s1
+1791725008.334 F19-r1 stage11 final-forwarding verify
+1791725012.834 F19-r2 stage5 shield
+1791725013.165 F19-r2 shield-install s2 2001:db8:110:2::1
+1791725014.837 F19-r2 shield-verified s2
+1791725015.216 F19-r2 shield-install r2 2001:db8:110:2::2
+1791725018.094 F19-r2 shield-verified r2
+1791725018.094 F19-r2 stage6 shield-forwarding verify
+1791725024.203 F19-r2 stage7 static-removal start
+1791725024.658 F19-r2 stage7 switch-static-removed
+1791725025.258 F19-r2 stage7 router-floating-statics-added
+1791725027.694 F19-r2 stage7 router-statics-removed
+1791725031.664 F19-r2 stage7 router-floating-statics-removed
+1791725031.664 F19-r2 stage9 isis-ownership wait
+1791725038.834 F19-r2 stage10 shield-removal
+1791725039.866 F19-r2 takeover-nexthop r2 2001:db8:10::/64 isisL2 fe80::42:aff:fefb:1c03%eth3 before=REACHABLE after=REACHABLE
+1791725041.011 F19-r2 takeover-nexthop r2 2001:db8:20::/64 isisL2 fe80::42:aff:fefb:1c03%eth3 before=REACHABLE after=REACHABLE
+1791725042.698 F19-r2 takeover-nexthop r2 2001:db8:30::/64 isisL2 fe80::42:aff:fefb:1c03%eth3 before=REACHABLE after=REACHABLE
+1791725042.698 F19-r2 shield-remove r2
+1791725044.608 F19-r2 shield-removed r2
+1791725045.880 F19-r2 takeover-nexthop s2 2001:db8::/32 isisL2 fe80::42:aff:fefb:1c02%eth1 before=REACHABLE after=REACHABLE
+1791725045.880 F19-r2 shield-remove s2
+1791725048.096 F19-r2 shield-removed s2
+1791725048.096 F19-r2 stage11 final-forwarding verify
+1791725059.306 F19 stage12 final-config r1=5408a3ab57b34d17 r2=4d5eb24485271374 s1=c14991f826026d59 s2=9e1955c8185575b0
+1791725186.240 F19 core-quiet 457
+1791725187.781 F19 core-cover-removed
+1791725206.640 F19 final-equals-first-final True
+1791725212.640 C19 between forward and rollback
+1791725215.567 B19 core-cover-installed 2001:db8:10::/63 2001:db8:20::/63 2001:db8:30::/63
+1791725215.567 B19-r2 rb1 shield
+1791725215.965 B19-r2 shield-install s2 2001:db8:110:2::1
+1791725217.505 B19-r2 shield-verified s2
+1791725217.868 B19-r2 shield-install r2 2001:db8:110:2::2
+1791725220.014 B19-r2 shield-verified r2
+1791725223.014 B19-r2 rb2 static-restore start
+1791725225.992 B19-r2 rb2 router-statics-restored
+1791725226.446 B19-r2 rb2 switch-static-restored
+1791725233.275 B19-r2 rb3 shield-removal
+1791725234.204 B19-r2 takeover-nexthop r2 2001:db8:10::/64 static 2001:db8:110:2::2 before=REACHABLE after=REACHABLE
+1791725235.340 B19-r2 takeover-nexthop r2 2001:db8:20::/64 static 2001:db8:110:2::2 before=REACHABLE after=REACHABLE
+1791725236.442 B19-r2 takeover-nexthop r2 2001:db8:30::/64 static 2001:db8:110:2::2 before=REACHABLE after=REACHABLE
+1791725236.442 B19-r2 shield-remove r2
+1791725238.927 B19-r2 shield-removed r2
+1791725240.052 B19-r2 takeover-nexthop s2 2001:db8::/32 static 2001:db8:110:2::1 before=REACHABLE after=REACHABLE
+1791725240.052 B19-r2 shield-remove s2
+1791725241.852 B19-r2 shield-removed s2
+1791725244.852 B19-r1 rb1 shield
+1791725245.254 B19-r1 shield-install s1 2001:db8:110:1::1
+1791725246.827 B19-r1 shield-verified s1
+1791725247.223 B19-r1 shield-install r1 2001:db8:110:1::2
+1791725249.318 B19-r1 shield-verified r1
+1791725252.319 B19-r1 rb2 static-restore start
+1791725255.014 B19-r1 rb2 router-statics-restored
+1791725255.551 B19-r1 rb2 switch-static-restored
+1791725262.359 B19-r1 rb3 shield-removal
+1791725263.449 B19-r1 takeover-nexthop r1 2001:db8:10::/64 static 2001:db8:110:1::2 before=REACHABLE after=REACHABLE
+1791725264.723 B19-r1 takeover-nexthop r1 2001:db8:20::/64 static 2001:db8:110:1::2 before=REACHABLE after=REACHABLE
+1791725265.918 B19-r1 takeover-nexthop r1 2001:db8:30::/64 static 2001:db8:110:1::2 before=REACHABLE after=REACHABLE
+1791725265.918 B19-r1 shield-remove r1
+1791725268.837 B19-r1 shield-removed r1
+1791725270.133 B19-r1 takeover-nexthop s1 2001:db8::/32 static 2001:db8:110:1::1 before=REACHABLE after=REACHABLE
+1791725270.133 B19-r1 shield-remove s1
+1791725271.919 B19-r1 shield-removed s1
+1791725274.919 B19 rb4 withdraw-advertisements start
+1791725278.457 B19 rb5 isis-removal start
+1791725287.353 B19 rb6 baseline-config r1=2bd8c040664c1216 r2=6284ec1a7270b9dd s1=7d083ffd40ee3b4f s2=a4f9a4a23f07a916
+1791725413.510 B19 core-quiet 684
+1791725414.905 B19 core-cover-removed
+1791725416.806 B19 baseline-restored True
+1791725421.807 C19 end load 22.92 22.59 24.10
+1791725435.402 C20 begin load 20.75 22.12 23.92
+1791725438.212 F20 core-cover-installed 2001:db8:10::/63 2001:db8:20::/63 2001:db8:30::/63
+1791725438.212 F20 stage1 vlan99-ipv6+isis start
+1791725443.630 F20 stage2 adjacencies wait
+1791725463.225 F20 stage3 advertise start
+1791725467.530 F20 stage4 isis-available wait (static still owns)
+1791725476.546 F20-r1 stage5 shield
+1791725476.899 F20-r1 shield-install s1 2001:db8:110:1::1
+1791725478.556 F20-r1 shield-verified s1
+1791725478.902 F20-r1 shield-install r1 2001:db8:110:1::2
+1791725481.326 F20-r1 shield-verified r1
+1791725481.326 F20-r1 stage6 shield-forwarding verify
+1791725487.138 F20-r1 stage7 static-removal start
+1791725487.453 F20-r1 stage7 switch-static-removed
+1791725487.864 F20-r1 stage7 router-floating-statics-added
+1791725490.319 F20-r1 stage7 router-statics-removed
+1791725493.908 F20-r1 stage7 router-floating-statics-removed
+1791725493.908 F20-r1 stage9 isis-ownership wait
+1791725500.972 F20-r1 stage10 shield-removal
+1791725502.169 F20-r1 takeover-nexthop r1 2001:db8:10::/64 isisL2 fe80::42:aff:fefb:1b03%eth3 before=REACHABLE after=REACHABLE
+1791725503.270 F20-r1 takeover-nexthop r1 2001:db8:20::/64 isisL2 fe80::42:aff:fefb:1b03%eth3 before=REACHABLE after=REACHABLE
+1791725504.331 F20-r1 takeover-nexthop r1 2001:db8:30::/64 isisL2 fe80::42:aff:fefb:1b03%eth3 before=REACHABLE after=REACHABLE
+1791725504.331 F20-r1 shield-remove r1
+1791725506.561 F20-r1 shield-removed r1
+1791725507.595 F20-r1 takeover-nexthop s1 2001:db8::/32 isisL2 fe80::42:aff:fefb:1b02%eth1 before=DELAY after=DELAY
+1791725507.595 F20-r1 shield-remove s1
+1791725509.316 F20-r1 shield-removed s1
+1791725509.316 F20-r1 stage11 final-forwarding verify
+1791725514.359 F20-r2 stage5 shield
+1791725514.794 F20-r2 shield-install s2 2001:db8:110:2::1
+1791725516.198 F20-r2 shield-verified s2
+1791725516.537 F20-r2 shield-install r2 2001:db8:110:2::2
+1791725518.777 F20-r2 shield-verified r2
+1791725518.777 F20-r2 stage6 shield-forwarding verify
+1791725524.697 F20-r2 stage7 static-removal start
+1791725525.056 F20-r2 stage7 switch-static-removed
+1791725525.483 F20-r2 stage7 router-floating-statics-added
+1791725527.997 F20-r2 stage7 router-statics-removed
+1791725531.510 F20-r2 stage7 router-floating-statics-removed
+1791725531.510 F20-r2 stage9 isis-ownership wait
+1791725538.849 F20-r2 stage10 shield-removal
+1791725539.987 F20-r2 takeover-nexthop r2 2001:db8:10::/64 isisL2 fe80::42:aff:fefb:1c03%eth3 before=REACHABLE after=REACHABLE
+1791725541.197 F20-r2 takeover-nexthop r2 2001:db8:20::/64 isisL2 fe80::42:aff:fefb:1c03%eth3 before=REACHABLE after=REACHABLE
+1791725542.328 F20-r2 takeover-nexthop r2 2001:db8:30::/64 isisL2 fe80::42:aff:fefb:1c03%eth3 before=REACHABLE after=REACHABLE
+1791725542.328 F20-r2 shield-remove r2
+1791725544.375 F20-r2 shield-removed r2
+1791725545.355 F20-r2 takeover-nexthop s2 2001:db8::/32 isisL2 fe80::42:aff:fefb:1c02%eth1 before=REACHABLE after=REACHABLE
+1791725545.355 F20-r2 shield-remove s2
+1791725546.791 F20-r2 shield-removed s2
+1791725546.791 F20-r2 stage11 final-forwarding verify
+1791725556.645 F20 stage12 final-config r1=5408a3ab57b34d17 r2=4d5eb24485271374 s1=c14991f826026d59 s2=9e1955c8185575b0
+1791725684.115 F20 core-quiet 955
+1791725685.836 F20 core-cover-removed
+1791725704.391 F20 final-equals-first-final True
+1791725710.391 C20 between forward and rollback
+1791725713.541 B20 core-cover-installed 2001:db8:10::/63 2001:db8:20::/63 2001:db8:30::/63
+1791725713.541 B20-r2 rb1 shield
+1791725713.894 B20-r2 shield-install s2 2001:db8:110:2::1
+1791725715.658 B20-r2 shield-verified s2
+1791725715.980 B20-r2 shield-install r2 2001:db8:110:2::2
+1791725718.714 B20-r2 shield-verified r2
+1791725721.714 B20-r2 rb2 static-restore start
+1791725724.630 B20-r2 rb2 router-statics-restored
+1791725724.990 B20-r2 rb2 switch-static-restored
+1791725731.316 B20-r2 rb3 shield-removal
+1791725732.373 B20-r2 takeover-nexthop r2 2001:db8:10::/64 static 2001:db8:110:2::2 before=REACHABLE after=REACHABLE
+1791725733.387 B20-r2 takeover-nexthop r2 2001:db8:20::/64 static 2001:db8:110:2::2 before=REACHABLE after=REACHABLE
+1791725734.362 B20-r2 takeover-nexthop r2 2001:db8:30::/64 static 2001:db8:110:2::2 before=REACHABLE after=REACHABLE
+1791725734.362 B20-r2 shield-remove r2
+1791725736.536 B20-r2 shield-removed r2
+1791725737.631 B20-r2 takeover-nexthop s2 2001:db8::/32 static 2001:db8:110:2::1 before=REACHABLE after=REACHABLE
+1791725737.631 B20-r2 shield-remove s2
+1791725739.023 B20-r2 shield-removed s2
+1791725742.023 B20-r1 rb1 shield
+1791725742.421 B20-r1 shield-install s1 2001:db8:110:1::1
+1791725744.162 B20-r1 shield-verified s1
+1791725744.512 B20-r1 shield-install r1 2001:db8:110:1::2
+1791725747.029 B20-r1 shield-verified r1
+1791725750.029 B20-r1 rb2 static-restore start
+1791725752.890 B20-r1 rb2 router-statics-restored
+1791725753.330 B20-r1 rb2 switch-static-restored
+1791725759.933 B20-r1 rb3 shield-removal
+1791725761.153 B20-r1 takeover-nexthop r1 2001:db8:10::/64 static 2001:db8:110:1::2 before=REACHABLE after=REACHABLE
+1791725762.661 B20-r1 takeover-nexthop r1 2001:db8:20::/64 static 2001:db8:110:1::2 before=REACHABLE after=REACHABLE
+1791725763.665 B20-r1 takeover-nexthop r1 2001:db8:30::/64 static 2001:db8:110:1::2 before=REACHABLE after=REACHABLE
+1791725763.665 B20-r1 shield-remove r1
+1791725765.842 B20-r1 shield-removed r1
+1791725767.146 B20-r1 takeover-nexthop s1 2001:db8::/32 static 2001:db8:110:1::1 before=REACHABLE after=REACHABLE
+1791725767.146 B20-r1 shield-remove s1
+1791725768.695 B20-r1 shield-removed s1
+1791725771.695 B20 rb4 withdraw-advertisements start
+1791725775.258 B20 rb5 isis-removal start
+1791725784.886 B20 rb6 baseline-config r1=2bd8c040664c1216 r2=6284ec1a7270b9dd s1=7d083ffd40ee3b4f s2=a4f9a4a23f07a916
+1791725912.486 B20 core-quiet 159
+1791725913.894 B20 core-cover-removed
+1791725915.606 B20 baseline-restored True
+1791725920.606 C20 end load 25.41 25.45 24.99
+1791725946.795 END ok load 24.39 25.25 24.93

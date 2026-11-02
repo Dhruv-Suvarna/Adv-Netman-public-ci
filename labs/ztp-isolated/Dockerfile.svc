@@ -1,0 +1,8 @@
+# Disposable NMAS V2 Phase 3 isolated bootstrap-service fixture: ISC DHCP (operational) and Kea (configuration validation only).
+# Runs only on the isolated ZTP fixture network; never attached to a production network or the Containerlab management bridge.
+FROM ubuntu:24.04
+RUN apt-get update \
+ && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends isc-dhcp-server kea-dhcp4-server iproute2 tcpdump procps \
+ && rm -rf /var/lib/apt/lists/*
+COPY svc-entrypoint.sh /usr/local/sbin/svc-entrypoint.sh
+ENTRYPOINT ["/usr/local/sbin/svc-entrypoint.sh"]

@@ -1,0 +1,45 @@
+{% extends "core/base.html" %}
+{% load nsot_extras %}
+{% block title %}VLANs / Prefixes · NSOT{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>VLANs / Prefixes</h1>
+  <p><span class="badge NETBOX">NETBOX</span></p>
+</div>
+{% include "core/nsot/_subnav.html" %}
+<div class="filter-bar">
+  <a class="btn btn--secondary" href="?refresh=1">Refresh NSOT</a>
+  {% include "core/nsot/_freshness.html" with fetched_at=listing.fetched_at cache=listing.cache freshness=listing.freshness refresh_error=listing.refresh_error %}
+</div>
+
+{% if listing.status != "available" %}
+  <div class="alert alert--warning"><div><strong>NetBox unavailable.</strong> {{ listing.message }}</div></div>
+{% else %}
+  <div class="card" style="margin-top:16px;">
+    <table class="data-table">
+      <thead><tr><th>VID</th><th>Name</th><th>Status</th><th>Role</th><th>Description</th><th>Addressing</th></tr></thead>
+      <tbody>
+      {% for vlan in vlans %}
+        <tr>
+          <td>{{ vlan.vid }}</td>
+          <td>{{ vlan.name }}</td>
+          <td>{{ vlan.status|default:"—" }}</td>
+          <td>{{ vlan.role|default:"—" }}</td>
+          <td>{{ vlan.description|default:"—" }}</td>
+          <td>
+            {% if vlan.static_management %}
+              <span class="badge badge--info">MANAGEMENT · STATIC</span>
+            {% else %}
+              <span class="badge badge--neutral">standard</span>
+            {% endif %}
+          </td>
+        </tr>
+      {% empty %}
+        <tr><td colspan="6"><div class="empty-state">No VLANs modeled.</div></td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <p style="color:var(--text-secondary);margin-top:12px;">VLAN 200 is permanently static management addressing on every managed device — there is no DHCP-enable action or reservation control for it anywhere in this UI.</p>
+{% endif %}
+{% endblock %}

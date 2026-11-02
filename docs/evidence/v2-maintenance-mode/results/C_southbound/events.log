@@ -1,0 +1,54 @@
+1792283887.089 START maintenance-sandbox ['05b', '11b'] load 27.29 29.28 27.22
+1792283887.090 SCENARIO 05b begin load 27.29 29.28 27.22
+1792284057.938 NMAS before S1-shield-install-drain
+1792284078.840 NMAS after S1-shield-install-drain
+1792284085.927 NMAS before S1-uplink-metric-drain
+1792284114.889 NMAS after S1-uplink-metric-drain
+1792284126.607 NMAS before S1-shield-remove-drain
+1792284135.192 NMAS after S1-shield-remove-drain
+1792284152.026 NMAS before R1-external-metric-drain
+1792284177.369 NMAS after R1-external-metric-drain
+1792284202.635 NMAS before FINAL_VALIDATION
+1792284209.007 NMAS before PERSISTENCE-R1
+1792284210.106 NMAS after PERSISTENCE-R1
+1792284210.122 NMAS before PERSISTENCE-S1
+1792284211.409 NMAS after PERSISTENCE-S1
+1792284339.230 NMAS before R1-external-metric-restore
+1792284349.352 NMAS after R1-external-metric-restore
+1792284366.158 NMAS before S1-shield-install-restore
+1792284387.297 NMAS after S1-shield-install-restore
+1792284396.086 NMAS before S1-uplink-metric-restore
+1792284418.866 NMAS after S1-uplink-metric-restore
+1792284431.379 NMAS before S1-shield-remove-restore
+1792284440.374 NMAS after S1-shield-remove-restore
+1792284463.940 NMAS before FINAL_VALIDATION
+1792284471.151 NMAS before PERSISTENCE-S1
+1792284472.691 NMAS after PERSISTENCE-S1
+1792284472.709 NMAS before PERSISTENCE-R1
+1792284474.141 NMAS after PERSISTENCE-R1
+1792284564.403 RESULT 05b_southbound_metric_without_covers_measured PASS {"lossless": true, "state_after_entry": "ACTIVE", "entry_outcome": "SUCCEEDED", "failure": {}, "applied": ["S1-shield-install-drain", "S1-uplink-metric-drain", "S1-shield-remove-drain", "R1-external-metric-drain"], "compensation": [], "probes_lost_in_run": 0, "probe_totals_entry": {"answered": 147916, "lost": 0, "flows": 14}, "state_after_restore": "RESTORED", "probes_lost_in_restore": 0, "baseline_restored": true, "chain_ok": true, "cores_unchanged": true}
+1792284564.405 SCENARIO 11b begin load 26.70 25.76 25.60
+1792284909.826 NMAS before S1-shield-install-restore
+1792284930.503 NMAS after S1-shield-install-restore
+1792284937.323 NMAS before S1-uplink-metric-restore
+1792284957.700 NMAS after S1-uplink-metric-restore
+1792284970.119 NMAS before S1-shield-remove-restore
+1792284979.334 NMAS after S1-shield-remove-restore
+1792284997.958 NMAS before FINAL_VALIDATION
+1792285004.687 NMAS before PERSISTENCE-S1
+1792285006.162 NMAS after PERSISTENCE-S1
+1792285006.178 NMAS before PERSISTENCE-R1
+1792285007.594 NMAS after PERSISTENCE-R1
+1792285363.407 NMAS before S1-shield-install-restore
+1792285522.733 NMAS before S1-shield-install-restore
+1792285564.377 NMAS after S1-shield-install-restore
+1792285572.940 NMAS before S1-uplink-metric-restore
+1792285583.170 NMAS before S1-shield-remove-restore
+1792285594.975 NMAS after S1-shield-remove-restore
+1792285628.979 NMAS before FINAL_VALIDATION
+1792285640.399 NMAS before PERSISTENCE-S1
+1792285642.085 NMAS after PERSISTENCE-S1
+1792285642.107 NMAS before PERSISTENCE-R1
+1792285643.871 NMAS after PERSISTENCE-R1
+1792285717.382 RESULT 11b_worker_crash_recovery PASS {"after_step_boundary": {"killed": {"state": "ENTERING", "claim": true, "locks": ["S1"]}, "tick_while_claim_fresh": [], "recovery": [{"record": "MNT-000002", "item": "RECOVER", "state": "ENTRY_ABORTED_RESTORED", "outcome": "DONE", "escalated": false}], "state": "ENTRY_ABORTED_RESTORED", "escalated": false, "maintenance_only_state": [], "findings": [], "baseline_restored": true, "chain_ok": true}, "inside_stage": {"killed": {"state": "ENTERING", "claim": true, "locks": ["S1"]}, "tick_while_claim_fresh": [], "recovery": [{"record": "MNT-000003", "item": "RECOVER", "state": "RESTORE_FAILED_ESCALATED", "outcome": "DONE", "escalated": true}], "state": "RESTORE_FAILED_ESCALATED", "escalated": true, "maintenance_only_state": ["S1: interface Ethernet1 > isis metric 1000", "S1: ipv6 route 2001:db8:8000::/33 2001:db8:110:3::2", "S1: ipv6 route 2001:db8::/33 2001:db8:110:3::2"], "findings": [{"code
+1792285717.383 END {"05b_southbound_metric_without_covers_measured": true, "11b_worker_crash_recovery": true} load 32.89 28.94 25.95
