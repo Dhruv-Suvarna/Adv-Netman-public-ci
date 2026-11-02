@@ -2,8 +2,13 @@
 
 ## Project Context
 
-- Authoritative Git repository:
-  `/home/student/Scripts/clab_dualstack_lab`
+- Authoritative Git repository (all NMAS V2 development, PRs, merges, CI and
+  capability-ledger changes): `https://github.com/Dhruv-Suvarna/Adv-Netman-public-ci`,
+  default branch `main`. See `docs/AUTHORITATIVE_REPOSITORY.md`.
+- Legacy repository `Dhruv-Suvarna/Adv-Netman` (local checkout
+  `/home/student/Scripts/clab_dualstack_lab`) is a private legacy and
+  security-remediation archive: no new feature commits, branches or development
+  PRs there, and none of its Git history may be imported here.
 - Active Containerlab runtime directory:
   `/home/student/clab-quickstart`
 - The runtime directory is NOT the source of truth.
@@ -200,6 +205,15 @@ Work one subsystem at a time:
 6. commit separately
 
 Do NOT stage or commit implementation changes unless explicitly instructed by the user.
+
+Repository rules (`docs/AUTHORITATIVE_REPOSITORY.md`):
+- branch from the latest `main` and open the PR against this repository;
+- merge by squash only, so `main` stays a strictly linear chain;
+- never force-push or rewrite published history; never push, merge or
+  cherry-pick legacy-repository commits -- port legacy work as reviewed source
+  changes;
+- stage only reviewed files and scan them for credentials before every push;
+  no credentials, runtime secrets or private runtime artifacts in commits.
 
 Keep functional phase commits separate where practical.
 

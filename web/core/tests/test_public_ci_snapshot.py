@@ -409,3 +409,182 @@ class PublicCiLinearHistoryTests(SimpleTestCase):
             subprocess.run(["git", *SNAPSHOT_GIT, "-C", str(published), "commit", "-q", "-m", body], check=True)
             with self.assertRaisesRegex(RuntimeError, "path set does not match"):
                 VERIFY_MODULE.verify_commit(published, self.git(published, "rev-parse", "HEAD"), head)
+
+
+DEV_GIT = ["-c", "user.name=Developer", "-c", "user.email=developer@invalid.example"]
+
+
+class DevelopmentHistoryTests(SimpleTestCase):
+    """After the import boundary, main takes ordinary linear commits; the sanitized import stays verifiable."""
+
+    @staticmethod
+    def git(repo: Path, *args: str) -> str:
+        return subprocess.check_output(["git", "-C", str(repo), *args], text=True, stderr=subprocess.DEVNULL).strip()
+
+    def repository(self, root: Path) -> tuple[Path, str, str]:
+        """A published snapshot (the root is the import boundary) plus one ordinary development commit."""
+        source, revision = PublicCiSnapshotTests.fixture(self, root)
+        repo = root / "repository"
+        BUILD_MODULE.build(source, revision, repo)
+        boundary = self.git(repo, "rev-parse", "HEAD")
+        (repo / "feature.py").write_text("print('reviewed feature')\n")
+        subprocess.run(["git", "-C", str(repo), "add", "feature.py"], check=True)
+        subprocess.run(["git", *DEV_GIT, "-C", str(repo), "commit", "-qm", "feature"], check=True)
+        return repo, boundary, self.git(repo, "rev-parse", "HEAD")
+
+    def test_development_history_tree_and_roots_accept_linear_reviewed_commits(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            repo, boundary, head = self.repository(Path(temporary))
+            self.assertEqual(VERIFY_MODULE.checked_rev(boundary), boundary)
+            self.assertEqual(VERIFY_MODULE.checked_rev("HEAD"), "HEAD")
+            self.assertEqual(VERIFY_MODULE.linear_chain(repo, "HEAD"), [boundary, head])
+            self.assertIn("feature.py", VERIFY_MODULE.tree_entries(repo, head))
+            self.assertGreater(VERIFY_MODULE.verify_snapshot_blobs(repo, boundary), 0)
+            manifest_blob = self.git(repo, "rev-parse", f"{boundary}:PUBLIC_CI_SNAPSHOT.json")
+            VERIFY_MODULE.verify_development_commit(repo, head, manifest_blob, {"address_report.csv"})
+            self.assertEqual(VERIFY_MODULE.verify_development_history(repo, boundary, boundary), ([boundary, head], 0))
+            self.assertEqual(VERIFY_MODULE.verify_development_history(repo, boundary, boundary, boundary), ([boundary], 0))
+            self.assertEqual(VERIFY_MODULE.verify_roots(repo, boundary), [boundary])
+            self.assertEqual(VERIFY_MODULE.verify_roots(repo, boundary, [head]), [boundary])
+            self.assertGreater(VERIFY_MODULE.verify_tree_policy(repo, boundary), 0)
+            # A feature branch outside main is allowed when it descends from the published root.
+            subprocess.run(["git", "-C", str(repo), "branch", "-q", "feature-branch", head], check=True)
+            self.assertEqual(VERIFY_MODULE.verify_roots(repo, boundary), [boundary])
+            for argv in (
+                ["--history", "--expected-root", boundary, "--import-boundary", boundary],
+                ["--history", "--expected-root", boundary, "--import-boundary", boundary, "--rev", boundary],
+                ["--roots", "--expected-root", boundary, "--all-refs"],
+                ["--roots", "--expected-root", boundary, "--rev", head],
+                ["--tree-policy", "--import-boundary", boundary],
+            ):
+                with mock.patch.object(sys, "argv", ["verify_public_ci_snapshot.py", "--root", str(repo), *argv]), \
+                        mock.patch("builtins.print"):
+                    self.assertEqual(VERIFY_MODULE.main(), 0, argv)
+
+    def test_development_verifiers_reject_merges_foreign_roots_and_import_tampering(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            repo, boundary, head = self.repository(root)
+            manifest_blob = self.git(repo, "rev-parse", f"{boundary}:PUBLIC_CI_SNAPSHOT.json")
+            for bad in ("--all", "abc123", "", "HEAD~1"):
+                with self.assertRaisesRegex(RuntimeError, "full 40-character"):
+                    VERIFY_MODULE.checked_rev(bad)
+            with self.assertRaisesRegex(RuntimeError, "full commit IDs"):
+                VERIFY_MODULE.verify_development_history(repo, boundary, "HEAD")
+            with self.assertRaisesRegex(RuntimeError, "published root"):
+                VERIFY_MODULE.verify_development_history(repo, "0" * 40, boundary)
+            with self.assertRaisesRegex(RuntimeError, "import boundary"):
+                VERIFY_MODULE.verify_development_history(repo, boundary, "1" * 40)
+            with self.assertRaisesRegex(RuntimeError, "published root must"):
+                VERIFY_MODULE.verify_roots(repo, "HEAD")
+            with self.assertRaisesRegex(RuntimeError, "No revision"):
+                VERIFY_MODULE.verify_roots(repo, boundary, [])
+            with self.assertRaisesRegex(RuntimeError, "must be a full commit ID"):
+                VERIFY_MODULE.verify_tree_policy(repo, "HEAD")
+            with self.assertRaises(subprocess.CalledProcessError):
+                VERIFY_MODULE.tree_entries(repo, "0" * 40)
+
+            # Imported legacy history: a second root on another ref, then merged into main.
+            source = root / "source"
+            subprocess.run(["git", "-C", str(repo), "fetch", "-q", str(source), "main:refs/heads/imported"], check=True)
+            with self.assertRaisesRegex(RuntimeError, "root other than the published root"):
+                VERIFY_MODULE.verify_roots(repo, boundary)
+            with self.assertRaisesRegex(RuntimeError, "root other than the published root"):
+                VERIFY_MODULE.verify_roots(repo, boundary, ["HEAD", self.git(repo, "rev-parse", "imported")])
+            subprocess.run(["git", *DEV_GIT, "-C", str(repo), "merge", "-q", "--no-edit", "-s", "ours",
+                            "--allow-unrelated-histories", "imported"], check=True, capture_output=True)
+            with self.assertRaisesRegex(RuntimeError, "strictly linear"):
+                VERIFY_MODULE.linear_chain(repo, "HEAD")
+            with self.assertRaisesRegex(RuntimeError, "strictly linear"):
+                VERIFY_MODULE.verify_development_history(repo, boundary, boundary)
+            subprocess.run(["git", "-C", str(repo), "reset", "-q", "--hard", head], check=True)
+            subprocess.run(["git", "-C", str(repo), "branch", "-q", "-D", "imported"], check=True)
+
+            # A development commit that edits the immutable import manifest.
+            manifest = repo / "PUBLIC_CI_SNAPSHOT.json"
+            original = manifest.read_bytes()
+            manifest.write_bytes(original + b"\n")
+            with self.assertRaisesRegex(RuntimeError, "immutable import manifest"):
+                VERIFY_MODULE.verify_tree_policy(repo, boundary)
+            subprocess.run(["git", *DEV_GIT, "-C", str(repo), "commit", "-qam", "edit manifest"], check=True)
+            with self.assertRaisesRegex(RuntimeError, "immutable import manifest"):
+                VERIFY_MODULE.verify_development_history(repo, boundary, boundary)
+            subprocess.run(["git", "-C", str(repo), "reset", "-q", "--hard", head], check=True)
+
+            # A development commit that brings back an excluded legacy path.
+            (repo / "address_report.csv").write_text("generated\n")
+            with self.assertRaisesRegex(RuntimeError, "Excluded legacy path"):
+                VERIFY_MODULE.verify_tree_policy(repo, boundary)
+            subprocess.run(["git", "-C", str(repo), "add", "address_report.csv"], check=True)
+            subprocess.run(["git", *DEV_GIT, "-C", str(repo), "commit", "-qm", "excluded"], check=True)
+            with self.assertRaisesRegex(RuntimeError, "excluded from the sanitized import"):
+                VERIFY_MODULE.verify_development_commit(repo, "HEAD", manifest_blob, {"address_report.csv"})
+            subprocess.run(["git", "-C", str(repo), "reset", "-q", "--hard", head], check=True)
+
+            # A symlink.
+            (repo / "link").symlink_to("feature.py")
+            subprocess.run(["git", "-C", str(repo), "add", "link"], check=True)
+            with self.assertRaisesRegex(RuntimeError, "special mode"):
+                VERIFY_MODULE.verify_tree_policy(repo, boundary)
+            subprocess.run(["git", *DEV_GIT, "-C", str(repo), "commit", "-qm", "link"], check=True)
+            with self.assertRaisesRegex(RuntimeError, "special mode"):
+                VERIFY_MODULE.verify_development_commit(repo, "HEAD", manifest_blob, set())
+            subprocess.run(["git", "-C", str(repo), "reset", "-q", "--hard", head], check=True)
+
+            # A tree that does not descend from the import boundary.
+            orphan = root / "orphan"
+            subprocess.run(["git", "init", "-q", "-b", "main", str(orphan)], check=True)
+            (orphan / "PUBLIC_CI_SNAPSHOT.json").write_bytes(original)
+            subprocess.run(["git", "-C", str(orphan), "add", "--all"], check=True)
+            subprocess.run(["git", *DEV_GIT, "-C", str(orphan), "commit", "-qm", "orphan"], check=True)
+            with self.assertRaisesRegex(RuntimeError, "does not descend"):
+                VERIFY_MODULE.verify_tree_policy(orphan, boundary)
+
+            # A snapshot-identity commit whose blob disagrees with its own manifest.
+            (repo / "safe.py").write_text("print('tampered snapshot')\n")
+            body = self.git(repo, "show", "-s", "--format=%B", boundary)
+            subprocess.run(["git", *SNAPSHOT_GIT, "-C", str(repo), "commit", "-qam", body], check=True)
+            with self.assertRaisesRegex(RuntimeError, "snapshot digest mismatch"):
+                VERIFY_MODULE.verify_snapshot_blobs(repo, self.git(repo, "rev-parse", "HEAD"))
+
+            with mock.patch.object(sys, "argv", ["verify_public_ci_snapshot.py", "--root", str(repo), "--history",
+                                                 "--expected-root", boundary, "--import-boundary", boundary,
+                                                 "--rev", boundary, "--rev", head]), mock.patch("builtins.print"):
+                self.assertEqual(VERIFY_MODULE.main(), 1)
+            with mock.patch.object(sys, "argv", ["verify_public_ci_snapshot.py", "--root", str(repo), "--roots",
+                                                 "--expected-root", boundary, "--rev", "--all"]), \
+                    mock.patch("builtins.print"), mock.patch("sys.stderr"):
+                with self.assertRaises(SystemExit):
+                    VERIFY_MODULE.main()
+
+    @case(
+        "CFG:.github/workflows/repository-integrity.yml:LOAD:POSITIVE",
+        target=".github/workflows/repository-integrity.yml",
+        polarity=POSITIVE,
+        condition="the tracked repository-integrity workflow",
+        expected="read-only permissions, pinned actions, linear-history, root, tree-policy and tracked secret checks",
+    )
+    def test_repository_integrity_workflow_is_least_privilege_and_complete(self):
+        text = (REPO_ROOT / ".github" / "workflows" / "repository-integrity.yml").read_text()
+        workflow = yaml.safe_load(text)
+        self.assertEqual(workflow["permissions"], {"contents": "read"})
+        self.assertEqual(set(workflow[True]), {"pull_request", "push", "workflow_dispatch"})
+        self.assertNotRegex(text, r"\$\{\{\s*secrets\.")
+        self.assertNotIn("pull_request_target", text)
+        steps = workflow["jobs"]["integrity"]["steps"]
+        checkout = next(step for step in steps if str(step.get("uses", "")).startswith("actions/checkout@"))
+        self.assertFalse(checkout["with"]["persist-credentials"])
+        self.assertEqual(checkout["with"]["fetch-depth"], 0)
+        self.assertTrue(all("uses" not in step or len(step["uses"].split("@", 1)[1].split()[0]) == 40 for step in steps))
+        commands = "\n".join(step.get("run", "") for step in steps)
+        for wanted in ("--history --expected-root \"$PUBLISHED_ROOT\" --import-boundary \"$IMPORT_BOUNDARY\"",
+                       "--roots --expected-root \"$PUBLISHED_ROOT\" --all-refs",
+                       "--roots --expected-root \"$PUBLISHED_ROOT\" --rev \"$HEAD_SHA\"",
+                       "--tree-policy --import-boundary \"$IMPORT_BOUNDARY\"",
+                       "scripts/ci/scan_tracked_secrets.py"):
+            self.assertIn(wanted, commands)
+        self.assertNotIn("github.event", commands)                                    # event values reach the shell only via env
+        self.assertEqual(workflow["env"], {
+            "PUBLISHED_ROOT": "e0e85e6fa13fd75f4015bf356364f6914085649f",
+            "IMPORT_BOUNDARY": "321db58dec7890cad99e7e795f1dbe595dc950fa",
+        })

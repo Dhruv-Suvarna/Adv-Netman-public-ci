@@ -762,9 +762,8 @@ class WorkflowFileTests(SimpleTestCase):
             "configuration-validation.yml": "Configuration Validation",
             "secret-scanning.yml": "Secret scanning",
             "tier3-validation.yml": "Tier-3 validation",
+            "repository-integrity.yml": "Repository integrity",
         }
-        if (folder / "public-ci-integrity.yml").is_file():
-            expected["public-ci-integrity.yml"] = "Public CI snapshot integrity"
         self.assertEqual(names, expected)
         text = (folder / "configuration-validation.yml").read_text()
         workflow = yaml.safe_load(text)

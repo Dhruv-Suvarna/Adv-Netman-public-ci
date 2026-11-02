@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 """Build a sanitized public CI snapshot from one reviewed Git commit.
 
+Legacy import tool: it produced the sanitized snapshot chain that ends at the
+import boundary of the authoritative repository (docs/AUTHORITATIVE_REPOSITORY.md).
+It is not part of the development workflow.
+
 The first snapshot is a single root commit. Each later snapshot is appended as
 one single-parent commit on top of the last approved public snapshot
 (``--parent-mirror``/``--parent-commit``); only that sanitized mirror history is

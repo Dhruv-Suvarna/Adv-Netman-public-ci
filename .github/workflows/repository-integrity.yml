@@ -1,0 +1,62 @@
+name: Repository integrity
+
+# Adv-Netman-public-ci is the authoritative NMAS V2 development repository.  Its history starts with a sanitized
+# snapshot chain (root e0e85e6, import boundary 321db58) built from the private legacy repository; after the boundary,
+# main takes ordinary reviewed squash merges.  These checks keep main strictly linear, keep every ref free of imported
+# legacy history, keep the import manifest immutable, and keep excluded legacy paths and special file modes out.
+# See docs/AUTHORITATIVE_REPOSITORY.md.
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: repository-integrity-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+env:
+  PUBLISHED_ROOT: e0e85e6fa13fd75f4015bf356364f6914085649f
+  IMPORT_BOUNDARY: 321db58dec7890cad99e7e795f1dbe595dc950fa
+
+jobs:
+  integrity:
+    name: Linear history, sanitized import and tracked secret scan
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: "3.12"
+
+      - name: Verify the linear default-branch history
+        if: github.event_name != 'pull_request'
+        run: |
+          python scripts/ci/verify_public_ci_snapshot.py --root . --history --expected-root "$PUBLISHED_ROOT" --import-boundary "$IMPORT_BOUNDARY"
+          python scripts/ci/verify_public_ci_snapshot.py --root . --roots --expected-root "$PUBLISHED_ROOT" --all-refs
+
+      - name: Verify the base history and the pull request ancestry
+        if: github.event_name == 'pull_request'
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          python scripts/ci/verify_public_ci_snapshot.py --root . --history --expected-root "$PUBLISHED_ROOT" --import-boundary "$IMPORT_BOUNDARY" --rev "$BASE_SHA"
+          python scripts/ci/verify_public_ci_snapshot.py --root . --roots --expected-root "$PUBLISHED_ROOT" --rev "$HEAD_SHA"
+
+      - name: Verify the tree policy and the immutable import manifest
+        run: python scripts/ci/verify_public_ci_snapshot.py --root . --tree-policy --import-boundary "$IMPORT_BOUNDARY"
+
+      - name: Scan tracked files without uploading source
+        env:
+          PYTHONDONTWRITEBYTECODE: "1"
+        run: python scripts/ci/scan_tracked_secrets.py
