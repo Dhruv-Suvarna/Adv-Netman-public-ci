@@ -71,16 +71,18 @@
       "size": 4495
     }
   ],
-  "history_policy": "one root commit; no source-repository ancestry",
+  "history_policy": "linear append-only snapshot chain from one root commit; no source-repository ancestry",
   "mirror_additions": [
     {
       "mode": "100644",
       "path": ".github/workflows/public-ci-integrity.yml",
       "reason": "mirror-only immutable-source verification",
-      "sha256": "f7d31e5b9360226ea36e6153436ad5855785c58d1091be9a25517db826d45251",
-      "size": 1171
+      "sha256": "936392275ffa1de8ff29b8fc58378a90a4b276914ef59b9dc8753a9790e7395a",
+      "size": 1261
     }
   ],
+  "mirror_parent_commit": "e0e85e6fa13fd75f4015bf356364f6914085649f",
+  "mirror_root_commit": "e0e85e6fa13fd75f4015bf356364f6914085649f",
   "schema_version": 1,
   "source_file_count": 1721,
   "source_files": [
@@ -909,8 +911,8 @@
     {
       "mode": "100644",
       "path": "docs/PUBLIC_CI_MIRROR.md",
-      "sha256": "614b0fd5f4cc7f151919bee7f20e17d8609a166aa12876a4e901dcbb453a7f54",
-      "size": 3309
+      "sha256": "1aabb63f7bd60315a1333fe9073bb0f6e7a68cabca89152f59267c71cd132aaa",
+      "size": 4137
     },
     {
       "mode": "100644",
@@ -4257,8 +4259,8 @@
     {
       "mode": "100644",
       "path": "scripts/ci/build_public_ci_snapshot.py",
-      "sha256": "21efebdd863e17da13d371553d5ab9baa7de9bf1a59c7de7c14bd654b8932f30",
-      "size": 7883
+      "sha256": "4d0090f44e1ac7fbd5de9a0101ebcf8e369b742d9b5dbdc287327bbc7dd9b51d",
+      "size": 10953
     },
     {
       "mode": "100644",
@@ -4281,8 +4283,8 @@
     {
       "mode": "100644",
       "path": "scripts/ci/verify_public_ci_snapshot.py",
-      "sha256": "2f31c78c4179c5ce020fdeb081f5d890e616d197588829ed83ec972722d5aeec",
-      "size": 4201
+      "sha256": "29a0d9748a30e88f2b1b766edcf1d2803b3db1b1768e3c1885ec1b2d6c3a84bb",
+      "size": 8415
     },
     {
       "mode": "100755",
@@ -8895,8 +8897,8 @@
     {
       "mode": "100644",
       "path": "web/core/tests/test_ceos_isis_phase9.py",
-      "sha256": "78b497aca63aff2f5ed04d32981fbe75f88ce340dc3e8f54a443549d462760cf",
-      "size": 9245
+      "sha256": "4cef5a5e41664a33b1ed202c32e842eab307f19f5506e7b16d4c3bc8b8c63c4d",
+      "size": 9570
     },
     {
       "mode": "100644",
@@ -9513,8 +9515,8 @@
     {
       "mode": "100644",
       "path": "web/core/tests/test_public_ci_snapshot.py",
-      "sha256": "48fd082bd1e4b1f43f0fcaf26473d55c42edbe40712c52c2ad416c079d2d9144",
-      "size": 16171
+      "sha256": "6820d9522984cf23f4995379799b65be6c5f709a3e8e855ed50f7317b906be95",
+      "size": 24534
     },
     {
       "mode": "100644",
@@ -10411,8 +10413,8 @@
       "size": 178
     }
   ],
-  "source_manifest_sha256": "7591f656e3c23bf0a9948bed76faa51431450cdb6ed9891d47451ed49c2e680f",
+  "source_manifest_sha256": "c4992673feb727148af12b5dac046e8394cd87d54f4ad6eaf81946746f8f08c2",
   "source_repository": "Dhruv-Suvarna/Adv-Netman",
-  "source_revision": "33c1a4ea1f478390184c550aca993a8749498d89",
-  "source_tree_oid": "9c0251191e58dfbf6ee26ce9cceb0f6ad2f69111"
+  "source_revision": "39dee216cf439c890fcec03d9699f35d7c1e7f66",
+  "source_tree_oid": "9565b28b8aa3ffc16a97ab09da5cb5f0fccb29d6"
 }

@@ -123,9 +123,13 @@ class IsisLiveAdapterUnitTests(SimpleTestCase):
         sock.connect.assert_called_once_with(("198.51.100.10", 22))
 
     def test_fixture_ceos_ssh_negative_refuses_a_missing_runtime_secret(self):
-        with mock.patch.dict(os.environ, {}, clear=True):
+        # The target lookup is replaced so the result does not depend on a lab container being present.
+        with mock.patch.dict(os.environ, {}, clear=True), \
+                mock.patch.object(fixture_ceos_ssh, "_target", return_value=({"container": "fixture"}, None, None)), \
+                mock.patch.object(fixture_ceos_ssh, "_run") as run:
             with self.assertRaisesRegex(RuntimeError, "required"):
                 fixture_ceos_ssh.FixtureCeosSsh()
+        run.assert_not_called()
 
 
 class IsisIsolatedScriptTests(SimpleTestCase):

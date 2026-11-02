@@ -28,9 +28,9 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Require a root-only main snapshot
+      - name: Require a linear sanitized snapshot history
         if: github.event_name != 'pull_request'
-        run: test "$(git rev-list --count --all)" -eq 1
+        run: python scripts/ci/verify_public_ci_snapshot.py --root . --history --expected-root e0e85e6fa13fd75f4015bf356364f6914085649f
 
       - name: Verify immutable source linkage
         run: python scripts/ci/verify_public_ci_snapshot.py --root . --manifest PUBLIC_CI_SNAPSHOT.json

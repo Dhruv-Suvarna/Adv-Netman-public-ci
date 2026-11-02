@@ -1,5 +1,11 @@
 #!/usr/bin/env python3
-"""Verify that a public CI tree exactly matches its reviewed source manifest."""
+"""Verify that a public CI tree exactly matches its reviewed source manifest.
+
+With ``--history`` it also proves the mirror history is a strictly linear,
+append-only chain of sanitized snapshot commits: one root, single-parent
+commits only, no other refs, the snapshot identity on every commit, and
+provenance trailers that agree with each commit's own manifest and path set.
+"""
 
 from __future__ import annotations
 
@@ -12,6 +18,15 @@ from pathlib import Path, PurePosixPath
 
 
 OID_RE = re.compile(r"[0-9a-f]{40}")
+SOURCE_REPOSITORY = "Dhruv-Suvarna/Adv-Netman"
+MANIFEST_NAME = "PUBLIC_CI_SNAPSHOT.json"
+SNAPSHOT_IDENTITY = "NMAS Public CI Snapshot <nmas-public-ci@invalid.example>"
+ALLOWED_MODES = {"100644", "100755"}
+PROVENANCE = (
+    ("Source-Commit", "source_revision"),
+    ("Source-Tree", "source_tree_oid"),
+    ("Source-Manifest-SHA256", "source_manifest_sha256"),
+)
 
 
 def digest(path: Path) -> str:
@@ -82,14 +97,72 @@ def verify(root: Path, manifest_path: Path) -> dict:
     return data
 
 
+def git(root: Path, *args: str) -> str:
+    return subprocess.check_output(["git", "-C", str(root), *args], text=True, stderr=subprocess.DEVNULL)
+
+
+def verify_commit(root: Path, oid: str, parent: str | None) -> None:
+    author, committer, body = git(root, "show", "-s", "--format=%an <%ae>%x00%cn <%ce>%x00%B", oid).split("\0", 2)
+    if author != SNAPSHOT_IDENTITY or committer != SNAPSHOT_IDENTITY:
+        raise RuntimeError(f"Commit {oid} was not created by the snapshot builder identity.")
+    trailers = dict(line.split(": ", 1) for line in body.splitlines() if ": " in line)
+    manifest = json.loads(git(root, "show", f"{oid}:{MANIFEST_NAME}"))
+    if trailers.get("Source-Repository") != SOURCE_REPOSITORY or manifest.get("source_repository") != SOURCE_REPOSITORY:
+        raise RuntimeError(f"Commit {oid} has invalid source-repository provenance.")
+    for trailer, key in PROVENANCE:
+        value = trailers.get(trailer)
+        if not value or value != manifest.get(key):
+            raise RuntimeError(f"Commit {oid} provenance trailer {trailer} does not match its manifest.")
+    if not OID_RE.fullmatch(manifest["source_revision"]) or manifest["source_revision"] == oid:
+        raise RuntimeError(f"Commit {oid} is not a sanitized snapshot of a source revision.")
+    if manifest["source_manifest_sha256"] != canonical_digest(manifest["source_files"]):
+        raise RuntimeError(f"Commit {oid} manifest digest is invalid.")
+    if "mirror_parent_commit" in manifest and manifest["mirror_parent_commit"] != parent:
+        raise RuntimeError(f"Commit {oid} manifest names a different mirror parent.")
+    tree = {}
+    for record in git(root, "ls-tree", "-r", "-z", "--full-tree", oid).split("\0"):
+        if record:
+            metadata, path = record.split("\t", 1)
+            tree[path] = metadata.split()[0]
+    if any(mode not in ALLOWED_MODES for mode in tree.values()):
+        raise RuntimeError(f"Commit {oid} contains a submodule, symlink, or special mode.")
+    expected = {item["path"] for item in manifest["source_files"] + manifest["mirror_additions"]} | {MANIFEST_NAME}
+    if set(tree) != expected:
+        raise RuntimeError(f"Commit {oid} path set does not match its reviewed manifest.")
+
+
+def verify_history(root: Path, expected_root: str | None = None) -> list[str]:
+    chain: list[str] = []
+    for line in git(root, "rev-list", "--reverse", "--parents", "HEAD").splitlines():
+        oid, *parents = line.split()
+        if parents != chain[-1:]:
+            raise RuntimeError("Snapshot history is not a strictly linear single-parent chain from one root.")
+        chain.append(oid)
+    if not chain:
+        raise RuntimeError("Snapshot history is empty.")
+    for index, oid in enumerate(chain):
+        verify_commit(root, oid, chain[index - 1] if index else None)
+    if expected_root is not None and chain[0] != expected_root:
+        raise RuntimeError("Snapshot history does not start at the published root commit.")
+    if set(git(root, "rev-list", "--all").split()) != set(chain):
+        raise RuntimeError("A ref outside the linear snapshot chain is present.")
+    return chain
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--root", type=Path, default=Path("."))
-    parser.add_argument("--manifest", type=Path, default=Path("PUBLIC_CI_SNAPSHOT.json"))
+    parser.add_argument("--manifest", type=Path, default=Path(MANIFEST_NAME))
+    parser.add_argument("--history", action="store_true", help="verify the linear snapshot history instead of the tree")
+    parser.add_argument("--expected-root", help="the published root commit the chain must start at")
     args = parser.parse_args()
     root = args.root.resolve()
     manifest = args.manifest if args.manifest.is_absolute() else root / args.manifest
     try:
+        if args.history:
+            chain = verify_history(root, args.expected_root)
+            print(f"public-ci-history: PASS commits={len(chain)} root={chain[0]} head={chain[-1]}")
+            return 0
         data = verify(root, manifest)
     except (OSError, ValueError, KeyError, subprocess.CalledProcessError, RuntimeError) as exc:
         print(f"public-ci-integrity: FAIL {exc}")

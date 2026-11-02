@@ -1,7 +1,7 @@
 # Sanitized public CI mirror
 
-The proposed `Adv-Netman-public-ci` repository is a CI-only, root-history
-snapshot. It is not a replacement source repository and its checks are not
+The proposed `Adv-Netman-public-ci` repository is a CI-only, linear
+snapshot history. It is not a replacement source repository and its checks are not
 native required checks on private PR #86.
 
 ## Security boundary
@@ -20,12 +20,23 @@ the governance tests and has passed both the NMAS scanner and Gitleaks. Its
 addresses describe the intentionally published lab/simulation environment, not
 production credentials.
 
-The builder creates a new repository with exactly one root commit. The commit
-message and manifest bind the mirror to the original repository, full source
-commit, source tree object, and canonical SHA-256 file manifest. The mirror-only
-integrity workflow verifies every tracked path, mode, size, and digest before
-running the offline scanner. Any source edit requires a newly reviewed snapshot
-and manifest.
+The first snapshot is one root commit. Each later snapshot is appended as one
+single-parent commit on top of the last approved public snapshot
+(`--parent-mirror <local clone> --parent-commit <full SHA>`); only that sanitized
+mirror chain is fetched, never source-repository history. The history is
+append-only: no force push, no merge commits, no second root.
+
+Every commit message and manifest bind the snapshot to the original repository,
+full source commit, source tree object, and canonical SHA-256 file manifest;
+appended manifests also name `mirror_root_commit` and `mirror_parent_commit`.
+The mirror-only integrity workflow runs `verify_public_ci_snapshot.py --history
+--expected-root <published root>`, which rejects a different root, a merge, a
+commit not made by the snapshot builder identity, provenance trailers that
+disagree with that commit's manifest, a commit path set that differs from its
+manifest, special modes, and any ref outside the chain. It then verifies every
+tracked path, mode, size, and digest of the current tree before running the
+offline scanner. Any source edit requires a newly reviewed snapshot and
+manifest.
 
 ## Workflow coverage
 
@@ -50,8 +61,9 @@ and must never be represented as public-CI PASS.
 
 Before creating the GitHub repository:
 
-1. Build from the reviewed full source commit, run the verifier, require a
-   one-commit history, and scan both the tree and full history.
+1. Build from the reviewed full source commit (appending to the last approved
+   snapshot after the first publication), run the tree and history verifiers,
+   and scan the tree, the new commit range, and the full mirror history.
 2. Confirm no submodule, LFS pointer, release asset, database, private key, or
    credential artifact is present.
 3. Create the public repository only after explicit approval. Disable issues,

@@ -290,3 +290,122 @@ class PublicCiSnapshotTests(SimpleTestCase):
             "nmas-new-commit-gitleaks": "python scripts/ci/run_gitleaks_range.py",
             "nmas-tracked-secret-scan": "python scripts/ci/scan_tracked_secrets.py",
         })
+
+
+SNAPSHOT_GIT = ["-c", "user.name=NMAS Public CI Snapshot", "-c", "user.email=nmas-public-ci@invalid.example"]
+
+
+class PublicCiLinearHistoryTests(SimpleTestCase):
+    """The mirror is an append-only chain: one root, single-parent snapshots, no imported history."""
+
+    @staticmethod
+    def git(repo: Path, *args: str) -> str:
+        return subprocess.check_output(["git", "-C", str(repo), *args], text=True, stderr=subprocess.DEVNULL).strip()
+
+    def chain(self, root: Path) -> tuple[Path, Path, Path, str]:
+        source, first = PublicCiSnapshotTests.fixture(self, root)
+        published = root / "published"
+        BUILD_MODULE.build(source, first, published)
+        (source / "safe.py").write_text("print('safe, revised')\n")
+        subprocess.run(["git", "-C", str(source), "commit", "-qam", "revise"], check=True)
+        second = self.git(source, "rev-parse", "HEAD")
+        return source, published, root / "appended", second
+
+    def test_appended_snapshot_is_a_single_parent_commit_on_the_published_root(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            source, published, appended, second = self.chain(Path(temporary))
+            published_head = self.git(published, "rev-parse", "HEAD")
+            self.assertEqual(BUILD_MODULE.parent_snapshot(published, published_head), published_head)
+            manifest = BUILD_MODULE.build(source, second, appended, published, published_head)
+            self.assertEqual(self.git(appended, "rev-parse", "HEAD^"), published_head)
+            self.assertEqual(self.git(appended, "rev-list", "--count", "--all"), "2")
+            self.assertEqual(self.git(appended, "remote"), "")
+            self.assertEqual((manifest["mirror_root_commit"], manifest["mirror_parent_commit"]),
+                             (published_head, published_head))
+            self.assertEqual(VERIFY_MODULE.verify_history(appended, published_head),
+                             [published_head, manifest["mirror_commit"]])
+            self.assertEqual(BUILD_MODULE.verify_history(appended, published_head), published_head)
+            VERIFY_MODULE.verify_commit(appended, manifest["mirror_commit"], published_head)
+            self.assertEqual(VERIFY_MODULE.git(appended, "rev-parse", "HEAD").strip(), manifest["mirror_commit"])
+            workflow = (appended / ".github" / "workflows" / "public-ci-integrity.yml").read_text()
+            self.assertIn(f"--history --expected-root {published_head}", workflow)
+            self.assertEqual(VERIFY_MODULE.verify(appended, appended / "PUBLIC_CI_SNAPSHOT.json")["source_revision"], second)
+            with mock.patch.object(sys, "argv", ["verify_public_ci_snapshot.py", "--root", str(appended),
+                                                 "--history", "--expected-root", published_head]):
+                self.assertEqual(VERIFY_MODULE.main(), 0)
+            with mock.patch.object(sys, "argv", [
+                "build_public_ci_snapshot.py", "--source", str(source), "--revision", second,
+                "--output", str(Path(temporary) / "cli"), "--parent-mirror", str(published),
+                "--parent-commit", published_head,
+            ]):
+                self.assertEqual(BUILD_MODULE.main(), 0)
+
+    def test_builder_refuses_an_unapproved_or_unverified_parent(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            source, published, appended, second = self.chain(Path(temporary))
+            published_head = self.git(published, "rev-parse", "HEAD")
+            with self.assertRaisesRegex(RuntimeError, "full commit ID"):
+                BUILD_MODULE.parent_snapshot(published, published_head[:12])
+            with self.assertRaisesRegex(RuntimeError, "not the approved parent"):
+                BUILD_MODULE.parent_snapshot(published, "0" * 40)
+            with self.assertRaisesRegex(RuntimeError, "given together"):
+                BUILD_MODULE.build(source, second, appended, published, None)
+            with self.assertRaisesRegex(RuntimeError, "history verification failed"):
+                BUILD_MODULE.verify_history(published, "0" * 40)
+            manifest = {"source_tree_oid": "0" * 40, "source_manifest_sha256": "0" * 64,
+                        "mirror_parent_commit": "0" * 40}
+            target = Path(temporary) / "mismatch"
+            target.mkdir()
+            (target / "safe.py").write_text("print('safe')\n")
+            with self.assertRaisesRegex(RuntimeError, "does not match the approved parent"):
+                BUILD_MODULE.initialize_git(target, source, second, manifest, published)
+            self.assertFalse(appended.exists())
+
+    def test_history_verifier_rejects_imported_merged_foreign_or_mislabelled_commits(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            source, published, _appended, second = self.chain(Path(temporary))
+            head = self.git(published, "rev-parse", "HEAD")
+            with self.assertRaisesRegex(RuntimeError, "published root"):
+                VERIFY_MODULE.verify_history(published, "0" * 40)
+            with self.assertRaises(subprocess.CalledProcessError):
+                VERIFY_MODULE.git(Path(temporary) / "missing", "rev-parse", "HEAD")
+
+            # A commit outside the chain on another ref.
+            subprocess.run(["git", "-C", str(published), "fetch", "-q", str(source), "main:refs/heads/imported"], check=True)
+            with self.assertRaisesRegex(RuntimeError, "outside the linear snapshot chain"):
+                VERIFY_MODULE.verify_history(published)
+            # The same imported source history merged in: second root plus a merge commit.
+            subprocess.run(["git", *SNAPSHOT_GIT, "-C", str(published), "merge", "-q", "--no-edit", "-s", "ours",
+                            "--allow-unrelated-histories", "imported"], check=True, capture_output=True)
+            with self.assertRaisesRegex(RuntimeError, "strictly linear"):
+                VERIFY_MODULE.verify_history(published)
+            subprocess.run(["git", "-C", str(published), "reset", "-q", "--hard", head], check=True)
+            subprocess.run(["git", "-C", str(published), "branch", "-q", "-D", "imported"], check=True)
+            self.assertEqual(len(VERIFY_MODULE.verify_history(published, head)), 1)
+
+            # A commit by any identity other than the snapshot builder.
+            (published / "safe.py").write_text("print('hand edit')\n")
+            subprocess.run(["git", "-c", "user.name=Someone", "-c", "user.email=someone@invalid.example",
+                            "-C", str(published), "commit", "-qam", "hand edit"], check=True)
+            with self.assertRaisesRegex(RuntimeError, "snapshot builder identity"):
+                VERIFY_MODULE.verify_history(published)
+            subprocess.run(["git", "-C", str(published), "reset", "-q", "--hard", head], check=True)
+
+            # Snapshot identity but trailers that disagree with the commit's own manifest.
+            body = self.git(published, "show", "-s", "--format=%B", head).replace(
+                f"Source-Commit: {self.git(source, 'rev-parse', 'HEAD^')}", f"Source-Commit: {second}")
+            subprocess.run(["git", *SNAPSHOT_GIT, "-C", str(published), "commit", "-q", "--allow-empty", "-m", body], check=True)
+            with self.assertRaisesRegex(RuntimeError, "Source-Commit does not match"):
+                VERIFY_MODULE.verify_history(published)
+            with mock.patch.object(sys, "argv", ["verify_public_ci_snapshot.py", "--root", str(published), "--history"]), \
+                    mock.patch("builtins.print"):
+                self.assertEqual(VERIFY_MODULE.main(), 1)
+            subprocess.run(["git", "-C", str(published), "reset", "-q", "--hard", head], check=True)
+
+            # Snapshot identity and trailers, but a path the manifest does not list.
+            (published / "unreviewed.py").write_text("print('unreviewed')\n")
+            subprocess.run(["git", "-C", str(published), "add", "unreviewed.py"], check=True)
+            body = self.git(published, "show", "-s", "--format=%B", head)
+            subprocess.run(["git", *SNAPSHOT_GIT, "-C", str(published), "commit", "-q", "-m", body], check=True)
+            with self.assertRaisesRegex(RuntimeError, "path set does not match"):
+                VERIFY_MODULE.verify_commit(published, self.git(published, "rev-parse", "HEAD"), head)
