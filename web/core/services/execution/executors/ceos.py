@@ -151,6 +151,19 @@ RESTORABLE_STEMS = frozenset({"isis metric "})
 DEFAULT_RESTORED_STEMS = ("passive-interface ",)
 # Child commands of which a block holds one line per value: a new line coexists with its siblings and never replaces one.
 COEXISTING_STEMS = ("passive-interface ",)
+# One-value commands of which a block holds one line per value: ``router rip`` / ``router bgp`` keep every
+# ``network <prefix>`` line and ``no network <prefix>`` removes only that one (proven on cEOS 4.36.2F, Lab 8 R7).  Only the
+# bare two-token form coexists; ``network <prefix> area <id>`` keeps its prefix-specific stem and its replacement guard.
+COEXISTING_VALUE_COMMANDS = frozenset({"network"})
+# Paired child statements that replace each other in place: under ``router rip`` cEOS 4.36.2F stores ``shutdown`` when the
+# process is suspended and ``no shutdown`` when it runs; re-applying the captured line restores it byte-identically
+# (aborted configuration session on the isolated Lab 8 R7).  Only an exact captured partner makes the toggle provable.
+TOGGLED_CHILDREN = {"no shutdown": "shutdown", "shutdown": "no shutdown"}
+
+
+def _coexists(text: str) -> bool:
+    words = text.split()
+    return text.startswith(COEXISTING_STEMS) or (len(words) == 2 and words[0] in COEXISTING_VALUE_COMMANDS)
 
 
 def child_negation(text: str) -> str:
@@ -236,7 +249,10 @@ def config_inverse(spec_lines, running_text: str) -> list[str] | None:
         restore = []
         for child in new:
             text = child.strip()
-            prior = [] if text.startswith(COEXISTING_STEMS) else [existing for existing in running[header] if existing.startswith(_stem(text))]
+            if TOGGLED_CHILDREN.get(text) in running[header]:
+                restore.append(f"   {TOGGLED_CHILDREN[text]}")   # put the captured partner back
+                continue
+            prior = [] if _coexists(text) else [existing for existing in running[header] if existing.startswith(_stem(text))]
             if text.startswith("no "):
                 return None
             if prior:
@@ -345,6 +361,17 @@ def management_inverse(spec_lines, running_text: str) -> list[str] | None:
 
 
 SNAPSHOT_TYPES = frozenset({"interface", "address", "mgmt_vrf_binding"})
+
+# Global prerequisite statements the planner places in front of a Configlet (``ipv6 unicast-routing`` before an IPv6 static
+# route: Lab 8 R6/R7).  Such a static route is no longer one leaf line, so its exact inverse depends on whether the
+# prerequisite was already configured: it is judged like a configuration block -- the inverse is derived against the running
+# configuration captured right before apply, and compensation is proven by the captured configuration digest.
+PREREQUISITE_LINES = frozenset({"ipv6 unicast-routing"})
+
+
+def _block_judged(spec: ConfigletSpec) -> bool:
+    return spec.object_type in CONFIG_BLOCK_TYPES or (
+        spec.object_type == "static_route" and len(spec.lines) > 1 and any(line in PREREQUISITE_LINES for line in spec.lines))
 
 
 def _snapshot_key(line: str) -> str | None:
@@ -654,7 +681,7 @@ class CeosExecutor(DeviceExecutor):
         if not spec.lines:
             return Assessment(REFUSE, False, {}, "PLATFORM_EXECUTION_UNSUPPORTED")
         found = state.assess(spec, self._read(), additive_overwrites_primary=True)
-        if spec.object_type in CONFIG_BLOCK_TYPES and found.action == APPLY:
+        if _block_judged(spec) and found.action == APPLY:
             return self._assess_config_block(spec)
         if spec.object_type in SNAPSHOT_TYPES and found.action == APPLY and (not found.restorable or inverse_lines(spec) is None):
             snapshot = self._assess_interface_snapshot(spec)
@@ -698,7 +725,7 @@ class CeosExecutor(DeviceExecutor):
             if inverse is None:
                 return ApplyOutcome(False, "COMMAND_REJECTED")     # nothing sent: no inverse is provable any more
             self._config_inverses[spec.cfg_id], self._config_applied[spec.cfg_id] = inverse, digest
-        elif spec.object_type in CONFIG_BLOCK_TYPES and spec.object_type not in DECLARED_INVERSE_TYPES \
+        elif _block_judged(spec) and spec.object_type not in DECLARED_INVERSE_TYPES \
                 and isinstance(assessment.previous_state, dict) and assessment.previous_state.get("kind") == "config_block":
             # The engine assesses EVERY Configlet before applying any, so the assess-time digest (and inverse) describe the
             # state before the whole plan.  Several configuration-block Configlets on one device are compensated in reverse

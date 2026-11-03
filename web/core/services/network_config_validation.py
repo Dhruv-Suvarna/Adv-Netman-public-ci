@@ -145,7 +145,9 @@ def _managed_scope_checks(snapshot: dict, bundle, change=None) -> list[dict]:
     # ordinary Changes that target it as an EXISTING device.  The Configuration Validation bundle carries this list as
     # ``scope.nmas_active``; its CI check accepts it only for EXISTING_DEVICE intents of a PASS scope.
     existing = {d["device_name"] for d in snapshot.get("devices") or [] if d.get("target_type") == "EXISTING_DEVICE"}
-    active = sorted(name for name in requested if name not in managed and name not in provisioning and name in existing
+    # It stays listed once NetBox also reports it managed: the CI check reads the repository inventory, which never names a
+    # natively provisioned device, so dropping it there made every later Change on it fail "outside the managed scope".
+    active = sorted(name for name in requested if name not in provisioning and name in existing
                     and provisioning_registry.active_managed(name))
     outside = sorted(set(requested) - set(managed) - set(provisioning) - set(active))
     if outside:

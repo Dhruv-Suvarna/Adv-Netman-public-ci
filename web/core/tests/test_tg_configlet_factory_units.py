@@ -225,6 +225,46 @@ class ConfigletFactoryUnitTests(TestCase):
         self.assertNotIn("ip routing", spec.lines)
         self.assertTrue(any(line.startswith("router ospf 1") for line in spec.lines), spec.lines)
 
+    # -- Lab 8: an IPv6 static route on cEOS carries ``ipv6 unicast-routing`` (natively onboarded devices boot without it) ------
+    def _static_node(self, target_type, destination, next_hop, family, platform=None):
+        from core import models
+        from core.tests.helpers.validation import Dev, new_change
+
+        kwargs = {"platform": platform} if platform else {}
+        dev = Dev(new_change(f"ipv6 routing prerequisite ({target_type}, {family}, {platform})"), "EDGE8", target_type=target_type, **kwargs)
+        route = dev.static_route(destination, next_hop, family=family)
+        ctx = cf.DeviceContext(dev.intent, dev.refresh(), {})
+        node = {"id": f"EDGE8/static_route/{route['id']}", "type": "static_route", "object_id": route["id"]}
+        self.assertEqual(dev.intent.platform, platform or models.Platform.ARISTA_CEOS)
+        return cf._static_route(ctx, node)
+
+    def test_ipv6_static_route_on_an_existing_ceos_device_renders_ipv6_unicast_routing_first(self):
+        (spec,) = self._static_node("EXISTING_DEVICE", "::/0", "2001:db8:254:90::1", "IPV6")
+        self.assertEqual(spec.lines, ["ipv6 unicast-routing", "ipv6 route ::/0 2001:db8:254:90::1"])
+
+    def test_ipv6_static_route_on_a_new_ceos_device_also_renders_ipv6_unicast_routing(self):
+        (spec,) = self._static_node("NEW_DEVICE", "2001:db8:254:10::/64", "2001:db8:254:96::2", "IPV6")
+        self.assertEqual(spec.lines[0], "ipv6 unicast-routing")
+        self.assertEqual(spec.lines.count("ipv6 unicast-routing"), 1)
+
+    def test_ipv4_static_route_and_frr_ipv6_static_route_render_no_ipv6_routing_line(self):
+        from core import models
+
+        (v4,) = self._static_node("EXISTING_DEVICE", "10.254.10.0/24", "10.254.90.2", "IPV4")
+        self.assertNotIn("ipv6 unicast-routing", v4.lines)
+        (frr,) = self._static_node("EXISTING_DEVICE", "2001:db8:254:10::/64", "2001:db8:254:90::2", "IPV6",
+                                   platform=models.Platform.UBUNTU_FRR)
+        self.assertNotIn("ipv6 unicast-routing", frr.lines)
+
+    def test_the_ipv6_routing_line_is_undone_only_where_it_was_absent(self):
+        from core.services.execution.executors.ceos import config_inverse
+
+        lines = ["ipv6 unicast-routing", "ipv6 route ::/0 2001:db8:254:90::1"]
+        self.assertEqual(config_inverse(lines, "hostname R6\nip routing\n"),
+                         ["no ipv6 route ::/0 2001:db8:254:90::1", "no ipv6 unicast-routing"])
+        self.assertEqual(config_inverse(lines, "hostname R6\nip routing\nipv6 unicast-routing\n"),
+                         ["no ipv6 route ::/0 2001:db8:254:90::1"])
+
     # -- V2 Phase 6: exact Phase-4 capability labels for routing processes, bindings and DHCP relays ---------------------------
     def test_routing_feature_matches_the_declared_version_or_address_family(self):
         self.assertEqual(cf.routing_feature("ospf", {"version": "OSPFV2"}), "routing.OSPFV2")

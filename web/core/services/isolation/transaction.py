@@ -41,6 +41,7 @@ from .. import change_service, lifecycle_service
 from ..bundles import canonical
 from ..execution import locking, persistence
 from ..execution.codes import Outcome, Phase, Status, precheck_max_age_seconds
+from . import enforced_reconciliation
 from ..execution.executors.base import APPLY, SKIP_SATISFIED, ApplyOutcome, ConfigletSpec, ExecutorError
 from ..execution.scope import resolve_scope
 from ..health.codes import ENGINE_VERSION as HEALTH_ENGINE_VERSION
@@ -259,7 +260,8 @@ def unresolved_runs(device: str) -> list[str]:
     """Governed transactions (isolation, decommission, restore) on ``device`` that are running, interrupted or not proven restored."""
     runs = models.ChangeExecutionRun.objects.exclude(outcome__in=[*RESOLVED, Outcome.SUCCEEDED]).select_related("change")
     return sorted({run.change.change_id for run in runs
-                   if kind_of(run.change).startswith(GOVERNED_KINDS) and device in (run.devices or []) and not reconciled(run)})
+                   if kind_of(run.change).startswith(GOVERNED_KINDS) and device in (run.devices or []) and not reconciled(run)
+                   and not enforced_reconciliation.is_reconciled_as_enforced(run)})
 
 
 def gate(change, ops, *, device: str, confirmation: str, now, resolves: str = "") -> tuple[object, object, list[dict]]:

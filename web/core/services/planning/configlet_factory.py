@@ -201,6 +201,9 @@ def _static_route(ctx, node):
         raise _missing(ctx, node)
     ref = ctx.ifaces([route.get("next_hop_interface_id")])
     lines = ctx.added(dict(interfaces=ref), dict(interfaces=ref, routing={"static_routes": {route["id"]: route}}))
+    prerequisite = _ipv6_routing_prerequisite(ctx, route.get("family") == "IPV6")
+    if prerequisite and prerequisite not in lines:
+        lines = [prerequisite, *lines]
     facts = {"prefix": route.get("destination"), "family": _family(route.get("destination")),
              "next_hop": route.get("next_hop_address") or "", "exit_interface": _iface_name(ctx, route.get("next_hop_interface_id"))}
     return [_spec(ctx, node, "static_route", lines, facts=facts,
@@ -216,6 +219,17 @@ def _static_route(ctx, node):
 # live: docs/evidence/v2-phase9-closure/ipv6-admission/platform-probe).  An OSPFv3 / RIPng process carries ``ipv6 unicast-routing``.
 _IPV4_PROCESSES = {"ospf": ("OSPFV2",), "rip": ("IPV4",), "isis": None, "bgp": None}
 _IPV6_PROCESSES = {"ospf": ("OSPFV3",), "rip": ("IPV6",)}
+
+
+# Lab 8: a natively onboarded cEOS stays without ``ipv6 unicast-routing`` after commissioning, so a later IPv6 static route on
+# it -- an EXISTING device by then -- is installed nowhere (observed on cEOS 4.36.2F R6/R7: "IPv6 routing not enabled").  An
+# IPv6 static-route Configlet on cEOS therefore carries it, for any target type.  The executor's captured-config inverse undoes
+# it with ``no ipv6 unicast-routing`` only where it was absent, and leaves it alone where IPv6 routing is already on.
+IPV6_ROUTING = "ipv6 unicast-routing"
+
+
+def _ipv6_routing_prerequisite(ctx, wanted: bool) -> str:
+    return IPV6_ROUTING if wanted and ctx.platform == "arista_ceos" else ""
 
 
 def _routing_prerequisite(ctx, family: str, instance: dict) -> str:
