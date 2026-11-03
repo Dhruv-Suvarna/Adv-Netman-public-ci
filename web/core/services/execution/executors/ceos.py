@@ -151,6 +151,19 @@ RESTORABLE_STEMS = frozenset({"isis metric "})
 DEFAULT_RESTORED_STEMS = ("passive-interface ",)
 # Child commands of which a block holds one line per value: a new line coexists with its siblings and never replaces one.
 COEXISTING_STEMS = ("passive-interface ",)
+# One-value commands of which a block holds one line per value: ``router rip`` / ``router bgp`` keep every
+# ``network <prefix>`` line and ``no network <prefix>`` removes only that one (proven on cEOS 4.36.2F, Lab 8 R7).  Only the
+# bare two-token form coexists; ``network <prefix> area <id>`` keeps its prefix-specific stem and its replacement guard.
+COEXISTING_VALUE_COMMANDS = frozenset({"network"})
+# Paired child statements that replace each other in place: under ``router rip`` cEOS 4.36.2F stores ``shutdown`` when the
+# process is suspended and ``no shutdown`` when it runs; re-applying the captured line restores it byte-identically
+# (aborted configuration session on the isolated Lab 8 R7).  Only an exact captured partner makes the toggle provable.
+TOGGLED_CHILDREN = {"no shutdown": "shutdown", "shutdown": "no shutdown"}
+
+
+def _coexists(text: str) -> bool:
+    words = text.split()
+    return text.startswith(COEXISTING_STEMS) or (len(words) == 2 and words[0] in COEXISTING_VALUE_COMMANDS)
 
 
 def child_negation(text: str) -> str:
@@ -236,7 +249,10 @@ def config_inverse(spec_lines, running_text: str) -> list[str] | None:
         restore = []
         for child in new:
             text = child.strip()
-            prior = [] if text.startswith(COEXISTING_STEMS) else [existing for existing in running[header] if existing.startswith(_stem(text))]
+            if TOGGLED_CHILDREN.get(text) in running[header]:
+                restore.append(f"   {TOGGLED_CHILDREN[text]}")   # put the captured partner back
+                continue
+            prior = [] if _coexists(text) else [existing for existing in running[header] if existing.startswith(_stem(text))]
             if text.startswith("no "):
                 return None
             if prior:
