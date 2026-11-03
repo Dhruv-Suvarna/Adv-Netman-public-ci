@@ -158,8 +158,17 @@ class ManagedScopeEvidenceTests(AdmittedDevice):
         self.assertEqual((check["status"], check["message"], check["evidence"]),
                          ("PASS", "All targets are managed or admitted to production by NMAS.", {"outside_scope": [], "nmas_active": [self.name]}))
 
-    def test_netbox_managed_targets_record_no_nmas_active(self):
+    def test_netbox_managed_active_device_stays_nmas_active(self):
+        # Lab 8 R6/R7: once NSOT sync put the device in NetBox's managed scope, it vanished from ``nmas_active`` and the CI check
+        # (which reads the repository inventory, never listing a native device) refused every later Change on it.
         (check,) = ncv._managed_scope_checks(self.snapshot(), _bundle({"managed_devices": [*FROZEN_MANAGED, self.name]}))
+        self.assertEqual((check["status"], check["message"], check["evidence"]),
+                         ("PASS", "All targets are managed or admitted to production by NMAS.", {"outside_scope": [], "nmas_active": [self.name]}))
+
+    def test_netbox_managed_frozen_targets_record_no_nmas_active(self):
+        snapshot = self.snapshot()
+        snapshot["devices"] = [{**snapshot["devices"][0], "device_name": "R1"}]
+        (check,) = ncv._managed_scope_checks(snapshot, _bundle({"managed_devices": FROZEN_MANAGED}))
         self.assertEqual((check["status"], check["message"], check["evidence"]), ("PASS", "All targets are managed.", {"outside_scope": []}))
 
     def test_new_device_intent_of_an_active_device_blocks_managed_scope(self):

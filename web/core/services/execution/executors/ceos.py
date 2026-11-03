@@ -362,6 +362,17 @@ def management_inverse(spec_lines, running_text: str) -> list[str] | None:
 
 SNAPSHOT_TYPES = frozenset({"interface", "address", "mgmt_vrf_binding"})
 
+# Global prerequisite statements the planner places in front of a Configlet (``ipv6 unicast-routing`` before an IPv6 static
+# route: Lab 8 R6/R7).  Such a static route is no longer one leaf line, so its exact inverse depends on whether the
+# prerequisite was already configured: it is judged like a configuration block -- the inverse is derived against the running
+# configuration captured right before apply, and compensation is proven by the captured configuration digest.
+PREREQUISITE_LINES = frozenset({"ipv6 unicast-routing"})
+
+
+def _block_judged(spec: ConfigletSpec) -> bool:
+    return spec.object_type in CONFIG_BLOCK_TYPES or (
+        spec.object_type == "static_route" and len(spec.lines) > 1 and any(line in PREREQUISITE_LINES for line in spec.lines))
+
 
 def _snapshot_key(line: str) -> str | None:
     """What single-valued setting a child line configures; None for lines that coexist with their siblings."""
@@ -670,7 +681,7 @@ class CeosExecutor(DeviceExecutor):
         if not spec.lines:
             return Assessment(REFUSE, False, {}, "PLATFORM_EXECUTION_UNSUPPORTED")
         found = state.assess(spec, self._read(), additive_overwrites_primary=True)
-        if spec.object_type in CONFIG_BLOCK_TYPES and found.action == APPLY:
+        if _block_judged(spec) and found.action == APPLY:
             return self._assess_config_block(spec)
         if spec.object_type in SNAPSHOT_TYPES and found.action == APPLY and (not found.restorable or inverse_lines(spec) is None):
             snapshot = self._assess_interface_snapshot(spec)
@@ -714,7 +725,7 @@ class CeosExecutor(DeviceExecutor):
             if inverse is None:
                 return ApplyOutcome(False, "COMMAND_REJECTED")     # nothing sent: no inverse is provable any more
             self._config_inverses[spec.cfg_id], self._config_applied[spec.cfg_id] = inverse, digest
-        elif spec.object_type in CONFIG_BLOCK_TYPES and spec.object_type not in DECLARED_INVERSE_TYPES \
+        elif _block_judged(spec) and spec.object_type not in DECLARED_INVERSE_TYPES \
                 and isinstance(assessment.previous_state, dict) and assessment.previous_state.get("kind") == "config_block":
             # The engine assesses EVERY Configlet before applying any, so the assess-time digest (and inverse) describe the
             # state before the whole plan.  Several configuration-block Configlets on one device are compensated in reverse
