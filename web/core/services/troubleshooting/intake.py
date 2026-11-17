@@ -150,7 +150,8 @@ def admission(incident: Incident, cfg: IntakeConfig, now: datetime) -> tuple[boo
     last = models.TsCase.objects.filter(trigger_source=TRIGGER_SOURCE, trigger_ref=incident.fingerprint).order_by("-opened_at").first()
     if last is not None and (now - last.opened_at).total_seconds() < cfg.cooldown_seconds:
         return False, "COOLDOWN_ACTIVE"
-    if models.TsCase.objects.filter(trigger_source=TRIGGER_SOURCE, opened_at__gte=now - timedelta(hours=1)).count() >= cfg.max_cases_per_hour:
+    live = models.TsCase.objects.filter(trigger_source=TRIGGER_SOURCE, opened_at__gte=now - timedelta(hours=1)).exclude(trigger_ref__startswith="REPLAY")
+    if live.count() >= cfg.max_cases_per_hour:                              # controlled replays never consume the live budget
         return False, "HOURLY_CASE_BUDGET_EXHAUSTED"
     return True, ""
 

@@ -113,6 +113,15 @@ class IntakeTests(TestCase):
         engine.poll(T0)
         self.assertEqual(engine.poll(T0 + timedelta(seconds=31))[0]["skipped"], "HOURLY_CASE_BUDGET_EXHAUSTED")
 
+    def test_replay_cases_do_not_consume_the_live_hourly_budget(self):
+        engine = self.make()
+        engine.cfg.max_cases_per_hour = 1
+        models.TsCase.objects.create(case_id="TS-20261117-REPLAY01", tenant="default", trigger_source="monitoring",
+                                     trigger_ref="REPLAY:LINK:R2:Ethernet1|S4:Ethernet3", opened_at=T0, idempotency_key="replay-1")
+        self.world.shut_r2_e1()
+        engine.poll(T0)
+        self.assertIn("case", engine.poll(T0 + timedelta(seconds=31))[0])
+
     def test_unreadable_device_is_not_treated_as_healed(self):
         self.world.shut_r2_e1()
         self.engine.poll(T0)
