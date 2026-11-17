@@ -361,7 +361,10 @@ def change_correlation(changes: list[dict], *, onset: datetime, path_devices: li
         score = 0.0
         if rel == "BEFORE_ONSET":
             score = round(max(0.1, 1.0 - delta / lookback_seconds) * (1.0 if in_path else 0.5 if (dist is not None and dist <= 1) else 0.2), 2)
-        rows.append({"change_id": ch.get("change_id", ""), "approved": ch.get("approved"), "kind": ch.get("kind", ""), "devices": ch.get("devices", []),
+        rows.append({"change_id": ch.get("change_id", ""), "approved": ch.get("approved"), "authorized": ch.get("authorized", ch.get("approved")),
+                     "authorization_mode": ch.get("authorization_mode", ""), "authorizing_policy_id": ch.get("authorizing_policy_id", ""),
+                     "execution_outcome": ch.get("execution_outcome", ch.get("outcome", "")), "service_verification": ch.get("service_verification", ""),
+                     "kind": ch.get("kind", ""), "devices": ch.get("devices", []),
                      "at": c.iso(t), "seconds_before_onset": int(delta), "relation": rel, "topology_distance": dist, "on_affected_path": in_path,
                      "in_soak": bool(ch.get("in_soak")), "score": score, "blame": False,
                      "note": "temporal/topological proximity only; a causal test must confirm before any remediation"})

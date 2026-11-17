@@ -54,7 +54,7 @@ def lf02(ctx: Ctx) -> Result:
     admin = [e for e in ev if e["state"] == "down" and e.get("reason", "").startswith("admin")]
     m = ctx.opt("maintenance.state", dev)
     in_m = bool(m and m.value.get("in_maintenance"))
-    planned = [r["change_id"] for r in ctx.correlation.get("changes", []) if dev in (r.get("devices") or []) and r.get("approved") and r["relation"] == "BEFORE_ONSET"]
+    planned = [r["change_id"] for r in ctx.correlation.get("changes", []) if dev in (r.get("devices") or []) and r.get("authorized", r.get("approved")) and r["relation"] == "BEFORE_ONSET"]
     ctx.use_intent("changes")
     downs = [e for e in ev if e["state"] == "down"]
     if downs and len(admin) == len(downs) and (in_m or planned):

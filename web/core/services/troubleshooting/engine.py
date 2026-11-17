@@ -331,9 +331,11 @@ class Engine:
                     repo.record(self.actor, self.case, "correlation", basis="DERIVED", evidence_ids=[self.ev_ids["changes"]], now=self.now, alert_ids=[],
                                 common_fault_candidate=f"change {r['change_id']}", topology_edge={"distance_to_path": r["topology_distance"], "devices": r["devices"]},
                                 time_window={"seconds_before_onset": r["seconds_before_onset"], "in_soak": r["in_soak"]},
-                                rules=["change before onset", "topology distance to path"], metrics={"score": r["score"], "approved": r["approved"]},
-                                role="UNRELATED", drift_kind="APPROVED" if r["approved"] else "UNAPPROVED", confidence=r["score"],
-                                conclusion=f"candidate only ({'approved' if r['approved'] else 'unapproved'}); no causal link established: {r['note']}"[:255],
+                                rules=["change before onset", "topology distance to path"], metrics={"score": r["score"], "approved": r["approved"], "authorized": r.get("authorized", r["approved"]),
+                                         "authorization_mode": r.get("authorization_mode", "")},
+                                role="UNRELATED", drift_kind="APPROVED" if r.get("authorized", r["approved"]) else "UNAPPROVED", confidence=r["score"],
+                                conclusion=(f"candidate only ({r.get('authorization_mode') or ('approved' if r['approved'] else 'unapproved')}); "
+                                            f"no causal link established: {r['note']}")[:255],
                                 stage_decision="change/time correlation; proximity is not blame")
         # alarm storm -------------------------------------------------------------------------------------------------
         if self.alarms and intent.get("links"):
@@ -662,7 +664,8 @@ class Engine:
                           "soak_window": bs["soak_window"], "provenance": bl.distinct_provenance(bs)},
             "production_flow": {"measured_impact": self.stages.get("correlate", {}).get("measured_impact"), "monitor": self.stages.get("correlate", {}).get("flow_monitor"),
                                 "impact_tests": diag.get("impact_tests")},
-            "correlations": {"changes": [{k: r[k] for k in ("change_id", "approved", "relation", "topology_distance", "in_soak", "blame")} for r in self.stages.get("correlate", {}).get("changes", [])],
+            "correlations": {"changes": [{k: r.get(k) for k in ("change_id", "approved", "authorized", "authorization_mode", "authorizing_policy_id",
+                                                                 "execution_outcome", "service_verification", "relation", "topology_distance", "in_soak", "blame")} for r in self.stages.get("correlate", {}).get("changes", [])],
                              "drift": [{"subject": d["subject"], "kind": d["drift_kind"], "impact": d["production_impact"]} for d in self.stages.get("correlate", {}).get("drift", [])],
                              "alarm_groups": len((self.stages.get("correlate", {}).get("alarm_groups") or {}).get("groups", []))},
             "topology_path": self.stages.get("correlate", {}).get("paths", []),

@@ -109,7 +109,15 @@ def build_request(context: dict, *, identity: dict, catalog: list[dict], seq: in
                  **({"schema": ai.TOOLS[t]["schema"]} if "schema" in ai.TOOLS[t] else {})} for t in MODEL_TOOLS}
     req = {"schema": REQUEST_SCHEMA, "seq": seq, "model": identity,
            "instructions": ("Read-only investigation. Choose ONE registered tool per turn, or conclude. You cannot run raw commands, change "
-                            "configuration, approve anything or contact hosts outside allowed_targets. Cite evidence_ids from tool results."),
+                            "configuration, approve anything or contact hosts outside allowed_targets. Cite evidence_ids from tool results. "
+                            "Remediation selection: propose the MINIMAL operation set that restores the authoritative intent the evidence "
+                            "shows is violated. Change history fields are distinct: 'approved'/'human_approved' is human approval only; "
+                            "'authorized' with 'authorization_mode' (HUMAN_APPROVAL or PREAUTHORIZED_AUTOMATED_RECOVERY) says what "
+                            "permitted an execution; 'execution_outcome' and 'service_verification' say what it did. A policy-authorized "
+                            "recovery is an authorized change, not an unapproved one. Propose config_rollback of a change ONLY when evidence "
+                            "shows that change caused the current fault, its rollback is supported, and it would restore intent; temporal "
+                            "proximity alone is not causation, and a state that conflicts with current intent is corrected toward intent, "
+                            "not by rolling back an earlier change."),
            "tools": tools, "diagnostic_tests": catalog, "context": context,
            "response_schema": {"action": "tool|conclude", "tool": "str", "args": "dict", "why_informative": "str", "rationale": "str",
                                "hypotheses": "list[{title,domain,supporting,contradicting,confidence}]",

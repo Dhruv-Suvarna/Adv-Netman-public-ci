@@ -106,7 +106,7 @@ def hc02(ctx: Ctx) -> Result:
         return inconclusive("change history unavailable: " + str(ctx.baselines.get("changes", {}).get("reason", "")), "cannot answer 'has anything changed?'")
     before = [r for r in rows if r["relation"] == "BEFORE_ONSET"]
     soak = ctx.baselines.get("soak_window", {})
-    unapproved = [r for r in before if not r.get("approved")]
+    unapproved = [r for r in before if not r.get("authorized", r.get("approved"))]   # unauthorized: neither human-approved nor policy-authorized
     drift_unapproved = [d for d in ctx.correlation.get("drift", []) if d["drift_kind"] == "UNAPPROVED"]
     obs = {"changes_before_onset": [r["change_id"] for r in before], "unapproved": [r["change_id"] for r in unapproved],
            "unapproved_drift": [d["subject"] for d in drift_unapproved], "soak": soak.get("state"), "onset_in_soak": soak.get("onset_in_window")}

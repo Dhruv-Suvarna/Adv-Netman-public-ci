@@ -69,6 +69,36 @@ class StaticSources:
 
 
 # ------------------------------------------------------------------------------------------------------- Django-backed sources
+POLICY_ACTOR_PREFIX = "nmas-policy:"
+
+
+def execution_authorization(run, *, human_approved: bool) -> dict:
+    """What actually authorized ``run`` (a ChangeExecutionRun), derived from IMMUTABLE execution and audit records -- never from
+    Change metadata alone.  PREAUTHORIZED_AUTOMATED_RECOVERY is reported only when all three agree: the engine run's actor is the
+    policy identity, a TsActionExecution under that policy names this Change, and the case's hash-chained audit records the
+    automated execution of this Change.  Otherwise the run is HUMAN_APPROVAL (lifecycle approval) or NONE (unauthorized/unknown)."""
+    from core import models as m
+    cid = run.change.change_id
+    out = {"authorization_mode": "HUMAN_APPROVAL" if human_approved else "NONE", "authorizing_policy_id": "",
+           "authorized": bool(human_approved), "service_verification": "UNKNOWN"}
+    actor = run.actor or ""
+    if not actor.startswith(POLICY_ACTOR_PREFIX):
+        return out
+    pid = actor[len(POLICY_ACTOR_PREFIX):]
+    ex = next((e for e in m.TsActionExecution.objects.filter(stage_decision=f"policy {pid}").select_related("case")
+               if (e.command_or_intent or {}).get("change_id") == cid), None)
+    if ex is None or not m.TsAuditEvent.objects.filter(case=ex.case, action="AUTOMATED_RECOVERY_EXECUTED",
+                                                        decision__startswith=f"{cid} ").exists():
+        out["authorization_note"] = "policy actor without matching policy execution and audit records: NOT treated as authorized"
+        return out
+    ver = m.TsVerificationRecord.objects.filter(case=ex.case).order_by("-id").first()
+    out.update({"authorization_mode": "PREAUTHORIZED_AUTOMATED_RECOVERY", "authorizing_policy_id": pid, "authorized": True,
+                "authorization_evidence": {"execution_record": ex.record_id, "case_id": ex.case.case_id, "run_actor": actor},
+                "service_verification": ver.outcome if ver else "NOT_RECORDED",
+                "note": "executed under a standing owner policy without incident-time human approval; not a human approval"})
+    return out
+
+
 class DjangoBaselineSources:
     """Real NMAS integrations (read-only).  Each method degrades to ``unavailable`` rather than raising.
 
@@ -140,9 +170,14 @@ class DjangoBaselineSources:
                 touched = sorted(wanted & set(run.devices or []))
                 if not touched or run.outcome in no_mutation:
                     continue
-                rows.append({"change_id": run.change.change_id, "approved": run.change.lifecycle_state in approved_states, "kind": "execution",
-                             "at": c.iso(run.started_at), "devices": touched, "summary": run.change.title, "outcome": run.outcome or run.state,
-                             "source": "ChangeExecutionRun", "lifecycle": run.change.lifecycle_state})
+                human = run.change.lifecycle_state in approved_states
+                authz = execution_authorization(run, human_approved=human)
+                rows.append({"change_id": run.change.change_id, "kind": "execution", "at": c.iso(run.started_at), "devices": touched,
+                             "summary": run.change.title, "source": "ChangeExecutionRun", "lifecycle": run.change.lifecycle_state,
+                             # approval = HUMAN approval only (never inferred); authorization = what actually permitted the execution
+                             "approved": human, "human_approved": human, **authz,
+                             "outcome": run.outcome or run.state, "execution_outcome": run.outcome or run.state,
+                             "postcheck": ((run.report or {}).get("postcheck") or {}).get("result") or "NOT_RUN"})
             return {"status": "available", "source": "Change+ChangeExecutionRun", "changes": rows,
                     "limitations": ["manual/out-of-band device changes are only visible through configs() drift, not through this list"]}
         except Exception as exc:  # pylint: disable=broad-exception-caught  # noqa: BLE001
@@ -357,7 +392,10 @@ def classify_changes(changes: list[dict], *, soak: dict | None, onset: datetime)
     for ch in changes:
         t = c.parse_time(ch.get("at"))
         in_soak = bool(soak and soak.get("active") and start and t and start <= t <= (end or onset))
-        out.append({**ch, "approved": True if ch.get("approved") is True else False, "approval_known": ch.get("approved") is not None,
+        human = True if ch.get("approved") is True else False
+        authorized = ch["authorized"] is True if "authorized" in ch else human      # sources without an authorization model: approval
+        out.append({**ch, "approved": human, "approval_known": ch.get("approved") is not None, "authorized": authorized,
+                    "authorization_mode": ch.get("authorization_mode") or ("HUMAN_APPROVAL" if human else "NONE"),
                     "in_soak": in_soak or bool(ch.get("in_soak"))})
     return out
 
@@ -395,7 +433,7 @@ def assess_drift(configs: dict, *, changes: list[dict], production_impact: str) 
         for d in diffs:
             cid = d.get("change_id") or ""
             known = by_change.get(cid)
-            approved = bool(known and known.get("approved"))
+            approved = bool(known and known.get("authorized", known.get("approved")))     # authorized (human or verified policy)
             kind = "APPROVED" if approved else "UNAPPROVED"
             rows.append({"subject": f"{dev}:{d.get('path', '')}", "drift_kind": kind, "applicability": "APPLICABLE", "expected": d.get("golden"),
                          "observed": d.get("running"), "delta": d.get("summary"), "approved_change_id": cid if approved else "", "blocks": d.get("blocks", []),

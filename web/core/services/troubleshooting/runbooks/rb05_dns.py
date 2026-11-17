@@ -278,7 +278,7 @@ def dn10(ctx: Ctx) -> Result:
     ctx.use_intent("changes")
     if ts is not None and abs(ts.value.get("offset_ms", 0)) > 5000:
         return fault(f"client clock offset {ts.value['offset_ms']} ms (affects DNSSEC validity)", Finding("F-time", "Time not synchronised", "dns", t["client"], "H-client", False, 0.6), **ts.value)
-    unapproved = [r["change_id"] for r in ch if not r.get("approved")]
+    unapproved = [r["change_id"] for r in ch if not r.get("authorized", r.get("approved"))]
     if unapproved:
         return fault(f"unapproved DNS/zone change(s) {unapproved} precede onset", Finding("F-dns-change", "Unapproved DNS change precedes the failure", "change", hypothesis="H-change", confidence=0.4), changes=unapproved)
     return ok(f"time synchronised; {len(ch)} approved DNS change(s) in window (recorded, not blamed)", "no time/change explanation", approved=[r["change_id"] for r in ch])

@@ -301,6 +301,21 @@ def _expire_if_due(actor, plan, now):
 
 
 # ---------------------------------------------------------------------------------------------------------------- propose
+def _rollback_target_problem(op: dict) -> str:
+    """A config_rollback must name a Change that actually changed that device: rolling back a Change that never executed there
+    (or that the engine refused before any mutation) cannot be the repair.  Causation itself stays an evidence question."""
+    if op.get("kind") != "config_rollback":
+        return ""
+    cid = op.get("change_id")
+    if not cid:
+        return "config_rollback requires change_id naming the Change to roll back"
+    no_mutation = {m.ExecutionOutcome.BLOCKED, m.ExecutionOutcome.FAILED_NO_MUTATION}
+    runs = m.ChangeExecutionRun.objects.filter(change__change_id=cid).exclude(outcome__in=no_mutation)
+    if not any(op.get("device") in (r.devices or []) for r in runs):
+        return f"config_rollback target {cid} never changed {op.get('device')!r}; it cannot be the repair"
+    return ""
+
+
 def propose(actor: repo.Actor, case: m.TsCase, *, operations: list[dict], causal_evidence_ids: list[str], rollback_plan: dict,
             impacted_flows: list[dict] | None = None, addressed_fault: str = "", abort_thresholds: dict | None = None,
             soak_required: bool | None = None, expected_dataplane_effect: str = "", ttl: timedelta = timedelta(hours=4),
@@ -322,7 +337,7 @@ def propose(actor: repo.Actor, case: m.TsCase, *, operations: list[dict], causal
     if not isinstance(operations, list):
         raise GovernanceRefused("INVALID_OPERATION", "operations must be a list of operation objects")
     for op in operations:
-        problem = validate_operation(op)
+        problem = validate_operation(op) or _rollback_target_problem(op)
         if problem:
             raise GovernanceRefused("INVALID_OPERATION", problem)
     for op in operations:
