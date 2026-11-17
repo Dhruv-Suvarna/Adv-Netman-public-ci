@@ -34,3 +34,16 @@ def notify_issue(case) -> bool:
     except Exception as exc:  # pylint: disable=broad-exception-caught  # noqa: BLE001 - notification is best-effort
         log.warning("issue notification for %s failed: %s", case.case_id, type(exc).__name__)
         return False
+
+
+def send(subject: str, body: str) -> bool:
+    """Best-effort free-form notification to the configured recipients (used by automated recovery)."""
+    to = recipients()
+    if not to:
+        return False
+    try:
+        send_mail(subject[:200], body, getattr(settings, "DEFAULT_FROM_EMAIL", None), to, fail_silently=False)
+        return True
+    except Exception as exc:  # pylint: disable=broad-exception-caught  # noqa: BLE001 - notification is best-effort
+        log.warning("notification failed: %s", type(exc).__name__)
+        return False

@@ -1,0 +1,17 @@
+[Unit]
+Description=NMAS Troubleshooter policy-authorized recovery (PREAUTHORIZED_AUTOMATED_RECOVERY via the Change Engine)
+After=network-online.target nmas-web.service
+
+[Service]
+Type=simple
+User=student
+Group=student
+WorkingDirectory=/home/student/Scripts/clab_dualstack_lab-deploy/web
+EnvironmentFile=/etc/nmas/nmas-web.env
+Environment=DJANGO_SETTINGS_MODULE=config.settings PYTHONUNBUFFERED=1
+ExecStart=/home/student/Scripts/.venv/bin/python manage.py nmas_ts_auto_recover --watch --interval 3
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

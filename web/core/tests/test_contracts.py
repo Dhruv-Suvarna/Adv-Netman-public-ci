@@ -553,7 +553,9 @@ class ExecutionBoundaryContractTests(SimpleTestCase):
                 continue
             if "execute_change(" in path.read_text() or ".execute_change" in path.read_text():
                 callers.add(rel)
-        self.assertEqual(callers, {"core/services/execution/engine.py", "core/services/execution_service.py", "core/views.py"})
+        # Exactly two authorization paths: the human Change page POST and the exact-scoped policy recovery (owner-approved 2026-11-17).
+        self.assertEqual(callers, {"core/services/execution/engine.py", "core/services/execution_service.py", "core/views.py",
+                                   "core/services/troubleshooting/recovery.py"})
         # V2 Phase 5A: provisioning adds NO caller.  Its package never names the engine entry point, never spawns an executor of its own,
         # and contributes policy only through the three hooks the engine itself calls.
         from core.services.provisioning import gate as provisioning_gate

@@ -337,6 +337,7 @@ Parser-validated on cEOS 4.36.2F (2026-09-27):
   * `no vrrp N`
   * `no ip ospf area …`
   * `no ipv6 ospf 10 area …`
+  * `no shutdown` (removes an interface admin `shutdown`; restore re-adds `shutdown`). Validated on R2 cEOS 4.36.2F on 2026-11-17 in aborted session `nmas-syntax-admin-shutdown`; the running-config SHA-256 was `347a73be…` before and after.
 * **Routing:**
   * `no redistribute rip route-map …`
   * RIP / OSPF `no network …`
