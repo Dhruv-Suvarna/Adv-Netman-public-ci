@@ -116,8 +116,10 @@ def hc02(ctx: Ctx) -> Result:
                              confidence=0.4, remediation_hint="identify author/purpose; proximity is not proof -- confirm with a causal test"),
                      "temporal proximity of an unauthorized change is a lead, not a verdict", "run the path tests to locate the affected mechanism", **obs)
     if before:
-        return ok(f"approved change(s) {obs['changes_before_onset']} precede onset; correlation recorded, no blame without a causal test",
-                  "approved drift is expected; it does not by itself imply a fault or a rollback", **obs)
+        modes = sorted({r.get("authorization_mode") or ("HUMAN_APPROVAL" if r.get("approved") else "NONE") for r in before})
+        return ok(f"authorized change(s) {obs['changes_before_onset']} ({', '.join(modes)}) precede onset; correlation recorded, "
+                  "no blame without a causal test",
+                  "authorized drift is expected; it does not by itself imply a fault or a rollback", **obs)
     return ok("no configuration change in the lookback window", "no change-based explanation", **obs)
 
 
