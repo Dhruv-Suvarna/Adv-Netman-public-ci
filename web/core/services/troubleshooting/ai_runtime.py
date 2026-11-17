@@ -117,10 +117,12 @@ def build_request(context: dict, *, identity: dict, catalog: list[dict], seq: in
                             "recovery is an authorized change, not an unapproved one. Propose config_rollback of a change ONLY when evidence "
                             "shows that change caused the current fault, its rollback is supported, and it would restore intent; temporal "
                             "proximity alone is not causation, and a state that conflicts with current intent is corrected toward intent, "
-                            "not by rolling back an earlier change."),
+                            "not by rolling back an earlier change. Workflow: when a root cause is supported and a registered corrective operation "
+                            "applies, call propose_remediation BEFORE submit_investigation_result; a conclusion without a proposal leaves the "
+                            "incident unremediated for a human. Proposing never executes anything: NMAS governance decides."),
            "tools": tools, "diagnostic_tests": catalog, "context": context,
            "response_schema": {"action": "tool|conclude", "tool": "str", "args": "dict", "why_informative": "str", "rationale": "str",
-                               "hypotheses": "list[{title,domain,supporting,contradicting,confidence}]",
+                               "hypotheses": "list[{title,domain,supporting,contradicting,confidence: number 0..1}]",
                                "conclude": "{outcome: ROOT_CAUSE_SUPPORTED|INCONCLUSIVE|EXTERNAL_PREREQUISITE_BLOCKED, summary, hypotheses}"}}
     req = c.redact_value(req)
     if len(c.canonical_json(req)) > MAX_REQUEST_BYTES:       # bounded prompt: shrink the volatile parts, never the rules

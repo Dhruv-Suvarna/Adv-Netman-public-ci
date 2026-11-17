@@ -433,6 +433,31 @@ def _diagnostic(actor, h, args, rt, now):
 
 
 # ------------------------------------------------------------------------------------------------------ results / hypotheses
+CONFIDENCE_LABELS = {"very low": 0.1, "low": 0.25, "medium": 0.5, "moderate": 0.5, "high": 0.75, "very high": 0.9}
+
+
+def confidence_value(raw) -> float:
+    """Model confidence as a number in [0, 1].  Numbers and the documented labels are accepted; anything else is a typed
+    validation error the model can correct (it is never a crash that discards a whole conclusion)."""
+    if raw is None or raw == "":
+        return 0.0
+    if isinstance(raw, bool):
+        raise ValueError("confidence must be a number in [0, 1] or one of " + ", ".join(CONFIDENCE_LABELS))
+    if isinstance(raw, (int, float)):
+        value = float(raw)
+    else:
+        text = str(raw).strip().lower()
+        if text in CONFIDENCE_LABELS:
+            return CONFIDENCE_LABELS[text]
+        try:
+            value = float(text)
+        except ValueError:
+            raise ValueError(f"confidence {str(raw)[:20]!r} must be a number in [0, 1] or one of " + ", ".join(CONFIDENCE_LABELS)) from None
+    if not 0.0 <= value <= 1.0:
+        raise ValueError("confidence must be within [0, 1]")
+    return value
+
+
 def _record_hypotheses(actor, case, rows: list[dict], now) -> list[dict]:
     out = []
     valid_ids = set(m.TsEvidenceRef.objects.filter(case=case).values_list("evidence_id", flat=True))
@@ -441,7 +466,7 @@ def _record_hypotheses(actor, case, rows: list[dict], now) -> list[dict]:
         con = [e for e in row.get("contradicting", []) if e in valid_ids]
         bad = [e for e in row.get("supporting", []) + row.get("contradicting", []) if e not in valid_ids]
         state = "SUPPORTED" if sup else "UNVERIFIED"       # AI can never CONFIRM; unsupported claims are UNVERIFIED (UT-060)
-        conf = min(float(row.get("confidence", 0.0) or 0.0), 0.9 if sup else 0.3)
+        conf = min(confidence_value(row.get("confidence")), 0.9 if sup else 0.3)
         hyp = repo.record(actor, case, "hypothesis", basis="AI_INFERRED", evidence_ids=sup + con,
                           stage_decision=f"AI hypothesis {state}", now=now, title=str(row.get("title", ""))[:255],
                           failure_domain=str(row.get("domain", ""))[:32], supporting_evidence=sup, contradicting_evidence=con,
@@ -457,6 +482,11 @@ def _submit(actor, h, args, rt, now):
     outcome = args["outcome"]
     if outcome not in ("ROOT_CAUSE_SUPPORTED", "INCONCLUSIVE", "EXTERNAL_PREREQUISITE_BLOCKED"):
         raise AiRefused("INVALID_ARGUMENTS", "outcome must be ROOT_CAUSE_SUPPORTED | INCONCLUSIVE | EXTERNAL_PREREQUISITE_BLOCKED")
+    for row in args.get("hypotheses", []) or []:                      # validate everything before recording anything
+        try:
+            confidence_value(row.get("confidence") if isinstance(row, dict) else None)
+        except ValueError as exc:
+            raise AiRefused("INVALID_ARGUMENTS", f"hypothesis {str(row.get('title', ''))[:60]!r}: {exc}") from None
     hyps = _record_hypotheses(actor, case, args.get("hypotheses", []), now)
     if outcome == "ROOT_CAUSE_SUPPORTED" and not any(x["state"] == "SUPPORTED" for x in hyps):
         raise AiRefused("UNSUPPORTED_CLAIM", "a root cause claim needs at least one hypothesis with valid evidence citations")
