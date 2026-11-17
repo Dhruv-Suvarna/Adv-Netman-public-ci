@@ -1,0 +1,327 @@
+{
+    "vrfs": {
+        "default": {
+            "routingDisabled": false,
+            "allRoutesProgrammedHardware": true,
+            "allRoutesProgrammedKernel": true,
+            "defaultRouteState": "reachable",
+            "routes": {
+                "0.0.0.0/0": {
+                    "hardwareProgrammed": true,
+                    "routeType": "static",
+                    "routeLeaked": false,
+                    "kernelProgrammed": true,
+                    "preference": 1,
+                    "metric": 0,
+                    "routeAction": "forward",
+                    "directlyConnected": false,
+                    "vias": [
+                        {
+                            "nexthopAddr": "172.20.20.1",
+                            "interface": "Management0"
+                        }
+                    ]
+                },
+                "2.2.2.2/32": {
+                    "hardwareProgrammed": true,
+                    "routeType": "RIP",
+                    "routeLeaked": false,
+                    "kernelProgrammed": true,
+                    "preference": 120,
+                    "metric": 2,
+                    "routeAction": "forward",
+                    "directlyConnected": false,
+                    "vias": [
+                        {
+                            "nexthopAddr": "192.168.110.0",
+                            "interface": "Ethernet1"
+                        }
+                    ]
+                },
+                "10.10.10.10/32": {
+                    "hardwareProgrammed": true,
+                    "routeType": "RIP",
+                    "routeLeaked": false,
+                    "kernelProgrammed": true,
+                    "preference": 120,
+                    "metric": 2,
+                    "routeAction": "forward",
+                    "directlyConnected": false,
+                    "vias": [
+                        {
+                            "nexthopAddr": "192.168.110.0",
+                            "interface": "Ethernet1"
+                        }
+                    ]
+                },
+                "10.254.82.0/29": {
+                    "hardwareProgrammed": true,
+                    "routeType": "RIP",
+                    "routeLeaked": false,
+                    "kernelProgrammed": true,
+                    "preference": 120,
+                    "metric": 3,
+                    "routeAction": "forward",
+                    "directlyConnected": false,
+                    "vias": [
+                        {
+                            "nexthopAddr": "192.168.110.5",
+                            "interface": "Vlan99"
+                        }
+                    ]
+                },
+                "10.254.84.0/30": {
+                    "hardwareProgrammed": true,
+                    "routeType": "RIP",
+                    "routeLeaked": false,
+                    "kernelProgrammed": true,
+                    "preference": 120,
+                    "metric": 3,
+                    "routeAction": "forward",
+                    "directlyConnected": false,
+                    "vias": [
+                        {
+                            "nexthopAddr": "192.168.110.5",
+                            "interface": "Vlan99"
+                        }
+                    ]
+                },
+                "172.20.20.0/24": {
+                    "hardwareProgrammed": true,
+                    "routeType": "connected",
+                    "routeLeaked": false,
+                    "kernelProgrammed": true,
+                    "routeAction": "forward",
+                    "vias": [
+                        {
+                            "interface": "Management0"
+                        }
+                    ],
+                    "directlyConnected": true
+                },
+                "172.30.50.10/32": {
+                    "hardwareProgrammed": true,
+                    "routeType": "RIP",
+                    "routeLeaked": false,
+                    "kernelProgrammed": true,
+                    "preference": 120,
+                    "metric": 2,
+                    "routeAction": "forward",
+                    "directlyConnected": false,
+                    "vias": [
+                        {
+                            "nexthopAddr": "192.168.110.0",
+                            "interface": "Ethernet1"
+                        }
+                    ]
+                },
+                "192.168.10.0/24": {
+                    "hardwareProgrammed": true,
+                    "routeType": "connected",
+                    "routeLeaked": false,
+                    "kernelProgrammed": true,
+                    "routeAction": "forward",
+                    "vias": [
+                        {
+                            "interface": "Vlan10"
+                        }
+                    ],
+                    "directlyConnected": true
+                },
+                "192.168.20.0/24": {
+                    "hardwareProgrammed": true,
+                    "routeType": "connected",
+                    "routeLeaked": false,
+                    "kernelProgrammed": true,
+                    "routeAction": "forward",
+                    "vias": [
+                        {
+                            "interface": "Vlan20"
+                        }
+                    ],
+                    "directlyConnected": true
+                },
+                "192.168.100.0/31": {
+                    "hardwareProgrammed": true,
+                    "routeType": "RIP",
+                    "routeLeaked": false,
+                    "kernelProgrammed": true,
+                    "preference": 120,
+                    "metric": 2,
+                    "routeAction": "forward",
+                    "directlyConnected": false,
+                    "vias": [
+                        {
+                            "nexthopAddr": "192.168.110.0",
+                            "interface": "Ethernet1"
+                        }
+                    ]
+                },
+                "192.168.100.2/31": {
+                    "hardwareProgrammed": true,
+                    "routeType": "RIP",
+                    "routeLeaked": false,
+                    "kernelProgrammed": true,
+                    "preference": 120,
+                    "metric": 2,
+                    "routeAction": "forward",
+                    "directlyConnected": false,
+                    "vias": [
+                        {
+                            "nexthopAddr": "192.168.110.0",
+                            "interface": "Ethernet1"
+                        }
+                    ]
+                },
+                "192.168.100.4/31": {
+                    "hardwareProgrammed": true,
+                    "routeType": "RIP",
+                    "routeLeaked": false,
+                    "kernelProgrammed": true,
+                    "preference": 120,
+                    "metric": 3,
+                    "routeAction": "forward",
+                    "directlyConnected": false,
+                    "vias": [
+                        {
+                            "nexthopAddr": "192.168.110.5",
+                            "interface": "Vlan99"
+                        }
+                    ]
+                },
+                "192.168.100.6/31": {
+                    "hardwareProgrammed": true,
+                    "routeType": "RIP",
+                    "routeLeaked": false,
+                    "kernelProgrammed": true,
+                    "preference": 120,
+                    "metric": 3,
+                    "routeAction": "forward",
+                    "directlyConnected": false,
+                    "vias": [
+                        {
+                            "nexthopAddr": "192.168.110.5",
+                            "interface": "Vlan99"
+                        }
+                    ]
+                },
+                "192.168.110.0/31": {
+                    "hardwareProgrammed": true,
+                    "routeType": "connected",
+                    "routeLeaked": false,
+                    "kernelProgrammed": true,
+                    "routeAction": "forward",
+                    "vias": [
+                        {
+                            "interface": "Ethernet1"
+                        }
+                    ],
+                    "directlyConnected": true
+                },
+                "192.168.110.2/31": {
+                    "hardwareProgrammed": true,
+                    "routeType": "RIP",
+                    "routeLeaked": false,
+                    "kernelProgrammed": true,
+                    "preference": 120,
+                    "metric": 2,
+                    "routeAction": "forward",
+                    "directlyConnected": false,
+                    "vias": [
+                        {
+                            "nexthopAddr": "192.168.110.5",
+                            "interface": "Vlan99"
+                        }
+                    ]
+                },
+                "192.168.110.4/31": {
+                    "hardwareProgrammed": true,
+                    "routeType": "connected",
+                    "routeLeaked": false,
+                    "kernelProgrammed": true,
+                    "routeAction": "forward",
+                    "vias": [
+                        {
+                            "interface": "Vlan99"
+                        }
+                    ],
+                    "directlyConnected": true
+                },
+                "192.168.200.0/24": {
+                    "hardwareProgrammed": true,
+                    "routeType": "connected",
+                    "routeLeaked": false,
+                    "kernelProgrammed": true,
+                    "routeAction": "forward",
+                    "vias": [
+                        {
+                            "interface": "Vlan200"
+                        }
+                    ],
+                    "directlyConnected": true
+                },
+                "192.168.255.1/32": {
+                    "hardwareProgrammed": true,
+                    "routeType": "RIP",
+                    "routeLeaked": false,
+                    "kernelProgrammed": true,
+                    "preference": 120,
+                    "metric": 2,
+                    "routeAction": "forward",
+                    "directlyConnected": false,
+                    "vias": [
+                        {
+                            "nexthopAddr": "192.168.110.0",
+                            "interface": "Ethernet1"
+                        }
+                    ]
+                },
+                "192.168.255.2/32": {
+                    "hardwareProgrammed": true,
+                    "routeType": "RIP",
+                    "routeLeaked": false,
+                    "kernelProgrammed": true,
+                    "preference": 120,
+                    "metric": 3,
+                    "routeAction": "forward",
+                    "directlyConnected": false,
+                    "vias": [
+                        {
+                            "nexthopAddr": "192.168.110.5",
+                            "interface": "Vlan99"
+                        }
+                    ]
+                },
+                "192.168.255.11/32": {
+                    "hardwareProgrammed": true,
+                    "routeType": "connected",
+                    "routeLeaked": false,
+                    "kernelProgrammed": true,
+                    "routeAction": "forward",
+                    "vias": [
+                        {
+                            "interface": "Loopback0"
+                        }
+                    ],
+                    "directlyConnected": true
+                },
+                "192.168.255.12/32": {
+                    "hardwareProgrammed": true,
+                    "routeType": "RIP",
+                    "routeLeaked": false,
+                    "kernelProgrammed": true,
+                    "preference": 120,
+                    "metric": 2,
+                    "routeAction": "forward",
+                    "directlyConnected": false,
+                    "vias": [
+                        {
+                            "nexthopAddr": "192.168.110.5",
+                            "interface": "Vlan99"
+                        }
+                    ]
+                }
+            }
+        }
+    }
+}

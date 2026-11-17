@@ -1,0 +1,111 @@
+{
+    "vrfs": {
+        "default": {
+            "instList": {
+                "10": {
+                    "ospfNeighborEntries": [
+                        {
+                            "routerId": "192.168.255.4",
+                            "interfaceAddress": "192.168.100.7",
+                            "interfaceName": "Vlan104",
+                            "priority": 1,
+                            "adjacencyState": "full",
+                            "drState": "DR",
+                            "options": {
+                                "multitopologyCapability": false,
+                                "externalRoutingCapability": true,
+                                "multicastCapability": false,
+                                "nssaCapability": false,
+                                "linkLocalSignaling": false,
+                                "demandCircuitsSupport": false,
+                                "opaqueLsaSupport": false,
+                                "doNotUseInRouteCalc": false
+                            },
+                            "inactivity": 1794950326.895141,
+                            "details": {
+                                "areaId": "0.0.0.0",
+                                "designatedRouter": "192.168.100.7",
+                                "backupDesignatedRouter": "192.168.100.6",
+                                "numberOfStateChanges": 7,
+                                "stateTime": 1794941067.8951812,
+                                "inactivityDefers": 0,
+                                "retransmissionCount": 0,
+                                "bfdState": "adminDown",
+                                "bfdRequestSent": false,
+                                "grHelperTimer": null,
+                                "grNumAttempts": 0,
+                                "grLastRestartTime": null
+                            }
+                        },
+                        {
+                            "routerId": "192.168.255.3",
+                            "interfaceAddress": "192.168.100.5",
+                            "interfaceName": "Vlan103",
+                            "priority": 1,
+                            "adjacencyState": "full",
+                            "drState": "DR",
+                            "options": {
+                                "multitopologyCapability": false,
+                                "externalRoutingCapability": true,
+                                "multicastCapability": false,
+                                "nssaCapability": false,
+                                "linkLocalSignaling": false,
+                                "demandCircuitsSupport": false,
+                                "opaqueLsaSupport": false,
+                                "doNotUseInRouteCalc": false
+                            },
+                            "inactivity": 1794950321.8954036,
+                            "details": {
+                                "areaId": "0.0.0.0",
+                                "designatedRouter": "192.168.100.5",
+                                "backupDesignatedRouter": "192.168.100.4",
+                                "numberOfStateChanges": 6,
+                                "stateTime": 1794941072.8954253,
+                                "inactivityDefers": 0,
+                                "retransmissionCount": 0,
+                                "bfdState": "adminDown",
+                                "bfdRequestSent": false,
+                                "grHelperTimer": null,
+                                "grNumAttempts": 0,
+                                "grLastRestartTime": null
+                            }
+                        },
+                        {
+                            "routerId": "192.168.255.8",
+                            "interfaceAddress": "10.254.82.2",
+                            "interfaceName": "Ethernet4",
+                            "priority": 0,
+                            "adjacencyState": "full",
+                            "drState": null,
+                            "options": {
+                                "multitopologyCapability": false,
+                                "externalRoutingCapability": true,
+                                "multicastCapability": false,
+                                "nssaCapability": false,
+                                "linkLocalSignaling": false,
+                                "demandCircuitsSupport": false,
+                                "opaqueLsaSupport": false,
+                                "doNotUseInRouteCalc": false
+                            },
+                            "inactivity": 1794950326.8955693,
+                            "details": {
+                                "areaId": "0.0.0.20",
+                                "designatedRouter": "0.0.0.0",
+                                "backupDesignatedRouter": "0.0.0.0",
+                                "numberOfStateChanges": 7,
+                                "stateTime": 1793694892.8955889,
+                                "inactivityDefers": 0,
+                                "retransmissionCount": 0,
+                                "bfdState": "adminDown",
+                                "bfdRequestSent": false,
+                                "grHelperTimer": null,
+                                "grNumAttempts": 0,
+                                "grLastRestartTime": null
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    }
+}

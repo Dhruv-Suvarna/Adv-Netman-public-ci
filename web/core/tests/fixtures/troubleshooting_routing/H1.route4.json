@@ -1,0 +1,1 @@
+[{"dst":"default","gateway":"192.168.10.1","dev":"eth1","flags":[]},{"dst":"172.20.20.0/24","dev":"eth0","protocol":"kernel","scope":"link","prefsrc":"172.20.20.2","flags":[]},{"dst":"192.168.10.0/24","dev":"eth1","protocol":"kernel","scope":"link","prefsrc":"192.168.10.102","flags":[]}]

@@ -1,0 +1,60 @@
+{
+    "vrfs": {
+        "default": {
+            "instList": {
+                "10": {
+                    "ospf3NeighborEntries": [
+                        {
+                            "routerId": "192.168.255.3",
+                            "priority": 1,
+                            "adjacencyState": "full",
+                            "designatedRouter": "192.168.255.3",
+                            "backupDesignatedRouter": "192.168.255.1",
+                            "options": {
+                                "doNotUseInRouteCalc": true,
+                                "externalRoutingCapability": true,
+                                "multicastCapability": false,
+                                "nssaCapability": false,
+                                "activeRouter": true,
+                                "demandCircuitsSupport": false
+                            },
+                            "areaId": "0.0.0.0",
+                            "interfaceName": "Vlan101",
+                            "inactivity": 1794950328.1397026,
+                            "details": {
+                                "bfdState": "adminDown",
+                                "bfdRequestSent": false,
+                                "stateTime": 1793658134.1397161,
+                                "grNumAttempts": 0
+                            }
+                        },
+                        {
+                            "routerId": "192.168.255.4",
+                            "priority": 1,
+                            "adjacencyState": "full",
+                            "designatedRouter": "192.168.255.4",
+                            "backupDesignatedRouter": "192.168.255.1",
+                            "options": {
+                                "doNotUseInRouteCalc": true,
+                                "externalRoutingCapability": true,
+                                "multicastCapability": false,
+                                "nssaCapability": false,
+                                "activeRouter": true,
+                                "demandCircuitsSupport": false
+                            },
+                            "areaId": "0.0.0.0",
+                            "interfaceName": "Vlan102",
+                            "inactivity": 1794950319.1399846,
+                            "details": {
+                                "bfdState": "adminDown",
+                                "bfdRequestSent": false,
+                                "stateTime": 1793658142.13999,
+                                "grNumAttempts": 0
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,83 @@
+{
+"ipv4Unicast":{
+  "routerId":"192.168.255.4",
+  "as":65004,
+  "vrfId":0,
+  "vrfName":"default",
+  "tableVersion":63,
+  "ribCount":5,
+  "ribMemory":960,
+  "peerCount":1,
+  "peerMemory":741464,
+  "peers":{
+    "172.20.5.3":{
+      "remoteAs":65005,
+      "localAs":65004,
+      "version":4,
+      "msgRcvd":131569,
+      "msgSent":112045,
+      "tableVersion":0,
+      "outq":0,
+      "inq":0,
+      "peerUptime":"11w0d15h",
+      "peerUptimeMsec":6707450000,
+      "peerUptimeEstablishedEpoch":1788242848,
+      "pfxRcd":1,
+      "pfxSnt":3,
+      "state":"Established",
+      "peerState":"OK",
+      "connectionsEstablished":8,
+      "connectionsDropped":7,
+      "idType":"ipv4"
+    }
+  },
+  "failedPeers":0,
+  "displayedPeers":1,
+  "totalPeers":1,
+  "dynamicPeers":0,
+  "bestPath":{
+    "multiPathRelax":"false"
+  }
+}
+,
+"ipv6Unicast":{
+  "routerId":"192.168.255.4",
+  "as":65004,
+  "vrfId":0,
+  "vrfName":"default",
+  "tableVersion":66,
+  "ribCount":11,
+  "ribMemory":2112,
+  "peerCount":1,
+  "peerMemory":741464,
+  "peers":{
+    "2001:db8:205:2::2":{
+      "remoteAs":65005,
+      "localAs":65004,
+      "version":4,
+      "msgRcvd":131511,
+      "msgSent":112039,
+      "tableVersion":0,
+      "outq":0,
+      "inq":0,
+      "peerUptime":"11w0d15h",
+      "peerUptimeMsec":6707448000,
+      "peerUptimeEstablishedEpoch":1788242850,
+      "pfxRcd":1,
+      "pfxSnt":6,
+      "state":"Established",
+      "peerState":"OK",
+      "connectionsEstablished":10,
+      "connectionsDropped":9,
+      "idType":"ipv6"
+    }
+  },
+  "failedPeers":0,
+  "displayedPeers":1,
+  "totalPeers":1,
+  "dynamicPeers":0,
+  "bestPath":{
+    "multiPathRelax":"false"
+  }
+}
+}

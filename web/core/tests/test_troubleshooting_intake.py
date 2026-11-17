@@ -90,7 +90,8 @@ class IntakeTests(TestCase):
         restarted = self.make()                                                          # new process: in-memory state lost
         restarted.poll(T0 + timedelta(seconds=40))
         out = restarted.poll(T0 + timedelta(seconds=75))
-        self.assertEqual(out, [{"fingerprint": "LINK:R2:Ethernet1|S4:Ethernet3", "skipped": "OPEN_CASE_EXISTS"}])
+        self.assertEqual(out, [{"fingerprint": "LINK:R2:Ethernet1|S4:Ethernet3", "skipped": "OPEN_CASE_EXISTS",
+                                "category": "ADMIN_STATE_MISMATCH"}])
         self.assertEqual(models.TsCase.objects.count(), 1)
         self.assertEqual(len(self.dispatched), 1)
 

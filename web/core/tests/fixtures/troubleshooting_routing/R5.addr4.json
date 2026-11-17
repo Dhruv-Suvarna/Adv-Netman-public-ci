@@ -1,0 +1,79 @@
+{
+    "interfaces": {
+        "Ethernet1": {
+            "name": "Ethernet1",
+            "interfaceStatus": "connected",
+            "lineProtocolStatus": "up",
+            "mtu": 1500,
+            "ipv4Routable240": false,
+            "ipv4Routable0": false,
+            "interfaceAddress": {
+                "ipAddr": {
+                    "address": "172.20.5.1",
+                    "maskLen": 31
+                }
+            },
+            "nonRoutableClassEIntf": false
+        },
+        "Ethernet2": {
+            "name": "Ethernet2",
+            "interfaceStatus": "connected",
+            "lineProtocolStatus": "up",
+            "mtu": 1500,
+            "ipv4Routable240": false,
+            "ipv4Routable0": false,
+            "interfaceAddress": {
+                "ipAddr": {
+                    "address": "172.20.5.3",
+                    "maskLen": 31
+                }
+            },
+            "nonRoutableClassEIntf": false
+        },
+        "Ethernet3": {
+            "name": "Ethernet3",
+            "interfaceStatus": "connected",
+            "lineProtocolStatus": "up",
+            "mtu": 1500,
+            "ipv4Routable240": false,
+            "ipv4Routable0": false,
+            "interfaceAddress": {
+                "ipAddr": {
+                    "address": "172.31.50.0",
+                    "maskLen": 31
+                }
+            },
+            "nonRoutableClassEIntf": false
+        },
+        "Loopback0": {
+            "name": "Loopback0",
+            "interfaceStatus": "connected",
+            "lineProtocolStatus": "up",
+            "mtu": 65535,
+            "ipv4Routable240": false,
+            "ipv4Routable0": false,
+            "interfaceAddress": {
+                "ipAddr": {
+                    "address": "192.168.255.5",
+                    "maskLen": 32
+                }
+            },
+            "nonRoutableClassEIntf": false
+        },
+        "Management0": {
+            "name": "Management0",
+            "interfaceStatus": "connected",
+            "lineProtocolStatus": "up",
+            "mtu": 1500,
+            "ipv4Routable240": false,
+            "ipv4Routable0": false,
+            "interfaceAddress": {
+                "ipAddr": {
+                    "address": "172.20.20.16",
+                    "maskLen": 24
+                }
+            },
+            "nonRoutableClassEIntf": false
+        }
+    }
+}

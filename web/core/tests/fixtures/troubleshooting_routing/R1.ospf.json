@@ -1,0 +1,78 @@
+{
+    "vrfs": {
+        "default": {
+            "instList": {
+                "10": {
+                    "ospfNeighborEntries": [
+                        {
+                            "routerId": "192.168.255.4",
+                            "interfaceAddress": "192.168.100.3",
+                            "interfaceName": "Vlan102",
+                            "priority": 1,
+                            "adjacencyState": "full",
+                            "drState": "DR",
+                            "options": {
+                                "multitopologyCapability": false,
+                                "externalRoutingCapability": true,
+                                "multicastCapability": false,
+                                "nssaCapability": false,
+                                "linkLocalSignaling": false,
+                                "demandCircuitsSupport": false,
+                                "opaqueLsaSupport": false,
+                                "doNotUseInRouteCalc": false
+                            },
+                            "inactivity": 1794950326.9048634,
+                            "details": {
+                                "areaId": "0.0.0.0",
+                                "designatedRouter": "192.168.100.3",
+                                "backupDesignatedRouter": "192.168.100.2",
+                                "numberOfStateChanges": 19,
+                                "stateTime": 1793658136.9049075,
+                                "inactivityDefers": 0,
+                                "retransmissionCount": 15,
+                                "bfdState": "adminDown",
+                                "bfdRequestSent": false,
+                                "grHelperTimer": null,
+                                "grNumAttempts": 0,
+                                "grLastRestartTime": null
+                            }
+                        },
+                        {
+                            "routerId": "192.168.255.3",
+                            "interfaceAddress": "192.168.100.1",
+                            "interfaceName": "Vlan101",
+                            "priority": 1,
+                            "adjacencyState": "full",
+                            "drState": "DR",
+                            "options": {
+                                "multitopologyCapability": false,
+                                "externalRoutingCapability": true,
+                                "multicastCapability": false,
+                                "nssaCapability": false,
+                                "linkLocalSignaling": false,
+                                "demandCircuitsSupport": false,
+                                "opaqueLsaSupport": false,
+                                "doNotUseInRouteCalc": false
+                            },
+                            "inactivity": 1794950321.9051023,
+                            "details": {
+                                "areaId": "0.0.0.0",
+                                "designatedRouter": "192.168.100.1",
+                                "backupDesignatedRouter": "192.168.100.0",
+                                "numberOfStateChanges": 20,
+                                "stateTime": 1793658137.9051223,
+                                "inactivityDefers": 0,
+                                "retransmissionCount": 11,
+                                "bfdState": "adminDown",
+                                "bfdRequestSent": false,
+                                "grHelperTimer": null,
+                                "grNumAttempts": 0,
+                                "grLastRestartTime": null
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    }
+}
