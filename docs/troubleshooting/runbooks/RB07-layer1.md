@@ -4,6 +4,8 @@ Separate optics, cable, FEC/negotiation and platform causes of framing errors; n
 
 > Stage 1 is deterministic and read-only. Unavailable evidence is UNKNOWN. Results in this document come from SIMULATED replay fixtures unless stated otherwise (see `deterministic-engine.md`).
 
+> **Unattended intake (2026-11-17):** live monitoring classifies this fault deterministically before any model call, and records a remediation decision (`faults.decide`). See `../MULTI_FAULT_CLASSIFICATION.md`. Operational-down, flapping, degradation, routing and reachability faults are `DIAGNOSE_AND_ESCALATE`: no automatic bounce, shutdown, counter clear, routing or process change. An administrative enable is valid only for an interface observed administratively down.
+
 ## Symptoms
 CRC/FCS/framing errors, FEC uncorrected codewords, flapping optics, one-directional loss.
 
