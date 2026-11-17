@@ -37,7 +37,7 @@ OP = {"kind": "interface_enable", "device": DEVICE, "interface": IFACE, "intende
 def policy(**kw):
     base = {"id": "ARP-TEST-001", "owner_authorization": "OWNER-TEST", "device": DEVICE, "interface": IFACE, "kind": "interface_enable",
             "intended_state": "admin_up", "expires_at": (datetime.now(timezone.utc) + timedelta(hours=1)).isoformat(),
-            "max_executions": 3, "cooldown_seconds": 600, "enabled": True, "protected_flows": [{"container": "h1", "dst": "x"}]}
+            "max_executions": 3, "cooldown_seconds": 600, "enabled": True, "protected_flows": [{"name": "H1-H2-v4", "container": "h1", "dst": "x"}]}
     return {**base, **kw}
 
 
@@ -53,6 +53,8 @@ class RecoveryExecutionTests(TestCase):
         actor = repo.Actor("operator", "user", tenant="default")
         self.case = repo.open_case(actor, trigger_source="operator", title="S1 alarm", symptom="trunk down", runbook="RB02",
                                    service_intent={"service": "x"}, affected_scope={"devices": [DEVICE]})
+        for state in ("COLLECTING", "TESTING"):                       # where the Troubleshooter leaves a diagnosed case
+            self.case = repo.transition_case(actor, self.case, state)
         self.plan = models.TsRemediationPlan.objects.create(record_id=repo._rid("RPL"), case=self.case, basis="AI_INFERRED", status="RISK_ASSESSED",
                                                             tier=2, risk="HIGH", operations=[OP], evidence_ids=["EV-1"])
         self.sent: list[tuple[str, str]] = []
@@ -87,7 +89,9 @@ class RecoveryExecutionTests(TestCase):
             plan=lambda change, actor: cps.build_change_plan(change, actor=actor, sources=self.sources),
             precheck=lambda change, actor: hs.run_change_precheck(change, actor=actor, sources=self.sources, snapshot=h.snapshot(),
                                                                   session_factory=fetch_factory(eos.text), persist=True),
-            execute=execute, notify=lambda s, b: self.sent.append((s, b)) or True, ci_wait=lambda change: self.ci_status)
+            execute=execute, notify=lambda s, b: self.sent.append((s, b)) or True, ci_wait=lambda change: self.ci_status,
+            flow_measure=lambda flows: {f["name"]: {"loss_pct": 0.0, "coverage": 1.0, "raw": "5 packets transmitted, 5 received, 0% packet loss"}
+                                        for f in flows}, case_settle_seconds=0)
 
     def run_recovery(self):
         return recovery.recover(self.plan.record_id, deps=self.deps(), policy_file=self.policy_file)
@@ -110,7 +114,14 @@ class RecoveryExecutionTests(TestCase):
         self.assertEqual((self.plan.status, self.plan.risk, self.plan.approval["approved_by"], self.plan.approval["mode"]),
                          ("RESOLVED", "HIGH", "", "PREAUTHORIZED_AUTOMATED_RECOVERY"))
         ex = models.TsActionExecution.objects.get(plan=self.plan)
-        self.assertEqual((ex.status, ex.observed_effect["admin"], ex.observed_effect["oper"]), ("SUCCEEDED", "up", "up"))
+        self.assertEqual((ex.status, ex.observed_effect["admin"], ex.observed_effect["oper"]), ("APPLIED", "up", "up"))
+        self.case.refresh_from_db()
+        self.assertEqual(self.case.state, "RESOLVED_VERIFIED")                              # the CASE closes, not only the plan
+        rec = models.TsVerificationRecord.objects.get(case=self.case)
+        self.assertEqual(rec.outcome, "VERIFIED")
+        self.assertTrue(all(step["passed"] for step in rec.test_steps))
+        states = list(models.TsAuditEvent.objects.filter(case=self.case, action="CASE_STATE").values_list("decision", flat=True))
+        self.assertEqual(states[-3:], ["TESTING -> REMEDIATING", "REMEDIATING -> VERIFYING", "VERIFYING -> RESOLVED_VERIFIED"])
         actions = set(models.TsAuditEvent.objects.filter(case=self.case).values_list("action", flat=True))
         self.assertTrue({"AUTOMATED_RECOVERY_EXECUTED", "REMEDIATION_STATE"} <= actions)
         self.assertIn("COMPLETED", self.sent[-1][0])
@@ -124,6 +135,8 @@ class RecoveryExecutionTests(TestCase):
         self.assertIn("   shutdown", block)                                                 # restored to the real pre-state
         self.plan.refresh_from_db()
         self.assertEqual(self.plan.status, "ABORTED_RESTORED")
+        self.case.refresh_from_db()
+        self.assertEqual(self.case.state, "UNRESOLVED")                                     # honest: remediation failed, restored
 
     def assertRefused(self, code, reason=None):
         out = self.run_recovery()
@@ -207,3 +220,19 @@ class RecoveryExecutionTests(TestCase):
         feed = DjangoBaselineSources().changes([DEVICE], now - timedelta(hours=1), now + timedelta(minutes=1))
         self.assertEqual(feed["status"], "available", feed)
         self.assertEqual([r["outcome"] for r in feed["changes"]], ["SUCCEEDED"])           # the real write stays visible
+
+    def test_lossy_protected_flow_after_change_fails_verification_and_never_resolves_the_case(self):
+        calls = {"n": 0}
+
+        def measure(flows):
+            calls["n"] += 1          # 1st = pre-change baseline (clean); 2nd = post-change sample (lossy)
+            loss = 0.0 if calls["n"] == 1 else 40.0
+            return {f["name"]: {"loss_pct": loss, "coverage": 1.0, "raw": f"{loss}% packet loss"} for f in flows}
+
+        deps = self.deps()
+        deps.flow_measure = measure
+        out = recovery.recover(self.plan.record_id, deps=deps, policy_file=self.policy_file)
+        self.assertEqual(out["result"], "NOT_VERIFIED", out)
+        self.case.refresh_from_db()
+        self.assertEqual(self.case.state, "UNRESOLVED")
+        self.assertEqual(models.TsVerificationRecord.objects.get(case=self.case).outcome, "FAILED")

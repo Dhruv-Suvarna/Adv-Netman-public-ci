@@ -31,6 +31,7 @@ from ..execution import capability, eligibility
 from . import governance as gov
 from . import notify
 from . import repository as repo
+from . import verification
 from .runbooks import hc
 
 POLICY_ACTOR_PREFIX = "nmas-policy:"       # non-human execution identity: nmas-policy:<policy id>
@@ -55,6 +56,8 @@ class RecoveryDeps:
     precheck: Callable[..., Any] = health_service.run_change_precheck
     notify: Callable[[str, str], bool] = None       # type: ignore[assignment]
     ci_wait: Callable[[Any], str] = None            # type: ignore[assignment]
+    flow_measure: Callable[[list], dict] = None     # type: ignore[assignment]
+    case_settle_seconds: float = 90.0
     now: Callable[[], datetime] = lambda: datetime.now(timezone.utc)
     extra: dict = field(default_factory=dict)
 
@@ -97,6 +100,31 @@ def sample_flows(flows: list) -> bool:
         if " 0% packet loss" not in out:
             return False
     return True
+
+
+def measure_flows(flows: list) -> dict:
+    """{flow name: {"loss_pct", "coverage", "raw"}} from a read-only 5-probe ping per protected flow (None loss == unmeasurable)."""
+    out = {}
+    for flow in flows:
+        argv = ["docker", "exec", flow["container"], "ping", *(["-6"] if int(flow.get("af", 4)) == 6 else []), "-c", "5", "-W", "1",
+                "-q", flow["dst"]]
+        try:
+            text = subprocess.run(argv, capture_output=True, text=True, timeout=20, check=False).stdout
+        except (OSError, subprocess.SubprocessError) as exc:
+            text = f"{type(exc).__name__}"
+        loss = next((float(tok.rstrip("%")) for line in text.splitlines() if "packet loss" in line
+                     for tok in line.replace(",", " ").split() if tok.endswith("%")), None)
+        sent = next((int(line.split()[0]) for line in text.splitlines() if "packets transmitted" in line), 0)
+        out[flow["name"]] = {"loss_pct": loss, "coverage": 1.0 if sent >= 5 else sent / 5, "raw": text}
+    return out
+
+
+def _case_to(actor, case, state: str, why: str, now):
+    """Advance the case only along a legal lifecycle edge; never forces a state."""
+    case = repo.get_case(actor, case.case_id)
+    if state == case.state or state not in repo._TRANSITIONS.get(case.state, set()):
+        return case
+    return repo.transition_case(actor, case, state, reason=why[:250], now=now)
 
 
 def read_oper_state(raw: dict, interface: str) -> str | None:
@@ -161,6 +189,7 @@ def recover(plan_id: str, *, deps: RecoveryDeps | None = None, policy_file: str 
     deps.oper_state = deps.oper_state or read_oper_state
     deps.notify = deps.notify or (lambda subject, body: notify.send(subject, body))
     deps.ci_wait = deps.ci_wait or wait_configuration_validation
+    deps.flow_measure = deps.flow_measure or measure_flows
     plan = models.TsRemediationPlan.objects.select_related("case").get(record_id=plan_id)
     case = plan.case
     if plan.status != "RISK_ASSESSED" or len(plan.operations or []) != 1:
@@ -258,7 +287,9 @@ def recover(plan_id: str, *, deps: RecoveryDeps | None = None, policy_file: str 
                              "configlet": configlets[0].cfg_id, "delta": [header, "   no shutdown"]})
     gov._set_status(actor, plan, "PREAUTHORIZED", f"{gov.AUTOMATED_RECOVERY} {pol.id}", now=deps.now(),
                     approval={"mode": gov.AUTOMATED_RECOVERY, "policy_id": pol.id, "owner_authorization": pol.owner_authorization,
-                              "policy_actor": actor_name, "approved_by": "", "human_approval": False, "change_id": change.change_id})
+                              "policy_actor": actor_name, "approved_by": "", "human_approval": False, "change_id": change.change_id,
+                              "abort_thresholds": dict(gov.DEFAULT_ABORT), "soak_required": False,
+                              "addressed_fault": f"{device} {iface} administratively down while intent requires admin up"})
     ci_status = deps.ci_wait(change)
     if ci_status != "PASS":
         return refuse("CONFIGURATION_VALIDATION_NOT_PASSING", [ci_status], change=change.change_id)
@@ -267,47 +298,88 @@ def recover(plan_id: str, *, deps: RecoveryDeps | None = None, policy_file: str 
         return refuse("PRECHECK_NOT_PASSING", [str(getattr(precheck, "result", "?"))], change=change.change_id)
     gov._set_status(actor, plan, "PRECHECK_PASS", f"precheck {precheck.result}", now=deps.now())
 
-    # 4. re-evaluate every gate immediately before the write (fresh flows, locks, history)
+    # 4. let the AI handoff close (its own case transition must not race ours), then re-evaluate every gate before the write
+    settle = time.monotonic() + deps.case_settle_seconds
+    while repo.get_case(actor, case.case_id).state == "AI_INVESTIGATING" and time.monotonic() < settle:
+        time.sleep(2)
     final = gov.evaluate_recovery_policy(pol, op, facts(snapshot, line, rollback_ready=True), risk=plan.risk)
     if not final["authorized"]:
         return refuse("POLICY_DENIED_AT_EXECUTION", final["reasons"], change=change.change_id)
+    protected = list(raw.get("protected_flows") or [])
+    baseline = deps.flow_measure(protected)
     started = deps.now()
+    case = _case_to(actor, case, "REMEDIATING", f"{gov.AUTOMATED_RECOVERY} {pol.id}: Change Engine executing {change.change_id}", started)
     ex = models.TsActionExecution.objects.create(
         record_id=repo._rid("ACT"), case=case, basis="DERIVED", stage="REMEDIATE", stage_decision=f"policy {pol.id}",
         evidence_ids=plan.evidence_ids, plan=plan, pre_state={"admin": "down", "snapshot_id": str(snapshot.snapshot_id), "line": line},
-        command_or_intent={"change_id": change.change_id, "operation": op, "policy_id": pol.id, "authorization_type": gov.AUTOMATED_RECOVERY},
+        command_or_intent={"change_id": change.change_id, "operation": op, "policy_id": pol.id, "authorization_type": gov.AUTOMATED_RECOVERY,
+                           "baseline_flows": {k: {"loss_pct": v["loss_pct"], "coverage": v["coverage"]} for k, v in baseline.items()}},
         idempotency_key=f"recovery:{pol.id}:{plan.record_id}", executed_at=started, status="EXECUTING",
         rollback={"restore_lines": item["restore_lines"], "mechanism": "Change Engine compensation (captured pre-change state)"})
     gov._set_status(actor, plan, "EXECUTING", f"Change Engine executing {change.change_id}", now=deps.now())
     result = deps.execute(change, actor=actor_name, confirm_mode=models.ExecutionMode.COMPLETE)
     outcome = str(result.outcome)
 
-    # 5. verify actual state: admin (fresh running config) AND oper
+    # 5. observe actual state (admin from a fresh running config, oper from the device), then the case's own verification
     after, _ = deps.snapshot(device, actor_name)
     admin_up = after is not None and shutdown_line(after, iface) is None
     oper = deps.oper_state(raw, iface)
-    verified = outcome == models.ExecutionOutcome.SUCCEEDED and admin_up and oper == "up"
+    applied = outcome == models.ExecutionOutcome.SUCCEEDED
     ex.observed_effect = {"execution_outcome": outcome, "run": str(getattr(result.run, "run_id", "")), "admin": "up" if admin_up else "down",
-                          "oper": oper, "verified_at": deps.now().isoformat()}
-    ex.status = "SUCCEEDED" if verified else ("ABORTED_RESTORED" if "ROLLED_BACK" in outcome else "FAILED")
+                          "oper": oper, "observed_at": deps.now().isoformat()}
+    ex.status = "APPLIED" if applied else ("ABORTED_RESTORED" if "ROLLED_BACK" in outcome else "ABORTED_UNRESTORED")
+    ex.stop_reason = "" if applied else outcome[:255]
     ex.save()
-    gov._set_status(actor, plan, "VERIFYING", f"Change Engine outcome {outcome}", now=deps.now()) if verified or "ROLLED_BACK" not in outcome else None
-    if verified:
-        gov._set_status(actor, plan, "RESOLVED", f"{device} {iface} admin up, oper up", now=deps.now())
+    record = None
+    if applied:
+        gov._set_status(actor, plan, "VERIFYING", f"Change Engine outcome {outcome}", now=deps.now())
+        case = _case_to(actor, case, "VERIFYING", f"Change {change.change_id} applied by the Change Engine; verifying the service", deps.now())
+        block = ""
+        if after is not None and f"interface {iface}\n" in after.text:
+            block = header + "\n" + after.text.split(f"interface {iface}\n", 1)[1].split("\ninterface ", 1)[0]
+        ev_admin = repo.store_evidence(actor, case, source_type="cli", device=device, command_or_api="show running-config (sanitized snapshot)",
+                                       adapter="nmas-config-workbench", raw=block or "<interface block unavailable>",
+                                       collected_at=getattr(after, "captured_at", None))
+        ev_oper = repo.store_evidence(actor, case, source_type="cli", device=device, command_or_api=f"show interfaces {iface} status",
+                                      adapter="nmas-recovery", raw=f"{iface} oper_state={oper}")
+        checks = [
+            {"name": f"{device} {iface} admin up (running-config)", "passed": admin_up, "observed": "up" if admin_up else "down",
+             "evidence_ids": [ev_admin.evidence_id]},
+            {"name": f"{device} {iface} oper up", "passed": oper == "up", "observed": oper, "evidence_ids": [ev_oper.evidence_id]},
+        ]
+        surrounding = [{**f, "key": f["name"]} for f in protected]
+
+        def flow_sample(defs):
+            sampled = deps.flow_measure(protected)
+            for name, v in sampled.items():
+                repo.store_evidence(actor, case, source_type="cli", command_or_api=f"ping {name}", adapter="nmas-recovery",
+                                    raw=v.get("raw") or "")
+            return {k: {"loss_pct": v["loss_pct"], "coverage": v["coverage"]} for k, v in sampled.items()}
+
+        ports = gov.Ports(flow_sample=flow_sample, clock=deps.now)
+        record = verification.verify(actor, plan.record_id, ports, service_checks=lambda: checks, surrounding_flows=surrounding, now=deps.now())
+        if record.outcome == "FAILED":
+            verification.abort_failed_verification(actor, plan.record_id, ports, now=deps.now())
     elif "ROLLED_BACK" in outcome:
         gov._set_status(actor, plan, "ABORTED_RESTORED", f"{outcome}: compensated to the captured pre-change state", now=deps.now())
     else:
         gov._set_status(actor, plan, "ABORTED_UNRESTORED", f"{outcome}: admin_up={admin_up} oper={oper}", now=deps.now())
+    disposition = verification.finalize(actor, case, now=deps.now())
+    verified = record is not None and record.outcome == "VERIFIED"
     repo.audit(actor, case, "AUTOMATED_RECOVERY_EXECUTED", decision=f"{change.change_id} {outcome}", result="VERIFIED" if verified else "NOT_VERIFIED",
                risk=plan.risk, operation=plan.record_id, evidence_ids=plan.evidence_ids, now=deps.now(),
                rationale=f"{gov.AUTOMATED_RECOVERY} {pol.id} (owner {pol.owner_authorization}); actor {actor_name}; "
-                         f"delta '{header} / no shutdown'; admin={'up' if admin_up else 'down'} oper={oper}")
+                         f"delta '{header} / no shutdown'; admin={'up' if admin_up else 'down'} oper={oper}; "
+                         f"verification={record.outcome if record else 'not run'}; case outcome={disposition.get('outcome')}")
+    final_case = repo.get_case(actor, case.case_id)
     summary.update(result="VERIFIED" if verified else "NOT_VERIFIED", change=change.change_id, outcome=outcome,
-                   admin="up" if admin_up else "down", oper=oper, execution=ex.record_id)
+                   admin="up" if admin_up else "down", oper=oper, execution=ex.record_id, case_state=final_case.state,
+                   verification=record.record_id if record else "")
     deps.notify(f"[NMAS] Automated recovery {'COMPLETED' if verified else 'NOT VERIFIED'}: {device} {iface} ({case.case_id})",
-                f"Case: {case.case_id}\nPlan: {plan.record_id}\nChange: {change.change_id} ({outcome})\nPolicy: {pol.id} "
+                f"Case: {case.case_id} ({final_case.state})\nPlan: {plan.record_id}\nChange: {change.change_id} ({outcome})\nPolicy: {pol.id} "
                 f"(owner authorization {pol.owner_authorization}; actor {actor_name}; {gov.AUTOMATED_RECOVERY}; risk {plan.risk})\n"
-                f"Delta: {header} / no shutdown\nVerified: admin {'up' if admin_up else 'down'}, oper {oper}\n")
+                f"Delta: {header} / no shutdown\nVerified: admin {'up' if admin_up else 'down'}, oper {oper}; "
+                f"service verification {record.outcome if record else 'not run'}\n")
     return summary
 
 
