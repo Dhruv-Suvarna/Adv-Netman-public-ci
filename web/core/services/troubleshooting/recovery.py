@@ -16,6 +16,7 @@ from __future__ import annotations
 
 import json
 import subprocess
+import time
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
@@ -53,6 +54,7 @@ class RecoveryDeps:
     plan: Callable[..., Any] = change_plan_service.build_change_plan
     precheck: Callable[..., Any] = health_service.run_change_precheck
     notify: Callable[[str, str], bool] = None       # type: ignore[assignment]
+    ci_wait: Callable[[Any], str] = None            # type: ignore[assignment]
     now: Callable[[], datetime] = lambda: datetime.now(timezone.utc)
     extra: dict = field(default_factory=dict)
 
@@ -111,6 +113,22 @@ def read_oper_state(raw: dict, interface: str) -> str | None:
     return "up" if " connected " in f" {row} " else "down"
 
 
+def wait_configuration_validation(change, *, timeout: float = 180.0, interval: float = 5.0) -> str:
+    """The external (GitHub Actions) Configuration Validation is asynchronous: wait (bounded) for its verdict on this exact
+    Change instead of meeting the engine gate while it is still QUEUED.  Never bypasses it: the engine re-checks the gate."""
+    from ..configuration_validation import service as ci   # noqa: PLC0415
+
+    if not ci.enabled() or ci.exempt(change):
+        return "PASS"
+    deadline = time.monotonic() + timeout
+    while True:
+        row = ci.latest(change)
+        status = "NOT_TRIGGERED" if row is None else ci.effective_status(ci.refresh(row))
+        if status not in ("QUEUED", "IN_PROGRESS") or time.monotonic() >= deadline:
+            return status
+        time.sleep(interval)
+
+
 def shutdown_line(snapshot, interface: str) -> int | None:
     """Line number of a literal admin ``shutdown`` directly under ``interface <X>`` in the snapshot; None if absent."""
     model = semantics.build_model(snapshot.text, snapshot.platform)
@@ -142,6 +160,7 @@ def recover(plan_id: str, *, deps: RecoveryDeps | None = None, policy_file: str 
     deps.flows = deps.flows or sample_flows
     deps.oper_state = deps.oper_state or read_oper_state
     deps.notify = deps.notify or (lambda subject, body: notify.send(subject, body))
+    deps.ci_wait = deps.ci_wait or wait_configuration_validation
     plan = models.TsRemediationPlan.objects.select_related("case").get(record_id=plan_id)
     case = plan.case
     if plan.status != "RISK_ASSESSED" or len(plan.operations or []) != 1:
@@ -240,6 +259,9 @@ def recover(plan_id: str, *, deps: RecoveryDeps | None = None, policy_file: str 
     gov._set_status(actor, plan, "PREAUTHORIZED", f"{gov.AUTOMATED_RECOVERY} {pol.id}", now=deps.now(),
                     approval={"mode": gov.AUTOMATED_RECOVERY, "policy_id": pol.id, "owner_authorization": pol.owner_authorization,
                               "policy_actor": actor_name, "approved_by": "", "human_approval": False, "change_id": change.change_id})
+    ci_status = deps.ci_wait(change)
+    if ci_status != "PASS":
+        return refuse("CONFIGURATION_VALIDATION_NOT_PASSING", [ci_status], change=change.change_id)
     precheck = deps.precheck(change, actor=actor_name)
     if getattr(precheck, "result", "") not in ("PASS", "PASS_WITH_WARNINGS"):
         return refuse("PRECHECK_NOT_PASSING", [str(getattr(precheck, "result", "?"))], change=change.change_id)

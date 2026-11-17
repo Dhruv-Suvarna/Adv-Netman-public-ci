@@ -59,6 +59,7 @@ class RecoveryExecutionTests(TestCase):
         self.intent = {IFACE: "up"}
         self.flows_ok = True
         self.lying_postcheck = False
+        self.ci_status = "PASS"
 
     def write_policy(self, data):
         Path(self.policy_file).write_text(json.dumps({"policies": [data]}))
@@ -86,7 +87,7 @@ class RecoveryExecutionTests(TestCase):
             plan=lambda change, actor: cps.build_change_plan(change, actor=actor, sources=self.sources),
             precheck=lambda change, actor: hs.run_change_precheck(change, actor=actor, sources=self.sources, snapshot=h.snapshot(),
                                                                   session_factory=fetch_factory(eos.text), persist=True),
-            execute=execute, notify=lambda s, b: self.sent.append((s, b)) or True)
+            execute=execute, notify=lambda s, b: self.sent.append((s, b)) or True, ci_wait=lambda change: self.ci_status)
 
     def run_recovery(self):
         return recovery.recover(self.plan.record_id, deps=self.deps(), policy_file=self.policy_file)
@@ -184,3 +185,25 @@ class RecoveryExecutionTests(TestCase):
         self.plan = models.TsRemediationPlan.objects.create(record_id=repo._rid("RPL"), case=self.case, basis="AI_INFERRED", status="RISK_ASSESSED",
                                                             tier=2, risk="HIGH", operations=[OP])
         self.assertRefused("POLICY_DENIED", "COOLDOWN_ACTIVE")
+
+    def test_external_configuration_validation_must_pass_before_any_write(self):
+        for status in ("FAIL", "ERROR", "QUEUED"):
+            with self.subTest(status=status):
+                self.plan = models.TsRemediationPlan.objects.create(record_id=repo._rid("RPL"), case=self.case, basis="AI_INFERRED",
+                                                                    status="RISK_ASSESSED", tier=2, risk="HIGH", operations=[OP])
+                self.ci_status = status
+                self.assertRefused("CONFIGURATION_VALIDATION_NOT_PASSING", status)
+
+    def test_change_feed_ignores_runs_that_changed_no_device(self):
+        """HC02 'has anything changed?' must not blame a run the engine refused before any mutation (campaign 006 false lead)."""
+        from core.services.troubleshooting.baselines import DjangoBaselineSources
+
+        out = self.run_recovery()
+        self.assertEqual(out["result"], "VERIFIED", out)
+        change = models.Change.objects.get(change_id=out["change"])
+        blocked = self.deps().execute(change, actor="tester", confirm_mode=models.ExecutionMode.COMPLETE)   # plan already executed
+        self.assertEqual(blocked.outcome, models.ExecutionOutcome.BLOCKED)
+        now = datetime.now(timezone.utc)
+        feed = DjangoBaselineSources().changes([DEVICE], now - timedelta(hours=1), now + timedelta(minutes=1))
+        self.assertEqual(feed["status"], "available", feed)
+        self.assertEqual([r["outcome"] for r in feed["changes"]], ["SUCCEEDED"])           # the real write stays visible

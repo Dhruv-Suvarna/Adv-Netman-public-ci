@@ -133,9 +133,12 @@ class DjangoBaselineSources:
             wanted = set(devices)
             rows = []
             approved_states = {s for s in m.ChangeLifecycleState.values if s not in ("DRAFT", "VALIDATED", "CI_PENDING", "CI_FAILED")}
+            # A run the engine itself records as having changed NO device (refused at eligibility, or failed before the first
+            # mutation) is not change activity on the device: counting it would blame a configuration change that never happened.
+            no_mutation = {m.ExecutionOutcome.BLOCKED, m.ExecutionOutcome.FAILED_NO_MUTATION}
             for run in m.ChangeExecutionRun.objects.select_related("change").filter(started_at__gte=since, started_at__lte=until):
                 touched = sorted(wanted & set(run.devices or []))
-                if not touched:
+                if not touched or run.outcome in no_mutation:
                     continue
                 rows.append({"change_id": run.change.change_id, "approved": run.change.lifecycle_state in approved_states, "kind": "execution",
                              "at": c.iso(run.started_at), "devices": touched, "summary": run.change.title, "outcome": run.outcome or run.state,
