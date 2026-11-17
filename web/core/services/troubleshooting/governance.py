@@ -758,6 +758,7 @@ class RecoveryContext:
     management_path_healthy: bool
     protected_flows_healthy: bool
     rollback_ready: bool
+    scope_executions: tuple[datetime, ...] = ()   # executions of predecessor policies for the same scope (cooldown only)
 
 
 def evaluate_recovery_policy(policy: RecoveryPolicy | None, op: dict, ctx: RecoveryContext, *, risk: str) -> dict[str, Any]:
@@ -781,7 +782,8 @@ def evaluate_recovery_policy(policy: RecoveryPolicy | None, op: dict, ctx: Recov
             reasons.append("POLICY_EXPIRED")
         if len(ctx.executions) >= policy.max_executions:
             reasons.append("EXECUTION_LIMIT_EXHAUSTED")
-        if ctx.executions and (ctx.now - max(ctx.executions)).total_seconds() < policy.cooldown_seconds:
+        recent = ctx.executions + tuple(ctx.scope_executions)
+        if recent and (ctx.now - max(recent)).total_seconds() < policy.cooldown_seconds:
             reasons.append("COOLDOWN_ACTIVE")
         if ctx.observed_at is None or (ctx.now - ctx.observed_at).total_seconds() > policy.max_evidence_age_seconds:
             reasons.append("EVIDENCE_STALE")

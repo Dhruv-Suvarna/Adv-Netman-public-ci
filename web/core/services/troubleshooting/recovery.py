@@ -28,6 +28,7 @@ from ... import models
 from .. import change_plan_service, change_validation_service, execution_service, health_service, workbench_service
 from ..config_workbench import removal, semantics, snapshots
 from ..execution import capability, eligibility
+from . import contracts as c
 from . import governance as gov
 from . import notify
 from . import repository as repo
@@ -71,17 +72,40 @@ def load_policies(path: str | None = None) -> dict[str, dict]:
     return {p["id"]: p for p in data.get("policies", []) if isinstance(p, dict) and p.get("id")}
 
 
+def policy_active(raw: dict, now: datetime | None = None) -> bool:
+    """Enabled, not revoked and not expired (the remaining gates are evaluated at execution time)."""
+    now = now or datetime.now(timezone.utc)
+    try:
+        expires = datetime.fromisoformat(str(raw.get("expires_at", "")).replace("Z", "+00:00"))
+    except ValueError:
+        return False
+    return raw.get("enabled") is True and not raw.get("revoked_at") and expires > now
+
+
 def policy_for(op: dict, policies: dict[str, dict]) -> dict | None:
-    return next((p for p in policies.values() if (p.get("device"), p.get("interface"), p.get("kind")) ==
-                 (op.get("device"), op.get("interface"), op.get("kind"))), None)
+    """The policy covering ``op``'s exact target: an active one if any (a successor supersedes an expired/exhausted
+    predecessor), otherwise the first match so the refusal names the real reason (expired, revoked, ...)."""
+    matches = [p for p in policies.values() if (p.get("device"), p.get("interface"), p.get("kind")) ==
+               (op.get("device"), op.get("interface"), op.get("kind"))]
+    return next((p for p in matches if policy_active(p)), matches[0] if matches else None)
+
+
+def scope_executions(raw: dict, policies: dict[str, dict]) -> tuple[datetime, ...]:
+    """Executions of OTHER policies for the same exact scope: a successor policy still honours the cooldown."""
+    key = (raw.get("device"), raw.get("interface"), raw.get("kind"))
+    out: tuple[datetime, ...] = ()
+    for pid, p in policies.items():
+        if pid != raw["id"] and (p.get("device"), p.get("interface"), p.get("kind")) == key:
+            out += _executions(pid)
+    return out
 
 
 def _policy(raw: dict) -> gov.RecoveryPolicy:
     return gov.RecoveryPolicy(
         id=raw["id"], owner_authorization=raw.get("owner_authorization", ""), device=raw["device"], interface=raw["interface"],
-        kind=raw["kind"], intended_state=raw["intended_state"],
+        kind=raw["kind"], intended_state=raw["intended_state"],                    # revocation: revoked_at set => inactive
         expires_at=datetime.fromisoformat(raw["expires_at"].replace("Z", "+00:00")), max_executions=int(raw["max_executions"]),
-        cooldown_seconds=int(raw["cooldown_seconds"]), enabled=raw.get("enabled") is True,
+        cooldown_seconds=int(raw["cooldown_seconds"]), enabled=raw.get("enabled") is True and not raw.get("revoked_at"),
         max_evidence_age_seconds=int(raw.get("max_evidence_age_seconds", 300)))
 
 
@@ -195,7 +219,8 @@ def recover(plan_id: str, *, deps: RecoveryDeps | None = None, policy_file: str 
     if plan.status != "RISK_ASSESSED" or len(plan.operations or []) != 1:
         raise RecoveryRefused("PLAN_NOT_ELIGIBLE", f"{plan.status}, {len(plan.operations or [])} operation(s)")
     op = dict(plan.operations[0])
-    raw = policy_for(op, load_policies(policy_file))
+    policies = load_policies(policy_file)
+    raw = policy_for(op, policies)
     if raw is None:
         raise RecoveryRefused("NO_POLICY", "no standing policy covers this exact target and operation")
     pol = _policy(raw)
@@ -225,7 +250,7 @@ def recover(plan_id: str, *, deps: RecoveryDeps | None = None, policy_file: str 
             observed_at=snapshot.captured_at if snapshot is not None else None,
             maintenance_active=bool(eligibility._maintenance_conflicts([device])), conflicting_change=_conflicting_change(device),
             management_path_healthy=snapshot is not None, protected_flows_healthy=deps.flows(raw.get("protected_flows") or []),
-            rollback_ready=rollback_ready)
+            rollback_ready=rollback_ready, scope_executions=scope_executions(raw, policies))
 
     # 1. fresh evidence through the management path; first evaluation (rollback readiness is proven in step 2)
     snapshot, error = deps.snapshot(device, actor_name)
@@ -395,4 +420,86 @@ def pending_plans() -> list[str]:
         ops = plan.operations or []
         if len(ops) == 1 and isinstance(ops[0], dict) and policy_for(ops[0], policies):
             out.append(plan.record_id)
+    return out
+
+
+# ------------------------------------------------------------------------------------------------- operations / restart safety
+IN_FLIGHT_PRE_EXECUTION = ("DRY_RUN_PASS", "PREAUTHORIZED", "PRECHECK_PASS")
+
+
+def policy_status(now: datetime | None = None, policy_file: str | None = None) -> list[dict]:
+    """Operator visibility: validity, executions used/remaining, cooldown and warnings for every standing policy."""
+    now = now or datetime.now(timezone.utc)
+    policies = load_policies(policy_file)
+    out = []
+    for pid, raw in sorted(policies.items()):
+        try:
+            pol = _policy(raw)
+        except (KeyError, ValueError) as exc:
+            out.append({"id": pid, "active": False, "warnings": [f"INVALID_POLICY: {type(exc).__name__}"]})
+            continue
+        own = _executions(pid)
+        recent = own + scope_executions(raw, policies)
+        cooldown_left = max(0, int(pol.cooldown_seconds - (now - max(recent)).total_seconds())) if recent else 0
+        left = (pol.expires_at - now).total_seconds()
+        warnings = [w for w, hit in (("REVOKED", bool(raw.get("revoked_at"))), ("DISABLED", raw.get("enabled") is not True),
+                                     ("EXPIRED", left <= 0), ("EXPIRES_WITHIN_24H", 0 < left <= 86400),
+                                     ("EXECUTIONS_EXHAUSTED", len(own) >= pol.max_executions),
+                                     ("ONE_EXECUTION_LEFT", pol.max_executions - len(own) == 1)) if hit]
+        out.append({"id": pid, "scope": f"{pol.device} {pol.interface} {pol.kind} -> {pol.intended_state}", "risk": raw.get("risk", ""),
+                    "owner_authorization": pol.owner_authorization, "supersedes": raw.get("supersedes", ""),
+                    "active": policy_active(raw, now) and len(own) < pol.max_executions, "expires_at": c.iso(pol.expires_at),
+                    "executions_used": len(own), "max_executions": pol.max_executions,
+                    "executions_remaining": max(0, pol.max_executions - len(own)), "cooldown_seconds": pol.cooldown_seconds,
+                    "cooldown_remaining_seconds": cooldown_left, "last_execution": c.iso(max(recent)) if recent else None,
+                    "revoked_at": raw.get("revoked_at") or None, "warnings": warnings})
+    return out
+
+
+def fail_closed(plan_id: str, error: str) -> str:
+    """An unexpected error in recover(): never retry silently.  Pre-execution states are BLOCKED; an execution that may have
+    started is left for a human (its Change Engine run is the record of what happened).  Returns what was done."""
+    plan = models.TsRemediationPlan.objects.select_related("case").get(record_id=plan_id)
+    actor = repo.Actor("nmas-recovery-watcher", "system", tenant=plan.case.tenant)
+    if plan.status in ("RISK_ASSESSED", *IN_FLIGHT_PRE_EXECUTION):
+        gov._set_status(actor, plan, "BLOCKED", f"AUTOMATED_RECOVERY_ERROR: {error}"[:250])
+        done = "BLOCKED"
+    else:
+        done = f"LEFT_{plan.status}"
+    repo.audit(actor, plan.case, "AUTOMATED_RECOVERY_ERROR", decision=done, result="ERROR", risk=plan.risk, operation=plan.record_id,
+               rationale=error[:900])
+    notify.send(f"[NMAS] Automated recovery ERROR for {plan.case.case_id}",
+                f"Plan {plan.record_id} hit an unexpected error and was {done}; it will not be retried automatically.\n{error[:500]}\n")
+    return done
+
+
+def sweep_interrupted() -> list[dict]:
+    """Run once when the (single) recovery watcher starts: anything it left mid-pipeline was interrupted by a crash/restart.
+    Nothing is ever re-executed.  Pre-execution plans are BLOCKED; an EXECUTING action is marked INTERRUPTED -> BLOCKED with the
+    Change Engine run outcome recorded; VERIFYING is left for a human.  Every case is audited and the engineer is emailed."""
+    out = []
+    actor_for = lambda case: repo.Actor("nmas-recovery-watcher", "system", tenant=case.tenant)  # noqa: E731
+    plans = models.TsRemediationPlan.objects.select_related("case").filter(
+        status__in=(*IN_FLIGHT_PRE_EXECUTION, "EXECUTING", "VERIFYING"), approval__mode=gov.AUTOMATED_RECOVERY)
+    for plan in plans:
+        actor, prior = actor_for(plan.case), plan.status
+        ex = models.TsActionExecution.objects.filter(plan=plan, stage_decision__startswith="policy ").order_by("-id").first()
+        run_outcome = ""
+        if ex is not None:
+            run = models.ChangeExecutionRun.objects.filter(change__change_id=(ex.command_or_intent or {}).get("change_id")).order_by("-started_at").first()
+            run_outcome = (run.outcome or run.state) if run else "NO_RUN"
+        if prior in IN_FLIGHT_PRE_EXECUTION:
+            gov._set_status(actor, plan, "BLOCKED", "recovery watcher restarted before execution; not retried")
+        elif prior == "EXECUTING":
+            if ex is not None and ex.status == "EXECUTING":
+                ex.status, ex.stop_reason = "INTERRUPTED", f"recovery watcher lost during execution; Change Engine run: {run_outcome}"
+                ex.save()
+            gov._set_status(actor, plan, "INTERRUPTED", f"watcher restart; Change Engine run {run_outcome}")
+            gov._set_status(actor, plan, "BLOCKED", "interrupted automated execution requires human review; never re-executed")
+        repo.audit(actor, plan.case, "AUTOMATED_RECOVERY_INTERRUPTED", decision=f"{plan.record_id}: {prior}", result="INTERRUPTED",
+                   risk=plan.risk, operation=plan.record_id, rationale=f"Change Engine run outcome: {run_outcome or 'none'}")
+        notify.send(f"[NMAS] Automated recovery INTERRUPTED for {plan.case.case_id}",
+                    f"Plan {plan.record_id} was {prior} when the recovery watcher stopped. Change Engine run: {run_outcome or 'none'}.\n"
+                    "Nothing was retried. A human must review the case and the device state.\n")
+        out.append({"plan": plan.record_id, "was": prior, "run_outcome": run_outcome})
     return out
