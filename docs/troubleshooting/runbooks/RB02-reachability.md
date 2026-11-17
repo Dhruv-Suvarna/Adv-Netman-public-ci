@@ -65,12 +65,14 @@ Strategies: bottom-up, divide-and-conquer, follow-the-path, top-down
 | 25 | HC22 v1 | TCP application handshake / L7 health | L7 | H-impact | CONTEXT | - | authorised probes succeed within SLO |
 | 26 | HC23 v1 | UDP/ICMP behaviour separately | L4 | H-policy | CONTEXT | - | diagnostic protocols as intended |
 | 27 | HC17 v1 | Bounded traceroute / path trace vs intended path | L3 | H-routing | DISCRIMINATING | - | trace reaches destination along intended path |
-| 28 | HC28 v1 | Redundant alternate path / failover eligibility (read-only) | CTRL | H-alt | SAFETY | - | existing alternate path evaluated; never assumed lossless |
+| 28 | HC29 v1 | Managed-device interface admin state vs intended configuration | L1 | H-admin | DISCRIMINATING | - | observed admin state matches intended configuration |
+| 29 | HC28 v1 | Redundant alternate path / failover eligibility (read-only) | CTRL | H-alt | SAFETY | - | existing alternate path evaluated; never assumed lossless |
 
 | Hypothesis | Statement | Domain | Tests |
 |---|---|---|---|
 | H-impact | The production service is genuinely impaired (not merely a diagnostic-protocol artefact) | svc | HC22, HC27 |
 | H-svc | Service contract unknown or an intentional maintenance explains the symptom | ops | HC01, HC12 |
+| H-admin | Managed-device interface administratively disabled contrary to intended configuration | L1 | HC29 |
 | H-change | A recent change (approved or not) caused the symptom | change | HC02 |
 | H-policy | Directional ACL/firewall policy blocks the production flow | policy | HC18, HC23 |
 | H-addr | Host addressing, provisioning, first-hop resolution or FHRP fault | L3 | HC06, HC07, HC10, HC11 |
