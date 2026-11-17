@@ -1,0 +1,2095 @@
+{
+ "coverage": {
+  "collected": 8,
+  "missing_by_reason": {
+   "EMPTY": 2,
+   "PARSER_UNAVAILABLE": 2
+  },
+  "observations": 35,
+  "requested": 8
+ },
+ "evidence": [
+  {
+   "adapter": "gateway-fixture",
+   "adapter_version": "1.0.0",
+   "collected_at": "2026-11-09T22:16:25.759888Z",
+   "command_or_api": "show version | json",
+   "coverage": null,
+   "device": "r1",
+   "duration_s": 0.619,
+   "evidence_class": "operational",
+   "evidence_id": "ev-0244e27ee66c4dee",
+   "extra": {
+    "attempts": 1
+   },
+   "freshness_max_age_s": 120.0,
+   "gateway": {
+    "fixture_id": "fxe85127d9",
+    "gateway_evidence_seqs": [
+     6181
+    ],
+    "live": true,
+    "node": "r1",
+    "pin_id": null
+   },
+   "os_version": "4.36.2F",
+   "parser": null,
+   "platform": "ceos",
+   "raw_ref": {
+    "bytes": 737,
+    "hash": "sha256:d891b03672bd4e1df9e1cc92a10b5933d4d007fb19a5bc0a294a9625e9edbdc6",
+    "operator_view": "reference-only",
+    "pointer": "mem:sha256:d891b03672bd4e1df9e1cc92a10b5933d4d007fb19a5bc0a294a9625e9edbdc6",
+    "stored_hash": "sha256:d891b03672bd4e1df9e1cc92a10b5933d4d007fb19a5bc0a294a9625e9edbdc6"
+   },
+   "redaction": {
+    "redactions": 0,
+    "status": "CHECKED_NO_SECRETS"
+   },
+   "schema": "nmas.troubleshooting.evidence/1",
+   "sequence": 1,
+   "source_type": "CLI",
+   "started_at": "2026-11-09T22:16:25.140470Z",
+   "status": "OK",
+   "status_detail": "",
+   "transport": "gateway-fixture"
+  },
+  {
+   "adapter": "gateway-fixture",
+   "adapter_version": "1.0.0",
+   "collected_at": "2026-11-09T22:16:26.337642Z",
+   "command_or_api": "show interfaces | json",
+   "coverage": null,
+   "device": "r1",
+   "duration_s": 0.577,
+   "evidence_class": "operational",
+   "evidence_id": "ev-b0acd72447c5dead",
+   "extra": {
+    "attempts": 1
+   },
+   "freshness_max_age_s": 120.0,
+   "gateway": {
+    "fixture_id": "fxe85127d9",
+    "gateway_evidence_seqs": [
+     6181,
+     6182
+    ],
+    "live": true,
+    "node": "r1",
+    "pin_id": null
+   },
+   "os_version": "4.36.2F",
+   "parser": {
+    "id": "interfaces.state",
+    "input_kind": "json",
+    "template": "eos.show_interfaces.json",
+    "version": "eos-json-1.0"
+   },
+   "platform": "ceos",
+   "raw_ref": {
+    "bytes": 4973,
+    "hash": "sha256:6edb369a90ecd69cb936c36050c6331254118d1d358fa430d34d8d796aafc65b",
+    "operator_view": "reference-only",
+    "pointer": "mem:sha256:6edb369a90ecd69cb936c36050c6331254118d1d358fa430d34d8d796aafc65b",
+    "stored_hash": "sha256:6edb369a90ecd69cb936c36050c6331254118d1d358fa430d34d8d796aafc65b"
+   },
+   "redaction": {
+    "redactions": 0,
+    "status": "CHECKED_NO_SECRETS"
+   },
+   "schema": "nmas.troubleshooting.evidence/1",
+   "sequence": 2,
+   "source_type": "CLI",
+   "started_at": "2026-11-09T22:16:25.760442Z",
+   "status": "OK",
+   "status_detail": "",
+   "transport": "gateway-fixture"
+  },
+  {
+   "adapter": "gateway-fixture",
+   "adapter_version": "1.0.0",
+   "collected_at": "2026-11-09T22:16:27.167553Z",
+   "command_or_api": "show ip ospf neighbor | json",
+   "coverage": null,
+   "device": "r1",
+   "duration_s": 0.824,
+   "evidence_class": "operational",
+   "evidence_id": "ev-c1fc506f8835e023",
+   "extra": {
+    "attempts": 1
+   },
+   "freshness_max_age_s": 120.0,
+   "gateway": {
+    "fixture_id": "fxe85127d9",
+    "gateway_evidence_seqs": [
+     6181,
+     6182,
+     6183
+    ],
+    "live": true,
+    "node": "r1",
+    "pin_id": null
+   },
+   "os_version": "4.36.2F",
+   "parser": {
+    "id": "ospf.neighbors",
+    "input_kind": "json",
+    "template": "eos.show_ip_ospf_neighbor.json",
+    "version": "eos-json-1.0"
+   },
+   "platform": "ceos",
+   "raw_ref": {
+    "bytes": 19,
+    "hash": "sha256:0e29a1fe555e15780a20daf5204ab48fc4aad11fcfdd7b640ec314cec0fb2f8d",
+    "operator_view": "reference-only",
+    "pointer": "mem:sha256:0e29a1fe555e15780a20daf5204ab48fc4aad11fcfdd7b640ec314cec0fb2f8d",
+    "stored_hash": "sha256:0e29a1fe555e15780a20daf5204ab48fc4aad11fcfdd7b640ec314cec0fb2f8d"
+   },
+   "redaction": {
+    "redactions": 0,
+    "status": "CHECKED_NO_SECRETS"
+   },
+   "schema": "nmas.troubleshooting.evidence/1",
+   "sequence": 3,
+   "source_type": "CLI",
+   "started_at": "2026-11-09T22:16:26.343963Z",
+   "status": "OK",
+   "status_detail": "",
+   "transport": "gateway-fixture"
+  },
+  {
+   "adapter": "gateway-fixture",
+   "adapter_version": "1.0.0",
+   "collected_at": "2026-11-09T22:16:27.834817Z",
+   "command_or_api": "show ip bgp summary | json",
+   "coverage": null,
+   "device": "r1",
+   "duration_s": 0.667,
+   "evidence_class": "operational",
+   "evidence_id": "ev-90b258be52451c96",
+   "extra": {
+    "attempts": 1
+   },
+   "freshness_max_age_s": 120.0,
+   "gateway": {
+    "fixture_id": "fxe85127d9",
+    "gateway_evidence_seqs": [
+     6181,
+     6182,
+     6183,
+     6184
+    ],
+    "live": true,
+    "node": "r1",
+    "pin_id": null
+   },
+   "os_version": "4.36.2F",
+   "parser": null,
+   "platform": "ceos",
+   "raw_ref": {
+    "bytes": 49,
+    "hash": "sha256:06fb53667c4f3e2bfd00ebc0cc01d554b17747b35e95259a19ab4997ba50dc4e",
+    "operator_view": "reference-only",
+    "pointer": "mem:sha256:06fb53667c4f3e2bfd00ebc0cc01d554b17747b35e95259a19ab4997ba50dc4e",
+    "stored_hash": "sha256:06fb53667c4f3e2bfd00ebc0cc01d554b17747b35e95259a19ab4997ba50dc4e"
+   },
+   "redaction": {
+    "redactions": 0,
+    "status": "CHECKED_NO_SECRETS"
+   },
+   "schema": "nmas.troubleshooting.evidence/1",
+   "sequence": 4,
+   "source_type": "CLI",
+   "started_at": "2026-11-09T22:16:27.167922Z",
+   "status": "DEVICE_NOTE",
+   "status_detail": "BGP inactive",
+   "transport": "gateway-fixture"
+  },
+  {
+   "adapter": "gateway-fixture",
+   "adapter_version": "1.0.0",
+   "collected_at": "2026-11-09T22:16:28.472477Z",
+   "command_or_api": "show ip route | json",
+   "coverage": null,
+   "device": "r1",
+   "duration_s": 0.637,
+   "evidence_class": "operational",
+   "evidence_id": "ev-e277da6f54eb481f",
+   "extra": {
+    "attempts": 1
+   },
+   "freshness_max_age_s": 120.0,
+   "gateway": {
+    "fixture_id": "fxe85127d9",
+    "gateway_evidence_seqs": [
+     6181,
+     6182,
+     6183,
+     6184,
+     6185
+    ],
+    "live": true,
+    "node": "r1",
+    "pin_id": null
+   },
+   "os_version": "4.36.2F",
+   "parser": null,
+   "platform": "ceos",
+   "raw_ref": {
+    "bytes": 1372,
+    "hash": "sha256:7e1c2b4a70a1f54443432f73fe83c25d93585fd48aff58be05475519e29a8b01",
+    "operator_view": "reference-only",
+    "pointer": "mem:sha256:7e1c2b4a70a1f54443432f73fe83c25d93585fd48aff58be05475519e29a8b01",
+    "stored_hash": "sha256:7e1c2b4a70a1f54443432f73fe83c25d93585fd48aff58be05475519e29a8b01"
+   },
+   "redaction": {
+    "redactions": 0,
+    "status": "CHECKED_NO_SECRETS"
+   },
+   "schema": "nmas.troubleshooting.evidence/1",
+   "sequence": 5,
+   "source_type": "CLI",
+   "started_at": "2026-11-09T22:16:27.835011Z",
+   "status": "OK",
+   "status_detail": "",
+   "transport": "gateway-fixture"
+  },
+  {
+   "adapter": "gateway-fixture",
+   "adapter_version": "1.0.0",
+   "collected_at": "2026-11-09T22:16:29.263757Z",
+   "command_or_api": "show spanning-tree | json",
+   "coverage": null,
+   "device": "r1",
+   "duration_s": 0.791,
+   "evidence_class": "operational",
+   "evidence_id": "ev-85611f1f1d972c80",
+   "extra": {
+    "attempts": 1
+   },
+   "freshness_max_age_s": 120.0,
+   "gateway": {
+    "fixture_id": "fxe85127d9",
+    "gateway_evidence_seqs": [
+     6181,
+     6182,
+     6183,
+     6184,
+     6185,
+     6186
+    ],
+    "live": true,
+    "node": "r1",
+    "pin_id": null
+   },
+   "os_version": "4.36.2F",
+   "parser": null,
+   "platform": "ceos",
+   "raw_ref": {
+    "bytes": 1070,
+    "hash": "sha256:28bc4c52c2aff09692100939f4053ada620c3d60127975e021737b0efd0ea4b5",
+    "operator_view": "reference-only",
+    "pointer": "mem:sha256:28bc4c52c2aff09692100939f4053ada620c3d60127975e021737b0efd0ea4b5",
+    "stored_hash": "sha256:28bc4c52c2aff09692100939f4053ada620c3d60127975e021737b0efd0ea4b5"
+   },
+   "redaction": {
+    "redactions": 0,
+    "status": "CHECKED_NO_SECRETS"
+   },
+   "schema": "nmas.troubleshooting.evidence/1",
+   "sequence": 6,
+   "source_type": "CLI",
+   "started_at": "2026-11-09T22:16:28.473124Z",
+   "status": "OK",
+   "status_detail": "",
+   "transport": "gateway-fixture"
+  },
+  {
+   "adapter": "gateway-fixture",
+   "adapter_version": "1.0.0",
+   "collected_at": "2026-11-09T22:16:29.916302Z",
+   "command_or_api": "show interfaces Ethernet1 transceiver",
+   "coverage": null,
+   "device": "r1",
+   "duration_s": 0.652,
+   "evidence_class": "operational",
+   "evidence_id": "ev-44e14afd84f92033",
+   "extra": {
+    "attempts": 1
+   },
+   "freshness_max_age_s": 120.0,
+   "gateway": {
+    "fixture_id": "fxe85127d9",
+    "gateway_evidence_seqs": [
+     6181,
+     6182,
+     6183,
+     6184,
+     6185,
+     6186,
+     6187
+    ],
+    "live": true,
+    "node": "r1",
+    "pin_id": null
+   },
+   "os_version": "4.36.2F",
+   "parser": null,
+   "platform": "ceos",
+   "raw_ref": {
+    "bytes": 0,
+    "hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "operator_view": "reference-only",
+    "pointer": "mem:sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stored_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+   },
+   "redaction": {
+    "redactions": 0,
+    "status": "CHECKED_NO_SECRETS"
+   },
+   "schema": "nmas.troubleshooting.evidence/1",
+   "sequence": 7,
+   "source_type": "CLI",
+   "started_at": "2026-11-09T22:16:29.264603Z",
+   "status": "OK",
+   "status_detail": "",
+   "transport": "gateway-fixture"
+  },
+  {
+   "adapter": "gateway-fixture",
+   "adapter_version": "1.0.0",
+   "collected_at": "2026-11-09T22:16:30.868526Z",
+   "command_or_api": "show running-config",
+   "coverage": null,
+   "device": "r1",
+   "duration_s": 0.952,
+   "evidence_class": "operational",
+   "evidence_id": "ev-d16916804e969442",
+   "extra": {
+    "attempts": 1
+   },
+   "freshness_max_age_s": 86400.0,
+   "gateway": {
+    "fixture_id": "fxe85127d9",
+    "gateway_evidence_seqs": [
+     6181,
+     6182,
+     6183,
+     6184,
+     6185,
+     6186,
+     6187,
+     6188
+    ],
+    "live": true,
+    "node": "r1",
+    "pin_id": null
+   },
+   "os_version": "4.36.2F",
+   "parser": null,
+   "platform": "ceos",
+   "raw_ref": {
+    "bytes": 839,
+    "hash": "sha256:ce1fb9ff72fc887210bec7dbd2286ea9c610d91295657e9ffa2a24e5ecd70154",
+    "operator_view": "reference-only",
+    "pointer": "mem:sha256:ce1fb9ff72fc887210bec7dbd2286ea9c610d91295657e9ffa2a24e5ecd70154",
+    "stored_hash": "sha256:ce1fb9ff72fc887210bec7dbd2286ea9c610d91295657e9ffa2a24e5ecd70154"
+   },
+   "redaction": {
+    "redactions": 1,
+    "status": "REDACTED"
+   },
+   "schema": "nmas.troubleshooting.evidence/1",
+   "sequence": 8,
+   "source_type": "CONFIG_SNAPSHOT",
+   "started_at": "2026-11-09T22:16:29.916493Z",
+   "status": "OK",
+   "status_detail": "",
+   "transport": "gateway-fixture"
+  }
+ ],
+ "missing": [
+  {
+   "command_or_api": "show ip bgp summary | json",
+   "detail": "device reported: BGP inactive",
+   "device": "r1",
+   "evidence_id": "",
+   "interpretation": "UNKNOWN",
+   "kind": "missing",
+   "observation_emitted": false,
+   "reason": "EMPTY",
+   "recorded_at": "2026-11-09T22:16:27.834964Z",
+   "schema": "nmas.troubleshooting.missing-data/1",
+   "source_type": "CLI"
+  },
+  {
+   "command_or_api": "show ip route | json",
+   "detail": "no validated parser for ip_route on ceos; evidence retained unparsed",
+   "device": "r1",
+   "evidence_id": "",
+   "interpretation": "UNKNOWN",
+   "kind": "missing",
+   "observation_emitted": false,
+   "reason": "PARSER_UNAVAILABLE",
+   "recorded_at": "2026-11-09T22:16:28.473075Z",
+   "schema": "nmas.troubleshooting.missing-data/1",
+   "source_type": "CLI"
+  },
+  {
+   "command_or_api": "show spanning-tree | json",
+   "detail": "no validated parser for spanning_tree on ceos; evidence retained unparsed",
+   "device": "r1",
+   "evidence_id": "",
+   "interpretation": "UNKNOWN",
+   "kind": "missing",
+   "observation_emitted": false,
+   "reason": "PARSER_UNAVAILABLE",
+   "recorded_at": "2026-11-09T22:16:29.264530Z",
+   "schema": "nmas.troubleshooting.missing-data/1",
+   "source_type": "CLI"
+  },
+  {
+   "command_or_api": "show interfaces Ethernet1 transceiver",
+   "detail": "device returned empty output (feature/protocol not running or not supported on this platform); absence is NOT evidence of absence",
+   "device": "r1",
+   "evidence_id": "",
+   "interpretation": "UNKNOWN",
+   "kind": "missing",
+   "observation_emitted": false,
+   "reason": "EMPTY",
+   "recorded_at": "2026-11-09T22:16:29.916447Z",
+   "schema": "nmas.troubleshooting.missing-data/1",
+   "source_type": "CLI"
+  }
+ ],
+ "observations": [
+  {
+   "clock": null,
+   "collected_at": "2026-11-09T22:16:26.337642Z",
+   "confidence": 0.95,
+   "evidence_class": "operational",
+   "flags": [],
+   "freshness": {
+    "age_s": 0.079,
+    "max_age_s": 120.0,
+    "status": "FRESH"
+   },
+   "key": "interface.admin_state",
+   "normalizer_version": "1.0.0",
+   "observation_id": "obs-1b32ac755b732f2e",
+   "observed_at": "2026-11-09T22:16:26.262290Z",
+   "parser": {
+    "id": "interfaces.state",
+    "input_kind": "json",
+    "template": "eos.show_interfaces.json",
+    "version": "eos-json-1.0"
+   },
+   "quality": "OK",
+   "raw_hash": "sha256:6edb369a90ecd69cb936c36050c6331254118d1d358fa430d34d8d796aafc65b",
+   "redaction_status": "CHECKED_NO_SECRETS",
+   "schema": "nmas.troubleshooting.observation/1",
+   "source": {
+    "adapter": "gateway-fixture",
+    "command_or_api": "show interfaces | json",
+    "evidence_id": "ev-b0acd72447c5dead",
+    "source_type": "CLI",
+    "transport": "gateway-fixture"
+   },
+   "target": {
+    "device": "r1",
+    "interface": "Ethernet1"
+   },
+   "unit": "",
+   "value": "up"
+  },
+  {
+   "clock": null,
+   "collected_at": "2026-11-09T22:16:26.337642Z",
+   "confidence": 0.95,
+   "evidence_class": "operational",
+   "flags": [],
+   "freshness": {
+    "age_s": 0.079,
+    "max_age_s": 120.0,
+    "status": "FRESH"
+   },
+   "key": "interface.oper_state",
+   "normalizer_version": "1.0.0",
+   "observation_id": "obs-665e69f037e92e30",
+   "observed_at": "2026-11-09T22:16:26.262290Z",
+   "parser": {
+    "id": "interfaces.state",
+    "input_kind": "json",
+    "template": "eos.show_interfaces.json",
+    "version": "eos-json-1.0"
+   },
+   "quality": "OK",
+   "raw_hash": "sha256:6edb369a90ecd69cb936c36050c6331254118d1d358fa430d34d8d796aafc65b",
+   "redaction_status": "CHECKED_NO_SECRETS",
+   "schema": "nmas.troubleshooting.observation/1",
+   "source": {
+    "adapter": "gateway-fixture",
+    "command_or_api": "show interfaces | json",
+    "evidence_id": "ev-b0acd72447c5dead",
+    "source_type": "CLI",
+    "transport": "gateway-fixture"
+   },
+   "target": {
+    "device": "r1",
+    "interface": "Ethernet1"
+   },
+   "unit": "",
+   "value": "up"
+  },
+  {
+   "clock": null,
+   "collected_at": "2026-11-09T22:16:26.337642Z",
+   "confidence": 0.95,
+   "evidence_class": "operational",
+   "flags": [],
+   "freshness": {
+    "age_s": 0.079,
+    "max_age_s": 120.0,
+    "status": "FRESH"
+   },
+   "key": "interface.mtu",
+   "normalizer_version": "1.0.0",
+   "observation_id": "obs-f708a38155bfa8c8",
+   "observed_at": "2026-11-09T22:16:26.262290Z",
+   "parser": {
+    "id": "interfaces.state",
+    "input_kind": "json",
+    "template": "eos.show_interfaces.json",
+    "version": "eos-json-1.0"
+   },
+   "quality": "OK",
+   "raw_hash": "sha256:6edb369a90ecd69cb936c36050c6331254118d1d358fa430d34d8d796aafc65b",
+   "redaction_status": "CHECKED_NO_SECRETS",
+   "schema": "nmas.troubleshooting.observation/1",
+   "source": {
+    "adapter": "gateway-fixture",
+    "command_or_api": "show interfaces | json",
+    "evidence_id": "ev-b0acd72447c5dead",
+    "source_type": "CLI",
+    "transport": "gateway-fixture"
+   },
+   "target": {
+    "device": "r1",
+    "interface": "Ethernet1"
+   },
+   "unit": "bytes",
+   "value": 9214
+  },
+  {
+   "clock": null,
+   "collected_at": "2026-11-09T22:16:26.337642Z",
+   "confidence": 0.95,
+   "evidence_class": "operational",
+   "flags": [],
+   "freshness": {
+    "age_s": 0.079,
+    "max_age_s": 120.0,
+    "status": "FRESH"
+   },
+   "key": "interface.speed",
+   "normalizer_version": "1.0.0",
+   "observation_id": "obs-6d3c2134e2bddc13",
+   "observed_at": "2026-11-09T22:16:26.262290Z",
+   "parser": {
+    "id": "interfaces.state",
+    "input_kind": "json",
+    "template": "eos.show_interfaces.json",
+    "version": "eos-json-1.0"
+   },
+   "quality": "OK",
+   "raw_hash": "sha256:6edb369a90ecd69cb936c36050c6331254118d1d358fa430d34d8d796aafc65b",
+   "redaction_status": "CHECKED_NO_SECRETS",
+   "schema": "nmas.troubleshooting.observation/1",
+   "source": {
+    "adapter": "gateway-fixture",
+    "command_or_api": "show interfaces | json",
+    "evidence_id": "ev-b0acd72447c5dead",
+    "source_type": "CLI",
+    "transport": "gateway-fixture"
+   },
+   "target": {
+    "device": "r1",
+    "interface": "Ethernet1"
+   },
+   "unit": "bps",
+   "value": 1000000000
+  },
+  {
+   "clock": null,
+   "collected_at": "2026-11-09T22:16:26.337642Z",
+   "confidence": 0.95,
+   "evidence_class": "operational",
+   "flags": [],
+   "freshness": {
+    "age_s": 0.079,
+    "max_age_s": 120.0,
+    "status": "FRESH"
+   },
+   "key": "interface.duplex",
+   "normalizer_version": "1.0.0",
+   "observation_id": "obs-31a03da263294076",
+   "observed_at": "2026-11-09T22:16:26.262290Z",
+   "parser": {
+    "id": "interfaces.state",
+    "input_kind": "json",
+    "template": "eos.show_interfaces.json",
+    "version": "eos-json-1.0"
+   },
+   "quality": "OK",
+   "raw_hash": "sha256:6edb369a90ecd69cb936c36050c6331254118d1d358fa430d34d8d796aafc65b",
+   "redaction_status": "CHECKED_NO_SECRETS",
+   "schema": "nmas.troubleshooting.observation/1",
+   "source": {
+    "adapter": "gateway-fixture",
+    "command_or_api": "show interfaces | json",
+    "evidence_id": "ev-b0acd72447c5dead",
+    "source_type": "CLI",
+    "transport": "gateway-fixture"
+   },
+   "target": {
+    "device": "r1",
+    "interface": "Ethernet1"
+   },
+   "unit": "",
+   "value": "full"
+  },
+  {
+   "clock": null,
+   "collected_at": "2026-11-09T22:16:26.337642Z",
+   "confidence": 0.95,
+   "evidence_class": "operational",
+   "extra": {
+    "counter": {
+     "cumulative": true,
+     "last_clear": null,
+     "width_bits": 64
+    }
+   },
+   "flags": [],
+   "freshness": {
+    "age_s": 0.079,
+    "max_age_s": 120.0,
+    "status": "FRESH"
+   },
+   "key": "interface.counter.in_crc_errors",
+   "normalizer_version": "1.0.0",
+   "observation_id": "obs-cb3431716297f675",
+   "observed_at": "2026-11-09T22:16:26.262290Z",
+   "parser": {
+    "id": "interfaces.state",
+    "input_kind": "json",
+    "template": "eos.show_interfaces.json",
+    "version": "eos-json-1.0"
+   },
+   "quality": "OK",
+   "raw_hash": "sha256:6edb369a90ecd69cb936c36050c6331254118d1d358fa430d34d8d796aafc65b",
+   "redaction_status": "CHECKED_NO_SECRETS",
+   "schema": "nmas.troubleshooting.observation/1",
+   "source": {
+    "adapter": "gateway-fixture",
+    "command_or_api": "show interfaces | json",
+    "evidence_id": "ev-b0acd72447c5dead",
+    "source_type": "CLI",
+    "transport": "gateway-fixture"
+   },
+   "target": {
+    "device": "r1",
+    "interface": "Ethernet1"
+   },
+   "unit": "frames",
+   "value": 0
+  },
+  {
+   "clock": null,
+   "collected_at": "2026-11-09T22:16:26.337642Z",
+   "confidence": 0.95,
+   "evidence_class": "operational",
+   "extra": {
+    "counter": {
+     "cumulative": true,
+     "last_clear": null,
+     "width_bits": 64
+    }
+   },
+   "flags": [],
+   "freshness": {
+    "age_s": 0.079,
+    "max_age_s": 120.0,
+    "status": "FRESH"
+   },
+   "key": "interface.counter.in_discards",
+   "normalizer_version": "1.0.0",
+   "observation_id": "obs-f76918c3bfa68d06",
+   "observed_at": "2026-11-09T22:16:26.262290Z",
+   "parser": {
+    "id": "interfaces.state",
+    "input_kind": "json",
+    "template": "eos.show_interfaces.json",
+    "version": "eos-json-1.0"
+   },
+   "quality": "OK",
+   "raw_hash": "sha256:6edb369a90ecd69cb936c36050c6331254118d1d358fa430d34d8d796aafc65b",
+   "redaction_status": "CHECKED_NO_SECRETS",
+   "schema": "nmas.troubleshooting.observation/1",
+   "source": {
+    "adapter": "gateway-fixture",
+    "command_or_api": "show interfaces | json",
+    "evidence_id": "ev-b0acd72447c5dead",
+    "source_type": "CLI",
+    "transport": "gateway-fixture"
+   },
+   "target": {
+    "device": "r1",
+    "interface": "Ethernet1"
+   },
+   "unit": "frames",
+   "value": 0
+  },
+  {
+   "clock": null,
+   "collected_at": "2026-11-09T22:16:26.337642Z",
+   "confidence": 0.95,
+   "evidence_class": "operational",
+   "extra": {
+    "counter": {
+     "cumulative": true,
+     "last_clear": null,
+     "width_bits": 64
+    }
+   },
+   "flags": [],
+   "freshness": {
+    "age_s": 0.079,
+    "max_age_s": 120.0,
+    "status": "FRESH"
+   },
+   "key": "interface.counter.in_errors",
+   "normalizer_version": "1.0.0",
+   "observation_id": "obs-7ad1d23bb67f3b96",
+   "observed_at": "2026-11-09T22:16:26.262290Z",
+   "parser": {
+    "id": "interfaces.state",
+    "input_kind": "json",
+    "template": "eos.show_interfaces.json",
+    "version": "eos-json-1.0"
+   },
+   "quality": "OK",
+   "raw_hash": "sha256:6edb369a90ecd69cb936c36050c6331254118d1d358fa430d34d8d796aafc65b",
+   "redaction_status": "CHECKED_NO_SECRETS",
+   "schema": "nmas.troubleshooting.observation/1",
+   "source": {
+    "adapter": "gateway-fixture",
+    "command_or_api": "show interfaces | json",
+    "evidence_id": "ev-b0acd72447c5dead",
+    "source_type": "CLI",
+    "transport": "gateway-fixture"
+   },
+   "target": {
+    "device": "r1",
+    "interface": "Ethernet1"
+   },
+   "unit": "frames",
+   "value": 0
+  },
+  {
+   "clock": null,
+   "collected_at": "2026-11-09T22:16:26.337642Z",
+   "confidence": 0.95,
+   "evidence_class": "operational",
+   "extra": {
+    "counter": {
+     "cumulative": true,
+     "last_clear": null,
+     "width_bits": 64
+    }
+   },
+   "flags": [],
+   "freshness": {
+    "age_s": 0.079,
+    "max_age_s": 120.0,
+    "status": "FRESH"
+   },
+   "key": "interface.counter.in_frame_errors",
+   "normalizer_version": "1.0.0",
+   "observation_id": "obs-6d5559de23ffe3a9",
+   "observed_at": "2026-11-09T22:16:26.262290Z",
+   "parser": {
+    "id": "interfaces.state",
+    "input_kind": "json",
+    "template": "eos.show_interfaces.json",
+    "version": "eos-json-1.0"
+   },
+   "quality": "OK",
+   "raw_hash": "sha256:6edb369a90ecd69cb936c36050c6331254118d1d358fa430d34d8d796aafc65b",
+   "redaction_status": "CHECKED_NO_SECRETS",
+   "schema": "nmas.troubleshooting.observation/1",
+   "source": {
+    "adapter": "gateway-fixture",
+    "command_or_api": "show interfaces | json",
+    "evidence_id": "ev-b0acd72447c5dead",
+    "source_type": "CLI",
+    "transport": "gateway-fixture"
+   },
+   "target": {
+    "device": "r1",
+    "interface": "Ethernet1"
+   },
+   "unit": "frames",
+   "value": 0
+  },
+  {
+   "clock": null,
+   "collected_at": "2026-11-09T22:16:26.337642Z",
+   "confidence": 0.95,
+   "evidence_class": "operational",
+   "extra": {
+    "counter": {
+     "cumulative": true,
+     "last_clear": null,
+     "width_bits": 64
+    }
+   },
+   "flags": [],
+   "freshness": {
+    "age_s": 0.079,
+    "max_age_s": 120.0,
+    "status": "FRESH"
+   },
+   "key": "interface.counter.in_giants",
+   "normalizer_version": "1.0.0",
+   "observation_id": "obs-b6974fc1af9a96c0",
+   "observed_at": "2026-11-09T22:16:26.262290Z",
+   "parser": {
+    "id": "interfaces.state",
+    "input_kind": "json",
+    "template": "eos.show_interfaces.json",
+    "version": "eos-json-1.0"
+   },
+   "quality": "OK",
+   "raw_hash": "sha256:6edb369a90ecd69cb936c36050c6331254118d1d358fa430d34d8d796aafc65b",
+   "redaction_status": "CHECKED_NO_SECRETS",
+   "schema": "nmas.troubleshooting.observation/1",
+   "source": {
+    "adapter": "gateway-fixture",
+    "command_or_api": "show interfaces | json",
+    "evidence_id": "ev-b0acd72447c5dead",
+    "source_type": "CLI",
+    "transport": "gateway-fixture"
+   },
+   "target": {
+    "device": "r1",
+    "interface": "Ethernet1"
+   },
+   "unit": "frames",
+   "value": 0
+  },
+  {
+   "clock": null,
+   "collected_at": "2026-11-09T22:16:26.337642Z",
+   "confidence": 0.95,
+   "evidence_class": "operational",
+   "extra": {
+    "counter": {
+     "cumulative": true,
+     "last_clear": null,
+     "width_bits": 64
+    }
+   },
+   "flags": [],
+   "freshness": {
+    "age_s": 0.079,
+    "max_age_s": 120.0,
+    "status": "FRESH"
+   },
+   "key": "interface.counter.in_octets",
+   "normalizer_version": "1.0.0",
+   "observation_id": "obs-87dda1843bd6ab06",
+   "observed_at": "2026-11-09T22:16:26.262290Z",
+   "parser": {
+    "id": "interfaces.state",
+    "input_kind": "json",
+    "template": "eos.show_interfaces.json",
+    "version": "eos-json-1.0"
+   },
+   "quality": "OK",
+   "raw_hash": "sha256:6edb369a90ecd69cb936c36050c6331254118d1d358fa430d34d8d796aafc65b",
+   "redaction_status": "CHECKED_NO_SECRETS",
+   "schema": "nmas.troubleshooting.observation/1",
+   "source": {
+    "adapter": "gateway-fixture",
+    "command_or_api": "show interfaces | json",
+    "evidence_id": "ev-b0acd72447c5dead",
+    "source_type": "CLI",
+    "transport": "gateway-fixture"
+   },
+   "target": {
+    "device": "r1",
+    "interface": "Ethernet1"
+   },
+   "unit": "bytes",
+   "value": 222
+  },
+  {
+   "clock": null,
+   "collected_at": "2026-11-09T22:16:26.337642Z",
+   "confidence": 0.95,
+   "evidence_class": "operational",
+   "extra": {
+    "counter": {
+     "cumulative": true,
+     "last_clear": null,
+     "width_bits": 64
+    }
+   },
+   "flags": [],
+   "freshness": {
+    "age_s": 0.079,
+    "max_age_s": 120.0,
+    "status": "FRESH"
+   },
+   "key": "interface.counter.in_packets",
+   "normalizer_version": "1.0.0",
+   "observation_id": "obs-a6a020234eff2f35",
+   "observed_at": "2026-11-09T22:16:26.262290Z",
+   "parser": {
+    "id": "interfaces.state",
+    "input_kind": "json",
+    "template": "eos.show_interfaces.json",
+    "version": "eos-json-1.0"
+   },
+   "quality": "OK",
+   "raw_hash": "sha256:6edb369a90ecd69cb936c36050c6331254118d1d358fa430d34d8d796aafc65b",
+   "redaction_status": "CHECKED_NO_SECRETS",
+   "schema": "nmas.troubleshooting.observation/1",
+   "source": {
+    "adapter": "gateway-fixture",
+    "command_or_api": "show interfaces | json",
+    "evidence_id": "ev-b0acd72447c5dead",
+    "source_type": "CLI",
+    "transport": "gateway-fixture"
+   },
+   "target": {
+    "device": "r1",
+    "interface": "Ethernet1"
+   },
+   "unit": "packets",
+   "value": 0
+  },
+  {
+   "clock": null,
+   "collected_at": "2026-11-09T22:16:26.337642Z",
+   "confidence": 0.95,
+   "evidence_class": "operational",
+   "extra": {
+    "counter": {
+     "cumulative": true,
+     "last_clear": null,
+     "width_bits": 64
+    }
+   },
+   "flags": [],
+   "freshness": {
+    "age_s": 0.079,
+    "max_age_s": 120.0,
+    "status": "FRESH"
+   },
+   "key": "interface.counter.in_runts",
+   "normalizer_version": "1.0.0",
+   "observation_id": "obs-7052047d6016b517",
+   "observed_at": "2026-11-09T22:16:26.262290Z",
+   "parser": {
+    "id": "interfaces.state",
+    "input_kind": "json",
+    "template": "eos.show_interfaces.json",
+    "version": "eos-json-1.0"
+   },
+   "quality": "OK",
+   "raw_hash": "sha256:6edb369a90ecd69cb936c36050c6331254118d1d358fa430d34d8d796aafc65b",
+   "redaction_status": "CHECKED_NO_SECRETS",
+   "schema": "nmas.troubleshooting.observation/1",
+   "source": {
+    "adapter": "gateway-fixture",
+    "command_or_api": "show interfaces | json",
+    "evidence_id": "ev-b0acd72447c5dead",
+    "source_type": "CLI",
+    "transport": "gateway-fixture"
+   },
+   "target": {
+    "device": "r1",
+    "interface": "Ethernet1"
+   },
+   "unit": "frames",
+   "value": 0
+  },
+  {
+   "clock": null,
+   "collected_at": "2026-11-09T22:16:26.337642Z",
+   "confidence": 0.95,
+   "evidence_class": "operational",
+   "extra": {
+    "counter": {
+     "cumulative": true,
+     "last_clear": null,
+     "width_bits": 64
+    }
+   },
+   "flags": [],
+   "freshness": {
+    "age_s": 0.079,
+    "max_age_s": 120.0,
+    "status": "FRESH"
+   },
+   "key": "interface.counter.out_discards",
+   "normalizer_version": "1.0.0",
+   "observation_id": "obs-487ee2b31801da7d",
+   "observed_at": "2026-11-09T22:16:26.262290Z",
+   "parser": {
+    "id": "interfaces.state",
+    "input_kind": "json",
+    "template": "eos.show_interfaces.json",
+    "version": "eos-json-1.0"
+   },
+   "quality": "OK",
+   "raw_hash": "sha256:6edb369a90ecd69cb936c36050c6331254118d1d358fa430d34d8d796aafc65b",
+   "redaction_status": "CHECKED_NO_SECRETS",
+   "schema": "nmas.troubleshooting.observation/1",
+   "source": {
+    "adapter": "gateway-fixture",
+    "command_or_api": "show interfaces | json",
+    "evidence_id": "ev-b0acd72447c5dead",
+    "source_type": "CLI",
+    "transport": "gateway-fixture"
+   },
+   "target": {
+    "device": "r1",
+    "interface": "Ethernet1"
+   },
+   "unit": "frames",
+   "value": 0
+  },
+  {
+   "clock": null,
+   "collected_at": "2026-11-09T22:16:26.337642Z",
+   "confidence": 0.95,
+   "evidence_class": "operational",
+   "extra": {
+    "counter": {
+     "cumulative": true,
+     "last_clear": null,
+     "width_bits": 64
+    }
+   },
+   "flags": [],
+   "freshness": {
+    "age_s": 0.079,
+    "max_age_s": 120.0,
+    "status": "FRESH"
+   },
+   "key": "interface.counter.out_errors",
+   "normalizer_version": "1.0.0",
+   "observation_id": "obs-b05406ce9bde20b2",
+   "observed_at": "2026-11-09T22:16:26.262290Z",
+   "parser": {
+    "id": "interfaces.state",
+    "input_kind": "json",
+    "template": "eos.show_interfaces.json",
+    "version": "eos-json-1.0"
+   },
+   "quality": "OK",
+   "raw_hash": "sha256:6edb369a90ecd69cb936c36050c6331254118d1d358fa430d34d8d796aafc65b",
+   "redaction_status": "CHECKED_NO_SECRETS",
+   "schema": "nmas.troubleshooting.observation/1",
+   "source": {
+    "adapter": "gateway-fixture",
+    "command_or_api": "show interfaces | json",
+    "evidence_id": "ev-b0acd72447c5dead",
+    "source_type": "CLI",
+    "transport": "gateway-fixture"
+   },
+   "target": {
+    "device": "r1",
+    "interface": "Ethernet1"
+   },
+   "unit": "frames",
+   "value": 0
+  },
+  {
+   "clock": null,
+   "collected_at": "2026-11-09T22:16:26.337642Z",
+   "confidence": 0.95,
+   "evidence_class": "operational",
+   "extra": {
+    "counter": {
+     "cumulative": true,
+     "last_clear": null,
+     "width_bits": 64
+    }
+   },
+   "flags": [],
+   "freshness": {
+    "age_s": 0.079,
+    "max_age_s": 120.0,
+    "status": "FRESH"
+   },
+   "key": "interface.counter.out_octets",
+   "normalizer_version": "1.0.0",
+   "observation_id": "obs-6d5b929f47ab9c29",
+   "observed_at": "2026-11-09T22:16:26.262290Z",
+   "parser": {
+    "id": "interfaces.state",
+    "input_kind": "json",
+    "template": "eos.show_interfaces.json",
+    "version": "eos-json-1.0"
+   },
+   "quality": "OK",
+   "raw_hash": "sha256:6edb369a90ecd69cb936c36050c6331254118d1d358fa430d34d8d796aafc65b",
+   "redaction_status": "CHECKED_NO_SECRETS",
+   "schema": "nmas.troubleshooting.observation/1",
+   "source": {
+    "adapter": "gateway-fixture",
+    "command_or_api": "show interfaces | json",
+    "evidence_id": "ev-b0acd72447c5dead",
+    "source_type": "CLI",
+    "transport": "gateway-fixture"
+   },
+   "target": {
+    "device": "r1",
+    "interface": "Ethernet1"
+   },
+   "unit": "bytes",
+   "value": 0
+  },
+  {
+   "clock": null,
+   "collected_at": "2026-11-09T22:16:26.337642Z",
+   "confidence": 0.95,
+   "evidence_class": "operational",
+   "extra": {
+    "counter": {
+     "cumulative": true,
+     "last_clear": null,
+     "width_bits": 64
+    }
+   },
+   "flags": [],
+   "freshness": {
+    "age_s": 0.079,
+    "max_age_s": 120.0,
+    "status": "FRESH"
+   },
+   "key": "interface.counter.out_packets",
+   "normalizer_version": "1.0.0",
+   "observation_id": "obs-21c2ccdebf5f541b",
+   "observed_at": "2026-11-09T22:16:26.262290Z",
+   "parser": {
+    "id": "interfaces.state",
+    "input_kind": "json",
+    "template": "eos.show_interfaces.json",
+    "version": "eos-json-1.0"
+   },
+   "quality": "OK",
+   "raw_hash": "sha256:6edb369a90ecd69cb936c36050c6331254118d1d358fa430d34d8d796aafc65b",
+   "redaction_status": "CHECKED_NO_SECRETS",
+   "schema": "nmas.troubleshooting.observation/1",
+   "source": {
+    "adapter": "gateway-fixture",
+    "command_or_api": "show interfaces | json",
+    "evidence_id": "ev-b0acd72447c5dead",
+    "source_type": "CLI",
+    "transport": "gateway-fixture"
+   },
+   "target": {
+    "device": "r1",
+    "interface": "Ethernet1"
+   },
+   "unit": "packets",
+   "value": 0
+  },
+  {
+   "clock": null,
+   "collected_at": "2026-11-09T22:16:26.337642Z",
+   "confidence": 0.95,
+   "evidence_class": "operational",
+   "flags": [],
+   "freshness": {
+    "age_s": 0.077,
+    "max_age_s": 120.0,
+    "status": "FRESH"
+   },
+   "key": "interface.admin_state",
+   "normalizer_version": "1.0.0",
+   "observation_id": "obs-7b2e1d8f34021017",
+   "observed_at": "2026-11-09T22:16:26.264530Z",
+   "parser": {
+    "id": "interfaces.state",
+    "input_kind": "json",
+    "template": "eos.show_interfaces.json",
+    "version": "eos-json-1.0"
+   },
+   "quality": "OK",
+   "raw_hash": "sha256:6edb369a90ecd69cb936c36050c6331254118d1d358fa430d34d8d796aafc65b",
+   "redaction_status": "CHECKED_NO_SECRETS",
+   "schema": "nmas.troubleshooting.observation/1",
+   "source": {
+    "adapter": "gateway-fixture",
+    "command_or_api": "show interfaces | json",
+    "evidence_id": "ev-b0acd72447c5dead",
+    "source_type": "CLI",
+    "transport": "gateway-fixture"
+   },
+   "target": {
+    "device": "r1",
+    "interface": "Management0"
+   },
+   "unit": "",
+   "value": "up"
+  },
+  {
+   "clock": null,
+   "collected_at": "2026-11-09T22:16:26.337642Z",
+   "confidence": 0.95,
+   "evidence_class": "operational",
+   "flags": [],
+   "freshness": {
+    "age_s": 0.077,
+    "max_age_s": 120.0,
+    "status": "FRESH"
+   },
+   "key": "interface.oper_state",
+   "normalizer_version": "1.0.0",
+   "observation_id": "obs-fac9e925dd4f2acc",
+   "observed_at": "2026-11-09T22:16:26.264530Z",
+   "parser": {
+    "id": "interfaces.state",
+    "input_kind": "json",
+    "template": "eos.show_interfaces.json",
+    "version": "eos-json-1.0"
+   },
+   "quality": "OK",
+   "raw_hash": "sha256:6edb369a90ecd69cb936c36050c6331254118d1d358fa430d34d8d796aafc65b",
+   "redaction_status": "CHECKED_NO_SECRETS",
+   "schema": "nmas.troubleshooting.observation/1",
+   "source": {
+    "adapter": "gateway-fixture",
+    "command_or_api": "show interfaces | json",
+    "evidence_id": "ev-b0acd72447c5dead",
+    "source_type": "CLI",
+    "transport": "gateway-fixture"
+   },
+   "target": {
+    "device": "r1",
+    "interface": "Management0"
+   },
+   "unit": "",
+   "value": "up"
+  },
+  {
+   "clock": null,
+   "collected_at": "2026-11-09T22:16:26.337642Z",
+   "confidence": 0.95,
+   "evidence_class": "operational",
+   "flags": [],
+   "freshness": {
+    "age_s": 0.077,
+    "max_age_s": 120.0,
+    "status": "FRESH"
+   },
+   "key": "interface.mtu",
+   "normalizer_version": "1.0.0",
+   "observation_id": "obs-c722c0341f4f69b5",
+   "observed_at": "2026-11-09T22:16:26.264530Z",
+   "parser": {
+    "id": "interfaces.state",
+    "input_kind": "json",
+    "template": "eos.show_interfaces.json",
+    "version": "eos-json-1.0"
+   },
+   "quality": "OK",
+   "raw_hash": "sha256:6edb369a90ecd69cb936c36050c6331254118d1d358fa430d34d8d796aafc65b",
+   "redaction_status": "CHECKED_NO_SECRETS",
+   "schema": "nmas.troubleshooting.observation/1",
+   "source": {
+    "adapter": "gateway-fixture",
+    "command_or_api": "show interfaces | json",
+    "evidence_id": "ev-b0acd72447c5dead",
+    "source_type": "CLI",
+    "transport": "gateway-fixture"
+   },
+   "target": {
+    "device": "r1",
+    "interface": "Management0"
+   },
+   "unit": "bytes",
+   "value": 1500
+  },
+  {
+   "clock": null,
+   "collected_at": "2026-11-09T22:16:26.337642Z",
+   "confidence": 0.95,
+   "evidence_class": "operational",
+   "flags": [],
+   "freshness": {
+    "age_s": 0.077,
+    "max_age_s": 120.0,
+    "status": "FRESH"
+   },
+   "key": "interface.speed",
+   "normalizer_version": "1.0.0",
+   "observation_id": "obs-39ddd055ddab9ed6",
+   "observed_at": "2026-11-09T22:16:26.264530Z",
+   "parser": {
+    "id": "interfaces.state",
+    "input_kind": "json",
+    "template": "eos.show_interfaces.json",
+    "version": "eos-json-1.0"
+   },
+   "quality": "OK",
+   "raw_hash": "sha256:6edb369a90ecd69cb936c36050c6331254118d1d358fa430d34d8d796aafc65b",
+   "redaction_status": "CHECKED_NO_SECRETS",
+   "schema": "nmas.troubleshooting.observation/1",
+   "source": {
+    "adapter": "gateway-fixture",
+    "command_or_api": "show interfaces | json",
+    "evidence_id": "ev-b0acd72447c5dead",
+    "source_type": "CLI",
+    "transport": "gateway-fixture"
+   },
+   "target": {
+    "device": "r1",
+    "interface": "Management0"
+   },
+   "unit": "bps",
+   "value": 1000000000
+  },
+  {
+   "clock": null,
+   "collected_at": "2026-11-09T22:16:26.337642Z",
+   "confidence": 0.95,
+   "evidence_class": "operational",
+   "flags": [],
+   "freshness": {
+    "age_s": 0.077,
+    "max_age_s": 120.0,
+    "status": "FRESH"
+   },
+   "key": "interface.duplex",
+   "normalizer_version": "1.0.0",
+   "observation_id": "obs-357282e88d355512",
+   "observed_at": "2026-11-09T22:16:26.264530Z",
+   "parser": {
+    "id": "interfaces.state",
+    "input_kind": "json",
+    "template": "eos.show_interfaces.json",
+    "version": "eos-json-1.0"
+   },
+   "quality": "OK",
+   "raw_hash": "sha256:6edb369a90ecd69cb936c36050c6331254118d1d358fa430d34d8d796aafc65b",
+   "redaction_status": "CHECKED_NO_SECRETS",
+   "schema": "nmas.troubleshooting.observation/1",
+   "source": {
+    "adapter": "gateway-fixture",
+    "command_or_api": "show interfaces | json",
+    "evidence_id": "ev-b0acd72447c5dead",
+    "source_type": "CLI",
+    "transport": "gateway-fixture"
+   },
+   "target": {
+    "device": "r1",
+    "interface": "Management0"
+   },
+   "unit": "",
+   "value": "full"
+  },
+  {
+   "clock": null,
+   "collected_at": "2026-11-09T22:16:26.337642Z",
+   "confidence": 0.95,
+   "evidence_class": "operational",
+   "extra": {
+    "counter": {
+     "cumulative": true,
+     "last_clear": null,
+     "width_bits": 64
+    }
+   },
+   "flags": [],
+   "freshness": {
+    "age_s": 0.077,
+    "max_age_s": 120.0,
+    "status": "FRESH"
+   },
+   "key": "interface.counter.in_crc_errors",
+   "normalizer_version": "1.0.0",
+   "observation_id": "obs-cd0de9333d16b020",
+   "observed_at": "2026-11-09T22:16:26.264530Z",
+   "parser": {
+    "id": "interfaces.state",
+    "input_kind": "json",
+    "template": "eos.show_interfaces.json",
+    "version": "eos-json-1.0"
+   },
+   "quality": "OK",
+   "raw_hash": "sha256:6edb369a90ecd69cb936c36050c6331254118d1d358fa430d34d8d796aafc65b",
+   "redaction_status": "CHECKED_NO_SECRETS",
+   "schema": "nmas.troubleshooting.observation/1",
+   "source": {
+    "adapter": "gateway-fixture",
+    "command_or_api": "show interfaces | json",
+    "evidence_id": "ev-b0acd72447c5dead",
+    "source_type": "CLI",
+    "transport": "gateway-fixture"
+   },
+   "target": {
+    "device": "r1",
+    "interface": "Management0"
+   },
+   "unit": "frames",
+   "value": 0
+  },
+  {
+   "clock": null,
+   "collected_at": "2026-11-09T22:16:26.337642Z",
+   "confidence": 0.95,
+   "evidence_class": "operational",
+   "extra": {
+    "counter": {
+     "cumulative": true,
+     "last_clear": null,
+     "width_bits": 64
+    }
+   },
+   "flags": [],
+   "freshness": {
+    "age_s": 0.077,
+    "max_age_s": 120.0,
+    "status": "FRESH"
+   },
+   "key": "interface.counter.in_discards",
+   "normalizer_version": "1.0.0",
+   "observation_id": "obs-1533161082027e90",
+   "observed_at": "2026-11-09T22:16:26.264530Z",
+   "parser": {
+    "id": "interfaces.state",
+    "input_kind": "json",
+    "template": "eos.show_interfaces.json",
+    "version": "eos-json-1.0"
+   },
+   "quality": "OK",
+   "raw_hash": "sha256:6edb369a90ecd69cb936c36050c6331254118d1d358fa430d34d8d796aafc65b",
+   "redaction_status": "CHECKED_NO_SECRETS",
+   "schema": "nmas.troubleshooting.observation/1",
+   "source": {
+    "adapter": "gateway-fixture",
+    "command_or_api": "show interfaces | json",
+    "evidence_id": "ev-b0acd72447c5dead",
+    "source_type": "CLI",
+    "transport": "gateway-fixture"
+   },
+   "target": {
+    "device": "r1",
+    "interface": "Management0"
+   },
+   "unit": "frames",
+   "value": 0
+  },
+  {
+   "clock": null,
+   "collected_at": "2026-11-09T22:16:26.337642Z",
+   "confidence": 0.95,
+   "evidence_class": "operational",
+   "extra": {
+    "counter": {
+     "cumulative": true,
+     "last_clear": null,
+     "width_bits": 64
+    }
+   },
+   "flags": [],
+   "freshness": {
+    "age_s": 0.077,
+    "max_age_s": 120.0,
+    "status": "FRESH"
+   },
+   "key": "interface.counter.in_errors",
+   "normalizer_version": "1.0.0",
+   "observation_id": "obs-57bec0afe9d0bccb",
+   "observed_at": "2026-11-09T22:16:26.264530Z",
+   "parser": {
+    "id": "interfaces.state",
+    "input_kind": "json",
+    "template": "eos.show_interfaces.json",
+    "version": "eos-json-1.0"
+   },
+   "quality": "OK",
+   "raw_hash": "sha256:6edb369a90ecd69cb936c36050c6331254118d1d358fa430d34d8d796aafc65b",
+   "redaction_status": "CHECKED_NO_SECRETS",
+   "schema": "nmas.troubleshooting.observation/1",
+   "source": {
+    "adapter": "gateway-fixture",
+    "command_or_api": "show interfaces | json",
+    "evidence_id": "ev-b0acd72447c5dead",
+    "source_type": "CLI",
+    "transport": "gateway-fixture"
+   },
+   "target": {
+    "device": "r1",
+    "interface": "Management0"
+   },
+   "unit": "frames",
+   "value": 0
+  },
+  {
+   "clock": null,
+   "collected_at": "2026-11-09T22:16:26.337642Z",
+   "confidence": 0.95,
+   "evidence_class": "operational",
+   "extra": {
+    "counter": {
+     "cumulative": true,
+     "last_clear": null,
+     "width_bits": 64
+    }
+   },
+   "flags": [],
+   "freshness": {
+    "age_s": 0.077,
+    "max_age_s": 120.0,
+    "status": "FRESH"
+   },
+   "key": "interface.counter.in_frame_errors",
+   "normalizer_version": "1.0.0",
+   "observation_id": "obs-f8b3f17c0a9caf5c",
+   "observed_at": "2026-11-09T22:16:26.264530Z",
+   "parser": {
+    "id": "interfaces.state",
+    "input_kind": "json",
+    "template": "eos.show_interfaces.json",
+    "version": "eos-json-1.0"
+   },
+   "quality": "OK",
+   "raw_hash": "sha256:6edb369a90ecd69cb936c36050c6331254118d1d358fa430d34d8d796aafc65b",
+   "redaction_status": "CHECKED_NO_SECRETS",
+   "schema": "nmas.troubleshooting.observation/1",
+   "source": {
+    "adapter": "gateway-fixture",
+    "command_or_api": "show interfaces | json",
+    "evidence_id": "ev-b0acd72447c5dead",
+    "source_type": "CLI",
+    "transport": "gateway-fixture"
+   },
+   "target": {
+    "device": "r1",
+    "interface": "Management0"
+   },
+   "unit": "frames",
+   "value": 0
+  },
+  {
+   "clock": null,
+   "collected_at": "2026-11-09T22:16:26.337642Z",
+   "confidence": 0.95,
+   "evidence_class": "operational",
+   "extra": {
+    "counter": {
+     "cumulative": true,
+     "last_clear": null,
+     "width_bits": 64
+    }
+   },
+   "flags": [],
+   "freshness": {
+    "age_s": 0.077,
+    "max_age_s": 120.0,
+    "status": "FRESH"
+   },
+   "key": "interface.counter.in_giants",
+   "normalizer_version": "1.0.0",
+   "observation_id": "obs-8fb7de2deab58f7e",
+   "observed_at": "2026-11-09T22:16:26.264530Z",
+   "parser": {
+    "id": "interfaces.state",
+    "input_kind": "json",
+    "template": "eos.show_interfaces.json",
+    "version": "eos-json-1.0"
+   },
+   "quality": "OK",
+   "raw_hash": "sha256:6edb369a90ecd69cb936c36050c6331254118d1d358fa430d34d8d796aafc65b",
+   "redaction_status": "CHECKED_NO_SECRETS",
+   "schema": "nmas.troubleshooting.observation/1",
+   "source": {
+    "adapter": "gateway-fixture",
+    "command_or_api": "show interfaces | json",
+    "evidence_id": "ev-b0acd72447c5dead",
+    "source_type": "CLI",
+    "transport": "gateway-fixture"
+   },
+   "target": {
+    "device": "r1",
+    "interface": "Management0"
+   },
+   "unit": "frames",
+   "value": 0
+  },
+  {
+   "clock": null,
+   "collected_at": "2026-11-09T22:16:26.337642Z",
+   "confidence": 0.95,
+   "evidence_class": "operational",
+   "extra": {
+    "counter": {
+     "cumulative": true,
+     "last_clear": null,
+     "width_bits": 64
+    }
+   },
+   "flags": [],
+   "freshness": {
+    "age_s": 0.077,
+    "max_age_s": 120.0,
+    "status": "FRESH"
+   },
+   "key": "interface.counter.in_octets",
+   "normalizer_version": "1.0.0",
+   "observation_id": "obs-476b4f1c9987932b",
+   "observed_at": "2026-11-09T22:16:26.264530Z",
+   "parser": {
+    "id": "interfaces.state",
+    "input_kind": "json",
+    "template": "eos.show_interfaces.json",
+    "version": "eos-json-1.0"
+   },
+   "quality": "OK",
+   "raw_hash": "sha256:6edb369a90ecd69cb936c36050c6331254118d1d358fa430d34d8d796aafc65b",
+   "redaction_status": "CHECKED_NO_SECRETS",
+   "schema": "nmas.troubleshooting.observation/1",
+   "source": {
+    "adapter": "gateway-fixture",
+    "command_or_api": "show interfaces | json",
+    "evidence_id": "ev-b0acd72447c5dead",
+    "source_type": "CLI",
+    "transport": "gateway-fixture"
+   },
+   "target": {
+    "device": "r1",
+    "interface": "Management0"
+   },
+   "unit": "bytes",
+   "value": 8659
+  },
+  {
+   "clock": null,
+   "collected_at": "2026-11-09T22:16:26.337642Z",
+   "confidence": 0.95,
+   "evidence_class": "operational",
+   "extra": {
+    "counter": {
+     "cumulative": true,
+     "last_clear": null,
+     "width_bits": 64
+    }
+   },
+   "flags": [],
+   "freshness": {
+    "age_s": 0.077,
+    "max_age_s": 120.0,
+    "status": "FRESH"
+   },
+   "key": "interface.counter.in_packets",
+   "normalizer_version": "1.0.0",
+   "observation_id": "obs-f7fa321fdc68cdb6",
+   "observed_at": "2026-11-09T22:16:26.264530Z",
+   "parser": {
+    "id": "interfaces.state",
+    "input_kind": "json",
+    "template": "eos.show_interfaces.json",
+    "version": "eos-json-1.0"
+   },
+   "quality": "OK",
+   "raw_hash": "sha256:6edb369a90ecd69cb936c36050c6331254118d1d358fa430d34d8d796aafc65b",
+   "redaction_status": "CHECKED_NO_SECRETS",
+   "schema": "nmas.troubleshooting.observation/1",
+   "source": {
+    "adapter": "gateway-fixture",
+    "command_or_api": "show interfaces | json",
+    "evidence_id": "ev-b0acd72447c5dead",
+    "source_type": "CLI",
+    "transport": "gateway-fixture"
+   },
+   "target": {
+    "device": "r1",
+    "interface": "Management0"
+   },
+   "unit": "packets",
+   "value": 67
+  },
+  {
+   "clock": null,
+   "collected_at": "2026-11-09T22:16:26.337642Z",
+   "confidence": 0.95,
+   "evidence_class": "operational",
+   "extra": {
+    "counter": {
+     "cumulative": true,
+     "last_clear": null,
+     "width_bits": 64
+    }
+   },
+   "flags": [],
+   "freshness": {
+    "age_s": 0.077,
+    "max_age_s": 120.0,
+    "status": "FRESH"
+   },
+   "key": "interface.counter.in_runts",
+   "normalizer_version": "1.0.0",
+   "observation_id": "obs-70ddfdb2abb6b791",
+   "observed_at": "2026-11-09T22:16:26.264530Z",
+   "parser": {
+    "id": "interfaces.state",
+    "input_kind": "json",
+    "template": "eos.show_interfaces.json",
+    "version": "eos-json-1.0"
+   },
+   "quality": "OK",
+   "raw_hash": "sha256:6edb369a90ecd69cb936c36050c6331254118d1d358fa430d34d8d796aafc65b",
+   "redaction_status": "CHECKED_NO_SECRETS",
+   "schema": "nmas.troubleshooting.observation/1",
+   "source": {
+    "adapter": "gateway-fixture",
+    "command_or_api": "show interfaces | json",
+    "evidence_id": "ev-b0acd72447c5dead",
+    "source_type": "CLI",
+    "transport": "gateway-fixture"
+   },
+   "target": {
+    "device": "r1",
+    "interface": "Management0"
+   },
+   "unit": "frames",
+   "value": 0
+  },
+  {
+   "clock": null,
+   "collected_at": "2026-11-09T22:16:26.337642Z",
+   "confidence": 0.95,
+   "evidence_class": "operational",
+   "extra": {
+    "counter": {
+     "cumulative": true,
+     "last_clear": null,
+     "width_bits": 64
+    }
+   },
+   "flags": [],
+   "freshness": {
+    "age_s": 0.077,
+    "max_age_s": 120.0,
+    "status": "FRESH"
+   },
+   "key": "interface.counter.out_discards",
+   "normalizer_version": "1.0.0",
+   "observation_id": "obs-c1ce9b6da2451b45",
+   "observed_at": "2026-11-09T22:16:26.264530Z",
+   "parser": {
+    "id": "interfaces.state",
+    "input_kind": "json",
+    "template": "eos.show_interfaces.json",
+    "version": "eos-json-1.0"
+   },
+   "quality": "OK",
+   "raw_hash": "sha256:6edb369a90ecd69cb936c36050c6331254118d1d358fa430d34d8d796aafc65b",
+   "redaction_status": "CHECKED_NO_SECRETS",
+   "schema": "nmas.troubleshooting.observation/1",
+   "source": {
+    "adapter": "gateway-fixture",
+    "command_or_api": "show interfaces | json",
+    "evidence_id": "ev-b0acd72447c5dead",
+    "source_type": "CLI",
+    "transport": "gateway-fixture"
+   },
+   "target": {
+    "device": "r1",
+    "interface": "Management0"
+   },
+   "unit": "frames",
+   "value": 0
+  },
+  {
+   "clock": null,
+   "collected_at": "2026-11-09T22:16:26.337642Z",
+   "confidence": 0.95,
+   "evidence_class": "operational",
+   "extra": {
+    "counter": {
+     "cumulative": true,
+     "last_clear": null,
+     "width_bits": 64
+    }
+   },
+   "flags": [],
+   "freshness": {
+    "age_s": 0.077,
+    "max_age_s": 120.0,
+    "status": "FRESH"
+   },
+   "key": "interface.counter.out_errors",
+   "normalizer_version": "1.0.0",
+   "observation_id": "obs-dbe1e71be493b8be",
+   "observed_at": "2026-11-09T22:16:26.264530Z",
+   "parser": {
+    "id": "interfaces.state",
+    "input_kind": "json",
+    "template": "eos.show_interfaces.json",
+    "version": "eos-json-1.0"
+   },
+   "quality": "OK",
+   "raw_hash": "sha256:6edb369a90ecd69cb936c36050c6331254118d1d358fa430d34d8d796aafc65b",
+   "redaction_status": "CHECKED_NO_SECRETS",
+   "schema": "nmas.troubleshooting.observation/1",
+   "source": {
+    "adapter": "gateway-fixture",
+    "command_or_api": "show interfaces | json",
+    "evidence_id": "ev-b0acd72447c5dead",
+    "source_type": "CLI",
+    "transport": "gateway-fixture"
+   },
+   "target": {
+    "device": "r1",
+    "interface": "Management0"
+   },
+   "unit": "frames",
+   "value": 0
+  },
+  {
+   "clock": null,
+   "collected_at": "2026-11-09T22:16:26.337642Z",
+   "confidence": 0.95,
+   "evidence_class": "operational",
+   "extra": {
+    "counter": {
+     "cumulative": true,
+     "last_clear": null,
+     "width_bits": 64
+    }
+   },
+   "flags": [],
+   "freshness": {
+    "age_s": 0.077,
+    "max_age_s": 120.0,
+    "status": "FRESH"
+   },
+   "key": "interface.counter.out_octets",
+   "normalizer_version": "1.0.0",
+   "observation_id": "obs-487e748dc9d5720b",
+   "observed_at": "2026-11-09T22:16:26.264530Z",
+   "parser": {
+    "id": "interfaces.state",
+    "input_kind": "json",
+    "template": "eos.show_interfaces.json",
+    "version": "eos-json-1.0"
+   },
+   "quality": "OK",
+   "raw_hash": "sha256:6edb369a90ecd69cb936c36050c6331254118d1d358fa430d34d8d796aafc65b",
+   "redaction_status": "CHECKED_NO_SECRETS",
+   "schema": "nmas.troubleshooting.observation/1",
+   "source": {
+    "adapter": "gateway-fixture",
+    "command_or_api": "show interfaces | json",
+    "evidence_id": "ev-b0acd72447c5dead",
+    "source_type": "CLI",
+    "transport": "gateway-fixture"
+   },
+   "target": {
+    "device": "r1",
+    "interface": "Management0"
+   },
+   "unit": "bytes",
+   "value": 4289
+  },
+  {
+   "clock": null,
+   "collected_at": "2026-11-09T22:16:26.337642Z",
+   "confidence": 0.95,
+   "evidence_class": "operational",
+   "extra": {
+    "counter": {
+     "cumulative": true,
+     "last_clear": null,
+     "width_bits": 64
+    }
+   },
+   "flags": [],
+   "freshness": {
+    "age_s": 0.077,
+    "max_age_s": 120.0,
+    "status": "FRESH"
+   },
+   "key": "interface.counter.out_packets",
+   "normalizer_version": "1.0.0",
+   "observation_id": "obs-facb5334fadb6806",
+   "observed_at": "2026-11-09T22:16:26.264530Z",
+   "parser": {
+    "id": "interfaces.state",
+    "input_kind": "json",
+    "template": "eos.show_interfaces.json",
+    "version": "eos-json-1.0"
+   },
+   "quality": "OK",
+   "raw_hash": "sha256:6edb369a90ecd69cb936c36050c6331254118d1d358fa430d34d8d796aafc65b",
+   "redaction_status": "CHECKED_NO_SECRETS",
+   "schema": "nmas.troubleshooting.observation/1",
+   "source": {
+    "adapter": "gateway-fixture",
+    "command_or_api": "show interfaces | json",
+    "evidence_id": "ev-b0acd72447c5dead",
+    "source_type": "CLI",
+    "transport": "gateway-fixture"
+   },
+   "target": {
+    "device": "r1",
+    "interface": "Management0"
+   },
+   "unit": "packets",
+   "value": 24
+  },
+  {
+   "clock": null,
+   "collected_at": "2026-11-09T22:16:30.868526Z",
+   "confidence": 0.95,
+   "evidence_class": "snapshot",
+   "flags": [
+    "NO_OPERATOR_URL",
+    "SECRETS_REDACTED"
+   ],
+   "freshness": {
+    "age_s": 0.0,
+    "max_age_s": 86400.0,
+    "status": "FRESH"
+   },
+   "key": "config.snapshot",
+   "normalizer_version": "1.0.0",
+   "observation_id": "obs-ce4150adfc45308a",
+   "observed_at": "2026-11-09T22:16:30.868946Z",
+   "parser": {
+    "id": "snapshot.running-config",
+    "input_kind": "text",
+    "template": "running-config",
+    "version": "1.0"
+   },
+   "quality": "OK",
+   "raw_hash": "sha256:ce1fb9ff72fc887210bec7dbd2286ea9c610d91295657e9ffa2a24e5ecd70154",
+   "redaction_status": "REDACTED",
+   "schema": "nmas.troubleshooting.observation/1",
+   "source": {
+    "adapter": "gateway-fixture",
+    "command_or_api": "show running-config",
+    "evidence_id": "ev-d16916804e969442",
+    "source_type": "CONFIG_SNAPSHOT",
+    "transport": "gateway-fixture"
+   },
+   "target": {
+    "device": "r1"
+   },
+   "unit": "",
+   "value": {
+    "bytes": 839,
+    "hash": "sha256:ce1fb9ff72fc887210bec7dbd2286ea9c610d91295657e9ffa2a24e5ecd70154",
+    "kind": "running-config",
+    "lines": 41,
+    "operator_url": null,
+    "redactions": 1,
+    "revision": null
+   }
+  }
+ ],
+ "run": {
+  "adapter": "gateway-fixture",
+  "admission": {
+   "ok": true
+  },
+  "budget": {
+   "limits": {
+    "backoff_s": 0.5,
+    "max_bytes": 2000000,
+    "max_commands": 12,
+    "max_records": 10000,
+    "max_retries": 1,
+    "max_seconds": 240,
+    "min_interval_s": 0.2,
+    "per_command_timeout_s": 20.0
+   },
+   "used": {
+    "bytes": 9059,
+    "commands": 8,
+    "records": 0,
+    "retries": 0,
+    "seconds": 5.729,
+    "throttled_s": 0.0
+   }
+  },
+  "collector": "cli",
+  "collector_version": "1.0.0",
+  "command_or_api": [
+   "show version | json",
+   "show interfaces | json",
+   "show ip ospf neighbor | json",
+   "show ip bgp summary | json",
+   "show ip route | json",
+   "show spanning-tree | json",
+   "show interfaces Ethernet1 transceiver",
+   "show running-config"
+  ],
+  "device": "r1",
+  "evidence_ids": [
+   "ev-0244e27ee66c4dee",
+   "ev-b0acd72447c5dead",
+   "ev-c1fc506f8835e023",
+   "ev-90b258be52451c96",
+   "ev-e277da6f54eb481f",
+   "ev-85611f1f1d972c80",
+   "ev-44e14afd84f92033",
+   "ev-d16916804e969442"
+  ],
+  "finished_at": "2026-11-09T22:16:30.869202Z",
+  "flags": [],
+  "gateway": {
+   "fixture_id": "fxe85127d9",
+   "gateway_evidence_seqs": [
+    6181,
+    6182,
+    6183,
+    6184,
+    6185,
+    6186,
+    6187,
+    6188
+   ],
+   "live": true,
+   "node": "r1",
+   "pin_id": null
+  },
+  "os_version": "4.36.2F",
+  "platform": "ceos",
+  "privileges": "read-only",
+  "rate_budget": {
+   "max_commands": 12,
+   "min_interval_s": 0.2
+  },
+  "retries": 0,
+  "run_id": "run-76b1c8358159",
+  "schema": "nmas.troubleshooting.collection-run/1",
+  "source_type": "CLI",
+  "stage": "collect",
+  "stage_order": 1,
+  "started_at": "2026-11-09T22:16:25.140128Z",
+  "status": "PARTIAL",
+  "timeout_s": 20.0,
+  "transport": "gateway-fixture"
+ },
+ "schema": "nmas.troubleshooting.collection-bundle/1"
+}

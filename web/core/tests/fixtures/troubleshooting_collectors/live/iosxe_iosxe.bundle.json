@@ -1,0 +1,1830 @@
+{
+ "coverage": {
+  "collected": 6,
+  "missing_by_reason": {
+   "EMPTY": 1,
+   "PARSER_UNAVAILABLE": 2,
+   "UNSUPPORTED_OPERATION": 1
+  },
+  "observations": 29,
+  "requested": 7
+ },
+ "evidence": [
+  {
+   "adapter": "gateway-fixture",
+   "adapter_version": "1.0.0",
+   "collected_at": "2026-11-09T22:16:33.627068Z",
+   "command_or_api": "show version",
+   "coverage": null,
+   "device": "iosxe",
+   "duration_s": 0.695,
+   "evidence_class": "operational",
+   "evidence_id": "ev-f77c1971e5bbfdbc",
+   "extra": {
+    "attempts": 1
+   },
+   "freshness_max_age_s": 120.0,
+   "gateway": {
+    "fixture_id": "fx1fea66d5",
+    "gateway_evidence_seqs": [
+     6196
+    ],
+    "live": true,
+    "node": "iosxe",
+    "pin_id": null
+   },
+   "os_version": "17.06.01a",
+   "parser": null,
+   "platform": "iosxe",
+   "raw_ref": {
+    "bytes": 2545,
+    "hash": "sha256:f2bf5447d9265cc548289729d90e968e7ef83c217550cdea48cd9499835c7bc6",
+    "operator_view": "reference-only",
+    "pointer": "mem:sha256:f2bf5447d9265cc548289729d90e968e7ef83c217550cdea48cd9499835c7bc6",
+    "stored_hash": "sha256:f2bf5447d9265cc548289729d90e968e7ef83c217550cdea48cd9499835c7bc6"
+   },
+   "redaction": {
+    "redactions": 0,
+    "status": "CHECKED_NO_SECRETS"
+   },
+   "schema": "nmas.troubleshooting.evidence/1",
+   "sequence": 1,
+   "source_type": "CLI",
+   "started_at": "2026-11-09T22:16:32.932398Z",
+   "status": "OK",
+   "status_detail": "",
+   "transport": "gateway-fixture"
+  },
+  {
+   "adapter": "gateway-fixture",
+   "adapter_version": "1.0.0",
+   "collected_at": "2026-11-09T22:16:34.137048Z",
+   "command_or_api": "show interfaces",
+   "coverage": null,
+   "device": "iosxe",
+   "duration_s": 0.509,
+   "evidence_class": "operational",
+   "evidence_id": "ev-257dad093107d41b",
+   "extra": {
+    "attempts": 1
+   },
+   "freshness_max_age_s": 120.0,
+   "gateway": {
+    "fixture_id": "fx1fea66d5",
+    "gateway_evidence_seqs": [
+     6196,
+     6197
+    ],
+    "live": true,
+    "node": "iosxe",
+    "pin_id": null
+   },
+   "os_version": "17.06.01a",
+   "parser": {
+    "id": "interfaces.state",
+    "input_kind": "text",
+    "template": "iosxe.show_interfaces.text",
+    "version": "iosxe-text-1.0"
+   },
+   "platform": "iosxe",
+   "raw_ref": {
+    "bytes": 2810,
+    "hash": "sha256:21978d2381eb7a97b2d15a576bcd853056b17fc085955ea1c8b41f14837419f3",
+    "operator_view": "reference-only",
+    "pointer": "mem:sha256:21978d2381eb7a97b2d15a576bcd853056b17fc085955ea1c8b41f14837419f3",
+    "stored_hash": "sha256:21978d2381eb7a97b2d15a576bcd853056b17fc085955ea1c8b41f14837419f3"
+   },
+   "redaction": {
+    "redactions": 0,
+    "status": "CHECKED_NO_SECRETS"
+   },
+   "schema": "nmas.troubleshooting.evidence/1",
+   "sequence": 2,
+   "source_type": "CLI",
+   "started_at": "2026-11-09T22:16:33.628086Z",
+   "status": "OK",
+   "status_detail": "",
+   "transport": "gateway-fixture"
+  },
+  {
+   "adapter": "gateway-fixture",
+   "adapter_version": "1.0.0",
+   "collected_at": "2026-11-09T22:16:34.691242Z",
+   "command_or_api": "show ip ospf neighbor",
+   "coverage": null,
+   "device": "iosxe",
+   "duration_s": 0.55,
+   "evidence_class": "operational",
+   "evidence_id": "ev-2e7a0eda5ff12ba8",
+   "extra": {
+    "attempts": 1
+   },
+   "freshness_max_age_s": 120.0,
+   "gateway": {
+    "fixture_id": "fx1fea66d5",
+    "gateway_evidence_seqs": [
+     6196,
+     6197,
+     6198
+    ],
+    "live": true,
+    "node": "iosxe",
+    "pin_id": null
+   },
+   "os_version": "17.06.01a",
+   "parser": null,
+   "platform": "iosxe",
+   "raw_ref": {
+    "bytes": 0,
+    "hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "operator_view": "reference-only",
+    "pointer": "mem:sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stored_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+   },
+   "redaction": {
+    "redactions": 0,
+    "status": "CHECKED_NO_SECRETS"
+   },
+   "schema": "nmas.troubleshooting.evidence/1",
+   "sequence": 3,
+   "source_type": "CLI",
+   "started_at": "2026-11-09T22:16:34.141109Z",
+   "status": "OK",
+   "status_detail": "",
+   "transport": "gateway-fixture"
+  },
+  {
+   "adapter": "gateway-fixture",
+   "adapter_version": "1.0.0",
+   "collected_at": "2026-11-09T22:16:35.314949Z",
+   "command_or_api": "show ip route",
+   "coverage": null,
+   "device": "iosxe",
+   "duration_s": 0.623,
+   "evidence_class": "operational",
+   "evidence_id": "ev-63573aab049b2147",
+   "extra": {
+    "attempts": 1
+   },
+   "freshness_max_age_s": 120.0,
+   "gateway": {
+    "fixture_id": "fx1fea66d5",
+    "gateway_evidence_seqs": [
+     6196,
+     6197,
+     6198,
+     6199
+    ],
+    "live": true,
+    "node": "iosxe",
+    "pin_id": null
+   },
+   "os_version": "17.06.01a",
+   "parser": null,
+   "platform": "iosxe",
+   "raw_ref": {
+    "bytes": 831,
+    "hash": "sha256:b9be99dd8cb24389689eee91470296ca5922b0c214cc1a25b750337ac647a0cc",
+    "operator_view": "reference-only",
+    "pointer": "mem:sha256:b9be99dd8cb24389689eee91470296ca5922b0c214cc1a25b750337ac647a0cc",
+    "stored_hash": "sha256:b9be99dd8cb24389689eee91470296ca5922b0c214cc1a25b750337ac647a0cc"
+   },
+   "redaction": {
+    "redactions": 0,
+    "status": "CHECKED_NO_SECRETS"
+   },
+   "schema": "nmas.troubleshooting.evidence/1",
+   "sequence": 4,
+   "source_type": "CLI",
+   "started_at": "2026-11-09T22:16:34.691456Z",
+   "status": "OK",
+   "status_detail": "",
+   "transport": "gateway-fixture"
+  },
+  {
+   "adapter": "gateway-fixture",
+   "adapter_version": "1.0.0",
+   "collected_at": "2026-11-09T22:16:35.858716Z",
+   "command_or_api": "show spanning-tree",
+   "coverage": null,
+   "device": "iosxe",
+   "duration_s": 0.543,
+   "evidence_class": "operational",
+   "evidence_id": "ev-64bc3c0402264f97",
+   "extra": {
+    "attempts": 1
+   },
+   "freshness_max_age_s": 120.0,
+   "gateway": {
+    "fixture_id": "fx1fea66d5",
+    "gateway_evidence_seqs": [
+     6196,
+     6197,
+     6198,
+     6199,
+     6200
+    ],
+    "live": true,
+    "node": "iosxe",
+    "pin_id": null
+   },
+   "os_version": "17.06.01a",
+   "parser": null,
+   "platform": "iosxe",
+   "raw_ref": {
+    "bytes": 35,
+    "hash": "sha256:f741d7641864a70dd32fa68a5604cc722532ceea9e3e5d1e5acc8cc4bf5575ff",
+    "operator_view": "reference-only",
+    "pointer": "mem:sha256:f741d7641864a70dd32fa68a5604cc722532ceea9e3e5d1e5acc8cc4bf5575ff",
+    "stored_hash": "sha256:f741d7641864a70dd32fa68a5604cc722532ceea9e3e5d1e5acc8cc4bf5575ff"
+   },
+   "redaction": {
+    "redactions": 0,
+    "status": "CHECKED_NO_SECRETS"
+   },
+   "schema": "nmas.troubleshooting.evidence/1",
+   "sequence": 5,
+   "source_type": "CLI",
+   "started_at": "2026-11-09T22:16:35.315424Z",
+   "status": "OK",
+   "status_detail": "",
+   "transport": "gateway-fixture"
+  },
+  {
+   "adapter": "gateway-fixture",
+   "adapter_version": "1.0.0",
+   "collected_at": "2026-11-09T22:16:36.565497Z",
+   "command_or_api": "show interfaces GigabitEthernet2 transceiver detail",
+   "coverage": null,
+   "device": "iosxe",
+   "duration_s": 0.707,
+   "evidence_class": "operational",
+   "evidence_id": "ev-d1dbf9c5727af58a",
+   "extra": {
+    "attempts": 1
+   },
+   "freshness_max_age_s": 120.0,
+   "gateway": {
+    "fixture_id": "fx1fea66d5",
+    "gateway_evidence_seqs": [
+     6196,
+     6197,
+     6198,
+     6199,
+     6200,
+     6201
+    ],
+    "live": true,
+    "node": "iosxe",
+    "pin_id": null
+   },
+   "os_version": "17.06.01a",
+   "parser": null,
+   "platform": "iosxe",
+   "raw_ref": {
+    "bytes": 81,
+    "hash": "sha256:c6b53fec7918fca19ce7f2bf64a037be9b3ae2f4d560c3887dbc25941bd53ea8",
+    "operator_view": "reference-only",
+    "pointer": "mem:sha256:c6b53fec7918fca19ce7f2bf64a037be9b3ae2f4d560c3887dbc25941bd53ea8",
+    "stored_hash": "sha256:c6b53fec7918fca19ce7f2bf64a037be9b3ae2f4d560c3887dbc25941bd53ea8"
+   },
+   "redaction": {
+    "redactions": 0,
+    "status": "CHECKED_NO_SECRETS"
+   },
+   "schema": "nmas.troubleshooting.evidence/1",
+   "sequence": 6,
+   "source_type": "CLI",
+   "started_at": "2026-11-09T22:16:35.858964Z",
+   "status": "UNSUPPORTED",
+   "status_detail": "^",
+   "transport": "gateway-fixture"
+  },
+  {
+   "adapter": "gateway-fixture",
+   "adapter_version": "1.0.0",
+   "collected_at": "2026-11-09T22:16:38.149686Z",
+   "command_or_api": "show running-config",
+   "coverage": null,
+   "device": "iosxe",
+   "duration_s": 1.584,
+   "evidence_class": "operational",
+   "evidence_id": "ev-9e42f7e768653b29",
+   "extra": {
+    "attempts": 1
+   },
+   "freshness_max_age_s": 86400.0,
+   "gateway": {
+    "fixture_id": "fx1fea66d5",
+    "gateway_evidence_seqs": [
+     6196,
+     6197,
+     6198,
+     6199,
+     6200,
+     6201,
+     6202
+    ],
+    "live": true,
+    "node": "iosxe",
+    "pin_id": null
+   },
+   "os_version": "17.06.01a",
+   "parser": null,
+   "platform": "iosxe",
+   "raw_ref": {
+    "bytes": 6859,
+    "hash": "sha256:3ec5dbfeffaf5e06b8b1443d62244d1ab43424c30333c2570e58a6243ff13fa5",
+    "operator_view": "reference-only",
+    "pointer": "mem:sha256:3ec5dbfeffaf5e06b8b1443d62244d1ab43424c30333c2570e58a6243ff13fa5",
+    "stored_hash": "sha256:3ec5dbfeffaf5e06b8b1443d62244d1ab43424c30333c2570e58a6243ff13fa5"
+   },
+   "redaction": {
+    "redactions": 1,
+    "status": "REDACTED"
+   },
+   "schema": "nmas.troubleshooting.evidence/1",
+   "sequence": 7,
+   "source_type": "CONFIG_SNAPSHOT",
+   "started_at": "2026-11-09T22:16:36.565700Z",
+   "status": "OK",
+   "status_detail": "",
+   "transport": "gateway-fixture"
+  }
+ ],
+ "missing": [
+  {
+   "command_or_api": "show ip ospf neighbor",
+   "detail": "device returned empty output (feature/protocol not running or not supported on this platform); absence is NOT evidence of absence",
+   "device": "iosxe",
+   "evidence_id": "",
+   "interpretation": "UNKNOWN",
+   "kind": "missing",
+   "observation_emitted": false,
+   "reason": "EMPTY",
+   "recorded_at": "2026-11-09T22:16:34.691409Z",
+   "schema": "nmas.troubleshooting.missing-data/1",
+   "source_type": "CLI"
+  },
+  {
+   "command_or_api": "show ip route",
+   "detail": "no validated parser for ip_route on iosxe; evidence retained unparsed",
+   "device": "iosxe",
+   "evidence_id": "",
+   "interpretation": "UNKNOWN",
+   "kind": "missing",
+   "observation_emitted": false,
+   "reason": "PARSER_UNAVAILABLE",
+   "recorded_at": "2026-11-09T22:16:35.315377Z",
+   "schema": "nmas.troubleshooting.missing-data/1",
+   "source_type": "CLI"
+  },
+  {
+   "command_or_api": "show spanning-tree",
+   "detail": "no validated parser for spanning_tree on iosxe; evidence retained unparsed",
+   "device": "iosxe",
+   "evidence_id": "",
+   "interpretation": "UNKNOWN",
+   "kind": "missing",
+   "observation_emitted": false,
+   "reason": "PARSER_UNAVAILABLE",
+   "recorded_at": "2026-11-09T22:16:35.858908Z",
+   "schema": "nmas.troubleshooting.missing-data/1",
+   "source_type": "CLI"
+  },
+  {
+   "command_or_api": "show interfaces GigabitEthernet2 transceiver detail",
+   "detail": "^",
+   "device": "iosxe",
+   "evidence_id": "",
+   "interpretation": "UNKNOWN",
+   "kind": "missing",
+   "observation_emitted": false,
+   "reason": "UNSUPPORTED_OPERATION",
+   "recorded_at": "2026-11-09T22:16:36.565655Z",
+   "schema": "nmas.troubleshooting.missing-data/1",
+   "source_type": "CLI"
+  }
+ ],
+ "observations": [
+  {
+   "clock": null,
+   "collected_at": "2026-11-09T22:16:34.137048Z",
+   "confidence": 0.95,
+   "evidence_class": "operational",
+   "flags": [
+    "OBSERVATION_TIME_IS_COLLECTION_TIME"
+   ],
+   "freshness": {
+    "age_s": 0.001,
+    "max_age_s": 120.0,
+    "status": "FRESH"
+   },
+   "key": "interface.admin_state",
+   "normalizer_version": "1.0.0",
+   "observation_id": "obs-24e3ec2277b41f9a",
+   "observed_at": "2026-11-09T22:16:34.137048Z",
+   "parser": {
+    "id": "interfaces.state",
+    "input_kind": "text",
+    "template": "iosxe.show_interfaces.text",
+    "version": "iosxe-text-1.0"
+   },
+   "quality": "OK",
+   "raw_hash": "sha256:21978d2381eb7a97b2d15a576bcd853056b17fc085955ea1c8b41f14837419f3",
+   "redaction_status": "CHECKED_NO_SECRETS",
+   "schema": "nmas.troubleshooting.observation/1",
+   "source": {
+    "adapter": "gateway-fixture",
+    "command_or_api": "show interfaces",
+    "evidence_id": "ev-257dad093107d41b",
+    "source_type": "CLI",
+    "transport": "gateway-fixture"
+   },
+   "target": {
+    "device": "iosxe",
+    "interface": "GigabitEthernet1"
+   },
+   "unit": "",
+   "value": "up"
+  },
+  {
+   "clock": null,
+   "collected_at": "2026-11-09T22:16:34.137048Z",
+   "confidence": 0.95,
+   "evidence_class": "operational",
+   "flags": [
+    "OBSERVATION_TIME_IS_COLLECTION_TIME"
+   ],
+   "freshness": {
+    "age_s": 0.001,
+    "max_age_s": 120.0,
+    "status": "FRESH"
+   },
+   "key": "interface.oper_state",
+   "normalizer_version": "1.0.0",
+   "observation_id": "obs-818e7a078bfc5f98",
+   "observed_at": "2026-11-09T22:16:34.137048Z",
+   "parser": {
+    "id": "interfaces.state",
+    "input_kind": "text",
+    "template": "iosxe.show_interfaces.text",
+    "version": "iosxe-text-1.0"
+   },
+   "quality": "OK",
+   "raw_hash": "sha256:21978d2381eb7a97b2d15a576bcd853056b17fc085955ea1c8b41f14837419f3",
+   "redaction_status": "CHECKED_NO_SECRETS",
+   "schema": "nmas.troubleshooting.observation/1",
+   "source": {
+    "adapter": "gateway-fixture",
+    "command_or_api": "show interfaces",
+    "evidence_id": "ev-257dad093107d41b",
+    "source_type": "CLI",
+    "transport": "gateway-fixture"
+   },
+   "target": {
+    "device": "iosxe",
+    "interface": "GigabitEthernet1"
+   },
+   "unit": "",
+   "value": "up"
+  },
+  {
+   "clock": null,
+   "collected_at": "2026-11-09T22:16:34.137048Z",
+   "confidence": 0.95,
+   "evidence_class": "operational",
+   "flags": [
+    "OBSERVATION_TIME_IS_COLLECTION_TIME"
+   ],
+   "freshness": {
+    "age_s": 0.001,
+    "max_age_s": 120.0,
+    "status": "FRESH"
+   },
+   "key": "interface.mtu",
+   "normalizer_version": "1.0.0",
+   "observation_id": "obs-52350c9474f220e6",
+   "observed_at": "2026-11-09T22:16:34.137048Z",
+   "parser": {
+    "id": "interfaces.state",
+    "input_kind": "text",
+    "template": "iosxe.show_interfaces.text",
+    "version": "iosxe-text-1.0"
+   },
+   "quality": "OK",
+   "raw_hash": "sha256:21978d2381eb7a97b2d15a576bcd853056b17fc085955ea1c8b41f14837419f3",
+   "redaction_status": "CHECKED_NO_SECRETS",
+   "schema": "nmas.troubleshooting.observation/1",
+   "source": {
+    "adapter": "gateway-fixture",
+    "command_or_api": "show interfaces",
+    "evidence_id": "ev-257dad093107d41b",
+    "source_type": "CLI",
+    "transport": "gateway-fixture"
+   },
+   "target": {
+    "device": "iosxe",
+    "interface": "GigabitEthernet1"
+   },
+   "unit": "bytes",
+   "value": 1500
+  },
+  {
+   "clock": null,
+   "collected_at": "2026-11-09T22:16:34.137048Z",
+   "confidence": 0.95,
+   "evidence_class": "operational",
+   "flags": [
+    "OBSERVATION_TIME_IS_COLLECTION_TIME"
+   ],
+   "freshness": {
+    "age_s": 0.001,
+    "max_age_s": 120.0,
+    "status": "FRESH"
+   },
+   "key": "interface.speed",
+   "normalizer_version": "1.0.0",
+   "observation_id": "obs-91d713d16c4a3c18",
+   "observed_at": "2026-11-09T22:16:34.137048Z",
+   "parser": {
+    "id": "interfaces.state",
+    "input_kind": "text",
+    "template": "iosxe.show_interfaces.text",
+    "version": "iosxe-text-1.0"
+   },
+   "quality": "OK",
+   "raw_hash": "sha256:21978d2381eb7a97b2d15a576bcd853056b17fc085955ea1c8b41f14837419f3",
+   "redaction_status": "CHECKED_NO_SECRETS",
+   "schema": "nmas.troubleshooting.observation/1",
+   "source": {
+    "adapter": "gateway-fixture",
+    "command_or_api": "show interfaces",
+    "evidence_id": "ev-257dad093107d41b",
+    "source_type": "CLI",
+    "transport": "gateway-fixture"
+   },
+   "target": {
+    "device": "iosxe",
+    "interface": "GigabitEthernet1"
+   },
+   "unit": "bps",
+   "value": 1000000000
+  },
+  {
+   "clock": null,
+   "collected_at": "2026-11-09T22:16:34.137048Z",
+   "confidence": 0.95,
+   "evidence_class": "operational",
+   "extra": {
+    "counter": {
+     "cumulative": true,
+     "last_clear": null,
+     "width_bits": 64
+    }
+   },
+   "flags": [
+    "OBSERVATION_TIME_IS_COLLECTION_TIME"
+   ],
+   "freshness": {
+    "age_s": 0.001,
+    "max_age_s": 120.0,
+    "status": "FRESH"
+   },
+   "key": "interface.counter.in_crc_errors",
+   "normalizer_version": "1.0.0",
+   "observation_id": "obs-5ceb0ddf8b691f97",
+   "observed_at": "2026-11-09T22:16:34.137048Z",
+   "parser": {
+    "id": "interfaces.state",
+    "input_kind": "text",
+    "template": "iosxe.show_interfaces.text",
+    "version": "iosxe-text-1.0"
+   },
+   "quality": "OK",
+   "raw_hash": "sha256:21978d2381eb7a97b2d15a576bcd853056b17fc085955ea1c8b41f14837419f3",
+   "redaction_status": "CHECKED_NO_SECRETS",
+   "schema": "nmas.troubleshooting.observation/1",
+   "source": {
+    "adapter": "gateway-fixture",
+    "command_or_api": "show interfaces",
+    "evidence_id": "ev-257dad093107d41b",
+    "source_type": "CLI",
+    "transport": "gateway-fixture"
+   },
+   "target": {
+    "device": "iosxe",
+    "interface": "GigabitEthernet1"
+   },
+   "unit": "frames",
+   "value": 0
+  },
+  {
+   "clock": null,
+   "collected_at": "2026-11-09T22:16:34.137048Z",
+   "confidence": 0.95,
+   "evidence_class": "operational",
+   "extra": {
+    "counter": {
+     "cumulative": true,
+     "last_clear": null,
+     "width_bits": 64
+    }
+   },
+   "flags": [
+    "OBSERVATION_TIME_IS_COLLECTION_TIME"
+   ],
+   "freshness": {
+    "age_s": 0.001,
+    "max_age_s": 120.0,
+    "status": "FRESH"
+   },
+   "key": "interface.counter.in_errors",
+   "normalizer_version": "1.0.0",
+   "observation_id": "obs-ff8f7303e14f63d2",
+   "observed_at": "2026-11-09T22:16:34.137048Z",
+   "parser": {
+    "id": "interfaces.state",
+    "input_kind": "text",
+    "template": "iosxe.show_interfaces.text",
+    "version": "iosxe-text-1.0"
+   },
+   "quality": "OK",
+   "raw_hash": "sha256:21978d2381eb7a97b2d15a576bcd853056b17fc085955ea1c8b41f14837419f3",
+   "redaction_status": "CHECKED_NO_SECRETS",
+   "schema": "nmas.troubleshooting.observation/1",
+   "source": {
+    "adapter": "gateway-fixture",
+    "command_or_api": "show interfaces",
+    "evidence_id": "ev-257dad093107d41b",
+    "source_type": "CLI",
+    "transport": "gateway-fixture"
+   },
+   "target": {
+    "device": "iosxe",
+    "interface": "GigabitEthernet1"
+   },
+   "unit": "frames",
+   "value": 0
+  },
+  {
+   "clock": null,
+   "collected_at": "2026-11-09T22:16:34.137048Z",
+   "confidence": 0.95,
+   "evidence_class": "operational",
+   "extra": {
+    "counter": {
+     "cumulative": true,
+     "last_clear": null,
+     "width_bits": 64
+    }
+   },
+   "flags": [
+    "OBSERVATION_TIME_IS_COLLECTION_TIME"
+   ],
+   "freshness": {
+    "age_s": 0.001,
+    "max_age_s": 120.0,
+    "status": "FRESH"
+   },
+   "key": "interface.counter.in_frame_errors",
+   "normalizer_version": "1.0.0",
+   "observation_id": "obs-d546b528e83e5b95",
+   "observed_at": "2026-11-09T22:16:34.137048Z",
+   "parser": {
+    "id": "interfaces.state",
+    "input_kind": "text",
+    "template": "iosxe.show_interfaces.text",
+    "version": "iosxe-text-1.0"
+   },
+   "quality": "OK",
+   "raw_hash": "sha256:21978d2381eb7a97b2d15a576bcd853056b17fc085955ea1c8b41f14837419f3",
+   "redaction_status": "CHECKED_NO_SECRETS",
+   "schema": "nmas.troubleshooting.observation/1",
+   "source": {
+    "adapter": "gateway-fixture",
+    "command_or_api": "show interfaces",
+    "evidence_id": "ev-257dad093107d41b",
+    "source_type": "CLI",
+    "transport": "gateway-fixture"
+   },
+   "target": {
+    "device": "iosxe",
+    "interface": "GigabitEthernet1"
+   },
+   "unit": "frames",
+   "value": 0
+  },
+  {
+   "clock": null,
+   "collected_at": "2026-11-09T22:16:34.137048Z",
+   "confidence": 0.95,
+   "evidence_class": "operational",
+   "extra": {
+    "counter": {
+     "cumulative": true,
+     "last_clear": null,
+     "width_bits": 64
+    }
+   },
+   "flags": [
+    "OBSERVATION_TIME_IS_COLLECTION_TIME"
+   ],
+   "freshness": {
+    "age_s": 0.001,
+    "max_age_s": 120.0,
+    "status": "FRESH"
+   },
+   "key": "interface.counter.in_giants",
+   "normalizer_version": "1.0.0",
+   "observation_id": "obs-31273086cc6cee95",
+   "observed_at": "2026-11-09T22:16:34.137048Z",
+   "parser": {
+    "id": "interfaces.state",
+    "input_kind": "text",
+    "template": "iosxe.show_interfaces.text",
+    "version": "iosxe-text-1.0"
+   },
+   "quality": "OK",
+   "raw_hash": "sha256:21978d2381eb7a97b2d15a576bcd853056b17fc085955ea1c8b41f14837419f3",
+   "redaction_status": "CHECKED_NO_SECRETS",
+   "schema": "nmas.troubleshooting.observation/1",
+   "source": {
+    "adapter": "gateway-fixture",
+    "command_or_api": "show interfaces",
+    "evidence_id": "ev-257dad093107d41b",
+    "source_type": "CLI",
+    "transport": "gateway-fixture"
+   },
+   "target": {
+    "device": "iosxe",
+    "interface": "GigabitEthernet1"
+   },
+   "unit": "frames",
+   "value": 0
+  },
+  {
+   "clock": null,
+   "collected_at": "2026-11-09T22:16:34.137048Z",
+   "confidence": 0.95,
+   "evidence_class": "operational",
+   "extra": {
+    "counter": {
+     "cumulative": true,
+     "last_clear": null,
+     "width_bits": 64
+    }
+   },
+   "flags": [
+    "OBSERVATION_TIME_IS_COLLECTION_TIME"
+   ],
+   "freshness": {
+    "age_s": 0.001,
+    "max_age_s": 120.0,
+    "status": "FRESH"
+   },
+   "key": "interface.counter.in_octets",
+   "normalizer_version": "1.0.0",
+   "observation_id": "obs-c23fa0153587f2ff",
+   "observed_at": "2026-11-09T22:16:34.137048Z",
+   "parser": {
+    "id": "interfaces.state",
+    "input_kind": "text",
+    "template": "iosxe.show_interfaces.text",
+    "version": "iosxe-text-1.0"
+   },
+   "quality": "OK",
+   "raw_hash": "sha256:21978d2381eb7a97b2d15a576bcd853056b17fc085955ea1c8b41f14837419f3",
+   "redaction_status": "CHECKED_NO_SECRETS",
+   "schema": "nmas.troubleshooting.observation/1",
+   "source": {
+    "adapter": "gateway-fixture",
+    "command_or_api": "show interfaces",
+    "evidence_id": "ev-257dad093107d41b",
+    "source_type": "CLI",
+    "transport": "gateway-fixture"
+   },
+   "target": {
+    "device": "iosxe",
+    "interface": "GigabitEthernet1"
+   },
+   "unit": "bytes",
+   "value": 23348
+  },
+  {
+   "clock": null,
+   "collected_at": "2026-11-09T22:16:34.137048Z",
+   "confidence": 0.95,
+   "evidence_class": "operational",
+   "extra": {
+    "counter": {
+     "cumulative": true,
+     "last_clear": null,
+     "width_bits": 64
+    }
+   },
+   "flags": [
+    "OBSERVATION_TIME_IS_COLLECTION_TIME"
+   ],
+   "freshness": {
+    "age_s": 0.001,
+    "max_age_s": 120.0,
+    "status": "FRESH"
+   },
+   "key": "interface.counter.in_packets",
+   "normalizer_version": "1.0.0",
+   "observation_id": "obs-120ef1fa9ef7f469",
+   "observed_at": "2026-11-09T22:16:34.137048Z",
+   "parser": {
+    "id": "interfaces.state",
+    "input_kind": "text",
+    "template": "iosxe.show_interfaces.text",
+    "version": "iosxe-text-1.0"
+   },
+   "quality": "OK",
+   "raw_hash": "sha256:21978d2381eb7a97b2d15a576bcd853056b17fc085955ea1c8b41f14837419f3",
+   "redaction_status": "CHECKED_NO_SECRETS",
+   "schema": "nmas.troubleshooting.observation/1",
+   "source": {
+    "adapter": "gateway-fixture",
+    "command_or_api": "show interfaces",
+    "evidence_id": "ev-257dad093107d41b",
+    "source_type": "CLI",
+    "transport": "gateway-fixture"
+   },
+   "target": {
+    "device": "iosxe",
+    "interface": "GigabitEthernet1"
+   },
+   "unit": "packets",
+   "value": 324
+  },
+  {
+   "clock": null,
+   "collected_at": "2026-11-09T22:16:34.137048Z",
+   "confidence": 0.95,
+   "evidence_class": "operational",
+   "extra": {
+    "counter": {
+     "cumulative": true,
+     "last_clear": null,
+     "width_bits": 64
+    }
+   },
+   "flags": [
+    "OBSERVATION_TIME_IS_COLLECTION_TIME"
+   ],
+   "freshness": {
+    "age_s": 0.001,
+    "max_age_s": 120.0,
+    "status": "FRESH"
+   },
+   "key": "interface.counter.in_runts",
+   "normalizer_version": "1.0.0",
+   "observation_id": "obs-963997f2d9bf1dbf",
+   "observed_at": "2026-11-09T22:16:34.137048Z",
+   "parser": {
+    "id": "interfaces.state",
+    "input_kind": "text",
+    "template": "iosxe.show_interfaces.text",
+    "version": "iosxe-text-1.0"
+   },
+   "quality": "OK",
+   "raw_hash": "sha256:21978d2381eb7a97b2d15a576bcd853056b17fc085955ea1c8b41f14837419f3",
+   "redaction_status": "CHECKED_NO_SECRETS",
+   "schema": "nmas.troubleshooting.observation/1",
+   "source": {
+    "adapter": "gateway-fixture",
+    "command_or_api": "show interfaces",
+    "evidence_id": "ev-257dad093107d41b",
+    "source_type": "CLI",
+    "transport": "gateway-fixture"
+   },
+   "target": {
+    "device": "iosxe",
+    "interface": "GigabitEthernet1"
+   },
+   "unit": "frames",
+   "value": 0
+  },
+  {
+   "clock": null,
+   "collected_at": "2026-11-09T22:16:34.137048Z",
+   "confidence": 0.95,
+   "evidence_class": "operational",
+   "extra": {
+    "counter": {
+     "cumulative": true,
+     "last_clear": null,
+     "width_bits": 64
+    }
+   },
+   "flags": [
+    "OBSERVATION_TIME_IS_COLLECTION_TIME"
+   ],
+   "freshness": {
+    "age_s": 0.001,
+    "max_age_s": 120.0,
+    "status": "FRESH"
+   },
+   "key": "interface.counter.out_errors",
+   "normalizer_version": "1.0.0",
+   "observation_id": "obs-fd465f4071b41491",
+   "observed_at": "2026-11-09T22:16:34.137048Z",
+   "parser": {
+    "id": "interfaces.state",
+    "input_kind": "text",
+    "template": "iosxe.show_interfaces.text",
+    "version": "iosxe-text-1.0"
+   },
+   "quality": "OK",
+   "raw_hash": "sha256:21978d2381eb7a97b2d15a576bcd853056b17fc085955ea1c8b41f14837419f3",
+   "redaction_status": "CHECKED_NO_SECRETS",
+   "schema": "nmas.troubleshooting.observation/1",
+   "source": {
+    "adapter": "gateway-fixture",
+    "command_or_api": "show interfaces",
+    "evidence_id": "ev-257dad093107d41b",
+    "source_type": "CLI",
+    "transport": "gateway-fixture"
+   },
+   "target": {
+    "device": "iosxe",
+    "interface": "GigabitEthernet1"
+   },
+   "unit": "frames",
+   "value": 0
+  },
+  {
+   "clock": null,
+   "collected_at": "2026-11-09T22:16:34.137048Z",
+   "confidence": 0.95,
+   "evidence_class": "operational",
+   "extra": {
+    "counter": {
+     "cumulative": true,
+     "last_clear": null,
+     "width_bits": 64
+    }
+   },
+   "flags": [
+    "OBSERVATION_TIME_IS_COLLECTION_TIME"
+   ],
+   "freshness": {
+    "age_s": 0.001,
+    "max_age_s": 120.0,
+    "status": "FRESH"
+   },
+   "key": "interface.counter.out_octets",
+   "normalizer_version": "1.0.0",
+   "observation_id": "obs-abd8b9a0b15b60ab",
+   "observed_at": "2026-11-09T22:16:34.137048Z",
+   "parser": {
+    "id": "interfaces.state",
+    "input_kind": "text",
+    "template": "iosxe.show_interfaces.text",
+    "version": "iosxe-text-1.0"
+   },
+   "quality": "OK",
+   "raw_hash": "sha256:21978d2381eb7a97b2d15a576bcd853056b17fc085955ea1c8b41f14837419f3",
+   "redaction_status": "CHECKED_NO_SECRETS",
+   "schema": "nmas.troubleshooting.observation/1",
+   "source": {
+    "adapter": "gateway-fixture",
+    "command_or_api": "show interfaces",
+    "evidence_id": "ev-257dad093107d41b",
+    "source_type": "CLI",
+    "transport": "gateway-fixture"
+   },
+   "target": {
+    "device": "iosxe",
+    "interface": "GigabitEthernet1"
+   },
+   "unit": "bytes",
+   "value": 60146
+  },
+  {
+   "clock": null,
+   "collected_at": "2026-11-09T22:16:34.137048Z",
+   "confidence": 0.95,
+   "evidence_class": "operational",
+   "extra": {
+    "counter": {
+     "cumulative": true,
+     "last_clear": null,
+     "width_bits": 64
+    }
+   },
+   "flags": [
+    "OBSERVATION_TIME_IS_COLLECTION_TIME"
+   ],
+   "freshness": {
+    "age_s": 0.001,
+    "max_age_s": 120.0,
+    "status": "FRESH"
+   },
+   "key": "interface.counter.out_packets",
+   "normalizer_version": "1.0.0",
+   "observation_id": "obs-c1535b96ae277af5",
+   "observed_at": "2026-11-09T22:16:34.137048Z",
+   "parser": {
+    "id": "interfaces.state",
+    "input_kind": "text",
+    "template": "iosxe.show_interfaces.text",
+    "version": "iosxe-text-1.0"
+   },
+   "quality": "OK",
+   "raw_hash": "sha256:21978d2381eb7a97b2d15a576bcd853056b17fc085955ea1c8b41f14837419f3",
+   "redaction_status": "CHECKED_NO_SECRETS",
+   "schema": "nmas.troubleshooting.observation/1",
+   "source": {
+    "adapter": "gateway-fixture",
+    "command_or_api": "show interfaces",
+    "evidence_id": "ev-257dad093107d41b",
+    "source_type": "CLI",
+    "transport": "gateway-fixture"
+   },
+   "target": {
+    "device": "iosxe",
+    "interface": "GigabitEthernet1"
+   },
+   "unit": "packets",
+   "value": 337
+  },
+  {
+   "clock": null,
+   "collected_at": "2026-11-09T22:16:34.137048Z",
+   "confidence": 0.95,
+   "evidence_class": "operational",
+   "flags": [
+    "OBSERVATION_TIME_IS_COLLECTION_TIME"
+   ],
+   "freshness": {
+    "age_s": 0.001,
+    "max_age_s": 120.0,
+    "status": "FRESH"
+   },
+   "key": "interface.admin_state",
+   "normalizer_version": "1.0.0",
+   "observation_id": "obs-8b1b113fe9e8888f",
+   "observed_at": "2026-11-09T22:16:34.137048Z",
+   "parser": {
+    "id": "interfaces.state",
+    "input_kind": "text",
+    "template": "iosxe.show_interfaces.text",
+    "version": "iosxe-text-1.0"
+   },
+   "quality": "OK",
+   "raw_hash": "sha256:21978d2381eb7a97b2d15a576bcd853056b17fc085955ea1c8b41f14837419f3",
+   "redaction_status": "CHECKED_NO_SECRETS",
+   "schema": "nmas.troubleshooting.observation/1",
+   "source": {
+    "adapter": "gateway-fixture",
+    "command_or_api": "show interfaces",
+    "evidence_id": "ev-257dad093107d41b",
+    "source_type": "CLI",
+    "transport": "gateway-fixture"
+   },
+   "target": {
+    "device": "iosxe",
+    "interface": "GigabitEthernet2"
+   },
+   "unit": "",
+   "value": "down"
+  },
+  {
+   "clock": null,
+   "collected_at": "2026-11-09T22:16:34.137048Z",
+   "confidence": 0.95,
+   "evidence_class": "operational",
+   "flags": [
+    "OBSERVATION_TIME_IS_COLLECTION_TIME"
+   ],
+   "freshness": {
+    "age_s": 0.001,
+    "max_age_s": 120.0,
+    "status": "FRESH"
+   },
+   "key": "interface.oper_state",
+   "normalizer_version": "1.0.0",
+   "observation_id": "obs-d930a97790060bf8",
+   "observed_at": "2026-11-09T22:16:34.137048Z",
+   "parser": {
+    "id": "interfaces.state",
+    "input_kind": "text",
+    "template": "iosxe.show_interfaces.text",
+    "version": "iosxe-text-1.0"
+   },
+   "quality": "OK",
+   "raw_hash": "sha256:21978d2381eb7a97b2d15a576bcd853056b17fc085955ea1c8b41f14837419f3",
+   "redaction_status": "CHECKED_NO_SECRETS",
+   "schema": "nmas.troubleshooting.observation/1",
+   "source": {
+    "adapter": "gateway-fixture",
+    "command_or_api": "show interfaces",
+    "evidence_id": "ev-257dad093107d41b",
+    "source_type": "CLI",
+    "transport": "gateway-fixture"
+   },
+   "target": {
+    "device": "iosxe",
+    "interface": "GigabitEthernet2"
+   },
+   "unit": "",
+   "value": "down"
+  },
+  {
+   "clock": null,
+   "collected_at": "2026-11-09T22:16:34.137048Z",
+   "confidence": 0.95,
+   "evidence_class": "operational",
+   "flags": [
+    "OBSERVATION_TIME_IS_COLLECTION_TIME"
+   ],
+   "freshness": {
+    "age_s": 0.001,
+    "max_age_s": 120.0,
+    "status": "FRESH"
+   },
+   "key": "interface.mtu",
+   "normalizer_version": "1.0.0",
+   "observation_id": "obs-64d3d6a1c2919d00",
+   "observed_at": "2026-11-09T22:16:34.137048Z",
+   "parser": {
+    "id": "interfaces.state",
+    "input_kind": "text",
+    "template": "iosxe.show_interfaces.text",
+    "version": "iosxe-text-1.0"
+   },
+   "quality": "OK",
+   "raw_hash": "sha256:21978d2381eb7a97b2d15a576bcd853056b17fc085955ea1c8b41f14837419f3",
+   "redaction_status": "CHECKED_NO_SECRETS",
+   "schema": "nmas.troubleshooting.observation/1",
+   "source": {
+    "adapter": "gateway-fixture",
+    "command_or_api": "show interfaces",
+    "evidence_id": "ev-257dad093107d41b",
+    "source_type": "CLI",
+    "transport": "gateway-fixture"
+   },
+   "target": {
+    "device": "iosxe",
+    "interface": "GigabitEthernet2"
+   },
+   "unit": "bytes",
+   "value": 1500
+  },
+  {
+   "clock": null,
+   "collected_at": "2026-11-09T22:16:34.137048Z",
+   "confidence": 0.95,
+   "evidence_class": "operational",
+   "flags": [
+    "OBSERVATION_TIME_IS_COLLECTION_TIME"
+   ],
+   "freshness": {
+    "age_s": 0.001,
+    "max_age_s": 120.0,
+    "status": "FRESH"
+   },
+   "key": "interface.speed",
+   "normalizer_version": "1.0.0",
+   "observation_id": "obs-3bd917f7bf4be028",
+   "observed_at": "2026-11-09T22:16:34.137048Z",
+   "parser": {
+    "id": "interfaces.state",
+    "input_kind": "text",
+    "template": "iosxe.show_interfaces.text",
+    "version": "iosxe-text-1.0"
+   },
+   "quality": "OK",
+   "raw_hash": "sha256:21978d2381eb7a97b2d15a576bcd853056b17fc085955ea1c8b41f14837419f3",
+   "redaction_status": "CHECKED_NO_SECRETS",
+   "schema": "nmas.troubleshooting.observation/1",
+   "source": {
+    "adapter": "gateway-fixture",
+    "command_or_api": "show interfaces",
+    "evidence_id": "ev-257dad093107d41b",
+    "source_type": "CLI",
+    "transport": "gateway-fixture"
+   },
+   "target": {
+    "device": "iosxe",
+    "interface": "GigabitEthernet2"
+   },
+   "unit": "bps",
+   "value": 1000000000
+  },
+  {
+   "clock": null,
+   "collected_at": "2026-11-09T22:16:34.137048Z",
+   "confidence": 0.95,
+   "evidence_class": "operational",
+   "extra": {
+    "counter": {
+     "cumulative": true,
+     "last_clear": null,
+     "width_bits": 64
+    }
+   },
+   "flags": [
+    "OBSERVATION_TIME_IS_COLLECTION_TIME"
+   ],
+   "freshness": {
+    "age_s": 0.001,
+    "max_age_s": 120.0,
+    "status": "FRESH"
+   },
+   "key": "interface.counter.in_crc_errors",
+   "normalizer_version": "1.0.0",
+   "observation_id": "obs-3e160a5c378ff449",
+   "observed_at": "2026-11-09T22:16:34.137048Z",
+   "parser": {
+    "id": "interfaces.state",
+    "input_kind": "text",
+    "template": "iosxe.show_interfaces.text",
+    "version": "iosxe-text-1.0"
+   },
+   "quality": "OK",
+   "raw_hash": "sha256:21978d2381eb7a97b2d15a576bcd853056b17fc085955ea1c8b41f14837419f3",
+   "redaction_status": "CHECKED_NO_SECRETS",
+   "schema": "nmas.troubleshooting.observation/1",
+   "source": {
+    "adapter": "gateway-fixture",
+    "command_or_api": "show interfaces",
+    "evidence_id": "ev-257dad093107d41b",
+    "source_type": "CLI",
+    "transport": "gateway-fixture"
+   },
+   "target": {
+    "device": "iosxe",
+    "interface": "GigabitEthernet2"
+   },
+   "unit": "frames",
+   "value": 0
+  },
+  {
+   "clock": null,
+   "collected_at": "2026-11-09T22:16:34.137048Z",
+   "confidence": 0.95,
+   "evidence_class": "operational",
+   "extra": {
+    "counter": {
+     "cumulative": true,
+     "last_clear": null,
+     "width_bits": 64
+    }
+   },
+   "flags": [
+    "OBSERVATION_TIME_IS_COLLECTION_TIME"
+   ],
+   "freshness": {
+    "age_s": 0.001,
+    "max_age_s": 120.0,
+    "status": "FRESH"
+   },
+   "key": "interface.counter.in_errors",
+   "normalizer_version": "1.0.0",
+   "observation_id": "obs-473b70165a81b365",
+   "observed_at": "2026-11-09T22:16:34.137048Z",
+   "parser": {
+    "id": "interfaces.state",
+    "input_kind": "text",
+    "template": "iosxe.show_interfaces.text",
+    "version": "iosxe-text-1.0"
+   },
+   "quality": "OK",
+   "raw_hash": "sha256:21978d2381eb7a97b2d15a576bcd853056b17fc085955ea1c8b41f14837419f3",
+   "redaction_status": "CHECKED_NO_SECRETS",
+   "schema": "nmas.troubleshooting.observation/1",
+   "source": {
+    "adapter": "gateway-fixture",
+    "command_or_api": "show interfaces",
+    "evidence_id": "ev-257dad093107d41b",
+    "source_type": "CLI",
+    "transport": "gateway-fixture"
+   },
+   "target": {
+    "device": "iosxe",
+    "interface": "GigabitEthernet2"
+   },
+   "unit": "frames",
+   "value": 0
+  },
+  {
+   "clock": null,
+   "collected_at": "2026-11-09T22:16:34.137048Z",
+   "confidence": 0.95,
+   "evidence_class": "operational",
+   "extra": {
+    "counter": {
+     "cumulative": true,
+     "last_clear": null,
+     "width_bits": 64
+    }
+   },
+   "flags": [
+    "OBSERVATION_TIME_IS_COLLECTION_TIME"
+   ],
+   "freshness": {
+    "age_s": 0.001,
+    "max_age_s": 120.0,
+    "status": "FRESH"
+   },
+   "key": "interface.counter.in_frame_errors",
+   "normalizer_version": "1.0.0",
+   "observation_id": "obs-6ba5a24b4026b83f",
+   "observed_at": "2026-11-09T22:16:34.137048Z",
+   "parser": {
+    "id": "interfaces.state",
+    "input_kind": "text",
+    "template": "iosxe.show_interfaces.text",
+    "version": "iosxe-text-1.0"
+   },
+   "quality": "OK",
+   "raw_hash": "sha256:21978d2381eb7a97b2d15a576bcd853056b17fc085955ea1c8b41f14837419f3",
+   "redaction_status": "CHECKED_NO_SECRETS",
+   "schema": "nmas.troubleshooting.observation/1",
+   "source": {
+    "adapter": "gateway-fixture",
+    "command_or_api": "show interfaces",
+    "evidence_id": "ev-257dad093107d41b",
+    "source_type": "CLI",
+    "transport": "gateway-fixture"
+   },
+   "target": {
+    "device": "iosxe",
+    "interface": "GigabitEthernet2"
+   },
+   "unit": "frames",
+   "value": 0
+  },
+  {
+   "clock": null,
+   "collected_at": "2026-11-09T22:16:34.137048Z",
+   "confidence": 0.95,
+   "evidence_class": "operational",
+   "extra": {
+    "counter": {
+     "cumulative": true,
+     "last_clear": null,
+     "width_bits": 64
+    }
+   },
+   "flags": [
+    "OBSERVATION_TIME_IS_COLLECTION_TIME"
+   ],
+   "freshness": {
+    "age_s": 0.001,
+    "max_age_s": 120.0,
+    "status": "FRESH"
+   },
+   "key": "interface.counter.in_giants",
+   "normalizer_version": "1.0.0",
+   "observation_id": "obs-7e55ca4641528ff7",
+   "observed_at": "2026-11-09T22:16:34.137048Z",
+   "parser": {
+    "id": "interfaces.state",
+    "input_kind": "text",
+    "template": "iosxe.show_interfaces.text",
+    "version": "iosxe-text-1.0"
+   },
+   "quality": "OK",
+   "raw_hash": "sha256:21978d2381eb7a97b2d15a576bcd853056b17fc085955ea1c8b41f14837419f3",
+   "redaction_status": "CHECKED_NO_SECRETS",
+   "schema": "nmas.troubleshooting.observation/1",
+   "source": {
+    "adapter": "gateway-fixture",
+    "command_or_api": "show interfaces",
+    "evidence_id": "ev-257dad093107d41b",
+    "source_type": "CLI",
+    "transport": "gateway-fixture"
+   },
+   "target": {
+    "device": "iosxe",
+    "interface": "GigabitEthernet2"
+   },
+   "unit": "frames",
+   "value": 0
+  },
+  {
+   "clock": null,
+   "collected_at": "2026-11-09T22:16:34.137048Z",
+   "confidence": 0.95,
+   "evidence_class": "operational",
+   "extra": {
+    "counter": {
+     "cumulative": true,
+     "last_clear": null,
+     "width_bits": 64
+    }
+   },
+   "flags": [
+    "OBSERVATION_TIME_IS_COLLECTION_TIME"
+   ],
+   "freshness": {
+    "age_s": 0.001,
+    "max_age_s": 120.0,
+    "status": "FRESH"
+   },
+   "key": "interface.counter.in_octets",
+   "normalizer_version": "1.0.0",
+   "observation_id": "obs-64f6447b50a102b7",
+   "observed_at": "2026-11-09T22:16:34.137048Z",
+   "parser": {
+    "id": "interfaces.state",
+    "input_kind": "text",
+    "template": "iosxe.show_interfaces.text",
+    "version": "iosxe-text-1.0"
+   },
+   "quality": "OK",
+   "raw_hash": "sha256:21978d2381eb7a97b2d15a576bcd853056b17fc085955ea1c8b41f14837419f3",
+   "redaction_status": "CHECKED_NO_SECRETS",
+   "schema": "nmas.troubleshooting.observation/1",
+   "source": {
+    "adapter": "gateway-fixture",
+    "command_or_api": "show interfaces",
+    "evidence_id": "ev-257dad093107d41b",
+    "source_type": "CLI",
+    "transport": "gateway-fixture"
+   },
+   "target": {
+    "device": "iosxe",
+    "interface": "GigabitEthernet2"
+   },
+   "unit": "bytes",
+   "value": 0
+  },
+  {
+   "clock": null,
+   "collected_at": "2026-11-09T22:16:34.137048Z",
+   "confidence": 0.95,
+   "evidence_class": "operational",
+   "extra": {
+    "counter": {
+     "cumulative": true,
+     "last_clear": null,
+     "width_bits": 64
+    }
+   },
+   "flags": [
+    "OBSERVATION_TIME_IS_COLLECTION_TIME"
+   ],
+   "freshness": {
+    "age_s": 0.001,
+    "max_age_s": 120.0,
+    "status": "FRESH"
+   },
+   "key": "interface.counter.in_packets",
+   "normalizer_version": "1.0.0",
+   "observation_id": "obs-56bd138b6ac49485",
+   "observed_at": "2026-11-09T22:16:34.137048Z",
+   "parser": {
+    "id": "interfaces.state",
+    "input_kind": "text",
+    "template": "iosxe.show_interfaces.text",
+    "version": "iosxe-text-1.0"
+   },
+   "quality": "OK",
+   "raw_hash": "sha256:21978d2381eb7a97b2d15a576bcd853056b17fc085955ea1c8b41f14837419f3",
+   "redaction_status": "CHECKED_NO_SECRETS",
+   "schema": "nmas.troubleshooting.observation/1",
+   "source": {
+    "adapter": "gateway-fixture",
+    "command_or_api": "show interfaces",
+    "evidence_id": "ev-257dad093107d41b",
+    "source_type": "CLI",
+    "transport": "gateway-fixture"
+   },
+   "target": {
+    "device": "iosxe",
+    "interface": "GigabitEthernet2"
+   },
+   "unit": "packets",
+   "value": 0
+  },
+  {
+   "clock": null,
+   "collected_at": "2026-11-09T22:16:34.137048Z",
+   "confidence": 0.95,
+   "evidence_class": "operational",
+   "extra": {
+    "counter": {
+     "cumulative": true,
+     "last_clear": null,
+     "width_bits": 64
+    }
+   },
+   "flags": [
+    "OBSERVATION_TIME_IS_COLLECTION_TIME"
+   ],
+   "freshness": {
+    "age_s": 0.001,
+    "max_age_s": 120.0,
+    "status": "FRESH"
+   },
+   "key": "interface.counter.in_runts",
+   "normalizer_version": "1.0.0",
+   "observation_id": "obs-a8e9290045966382",
+   "observed_at": "2026-11-09T22:16:34.137048Z",
+   "parser": {
+    "id": "interfaces.state",
+    "input_kind": "text",
+    "template": "iosxe.show_interfaces.text",
+    "version": "iosxe-text-1.0"
+   },
+   "quality": "OK",
+   "raw_hash": "sha256:21978d2381eb7a97b2d15a576bcd853056b17fc085955ea1c8b41f14837419f3",
+   "redaction_status": "CHECKED_NO_SECRETS",
+   "schema": "nmas.troubleshooting.observation/1",
+   "source": {
+    "adapter": "gateway-fixture",
+    "command_or_api": "show interfaces",
+    "evidence_id": "ev-257dad093107d41b",
+    "source_type": "CLI",
+    "transport": "gateway-fixture"
+   },
+   "target": {
+    "device": "iosxe",
+    "interface": "GigabitEthernet2"
+   },
+   "unit": "frames",
+   "value": 0
+  },
+  {
+   "clock": null,
+   "collected_at": "2026-11-09T22:16:34.137048Z",
+   "confidence": 0.95,
+   "evidence_class": "operational",
+   "extra": {
+    "counter": {
+     "cumulative": true,
+     "last_clear": null,
+     "width_bits": 64
+    }
+   },
+   "flags": [
+    "OBSERVATION_TIME_IS_COLLECTION_TIME"
+   ],
+   "freshness": {
+    "age_s": 0.001,
+    "max_age_s": 120.0,
+    "status": "FRESH"
+   },
+   "key": "interface.counter.out_errors",
+   "normalizer_version": "1.0.0",
+   "observation_id": "obs-fcd311732de1fe53",
+   "observed_at": "2026-11-09T22:16:34.137048Z",
+   "parser": {
+    "id": "interfaces.state",
+    "input_kind": "text",
+    "template": "iosxe.show_interfaces.text",
+    "version": "iosxe-text-1.0"
+   },
+   "quality": "OK",
+   "raw_hash": "sha256:21978d2381eb7a97b2d15a576bcd853056b17fc085955ea1c8b41f14837419f3",
+   "redaction_status": "CHECKED_NO_SECRETS",
+   "schema": "nmas.troubleshooting.observation/1",
+   "source": {
+    "adapter": "gateway-fixture",
+    "command_or_api": "show interfaces",
+    "evidence_id": "ev-257dad093107d41b",
+    "source_type": "CLI",
+    "transport": "gateway-fixture"
+   },
+   "target": {
+    "device": "iosxe",
+    "interface": "GigabitEthernet2"
+   },
+   "unit": "frames",
+   "value": 0
+  },
+  {
+   "clock": null,
+   "collected_at": "2026-11-09T22:16:34.137048Z",
+   "confidence": 0.95,
+   "evidence_class": "operational",
+   "extra": {
+    "counter": {
+     "cumulative": true,
+     "last_clear": null,
+     "width_bits": 64
+    }
+   },
+   "flags": [
+    "OBSERVATION_TIME_IS_COLLECTION_TIME"
+   ],
+   "freshness": {
+    "age_s": 0.001,
+    "max_age_s": 120.0,
+    "status": "FRESH"
+   },
+   "key": "interface.counter.out_octets",
+   "normalizer_version": "1.0.0",
+   "observation_id": "obs-09d463213a214d05",
+   "observed_at": "2026-11-09T22:16:34.137048Z",
+   "parser": {
+    "id": "interfaces.state",
+    "input_kind": "text",
+    "template": "iosxe.show_interfaces.text",
+    "version": "iosxe-text-1.0"
+   },
+   "quality": "OK",
+   "raw_hash": "sha256:21978d2381eb7a97b2d15a576bcd853056b17fc085955ea1c8b41f14837419f3",
+   "redaction_status": "CHECKED_NO_SECRETS",
+   "schema": "nmas.troubleshooting.observation/1",
+   "source": {
+    "adapter": "gateway-fixture",
+    "command_or_api": "show interfaces",
+    "evidence_id": "ev-257dad093107d41b",
+    "source_type": "CLI",
+    "transport": "gateway-fixture"
+   },
+   "target": {
+    "device": "iosxe",
+    "interface": "GigabitEthernet2"
+   },
+   "unit": "bytes",
+   "value": 0
+  },
+  {
+   "clock": null,
+   "collected_at": "2026-11-09T22:16:34.137048Z",
+   "confidence": 0.95,
+   "evidence_class": "operational",
+   "extra": {
+    "counter": {
+     "cumulative": true,
+     "last_clear": null,
+     "width_bits": 64
+    }
+   },
+   "flags": [
+    "OBSERVATION_TIME_IS_COLLECTION_TIME"
+   ],
+   "freshness": {
+    "age_s": 0.001,
+    "max_age_s": 120.0,
+    "status": "FRESH"
+   },
+   "key": "interface.counter.out_packets",
+   "normalizer_version": "1.0.0",
+   "observation_id": "obs-7058060d3f8b8530",
+   "observed_at": "2026-11-09T22:16:34.137048Z",
+   "parser": {
+    "id": "interfaces.state",
+    "input_kind": "text",
+    "template": "iosxe.show_interfaces.text",
+    "version": "iosxe-text-1.0"
+   },
+   "quality": "OK",
+   "raw_hash": "sha256:21978d2381eb7a97b2d15a576bcd853056b17fc085955ea1c8b41f14837419f3",
+   "redaction_status": "CHECKED_NO_SECRETS",
+   "schema": "nmas.troubleshooting.observation/1",
+   "source": {
+    "adapter": "gateway-fixture",
+    "command_or_api": "show interfaces",
+    "evidence_id": "ev-257dad093107d41b",
+    "source_type": "CLI",
+    "transport": "gateway-fixture"
+   },
+   "target": {
+    "device": "iosxe",
+    "interface": "GigabitEthernet2"
+   },
+   "unit": "packets",
+   "value": 0
+  },
+  {
+   "clock": null,
+   "collected_at": "2026-11-09T22:16:38.149686Z",
+   "confidence": 0.95,
+   "evidence_class": "snapshot",
+   "flags": [
+    "NO_OPERATOR_URL",
+    "SECRETS_REDACTED"
+   ],
+   "freshness": {
+    "age_s": 0.0,
+    "max_age_s": 86400.0,
+    "status": "FRESH"
+   },
+   "key": "config.snapshot",
+   "normalizer_version": "1.0.0",
+   "observation_id": "obs-ed8608d60896903c",
+   "observed_at": "2026-11-09T22:16:38.151574Z",
+   "parser": {
+    "id": "snapshot.running-config",
+    "input_kind": "text",
+    "template": "running-config",
+    "version": "1.0"
+   },
+   "quality": "OK",
+   "raw_hash": "sha256:3ec5dbfeffaf5e06b8b1443d62244d1ab43424c30333c2570e58a6243ff13fa5",
+   "redaction_status": "REDACTED",
+   "schema": "nmas.troubleshooting.observation/1",
+   "source": {
+    "adapter": "gateway-fixture",
+    "command_or_api": "show running-config",
+    "evidence_id": "ev-9e42f7e768653b29",
+    "source_type": "CONFIG_SNAPSHOT",
+    "transport": "gateway-fixture"
+   },
+   "target": {
+    "device": "iosxe"
+   },
+   "unit": "",
+   "value": {
+    "bytes": 6859,
+    "hash": "sha256:3ec5dbfeffaf5e06b8b1443d62244d1ab43424c30333c2570e58a6243ff13fa5",
+    "kind": "running-config",
+    "lines": 265,
+    "operator_url": null,
+    "redactions": 1,
+    "revision": null
+   }
+  }
+ ],
+ "run": {
+  "adapter": "gateway-fixture",
+  "admission": {
+   "ok": true
+  },
+  "budget": {
+   "limits": {
+    "backoff_s": 0.5,
+    "max_bytes": 2000000,
+    "max_commands": 12,
+    "max_records": 10000,
+    "max_retries": 1,
+    "max_seconds": 240,
+    "min_interval_s": 0.2,
+    "per_command_timeout_s": 20.0
+   },
+   "used": {
+    "bytes": 13161,
+    "commands": 7,
+    "records": 0,
+    "retries": 0,
+    "seconds": 5.221,
+    "throttled_s": 0.0
+   }
+  },
+  "collector": "cli",
+  "collector_version": "1.0.0",
+  "command_or_api": [
+   "show version",
+   "show interfaces",
+   "show ip ospf neighbor",
+   "show ip route",
+   "show spanning-tree",
+   "show interfaces GigabitEthernet2 transceiver detail",
+   "show running-config"
+  ],
+  "device": "iosxe",
+  "evidence_ids": [
+   "ev-f77c1971e5bbfdbc",
+   "ev-257dad093107d41b",
+   "ev-2e7a0eda5ff12ba8",
+   "ev-63573aab049b2147",
+   "ev-64bc3c0402264f97",
+   "ev-d1dbf9c5727af58a",
+   "ev-9e42f7e768653b29"
+  ],
+  "finished_at": "2026-11-09T22:16:38.153311Z",
+  "flags": [],
+  "gateway": {
+   "fixture_id": "fx1fea66d5",
+   "gateway_evidence_seqs": [
+    6196,
+    6197,
+    6198,
+    6199,
+    6200,
+    6201,
+    6202
+   ],
+   "live": true,
+   "node": "iosxe",
+   "pin_id": null
+  },
+  "os_version": "17.06.01a",
+  "platform": "iosxe",
+  "privileges": "read-only",
+  "rate_budget": {
+   "max_commands": 12,
+   "min_interval_s": 0.2
+  },
+  "retries": 0,
+  "run_id": "run-feb95740b047",
+  "schema": "nmas.troubleshooting.collection-run/1",
+  "source_type": "CLI",
+  "stage": "collect",
+  "stage_order": 1,
+  "started_at": "2026-11-09T22:16:32.932307Z",
+  "status": "PARTIAL",
+  "timeout_s": 20.0,
+  "transport": "gateway-fixture"
+ },
+ "schema": "nmas.troubleshooting.collection-bundle/1"
+}

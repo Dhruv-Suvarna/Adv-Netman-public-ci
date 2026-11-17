@@ -1,0 +1,2747 @@
+{
+  "added_passing_ids": [
+    "core.tests.test_deploy_bindings.CheckTests.test_binding_errors",
+    "core.tests.test_deploy_bindings.CheckTests.test_current_settings_pass",
+    "core.tests.test_deploy_bindings.CheckTests.test_settings_source_never_contains_key_material",
+    "core.tests.test_deploy_bindings.CheckTests.test_source_errors_never_print_the_key",
+    "core.tests.test_deploy_bindings.SettingsBindingTests.test_explicit_binding_equals_the_recommended_binding",
+    "core.tests.test_deploy_bindings.SettingsBindingTests.test_settings_default_is_fail_closed",
+    "core.tests.test_deploy_bindings.SettingsBindingTests.test_source_registration_names_only_the_key_variable",
+    "core.tests.test_deploy_bindings.TrustedSourceTests.test_every_generated_hex_key_is_accepted_and_degenerate_keys_are_not",
+    "core.tests.test_deploy_bindings.TrustedSourceTests.test_strong_dedicated_key_is_trusted",
+    "core.tests.test_deploy_bindings.TrustedSourceTests.test_weak_short_reused_or_misplaced_keys_are_untrusted",
+    "core.tests.test_device_observations.IndependentApprovalAndCurrentTests.test_collector_and_automation_cannot_self_approve",
+    "core.tests.test_device_observations.IndependentApprovalAndCurrentTests.test_contradicting_later_identity_invalidates_version",
+    "core.tests.test_device_observations.IndependentApprovalAndCurrentTests.test_independent_operator_verifies_then_version_is_authoritative",
+    "core.tests.test_device_observations.IndependentApprovalAndCurrentTests.test_observed_version_is_database_read_only",
+    "core.tests.test_device_observations.IndependentApprovalAndCurrentTests.test_stale_version_is_not_current",
+    "core.tests.test_device_observations.IndependentApprovalAndCurrentTests.test_unknown_device_and_no_observation",
+    "core.tests.test_device_observations.IndependentApprovalAndCurrentTests.test_unverified_identity_yields_no_authoritative_version",
+    "core.tests.test_device_observations.IngestTests.test_accepts_and_persists_provenance",
+    "core.tests.test_device_observations.IngestTests.test_db_uniqueness_backstops_replay",
+    "core.tests.test_device_observations.IngestTests.test_excluded_unknown_and_unregistered_devices",
+    "core.tests.test_device_observations.IngestTests.test_identity_mismatch_rejected_and_recorded_as_denial",
+    "core.tests.test_device_observations.IngestTests.test_ingest_never_verifies_or_admits",
+    "core.tests.test_device_observations.IngestTests.test_iosxe_parser",
+    "core.tests.test_device_observations.IngestTests.test_malformed_envelope",
+    "core.tests.test_device_observations.IngestTests.test_other_platform_parsers",
+    "core.tests.test_device_observations.IngestTests.test_replay_nonce_refresh_unchanged_output_and_out_of_order",
+    "core.tests.test_device_observations.IngestTests.test_reverify_against_retained_raw",
+    "core.tests.test_device_observations.IngestTests.test_rows_are_append_only",
+    "core.tests.test_device_observations.IngestTests.test_signature_is_bound_to_device_and_command",
+    "core.tests.test_device_observations.IngestTests.test_source_platform_restriction",
+    "core.tests.test_device_observations.IngestTests.test_stale_and_future",
+    "core.tests.test_device_observations.IngestTests.test_unknown_source_and_bad_signature_write_nothing",
+    "core.tests.test_device_observations.IngestTests.test_unparseable_output_and_wrong_vendor",
+    "core.tests.test_device_observations.IngestTests.test_unsupported_platform",
+    "core.tests.test_device_observations.ProviderIntegrationTests.test_real_observation_provider_requires_independent_verification",
+    "core.tests.test_device_observe.DeviceObserveTests.test_accepted_use_links_the_observation_and_budget_is_enforced",
+    "core.tests.test_device_observe.DeviceObserveTests.test_authorization_scope_is_enforced_before_connecting",
+    "core.tests.test_device_observe.DeviceObserveTests.test_bad_evidence_dir_refused",
+    "core.tests.test_device_observe.DeviceObserveTests.test_blank_authorization_and_unknown_source_refused",
+    "core.tests.test_device_observe.DeviceObserveTests.test_expiry_between_connection_and_ingest_prevents_ingest",
+    "core.tests.test_device_observe.DeviceObserveTests.test_free_form_label_is_no_longer_an_authorization",
+    "core.tests.test_device_observe.DeviceObserveTests.test_missing_arguments_refused",
+    "core.tests.test_device_observe.DeviceObserveTests.test_no_approval_side_effects",
+    "core.tests.test_device_observe.DeviceObserveTests.test_r5_and_unknown_refused_without_connecting",
+    "core.tests.test_device_observe.DeviceObserveTests.test_success_retains_verifiable_evidence_and_ingests",
+    "core.tests.test_device_observe.DeviceObserveTests.test_write_failure_prevents_ingest",
+    "core.tests.test_host_key_pins.PinEvidenceTests.test_a_fingerprint_or_invented_string_is_not_key_material",
+    "core.tests.test_host_key_pins.PinEvidenceTests.test_claimed_pin_is_compared_never_trusted",
+    "core.tests.test_host_key_pins.PinEvidenceTests.test_collector_and_enroller_must_differ",
+    "core.tests.test_host_key_pins.PinEvidenceTests.test_command_reports_route_and_fails_closed",
+    "core.tests.test_host_key_pins.PinEvidenceTests.test_network_handshake_channels_are_never_accepted",
+    "core.tests.test_host_key_pins.PinEvidenceTests.test_pin_is_computed_exactly_as_the_handshake_check_computes_it",
+    "core.tests.test_host_key_pins.PinEvidenceTests.test_r5_unknown_and_platform_mismatch_are_refused",
+    "core.tests.test_host_key_pins.PinEvidenceTests.test_registered_pins_are_compared_and_conflicts_reported",
+    "core.tests.test_host_key_pins.PinEvidenceTests.test_stale_and_future_captures_are_refused",
+    "core.tests.test_host_key_pins.PinEvidenceTests.test_valid_console_capture_is_accepted_with_its_computed_pin",
+    "core.tests.test_host_key_pins.PinEvidenceTests.test_validation_writes_nothing",
+    "core.tests.test_observation_authorizations.AuthorizationTests.test_admit_reserves_a_use_inside_scope",
+    "core.tests.test_observation_authorizations.AuthorizationTests.test_approver_must_hold_approve_and_be_independent_of_requester",
+    "core.tests.test_observation_authorizations.AuthorizationTests.test_budget_counts_every_reservation",
+    "core.tests.test_observation_authorizations.AuthorizationTests.test_device_and_command_outside_scope_are_refused",
+    "core.tests.test_observation_authorizations.AuthorizationTests.test_expiry_and_not_yet_valid_are_enforced",
+    "core.tests.test_observation_authorizations.AuthorizationTests.test_grant_records_exact_scope_digest_and_reference",
+    "core.tests.test_observation_authorizations.AuthorizationTests.test_management_command_grant_show_revoke",
+    "core.tests.test_observation_authorizations.AuthorizationTests.test_only_the_version_command_can_be_authorized",
+    "core.tests.test_observation_authorizations.AuthorizationTests.test_operator_must_hold_execute_and_not_be_the_approver",
+    "core.tests.test_observation_authorizations.AuthorizationTests.test_r5_unknown_and_malformed_devices_are_refused_at_grant",
+    "core.tests.test_observation_authorizations.AuthorizationTests.test_revocation_is_final_and_needs_approve",
+    "core.tests.test_observation_authorizations.AuthorizationTests.test_rows_are_immutable_except_one_revocation_and_one_finish",
+    "core.tests.test_observation_authorizations.AuthorizationTests.test_scope_is_rechecked_against_the_resolver_at_use",
+    "core.tests.test_observation_authorizations.AuthorizationTests.test_tampered_scope_and_wrong_digest_are_refused",
+    "core.tests.test_observation_authorizations.AuthorizationTests.test_unknown_and_free_form_references_are_refused",
+    "core.tests.test_observation_authorizations.AuthorizationTests.test_window_and_ticket_bounds",
+    "core.tests.test_observation_collector.CollectorTests.test_absent_session_and_failed_session",
+    "core.tests.test_observation_collector.CollectorTests.test_ceos_capture_persists_with_provenance",
+    "core.tests.test_observation_collector.CollectorTests.test_evidence_retention_required",
+    "core.tests.test_observation_collector.CollectorTests.test_fresh_nonce_older_capture_is_out_of_order",
+    "core.tests.test_observation_collector.CollectorTests.test_frr_capture_uses_vtysh_command",
+    "core.tests.test_observation_collector.CollectorTests.test_garbage_output_is_parse_failure_from_ingest",
+    "core.tests.test_observation_collector.CollectorTests.test_no_approval_side_effects",
+    "core.tests.test_observation_collector.CollectorTests.test_prohibited_targets",
+    "core.tests.test_observation_collector.CollectorTests.test_replay_of_nonce_is_refused",
+    "core.tests.test_observation_collector.CollectorTests.test_session_provenance_requirements",
+    "core.tests.test_observation_collector.CollectorTests.test_unconfigured_source",
+    "core.tests.test_observation_collector.CollectorTests.test_unsupported_platform",
+    "core.tests.test_observation_connections.CeosTests.test_approved_path_end_to_end",
+    "core.tests.test_observation_connections.CeosTests.test_endpoint_changed_between_provider_and_connect",
+    "core.tests.test_observation_connections.CeosTests.test_failed_authentication_tries_candidates_and_is_sanitized",
+    "core.tests.test_observation_connections.CeosTests.test_invalid_requests",
+    "core.tests.test_observation_connections.CeosTests.test_legacy_pinned_end_to_end",
+    "core.tests.test_observation_connections.CeosTests.test_legacy_without_key_is_refused_without_connecting",
+    "core.tests.test_observation_connections.CeosTests.test_live_target_endpoint_change_refused",
+    "core.tests.test_observation_connections.CeosTests.test_missing_pin_never_connects",
+    "core.tests.test_observation_connections.CeosTests.test_path_pin_changed_is_refused",
+    "core.tests.test_observation_connections.CeosTests.test_presented_key_mismatch_closes_and_refuses",
+    "core.tests.test_observation_connections.CeosTests.test_transport_pin_refusal_and_generic_failure",
+    "core.tests.test_observation_connections.CeosTests.test_unobservable_key_refused",
+    "core.tests.test_observation_connections.CeosTests.test_wrapper_permits_only_version_command",
+    "core.tests.test_observation_connections.FrrTests.test_auth_failure_and_path_source_unsupported",
+    "core.tests.test_observation_connections.FrrTests.test_changes_and_missing_pin_refused",
+    "core.tests.test_observation_connections.FrrTests.test_end_to_end_argv_only",
+    "core.tests.test_observation_connections.FrrTests.test_unverified_or_mismatched_session_is_closed",
+    "core.tests.test_observation_connections.LinuxSessionTests.test_host_key_provenance_only_when_observed",
+    "core.tests.test_observation_connections.SharedCredentialTests.test_sc01_legacy_route_with_fleet_profile_is_refused_before_connecting",
+    "core.tests.test_observation_connections.SharedCredentialTests.test_sc02_inventory_credential_path_with_fleet_profile_is_refused",
+    "core.tests.test_observation_connections.SharedCredentialTests.test_sc03_path_bound_to_a_legacy_shared_account_is_refused",
+    "core.tests.test_observation_connections.SharedCredentialTests.test_sc04_inventory_with_only_a_fleet_reference_never_connects_on_either_lineage",
+    "core.tests.test_observation_evidence.SinkTests.test_default_roots_are_development_roots_only",
+    "core.tests.test_observation_evidence.SinkTests.test_directory_refusals",
+    "core.tests.test_observation_evidence.SinkTests.test_hostile_device_name_cannot_traverse",
+    "core.tests.test_observation_evidence.SinkTests.test_invalid_reference_refused",
+    "core.tests.test_observation_evidence.SinkTests.test_no_overwrite",
+    "core.tests.test_observation_evidence.SinkTests.test_tamper_detected",
+    "core.tests.test_observation_evidence.SinkTests.test_write_failure_raises_and_leaves_nothing",
+    "core.tests.test_observation_evidence.SinkTests.test_write_is_private_digest_verifiable_and_independent",
+    "core.tests.test_observation_sessions.ProviderTests.test_approved_path_needs_authorizer_and_supported_platform",
+    "core.tests.test_observation_sessions.ProviderTests.test_collect_with_blocked_governed_path_never_connects",
+    "core.tests.test_observation_sessions.ProviderTests.test_connection_without_interface_refused",
+    "core.tests.test_observation_sessions.ProviderTests.test_end_to_end_collect_no_admission_side_effects",
+    "core.tests.test_observation_sessions.ProviderTests.test_factory_failure_is_sanitized",
+    "core.tests.test_observation_sessions.ProviderTests.test_frr_uses_argv_only_version_query",
+    "core.tests.test_observation_sessions.ProviderTests.test_governed_refusal_has_no_fallback",
+    "core.tests.test_observation_sessions.ProviderTests.test_host_key_provenance_gaps_close_connection",
+    "core.tests.test_observation_sessions.ProviderTests.test_inventory_pin_is_enforced_not_invented",
+    "core.tests.test_observation_sessions.ProviderTests.test_legacy_real_resolver_and_exact_command",
+    "core.tests.test_observation_sessions.ProviderTests.test_prohibited_endpoints",
+    "core.tests.test_observation_sessions.ProviderTests.test_requested_address_must_be_policy_endpoint",
+    "core.tests.test_observation_sessions.ProviderTests.test_unregistered_path_is_not_authorized_by_real_guard",
+    "core.tests.test_observation_sessions.ProviderTests.test_unsupported_platform_and_missing_prerequisites",
+    "core.tests.test_reconcile_inventory.ReconciliationTests.test_adopted_device_removed_from_inventory_is_registry_only",
+    "core.tests.test_reconcile_inventory.ReconciliationTests.test_adopted_legacy_identity_preserved_and_gaps_exposed",
+    "core.tests.test_reconcile_inventory.ReconciliationTests.test_command_json_and_fail_on_gap",
+    "core.tests.test_reconcile_inventory.ReconciliationTests.test_empty_registry_lists_every_eligible_original_and_excludes_r5",
+    "core.tests.test_reconcile_inventory.ReconciliationTests.test_fail_on_gap_includes_evidence_only_gaps",
+    "core.tests.test_reconcile_inventory.ReconciliationTests.test_historical_record_does_not_validate_current_identity",
+    "core.tests.test_reconcile_inventory.ReconciliationTests.test_netbox_reference_is_not_comparison",
+    "core.tests.test_reconcile_inventory.ReconciliationTests.test_non_adopted_origin_shadowing_inventory_name_is_conflict",
+    "core.tests.test_reconcile_inventory.ReconciliationTests.test_platform_mismatch_is_conflict_not_rewritten",
+    "core.tests.test_reconcile_inventory.ReconciliationTests.test_read_only_and_idempotent",
+    "core.tests.test_reconcile_inventory.ReconciliationTests.test_registered_new_device_without_authority_has_unknown_provenance",
+    "core.tests.test_reconcile_inventory.ReconciliationTests.test_registry_row_for_excluded_host_is_conflict",
+    "core.tests.test_reconcile_inventory.ReconciliationTests.test_report_cannot_claim_live_or_production_evidence",
+    "core.tests.test_reconcile_inventory.ReconciliationTests.test_resolver_conflict_cannot_be_classified_registered",
+    "core.tests.test_reconcile_inventory.ReconciliationTests.test_second_registry_read_failure_discards_snapshot",
+    "core.tests.test_reconcile_inventory.ReconciliationTests.test_unreadable_registry_fails_closed",
+    "core.tests.test_troubleshooting_access.ButtonGatingTests.test_TSACC_020_ts_approver_without_nmas_approve_sees_disabled_approve_and_is_refused",
+    "core.tests.test_troubleshooting_access.ButtonGatingTests.test_TSACC_021_server_side_recheck_refuses_without_nmas_permission_even_past_the_route",
+    "core.tests.test_troubleshooting_access.LayeredAccessTests.test_TSACC_010_nmas_permission_without_ts_role_is_refused_by_the_view",
+    "core.tests.test_troubleshooting_access.LayeredAccessTests.test_TSACC_011_ts_role_without_nmas_permission_is_refused_by_the_middleware",
+    "core.tests.test_troubleshooting_access.LayeredAccessTests.test_TSACC_012_mfa_pending_session_reaches_no_case_data",
+    "core.tests.test_troubleshooting_access.LayeredAccessTests.test_TSACC_013_anonymous_api_gets_json_401_and_page_gets_login",
+    "core.tests.test_troubleshooting_access.LayeredAccessTests.test_TSACC_014_tenant_scope_still_applies_with_full_nmas_permissions",
+    "core.tests.test_troubleshooting_access.RouteClassificationTests.test_TSACC_001_every_troubleshooting_route_is_classified_exactly_once",
+    "core.tests.test_troubleshooting_access.RouteClassificationTests.test_TSACC_002_plan_action_routes_match_the_view_permission_map",
+    "core.tests.test_troubleshooting_access.RouteClassificationTests.test_TSACC_003_writes_and_diagnostics_need_more_than_view",
+    "core.tests.test_troubleshooting_access.RouteClassificationTests.test_TSACC_004_raw_evidence_export_report_and_audit_are_audited_reads",
+    "core.tests.test_troubleshooting_acl_history.BindingTests.test_ACLHIST_011_both_factory_consumers_lazy_typed_failsafe",
+    "core.tests.test_troubleshooting_acl_history.BindingTests.test_ACLHIST_012_runtime_acl_context_contract_unchanged",
+    "core.tests.test_troubleshooting_acl_history.PersistentHistoryTests.test_ACLHIST_001_restart_continuity_yields_delta",
+    "core.tests.test_troubleshooting_acl_history.PersistentHistoryTests.test_ACLHIST_002_matches_in_memory_reference",
+    "core.tests.test_troubleshooting_acl_history.PersistentHistoryTests.test_ACLHIST_003_no_history_after_restart_is_unknown",
+    "core.tests.test_troubleshooting_acl_history.PersistentHistoryTests.test_ACLHIST_004_stale_short_reset_changed_survive_restart",
+    "core.tests.test_troubleshooting_acl_history.PersistentHistoryTests.test_ACLHIST_005_partial_and_nonmonotonic_do_not_persist",
+    "core.tests.test_troubleshooting_acl_history.PersistentHistoryTests.test_ACLHIST_006_scope_isolation_case_tenant_device_acl_parser",
+    "core.tests.test_troubleshooting_acl_history.PersistentHistoryTests.test_ACLHIST_007_foreign_corrupt_or_inconsistent_evidence_ignored",
+    "core.tests.test_troubleshooting_acl_history.PersistentHistoryTests.test_ACLHIST_008_persistence_failure_is_contained",
+    "core.tests.test_troubleshooting_acl_history.PersistentHistoryTests.test_ACLHIST_009_evidence_immutable",
+    "core.tests.test_troubleshooting_acl_history.PersistentHistoryTests.test_ACLHIST_010_construction_makes_no_db_access",
+    "core.tests.test_troubleshooting_acl_source.CollectorTests.test_ACLSRC_006_catalogue_read_only_labels_and_no_contact_when_unsupported",
+    "core.tests.test_troubleshooting_acl_source.CollectorTests.test_ACLSRC_007_collector_preserves_raw_hash_source_and_history",
+    "core.tests.test_troubleshooting_acl_source.GrammarTests.test_ACLSRC_001_supported_and_unsupported_rule_syntax",
+    "core.tests.test_troubleshooting_acl_source.JoinTests.test_ACLSRC_008_join_uses_only_collected_attachment",
+    "core.tests.test_troubleshooting_acl_source.RulesParserTests.test_ACLSRC_002_order_remarks_counters_and_defects",
+    "core.tests.test_troubleshooting_acl_source.RulesParserTests.test_ACLSRC_003_attachment_is_explicit_never_inferred",
+    "core.tests.test_troubleshooting_acl_source.RulesParserTests.test_ACLSRC_004_counter_history_ok_reset_stale_short_changed_partial",
+    "core.tests.test_troubleshooting_acl_source.RulesParserTests.test_ACLSRC_005_version_gate_fails_closed",
+    "core.tests.test_troubleshooting_acl_source.RuntimeToHc18Tests.test_ACLSRC_009_ingress_deny_with_incrementing_counter_is_causal",
+    "core.tests.test_troubleshooting_acl_source.RuntimeToHc18Tests.test_ACLSRC_010_tcp_healthy_with_icmp_denied_passes_and_records_icmp",
+    "core.tests.test_troubleshooting_acl_source.RuntimeToHc18Tests.test_ACLSRC_011_shadowed_deny_does_not_block",
+    "core.tests.test_troubleshooting_acl_source.RuntimeToHc18Tests.test_ACLSRC_012_wrong_direction_denial_is_never_causal",
+    "core.tests.test_troubleshooting_acl_source.RuntimeToHc18Tests.test_ACLSRC_013_unknown_or_inactive_attachment_stays_inconclusive",
+    "core.tests.test_troubleshooting_acl_source.RuntimeToHc18Tests.test_ACLSRC_014_stale_reset_missing_and_flat_counters_never_causal",
+    "core.tests.test_troubleshooting_acl_source.RuntimeToHc18Tests.test_ACLSRC_015_unsupported_rule_before_match_is_inconclusive",
+    "core.tests.test_troubleshooting_acl_source.RuntimeToHc18Tests.test_ACLSRC_016_unsupported_version_no_contact_and_provenance",
+    "core.tests.test_troubleshooting_acl_source.RuntimeToHc18Tests.test_ACLSRC_017_no_explicit_match_cannot_exclude_implicit_deny",
+    "core.tests.test_troubleshooting_ai.GatewayTests.test_concurrency_limit_blocks_second_inflight_call",
+    "core.tests.test_troubleshooting_ai.GatewayTests.test_read_tools_return_provenance_and_unknown_for_stale",
+    "core.tests.test_troubleshooting_ai.GatewayTests.test_ut058_additional_readonly_test_records_new_evidence_and_updates_hypotheses",
+    "core.tests.test_troubleshooting_ai.GatewayTests.test_ut059_rejects_write_out_of_scope_unregistered_and_privilege_args",
+    "core.tests.test_troubleshooting_ai.GatewayTests.test_ut060_hypotheses_cite_sources_and_unsupported_claims_marked_unverified",
+    "core.tests.test_troubleshooting_ai.GatewayTests.test_ut061_budgets_cap_calls_bytes_devices_and_time",
+    "core.tests.test_troubleshooting_ai.GatewayTests.test_ut062_checkpoint_survives_worker_replacement_without_duplicate_action",
+    "core.tests.test_troubleshooting_ai.GatewayTests.test_ut063_agent_proposes_but_cannot_self_authorize_or_execute",
+    "core.tests.test_troubleshooting_ai.GatewayTests.test_ut064_no_fixture_or_permission_is_escalated_not_bypassed",
+    "core.tests.test_troubleshooting_ai.GatewayTests.test_valid_recent_test_is_not_rerun",
+    "core.tests.test_troubleshooting_ai.GatewayTests.test_wrong_caller_closed_handoff_and_bad_nonce_denied",
+    "core.tests.test_troubleshooting_ai.HandoffGateTests.test_agent_cannot_open_its_own_handoff_and_uncertainty_is_required",
+    "core.tests.test_troubleshooting_ai.HandoffGateTests.test_default_catalog_uses_registered_runbook_and_refuses_unknown",
+    "core.tests.test_troubleshooting_ai.HandoffGateTests.test_deterministic_root_cause_already_confirmed_blocks_handoff_unless_special_case",
+    "core.tests.test_troubleshooting_ai.HandoffGateTests.test_ut055_fails_closed_without_catalog_and_without_baseline",
+    "core.tests.test_troubleshooting_ai.HandoffGateTests.test_ut055_refused_while_safe_tests_unexamined",
+    "core.tests.test_troubleshooting_ai.HandoffGateTests.test_ut056_dossier_has_baselines_golden_url_correlation_matrix_evidence",
+    "core.tests.test_troubleshooting_ai.HandoffGateTests.test_ut057_dossier_is_redacted_and_scoped_to_authorized_verified_targets",
+    "core.tests.test_troubleshooting_ai.InvestigationLoopTests.test_agent_failures_are_retried_then_escalated",
+    "core.tests.test_troubleshooting_ai.InvestigationLoopTests.test_it11_agent_iterates_requests_tools_and_reaches_supported_root_cause",
+    "core.tests.test_troubleshooting_ai.InvestigationLoopTests.test_it11_honest_failure_when_agent_cannot_conclude",
+    "core.tests.test_troubleshooting_ai.InvestigationLoopTests.test_it12_unauthorized_write_attempt_denied_audited_and_loop_continues",
+    "core.tests.test_troubleshooting_ai.InvestigationLoopTests.test_loop_stops_at_iteration_budget_with_honest_state",
+    "core.tests.test_troubleshooting_ai.InvestigationLoopTests.test_repeated_tool_failures_escalate",
+    "core.tests.test_troubleshooting_ai.InvestigationLoopTests.test_restart_resumes_from_persisted_iteration_without_rerunning",
+    "core.tests.test_troubleshooting_ai.InvestigationLoopTests.test_ut064_missing_fixture_blocks_case_externally",
+    "core.tests.test_troubleshooting_ai_runtime.ContinuationTests.test_AIR001_model_obtains_new_diagnostic_evidence_with_citations",
+    "core.tests.test_troubleshooting_ai_runtime.ContinuationTests.test_AIR002_resume_does_not_duplicate_execution",
+    "core.tests.test_troubleshooting_ai_runtime.ContinuationTests.test_AIR003_writes_cli_and_out_of_scope_rejected",
+    "core.tests.test_troubleshooting_ai_runtime.ContinuationTests.test_AIR004_provider_unavailable_fails_closed",
+    "core.tests.test_troubleshooting_ai_runtime.ContinuationTests.test_AIR005_invalid_model_output_retried_then_escalated",
+    "core.tests.test_troubleshooting_ai_runtime.ContinuationTests.test_AIR006_authorization_and_closed_handoff",
+    "core.tests.test_troubleshooting_ai_runtime.ContinuationTests.test_AIR007_unregistered_test_id_refused_by_adapter",
+    "core.tests.test_troubleshooting_baseline_history.ConfigSnapshotTests.test_blhist_001_conforming_scope_only",
+    "core.tests.test_troubleshooting_baseline_history.ConfigSnapshotTests.test_blhist_002_missing_snapshot_is_unknown_not_conforming",
+    "core.tests.test_troubleshooting_baseline_history.ConfigSnapshotTests.test_blhist_003_mixed_devices_partial",
+    "core.tests.test_troubleshooting_baseline_history.ConfigSnapshotTests.test_blhist_004_scope_guards",
+    "core.tests.test_troubleshooting_baseline_history.ConfigSnapshotTests.test_blhist_005_golden_payload_integrity_and_bad_operation",
+    "core.tests.test_troubleshooting_baseline_history.ConfigSnapshotTests.test_blhist_006_denied_and_failing_readers_fail_closed",
+    "core.tests.test_troubleshooting_baseline_history.ConfigSnapshotTests.test_blhist_007_approved_vs_unapproved_drift",
+    "core.tests.test_troubleshooting_baseline_history.ConfigSnapshotTests.test_blhist_008_redacted_only_scope_is_unknown",
+    "core.tests.test_troubleshooting_baseline_history.DjangoSourcesWiringTests.test_blhist_030_defaults_remain_explicit_unavailable_without_collaborators",
+    "core.tests.test_troubleshooting_baseline_history.DjangoSourcesWiringTests.test_blhist_031_injected_reader_and_adapter_are_used",
+    "core.tests.test_troubleshooting_baseline_history.HistoryTests.test_blhist_020_no_reader_or_no_declared_series_unavailable",
+    "core.tests.test_troubleshooting_baseline_history.HistoryTests.test_blhist_021_learned_fresh_with_pointer_fields",
+    "core.tests.test_troubleshooting_baseline_history.HistoryTests.test_blhist_022_stale_partial_and_aged_samples",
+    "core.tests.test_troubleshooting_baseline_history.HistoryTests.test_blhist_023_mixed_devices_out_of_scope_denied_not_queried",
+    "core.tests.test_troubleshooting_baseline_history.HistoryTests.test_blhist_024_denied_reader",
+    "core.tests.test_troubleshooting_baseline_history.HistoryTests.test_blhist_025_counter_reset_and_sample_hygiene",
+    "core.tests.test_troubleshooting_baseline_history.HistoryTests.test_blhist_026_flux_query_validated_and_parsed",
+    "core.tests.test_troubleshooting_baseline_history.OrmSnapshotAndPersistTests.test_blhist_040_orm_reader_newest_per_device_tenant_scoped_and_integrity",
+    "core.tests.test_troubleshooting_baseline_history.OrmSnapshotAndPersistTests.test_blhist_041_end_to_end_drift_persisted_in_report_baselines",
+    "core.tests.test_troubleshooting_baseline_history.OrmSnapshotAndPersistTests.test_blhist_042_persisted_history_baseline_carries_freshness_and_lkg",
+    "core.tests.test_troubleshooting_baseline_scope.OrmScopeTests.test_blscope_020_real_golden_selected_by_device_scope_with_exact_hash_and_link",
+    "core.tests.test_troubleshooting_baseline_scope.OrmScopeTests.test_blscope_021_unknown_device_and_empty_scope_are_unavailable_despite_a_golden_existing",
+    "core.tests.test_troubleshooting_baseline_scope.OrmScopeTests.test_blscope_022_partial_coverage_with_real_golden",
+    "core.tests.test_troubleshooting_baseline_scope.OrmScopeTests.test_blscope_023_running_soak_on_unrelated_device_is_not_attached",
+    "core.tests.test_troubleshooting_baseline_scope.OrmScopeTests.test_blscope_024_active_soak_candidate_selected_when_golden_exists_for_older_revision_only",
+    "core.tests.test_troubleshooting_baseline_scope.OrmScopeTests.test_blscope_025_two_real_goldens_newer_unrelated_one_does_not_displace_the_older",
+    "core.tests.test_troubleshooting_baseline_scope.PureSelectionTests.test_blscope_001_unrelated_newer_golden_is_ignored",
+    "core.tests.test_troubleshooting_baseline_scope.PureSelectionTests.test_blscope_002_no_devices_or_no_coverage_fails_closed_never_global_newest",
+    "core.tests.test_troubleshooting_baseline_scope.PureSelectionTests.test_blscope_003_newest_revision_per_device_and_previous_revision",
+    "core.tests.test_troubleshooting_baseline_scope.PureSelectionTests.test_blscope_004_mixed_revision_claims_no_single_revision",
+    "core.tests.test_troubleshooting_baseline_scope.PureSelectionTests.test_blscope_005_partial_coverage_lists_uncovered_devices",
+    "core.tests.test_troubleshooting_baseline_scope.PureSelectionTests.test_blscope_006_partial_and_mixed_combined",
+    "core.tests.test_troubleshooting_baseline_scope.PureSelectionTests.test_blscope_007_unrelated_running_soak_is_never_selected",
+    "core.tests.test_troubleshooting_baseline_scope.PureSelectionTests.test_blscope_008_running_soak_on_scoped_devices_is_the_active_candidate",
+    "core.tests.test_troubleshooting_baseline_scope.PureSelectionTests.test_blscope_009_multiple_active_soaks_are_ambiguous_and_not_selected",
+    "core.tests.test_troubleshooting_baseline_scope.PureSelectionTests.test_blscope_010_mixed_revisions_claim_no_parent_soak",
+    "core.tests.test_troubleshooting_baseline_scope.PureSelectionTests.test_blscope_011_legacy_consumer_keys_are_preserved",
+    "core.tests.test_troubleshooting_baseline_scope.PureSelectionTests.test_blscope_012_override_and_static_sources_unchanged",
+    "core.tests.test_troubleshooting_collectors.S2_Adapters.test_argv_runner_transport",
+    "core.tests.test_troubleshooting_collectors.S2_Adapters.test_flux_query_is_validated_and_csv_parsed",
+    "core.tests.test_troubleshooting_collectors.S2_Adapters.test_health_live_transport_enforces_existing_allowlist",
+    "core.tests.test_troubleshooting_collectors.S2_Adapters.test_netmiko_like_transport_maps_errors_without_leaking",
+    "core.tests.test_troubleshooting_collectors.S2_Adapters.test_topology_telemetry_adapter_only_trusts_fresh_endpoints",
+    "core.tests.test_troubleshooting_collectors.S2_ContractBridge.test_bundle_maps_to_s1_collection_bundle_and_validates",
+    "core.tests.test_troubleshooting_collectors.S2_ContractBridge.test_intent_and_rates_are_derived_basis",
+    "core.tests.test_troubleshooting_collectors.S2_ContractBridge.test_refused_run_maps_to_denied_and_untrusted_quality_maps",
+    "core.tests.test_troubleshooting_collectors.S2_ReplayOfRecordedGatewayEvidence.test_REPLAY_ceos_interfaces_and_empty_protocols",
+    "core.tests.test_troubleshooting_collectors.S2_ReplayOfRecordedGatewayEvidence.test_REPLAY_frr_linux_addr_and_empty_vtysh",
+    "core.tests.test_troubleshooting_collectors.S2_ReplayOfRecordedGatewayEvidence.test_REPLAY_iosxe_text_template_on_real_17_06_01a_output",
+    "core.tests.test_troubleshooting_collectors.S2_ReplayOfRecordedGatewayEvidence.test_REPLAY_recorded_bundles_state_unparsed_and_empty_honestly",
+    "core.tests.test_troubleshooting_collectors.S2_ReplayOfRecordedGatewayEvidence.test_REPLAY_recordings_declare_live_gateway_provenance",
+    "core.tests.test_troubleshooting_collectors.S2_Safety.test_bundles_are_deterministic_for_replay",
+    "core.tests.test_troubleshooting_collectors.S2_Safety.test_evidence_contract_carries_full_provenance",
+    "core.tests.test_troubleshooting_collectors.S2_Safety.test_maintenance_mode_is_flagged_not_hidden",
+    "core.tests.test_troubleshooting_collectors.S2_Safety.test_provider_snapshots_golden_and_intent_provenance",
+    "core.tests.test_troubleshooting_collectors.S2_Safety.test_secrets_redacted_in_stored_raw_and_snapshot_observations",
+    "core.tests.test_troubleshooting_collectors.UT013_PlatformCommandSelection.test_UT013_capability_probe_overrides_target_claims",
+    "core.tests.test_troubleshooting_collectors.UT013_PlatformCommandSelection.test_UT013_domain_filter_and_platform_isolation",
+    "core.tests.test_troubleshooting_collectors.UT013_PlatformCommandSelection.test_UT013_only_catalogued_read_only_commands_per_platform",
+    "core.tests.test_troubleshooting_collectors.UT013_PlatformCommandSelection.test_UT013_parameters_validated_not_concatenated",
+    "core.tests.test_troubleshooting_collectors.UT013_PlatformCommandSelection.test_UT013_uncatalogued_key_is_missing_not_executed",
+    "core.tests.test_troubleshooting_collectors.UT013_PlatformCommandSelection.test_UT013_version_gate_and_admission_gate_before_transport",
+    "core.tests.test_troubleshooting_collectors.UT013_PlatformCommandSelection.test_UT013_write_and_active_probe_commands_rejected",
+    "core.tests.test_troubleshooting_collectors.UT014_GnmiStreaming.test_UT014_backpressure_counts_dropped_notifications",
+    "core.tests.test_troubleshooting_collectors.UT014_GnmiStreaming.test_UT014_bad_or_future_timestamp_falls_back_and_is_flagged",
+    "core.tests.test_troubleshooting_collectors.UT014_GnmiStreaming.test_UT014_counters_admin_and_unmapped_paths",
+    "core.tests.test_troubleshooting_collectors.UT014_GnmiStreaming.test_UT014_device_clock_skew_corrected",
+    "core.tests.test_troubleshooting_collectors.UT014_GnmiStreaming.test_UT014_event_time_is_notification_time_not_arrival",
+    "core.tests.test_troubleshooting_collectors.UT014_GnmiStreaming.test_UT014_subscription_policy_path_allowlist_rate_bound_and_set_refused",
+    "core.tests.test_troubleshooting_collectors.UT015_SnmpCounters.test_UT015_32bit_wrap_detected_and_delta_modulo",
+    "core.tests.test_troubleshooting_collectors.UT015_SnmpCounters.test_UT015_gap_duplicate_and_time_regression",
+    "core.tests.test_troubleshooting_collectors.UT015_SnmpCounters.test_UT015_line_rate_violation_marks_sample_untrusted",
+    "core.tests.test_troubleshooting_collectors.UT015_SnmpCounters.test_UT015_normal_rate_and_bits_conversion",
+    "core.tests.test_troubleshooting_collectors.UT015_SnmpCounters.test_UT015_oids_equal_the_repository_catalog",
+    "core.tests.test_troubleshooting_collectors.UT015_SnmpCounters.test_UT015_poll_via_collector_enforces_allowlist_and_hides_session",
+    "core.tests.test_troubleshooting_collectors.UT015_SnmpCounters.test_UT015_polling_across_polls_emits_rates_wraps_and_resets",
+    "core.tests.test_troubleshooting_collectors.UT015_SnmpCounters.test_UT015_reset_is_not_a_wrap_and_has_no_fabricated_rate",
+    "core.tests.test_troubleshooting_collectors.UT015_SnmpCounters.test_UT015_sysuptime_ticks_to_seconds_and_restart_detection",
+    "core.tests.test_troubleshooting_collectors.UT016_SyslogDedup.test_UT016_duplicates_collapse_and_every_original_reference_is_kept",
+    "core.tests.test_troubleshooting_collectors.UT016_SyslogDedup.test_UT016_event_classes",
+    "core.tests.test_troubleshooting_collectors.UT016_SyslogDedup.test_UT016_same_message_far_apart_is_a_new_event",
+    "core.tests.test_troubleshooting_collectors.UT016_SyslogDedup.test_UT016_secrets_in_messages_are_redacted",
+    "core.tests.test_troubleshooting_collectors.UT017_NetFlow.test_UT017_collector_requires_service_selector",
+    "core.tests.test_troubleshooting_collectors.UT017_NetFlow.test_UT017_exporter_coverage_and_privacy_masking",
+    "core.tests.test_troubleshooting_collectors.UT017_NetFlow.test_UT017_no_live_exporter_exists_for_any_platform",
+    "core.tests.test_troubleshooting_collectors.UT017_NetFlow.test_UT017_sampling_uncertainty_retained",
+    "core.tests.test_troubleshooting_collectors.UT017_NetFlow.test_UT017_service_scoping_and_out_of_scope_counted_not_aggregated",
+    "core.tests.test_troubleshooting_collectors.UT017_NetFlow.test_UT017_unknown_sampling_rate_gives_no_estimate",
+    "core.tests.test_troubleshooting_collectors.UT018_PacketMetadata.test_UT018_authorization_required_scoped_and_unexpired",
+    "core.tests.test_troubleshooting_collectors.UT018_PacketMetadata.test_UT018_bounds_enforced",
+    "core.tests.test_troubleshooting_collectors.UT018_PacketMetadata.test_UT018_collector_cannot_start_a_capture",
+    "core.tests.test_troubleshooting_collectors.UT018_PacketMetadata.test_UT018_payload_never_reaches_evidence_or_observations",
+    "core.tests.test_troubleshooting_collectors.UT019_CanonicalEquivalence.test_UT019_eos_counter_refresh_time_is_the_event_time",
+    "core.tests.test_troubleshooting_collectors.UT019_CanonicalEquivalence.test_UT019_eos_json_ios_text_openconfig_snmp_yield_the_same_canonical_model",
+    "core.tests.test_troubleshooting_collectors.UT019_CanonicalEquivalence.test_UT019_intent_is_a_separate_class_from_operational_state",
+    "core.tests.test_troubleshooting_collectors.UT019_CanonicalEquivalence.test_UT019_interface_aliases_and_linux_names",
+    "core.tests.test_troubleshooting_collectors.UT019_CanonicalEquivalence.test_UT019_ios_text_maps_to_same_vocabulary_and_units",
+    "core.tests.test_troubleshooting_collectors.UT019_CanonicalEquivalence.test_UT019_routing_neighbors_across_vendors",
+    "core.tests.test_troubleshooting_collectors.UT019_CanonicalEquivalence.test_UT019_state_vocabulary",
+    "core.tests.test_troubleshooting_collectors.UT020_ParserFailClosed.test_UT020_cross_parser_disagreement_marks_only_the_disagreeing_values",
+    "core.tests.test_troubleshooting_collectors.UT020_ParserFailClosed.test_UT020_inaccurate_telemetry_is_caught_by_plausibility",
+    "core.tests.test_troubleshooting_collectors.UT020_ParserFailClosed.test_UT020_malformed_and_empty_input_are_missing_records",
+    "core.tests.test_troubleshooting_collectors.UT020_ParserFailClosed.test_UT020_parser_disagreement_with_raw_text_is_untrusted",
+    "core.tests.test_troubleshooting_collectors.UT020_ParserFailClosed.test_UT020_partial_parse_marks_quality",
+    "core.tests.test_troubleshooting_collectors.UT020_ParserFailClosed.test_UT020_version_selection",
+    "core.tests.test_troubleshooting_collectors.UT020_ParserFailClosed.test_UT020_wrong_nos_fails_closed_without_observations",
+    "core.tests.test_troubleshooting_collectors.UT021_TimeAndOrdering.test_UT021_freshness_and_trusted_value",
+    "core.tests.test_troubleshooting_collectors.UT021_TimeAndOrdering.test_UT021_missing_timestamp_uses_arrival_and_is_partial",
+    "core.tests.test_troubleshooting_collectors.UT021_TimeAndOrdering.test_UT021_skew_estimation_and_correction",
+    "core.tests.test_troubleshooting_collectors.UT021_TimeAndOrdering.test_UT021_timestamp_forms",
+    "core.tests.test_troubleshooting_collectors.UT021_TimeAndOrdering.test_UT021_unordered_arrivals_and_skew_correlate_across_devices",
+    "core.tests.test_troubleshooting_collectors.UT022_Budgets.test_UT022_buffer_rejects_and_counts",
+    "core.tests.test_troubleshooting_collectors.UT022_Budgets.test_UT022_byte_budget_and_oversize_output",
+    "core.tests.test_troubleshooting_collectors.UT022_Budgets.test_UT022_command_budget_stops_further_requests",
+    "core.tests.test_troubleshooting_collectors.UT022_Budgets.test_UT022_retries_consume_the_command_budget",
+    "core.tests.test_troubleshooting_collectors.UT022_Budgets.test_UT022_snmp_budget_exhaustion_discards_half_table",
+    "core.tests.test_troubleshooting_collectors.UT022_Budgets.test_UT022_syslog_and_flow_record_budgets",
+    "core.tests.test_troubleshooting_collectors.UT022_Budgets.test_UT022_time_budget_and_rate_spacing",
+    "core.tests.test_troubleshooting_collectors.UT022_Budgets.test_UT022_timeout_retries_are_bounded_and_counted",
+    "core.tests.test_troubleshooting_collectors.UT023_StreamingVsPolling.test_UT023_allowed_gnmi_prefixes_derive_from_repository_catalog",
+    "core.tests.test_troubleshooting_collectors.UT023_StreamingVsPolling.test_UT023_default_sample_interval_matches_repository_gnmi_catalog",
+    "core.tests.test_troubleshooting_collectors.UT023_StreamingVsPolling.test_UT023_every_source_documents_mode_sampling_freshness_overhead_backpressure",
+    "core.tests.test_troubleshooting_collectors.UT023_StreamingVsPolling.test_UT023_independently_selectable",
+    "core.tests.test_troubleshooting_collectors.UT024_ErrorsAreMissingData.test_UT024_partial_run_keeps_good_data_and_missing_side_by_side",
+    "core.tests.test_troubleshooting_collectors.UT024_ErrorsAreMissingData.test_UT024_permission_denied_in_output_or_transport",
+    "core.tests.test_troubleshooting_collectors.UT024_ErrorsAreMissingData.test_UT024_provider_failures",
+    "core.tests.test_troubleshooting_collectors.UT024_ErrorsAreMissingData.test_UT024_transport_error_never_leaks_exception_text",
+    "core.tests.test_troubleshooting_collectors.UT024_ErrorsAreMissingData.test_UT024_trusted_value_of_absent_observation_is_unknown",
+    "core.tests.test_troubleshooting_collectors.UT024_ErrorsAreMissingData.test_UT024_unsupported_command_and_empty_and_device_note",
+    "core.tests.test_troubleshooting_collectors.UT053_UnsupportedNeverInvented.test_UT053_active_probes_and_writes_are_not_in_any_catalog",
+    "core.tests.test_troubleshooting_collectors.UT053_UnsupportedNeverInvented.test_UT053_empty_stp_evidence_is_retained_but_yields_no_observation",
+    "core.tests.test_troubleshooting_collectors.UT053_UnsupportedNeverInvented.test_UT053_iosxe_has_no_bgp_or_fhrp_parser_and_says_so",
+    "core.tests.test_troubleshooting_collectors.UT053_UnsupportedNeverInvented.test_UT053_netconf_read_maps_to_canonical_interface_state",
+    "core.tests.test_troubleshooting_collectors.UT053_UnsupportedNeverInvented.test_UT053_snmp_and_gnmi_set_refused",
+    "core.tests.test_troubleshooting_collectors.UT053_UnsupportedNeverInvented.test_UT053_unsupported_operations_refused_without_touching_transport",
+    "core.tests.test_troubleshooting_collectors.UT053_UnsupportedNeverInvented.test_UT053_unsupported_platforms_and_sources_are_named_not_faked",
+    "core.tests.test_troubleshooting_collectors.UT053_UnsupportedNeverInvented.test_UT053_xxe_in_netconf_reply_is_rejected",
+    "core.tests.test_troubleshooting_config_snapshot.RuntimeToBaselineTests.test_cfgsnap_001_usable_snapshot_redacted_scoped_and_compared_before_baseline",
+    "core.tests.test_troubleshooting_config_snapshot.RuntimeToBaselineTests.test_cfgsnap_002_missing_snapshot_no_transport_is_unknown_and_nothing_contacted",
+    "core.tests.test_troubleshooting_config_snapshot.RuntimeToBaselineTests.test_cfgsnap_003_partial_empty_output_is_not_a_usable_snapshot",
+    "core.tests.test_troubleshooting_config_snapshot.RuntimeToBaselineTests.test_cfgsnap_004_stale_snapshot_is_unknown",
+    "core.tests.test_troubleshooting_config_snapshot.RuntimeToBaselineTests.test_cfgsnap_005_transport_permission_denied_is_explicit_gap",
+    "core.tests.test_troubleshooting_config_snapshot.RuntimeToBaselineTests.test_cfgsnap_006_capability_refusal_does_not_touch_device",
+    "core.tests.test_troubleshooting_config_snapshot.RuntimeToBaselineTests.test_cfgsnap_007_command_budget_is_preserved",
+    "core.tests.test_troubleshooting_config_snapshot.RuntimeToBaselineTests.test_cfgsnap_008_unknown_platform_has_no_catalogued_read",
+    "core.tests.test_troubleshooting_config_snapshot.RuntimeToBaselineTests.test_cfgsnap_009_duplicate_and_restart_are_idempotent_newest_wins",
+    "core.tests.test_troubleshooting_config_snapshot.RuntimeToBaselineTests.test_cfgsnap_010_actor_without_device_visibility_is_denied_per_device",
+    "core.tests.test_troubleshooting_deployment.AdmissionTests.test_DEP001_verified_uses_authoritative_version_not_inventory_or_client_claim",
+    "core.tests.test_troubleshooting_deployment.AdmissionTests.test_DEP002_fail_closed_missing_unknown_unsupported",
+    "core.tests.test_troubleshooting_deployment.AdmissionTests.test_DEP003_withdrawn_and_non_admitted_lifecycle_refused",
+    "core.tests.test_troubleshooting_deployment.AdmissionTests.test_DEP004_default_factory_admits_nobody",
+    "core.tests.test_troubleshooting_deployment.CollectionTests.test_DEP010_bounded_read_only_collection_via_runtime",
+    "core.tests.test_troubleshooting_deployment.CollectionTests.test_DEP011_missing_version_or_withdrawn_is_not_contacted",
+    "core.tests.test_troubleshooting_deployment.CollectionTests.test_DEP012_api_and_ai_consumers_resolve_equivalent_deps",
+    "core.tests.test_troubleshooting_deployment.CollectionTests.test_DEP013_view_run_uses_factory_and_ignores_client_states",
+    "core.tests.test_troubleshooting_deployment.ExtendedBindingsTests.test_DEP014_lazy_typed_contexts_and_baselines",
+    "core.tests.test_troubleshooting_deployment.ExtendedBindingsTests.test_DEP015_missing_and_invalid_bindings_fail_closed",
+    "core.tests.test_troubleshooting_deployment.ExtendedBindingsTests.test_DEP016_both_consumers_share_extended_bindings_without_contact",
+    "core.tests.test_troubleshooting_deployment.ExtendedBindingsTests.test_DEP017_dns_capability_refusal_never_executes_runner",
+    "core.tests.test_troubleshooting_deployment.ExtendedBindingsTests.test_DEP018_flow_binding_identity_and_baseline_failure_sanitization",
+    "core.tests.test_troubleshooting_deployment.ForwardingBindingTests.test_DEP019_forwarding_context_is_lazy_scoped_and_shared_by_consumers",
+    "core.tests.test_troubleshooting_deployment.ForwardingBindingTests.test_DEP020_invalid_forwarding_provider_invents_no_context",
+    "core.tests.test_troubleshooting_deployment.PhysProtoBindingTests.test_DEP025_absent_keys_keep_defaults",
+    "core.tests.test_troubleshooting_deployment.PhysProtoBindingTests.test_DEP026_no_construction_io_and_read_only_wrappers",
+    "core.tests.test_troubleshooting_deployment.PhysProtoBindingTests.test_DEP027_invalid_and_raising_providers_fail_closed_sanitized",
+    "core.tests.test_troubleshooting_deployment.PhysProtoBindingTests.test_DEP028_both_consumers_and_build_runtime_deps_receive_bindings",
+    "core.tests.test_troubleshooting_deployment.PhysProtoBindingTests.test_DEP029_bound_readers_reach_collectors_with_lazy_peer_scope",
+    "core.tests.test_troubleshooting_deployment.ReaderBindingTests.test_DEP021_absent_bindings_keep_defaults",
+    "core.tests.test_troubleshooting_deployment.ReaderBindingTests.test_DEP022_lazy_construction_and_read_only_wrapper",
+    "core.tests.test_troubleshooting_deployment.ReaderBindingTests.test_DEP023_invalid_and_raising_providers_fail_closed_sanitized",
+    "core.tests.test_troubleshooting_deployment.ReaderBindingTests.test_DEP024_both_consumers_get_identical_bindings_and_runtime_consumes",
+    "core.tests.test_troubleshooting_deployment.SettingsTests.test_DEP008_settings_factory_builds_and_misconfig_refuses_all",
+    "core.tests.test_troubleshooting_deployment.SettingsTests.test_DEP009_consistency_check",
+    "core.tests.test_troubleshooting_deployment.WrapperTests.test_DEP005_wrappers_expose_no_write_surface_and_forward_provenance_verbatim",
+    "core.tests.test_troubleshooting_deployment.WrapperTests.test_DEP006_provider_failure_is_unavailable_and_sanitized",
+    "core.tests.test_troubleshooting_deployment.WrapperTests.test_DEP007_no_write_field_in_deps",
+    "core.tests.test_troubleshooting_dns_rules.DN03Tests.test_dnsrule_005_nxdomain_is_not_passed",
+    "core.tests.test_troubleshooting_dns_rules.DN03Tests.test_dnsrule_006_nodata_and_unknown_rcode_are_not_passed",
+    "core.tests.test_troubleshooting_dns_rules.DN03Tests.test_dnsrule_007_stale_negative_cache_is_cache_not_authoritative_fault",
+    "core.tests.test_troubleshooting_dns_rules.DN03Tests.test_dnsrule_008_authoritative_nxdomain_is_not_called_cache",
+    "core.tests.test_troubleshooting_dns_rules.DN03Tests.test_dnsrule_009_intended_absent_name",
+    "core.tests.test_troubleshooting_dns_rules.DN03Tests.test_dnsrule_010_no_intent_is_inconclusive",
+    "core.tests.test_troubleshooting_dns_rules.DN03Tests.test_dnsrule_011_recovery_after_negative_ttl",
+    "core.tests.test_troubleshooting_dns_rules.DN03Tests.test_dnsrule_012_refused_keeps_policy_finding",
+    "core.tests.test_troubleshooting_dns_rules.DN05Tests.test_dnsrule_013_rollover_flags_the_numerically_larger_server",
+    "core.tests.test_troubleshooting_dns_rules.DN05Tests.test_dnsrule_014_equality_passes",
+    "core.tests.test_troubleshooting_dns_rules.DN05Tests.test_dnsrule_015_half_range_is_inconclusive_not_stale",
+    "core.tests.test_troubleshooting_dns_rules.DN05Tests.test_dnsrule_016_skew_without_transfer_evidence_is_not_causal",
+    "core.tests.test_troubleshooting_dns_rules.DN05Tests.test_dnsrule_017_skew_with_healthy_transfer_is_not_a_transfer_failure",
+    "core.tests.test_troubleshooting_dns_rules.DN05Tests.test_dnsrule_018_missing_delegation_evidence_is_uncertainty",
+    "core.tests.test_troubleshooting_dns_rules.DN05Tests.test_dnsrule_019_transfer_unknown_with_equal_serials_is_uncertainty",
+    "core.tests.test_troubleshooting_dns_rules.DN05Tests.test_dnsrule_020_lame_and_missing_delegation",
+    "core.tests.test_troubleshooting_dns_rules.DN05Tests.test_dnsrule_021_dns_delegation_is_a_declared_source",
+    "core.tests.test_troubleshooting_dns_rules.SerialTests.test_dnsrule_001_rfc1982_order_with_wraparound",
+    "core.tests.test_troubleshooting_dns_rules.SerialTests.test_dnsrule_002_half_range_is_undefined",
+    "core.tests.test_troubleshooting_dns_rules.SerialTests.test_dnsrule_003_rollover_lagging_is_not_numeric_max",
+    "core.tests.test_troubleshooting_dns_rules.SerialTests.test_dnsrule_004_equality_and_invalid_and_cyclic",
+    "core.tests.test_troubleshooting_dns_source.CollectorTests.test_DNSSRC_011_validation_blocks_before_the_runner",
+    "core.tests.test_troubleshooting_dns_source.CollectorTests.test_DNSSRC_012_normalised_request_and_names",
+    "core.tests.test_troubleshooting_dns_source.CollectorTests.test_DNSSRC_013_budget_retry_and_size_bounds",
+    "core.tests.test_troubleshooting_dns_source.CollectorTests.test_DNSSRC_014_truncated_udp_retries_once_over_tcp",
+    "core.tests.test_troubleshooting_dns_source.CollectorTests.test_DNSSRC_015_unverified_device_never_reaches_the_runner",
+    "core.tests.test_troubleshooting_dns_source.RuntimeToRb05Tests.test_DNSSRC_016_healthy_end_to_end_with_provenance",
+    "core.tests.test_troubleshooting_dns_source.RuntimeToRb05Tests.test_DNSSRC_017_authoritative_mismatch_and_zone_propagation",
+    "core.tests.test_troubleshooting_dns_source.RuntimeToRb05Tests.test_DNSSRC_018_stale_cache_then_ttl_aware_recovery",
+    "core.tests.test_troubleshooting_dns_source.RuntimeToRb05Tests.test_DNSSRC_019_policy_and_transport_failures",
+    "core.tests.test_troubleshooting_dns_source.RuntimeToRb05Tests.test_DNSSRC_020_malformed_timeout_and_unavailable_runner_never_pass",
+    "core.tests.test_troubleshooting_dns_source.RuntimeToRb05Tests.test_DNSSRC_021_dnssec_unavailable_vs_failure_vs_valid",
+    "core.tests.test_troubleshooting_dns_source.RuntimeToRb05Tests.test_DNSSRC_022_client_config_lame_delegation_and_time_skew",
+    "core.tests.test_troubleshooting_dns_source.RuntimeToRb05Tests.test_DNSSRC_023_split_horizon_vantage_servers_are_explicit",
+    "core.tests.test_troubleshooting_dns_source.RuntimeToRb05Tests.test_DNSSRC_024_source_labels",
+    "core.tests.test_troubleshooting_dns_source.UnitParserTests.test_DNSSRC_001_authoritative_and_recursive_answers_are_distinguished",
+    "core.tests.test_troubleshooting_dns_source.UnitParserTests.test_DNSSRC_002_soa_serial_and_invalid_soa",
+    "core.tests.test_troubleshooting_dns_source.UnitParserTests.test_DNSSRC_003_negative_caching_ttl",
+    "core.tests.test_troubleshooting_dns_source.UnitParserTests.test_DNSSRC_004_response_for_another_question_is_never_attributed",
+    "core.tests.test_troubleshooting_dns_source.UnitParserTests.test_DNSSRC_005_malformed_rows_and_documents",
+    "core.tests.test_troubleshooting_dns_source.UnitParserTests.test_DNSSRC_006_cname_chain_loop_and_final_rrset",
+    "core.tests.test_troubleshooting_dns_source.UnitParserTests.test_DNSSRC_007_timeout_and_error_status_are_gaps",
+    "core.tests.test_troubleshooting_dns_source.UnitParserTests.test_DNSSRC_008_transport_attempts",
+    "core.tests.test_troubleshooting_dns_source.UnitParserTests.test_DNSSRC_009_dnssec_unavailable_is_a_gap_not_a_verdict",
+    "core.tests.test_troubleshooting_dns_source.UnitParserTests.test_DNSSRC_010_records_and_time_sync",
+    "core.tests.test_troubleshooting_engine.AlarmStormEngineTests.test_ut035_engine_persists_one_correlation_record_per_group_with_all_alert_ids",
+    "core.tests.test_troubleshooting_engine.BaselineAndChangeTests.test_unapproved_change_is_a_lead_not_a_verdict",
+    "core.tests.test_troubleshooting_engine.BaselineAndChangeTests.test_ut026_stale_or_unknown_baseline_is_not_used_as_normal",
+    "core.tests.test_troubleshooting_engine.BaselineAndChangeTests.test_ut026_ut027_three_baselines_keep_distinct_provenance_and_golden_url_revision",
+    "core.tests.test_troubleshooting_engine.BaselineAndChangeTests.test_ut027_unverifiable_or_missing_golden_link_is_reported_not_invented",
+    "core.tests.test_troubleshooting_engine.BaselineAndChangeTests.test_ut028_ut029_approved_soak_change_is_correlated_without_blame_or_rollback",
+    "core.tests.test_troubleshooting_engine.CatalogueTests.test_ut039_host_connectivity_catalogue_registers_hc01_to_hc28_with_stable_ids_and_versions",
+    "core.tests.test_troubleshooting_engine.DossierAndRestartTests.test_engine_never_requests_a_non_read_only_collection_and_refuses_out_of_scope_devices",
+    "core.tests.test_troubleshooting_engine.DossierAndRestartTests.test_engine_restart_reloads_recorded_tests_instead_of_repeating_them",
+    "core.tests.test_troubleshooting_engine.DossierAndRestartTests.test_exhaustion_dossier_is_a_valid_contract_with_baselines_matrix_and_evidence",
+    "core.tests.test_troubleshooting_engine.FaultIsolationTests.test_ut037_rib_present_fib_missing_is_a_forwarding_installation_discrepancy",
+    "core.tests.test_troubleshooting_engine.FaultIsolationTests.test_ut040_injected_acl_fault_is_isolated_with_20_plus_tests_accounted_and_recovery_clears_it",
+    "core.tests.test_troubleshooting_engine.FaultIsolationTests.test_ut041_every_non_executed_test_has_a_specific_reason",
+    "core.tests.test_troubleshooting_engine.FaultIsolationTests.test_ut042_superficial_ping_failure_does_not_jump_to_ai",
+    "core.tests.test_troubleshooting_engine.FaultIsolationTests.test_ut043_proven_root_cause_stops_redundant_tests_but_keeps_applicability_audit",
+    "core.tests.test_troubleshooting_engine.FaultIsolationTests.test_ut044_follow_the_path_tests_cover_intermediate_rib_fib_and_return_path",
+    "core.tests.test_troubleshooting_engine.FaultIsolationTests.test_ut045_strategy_and_rationale_are_recorded_for_each_selection_branch",
+    "core.tests.test_troubleshooting_engine.FaultIsolationTests.test_ut053_unsupported_stale_and_failed_collection_is_never_a_pass",
+    "core.tests.test_troubleshooting_engine.PipelineTests.test_ut040_rich_fixture_runs_at_least_20_distinct_applicable_tests_in_order",
+    "core.tests.test_troubleshooting_engine.ProtocolAndImpactTests.test_ut030_production_loss_despite_golden_conformance_takes_priority",
+    "core.tests.test_troubleshooting_engine.ProtocolAndImpactTests.test_ut031_tcp_healthy_icmp_denied_is_an_expected_protocol_distinction_when_intended",
+    "core.tests.test_troubleshooting_engine.ProtocolAndImpactTests.test_ut031_unexplained_icmp_failure_with_healthy_tcp_gets_no_remediation",
+    "core.tests.test_troubleshooting_engine.ProtocolAndImpactTests.test_ut032_ut033_exception_suppresses_only_matching_test_alarm_and_expires_or_invalidates",
+    "core.tests.test_troubleshooting_engine.ProtocolAndImpactTests.test_ut034_actual_tcp_loss_is_never_hidden_by_a_scoped_icmp_exception",
+    "core.tests.test_troubleshooting_engine.TopologyCorrelationTests.test_ut025_netbox_intent_and_observed_topology_are_separate_and_differenced",
+    "core.tests.test_troubleshooting_engine.TopologyCorrelationTests.test_ut035_ut036_storm_of_100_plus_alarms_becomes_one_candidate_and_inconsistent_groupings_are_rejected",
+    "core.tests.test_troubleshooting_engine.TopologyCorrelationTests.test_ut036_redundant_link_failure_does_not_swallow_remote_alarms",
+    "core.tests.test_troubleshooting_engine.TopologyCorrelationTests.test_ut038_counter_deltas_are_correlated_with_flow_impairment_by_direction_and_time",
+    "core.tests.test_troubleshooting_evidence.AppendOnlyTests.test_ut003_audit_chain_detects_out_of_band_tampering",
+    "core.tests.test_troubleshooting_evidence.AppendOnlyTests.test_ut003_collection_run_freezes_once_final",
+    "core.tests.test_troubleshooting_evidence.AppendOnlyTests.test_ut003_observation_test_audit_evidence_reject_mutation_and_deletion",
+    "core.tests.test_troubleshooting_evidence.CaseIntakeTests.test_ut001_case_identity_immutable_and_closed_case_frozen",
+    "core.tests.test_troubleshooting_evidence.CaseIntakeTests.test_ut001_intake_is_idempotent_and_validated",
+    "core.tests.test_troubleshooting_evidence.CaseIntakeTests.test_ut001_valid_intake_initializes_identity_state_and_scope",
+    "core.tests.test_troubleshooting_evidence.CaseIntakeTests.test_ut002_unverified_withdrawn_unknown_unauthorized_targets_cannot_be_probed",
+    "core.tests.test_troubleshooting_evidence.ContractTests.test_every_schema_is_versioned_and_unknown_or_extra_fields_fail",
+    "core.tests.test_troubleshooting_evidence.ContractTests.test_freshness_and_tristate_primitives",
+    "core.tests.test_troubleshooting_evidence.EvidenceTests.test_ut004_reference_preserves_source_hash_time_parser_and_operator_url",
+    "core.tests.test_troubleshooting_evidence.EvidenceTests.test_ut005_raw_requires_privilege_and_is_audited",
+    "core.tests.test_troubleshooting_evidence.EvidenceTests.test_ut005_secrets_redacted_in_blob_values_audit_and_outputs",
+    "core.tests.test_troubleshooting_evidence.EvidenceTests.test_ut011_missing_or_broken_link_is_surfaced_never_invented",
+    "core.tests.test_troubleshooting_evidence.EvidenceTests.test_ut012_primary_view_references_raw_but_excludes_it",
+    "core.tests.test_troubleshooting_evidence.ObservationFreshnessTests.test_collection_bundle_contract_and_replay_idempotency",
+    "core.tests.test_troubleshooting_evidence.ObservationFreshnessTests.test_ut006_missing_stale_untrusted_yield_unknown_never_healthy_or_fault",
+    "core.tests.test_troubleshooting_evidence.ObservationFreshnessTests.test_ut007_stage_records_stay_ordered_through_retry_and_restart",
+    "core.tests.test_troubleshooting_evidence.ObservationFreshnessTests.test_ut024_permission_denied_is_a_missing_data_record_not_an_observation",
+    "core.tests.test_troubleshooting_evidence.TraceAndReportTests.test_closed_case_rejects_new_records_and_resolved_needs_verified_service_check",
+    "core.tests.test_troubleshooting_evidence.TraceAndReportTests.test_exception_policy_expiry_and_revision_invalidation",
+    "core.tests.test_troubleshooting_evidence.TraceAndReportTests.test_ut008_empty_stage_renders_not_performed_not_blank",
+    "core.tests.test_troubleshooting_evidence.TraceAndReportTests.test_ut008_report_has_all_eleven_populated_sections",
+    "core.tests.test_troubleshooting_evidence.TraceAndReportTests.test_ut009_every_verdict_stays_visible_with_specific_reasons",
+    "core.tests.test_troubleshooting_evidence.TraceAndReportTests.test_ut010_every_claim_traces_to_evidence_and_stage_decision",
+    "core.tests.test_troubleshooting_evidence.TraceAndReportTests.test_ut081_ut082_scoped_access_tenant_and_device",
+    "core.tests.test_troubleshooting_evidence.TraceAndReportTests.test_ut083_report_has_golden_link_sources_and_coverage",
+    "core.tests.test_troubleshooting_evidence.TraceAndReportTests.test_ut084_matrix_is_summarized_not_cli_dump",
+    "core.tests.test_troubleshooting_evidence.TraceAndReportTests.test_ut087_stale_and_missing_data_labelled_prominently",
+    "core.tests.test_troubleshooting_evidence.TraceAndReportTests.test_ut090_export_is_redacted_integrity_checked_and_retention_labelled",
+    "core.tests.test_troubleshooting_fib_source.CollectorTests.test_FIBSRC_007_collector_bounds_failures_and_admission",
+    "core.tests.test_troubleshooting_fib_source.RuntimeToHc16Tests.test_FIBSRC_008_installed_passes_hc16_with_provenance",
+    "core.tests.test_troubleshooting_fib_source.RuntimeToHc16Tests.test_FIBSRC_009_missing_with_complete_coverage_fails_hc16",
+    "core.tests.test_troubleshooting_fib_source.RuntimeToHc16Tests.test_FIBSRC_010_partial_table_is_unknown_never_pass_or_fail",
+    "core.tests.test_troubleshooting_fib_source.RuntimeToHc16Tests.test_FIBSRC_011_unsupported_capability_or_rib_derived_source_stays_unavailable",
+    "core.tests.test_troubleshooting_fib_source.RuntimeToHc16Tests.test_FIBSRC_012_wrong_scope_vrf_family_or_device_is_unknown",
+    "core.tests.test_troubleshooting_fib_source.RuntimeToHc16Tests.test_FIBSRC_013_restart_in_progress_is_unknown_then_converged_passes",
+    "core.tests.test_troubleshooting_fib_source.RuntimeToHc16Tests.test_FIBSRC_014_source_failure_and_restarted_run_are_bounded_and_idempotent",
+    "core.tests.test_troubleshooting_fib_source.UnitTests.test_FIBSRC_001_valid_document_normalizes_with_identity_scope_provenance",
+    "core.tests.test_troubleshooting_fib_source.UnitTests.test_FIBSRC_002_rib_or_kernel_tables_are_never_accepted_as_fib",
+    "core.tests.test_troubleshooting_fib_source.UnitTests.test_FIBSRC_003_identity_platform_capability_scope_provenance_gates",
+    "core.tests.test_troubleshooting_fib_source.UnitTests.test_FIBSRC_004_completeness_restart_and_truncation_downgrade_to_partial",
+    "core.tests.test_troubleshooting_fib_source.UnitTests.test_FIBSRC_005_lookup_semantics_installed_absent_partial_wrong_scope",
+    "core.tests.test_troubleshooting_fib_source.UnitTests.test_FIBSRC_006_describe_source_labels_and_qualification",
+    "core.tests.test_troubleshooting_flow_runtime.FlowRuntimeTests.test_FWRT001_selector_provenance_privacy_uncertainty_persist",
+    "core.tests.test_troubleshooting_flow_runtime.FlowRuntimeTests.test_FWRT002_restart_manifest_deduplicates_without_draining_new_input",
+    "core.tests.test_troubleshooting_flow_runtime.FlowRuntimeTests.test_FWRT003_missing_input_is_unknown",
+    "core.tests.test_troubleshooting_flow_runtime.FlowRuntimeTests.test_FWRT004_unknown_sampling_retained_without_estimate",
+    "core.tests.test_troubleshooting_flow_runtime.FlowRuntimeTests.test_FWRT005_template_loss_backpressure_gaps_are_not_packet_loss",
+    "core.tests.test_troubleshooting_flow_runtime.FlowRuntimeTests.test_FWRT006_exporter_scoping_and_capability_refusal",
+    "core.tests.test_troubleshooting_flow_runtime.FlowRuntimeTests.test_FWRT007_unscoped_input_refused_before_queue_drain",
+    "core.tests.test_troubleshooting_flow_runtime.FlowRuntimeTests.test_FWRT008_record_budget_preserves_remainder",
+    "core.tests.test_troubleshooting_flow_runtime.FlowRuntimeTests.test_FWRT009_duplicate_datagram_does_not_inflate_persistent_volume",
+    "core.tests.test_troubleshooting_flow_runtime.FlowRuntimeTests.test_FWRT010_receiver_restart_without_templates_persists_uncertainty",
+    "core.tests.test_troubleshooting_flow_wire.InputAdapterAndCollector.test_backpressure_rejects_and_counts_not_silent",
+    "core.tests.test_troubleshooting_flow_wire.InputAdapterAndCollector.test_ingest_many_is_bounded",
+    "core.tests.test_troubleshooting_flow_wire.InputAdapterAndCollector.test_loss_is_propagated_to_run_flags",
+    "core.tests.test_troubleshooting_flow_wire.InputAdapterAndCollector.test_no_listener_opened_by_module",
+    "core.tests.test_troubleshooting_flow_wire.InputAdapterAndCollector.test_records_traverse_flowcollector_with_sampling_privacy_and_scoping",
+    "core.tests.test_troubleshooting_flow_wire.InputAdapterAndCollector.test_unknown_exporter_discarded_and_counted",
+    "core.tests.test_troubleshooting_flow_wire.IpfixDecode.test_ipfix_absolute_times_enterprise_and_variable_length",
+    "core.tests.test_troubleshooting_flow_wire.IpfixDecode.test_withdrawal_and_redefinition",
+    "core.tests.test_troubleshooting_flow_wire.MalformedAndBounds.test_bad_inputs_never_raise_and_are_counted",
+    "core.tests.test_troubleshooting_flow_wire.MalformedAndBounds.test_fuzz_never_raises_and_stays_bounded",
+    "core.tests.test_troubleshooting_flow_wire.MalformedAndBounds.test_hostile_templates_rejected",
+    "core.tests.test_troubleshooting_flow_wire.MalformedAndBounds.test_record_and_set_caps_per_datagram",
+    "core.tests.test_troubleshooting_flow_wire.MalformedAndBounds.test_set_length_underflow_and_overrun",
+    "core.tests.test_troubleshooting_flow_wire.MalformedAndBounds.test_template_and_domain_table_caps",
+    "core.tests.test_troubleshooting_flow_wire.MalformedAndBounds.test_undersized_address_field_is_malformed_record",
+    "core.tests.test_troubleshooting_flow_wire.Sampling.test_inline_and_configured_and_conflict",
+    "core.tests.test_troubleshooting_flow_wire.Sampling.test_ipfix_packet_interval_and_space",
+    "core.tests.test_troubleshooting_flow_wire.Sampling.test_options_template_rate_applies_to_that_exporter_domain_only",
+    "core.tests.test_troubleshooting_flow_wire.Sequence.test_ipfix_gap_counts_records_and_duplicate_discarded",
+    "core.tests.test_troubleshooting_flow_wire.Sequence.test_v9_gap_counts_export_packets",
+    "core.tests.test_troubleshooting_flow_wire.TemplateScoping.test_exporters_and_domains_do_not_share_templates",
+    "core.tests.test_troubleshooting_flow_wire.TemplateScoping.test_ipfix_sequence_reset_is_restart",
+    "core.tests.test_troubleshooting_flow_wire.TemplateScoping.test_refresh_keeps_template_alive",
+    "core.tests.test_troubleshooting_flow_wire.TemplateScoping.test_same_template_id_different_layout_per_exporter",
+    "core.tests.test_troubleshooting_flow_wire.TemplateScoping.test_template_expiry_drops_data_without_guessing",
+    "core.tests.test_troubleshooting_flow_wire.TemplateScoping.test_v9_restart_flushes_templates",
+    "core.tests.test_troubleshooting_flow_wire.V9Decode.test_ipv6_and_missing_mandatory_field_dropped",
+    "core.tests.test_troubleshooting_flow_wire.V9Decode.test_padding_and_multiple_records",
+    "core.tests.test_troubleshooting_flow_wire.V9Decode.test_template_then_data_decodes_fields_and_times",
+    "core.tests.test_troubleshooting_forwarding_source.LookupTests.test_FWSRC_006_longest_prefix_exact_and_covering_default",
+    "core.tests.test_troubleshooting_forwarding_source.LookupTests.test_FWSRC_007_absence_only_from_complete_table_of_the_right_vrf_and_family",
+    "core.tests.test_troubleshooting_forwarding_source.LookupTests.test_FWSRC_008_discard_ecmp_and_interface_peer_resolution",
+    "core.tests.test_troubleshooting_forwarding_source.LookupTests.test_FWSRC_009_neighbor_values_duplicates_and_judgeability",
+    "core.tests.test_troubleshooting_forwarding_source.LookupTests.test_FWSRC_010_fib_is_never_available_and_source_labels_are_honest",
+    "core.tests.test_troubleshooting_forwarding_source.RuntimeToRb02Tests.test_FWSRC_011_healthy_v4_pass_with_provenance_and_explicit_fib_gap",
+    "core.tests.test_troubleshooting_forwarding_source.RuntimeToRb02Tests.test_FWSRC_012_missing_route_fails_hc15_then_recovers",
+    "core.tests.test_troubleshooting_forwarding_source.RuntimeToRb02Tests.test_FWSRC_013_wrong_next_hop_and_incomplete_table_semantics",
+    "core.tests.test_troubleshooting_forwarding_source.RuntimeToRb02Tests.test_FWSRC_014_unresolved_neighbor_fails_hc10_absent_entry_is_unknown_and_recovers",
+    "core.tests.test_troubleshooting_forwarding_source.RuntimeToRb02Tests.test_FWSRC_015_duplicate_address_and_ambiguous_states",
+    "core.tests.test_troubleshooting_forwarding_source.RuntimeToRb02Tests.test_FWSRC_016_ipv6_healthy_missing_route_and_unresolved_nd",
+    "core.tests.test_troubleshooting_forwarding_source.RuntimeToRb02Tests.test_FWSRC_017_return_path_fault_isolated_to_hc24_and_multihop_next_hops",
+    "core.tests.test_troubleshooting_forwarding_source.RuntimeToRb02Tests.test_FWSRC_018_unsupported_version_and_parse_failure_are_gaps_not_verdicts",
+    "core.tests.test_troubleshooting_forwarding_source.RuntimeToRb02Tests.test_FWSRC_019_vrf_not_collected_is_unknown",
+    "core.tests.test_troubleshooting_forwarding_source.RuntimeToRb02Tests.test_FWSRC_020_bounds_are_enforced_on_the_wire_path",
+    "core.tests.test_troubleshooting_forwarding_source.UnitParserTests.test_FWSRC_001_eos_rib_vrf_af_nexthops_and_provenance",
+    "core.tests.test_troubleshooting_forwarding_source.UnitParserTests.test_FWSRC_002_eos_ipv6_and_linux_tables",
+    "core.tests.test_troubleshooting_forwarding_source.UnitParserTests.test_FWSRC_003_neighbor_tables_states_and_ipv6",
+    "core.tests.test_troubleshooting_forwarding_source.UnitParserTests.test_FWSRC_004_version_gate_malformed_empty_partial_truncated",
+    "core.tests.test_troubleshooting_forwarding_source.UnitParserTests.test_FWSRC_005_unsupported_version_does_not_contact_transport",
+    "core.tests.test_troubleshooting_governance.AvailabilityTests.test_ut089_actions_enabled_only_when_supported_approved_and_safe",
+    "core.tests.test_troubleshooting_governance.ChangeEngineExecutorTests.test_execution_is_a_hand_off_to_the_change_page_never_a_second_engine_caller",
+    "core.tests.test_troubleshooting_governance.ChangeEngineExecutorTests.test_executor_delegates_to_existing_gate_and_refuses_when_ineligible",
+    "core.tests.test_troubleshooting_governance.DeviationAndAuditTests.test_cross_tenant_plan_access_denied",
+    "core.tests.test_troubleshooting_governance.DeviationAndAuditTests.test_secrets_in_plan_and_dry_run_are_redacted",
+    "core.tests.test_troubleshooting_governance.DeviationAndAuditTests.test_ut034_078_real_production_loss_is_never_masked_by_exception",
+    "core.tests.test_troubleshooting_governance.DeviationAndAuditTests.test_ut078_expected_icmp_deviation_cannot_trigger_remediation",
+    "core.tests.test_troubleshooting_governance.DeviationAndAuditTests.test_ut080_audit_records_risk_approver_operation_tool_time_result_rationale",
+    "core.tests.test_troubleshooting_governance.ExecutionTests.test_agent_cannot_execute_even_an_approved_plan",
+    "core.tests.test_troubleshooting_governance.ExecutionTests.test_expired_approval_cannot_execute",
+    "core.tests.test_troubleshooting_governance.ExecutionTests.test_operation_failure_mid_change_is_compensated",
+    "core.tests.test_troubleshooting_governance.ExecutionTests.test_preexisting_loss_is_not_attributed_to_the_change",
+    "core.tests.test_troubleshooting_governance.ExecutionTests.test_restart_recovery_marks_interrupted_without_retry",
+    "core.tests.test_troubleshooting_governance.ExecutionTests.test_ut067_idempotency_no_second_write_on_duplicate_or_restart",
+    "core.tests.test_troubleshooting_governance.ExecutionTests.test_ut073_unexpected_production_loss_aborts_and_compensates",
+    "core.tests.test_troubleshooting_governance.ExecutionTests.test_ut075_rollback_verified_by_readback_and_traffic",
+    "core.tests.test_troubleshooting_governance.ExecutionTests.test_ut076_failed_rollback_reported_unresolved_with_impact",
+    "core.tests.test_troubleshooting_governance.PreconditionTests.test_rate_limit_bounds_repeat_changes",
+    "core.tests.test_troubleshooting_governance.PreconditionTests.test_unmeasurable_production_flow_blocks_traffic_affecting_change",
+    "core.tests.test_troubleshooting_governance.PreconditionTests.test_ut068_conflicting_lock_refuses_second_writer",
+    "core.tests.test_troubleshooting_governance.PreconditionTests.test_ut069_maintenance_lifecycle_admission_enforced",
+    "core.tests.test_troubleshooting_governance.PreconditionTests.test_ut070_traffic_drain_refused_without_safe_alternate_path",
+    "core.tests.test_troubleshooting_governance.PreconditionTests.test_ut071_redundancy_used_only_after_capacity_and_losslessness_checks",
+    "core.tests.test_troubleshooting_governance.TierAndPlanTests.test_ut063_approval_rules_agent_self_and_ack",
+    "core.tests.test_troubleshooting_governance.TierAndPlanTests.test_ut065_tier1_read_only_tier2_needs_approval_tier3_needs_preauth",
+    "core.tests.test_troubleshooting_governance.TierAndPlanTests.test_ut065_tier3_preauthorization_applies_only_when_covering",
+    "core.tests.test_troubleshooting_governance.TierAndPlanTests.test_ut066_dry_run_failure_or_unsupported_blocks",
+    "core.tests.test_troubleshooting_governance.TierAndPlanTests.test_ut066_plan_requires_causal_proof_scope_rollback_and_names_fault",
+    "core.tests.test_troubleshooting_governance.TierAndPlanTests.test_ut072_hotfix_and_metric_change_need_approval_and_path_impact",
+    "core.tests.test_troubleshooting_governance.VerificationTests.test_regression_on_surrounding_flow_fails_verification",
+    "core.tests.test_troubleshooting_governance.VerificationTests.test_unmeasured_check_counts_as_failed",
+    "core.tests.test_troubleshooting_governance.VerificationTests.test_ut074_config_success_but_failed_service_check_is_not_resolved",
+    "core.tests.test_troubleshooting_governance.VerificationTests.test_ut074_empty_or_unsubstantiated_checks_cannot_resolve",
+    "core.tests.test_troubleshooting_governance.VerificationTests.test_ut074_missing_postchange_flow_cannot_resolve",
+    "core.tests.test_troubleshooting_governance.VerificationTests.test_ut077_soak_prevents_premature_success_then_completes",
+    "core.tests.test_troubleshooting_governance.VerificationTests.test_ut079_disposition_matches_facts",
+    "core.tests.test_troubleshooting_governance.VerificationTests.test_ut088_metrics_exclude_unresolved_from_mttr",
+    "core.tests.test_troubleshooting_l2_history.BindingTests.test_L2HIST_010_both_factory_consumers_lazy_typed_failsafe",
+    "core.tests.test_troubleshooting_l2_history.PersistentHistoryTests.test_L2HIST_001_restart_continuity_yields_movement",
+    "core.tests.test_troubleshooting_l2_history.PersistentHistoryTests.test_L2HIST_002_matches_in_memory_reference",
+    "core.tests.test_troubleshooting_l2_history.PersistentHistoryTests.test_L2HIST_003_no_history_after_restart_is_unknown_not_zero",
+    "core.tests.test_troubleshooting_l2_history.PersistentHistoryTests.test_L2HIST_004_gap_and_short_safeguards_survive_restart",
+    "core.tests.test_troubleshooting_l2_history.PersistentHistoryTests.test_L2HIST_005_nonmonotonic_and_partial_do_not_persist",
+    "core.tests.test_troubleshooting_l2_history.PersistentHistoryTests.test_L2HIST_006_scope_isolation_case_tenant_device_vlan_parser",
+    "core.tests.test_troubleshooting_l2_history.PersistentHistoryTests.test_L2HIST_007_foreign_scope_or_malformed_evidence_ignored",
+    "core.tests.test_troubleshooting_l2_history.PersistentHistoryTests.test_L2HIST_008_persistence_failure_is_contained",
+    "core.tests.test_troubleshooting_l2_history.PersistentHistoryTests.test_L2HIST_009_evidence_immutable_and_redacted_store_used",
+    "core.tests.test_troubleshooting_l2_source.CollectorTests.test_L2SRC_011_catalogue_read_only_labels_and_no_contact_when_unsupported",
+    "core.tests.test_troubleshooting_l2_source.CollectorTests.test_L2SRC_012_collector_preserves_raw_hash_source_and_history",
+    "core.tests.test_troubleshooting_l2_source.MacParserTests.test_L2SRC_004_first_sample_has_no_movement_claim",
+    "core.tests.test_troubleshooting_l2_source.MacParserTests.test_L2SRC_005_historical_samples_give_movement_and_flapping",
+    "core.tests.test_troubleshooting_l2_source.MacParserTests.test_L2SRC_006_short_span_and_gap_stay_uncertain",
+    "core.tests.test_troubleshooting_l2_source.MacParserTests.test_L2SRC_007_vlan_scope_other_vlan_flap_does_not_leak",
+    "core.tests.test_troubleshooting_l2_source.MacParserTests.test_L2SRC_008_static_entries_are_not_movement",
+    "core.tests.test_troubleshooting_l2_source.MacParserTests.test_L2SRC_009_empty_malformed_partial_tables_do_not_prove_absence",
+    "core.tests.test_troubleshooting_l2_source.MacParserTests.test_L2SRC_010_version_gate_fails_closed",
+    "core.tests.test_troubleshooting_l2_source.RuntimeToHcTests.test_L2SRC_013_hc08_pass_and_wrong_vlan_fault",
+    "core.tests.test_troubleshooting_l2_source.RuntimeToHcTests.test_L2SRC_014_hc09_stable_flapping_and_wrong_vlan",
+    "core.tests.test_troubleshooting_l2_source.RuntimeToHcTests.test_L2SRC_015_unknown_partial_empty_and_unsupported_never_pass",
+    "core.tests.test_troubleshooting_l2_source.RuntimeToHcTests.test_L2SRC_016_unsupported_version_refuses_before_contact_and_evidence_provenance",
+    "core.tests.test_troubleshooting_l2_source.SwitchportParserTests.test_L2SRC_001_access_and_trunk_match_hc08_contract",
+    "core.tests.test_troubleshooting_l2_source.SwitchportParserTests.test_L2SRC_002_malformed_partial_and_unsupported_mode_never_trusted",
+    "core.tests.test_troubleshooting_l2_source.SwitchportParserTests.test_L2SRC_003_version_gate_fails_closed",
+    "core.tests.test_troubleshooting_nmas_providers.NmasProviderTests.test_NP01_inventory_is_the_engines_device_dictionary",
+    "core.tests.test_troubleshooting_nmas_providers.NmasProviderTests.test_NP02_unregistered_inventory_device_is_refused_not_assumed_healthy",
+    "core.tests.test_troubleshooting_nmas_providers.NmasProviderTests.test_NP03_adopted_but_identity_unverified_is_refused",
+    "core.tests.test_troubleshooting_nmas_providers.NmasProviderTests.test_NP04_verified_in_service_device_is_admitted_only_with_an_authoritative_version",
+    "core.tests.test_troubleshooting_nmas_providers.NmasProviderTests.test_NP05_withdrawn_pending_and_retired_registrations_are_refused",
+    "core.tests.test_troubleshooting_nmas_providers.NmasProviderTests.test_NP06_not_admitted_to_production_is_refused",
+    "core.tests.test_troubleshooting_nmas_providers.NmasProviderTests.test_NP07_active_maintenance_is_flagged_but_read_only_diagnosis_continues",
+    "core.tests.test_troubleshooting_nmas_providers.NmasProviderTests.test_NP08_unknown_name_is_refused_before_lifecycle",
+    "core.tests.test_troubleshooting_nmas_providers.NmasProviderTests.test_NP09_settings_binding_resolves_through_the_shared_factory",
+    "core.tests.test_troubleshooting_physical_source.CollectorTests.test_PHYSRC_012_collector_reads_once_and_records_provenance",
+    "core.tests.test_troubleshooting_physical_source.CollectorTests.test_PHYSRC_013_failures_become_key_and_subject_bound_gaps",
+    "core.tests.test_troubleshooting_physical_source.CollectorTests.test_PHYSRC_014_budgets_are_enforced",
+    "core.tests.test_troubleshooting_physical_source.CollectorTests.test_PHYSRC_015_unadmitted_device_is_never_read",
+    "core.tests.test_troubleshooting_physical_source.CollectorTests.test_PHYSRC_016_restart_has_no_hidden_state",
+    "core.tests.test_troubleshooting_physical_source.RuntimeMappingTests.test_PHYSRC_017_map_observations_keeps_quality_and_adds_no_defaults",
+    "core.tests.test_troubleshooting_physical_source.RuntimeTests.test_PHYSRC_018_runtime_target_and_peer_reads_and_default_gaps",
+    "core.tests.test_troubleshooting_physical_source.RuntimeTests.test_PHYSRC_019_runtime_without_link_map_does_not_guess_the_peer",
+    "core.tests.test_troubleshooting_physical_source.RuntimeTests.test_PHYSRC_020_virtual_optics_reach_the_engine_as_unavailable_not_healthy",
+    "core.tests.test_troubleshooting_physical_source.UnitTests.test_PHYSRC_001_valid_document_yields_all_contract_observations",
+    "core.tests.test_troubleshooting_physical_source.UnitTests.test_PHYSRC_002_identity_platform_capability_scope_provenance_gates",
+    "core.tests.test_troubleshooting_physical_source.UnitTests.test_PHYSRC_003_peer_scope_is_never_reattributed",
+    "core.tests.test_troubleshooting_physical_source.UnitTests.test_PHYSRC_004_virtual_or_absent_optics_stay_unknown",
+    "core.tests.test_troubleshooting_physical_source.UnitTests.test_PHYSRC_005_missing_thresholds_or_measurements_block_the_verdict",
+    "core.tests.test_troubleshooting_physical_source.UnitTests.test_PHYSRC_006_stale_and_future_measurements",
+    "core.tests.test_troubleshooting_physical_source.UnitTests.test_PHYSRC_007_fec_delta_requires_one_epoch_and_span",
+    "core.tests.test_troubleshooting_physical_source.UnitTests.test_PHYSRC_008_counter_reset_is_an_event_never_a_rate",
+    "core.tests.test_troubleshooting_physical_source.UnitTests.test_PHYSRC_009_short_stale_or_malformed_counters_give_no_rate",
+    "core.tests.test_troubleshooting_physical_source.UnitTests.test_PHYSRC_010_error_history_needs_complete_wellformed_events",
+    "core.tests.test_troubleshooting_physical_source.UnitTests.test_PHYSRC_011_adapter_requests_target_and_peer_only",
+    "core.tests.test_troubleshooting_pmtu_source.ContractTests.test_PMTUSRC_001_request_is_a_bounded_df_ladder_from_the_flow_source_only",
+    "core.tests.test_troubleshooting_pmtu_source.ContractTests.test_PMTUSRC_002_good_run_separates_payload_from_packet_size_and_claims_no_tcp",
+    "core.tests.test_troubleshooting_pmtu_source.ContractTests.test_PMTUSRC_003_ipv6_overhead_is_48_and_family_must_match",
+    "core.tests.test_troubleshooting_pmtu_source.ContractTests.test_PMTUSRC_004_authorization_scope_gates_never_reach_the_runner",
+    "core.tests.test_troubleshooting_pmtu_source.ContractTests.test_PMTUSRC_005_unbounded_or_unsafe_requests_are_refused_before_sending",
+    "core.tests.test_troubleshooting_pmtu_source.ContractTests.test_PMTUSRC_006_packet_and_request_budget_is_shared_across_requests",
+    "core.tests.test_troubleshooting_pmtu_source.ContractTests.test_PMTUSRC_007_runner_failures_are_gaps_without_retry",
+    "core.tests.test_troubleshooting_pmtu_source.ContractTests.test_PMTUSRC_008_malformed_or_inconsistent_responses_are_parse_failed_with_raw_kept",
+    "core.tests.test_troubleshooting_pmtu_source.ContractTests.test_PMTUSRC_009_missing_large_size_trials_are_incomplete_coverage_not_a_pass",
+    "core.tests.test_troubleshooting_pmtu_source.ContractTests.test_PMTUSRC_010_local_errors_are_excluded_and_never_count_as_replies_or_loss",
+    "core.tests.test_troubleshooting_pmtu_source.ContractTests.test_PMTUSRC_011_loss_with_unknown_or_invisible_ptb_is_not_a_confirmed_black_hole",
+    "core.tests.test_troubleshooting_pmtu_source.ContractTests.test_PMTUSRC_012_observable_ptb_silence_with_df_loss_is_a_black_hole",
+    "core.tests.test_troubleshooting_pmtu_source.ContractTests.test_PMTUSRC_013_received_ptb_means_pmtud_signalling_works_not_a_black_hole",
+    "core.tests.test_troubleshooting_pmtu_source.ContractTests.test_PMTUSRC_014_intermittent_or_non_monotonic_loss_is_not_size_dependent_evidence",
+    "core.tests.test_troubleshooting_pmtu_source.ContractTests.test_PMTUSRC_015_legacy_untyped_values_keep_their_rule_and_typed_pass_requires_a_big_reply",
+    "core.tests.test_troubleshooting_pmtu_source.ContractTests.test_PMTUSRC_016_source_description_lists_the_pmtu_parser",
+    "core.tests.test_troubleshooting_pmtu_source.RunbookTests.test_PMTUSRC_023_mt03_verdicts_follow_the_assessment",
+    "core.tests.test_troubleshooting_pmtu_source.RunbookTests.test_PMTUSRC_024_mt05_uses_no_mss_verdict_when_nothing_passed",
+    "core.tests.test_troubleshooting_pmtu_source.RuntimeTests.test_PMTUSRC_017_runtime_maps_pmtu_and_hc21_consumes_the_typed_value",
+    "core.tests.test_troubleshooting_pmtu_source.RuntimeTests.test_PMTUSRC_018_confirmed_black_hole_only_with_observable_ptb",
+    "core.tests.test_troubleshooting_pmtu_source.RuntimeTests.test_PMTUSRC_019_missing_large_trials_make_hc21_inconclusive_never_pass",
+    "core.tests.test_troubleshooting_pmtu_source.RuntimeTests.test_PMTUSRC_020_absent_runner_or_missing_pmtu_authorization_sends_nothing_and_is_unknown",
+    "core.tests.test_troubleshooting_pmtu_source.RuntimeTests.test_PMTUSRC_021_restart_with_same_run_key_does_not_resend_size_probes",
+    "core.tests.test_troubleshooting_pmtu_source.RuntimeTests.test_PMTUSRC_022_only_the_flow_source_sends_and_every_wire_request_is_scoped",
+    "core.tests.test_troubleshooting_probe_source.ContractTests.test_PRBSRC_001_requests_derive_only_from_the_flow_tuple_and_flow_source",
+    "core.tests.test_troubleshooting_probe_source.ContractTests.test_PRBSRC_002_good_tcp_and_trace_preserve_vantage_provenance_and_limits",
+    "core.tests.test_troubleshooting_probe_source.ContractTests.test_PRBSRC_003_refusals_never_reach_the_runner",
+    "core.tests.test_troubleshooting_probe_source.ContractTests.test_PRBSRC_004_authorization_bound_to_another_case_or_missing_expiry",
+    "core.tests.test_troubleshooting_probe_source.ContractTests.test_PRBSRC_005_missing_runner_capability_and_bad_request_fields",
+    "core.tests.test_troubleshooting_probe_source.ContractTests.test_PRBSRC_006_attempt_budget_and_command_budget",
+    "core.tests.test_troubleshooting_probe_source.ContractTests.test_PRBSRC_007_timeout_transport_permission_and_unexpected_errors_are_gaps_without_retry",
+    "core.tests.test_troubleshooting_probe_source.ContractTests.test_PRBSRC_008_malformed_responses_yield_parse_failed_with_raw_evidence_kept",
+    "core.tests.test_troubleshooting_probe_source.ContractTests.test_PRBSRC_009_oversize_response_is_discarded",
+    "core.tests.test_troubleshooting_probe_source.ContractTests.test_PRBSRC_010_vantage_mismatch_is_not_accepted_as_the_requested_source",
+    "core.tests.test_troubleshooting_probe_source.ContractTests.test_PRBSRC_011_loss_refusal_and_partial_samples_are_reported_not_hidden",
+    "core.tests.test_troubleshooting_probe_source.ContractTests.test_PRBSRC_012_unresolved_or_gapped_trace_is_untrusted_not_a_path_verdict",
+    "core.tests.test_troubleshooting_probe_source.ContractTests.test_PRBSRC_013_non_tcp_trace_carries_a_limitation",
+    "core.tests.test_troubleshooting_probe_source.ContractTests.test_PRBSRC_014_unverified_device_never_reaches_the_runner",
+    "core.tests.test_troubleshooting_probe_source.ContractTests.test_PRBSRC_015_deployment_wrapper_requires_capabilities_and_factory_is_fail_closed",
+    "core.tests.test_troubleshooting_probe_source.ContractTests.test_PRBSRC_016_source_label_never_claims_live_without_gateway",
+    "core.tests.test_troubleshooting_probe_source.RuntimeTests.test_PRBSRC_017_runtime_maps_probes_to_engine_keys_and_hc22_hc17_consume_them",
+    "core.tests.test_troubleshooting_probe_source.RuntimeTests.test_PRBSRC_018_failing_handshakes_become_an_hc22_fault_and_unresolved_trace_is_inconclusive",
+    "core.tests.test_troubleshooting_probe_source.RuntimeTests.test_PRBSRC_019_absent_runner_or_authorization_is_an_unknown_gap_and_nothing_is_sent",
+    "core.tests.test_troubleshooting_probe_source.RuntimeTests.test_PRBSRC_020_restart_with_same_run_key_does_not_resend_probes",
+    "core.tests.test_troubleshooting_probe_source.RuntimeTests.test_PRBSRC_021_non_source_device_and_non_tcp_flow_send_nothing",
+    "core.tests.test_troubleshooting_protocol_source.CollectorTests.test_PROTOSRC_013_collector_reads_once_and_records_provenance",
+    "core.tests.test_troubleshooting_protocol_source.CollectorTests.test_PROTOSRC_014_failures_become_key_and_subject_bound_gaps",
+    "core.tests.test_troubleshooting_protocol_source.CollectorTests.test_PROTOSRC_015_budgets_are_enforced",
+    "core.tests.test_troubleshooting_protocol_source.CollectorTests.test_PROTOSRC_016_unadmitted_device_is_never_read",
+    "core.tests.test_troubleshooting_protocol_source.CollectorTests.test_PROTOSRC_017_secrets_never_reach_raw_evidence_or_observations",
+    "core.tests.test_troubleshooting_protocol_source.CollectorTests.test_PROTOSRC_018_restart_has_no_hidden_state",
+    "core.tests.test_troubleshooting_protocol_source.RuntimeMappingTests.test_PROTOSRC_019_map_observations_binds_subjects_and_keeps_quality",
+    "core.tests.test_troubleshooting_protocol_source.RuntimeTests.test_PROTOSRC_020_runtime_reads_both_ends_with_distinct_scopes",
+    "core.tests.test_troubleshooting_protocol_source.RuntimeTests.test_PROTOSRC_021_no_source_gives_not_configured_gaps",
+    "core.tests.test_troubleshooting_protocol_source.RuntimeTests.test_PROTOSRC_022_unsupported_protocol_stays_unavailable_without_a_read",
+    "core.tests.test_troubleshooting_protocol_source.RuntimeTests.test_PROTOSRC_023_device_outside_the_adjacency_is_not_read",
+    "core.tests.test_troubleshooting_protocol_source.RuntimeTests.test_PROTOSRC_024_reader_failure_reaches_the_engine_as_subject_bound_gaps",
+    "core.tests.test_troubleshooting_protocol_source.UnitTests.test_PROTOSRC_001_valid_document_yields_the_three_contract_observations",
+    "core.tests.test_troubleshooting_protocol_source.UnitTests.test_PROTOSRC_002_identity_platform_capability_scope_provenance_gates",
+    "core.tests.test_troubleshooting_protocol_source.UnitTests.test_PROTOSRC_003_wrong_scope_is_never_attributed",
+    "core.tests.test_troubleshooting_protocol_source.UnitTests.test_PROTOSRC_004_unsupported_or_unscoped_requests_are_gaps",
+    "core.tests.test_troubleshooting_protocol_source.UnitTests.test_PROTOSRC_005_capability_lists_the_protocol_and_af_or_it_is_unavailable",
+    "core.tests.test_troubleshooting_protocol_source.UnitTests.test_PROTOSRC_006_area_as_and_timer_values_are_reported_for_mismatch_detection",
+    "core.tests.test_troubleshooting_protocol_source.UnitTests.test_PROTOSRC_007_missing_config_fields_are_never_inferred_as_matching",
+    "core.tests.test_troubleshooting_protocol_source.UnitTests.test_PROTOSRC_008_partial_responses_are_untrusted_or_gaps",
+    "core.tests.test_troubleshooting_protocol_source.UnitTests.test_PROTOSRC_009_stale_or_future_data_is_not_live_state",
+    "core.tests.test_troubleshooting_protocol_source.UnitTests.test_PROTOSRC_010_authentication_is_safe_metadata_only",
+    "core.tests.test_troubleshooting_protocol_source.UnitTests.test_PROTOSRC_011_state_names_map_to_runbook_established_set",
+    "core.tests.test_troubleshooting_protocol_source.UnitTests.test_PROTOSRC_012_adapter_requests_target_and_neighbor_ends_only",
+    "core.tests.test_troubleshooting_qos_source.Hc19EngineTests.test_QOSSRC_006_healthy_proven_class_no_drop_delta_passes",
+    "core.tests.test_troubleshooting_qos_source.Hc19EngineTests.test_QOSSRC_007_causal_fault_needs_proven_class_direction_delta_and_aligned_loss",
+    "core.tests.test_troubleshooting_qos_source.Hc19EngineTests.test_QOSSRC_008_drops_without_time_aligned_production_loss_are_inconclusive",
+    "core.tests.test_troubleshooting_qos_source.Hc19EngineTests.test_QOSSRC_009_drops_in_a_class_that_does_not_match_the_flow_are_not_blamed",
+    "core.tests.test_troubleshooting_qos_source.Hc19EngineTests.test_QOSSRC_010_wrong_direction_or_untraversed_interface_is_never_a_fault_or_pass",
+    "core.tests.test_troubleshooting_qos_source.Hc19EngineTests.test_QOSSRC_011_reset_short_stale_missing_incomplete_and_unclassifiable_stay_inconclusive",
+    "core.tests.test_troubleshooting_qos_source.Hc19EngineTests.test_QOSSRC_012_legacy_matches_flow_record_is_never_healthy",
+    "core.tests.test_troubleshooting_qos_source.Hc19EngineTests.test_QOSSRC_017_shared_healthy_fixture_record_is_schema_conformant_and_passes",
+    "core.tests.test_troubleshooting_qos_source.RuntimeTests.test_QOSSRC_013_without_an_injected_source_qos_is_an_explicit_gap_and_hc19_inconclusive",
+    "core.tests.test_troubleshooting_qos_source.RuntimeTests.test_QOSSRC_014_runtime_healthy_source_produces_qos_state_and_pass",
+    "core.tests.test_troubleshooting_qos_source.RuntimeTests.test_QOSSRC_015_runtime_negative_sources_stay_inconclusive_with_precise_gaps",
+    "core.tests.test_troubleshooting_qos_source.RuntimeTests.test_QOSSRC_016_runtime_never_issues_a_command_and_bounds_reads",
+    "core.tests.test_troubleshooting_qos_source.UnitTests.test_QOSSRC_001_valid_document_normalizes_and_discards_matches_flow",
+    "core.tests.test_troubleshooting_qos_source.UnitTests.test_QOSSRC_002_identity_platform_capability_scope_provenance_gates",
+    "core.tests.test_troubleshooting_qos_source.UnitTests.test_QOSSRC_003_counter_status_reset_short_stale_missing",
+    "core.tests.test_troubleshooting_qos_source.UnitTests.test_QOSSRC_004_incomplete_or_unparsable_attachments_are_not_complete",
+    "core.tests.test_troubleshooting_qos_source.UnitTests.test_QOSSRC_005_classification_is_proven_from_the_tuple",
+    "core.tests.test_troubleshooting_qos_source.UnitTests.test_QOSSRC_018_counter_epoch_must_be_known_and_well_typed",
+    "core.tests.test_troubleshooting_qualification.CollectorQualificationTests.test_QL03_baselines_and_limits",
+    "core.tests.test_troubleshooting_qualification.CollectorQualificationTests.test_QL04_unknown_or_foreign_versions_qualify_nothing_or_flag_limits",
+    "core.tests.test_troubleshooting_qualification.MatrixTests.test_QL05_classification_preserves_exclusions_and_never_invents_peers",
+    "core.tests.test_troubleshooting_qualification.MatrixTests.test_QL06_unknown_stays_unknown_and_nothing_is_admitted",
+    "core.tests.test_troubleshooting_qualification.MatrixTests.test_QL07_no_containerlab_management_candidate_and_approved_failover_order",
+    "core.tests.test_troubleshooting_qualification.MatrixTests.test_QL08_observed_version_is_shown_but_does_not_admit",
+    "core.tests.test_troubleshooting_qualification.MatrixTests.test_QL09_command_matrix_is_read_only_json",
+    "core.tests.test_troubleshooting_qualification.VersionProviderTests.test_QL01_version_provider_fails_closed",
+    "core.tests.test_troubleshooting_qualification.VersionProviderTests.test_QL02_recommended_binding_loads_without_problems_and_unknown_version_refuses",
+    "core.tests.test_troubleshooting_readiness.CaptureProvenanceTests.test_RDY13_capture_script_imports_only_its_own_worktree",
+    "core.tests.test_troubleshooting_readiness.ReadinessTests.test_RDY01_unbound_deployment_refuses_every_device_and_names_both_missing_providers",
+    "core.tests.test_troubleshooting_readiness.ReadinessTests.test_RDY02_unregistered_adoptable_device_points_to_adopt_existing",
+    "core.tests.test_troubleshooting_readiness.ReadinessTests.test_RDY03_r5_is_not_adoptable_and_has_no_management_address",
+    "core.tests.test_troubleshooting_readiness.ReadinessTests.test_RDY04_adopted_device_reports_identity_gap_and_missing_producer",
+    "core.tests.test_troubleshooting_readiness.ReadinessTests.test_RDY05_authenticated_session_observation_removes_only_the_producer_blocker",
+    "core.tests.test_troubleshooting_readiness.ReadinessTests.test_RDY06_verified_device_without_version_is_refused_with_version_blocker_only",
+    "core.tests.test_troubleshooting_readiness.ReadinessTests.test_RDY07_all_gates_satisfied_is_admitted_and_report_agrees_with_runtime",
+    "core.tests.test_troubleshooting_readiness.ReadinessTests.test_RDY08_withdrawn_and_mismatch_are_never_reported_as_fixable_by_override",
+    "core.tests.test_troubleshooting_readiness.ReadinessTests.test_RDY09_runbooks_need_bindings_and_an_admitted_device_rb07_needs_hardware",
+    "core.tests.test_troubleshooting_readiness.ReadinessTests.test_RDY10_runbook_requirements_name_only_real_deployment_keys",
+    "core.tests.test_troubleshooting_readiness.ReadinessTests.test_RDY11_failing_provider_is_a_blocker_not_a_crash",
+    "core.tests.test_troubleshooting_readiness.ReadinessTests.test_RDY12_command_is_read_only_and_emits_json",
+    "core.tests.test_troubleshooting_runbooks.RB01Tests.test_ut046_planned_admin_down_is_expected_behaviour_not_a_fault",
+    "core.tests.test_troubleshooting_runbooks.RB01Tests.test_ut046_stable_link_recovers_cleanly",
+    "core.tests.test_troubleshooting_runbooks.RB01Tests.test_ut046_unstable_physical_link_is_distinguished_from_planned_admin_down",
+    "core.tests.test_troubleshooting_runbooks.RB01Tests.test_ut052_counter_reset_makes_error_trend_inconclusive_not_healthy",
+    "core.tests.test_troubleshooting_runbooks.RB03Tests.test_ut048_bgp_vrf_and_address_family_difference_and_auth_not_displayed",
+    "core.tests.test_troubleshooting_runbooks.RB03Tests.test_ut048_healthy_adjacency_passes_every_applicable_test",
+    "core.tests.test_troubleshooting_runbooks.RB03Tests.test_ut048_ospf_area_mismatch_is_found_with_protocol_specific_reason",
+    "core.tests.test_troubleshooting_runbooks.RB03Tests.test_ut053_unsupported_protocol_or_capability_is_unavailable_and_not_invented",
+    "core.tests.test_troubleshooting_runbooks.RB04Tests.test_ut049_evpn_vxlan_domain_excludes_stp_tests_and_remediation",
+    "core.tests.test_troubleshooting_runbooks.RB04Tests.test_ut049_healthy_domain_has_stable_root_and_blocked_port",
+    "core.tests.test_troubleshooting_runbooks.RB04Tests.test_ut049_root_change_is_reported",
+    "core.tests.test_troubleshooting_runbooks.RB04Tests.test_ut049_stp_loop_with_bpdu_filter_tcn_and_mac_flaps_is_identified",
+    "core.tests.test_troubleshooting_runbooks.RB05Tests.test_ut050_authoritative_zone_propagation_failure",
+    "core.tests.test_troubleshooting_runbooks.RB05Tests.test_ut050_dns_policy_refusal",
+    "core.tests.test_troubleshooting_runbooks.RB05Tests.test_ut050_healthy_resolution_chain",
+    "core.tests.test_troubleshooting_runbooks.RB05Tests.test_ut050_resolver_cache_ttl_is_distinguished_from_authoritative_failure",
+    "core.tests.test_troubleshooting_runbooks.RB06Tests.test_ut051_every_size_failing_is_not_an_mtu_signature",
+    "core.tests.test_troubleshooting_runbooks.RB06Tests.test_ut051_healthy_path_has_no_size_dependent_loss",
+    "core.tests.test_troubleshooting_runbooks.RB06Tests.test_ut051_size_dependent_loss_from_mtu_mismatch_and_ptb_filtering",
+    "core.tests.test_troubleshooting_runbooks.RB07Tests.test_ut052_counter_reset_is_inconclusive_and_never_healthy",
+    "core.tests.test_troubleshooting_runbooks.RB07Tests.test_ut052_fec_mismatch_with_crc_errors_is_isolated_even_though_optics_are_fine",
+    "core.tests.test_troubleshooting_runbooks.RB07Tests.test_ut052_healthy_link_passes",
+    "core.tests.test_troubleshooting_runbooks.RB07Tests.test_ut052_low_optical_power_is_a_dom_fault_with_error_signature",
+    "core.tests.test_troubleshooting_runbooks.RunbookDocTests.test_every_runbook_declares_governed_remediation_that_never_resets_blindly",
+    "core.tests.test_troubleshooting_runbooks.RunbookDocTests.test_ut054_a_renamed_or_added_test_id_breaks_synchronisation",
+    "core.tests.test_troubleshooting_runbooks.RunbookDocTests.test_ut054_every_runbook_dag_is_valid_and_document_is_synchronised",
+    "core.tests.test_troubleshooting_runtime.AdmissionTests.test_RT005_admission_comes_from_inventory_not_client_target_states",
+    "core.tests.test_troubleshooting_runtime.AdmissionTests.test_RT006_withdrawn_device_never_probed",
+    "core.tests.test_troubleshooting_runtime.AdmissionTests.test_RT007_device_budget_is_enforced_and_clamped",
+    "core.tests.test_troubleshooting_runtime.AdmissionTests.test_RT008_wall_clock_budget_exhaustion_is_a_gap",
+    "core.tests.test_troubleshooting_runtime.CoverageTests.test_RT011_all_seven_runbooks_run_on_actual_collector_output_without_fabrication",
+    "core.tests.test_troubleshooting_runtime.CoverageTests.test_RT012_rate_and_reset_need_two_snmp_polls",
+    "core.tests.test_troubleshooting_runtime.MappingTests.test_RT001_actual_collector_outputs_map_to_engine_keys_with_provenance",
+    "core.tests.test_troubleshooting_runtime.MappingTests.test_RT002_no_transport_means_unavailable_not_values",
+    "core.tests.test_troubleshooting_runtime.MappingTests.test_RT003_partial_parser_results_are_gaps_beside_parsed_values",
+    "core.tests.test_troubleshooting_runtime.MappingTests.test_RT004_untrusted_parse_stays_untrusted",
+    "core.tests.test_troubleshooting_runtime.RestartTests.test_RT009_restart_with_same_run_key_does_not_recontact_or_duplicate",
+    "core.tests.test_troubleshooting_runtime.RestartTests.test_RT010_crash_mid_device_resumes_without_duplicate_observations",
+    "core.tests.test_troubleshooting_runtime.ViewTests.test_RT013_auth_roles_tenant_and_method",
+    "core.tests.test_troubleshooting_runtime.ViewTests.test_RT014_run_endpoint_is_idempotent_ignores_client_states_and_fails_closed",
+    "core.tests.test_troubleshooting_runtime.ViewTests.test_RT014b_shipped_settings_admit_nothing_until_the_binding_is_enabled",
+    "core.tests.test_troubleshooting_runtime.ViewTests.test_RT015_factory_hook_drives_collection",
+    "core.tests.test_troubleshooting_runtime_ports.MonitorCommandTests.test_rp25_command_samples_persists_and_reports_status",
+    "core.tests.test_troubleshooting_runtime_ports.MonitorCommandTests.test_rp26_command_without_flow_source_records_unusable_samples",
+    "core.tests.test_troubleshooting_runtime_ports.MonitorCommandTests.test_rp27_command_reset_requires_reason_and_unknown_plan_refused",
+    "core.tests.test_troubleshooting_runtime_ports.SafetyPortTests.test_rp01_writes_disabled_by_default",
+    "core.tests.test_troubleshooting_runtime_ports.SafetyPortTests.test_rp02_authoritative_device_refusal_beats_case_claims",
+    "core.tests.test_troubleshooting_runtime_ports.SafetyPortTests.test_rp03_inventory_unreadable_and_unknown_maintenance_refuse",
+    "core.tests.test_troubleshooting_runtime_ports.SafetyPortTests.test_rp04_decommission_in_flight_forces_maintenance_state",
+    "core.tests.test_troubleshooting_runtime_ports.SafetyPortTests.test_rp05_absent_alternate_path_refuses_drain",
+    "core.tests.test_troubleshooting_runtime_ports.SafetyPortTests.test_rp06_verified_alternate_path_with_capacity_allows_precheck",
+    "core.tests.test_troubleshooting_runtime_ports.SafetyPortTests.test_rp07_missing_telemetry_is_not_healthy",
+    "core.tests.test_troubleshooting_runtime_ports.SafetyPortTests.test_rp08_non_production_flow_cannot_guard",
+    "core.tests.test_troubleshooting_runtime_ports.SafetyPortTests.test_rp09_approval_requires_step_up_and_human",
+    "core.tests.test_troubleshooting_runtime_ports.SafetyPortTests.test_rp10_readback_and_compensation_services_fail_closed",
+    "core.tests.test_troubleshooting_runtime_ports.SafetyPortTests.test_rp11_production_loss_mid_change_aborts_and_restores",
+    "core.tests.test_troubleshooting_runtime_ports.SafetyPortTests.test_rp12_compensation_failure_is_unrestored_never_hidden",
+    "core.tests.test_troubleshooting_runtime_ports.SoakTests.test_rp13_complete_clean_soak_verifies",
+    "core.tests.test_troubleshooting_runtime_ports.SoakTests.test_rp14_elapsed_deadline_alone_never_proves_soak",
+    "core.tests.test_troubleshooting_runtime_ports.SoakTests.test_rp15_caller_cannot_shorten_the_window",
+    "core.tests.test_troubleshooting_runtime_ports.SoakTests.test_rp16_degradation_is_sticky_a_single_recovered_sample_does_not_clear_it",
+    "core.tests.test_troubleshooting_runtime_ports.SoakTests.test_rp17_interrupted_monitoring_cannot_prove_clean",
+    "core.tests.test_troubleshooting_runtime_ports.SoakTests.test_rp18_insufficient_coverage_and_unusable_samples_do_not_pass",
+    "core.tests.test_troubleshooting_runtime_ports.SoakTests.test_rp19_missing_telemetry_during_soak_is_a_gap_not_health",
+    "core.tests.test_troubleshooting_runtime_ports.SoakTests.test_rp20_restart_recovery_resumes_from_persisted_ledger",
+    "core.tests.test_troubleshooting_runtime_ports.SoakTests.test_rp21_clock_moving_backwards_is_rejected",
+    "core.tests.test_troubleshooting_runtime_ports.SoakTests.test_rp22_reset_window_is_human_audited_and_starts_fresh",
+    "core.tests.test_troubleshooting_runtime_ports.SoakTests.test_rp23_verify_closes_missing_flow_and_coverage_bypasses",
+    "core.tests.test_troubleshooting_runtime_ports.SoakTests.test_rp24_soak_needs_a_named_production_flow",
+    "core.tests.test_troubleshooting_stp_source.RuntimeToRb04Tests.test_STPSRC_010_fault_parser_to_runtime_to_rb04_with_provenance",
+    "core.tests.test_troubleshooting_stp_source.RuntimeToRb04Tests.test_STPSRC_011_healthy_then_recovery",
+    "core.tests.test_troubleshooting_stp_source.RuntimeToRb04Tests.test_STPSRC_012_malformed_unsupported_and_stp_free_are_gaps_not_verdicts",
+    "core.tests.test_troubleshooting_stp_source.RuntimeToRb04Tests.test_STPSRC_013_partial_and_unknown_history_never_pass_rb04",
+    "core.tests.test_troubleshooting_stp_source.RuntimeToRb04Tests.test_STPSRC_014_reset_and_long_gap_are_unknown",
+    "core.tests.test_troubleshooting_stp_source.RuntimeToRb04Tests.test_STPSRC_015_unsupported_version_does_not_contact_transport",
+    "core.tests.test_troubleshooting_stp_source.RuntimeToRb04Tests.test_STPSRC_016_fault_window_persists_then_recovers",
+    "core.tests.test_troubleshooting_stp_source.RuntimeToRb04Tests.test_STPSRC_017_bad_boolean_and_counter_remain_uncertain",
+    "core.tests.test_troubleshooting_stp_source.UnitParserTests.test_STPSRC_001_root_port_roles_and_bridge_ids",
+    "core.tests.test_troubleshooting_stp_source.UnitParserTests.test_STPSRC_002_tcn_without_history_is_never_reported_as_zero_when_recent",
+    "core.tests.test_troubleshooting_stp_source.UnitParserTests.test_STPSRC_003_history_gives_windowed_tcn_and_root_change",
+    "core.tests.test_troubleshooting_stp_source.UnitParserTests.test_STPSRC_004_loop_indicators_and_port_protection",
+    "core.tests.test_troubleshooting_stp_source.UnitParserTests.test_STPSRC_005_malformed_and_partial_documents_keep_uncertainty",
+    "core.tests.test_troubleshooting_stp_source.UnitParserTests.test_STPSRC_006_version_gate_fails_closed",
+    "core.tests.test_troubleshooting_stp_source.UnitParserTests.test_STPSRC_007_no_instances_is_empty_not_healthy",
+    "core.tests.test_troubleshooting_stp_source.UnitParserTests.test_STPSRC_008_single_instance_modes_alias_requested_vlans_only",
+    "core.tests.test_troubleshooting_stp_source.UnitParserTests.test_STPSRC_009_catalogue_is_read_only_and_labels_source_honestly",
+    "core.tests.test_troubleshooting_stp_source.UnitParserTests.test_STPSRC_018_mst_alias_needs_single_common_instance",
+    "core.tests.test_troubleshooting_views.ActionAvailabilityTests.test_it13_full_governed_flow_through_the_api",
+    "core.tests.test_troubleshooting_views.ActionAvailabilityTests.test_ui_buttons_render_disabled_with_reason_and_post_redirects_with_notice",
+    "core.tests.test_troubleshooting_views.ActionAvailabilityTests.test_ut089_no_enabled_action_for_unsupported_unapproved_or_unsafe_remediation",
+    "core.tests.test_troubleshooting_views.ApiContractTests.test_authentication_and_roles_are_enforced",
+    "core.tests.test_troubleshooting_views.ApiContractTests.test_intake_api_creates_case_idempotently_and_validates",
+    "core.tests.test_troubleshooting_views.ApiContractTests.test_raw_evidence_requires_admin_and_is_audited",
+    "core.tests.test_troubleshooting_views.ApiContractTests.test_ut081_case_and_stage_apis_are_typed_scoped_and_versioned",
+    "core.tests.test_troubleshooting_views.ApiContractTests.test_ut082_cross_tenant_and_unauthorized_device_and_evidence_rejected",
+    "core.tests.test_troubleshooting_views.ReportTests.test_ut083_report_has_source_refs_golden_link_and_tested_untested_coverage",
+    "core.tests.test_troubleshooting_views.ReportTests.test_ut084_sequential_output_is_summarised_not_a_cli_dump",
+    "core.tests.test_troubleshooting_views.ReportTests.test_ut085_ai_remediation_and_verification_shown_separately",
+    "core.tests.test_troubleshooting_views.ReportTests.test_ut086_exception_visible_with_audit_scope_and_expiration",
+    "core.tests.test_troubleshooting_views.ReportTests.test_ut087_stale_evidence_labeled_never_live",
+    "core.tests.test_troubleshooting_views.ReportTests.test_ut088_metrics_endpoint_excludes_unresolved_from_mttr",
+    "core.tests.test_troubleshooting_views.ReportTests.test_ut090_export_is_redacted_integrity_checked_and_labelled",
+    "core.tests.test_troubleshooting_views.UiTests.test_list_detail_intake_pages_render",
+    "core.tests.test_troubleshooting_views.UiTests.test_report_html_is_escaped",
+    "core.tests.test_troubleshooting_views.UiTests.test_unauthenticated_pages_closed"
+  ],
+  "baseline_cases": 7005,
+  "baseline_nonpass": [
+    {
+      "id": "challenge_console.tests.test_tg_ui_closure.BridgeTests.test_a_bus_that_refuses_the_subscription_raises",
+      "status_events": {
+        "SKIP": 1
+      }
+    },
+    {
+      "id": "challenge_console.tests.test_tg_ui_closure.BridgeTests.test_drain_returns_each_changed_topic_once_and_counts_deliveries",
+      "status_events": {
+        "SKIP": 1
+      }
+    },
+    {
+      "id": "challenge_console.tests.test_tg_ui_closure.CloseDialogTests.test_ask_returns_cancel_when_the_dialog_window_is_closed",
+      "status_events": {
+        "SKIP": 1
+      }
+    },
+    {
+      "id": "challenge_console.tests.test_tg_ui_closure.CloseDialogTests.test_ask_returns_save_with_the_destination",
+      "status_events": {
+        "SKIP": 1
+      }
+    },
+    {
+      "id": "challenge_console.tests.test_tg_ui_closure.CloseDialogTests.test_close_dialog_with_an_incomplete_log_status_raises",
+      "status_events": {
+        "SKIP": 1
+      }
+    },
+    {
+      "id": "challenge_console.tests.test_tg_ui_closure.ConsoleAppSignalTests.test_stop_from_signal_shuts_down_on_the_next_pump_and_keeps_the_spool",
+      "status_events": {
+        "SKIP": 1
+      }
+    },
+    {
+      "id": "challenge_console.tests.test_tg_ui_closure.LiveProofHelperTests.test_press_on_a_closed_console_never_opens_a_dialog",
+      "status_events": {
+        "SKIP": 1
+      }
+    },
+    {
+      "id": "challenge_console.tests.test_tg_ui_closure.LiveProofHelperTests.test_press_opens_the_real_close_dialog_and_presses_cancel",
+      "status_events": {
+        "SKIP": 1
+      }
+    },
+    {
+      "id": "challenge_console.tests.test_tg_ui_closure.LiveProofHelperTests.test_pump_of_a_closed_console_never_updates",
+      "status_events": {
+        "SKIP": 1
+      }
+    },
+    {
+      "id": "challenge_console.tests.test_tg_ui_closure.LiveProofHelperTests.test_pump_updates_the_window_for_the_given_time",
+      "status_events": {
+        "SKIP": 1
+      }
+    },
+    {
+      "id": "challenge_console.tests.test_tg_ui_closure.LiveProofHelperTests.test_table_rows_counts_the_top_level_rows",
+      "status_events": {
+        "SKIP": 1
+      }
+    },
+    {
+      "id": "challenge_console.tests.test_tg_ui_closure.LiveProofHelperTests.test_table_rows_of_an_empty_table",
+      "status_events": {
+        "SKIP": 1
+      }
+    },
+    {
+      "id": "challenge_console.tests.test_tg_ui_closure.LiveProofMainTests.test_main_without_out_raises_system_exit",
+      "status_events": {
+        "SKIP": 1
+      }
+    },
+    {
+      "id": "challenge_console.tests.test_tg_ui_closure.LiveProofMainTests.test_main_writes_the_evidence_for_cancel_save_and_discard",
+      "status_events": {
+        "SKIP": 1
+      }
+    },
+    {
+      "id": "challenge_console.tests.test_tg_ui_closure.RunTests.test_run_opens_the_console_and_returns_0_after_a_discard_close",
+      "status_events": {
+        "SKIP": 1
+      }
+    },
+    {
+      "id": "challenge_console.tests.test_tg_ui_closure.RunTests.test_run_without_a_display_exits_2_and_discards_the_session",
+      "status_events": {
+        "SKIP": 1
+      }
+    },
+    {
+      "id": "challenge_console.tests.test_tg_ui_closure.ViewBaseTests.test_a_view_binds_the_runtime_store_and_config_then_builds",
+      "status_events": {
+        "SKIP": 1
+      }
+    },
+    {
+      "id": "challenge_console.tests.test_tg_ui_closure.ViewBaseTests.test_refresh_counts_and_renders",
+      "status_events": {
+        "SKIP": 1
+      }
+    },
+    {
+      "id": "challenge_console.tests.test_tg_ui_closure.ViewBaseTests.test_the_base_view_without_build_raises",
+      "status_events": {
+        "SKIP": 1
+      }
+    },
+    {
+      "id": "challenge_console.tests.test_tg_ui_closure.ViewBuildTests.test_each_view_build_creates_its_summary_and_tables",
+      "status_events": {
+        "SKIP": 1
+      }
+    },
+    {
+      "id": "challenge_console.tests.test_tg_ui_closure.ViewBuildTests.test_the_automation_view_builds_every_tab_and_soak_field",
+      "status_events": {
+        "SKIP": 1
+      }
+    },
+    {
+      "id": "challenge_console.tests.test_tg_ui_closure.WidgetHelperTests.test_make_table_builds_headings_widths_anchors_and_scrollbars",
+      "status_events": {
+        "SKIP": 1
+      }
+    },
+    {
+      "id": "challenge_console.tests.test_tg_ui_closure.WidgetHelperTests.test_make_table_with_a_malformed_column_raises",
+      "status_events": {
+        "SKIP": 1
+      }
+    },
+    {
+      "id": "challenge_console.tests.test_tg_ui_closure.WidgetHelperTests.test_selected_returns_the_chosen_row",
+      "status_events": {
+        "SKIP": 1
+      }
+    },
+    {
+      "id": "challenge_console.tests.test_tg_ui_closure.WidgetHelperTests.test_selected_without_a_selection_is_empty",
+      "status_events": {
+        "SKIP": 1
+      }
+    },
+    {
+      "id": "challenge_console.tests.test_tg_ui_closure.WidgetHelperTests.test_sync_table_inserts_updates_reorders_and_deletes_rows_in_place",
+      "status_events": {
+        "SKIP": 1
+      }
+    },
+    {
+      "id": "challenge_console.tests.test_tg_ui_closure.WidgetHelperTests.test_sync_table_with_a_duplicate_row_id_raises",
+      "status_events": {
+        "SKIP": 1
+      }
+    },
+    {
+      "id": "challenge_console.tests.test_ui.BridgeTests.test_a_slow_render_does_not_delay_collection",
+      "status_events": {
+        "SKIP": 1
+      }
+    },
+    {
+      "id": "challenge_console.tests.test_ui.BridgeTests.test_events_published_from_worker_threads_are_delivered_as_topics",
+      "status_events": {
+        "SKIP": 1
+      }
+    },
+    {
+      "id": "challenge_console.tests.test_ui.BridgeTests.test_widgets_are_only_touched_on_the_tk_thread",
+      "status_events": {
+        "SKIP": 1
+      }
+    },
+    {
+      "id": "challenge_console.tests.test_ui.CloseTests.test_cancel_returns_to_the_running_console_without_resetting_anything",
+      "status_events": {
+        "SKIP": 1
+      }
+    },
+    {
+      "id": "challenge_console.tests.test_ui.CloseTests.test_dont_save_discards_and_exits_cleanly",
+      "status_events": {
+        "SKIP": 1
+      }
+    },
+    {
+      "id": "challenge_console.tests.test_ui.CloseTests.test_save_persists_then_exits_cleanly",
+      "status_events": {
+        "SKIP": 1
+      }
+    },
+    {
+      "id": "challenge_console.tests.test_ui.CloseTests.test_save_to_a_chosen_destination",
+      "status_events": {
+        "SKIP": 1
+      }
+    },
+    {
+      "id": "challenge_console.tests.test_ui.CloseTests.test_the_dialog_offers_exactly_save_dont_save_cancel",
+      "status_events": {
+        "SKIP": 1
+      }
+    },
+    {
+      "id": "challenge_console.tests.test_ui.CloseTests.test_the_window_close_button_goes_through_the_chooser",
+      "status_events": {
+        "SKIP": 1
+      }
+    },
+    {
+      "id": "challenge_console.tests.test_ui.NavigationTests.test_connectivity_history_grows_while_other_views_are_shown",
+      "status_events": {
+        "SKIP": 1
+      }
+    },
+    {
+      "id": "challenge_console.tests.test_ui.NavigationTests.test_every_collector_keeps_running_while_its_view_is_hidden",
+      "status_events": {
+        "SKIP": 1
+      }
+    },
+    {
+      "id": "challenge_console.tests.test_ui.NavigationTests.test_five_views_and_a_persistent_sidebar",
+      "status_events": {
+        "SKIP": 1
+      }
+    },
+    {
+      "id": "challenge_console.tests.test_ui.NavigationTests.test_nmas_web_down_is_shown_and_the_console_keeps_working",
+      "status_events": {
+        "SKIP": 1
+      }
+    },
+    {
+      "id": "challenge_console.tests.test_ui.NavigationTests.test_only_the_visible_view_is_rendered",
+      "status_events": {
+        "SKIP": 1
+      }
+    },
+    {
+      "id": "challenge_console.tests.test_ui.ReadOnlySurfaceTests.test_automation_view_shows_the_soak_without_any_promotion_action",
+      "status_events": {
+        "SKIP": 1
+      }
+    },
+    {
+      "id": "challenge_console.tests.test_ui.ReadOnlySurfaceTests.test_no_view_offers_a_control_action",
+      "status_events": {
+        "SKIP": 1
+      }
+    },
+    {
+      "id": "core.tests.test_bootstrap_retirement.ConcurrentRetirementTests.test_accepted_write_then_worker_crash_reconciles_without_install_replay",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_bootstrap_retirement.ConcurrentRetirementTests.test_change_and_maintenance_lock_acquisition_cannot_overlap_retirement",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_bootstrap_retirement.ConcurrentRetirementTests.test_competing_retirement_is_refused_before_device_io",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_bootstrap_retirement.ConcurrentRetirementTests.test_started_retirement_cannot_be_cancelled_during_preflight",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_bootstrap_retirement.ExecuteTests.test_execute_bootstrap_still_accepted_never_confirmed_not_complete",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_bootstrap_retirement.ExecuteTests.test_execute_full_transition_complete_only_after_proof",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_bootstrap_retirement.ExecuteTests.test_execute_host_key_mismatch_preflight_failed_nothing_sent",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_bootstrap_retirement.ExecuteTests.test_execute_install_rejected_uncertain_then_reconciled_and_resumed",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_bootstrap_retirement.ExecuteTests.test_execute_legacy_transition_refused_when_approved_path_appears",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_bootstrap_retirement.ExecuteTests.test_execute_refuses_changed_selected_path_before_authentication",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_bootstrap_retirement.ExecuteTests.test_execute_replacement_unverified_removed_and_failed_bootstrap_intact",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_bootstrap_retirement.ExecuteTests.test_execute_retirement_failure_stays_pending_then_resumes",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_bootstrap_retirement.ExecuteTests.test_execute_revocation_ignored_not_complete",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_bootstrap_retirement.ExecuteTests.test_execute_selected_replacement_path_retires_bootstrap",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_bootstrap_retirement.ExecuteTests.test_execute_while_execution_lock_held_refused",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_bootstrap_retirement.ExecuteTests.test_in_flight_reports_bootstrap_credential_while_installing",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_bootstrap_retirement.PlanTests.test_approve_self_or_wrong_digest_refused",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_bootstrap_retirement.PlanTests.test_cancel_before_execution_only",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_bootstrap_retirement.PlanTests.test_execute_unapproved_refused_and_nothing_sent",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_bootstrap_retirement.PlanTests.test_plan_and_approve_bound_to_digest",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_bootstrap_retirement.PlanTests.test_plan_human_or_password_credential_refused",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_bootstrap_retirement.PlanTests.test_plan_on_selected_replacement_path",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_bootstrap_retirement.PlanTests.test_plan_other_platform_not_implemented",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_bootstrap_retirement.PlanTests.test_plan_reserved_username_refused",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_bootstrap_retirement.PlanTests.test_plan_second_open_transition_refused",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_bootstrap_retirement.PlanTests.test_plan_without_bootstrap_secret_refused",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_bootstrap_retirement.PlanTests.test_plan_without_selected_path_refused_after_approval",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_capability_batch_harness.VerifyMatrixCommandTests.test_family_batch_writes_ledger_and_fails_while_incomplete",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_capability_framework.VerificationCommandTests.test_fixture_verification_records_typed_audited_evidence",
+      "status_events": {
+        "ERROR": 1
+      }
+    },
+    {
+      "id": "core.tests.test_commissioning.AdmissionTests.test_admission_releases_isolation_and_admits",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_commissioning.AdmissionTests.test_approval_is_separated_and_bound_to_the_evidence",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_commissioning.AdmissionTests.test_execute_refused_when_unapproved_or_stale",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_commissioning.AdmissionTests.test_failed_verification_restores_isolation",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_commissioning.AdmissionTests.test_failures_reads_adjacency_routes_and_reachability",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_commissioning.AdmissionTests.test_plan_refused_before_configuration",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_commissioning.AdmissionTests.test_plan_refused_with_invalid_expectations_creates_nothing",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_commissioning.AdmissionTests.test_reconcile_after_a_crash_proves_the_upstream_state",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_commissioning.ApprovalTests.test_approval_approves_the_run_and_moves_lifecycle",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_commissioning.ApprovalTests.test_expired_approval_blocks_execution_and_nothing_is_written",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_commissioning.ApprovalTests.test_provisioning_run_cannot_be_approved_outside_commissioning",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_commissioning.ApprovalTests.test_requester_cannot_approve_and_confirmation_must_match",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_commissioning.ApprovalTests.test_stale_evidence_is_refused",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_commissioning.ConfigurationTests.test_abort_returns_the_device_to_isolated_and_cancels_the_run",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_commissioning.ConfigurationTests.test_configuration_through_the_engine_marks_configuring_then_configured",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_commissioning.ConfigurationTests.test_isolation_drift_after_configuration_is_uncertain",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_commissioning.ConfigurationTests.test_nsot_activation_waits_for_admission",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_commissioning.ConfigurationTests.test_reconcile_configuring_folds_the_recorded_run_outcome",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_commissioning.ConfigurationTests.test_record_configuration_before_execution_is_refused",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_commissioning.ConfigurationTests.test_status_summary",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_commissioning.OpenTests.test_open_creates_a_commissioning_provisioning_run",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_commissioning.OpenTests.test_open_refuses_a_device_that_is_not_isolated_or_has_no_transport",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_commissioning.OpenTests.test_open_refuses_a_second_commissioning",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_commissioning.ReadinessTests.test_assess_ready_freezes_evidence_and_moves_lifecycle",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_commissioning.ReadinessTests.test_assess_without_a_prechecked_candidate_stays_open",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_commissioning.ReadinessTests.test_bare_lifecycle_transition_cannot_skip_commissioning",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_commissioning.ReadinessTests.test_isolation_drift_withdraws_readiness",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_commissioning.ReadinessTests.test_operator_revoked_authorization_blocks_readiness_but_completion_closure_does_not",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_commissioning.TransportTests.test_ready_device_reads_but_does_not_write_before_approval",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_commissioning_views.ViewTests.test_admission_plan_record_and_reconcile_refuse_the_wrong_state",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_commissioning_views.ViewTests.test_admission_through_the_pages_releases_isolation_and_admits",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_commissioning_views.ViewTests.test_commissioning_abort_returns_the_device_to_isolated",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_commissioning_views.ViewTests.test_commissioning_approval_needs_a_different_approver_and_the_exact_digest",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_contracts.ExecutionBoundaryContractTests.test_no_persistence_reload_lifecycle_or_repository_command_is_ever_sent",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_contracts.ExecutionBoundaryContractTests.test_only_the_two_executors_touch_a_device_library_and_each_only_its_own",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_execution_executors.CeosExecutorTests.test_assess_and_compensate_follow_the_captured_state_and_verify_by_read_back",
+      "status_events": {
+        "FAIL": 4
+      }
+    },
+    {
+      "id": "core.tests.test_exhaustive_capability_assessment.AssessmentContractTests.test_verify_matrix_enumerates_selected_cell_and_fails_closed",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_isolation_eos.IntentProblemTests.test_management_plane_exposed_by_other_services_or_nmas_lockout",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_isolation_eos.RenderTests.test_render_release_refuses_an_uncovered_operation",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_isolation_service.GateTests.test_device_not_observed_on_the_port_fails_attachment_check",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_isolation_service.GateTests.test_dhcp_policy_answers_only_isolated_ports",
+      "status_events": {
+        "ERROR": 1
+      }
+    },
+    {
+      "id": "core.tests.test_isolation_service.GateTests.test_isolate_edge_requires_verified_policy_with_the_device_observed",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_isolation_service.GateTests.test_ztp_session_cannot_open_without_isolation",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_nsot.GitAdapterTests.test_catalogue_is_allowlisted_to_known_roots",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_nsot.GitAdapterTests.test_known_runtime_logs_are_distinguished_from_project_source_drift",
+      "status_events": {
+        "ERROR": 1
+      }
+    },
+    {
+      "id": "core.tests.test_nsot.GitAdapterTests.test_repo_state_matches_real_repository",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_phase9_option82.Option82ZtpDependencyTests.test_evaluate_accepts_relay_readback_with_option82",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_phase9_option82.Option82ZtpDependencyTests.test_evaluate_refuses_relay_readback_without_option82",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_test_governance.CatalogEvaluationTests.test_a_new_uncovered_function_or_file_fails_the_gate",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_test_governance.CatalogEvaluationTests.test_known_debt_is_visible_and_passes_with_debt_and_paid_debt_is_reported",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_test_governance.InventoryTests.test_the_real_repository_inventory_is_fully_classified",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_test_governance.ParserTests.test_a_file_no_test_imported_counts_as_zero_not_as_absent",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_test_governance.StaticCatalogValidationTests.test_the_real_catalog_is_valid",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_commissioning_closure.AdmissionClosureTests.test_cancel_returns_a_cancelled_admission_and_nothing_sent",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_commissioning_closure.AdmissionClosureTests.test_failures_refuse_an_adjacency_that_never_forms",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_commissioning_closure.AdmissionClosureTests.test_plan_evidence_and_current_problems",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_commissioning_closure.AdmissionClosureTests.test_reconcile_refuses_an_admission_that_is_not_releasing",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_commissioning_closure.AdmissionClosureTests.test_status_names_no_admission_before_approval",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_commissioning_closure.GateClosureTests.test_gate_accepts_the_commissioning_run",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_commissioning_closure.GateClosureTests.test_gate_refuses_other_devices_unapproved_runs_and_unadmitted_sync",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_commissioning_closure.GateClosureTests.test_sync_blockers_returns_nothing_once_admitted",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_commissioning_closure.ModelClosureTests.test_model_deletes_preserve_history",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_commissioning_closure.ModelClosureTests.test_model_identifiers_and_flags_return_their_values",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_commissioning_closure.ModelClosureTests.test_model_saves_accept_service_writes",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_commissioning_closure.ModelClosureTests.test_model_saves_refuse_direct_or_invalid_writes",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_commissioning_closure.OutboxClosureTests.test_admission_payloads_and_record_admission_return_valid_contracts",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_commissioning_closure.OutboxClosureTests.test_admission_payloads_never_carry_secrets_and_record_admission_never_duplicates",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_commissioning_closure.ServiceClosureTests.test_abort_refuses_an_admitted_or_closed_record",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_commissioning_closure.ServiceClosureTests.test_mark_configuring_accepts_the_approved_run_write_ahead",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_commissioning_closure.ServiceClosureTests.test_mark_configuring_refuses_a_run_whose_record_is_not_approved",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_commissioning_closure.ServiceClosureTests.test_readiness",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_commissioning_closure.ServiceClosureTests.test_reconcile_proves_restoration_and_returns_the_device_to_isolated",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_commissioning_closure.ServiceClosureTests.test_reconcile_refuses_an_unproven_restoration_and_keeps_it_uncertain",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_commissioning_closure.ServiceClosureTests.test_restoration_problems",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_commissioning_closure.ServiceClosureTests.test_session_management_and_open_records",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_commissioning_closure.ServiceClosureTests.test_settings_and_authorization_return_configured_values",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_commissioning_closure.ServiceClosureTests.test_status_never_carries_key_material",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_commissioning_closure.TransportClosureTests.test_lookups_and_endpoint",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_commissioning_closure.TransportClosureTests.test_nsot_live_target_never_resolves_a_native_device_for_another_platform_or_an_unnamed_caller",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_commissioning_closure.TransportClosureTests.test_nsot_live_target_refuses_an_unregistered_or_unready_native_device",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_commissioning_closure.TransportClosureTests.test_nsot_live_target_returns_a_native_device_to_a_ceos_caller",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_commissioning_closure.TransportClosureTests.test_prober",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_commissioning_closure.TransportClosureTests.test_write_authorized_and_live_target_return_access_once_approved",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_commissioning_views_closure.CommissioningViewClosureTests.test_admission_cancel_and_reconcile_views_succeed_in_their_states",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_commissioning_views_closure.CommissioningViewClosureTests.test_commissioning_abort_view_succeeds_before_configuration",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_commissioning_views_closure.CommissioningViewClosureTests.test_commissioning_and_admission_views",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_commissioning_views_closure.CommissioningViewClosureTests.test_commissioning_record_view_succeeds_after_the_run",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_configlet_factory_units.ConfigletFactoryUnitTests.test_routing_prerequisite_is_empty_for_existing_devices_other_platforms_and_ipv6_only_processes",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_governance_units.CoverageDataHelperTests.test_unmeasured_counts_statements_of_a_valid_file_as_uncovered",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_governance_units.InventoryHelperTests.test_head_sha_returns_the_checkout_commit",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_high_gap_closure.HighGapInverseTests.test_arista_ceos_interface_access_exact_inverse_restores_baseline",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_high_gap_closure.HighGapInverseTests.test_arista_ceos_interface_management_exact_inverse_restores_baseline",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_high_gap_closure.HighGapInverseTests.test_arista_ceos_interface_trunk_exact_inverse_restores_baseline",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_isolation_closure.ServiceClosureTests.test_isolate_problems_returns_nothing_once_verified_with_the_device",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_isolation_closure.ServiceClosureTests.test_release_helpers",
+      "status_events": {
+        "ERROR": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_isolation_closure.ServiceClosureTests.test_upstream_device_of_another_policy_never_names_this_upstream",
+      "status_events": {
+        "ERROR": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_management_surface_closure.BcredViewClosureTests.test_bcred_approve_with_the_bound_digest_succeeds",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_management_surface_closure.BcredViewClosureTests.test_bcred_approve_wrong_digest_refused",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_management_surface_closure.BcredViewClosureTests.test_bcred_cancel_with_reason_succeeds",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_management_surface_closure.BcredViewClosureTests.test_bcred_cancel_without_reason_refused",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_management_surface_closure.BcredViewClosureTests.test_bcred_execute_completes_after_proof",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_management_surface_closure.BcredViewClosureTests.test_bcred_execute_unapproved_refused_and_nothing_sent",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_management_surface_closure.BcredViewClosureTests.test_bcred_plan_records_a_planned_transition",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_management_surface_closure.BootstrapRetirementClosureTests.test_bootstrap_session_none_for_a_device_without_ztp",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_management_surface_closure.BootstrapRetirementClosureTests.test_bootstrap_session_returns_the_verified_enrollment_session",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_management_surface_closure.BootstrapRetirementClosureTests.test_cancel_without_reason_or_after_completion_refused",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_management_surface_closure.BootstrapRetirementClosureTests.test_keys_bootstrap_after_retirement_unavailable",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_management_surface_closure.BootstrapRetirementClosureTests.test_keys_bootstrap_returns_the_provider_held_enrollment_key",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_management_surface_closure.BootstrapRetirementClosureTests.test_keys_replacement_missing_from_the_provider_raises",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_management_surface_closure.BootstrapRetirementClosureTests.test_keys_replacement_returns_the_service_key_from_the_provider",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_management_surface_closure.BootstrapRetirementClosureTests.test_session_username_returns_the_enrollment_account",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_management_surface_closure.BootstrapRetirementClosureTests.test_status_of_a_failed_transition_is_not_complete",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_management_surface_closure.BootstrapRetirementClosureTests.test_status_returns_steps_and_the_complete_flag",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_management_surface_closure.BootstrapRetirementClosureTests.test_target_of_a_transition_without_path_never_uses_another_address",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_management_surface_closure.BootstrapRetirementClosureTests.test_target_returns_the_enrollment_address_and_pinned_key",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_management_surface_closure.BootstrapRetirementClosureTests.test_transition_id_and_is_open_returns_identity_and_state",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_management_surface_closure.BootstrapRetirementClosureTests.test_transition_rows_raise_on_delete",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_management_surface_closure.BootstrapRetirementClosureTests.test_transition_save_accepts_a_state_change_of_an_open_transition",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_management_surface_closure.BootstrapRetirementClosureTests.test_transition_save_of_immutable_fields_or_closed_history_refused",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_phase56_platform_fixes.IsolatedPortsOfAPlanTests.test_isolated_ports_is_empty_for_a_plan_without_an_isolated_device",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_phase56_platform_fixes.IsolatedPortsOfAPlanTests.test_isolated_ports_returns_the_commissioning_device_uplink",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_phase56_provisioning_branches.BootstrapTransportTests.test_classify_refuses_an_invalid_target_and_never_treats_a_silent_device_as_reachable",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_phase56_provisioning_branches.BootstrapTransportTests.test_classify_returns_reachable_bootstrap_through_the_commissioning_prober",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_phase56_provisioning_branches.BootstrapTransportTests.test_target_blockers_accepts_the_onboarded_ceos_device",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_phase56_provisioning_branches.BootstrapTransportTests.test_target_blockers_refuses_a_malformed_unknown_or_legacy_device",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_phase56_provisioning_branches.LifecycleBranchTests.test_approve_accepts_the_commissioning_approver_of_a_ready_record",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_phase56_provisioning_branches.LifecycleBranchTests.test_approve_refuses_the_requester_and_an_approver_the_commissioning_did_not_name",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_phase56_provisioning_branches.LifecycleBranchTests.test_before_first_mutation_accepts_and_marks_the_record_configuring",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_phase56_provisioning_branches.LifecycleBranchTests.test_before_first_mutation_refuses_an_unapproved_commissioning_and_writes_nothing",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_phase56_provisioning_branches.LifecycleBranchTests.test_config_digest_refuses_an_unreadable_or_empty_ceos_read",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_phase56_provisioning_branches.LifecycleBranchTests.test_config_digest_returns_the_commissioning_read_of_a_ceos_device",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_phase56_provisioning_branches.LifecycleBranchTests.test_define_identity_accepts_the_device_the_run_is_named_after",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_phase56_provisioning_branches.LifecycleBranchTests.test_define_identity_refuses_another_devices_session",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_phase56_provisioning_branches.LifecycleBranchTests.test_execution_blockers_accepts_an_approved_commissioning_run",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_phase56_provisioning_branches.LifecycleBranchTests.test_execution_blockers_refuses_a_commissioning_record_that_is_not_approved",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_phase56_provisioning_branches.LifecycleBranchTests.test_sync_nsot_refuses_a_commissioned_device_that_is_not_admitted",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_provisioning_closure.RegistryHookTests.test_repository_head_is_the_checked_out_commit",
+      "status_events": {
+        "ERROR": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_ztp_delivery_closure.DeliveryHandlerTests.test_http_get_serves_the_artifact_bytes_to_the_bound_requester",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_ztp_delivery_closure.DeliveryHandlerTests.test_tftp_read_request_transfers_the_artifact_to_the_bound_requester",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_ztp_delivery_closure.NmasZtpCommandTests.test_adapters_and_status_print_the_read_only_reports",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_ztp_delivery_closure.ZtpPageClosureTests.test_device_panel_lists_the_adapter_paths_and_the_open_session",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_ztp_delivery_closure.ZtpPageClosureTests.test_network_apply_writes_the_isolated_provider_and_records_applied",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_ztp_delivery_closure.ZtpPageClosureTests.test_network_ingest_reads_the_provider_lease_database",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_ztp_delivery_closure.ZtpPageClosureTests.test_network_rollback_restores_the_previous_policy",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_ztp_delivery_closure.ZtpPageClosureTests.test_session_cancel_closes_the_session",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_ztp_delivery_closure.ZtpPageClosureTests.test_session_fail_device_succeeds_for_a_discovered_device_after_a_closed_session",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_ztp_policy_closure.ArtifactClosureTests.test_close_for_session_revokes_the_active_artifact",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_ztp_policy_closure.ArtifactClosureTests.test_close_for_session_with_no_active_artifact_changes_nothing",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_ztp_policy_closure.ArtifactClosureTests.test_create_stores_a_new_artifact_and_supersedes_the_active_one",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_ztp_policy_closure.ArtifactClosureTests.test_expire_due_with_nothing_due_expires_none",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_ztp_policy_closure.ArtifactClosureTests.test_request_for_lease_takes_claims_from_the_lease_and_the_port_from_the_relay",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_ztp_policy_closure.DiscoveryClosureTests.test_fold_correlates_a_trusted_lease_and_repeats_only_count",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_ztp_policy_closure.DiscoveryClosureTests.test_fold_of_an_untrusted_relay_or_an_unseen_release_is_refused",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_ztp_policy_closure.DiscoveryClosureTests.test_read_lease_file_returns_the_provider_lease_database",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_ztp_policy_closure.NetworkPolicyClosureTests.test_allocate_address_of_an_exhausted_pool_is_empty",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_ztp_policy_closure.NetworkPolicyClosureTests.test_allocate_address_returns_the_first_free_pool_address",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_ztp_policy_closure.NetworkPolicyClosureTests.test_eligible_sessions_lists_the_open_approved_session",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_ztp_policy_closure.NetworkPolicyClosureTests.test_eligible_sessions_never_include_a_cancelled_or_expired_session",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_ztp_policy_closure.NetworkPolicyClosureTests.test_policy_is_not_current_before_any_application",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_ztp_policy_closure.NetworkPolicyClosureTests.test_validate_policy_with_a_failing_validator_or_missing_network_is_refused",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_ztp_workflow_closure.ModelClosureTests.test_bootstrap_artifact_save_accepts_a_state_change_of_an_active_artifact",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_ztp_workflow_closure.ModelClosureTests.test_bootstrap_artifact_save_of_changed_content_or_reopened_history_is_refused",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_ztp_workflow_closure.ModelClosureTests.test_bootstrap_delivery_save_appends_one_evidence_row",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_ztp_workflow_closure.ModelClosureTests.test_bootstrap_delivery_save_of_an_existing_row_or_unknown_outcome_is_refused",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_ztp_workflow_closure.ModelClosureTests.test_dhcp_lease_observation_save_moves_the_counters",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_ztp_workflow_closure.ModelClosureTests.test_dhcp_lease_observation_save_of_changed_evidence_is_refused",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_ztp_workflow_closure.ModelClosureTests.test_dhcp_provider_application_save_appends_one_record",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_ztp_workflow_closure.ModelClosureTests.test_dhcp_provider_application_save_of_a_bad_digest_or_an_existing_row_is_refused",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_ztp_workflow_closure.ModelClosureTests.test_evidence_models_refuse_deletion",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_ztp_workflow_closure.ModelClosureTests.test_ztp_session_save_accepts_an_open_session_update",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_ztp_workflow_closure.ModelClosureTests.test_ztp_session_save_of_an_immutable_or_malformed_field_is_refused",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_ztp_workflow_closure.WorkflowHelperClosureTests.test_a_mismatch_closes_the_session_and_never_retries",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_ztp_workflow_closure.WorkflowHelperClosureTests.test_context_for_builds_the_bootstrap_context_of_the_session",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_ztp_workflow_closure.WorkflowHelperClosureTests.test_get_session_returns_the_session_by_its_id",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_ztp_workflow_closure.WorkflowHelperClosureTests.test_open_prerequisites_of_a_ready_device_are_all_satisfied",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_ztp_workflow_closure.WorkflowHelperClosureTests.test_open_problems_without_an_authorization_or_with_an_open_session_are_refused",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_ztp_workflow_closure.WorkflowHelperClosureTests.test_retryable_attempt_keeps_the_session_open_with_native_guidance",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tg_ztp_workflow_closure.WorkflowHelperClosureTests.test_status_reports_every_evidence_stage_separately",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_tier3_selection.ClassificationTests.test_every_repository_file_has_a_classification_rule",
+      "status_events": {
+        "SKIP": 1
+      }
+    },
+    {
+      "id": "core.tests.test_traffic_runner.LiveRuntimeSmokeTests.test_an_absent_container_is_absent_and_removal_is_idempotent",
+      "status_events": {
+        "SKIP": 1
+      }
+    },
+    {
+      "id": "core.tests.test_ztp_artifacts.ArtifactDecisionTests.test_artifact_is_secret_free_and_bound_to_the_session",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_ztp_artifacts.ArtifactDecisionTests.test_closed_session_refuses",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_ztp_artifacts.ArtifactDecisionTests.test_create_refuses_secret_content_and_unsafe_names_and_supersedes",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_ztp_artifacts.ArtifactDecisionTests.test_duplicate_fetch_does_not_consume_again_and_is_bounded",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_ztp_artifacts.ArtifactDecisionTests.test_first_delivery_consumes_one_authorization_use_and_advances_to_delivered",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_ztp_artifacts.ArtifactDecisionTests.test_path_traversal_enumeration_and_unknown_paths_are_refused_uniformly",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_ztp_artifacts.ArtifactDecisionTests.test_refusals_are_recorded_and_audited_without_the_path",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_ztp_artifacts.ArtifactDecisionTests.test_requester_must_hold_the_sessions_trusted_lease",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_ztp_artifacts.ArtifactDecisionTests.test_revoked_authorization_refuses_first_and_repeat_delivery",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_ztp_artifacts.ArtifactDecisionTests.test_wrong_transport_expiry_revocation_and_closed_session",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_ztp_artifacts.DeliveryServerTests.test_http_serves_the_artifact_and_refuses_everything_else",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_ztp_artifacts.DeliveryServerTests.test_tftp_is_read_only_and_transfers_in_blocks",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_ztp_artifacts.MultiUseAuthorizationTests.test_revocation_after_first_delivery_stops_repeats",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_ztp_dhcp.ApplyTests.test_apply_without_a_status_command_is_never_reported_applied",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_ztp_dhcp.ApplyTests.test_closed_session_leaves_the_policy",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_ztp_dhcp.ApplyTests.test_failed_first_apply_leaves_no_unverified_configuration",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_ztp_dhcp.ApplyTests.test_failed_read_back_restores_the_previous_configuration",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_ztp_dhcp.ApplyTests.test_invalid_candidate_is_never_applied",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_ztp_dhcp.ApplyTests.test_no_validator_configured_means_nothing_is_applied",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_ztp_dhcp.ApplyTests.test_service_not_running_after_apply_is_a_failure",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_ztp_dhcp.ApplyTests.test_validate_apply_read_back_and_rollback",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_ztp_discovery.DiscoveryTests.test_address_other_than_the_reservation_is_refused",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_ztp_discovery.DiscoveryTests.test_identity_conflict_closes_the_session_and_stops_delivery",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_ztp_discovery.DiscoveryTests.test_identity_conflict_on_the_authorized_port",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_ztp_discovery.DiscoveryTests.test_lease_file_read_is_bounded_to_the_isolated_root",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_ztp_discovery.DiscoveryTests.test_no_api_route_accepts_posted_leases",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_ztp_discovery.DiscoveryTests.test_release_block_ends_the_binding_and_is_never_untrusted",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_ztp_discovery.DiscoveryTests.test_release_of_an_unseen_binding_is_ignored",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_ztp_discovery.DiscoveryTests.test_retransmissions_and_rereads_are_idempotent",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_ztp_discovery.DiscoveryTests.test_trusted_relay_correlates_and_records_claims_separately_from_attachment",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_ztp_discovery.DiscoveryTests.test_unauthorized_port_is_recorded_as_unauthorized",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_ztp_discovery.DiscoveryTests.test_untrusted_or_missing_relay_changes_nothing",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_ztp_views.ViewTests.test_csrf_is_enforced",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_ztp_views.ViewTests.test_device_page_shows_capability_dependencies_and_opens_a_session",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_ztp_views.ViewTests.test_dhcp_steps_have_their_own_permissions",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_ztp_views.ViewTests.test_fail_device_requires_typed_confirmation",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_ztp_views.ViewTests.test_session_actions_have_their_own_permissions",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_ztp_views.ViewTests.test_session_flow_through_the_pages",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_ztp_views.ViewTests.test_session_of_another_device_is_404",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_ztp_workflow.DependencyTests.test_evaluate_lists_every_check_and_downstream_waiting",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_ztp_workflow.ManagementTests.test_another_identity_over_the_authenticated_session_fails",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_ztp_workflow.ManagementTests.test_changed_host_key_on_contact_fails_the_session",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_ztp_workflow.ManagementTests.test_enrollment_rules",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_ztp_workflow.ManagementTests.test_failed_transition_needs_a_closed_non_retryable_failure",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_ztp_workflow.ManagementTests.test_full_bootstrap_to_bootstrapped_without_admission",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_ztp_workflow.ManagementTests.test_incomplete_bootstrap_cannot_take_the_lifecycle_edge",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_ztp_workflow.ManagementTests.test_pinned_key_mismatch_during_verification",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_ztp_workflow.ManagementTests.test_unreachable_management_is_retryable",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_ztp_workflow.ManagementTests.test_verification_failures",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_ztp_workflow.ManagementTests.test_verify_requires_an_enrolled_host_key",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_ztp_workflow.OpenSessionTests.test_cancel_closes_and_revokes_the_artifact",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_ztp_workflow.OpenSessionTests.test_one_open_session_per_device",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_ztp_workflow.OpenSessionTests.test_open_reserves_renders_and_keeps_the_private_key_out_of_the_artifact",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_ztp_workflow.OpenSessionTests.test_refused_open_leaves_no_enrollment_key_in_the_protected_store",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_ztp_workflow.RevocationTests.test_revocation_during_verification_is_refused_at_the_lifecycle_edge",
+      "status_events": {
+        "FAIL": 1
+      }
+    },
+    {
+      "id": "core.tests.test_ztp_workflow.RevocationTests.test_revoked_authorization_stops_bootstrap_completion",
+      "status_events": {
+        "FAIL": 1
+      }
+    }
+  ],
+  "baseline_status_events": {
+    "ERROR": 6,
+    "FAIL": 260,
+    "OK": 6697,
+    "SKIP": 45
+  },
+  "candidate_cases": 7880,
+  "candidate_status_events": {
+    "ERROR": 6,
+    "FAIL": 260,
+    "OK": 7572,
+    "SKIP": 45
+  },
+  "common_status_changes": [],
+  "missing_baseline_ids": [],
+  "package_entries_sha256": "8a4111f7b9f9553c0b78db5d633813b00beede08bd2a04bf57c9a3b6c49b8f70",
+  "schema": "nmas.acceptance-test-identities/1"
+}
