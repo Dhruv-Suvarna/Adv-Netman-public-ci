@@ -1,0 +1,9 @@
+# Model-broker identities.  Additive to nmas-troubleshooter.sysusers.in, which already defines nmas-ts-model-ipc and
+# the nmas-ts-runtime client.  Every account is locked, has no shell and no home.
+g nmas-ts-model-ipc -
+u nmas-ts-model-codex - "NMAS completion-only model broker (Codex)" /nonexistent /usr/sbin/nologin
+u nmas-ts-model-claude-a - "NMAS completion-only model broker (ClaudeA)" /nonexistent /usr/sbin/nologin
+u nmas-ts-model-claude-b - "NMAS completion-only model broker (ClaudeB)" /nonexistent /usr/sbin/nologin
+m nmas-ts-model-codex nmas-ts-model-ipc
+m nmas-ts-model-claude-a nmas-ts-model-ipc
+m nmas-ts-model-claude-b nmas-ts-model-ipc

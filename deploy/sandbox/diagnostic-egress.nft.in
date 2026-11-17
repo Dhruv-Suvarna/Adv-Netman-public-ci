@@ -1,0 +1,22 @@
+table inet nmas_diagnostic {
+  set targets4 { type ipv4_addr . inet_service; @TARGETS4@ }
+  set targets6 { type ipv6_addr . inet_service; @TARGETS6@ }
+
+  chain input {
+    type filter hook input priority filter; policy drop;
+    ct state established,related accept
+    icmpv6 type { nd-neighbor-solicit, nd-neighbor-advert } accept
+  }
+
+  chain forward {
+    type filter hook forward priority filter; policy drop;
+  }
+
+  chain output {
+    type filter hook output priority filter; policy drop;
+    ct state established,related accept
+    icmpv6 type { nd-neighbor-solicit, nd-neighbor-advert } accept
+    ip daddr . tcp dport @targets4 accept
+    ip6 daddr . tcp dport @targets6 accept
+  }
+}

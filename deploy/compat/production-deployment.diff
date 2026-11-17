@@ -1,0 +1,1168 @@
+# EXACT production deployment diff (summary of all 179 entries, then the full patches of the 8 shared files).
+# The 171 ADD files are new files whose content is the public file at the listed sha256; the complete diff including
+# them (45k lines) is reproduced by:  python3 -I deploy/compat/nmas_compat_overlay.py diff --package <package>
+# nmas compatibility overlay: entries_sha256 8a4111f7b9f9553c0b78db5d633813b00beede08bd2a04bf57c9a3b6c49b8f70
+# production 129d3f090f8b94b982178b1e8f3ec51047278068 + uncommitted state (pre_sha256 per file); public 4f950b36f97188f4d7b2c879006c472d9607bace (merge base 4f950b36f97188f4d7b2c879006c472d9607bace)
+ADD     0664 939406dd2c863dd24d80a77f962904623ea4a621ef5ca575ff650056160f307d docs/troubleshooting/acl-history.md 22 lines
+ADD     0664 99b65d316c9e3bea905659427871d0afcc1fd34ba9f359836b8655f463bc2f38 docs/troubleshooting/acl-source.md 32 lines
+ADD     0664 1e98e767b73476de2aa5df2c2aee9e0590d1b932db7a68417c1ab2655a6fad95 docs/troubleshooting/ai-mcp.md 30 lines
+ADD     0664 b90a961e98bee03729ec3849b2c238a38a0f0c8d1f15e4e68251ed9592587ded docs/troubleshooting/ai-runtime.md 34 lines
+ADD     0664 1325bb20eafee3f746efa14159e4e3ad34ca6c4a4e0224963487fde79197ca7a docs/troubleshooting/architecture.md 81 lines
+ADD     0664 160ea7d35b79c7ead9a1028946ae0ae1599dbdb59eb1018a8b16f97725fc8f90 docs/troubleshooting/baseline-history.md 27 lines
+ADD     0664 ba0401f924906510226af6977c4a7fe75fb9a70d904dc1686aeec3a8055d4452 docs/troubleshooting/baseline-scope.md 35 lines
+ADD     0664 366964aff4aa761b30e4ed771f970539830474720ca1a147a9c601bd1691913a docs/troubleshooting/collection.md 70 lines
+ADD     0664 91129467eb93c2ab29678cafcd5d3e86fe0279d0fcaa4a1291d59539c5bf56e5 docs/troubleshooting/compat-deployment.md 137 lines
+ADD     0664 58737e4fd9d021ee11a83e1cca7caa0f01ff19483479454a4de4763c4c7d48b4 docs/troubleshooting/config-snapshot.md 36 lines
+ADD     0664 91244574cedf698b95b7cc61adc1f555a83ae28342c9dd055900b1d65c73e870 docs/troubleshooting/deployment-bindings.md 254 lines
+ADD     0664 9baeafee406080ea29828f92564d934f8896798fba5fd3d944b46c8f3bf85319 docs/troubleshooting/deployment-rollback.md 51 lines
+ADD     0664 ee57f76d3b6ea754063bc4f6f482370ac0e1ce85cfd778ddbb785631df7ad8ab docs/troubleshooting/deterministic-engine.md 44 lines
+ADD     0664 1e602f0d4df0fd32860d34b104ec87b418aae4fae66857985ebb8f90a6045588 docs/troubleshooting/device-observations.md 38 lines
+ADD     0664 cf4e0017b0c67c29db4b12664df0b570c5d9b5d5f78b8b808f34d097f6caad91 docs/troubleshooting/dns-rules.md 24 lines
+ADD     0664 15923b872d60468f8248125ee85755c462ed0cc3809c4c00cb4d802e9403698e docs/troubleshooting/dns-source.md 53 lines
+ADD     0664 aadca64411152f352c2b9a76f3c2e90ede9f4a96b4d1ab1652e7811ef9f78ea3 docs/troubleshooting/evidence-contracts.md 60 lines
+ADD     0664 50e1f1036f3437270cbbb902a9182f0e0e6d0cfd6755207d732b74e3dc9da26b docs/troubleshooting/fib-source.md 57 lines
+ADD     0664 3cd2ef92065a66cb89071eeed66e5da8de10413e2db9fc49b0f84a5e8cbacee8 docs/troubleshooting/flow-runtime.md 64 lines
+ADD     0664 216c52826f916b3a0c9c121d975985031981ef146b22cb42d3817d48cdc8dd8c docs/troubleshooting/flow-wire.md 61 lines
+ADD     0664 8f83f1ae86c9e57715555ec6dbb9acd13bb1e866183180e3d5f4ca91ccf0167f docs/troubleshooting/forwarding-source.md 54 lines
+ADD     0664 979f6af4e2a64aca1bd07ed51f462e2811601f5603fc48d832852a5db25d7684 docs/troubleshooting/governance.md 34 lines
+ADD     0664 a288e2d743e1c6097b9e2e5239543175bed6fd15a5571c33b945e98464f52cc8 docs/troubleshooting/host-key-pin-enrollment.md 108 lines
+ADD     0664 a372159401ebee62c5d6dbf08bdcca5699fd8c0d94628974ebd80dac12eeacb1 docs/troubleshooting/l2-history.md 20 lines
+ADD     0664 50143aa142a186a34e1a052e9e1a49c5f2eef50fd416e1e66659a79aebfe9335 docs/troubleshooting/l2-source.md 50 lines
+ADD     0664 37c4517e8066f87bd2122b018ad3cde477db43a1305c82e0c36e475c3383b49f docs/troubleshooting/observation-collector.md 40 lines
+ADD     0664 ef982347c37220a19fb788e04e2ce5c1e5db8c3a6a1a2ad4a9437740cceacec5 docs/troubleshooting/observation-connections.md 57 lines
+ADD     0664 eeef9335a34a64e6e83e853be62a291c995aa5d339c27301ba80d2776b2c5de0 docs/troubleshooting/observation-runner.md 128 lines
+ADD     0664 e32cabff1daa3ad2ad261f9993c10a42e6082a069a1d634405093d7f49a3db19 docs/troubleshooting/observation-sessions.md 59 lines
+ADD     0664 9416e669f405bccf50ae6c6797b925f50b2be28ee0dfe42958e39bea0c32c91a docs/troubleshooting/operator-guide.md 36 lines
+ADD     0664 c49cce2f1d56f7416051baf7800afad5b4dfc5a46e6b07ae4918480f20e9f478 docs/troubleshooting/physical-source.md 45 lines
+ADD     0664 b5c82702333776a96098e4212dd3d7fb5d6301d1c2756b312cd577f0cf556534 docs/troubleshooting/pmtu-source.md 50 lines
+ADD     0664 627326743f89e2355d0eee5bae31fe6d67377086899f57d7ac5c2c1d73cbf738 docs/troubleshooting/port-to-public.md 56 lines
+ADD     0664 8578567f0ac8f010f1e470f061f16745c4415c80eca11fdcf625f76360c91004 docs/troubleshooting/probe-source.md 45 lines
+ADD     0664 4ca8e2d45bc7a68279f49edb4495387843edb474200423921342f0553e0ce54e docs/troubleshooting/protocol-source.md 46 lines
+ADD     0664 492456336069dfe2c50e98988e558fe387aa40e6a8435469e738b1c7d077bfb9 docs/troubleshooting/qos-source.md 45 lines
+ADD     0664 fe9be9188792b91706b06c189a5c9ad8fe8f038f445bcd68ea878c4d6332ef67 docs/troubleshooting/runbooks/RB01-link-flapping.md 100 lines
+ADD     0664 9038dc0fa89ae407ff148586d2c9955c618fe65b08baae96b1dc88771aa567b2 docs/troubleshooting/runbooks/RB02-reachability.md 132 lines
+ADD     0664 a711ab3e6d577646525aae59982fc5b5d56ced85dfb61c1ffb4392f68c597301 docs/troubleshooting/runbooks/RB03-routing-neighborship.md 103 lines
+ADD     0664 3c73b853af9ab60923639378f79c3bc3b57e3c21284bbc8b41e67b9b8f866baa docs/troubleshooting/runbooks/RB04-stp-loops.md 101 lines
+ADD     0664 f742ef21f5db5bd7a45498e2491b92dd841d3f9dc713cdcaff7755834e8332bb docs/troubleshooting/runbooks/RB05-dns.md 104 lines
+ADD     0664 071e560a332773fff9f6ed4410fe28bc6c7fda747b88d17f154fb12d3f67a183 docs/troubleshooting/runbooks/RB06-mtu-pmtud.md 96 lines
+ADD     0664 39651256a73ca9db92e9bef5ed8dbdc84d764d32973fb56e55bf7b43cfa4a140 docs/troubleshooting/runbooks/RB07-layer1.md 104 lines
+ADD     0664 7f5299cddb3f530e91db7f5683136a89fe484398ff452207871b19bbee1101ea docs/troubleshooting/runtime-ports.md 53 lines
+ADD     0664 9cb99b3f84588acb1987fc43e158f534dac349abe8eff44b60b4d40775b36acf docs/troubleshooting/runtime.md 42 lines
+ADD     0664 d19189128d2bc26cdf65e7376d4bdd841166f407f3a921cfb2eebf331f946c2f docs/troubleshooting/stp-source.md 51 lines
+ADD     0664 13663ead04161071560946514dc39c6d5db137ba72ebb02957179500687aec45 web/core/checks.py 63 lines
+ADD     0664 2387756560f4b7b503f0d2d3ad5072934a09a9906dfe22f7449aa1f0f3302cc7 web/core/management/commands/device_observe.py 78 lines
+ADD     0664 98a995ef28e1ed04b9dcabd8ce914ae01e70958d71a07d5b277d3c270514dd44 web/core/management/commands/host_key_pin_check.py 54 lines
+ADD     0664 46363bc0db37a20bfdf579100615543769b1c61db1aac2deb95be28b69ac99ff web/core/management/commands/nmas_reconcile_inventory.py 37 lines
+ADD     0664 c383da0144a0c138bc0a588821d4fe3e66be3f359c6ea67f5034cd9b2a7c985e web/core/management/commands/observation_authorize.py 78 lines
+ADD     0664 90e6b3369f962f3223cc3d9658ef3bb4cede44dad6ad8fad06eeacccbe259073 web/core/management/commands/troubleshooting_ai.py 51 lines
+ADD     0664 4bee6976f0cdd9c21856eb7097eae40fcbd8f016bf159811a31587ee14c90729 web/core/management/commands/troubleshooting_monitor.py 85 lines
+ADD     0664 741cee127316358851af7112d06f6b0777e9ad982ef0af5c3c0a95156964bc73 web/core/management/commands/troubleshooting_readiness.py 44 lines
+ADD     0664 eb11d8a80cccde431888eff1cfeb47993dda3c1acddb55c1ca3117386f07b9d5 web/core/migrations/0036_v2_phase9_relay_option82_readback.py 33 lines
+ADD     0664 428313937c3391f4305c0e118ede6db4ab10f9b48642b23f3ffff291b4252701 web/core/migrations/0037_troubleshooting.py 547 lines
+ADD     0664 f8c4a288f2ea5e57cd5dd0f53970bc5bbfcea9a87e6373a7244bd6829beab000 web/core/migrations/0038_device_observations.py 41 lines
+ADD     0664 381764c7ca8b617f3ed636fb696d290525fabb2bfab4260234953290fe6124ab web/core/migrations/0039_observation_authorizations.py 61 lines
+ADD     0664 74872f98002bb442bb25b87b8a68f0b2be5da01f6e2fafa0ff029f5a9c8fb813 web/core/services/devices/host_key_pins.py 197 lines
+ADD     0664 74718cc2eb1d0e0971ea5019a680ab4cb5052ad0a98498adbd3f4d9caed81d9a web/core/services/devices/observation_authorizations.py 287 lines
+ADD     0664 7ec38f3cc0ed48f4bd5e60d873b5d0c5d85e12fcd9866e980705a4c887d14cc3 web/core/services/devices/observation_collector.py 172 lines
+ADD     0664 ee41d93a9b3745d7e8d58f0d8e2524c8735df1df732279a64fedd5652535ff59 web/core/services/devices/observation_connections.py 272 lines
+ADD     0664 1bb1050eadbc15deab8d19f3fdb4aa73c225610a98a4a2ba7724b49f501963cf web/core/services/devices/observation_evidence.py 143 lines
+ADD     0664 e761d558dfbbade26740c006b03130a97a48d055769e5aac36e6d5bfa90b63a8 web/core/services/devices/observation_sessions.py 194 lines
+ADD     0664 4ef3b2dcdcc2b97c60acefde1303c5b3083630f31dfcbca2a6a0c16b9fa50326 web/core/services/devices/observations.py 331 lines
+ADD     0664 5da6594aeac7b12d63f71bf465993e3c25d5d4d880bfba71d0998b0844539da9 web/core/services/devices/reconciliation.py 185 lines
+ADD     0664 e92940d14de959cda1284b05924dcb846a1f2446843e4516e31bcf529b245112 web/core/services/management/linux_ssh.py 154 lines
+ADD     0664 fe4bf6fccd0488656490c279235a42a8492e2274a3f53d4ea170a425a0d61056 web/core/services/troubleshooting/__init__.py 13 lines
+ADD     0664 532e1b8463d62f1f91d29000838ce9681f111f0a256a463d84de5776bd5df30b web/core/services/troubleshooting/adapters/__init__.py 12 lines
+ADD     0664 0edc0879a1f716f8cd518f52893683b121987adf6ef2fb9cce8b4379aa838dec web/core/services/troubleshooting/adapters/acl.py 148 lines
+ADD     0664 3443ffb07d1ee9c7c2fe49a0da23f7f5fdd900b8e775fef380d99e131098a720 web/core/services/troubleshooting/adapters/baseline_history.py 336 lines
+ADD     0664 3660de4dc0a301d02cf5ae6ea4230449898ceed78ab5d8a18eb2150cc96f6973 web/core/services/troubleshooting/adapters/capabilities.py 65 lines
+ADD     0664 244c388391b103933e79af77bcc2f6e6bed76386b2682cc7b0e3e0bfb645fbb2 web/core/services/troubleshooting/adapters/config_snapshot.py 97 lines
+ADD     0664 5fb6034575f597e2419108fea8adbe6dded5d06a8db2cd4a730f7ca18d9360b2 web/core/services/troubleshooting/adapters/contracts_bridge.py 55 lines
+ADD     0664 c31c022a0ba7cb025dfb34d519306045179da35fb797e830d3806eeab1dcc333 web/core/services/troubleshooting/adapters/dns.py 110 lines
+ADD     0664 f436adf1da882f0c0b8e08f0faad2e6149a3ec698f0bbe1e7e5f2ab6ca2a6a45 web/core/services/troubleshooting/adapters/flow_runtime.py 54 lines
+ADD     0664 ae6c57fb3bf29040ce63191c77d6d9635e25c528fb39e74de7565032dc47b65f web/core/services/troubleshooting/adapters/flow_wire.py 612 lines
+ADD     0664 264e1d8074da9862532cdd72d505b65d91c5790a14559213bddcd3b8e6082557 web/core/services/troubleshooting/adapters/forwarding.py 250 lines
+ADD     0664 f7be3a694790f8789265cf0c2fc339db1ffbae6fed5f670a50d3e84b0d2db4ee web/core/services/troubleshooting/adapters/l2.py 128 lines
+ADD     0664 6918610d9d2e54d326c4ee2bf8c4738bdce1f215f3b2b33052566b160a1e1717 web/core/services/troubleshooting/adapters/monitoring.py 132 lines
+ADD     0664 48d4b5c032303820c325b2702f75eac251f5264aeb916848ac75abf1b05f5647 web/core/services/troubleshooting/adapters/nmas_providers.py 93 lines
+ADD     0664 be39c42cfd473d804c80f0d80345f7c42b807899bc16f7e4544a9a07066a2a05 web/core/services/troubleshooting/adapters/physical.py 67 lines
+ADD     0664 8b9eb2d8a47bb6938fe7f272472c1f22693ce28548910677854573a13f22eae9 web/core/services/troubleshooting/adapters/probes.py 422 lines
+ADD     0664 8fdfadfdbb3d34f8a0e5f8a30a6d41483455256b818b73ebcc196ba0b8b74bf6 web/core/services/troubleshooting/adapters/protocol.py 71 lines
+ADD     0664 d0adadb2535f6b66243e0c04be59195d5ccdd01186896b0384db5574e4318a60 web/core/services/troubleshooting/adapters/qos.py 78 lines
+ADD     0664 431d09f88c4e2160f0fc18588ad8bb14329c85ab5172819da62211a0650117b5 web/core/services/troubleshooting/adapters/stp.py 52 lines
+ADD     0664 000252705b8e735e8994548e2c67dc5bd3c98c0d94d24108aebb84cef7e23559 web/core/services/troubleshooting/adapters/transports.py 143 lines
+ADD     0664 0e1e4cd3d236a456d302e12fc03201ed1b4ef6dbc29d0436599285160affcd4d web/core/services/troubleshooting/ai.py 561 lines
+ADD     0664 4f7e7d6c0709292c24c32b574f389958fe4362c03505adb4c9ddf42fcafbe787 web/core/services/troubleshooting/ai_runtime.py 370 lines
+ADD     0664 6cd6d6f03f877f44fe975d6650da9258103780f1315ff53951be031dde5fd2ac web/core/services/troubleshooting/baselines.py 486 lines
+ADD     0664 b874f049255a51abf3aa532dd649d0abcb2e3a1db883e5d725d1aa46fbf951e5 web/core/services/troubleshooting/collectors.py 1933 lines
+ADD     0664 e1b634f61cf7c86042822d0ddb0f1c9af8f30ed3b1d3d0922be2e68c7694fc8c web/core/services/troubleshooting/contracts.py 264 lines
+ADD     0664 1dd59fa366b3bfd7d29a994b85e509d9e7244d8918d45b36923ff49426fa3e37 web/core/services/troubleshooting/correlation.py 387 lines
+ADD     0664 84de8501661146a749e633e43f6ef7199494ad9b46febdb1de7067bf268cdef5 web/core/services/troubleshooting/deployment.py 385 lines
+ADD     0664 9062c1c9defafe1240853844896e9f6d38245c561a0faec5d486f097f938dc60 web/core/services/troubleshooting/engine.py 750 lines
+ADD     0664 210d8ce23a297867e670e8638bed8d73b8ac63edbb665ee2b3da72dbacc6b183 web/core/services/troubleshooting/governance.py 641 lines
+ADD     0664 95c8323cce0ee9b6e3bb280829f6a95b896274d6d25a8d72abacbc95acf513e4 web/core/services/troubleshooting/normalization.py 3647 lines
+ADD     0664 b2e7cb36ed1e828ebfc4f4ce0b31c27c5caffc9aa383a56f070f1218f6490900 web/core/services/troubleshooting/qualification.py 168 lines
+ADD     0664 0faf16ebe298bde8b55e1d1d714c2ba12991299e0a668a0a264511ea69ace550 web/core/services/troubleshooting/readiness.py 252 lines
+ADD     0664 4c997bac8cdf321d126e783d887435c3f07fa3f2f5e2e8da0e06da7c98c23e42 web/core/services/troubleshooting/reporting.py 349 lines
+ADD     0664 9edcde0c45184aef12282c86fc4908cc1e46bff5f1d1eb2e447355018a89144f web/core/services/troubleshooting/repository.py 691 lines
+ADD     0664 2520f00eb49dac04f81bb7464935536f3aeba1de160c46ea4c33d94cd19c14f5 web/core/services/troubleshooting/runbooks/__init__.py 121 lines
+ADD     0664 f1063b618b34187bd1e7b57e6d4e12be7bdb36ec52ee340a3e5479bf1d32db01 web/core/services/troubleshooting/runbooks/base.py 339 lines
+ADD     0664 05ca57e3e67599c1648d3af04231ce03665e48af44f984c8464fa39a501c28d8 web/core/services/troubleshooting/runbooks/hc.py 887 lines
+ADD     0664 b5708266963435d411595b8f3a4e71a3260432976247c7a8711cf40dddc60a63 web/core/services/troubleshooting/runbooks/rb01_link_flap.py 206 lines
+ADD     0664 2f2c8b4b2a502edb169683941a42b9411afb1d38f8ee9f3cdf5ae9dc6c0d2a51 web/core/services/troubleshooting/runbooks/rb03_neighbor.py 222 lines
+ADD     0664 567fcd3ac7cb38bbc5548b29e1509b72200bfa90b421ace68fce43a6fcbbf4db web/core/services/troubleshooting/runbooks/rb04_stp.py 232 lines
+ADD     0664 844e2b57d38d6aa327e217b932aa0364cefa923c1a2abeb4f3128db55d071676 web/core/services/troubleshooting/runbooks/rb05_dns.py 322 lines
+ADD     0664 72f757d393619c026845c3c32fee20fdea114b84ef71a1f7200c60f02cca04ab web/core/services/troubleshooting/runbooks/rb06_mtu.py 189 lines
+ADD     0664 e22f43cec039127398c12dcc530a7894ff7d19f862221666469161617ca557e6 web/core/services/troubleshooting/runbooks/rb07_layer1.py 234 lines
+ADD     0664 6ffa0adf3e626dfc2d76757b361ce7fc368132a69577e2defcbb4f79fcad2660 web/core/services/troubleshooting/runtime.py 846 lines
+ADD     0664 b27cf260302da3184ac6bacd5ba8221ae6aed745bf9fc870823944467a52641f web/core/services/troubleshooting/runtime_ports.py 549 lines
+ADD     0664 9e535472f7716b0ebba67a1c915fe952333b6c1c011a5fd6d5faf0a647980a9b web/core/services/troubleshooting/verification.py 219 lines
+ADD     0664 03f4e6f1ebd574852b811842f29c653035131f0012ba2415ec9b89e9335ed363 web/core/templates/core/troubleshooting/detail.html 79 lines
+ADD     0664 4f250d67be38a5695b6aec1dba1285ea715a724173dfafb45192c1a493ca9cf4 web/core/templates/core/troubleshooting/intake.html 20 lines
+ADD     0664 1fb2dcea6604666107d0013d980861f77e6bc193e4c8aed9a44b02f8a917ffff web/core/templates/core/troubleshooting/list.html 33 lines
+ADD     0664 023c33aed32e2fe86e6e8fe47762d130298f919bbcd450fe3e752faddd1639de web/core/tests/fixtures/troubleshooting_collectors/capture_live.py 44 lines
+ADD     0664 f4453e559ff19486179c98edda04a730b600d7d231118fa1cd084c3ff87cac8f web/core/tests/fixtures/troubleshooting_collectors/live/ceos_r1.bundle.json 2095 lines
+ADD     0664 a10a00b986341bc8e2baa409f3a557ca9c90f1d31ecfa74da6d0195b6b7cc2e3 web/core/tests/fixtures/troubleshooting_collectors/live/ceos_r1.raw.json 34 lines
+ADD     0664 9416f575a6a42ee41768ab5b0adde985c9794179c8c4a0926c2c5dae6453cf58 web/core/tests/fixtures/troubleshooting_collectors/live/iosxe_iosxe.bundle.json 1830 lines
+ADD     0664 e8f9c25b2731c2a0850682355fdc76d65bd2110f64a6361dc378732f5199d8ca web/core/tests/fixtures/troubleshooting_collectors/live/iosxe_iosxe.raw.json 30 lines
+ADD     0664 c97005c132df8b4d621d81c5239d8d8fa003835cb30b33bc57a708d600f1c91e web/core/tests/fixtures/troubleshooting_collectors/live/linux_peer.bundle.json 1074 lines
+ADD     0664 1488df76252055344449c9e68b204e3351a09acc62ba7be8a28fd6d00acbc741 web/core/tests/fixtures/troubleshooting_collectors/live/linux_peer.raw.json 30 lines
+ADD     0664 d7eefc866829319f48564842e3d62217692c5438ddfae7de987efbde3255cad5 web/core/tests/fixtures/troubleshooting_runbooks/scenarios.py 252 lines
+ADD     0664 bc327173050ee49a80d1b5ce841559edc7ee8330931ebd2eb66d703e6a546f56 web/core/tests/helpers/troubleshooting.py 50 lines
+ADD     0664 606aee98931361a6781490923dc9f133cba66ed87eb42811afcd12b59f909d6b web/core/tests/test_deploy_bindings.py 124 lines
+ADD     0664 622f228a281cfa0c1b4bd34eb6cd07d2365fd0d8eccffd790f0367fa35d0b8a3 web/core/tests/test_device_observations.py 227 lines
+ADD     0664 c0f205a20e2e16e7a5fb1dad5d90935e48afebfb19aec1eb8a57a3193da4a11d web/core/tests/test_device_observe.py 175 lines
+ADD     0664 a8cbd410bc2cf14f8e3e2a894e8aa5f5ff7b0f388e929ac3c5609f866e0ca92c web/core/tests/test_host_key_pins.py 157 lines
+ADD     0664 4de044cffdf1be58c20a9e1449bda28899716f9f13283c039e8df5ee7b7ccf7f web/core/tests/test_observation_authorizations.py 209 lines
+ADD     0664 ac81736df0a4ee0128caea5081bd995c6b104364bc03e6ce3c907a8c00779ccf web/core/tests/test_observation_collector.py 155 lines
+ADD     0664 bc5382e6f9ac386f367f7a38a5f5fe3725d161791ebb12a371cc804b7e86e92f web/core/tests/test_observation_connections.py 332 lines
+ADD     0664 3b1d077008d48e601844c07ee0f8e626249d4c34da1997e1c395cc89ad1b0209 web/core/tests/test_observation_evidence.py 95 lines
+ADD     0664 bf6fbe19865355a33228c77b0f75c367c302abe9cf72bf3f87579b436f8f6c2d web/core/tests/test_observation_sessions.py 185 lines
+ADD     0664 d1b0b4b78fd6642a723d0fe7ef9031224cd222659da4b44b5e6e368d0973ecbc web/core/tests/test_reconcile_inventory.py 174 lines
+ADD     0664 c44e8e71e061789820c2b2380a05fecf262032658234482ea32697de16ff8d28 web/core/tests/test_troubleshooting_access.py 144 lines
+ADD     0664 f5f89b797fa18faf7c65042af141a5c4b044863321c315cbdae757e3e09d3500 web/core/tests/test_troubleshooting_acl_history.py 216 lines
+ADD     0664 816d4b47e99564bb789b7fa750b86016b4081caf87e044a260a67b67ede8ad82 web/core/tests/test_troubleshooting_acl_source.py 348 lines
+ADD     0664 812f91d6c54d74a04d9f5026d7dfa043ecc4b3dd4dd384d950ea862e0e5f4c74 web/core/tests/test_troubleshooting_ai.py 455 lines
+ADD     0664 503d57e7c5bb4981972272c3d94b536e7af8a8f19954806290f927e6607427fc web/core/tests/test_troubleshooting_ai_runtime.py 147 lines
+ADD     0664 bef13eb8201762d00123825543e8802bfcae42d71bc1c39cb83c2214c3a27288 web/core/tests/test_troubleshooting_baseline_history.py 262 lines
+ADD     0664 70571ec75dfa4882f0bbb5c3ebf733bd55e0425dbbc895440400b9b446a778cc web/core/tests/test_troubleshooting_baseline_scope.py 201 lines
+ADD     0664 51f1b17f53488627b1c30532974f9be4f82b6d10b2442d83bf6a13eda458962c web/core/tests/test_troubleshooting_collectors.py 1179 lines
+ADD     0664 e33bba42a2c234482f9816e63f2bee548c808fd6e5f348a4c2375523d8a2966c web/core/tests/test_troubleshooting_config_snapshot.py 171 lines
+ADD     0664 2bb1fc5590ebd3825006a220547931d6ddeb566cf120369d0ffe7063b6babda7 web/core/tests/test_troubleshooting_deployment.py 448 lines
+ADD     0664 2fc819933accdb76825c86a4ef261c85dba86182f07b4920049cc7b683466039 web/core/tests/test_troubleshooting_dns_rules.py 178 lines
+ADD     0664 91132364f8be389b675e0af89066da5129bd52956a074474adfa43f87ec2eca4 web/core/tests/test_troubleshooting_dns_source.py 417 lines
+ADD     0664 487ceac8c22c7684ebdd86b556b0d9f970bf95792ffd9a93e799bb664ecd4e5c web/core/tests/test_troubleshooting_engine.py 463 lines
+ADD     0664 8bbdaccf893b517f280ae8979125807e2ec507371c5b86a2bfcc7fd365abd4df web/core/tests/test_troubleshooting_evidence.py 531 lines
+ADD     0664 e663aae912d862edc20488fff3b2380e459cdf51bad0a4fa183f4d8b40984d1a web/core/tests/test_troubleshooting_fib_source.py 291 lines
+ADD     0664 0bfae33d7502f6ed753a00d1823430d3604fcf4c246cbc643a919b73e2db2589 web/core/tests/test_troubleshooting_flow_runtime.py 150 lines
+ADD     0664 24fade88ebcc7b954491a629bf762dbf0909d6e5aa734832edafda497ad29e20 web/core/tests/test_troubleshooting_flow_wire.py 371 lines
+ADD     0664 99844bb78c02b93af53a3f44e7f32e9a192d4ba6888fbc84c8752116dd593e93 web/core/tests/test_troubleshooting_forwarding_source.py 441 lines
+ADD     0664 7692f83e02c1185d6c996fa7a22994076877d02db1eaef12527002a9f92158c8 web/core/tests/test_troubleshooting_governance.py 653 lines
+ADD     0664 5cf1b7b9ae825a7abbea0681adb7bba00a0df2a08502e49329666e1bfcb4d5c0 web/core/tests/test_troubleshooting_l2_history.py 160 lines
+ADD     0664 ee8021967d2506a2b6651ab5f8930dc0792b0b37102ac469d1e1685d74254073 web/core/tests/test_troubleshooting_l2_source.py 329 lines
+ADD     0664 352a718597b6913268b6e06ebb470982dce8f3d32d1166bd954ec8c3f9d25109 web/core/tests/test_troubleshooting_nmas_providers.py 125 lines
+ADD     0664 18cfde18aa11c34add698c9c1593d290cafc85bfab4051511d5bc69e55b4b9cc web/core/tests/test_troubleshooting_physical_source.py 353 lines
+ADD     0664 c64c75d243a732fee041b4fef3a885ee9228ab51fcc27df0e1f00d5634a3d4f5 web/core/tests/test_troubleshooting_pmtu_source.py 389 lines
+ADD     0664 bf55611249adc854640413fc89333992cde4609ad210b82a2f493a4b1b938b99 web/core/tests/test_troubleshooting_probe_source.py 353 lines
+ADD     0664 61f16dbc196223cadb3768114099bb00fc95f446cdfa04bfe7a0799f98c94a56 web/core/tests/test_troubleshooting_protocol_source.py 372 lines
+ADD     0664 5a99e601a07150aee2a842e24392a5604be18be47cf8187a813d1f19e27448f5 web/core/tests/test_troubleshooting_qos_source.py 312 lines
+ADD     0664 0343deacb2aa6f2f663de6f6b82ac6d3162f656e28c406355d825608b83ce6ff web/core/tests/test_troubleshooting_qualification.py 158 lines
+ADD     0664 cebf388a80cb71d951a28cbe3e2c54228b643b97af3a0b98eb2bc511e13b5b95 web/core/tests/test_troubleshooting_readiness.py 180 lines
+ADD     0664 b617e06bbd1d733a44b568a0b97a3cdd95742d24be50732ac05a4ecc53ef3853 web/core/tests/test_troubleshooting_runbooks.py 298 lines
+ADD     0664 a0b8666c2537ee66af58c46ad59df3924de536b548e72c6f176cd660b57c4596 web/core/tests/test_troubleshooting_runtime.py 321 lines
+ADD     0664 ccd098255eb8bb87384f103f45a9c3c8faa1a0af45a8b569d46d8457efd950fa web/core/tests/test_troubleshooting_runtime_ports.py 407 lines
+ADD     0664 ecf1c931a1344f26bb1aca84e6ae7af96465d5f90f48d1caa6c10a7d60cc5c38 web/core/tests/test_troubleshooting_stp_source.py 301 lines
+ADD     0664 a36fedf14bf6073c48abab0e3bb69e3aac1441df4e7c81a12dab3f4334112d5c web/core/tests/test_troubleshooting_views.py 346 lines
+ADD     0664 2b07bd0ffb5b21f06a6dbfc6c677d1bbc2d55f0d69d69f2cd29a699e27cabda9 web/core/troubleshooting_urls.py 35 lines
+ADD     0664 1ec78382917567c309975ae9b9b6c7462ae25391a015e67186a4070bd2cc6273 web/core/troubleshooting_views.py 480 lines
+MERGE   0664 ba53b84879b80ca79d441df6bb16c4c4a7fa9216b593de513fd31d34c2d93f1e web/core/services/ci/rules.py +24 -5
+REPLACE 0664 3a6d949ae355ed1dd6d9eb754d4d0ad18f6357207802ef73c8cb2bb95caf6c09 web/config/settings.py +27 -0
+REPLACE 0664 503e618ed524d22b7239ca7717eab8cd021c8b08fbe9db103170d39fcafaff66 web/core/apps.py +1 -0
+REPLACE 0664 2c8d0c03a8479c81bbfd5562bccd38b676065e41b7c6eb8e22644ca0fa1f53ce web/core/middleware.py +3 -1
+REPLACE 0664 3af3a03bd08eb86b95f97f7b50ad4eaab23c1c8f1766d07e55c9ca58682d6807 web/core/models.py +746 -0
+REPLACE 0664 5936888790a0dcaf4604f301f2123e20b7b8d73c72413906754e0751f18f6b42 web/core/services/devices/lifecycle.py +4 -0
+REPLACE 0664 e22adc2088190a68ee439d00c449341a668553cfb41dcd66ba9b196ec0dac2c2 web/core/services/identity/policy.py +18 -0
+REPLACE 0664 cd862e7183d5cebd50833f8d08240b217408b67f7357887eddbf7ae70db85d3c web/core/urls.py +4 -1
+diff --git a/web/core/services/ci/rules.py b/web/core/services/ci/rules.py
+--- a/web/core/services/ci/rules.py
++++ b/web/core/services/ci/rules.py
+@@ -66,6 +66,7 @@
+     Subsystem("management_vrf", "management VRF intent, per-platform rendering, validation, Configlets, cEOS execution inverse and import", SOURCE),
+     Subsystem("device_secrets", "protected runtime device-secret provider consumed by every device session", SOURCE),
+     Subsystem("credentials", "managed-device credential metadata, rotation policy / engine / scheduler and device-login 2FA policy", SOURCE),
++    Subsystem("troubleshooting", "evidence-driven troubleshooting: case/evidence store, collectors, normalization, baselines, correlation, runbooks RB01-RB07 / HC01-HC28, NMAS-governed AI, remediation governance, verification, reports and API", SOURCE),
+     Subsystem("identity_security", "NMAS website authentication / RBAC / website MFA / request audit middleware", SOURCE),
+     Subsystem("capability_framework", "capability evidence framework (aggregation over the capability registries + empirical evidence)", SOURCE),
+     Subsystem("web_deployment", "website hosting templates: Gunicorn / systemd / Apache / cloudflared (website only)", SOURCE),
+@@ -109,9 +110,12 @@
+ 
+ 
+ PATH_RULES: tuple[PathRule, ...] = (
++    PathRule("troubleshooting", (f"{_SVC}/troubleshooting/**", "web/core/troubleshooting_views.py", "web/core/troubleshooting_urls.py",
++                                 "web/core/templates/core/troubleshooting/**", "web/core/management/commands/troubleshooting_*.py",
++                                 "web/core/tests/fixtures/troubleshooting_collectors/**", "web/core/tests/fixtures/troubleshooting_runbooks/**")),
+     PathRule("models_schema", ("web/core/models.py",)),
+     PathRule("migrations", ("web/core/migrations/**",)),
+-    PathRule("shared_core", ("web/core/__init__.py", "web/core/apps.py", *_svc("__init__", "base", "secret_policy"))),
++    PathRule("shared_core", ("web/core/__init__.py", "web/core/apps.py", "web/core/checks.py", *_svc("__init__", "base", "secret_policy"))),
+     PathRule("django_project", ("web/config/**", "web/manage.py")),
+     PathRule("dependencies", ("requirements.txt", "monitoring/requirements.txt", "web/requirements.txt")),
+     PathRule("control_plane", _svc("change_service", "intent_service", "lifecycle_service")),
+@@ -142,7 +146,11 @@
+                          "web/core/management/commands/traffic_reconcile.py", "web/core/management/commands/traffic_runner_config.py",
+                          "deploy/traffic-tools/**", "deploy/systemd/nmas-traffic-runner.*", "deploy/scripts/install_traffic_runner.sh")),
+     PathRule("provisioning", (f"{_SVC}/provisioning/**", *_svc("provisioning_service"), "web/core/templates/core/provisioning/**")),
+-    PathRule("device_lifecycle", (f"{_SVC}/devices/**", "web/core/lifecycle_views.py", "web/core/management/commands/nmas_devices.py")),
++    PathRule("device_lifecycle", (f"{_SVC}/devices/**", "web/core/lifecycle_views.py", "web/core/management/commands/nmas_devices.py",
++                                  # authenticated read-only observations, their authorizations, pin evidence and inventory reconciliation
++                                  "web/core/management/commands/device_observe.py", "web/core/management/commands/observation_authorize.py",
++                                  "web/core/management/commands/host_key_pin_check.py",
++                                  "web/core/management/commands/nmas_reconcile_inventory.py")),
+     PathRule("device_ztp", (f"{_SVC}/ztp/**", "web/core/ztp_views.py", "web/core/management/commands/nmas_ztp.py",
+                             "web/core/templates/core/provisioning/_ztp_panel.html", "web/core/templates/core/provisioning/ztp_networks.html",
+                             "labs/ztp-isolated/**", "web/core/tests/fixtures/ztp/**", "docs/evidence/v2-phase3-ztp/**")),
+@@ -386,6 +394,14 @@
+     Edge("probation_soak", "challenge_console", "the console reports soak collector freshness and eligibility with the soak overview's own rules"),
+     Edge("health", "challenge_console", "the console classifies telemetry freshness with the health engine's thresholds"),
+     Edge("lab_config", "challenge_console", "the probed endpoints and the managed-device list are read from the tracked inventory"),
++    Edge("models_schema", "troubleshooting", "Ts* case / evidence / journal / remediation records are model-backed"),
++    Edge("identity_security", "troubleshooting", "every troubleshooting route carries an RBAC permission and runs behind website MFA"),
++    Edge("health", "troubleshooting", "device admission, live read-only sessions and telemetry come from the health inventory / live / telemetry services"),
++    Edge("execution", "troubleshooting", "governed remediation runs through the execution eligibility gate, execution engine and its device locks"),
++    Edge("probation_soak", "troubleshooting", "probation soak state (ProbationSoakRun) is correlated into baselines and remediation decisions"),
++    Edge("bundles", "troubleshooting", "approved / last-known-good configuration baselines are immutable configuration bundles"),
++    Edge("nsot", "troubleshooting", "intended devices and interfaces are read from the NSOT / NetBox cache"),
++    Edge("topology", "troubleshooting", "intended paths and peer scope come from the topology service"),
+ )
+ 
+ # A change here can affect every Django-side subsystem: the impact is "django-wide", not chain-shaped.
+@@ -394,7 +410,7 @@
+     "control_plane", "device_builder", "candidate_rendering", "platform_drivers", "validation", "network_config_validation", "planning", "health", "execution", "raw_configlets",
+     "bundles", "probation_soak", "legacy_bootstrap", "credentials", "config_workbench", "config_templates", "netbox_ipam", "nsot", "topology", "notifications", "django_views_api", "ui_presentation",
+     "identity_security", "capability_framework", "provisioning", "traffic", "device_lifecycle", "device_ztp", "device_management", "management_vrf",
+-    "device_commissioning",
++    "device_commissioning", "troubleshooting",
+ )
+ 
+ 
+@@ -460,8 +476,10 @@
+     ),
+     "device_lifecycle": Selection(
+         django=("lifecycle_identity", "lifecycle_service", "lifecycle_authorization", "lifecycle_resolver", "lifecycle_views",
+-                "lifecycle_capability_vocabulary", "contracts"),
+-        reason="managed-device identity / lifecycle / attachments / bootstrap authorization / resolver changed",
++                "lifecycle_capability_vocabulary", "contracts", "device_observations", "device_observe", "observation_collector",
++                "observation_connections", "observation_evidence", "observation_sessions", "observation_authorizations",
++                "host_key_pins", "deploy_bindings", "reconcile_inventory"),
++        reason="managed-device identity / lifecycle / attachments / bootstrap authorization / resolver / observations changed",
+     ),
+     "device_ztp": Selection(
+         django=("ztp_adapters", "ztp_dhcp", "ztp_discovery", "ztp_artifacts", "ztp_workflow", "ztp_views", "lifecycle_service",
+@@ -506,6 +524,7 @@
+                 "routes", "admin_surface", "contracts"),
+         reason="managed-device credential metadata / rotation policy / engine / scheduler / 2FA policy changed",
+     ),
++    "troubleshooting": Selection(django=("troubleshooting_access", "troubleshooting_acl_history", "troubleshooting_acl_source", "troubleshooting_ai", "troubleshooting_ai_runtime", "troubleshooting_baseline_history", "troubleshooting_baseline_scope", "troubleshooting_collectors", "troubleshooting_config_snapshot", "troubleshooting_deployment", "troubleshooting_dns_rules", "troubleshooting_dns_source", "troubleshooting_engine", "troubleshooting_evidence", "troubleshooting_fib_source", "troubleshooting_flow_runtime", "troubleshooting_flow_wire", "troubleshooting_forwarding_source", "troubleshooting_governance", "troubleshooting_l2_history", "troubleshooting_l2_source", "troubleshooting_nmas_providers", "troubleshooting_physical_source", "troubleshooting_pmtu_source", "troubleshooting_probe_source", "troubleshooting_protocol_source", "troubleshooting_qos_source", "troubleshooting_readiness", "troubleshooting_runbooks", "troubleshooting_runtime", "troubleshooting_runtime_ports", "troubleshooting_stp_source", "troubleshooting_views",), reason="troubleshooting substrate / collectors / runbooks / AI / governance / views changed"),
+     "identity_security": Selection(full_django=True, reason="the access middleware / identity layer sits in front of every view"),
+     "capability_framework": Selection(django=("capability_framework", "capabilities", "transport_capability", "contracts",
+                                               "phase9_option82", "tg_phase9_closure", "tg_phase9_live_runner_closure"),
+diff --git a/web/config/settings.py b/web/config/settings.py
+--- a/web/config/settings.py
++++ b/web/config/settings.py
+@@ -354,3 +354,30 @@
+ NMAS_GITHUB_REPOSITORY = os.environ.get("NMAS_GITHUB_REPOSITORY", "").strip() or "Dhruv-Suvarna/Adv-Netman"
+ NMAS_GITHUB_API_URL = "https://api.github.com"
+ NMAS_GITHUB_TOKEN_ENV = "NMAS_GITHUB_TOKEN"
++
++
++# --- Troubleshooting runtime bindings and authenticated device observations ---------------------------------------------
++# Both troubleshooting consumers (REST views and ``manage.py troubleshooting_ai``) share ONE zero-argument factory
++# (docs/troubleshooting/deployment-bindings.md).  It reads no credential and contacts no device.  With NMAS_TS_DEPLOYMENT
++# empty every device is refused (LIFECYCLE_UNKNOWN): the fail-closed default.
++NMAS_TS_RUNTIME_FACTORY = "core.services.troubleshooting.deployment.runtime_deps"
++TROUBLESHOOTING_RUNTIME_DEPS = NMAS_TS_RUNTIME_FACTORY
++# The authoritative NMAS admission providers are bound only by an explicit environment decision (NMAS_TS_BINDING=nmas-v1);
++# any other non-empty value binds nothing and fails ``manage.py check`` (core.checks).  The literal must stay equal to
++# core.services.troubleshooting.adapters.nmas_providers.RECOMMENDED_BINDING (checked by core.checks and its tests).
++NMAS_TS_BINDING = os.environ.get("NMAS_TS_BINDING", "").strip()
++NMAS_TS_DEPLOYMENT = {
++    "inventory": "core.services.troubleshooting.adapters.nmas_providers.inventory",
++    "lifecycle_provider": "core.services.troubleshooting.adapters.nmas_providers.lifecycle",
++    "version_provider": "core.services.troubleshooting.adapters.nmas_providers.version",
++} if NMAS_TS_BINDING == "nmas-v1" else {}
++
++# Authenticated device-observation source.  Registered only by an explicit environment decision in the OBSERVATION RUNNER's
++# environment (not the web service's: reading observed versions needs no key).  Only the NAME of the key variable is
++# configured here; the key itself (>= 32 characters) is read from that variable at use time by
++# core.services.devices.observations.trusted_sources() and is never stored in settings, source, arguments, the database or logs.
++NMAS_OBSERVATION_KEY_ENV = "NMAS_OBSERVATION_KEY"
++_observation_source_id = os.environ.get("NMAS_OBSERVATION_SOURCE_ID", "").strip()
++NMAS_OBSERVATION_SOURCES = {
++    _observation_source_id: {"key_env": NMAS_OBSERVATION_KEY_ENV, "platforms": ["arista_ceos", "ubuntu_frr"]},
++} if _observation_source_id else {}
+diff --git a/web/core/apps.py b/web/core/apps.py
+--- a/web/core/apps.py
++++ b/web/core/apps.py
+@@ -7,3 +7,4 @@
+ 
+     def ready(self):
+         from . import signals  # noqa: F401  (V2 Phase 1: identity audit receivers)
++        from . import checks  # noqa: F401  (troubleshooting bindings / observation source deployment checks)
+diff --git a/web/core/middleware.py b/web/core/middleware.py
+--- a/web/core/middleware.py
++++ b/web/core/middleware.py
+@@ -24,11 +24,13 @@
+ 
+ _JSON_SUFFIXES = (".json",)
+ _JSON_ROUTES = frozenset({"topology_data"})
++# Versioned JSON APIs whose clients must get a JSON 401/403, never an HTML login redirect (troubleshooting API v1).
++_JSON_ROUTE_PREFIXES = ("ts_api_",)
+ _ADMIN_MFA_EXEMPT = frozenset({"login", "logout"})
+ 
+ 
+ def _wants_json(request, url_name: str) -> bool:
+-    return url_name in _JSON_ROUTES or request.path.endswith(_JSON_SUFFIXES)
++    return url_name in _JSON_ROUTES or url_name.startswith(_JSON_ROUTE_PREFIXES) or request.path.endswith(_JSON_SUFFIXES)
+ 
+ 
+ class NmasAccessMiddleware:
+diff --git a/web/core/models.py b/web/core/models.py
+--- a/web/core/models.py
++++ b/web/core/models.py
+@@ -3713,6 +3713,152 @@
+         raise ValueError("DeviceObservation records are evidence and cannot be deleted.")
+ 
+ 
++class DeviceVersionObservation(models.Model):
++    """One authenticated read of a device's NOS version (``core.services.devices.observations``).  Append-only evidence.
++
++    The version is what a supported platform parser extracted from the retained raw output (``raw_digest`` is its SHA-256), read
++    over a host-key-pinned management session by the trusted source ``source_id``.  It is bound to the device, its platform and
++    the AUTHENTICATED_SESSION identity observation recorded with it.  It never changes identity or admission state.
++    """
++
++    device = models.ForeignKey(ManagedDevice, on_delete=models.PROTECT, related_name="version_observations", editable=False)
++    platform = models.CharField(max_length=32, choices=Platform.choices, editable=False)
++    version = models.CharField(max_length=64, editable=False)
++    source_id = models.CharField(max_length=64, editable=False, help_text="Authenticated identity of the trusted collector.")
++    nonce = models.CharField(max_length=64, editable=False)
++    command = models.CharField(max_length=64, editable=False)
++    raw_digest = models.CharField(max_length=64, editable=False, help_text="SHA-256 of the raw command output.")
++    evidence_ref = models.CharField(max_length=200, blank=True, default="", editable=False, help_text="Reference to the retained raw evidence.")
++    signature = models.CharField(max_length=64, editable=False, help_text="HMAC-SHA256 the collector produced over the canonical envelope.")
++    host_key = models.CharField(max_length=51, editable=False)
++    serial = models.CharField(max_length=64, blank=True, default="", editable=False)
++    base_mac = models.CharField(max_length=17, blank=True, default="", editable=False)
++    identity_observation = models.ForeignKey(DeviceObservation, on_delete=models.PROTECT, related_name="version_observations", editable=False)
++    observed_at = models.DateTimeField(editable=False)
++    recorded_at = models.DateTimeField(auto_now_add=True)
++
++    objects = _ImmutableManager()
++
++    class Meta:
++        ordering = ["-observed_at", "-id"]
++        default_permissions = ()
++        indexes = [models.Index(fields=["device", "-observed_at"])]
++        constraints = [
++            models.UniqueConstraint(fields=["source_id", "nonce"], name="unique_version_observation_nonce"),
++        ]
++
++    def __str__(self):
++        return f"{self.device.name} {self.version} @ {self.observed_at:%Y-%m-%dT%H:%M:%SZ}"
++
++    def save(self, *args, **kwargs):
++        if self.platform not in Platform.values or not self.version or not self.source_id or not self.nonce:
++            raise ValueError("Invalid DeviceVersionObservation.")
++        _forbid_row_mutation(self)
++        super().save(*args, **kwargs)
++
++    def delete(self, *args, **kwargs):
++        raise ValueError("DeviceVersionObservation records are evidence and cannot be deleted.")
++
++
++OBSERVATION_COMMAND_IDS = ("nos-version",)        # command scopes an observation authorization may grant (observations.SPECS)
++
++
++class ObservationUseState(models.TextChoices):
++    RESERVED = "RESERVED", "Reserved (session about to open)"
++    ACCEPTED = "ACCEPTED", "Observation accepted"
++    REFUSED = "REFUSED", "Observation refused"
++
++
++class ObservationAuthorization(models.Model):
++    """A scoped, expiring approval for read-only device observations (``core.services.devices.observation_authorizations``).
++
++    It replaces the free-form ``--authorization-ref`` label: an observation runs only inside an authorization whose device scope,
++    command scope, validity window and use budget it fits, approved by an NMAS account holding the APPROVE permission and run by a
++    *different* account holding EXECUTE.  ``scope_digest`` binds the approved scope; a row whose scope no longer matches its digest
++    is refused.  The only permitted change after creation is a single revocation.  Never deleted.
++    """
++
++    devices = models.JSONField(default=list, editable=False)            # sorted device names (resolver WRITABLE scope only)
++    commands = models.JSONField(default=list, editable=False)           # sorted OBSERVATION_COMMAND_IDS
++    ticket = models.CharField(max_length=64, editable=False)
++    reason = models.CharField(max_length=200, blank=True, default="", editable=False)
++    requested_by = models.CharField(max_length=150, editable=False)
++    approved_by = models.CharField(max_length=150, editable=False)
++    not_before = models.DateTimeField(editable=False)
++    expires_at = models.DateTimeField(editable=False)
++    max_observations = models.PositiveSmallIntegerField(editable=False)
++    scope_digest = models.CharField(max_length=64, editable=False)
++    revoked_at = models.DateTimeField(null=True, blank=True)
++    revoked_by = models.CharField(max_length=150, blank=True, default="")
++    revoke_reason = models.CharField(max_length=200, blank=True, default="")
++    created_at = models.DateTimeField(auto_now_add=True)
++
++    class Meta:
++        ordering = ["-created_at", "-id"]
++        default_permissions = ()
++        indexes = [models.Index(fields=["expires_at"])]
++
++    @property
++    def auth_id(self) -> str:
++        return f"OBSAUTH-{self.pk:06d}" if self.pk else ""
++
++    def __str__(self):
++        return f"{self.auth_id} {','.join(self.devices or [])} until {self.expires_at:%Y-%m-%dT%H:%M:%SZ}"
++
++    def save(self, *args, **kwargs):
++        if not self.pk:
++            if (not isinstance(self.devices, list) or not self.devices or not isinstance(self.commands, list) or not self.commands
++                    or any(c not in OBSERVATION_COMMAND_IDS for c in self.commands) or not _HEX64.fullmatch(self.scope_digest or "")
++                    or not self.approved_by or not self.requested_by or self.expires_at <= self.not_before or self.revoked_at):
++                raise ValueError("Invalid ObservationAuthorization.")
++            return super().save(*args, **kwargs)
++        stored = type(self).objects.filter(pk=self.pk).values("revoked_at").first()
++        if stored is None or stored["revoked_at"] is not None or self.revoked_at is None or not self.revoked_by:
++            raise ValueError("An observation authorization can only be revoked, once.")
++        super().save(update_fields=["revoked_at", "revoked_by", "revoke_reason"])
++
++    def delete(self, *args, **kwargs):
++        raise ValueError("ObservationAuthorization records are approval evidence and cannot be deleted.")
++
++
++class ObservationAuthorizationUse(models.Model):
++    """One use of an ``ObservationAuthorization``: reserved before any session opens, then finished exactly once."""
++
++    authorization = models.ForeignKey(ObservationAuthorization, on_delete=models.PROTECT, related_name="uses", editable=False)
++    device = models.CharField(max_length=64, editable=False)
++    command = models.CharField(max_length=32, editable=False)
++    operator = models.CharField(max_length=150, editable=False)
++    state = models.CharField(max_length=10, choices=ObservationUseState.choices, default=ObservationUseState.RESERVED)
++    outcome_codes = models.JSONField(default=list, blank=True)
++    nonce = models.CharField(max_length=64, blank=True, default="")
++    evidence_ref = models.CharField(max_length=200, blank=True, default="")
++    version_observation = models.ForeignKey(DeviceVersionObservation, null=True, blank=True, on_delete=models.PROTECT,
++                                            related_name="authorization_uses")
++    reserved_at = models.DateTimeField(auto_now_add=True)
++    finished_at = models.DateTimeField(null=True, blank=True)
++
++    class Meta:
++        ordering = ["-reserved_at", "-id"]
++        default_permissions = ()
++        indexes = [models.Index(fields=["authorization", "state"])]
++
++    _FINISH_FIELDS = ["state", "outcome_codes", "nonce", "evidence_ref", "version_observation", "finished_at"]
++
++    def save(self, *args, **kwargs):
++        if not self.pk:
++            if self.state != ObservationUseState.RESERVED or self.command not in OBSERVATION_COMMAND_IDS or not self.operator:
++                raise ValueError("A use is created RESERVED, for an authorized command, by a named operator.")
++            return super().save(*args, **kwargs)
++        stored = type(self).objects.filter(pk=self.pk).values("state").first()
++        if stored is None or stored["state"] != ObservationUseState.RESERVED or self.state == ObservationUseState.RESERVED \
++                or self.finished_at is None:
++            raise ValueError("A use is finished exactly once.")
++        super().save(update_fields=self._FINISH_FIELDS)
++
++    def delete(self, *args, **kwargs):
++        raise ValueError("ObservationAuthorizationUse records are evidence and cannot be deleted.")
++
++
+ class BootstrapAuthorizationState(models.TextChoices):
+     PENDING_APPROVAL = "PENDING_APPROVAL", "Pending approval"
+     APPROVED = "APPROVED", "Approved (bootstrap only -- never production admission)"
+@@ -4179,6 +4325,50 @@
+ 
+     def delete(self, *args, **kwargs):
+         raise ValueError("DhcpLeaseObservation records are evidence and cannot be deleted.")
++
++
++class DhcpRelayReadbackSource(models.TextChoices):
++    POSTCHECK = "POSTCHECK", "Postcheck of a governed option 82 change"
++    READ = "READ", "Read-only refresh through NMAS's device transport"
++
++
++class DhcpRelayReadback(models.Model):
++    """V2 Phase 9: one read-back of a relay's DHCP relay agent information (option 82) configuration, as NMAS read it over its own
++    device transport -- the postcheck of a governed option 82 change or a read-only refresh.  ZTP trusts a relayed discovery only
++    against the latest FRESH read-back (``ztp.relay_option82``): the relay's option 82 state is never taken from intent alone.
++
++    Append-only evidence: a newer read-back supersedes an older one; none is ever edited or deleted."""
++
++    device = models.CharField(max_length=64, editable=False)
++    source = models.CharField(max_length=12, choices=DhcpRelayReadbackSource.choices, editable=False)
++    change = models.ForeignKey("Change", null=True, blank=True, on_delete=models.PROTECT, related_name="relay_readbacks", editable=False)
++    run_id = models.CharField(max_length=64, blank=True, default="", editable=False)
++    readback = models.JSONField(default=dict, editable=False)          # dhcp_relay_option82.parse_eos: enabled + per-port ids, helpers, addresses
++    config_digest = models.CharField(max_length=64, editable=False)    # the relay's configuration state digest at the read
++    captured_by = models.CharField(max_length=150, editable=False)
++    captured_at = models.DateTimeField(editable=False)
++
++    objects = _ImmutableManager()
++
++    class Meta:
++        ordering = ["-captured_at", "-id"]
++        default_permissions = ()
++        indexes = [models.Index(fields=["device", "-captured_at"])]
++
++    def __str__(self):
++        return f"{self.device} option 82 read-back ({self.source}) {self.captured_at:%Y-%m-%d %H:%M}"
++
++    def save(self, *args, **kwargs):
++        if self.pk:
++            raise ValueError("DhcpRelayReadback rows are append-only evidence.")
++        if self.source not in DhcpRelayReadbackSource.values:
++            raise ValueError("Invalid relay read-back source.")
++        if not _HEX64.fullmatch(self.config_digest or ""):
++            raise ValueError("A relay read-back carries the SHA-256 configuration digest it was read at.")
++        super().save(*args, **kwargs)
++
++    def delete(self, *args, **kwargs):
++        raise ValueError("DhcpRelayReadback rows are evidence and cannot be deleted.")
+ 
+ 
+ class DhcpApplicationState(models.TextChoices):
+@@ -5428,3 +5618,559 @@
+     class Meta:
+         ordering = ["name"]
+         default_permissions = ()
++
++
++# ═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════
++# NMAS V2 troubleshooting substrate (spec section 2).  ADDITIVE ONLY: nothing above this line is touched.
++#
++# Every entity is a typed, case-scoped record.  History rules (enforced here AND by core.services.troubleshooting):
++#   * append-only (never modifiable, never deletable):  TsEvidenceBlob, TsEvidenceRef, TsObservation, TsDiagnosticTest,
++#     TsAuditEvent, TsDriftAssessment, TsCorrelationRecord, TsTopologyPath, TsBaselineReference
++#   * finalisable (modifiable only while still in a non-final status; frozen afterwards): TsCollectionRun
++#   * lifecycle-mutable (state moves are written to the hash-chained audit journal by the repository): TsCase,
++#     TsHypothesis, TsProductionFlowMonitor, TsExceptionPolicy, TsAIHandoff, TsRemediationPlan, TsActionExecution,
++#     TsVerificationRecord
++# The class names carry a ``Ts`` prefix because ``AuditEvent`` (control-plane audit) and others already exist; the
++# spec's entity names map one-to-one (see docs/troubleshooting/architecture.md).
++# ═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════
++
++TS_SCHEMA_VERSION = "nmas.troubleshooting/1"
++
++
++class TsBasis(models.TextChoices):
++    """Strict separation of what a statement IS (spec 2.1): observation / inference / hypothesis / root cause / plan / execution."""
++
++    OBSERVED = "OBSERVED", "Directly observed"
++    DERIVED = "DERIVED", "Deterministically derived"
++    AI_INFERRED = "AI_INFERRED", "AI-inferred"
++    OPERATOR_CONFIRMED = "OPERATOR_CONFIRMED", "Operator-confirmed"
++
++
++class TsCaseState(models.TextChoices):
++    OPEN = "OPEN", "Open"
++    SCOPING = "SCOPING", "Scoping"
++    COLLECTING = "COLLECTING", "Collecting"
++    ANALYSING = "ANALYSING", "Analysing"
++    TESTING = "TESTING", "Testing"
++    AI_INVESTIGATING = "AI_INVESTIGATING", "AI investigating"
++    REMEDIATING = "REMEDIATING", "Remediating"
++    VERIFYING = "VERIFYING", "Verifying"
++    RESOLVED_VERIFIED = "RESOLVED_VERIFIED", "Resolved (verified)"
++    NO_FAULT_FOUND = "NO_FAULT_FOUND", "No fault found"
++    UNRESOLVED = "UNRESOLVED", "Unresolved"
++    EXTERNALLY_BLOCKED = "EXTERNALLY_BLOCKED", "Externally blocked"
++
++
++TS_TERMINAL_CASE_STATES = (
++    TsCaseState.RESOLVED_VERIFIED, TsCaseState.NO_FAULT_FOUND, TsCaseState.UNRESOLVED, TsCaseState.EXTERNALLY_BLOCKED,
++)
++
++
++class TsStage(models.TextChoices):
++    COLLECT = "COLLECT", "Collect"
++    NORMALIZE = "NORMALIZE", "Normalize"
++    BASELINE = "BASELINE", "Baseline"
++    CORRELATE = "CORRELATE", "Correlate"
++    TEST = "TEST", "Test"
++    DIAGNOSE = "DIAGNOSE", "Diagnose"
++    AI = "AI", "AI investigation"
++    REMEDIATE = "REMEDIATE", "Remediate"
++    VERIFY = "VERIFY", "Verify"
++    DOCUMENT = "DOCUMENT", "Document"
++
++
++TS_STAGE_ORDER = tuple(TsStage.values)
++
++
++def _ts_forbid_update(instance) -> None:
++    if instance.pk and type(instance).objects.filter(pk=instance.pk).exists():
++        raise ValueError(f"{type(instance).__name__} records are append-only and cannot be modified.")
++
++
++class _TsAppendOnlyQuerySet(models.QuerySet):
++    def update(self, **kwargs):
++        raise ValueError(f"{self.model.__name__} records are append-only and cannot be updated.")
++
++    def bulk_update(self, objs, fields, batch_size=None):
++        raise ValueError(f"{self.model.__name__} records are append-only and cannot be updated.")
++
++    def delete(self):
++        raise ValueError(f"{self.model.__name__} records are append-only and cannot be deleted.")
++
++
++_TsAppendOnlyManager = models.Manager.from_queryset(_TsAppendOnlyQuerySet)
++
++
++class _TsAppendOnly(models.Model):
++    """Mixin: rows can be created, never modified or deleted (instance, queryset or bulk)."""
++
++    objects = _TsAppendOnlyManager()
++
++    class Meta:
++        abstract = True
++
++    def save(self, *args, **kwargs):
++        _ts_forbid_update(self)
++        self.full_clean_json()
++        super().save(*args, **kwargs)
++
++    def delete(self, *args, **kwargs):
++        raise ValueError(f"{type(self).__name__} records are append-only and cannot be deleted.")
++
++    def full_clean_json(self) -> None:
++        """Secrets never live in structured metadata (shared policy).  Value-level redaction is the repository's job."""
++        from core.services.secret_policy import assert_no_secret_shaped_keys
++
++        for field in self._meta.fields:
++            if isinstance(field, models.JSONField):
++                value = getattr(self, field.name)
++                if isinstance(value, (dict, list)):
++                    assert_no_secret_shaped_keys({"v": value}, context=f"{type(self).__name__}.{field.name}")
++
++
++class _TsRecord(models.Model):
++    """Common envelope of every case-scoped record: identity, provenance of the claim, stage decision and timestamps."""
++
++    record_id = models.CharField(max_length=40, unique=True)
++    case = models.ForeignKey("core.TsCase", on_delete=models.PROTECT, related_name="%(class)s_records")
++    schema_version = models.CharField(max_length=40, default=TS_SCHEMA_VERSION)
++    basis = models.CharField(max_length=24, choices=TsBasis.choices, default=TsBasis.OBSERVED)
++    stage = models.CharField(max_length=16, choices=TsStage.choices, blank=True, default="")
++    stage_decision = models.CharField(max_length=255, blank=True, default="")
++    evidence_ids = models.JSONField(default=list, blank=True, help_text="TsEvidenceRef.evidence_id values this claim rests on.")
++    created_at = models.DateTimeField(auto_now_add=True)
++
++    class Meta:
++        abstract = True
++
++    def __str__(self):
++        return self.record_id
++
++    def full_clean_json(self) -> None:
++        _TsAppendOnly.full_clean_json(self)
++
++
++class TsCase(models.Model):
++    case_id = models.CharField(max_length=40, unique=True)
++    tenant = models.CharField(max_length=64, default="default", help_text="Tenant/project scope; every read is filtered by it.")
++    trigger_source = models.CharField(max_length=64)
++    trigger_ref = models.CharField(max_length=255, blank=True, default="")
++    idempotency_key = models.CharField(max_length=128, blank=True, default="")
++    title = models.CharField(max_length=255, blank=True, default="")
++    symptom = models.TextField(blank=True, default="")
++    runbook = models.CharField(max_length=16, blank=True, default="")
++    service_intent = models.JSONField(default=dict, blank=True)
++    flow_scope = models.JSONField(default=dict, blank=True, help_text="Production-flow scope: protocol/ports/endpoints/VRF/criticality.")
++    severity = models.CharField(max_length=16, default="MEDIUM")
++    affected_scope = models.JSONField(default=dict, blank=True, help_text="{'devices': [...], 'interfaces': [...], 'links': [...], 'flows': [...]}")
++    target_states = models.JSONField(default=dict, blank=True, help_text="device -> admission/lifecycle state captured at intake (VERIFIED only is probe-able).")
++    state = models.CharField(max_length=24, choices=TsCaseState.choices, default=TsCaseState.OPEN)
++    opened_at = models.DateTimeField()
++    closed_at = models.DateTimeField(null=True, blank=True)
++    first_detected_at = models.DateTimeField(null=True, blank=True)
++    isolation_strategy = models.CharField(max_length=32, blank=True, default="")
++    strategy_rationale = models.TextField(blank=True, default="")
++    last_known_good_at = models.DateTimeField(null=True, blank=True)
++    last_known_good_ref = models.CharField(max_length=255, blank=True, default="")
++    worked_before = models.BooleanField(null=True, blank=True)
++    changed_recently = models.BooleanField(null=True, blank=True)
++    change_window_refs = models.JSONField(default=list, blank=True)
++    owner = models.CharField(max_length=150, blank=True, default="")
++    confidence = models.FloatField(null=True, blank=True)
++    disposition = models.JSONField(default=dict, blank=True)
++    schema_version = models.CharField(max_length=40, default=TS_SCHEMA_VERSION)
++
++    _IMMUTABLE = ("case_id", "tenant", "trigger_source", "opened_at", "idempotency_key")
++
++    class Meta:
++        ordering = ["-opened_at"]
++        constraints = [
++            models.UniqueConstraint(fields=["tenant", "idempotency_key"], condition=~Q(idempotency_key=""), name="ts_case_unique_idempotency"),
++        ]
++
++    def __str__(self):
++        return self.case_id
++
++    def save(self, *args, **kwargs):
++        if self.state not in TsCaseState.values:
++            raise ValueError(f"Invalid case state {self.state!r}.")
++        if self.pk:
++            persisted = type(self).objects.filter(pk=self.pk).first()
++            if persisted is not None:
++                for name in self._IMMUTABLE:
++                    if getattr(persisted, name) != getattr(self, name):
++                        raise ValueError(f"TsCase.{name} is immutable after creation.")
++                if persisted.state in TS_TERMINAL_CASE_STATES and persisted.state != self.state:
++                    raise ValueError("A closed case cannot change state; open a follow-up case instead.")
++        _TsAppendOnly.full_clean_json(self)
++        super().save(*args, **kwargs)
++
++    def delete(self, *args, **kwargs):
++        raise ValueError("TsCase records are historical artifacts and cannot be deleted.")
++
++
++class TsEvidenceBlob(_TsAppendOnly):
++    """Content-addressed, ALREADY-REDACTED raw evidence (CLI/log/pcap-metadata/config).  Operator views never render it."""
++
++    stored_sha256 = models.CharField(max_length=64, unique=True)
++    raw_sha256 = models.CharField(max_length=64, help_text="sha256 of the original bytes before redaction (provenance only; the original is never stored).")
++    content = models.TextField()
++    size_bytes = models.PositiveIntegerField(default=0)
++    redaction_count = models.PositiveIntegerField(default=0)
++    created_at = models.DateTimeField(auto_now_add=True)
++
++
++class TsEvidenceRef(_TsAppendOnly):
++    evidence_id = models.CharField(max_length=40, unique=True)
++    case = models.ForeignKey(TsCase, on_delete=models.PROTECT, related_name="evidence_refs")
++    source_type = models.CharField(max_length=24, help_text="cli|gnmi|snmp|syslog|netflow|pcap|config|netbox|golden|operator|ai_tool|replay")
++    device = models.CharField(max_length=64, blank=True, default="")
++    command_or_api = models.CharField(max_length=255, blank=True, default="")
++    adapter = models.CharField(max_length=64, blank=True, default="")
++    adapter_version = models.CharField(max_length=32, blank=True, default="")
++    parser = models.CharField(max_length=64, blank=True, default="")
++    parser_version = models.CharField(max_length=32, blank=True, default="")
++    collected_at = models.DateTimeField()
++    raw_sha256 = models.CharField(max_length=64, blank=True, default="")
++    raw_blob = models.ForeignKey(TsEvidenceBlob, null=True, blank=True, on_delete=models.PROTECT, related_name="refs")
++    raw_pointer = models.CharField(max_length=512, blank=True, default="", help_text="Opaque pointer to externally held raw evidence (gateway evidence seq, pcap path...).")
++    raw_size_bytes = models.PositiveIntegerField(default=0)
++    redaction_status = models.CharField(max_length=16, default="NOT_APPLICABLE", help_text="REDACTED|CLEAN|NOT_APPLICABLE")
++    operator_url = models.CharField(max_length=512, blank=True, default="", help_text="Operator-view URL; blank when none exists. NEVER invented.")
++    link_status = models.CharField(max_length=16, default="MISSING", help_text="OK|BROKEN|MISSING|UNVERIFIED")
++    link_note = models.CharField(max_length=255, blank=True, default="")
++    quality = models.CharField(max_length=16, default="GOOD")
++    scope = models.JSONField(default=dict, blank=True)
++    created_at = models.DateTimeField(auto_now_add=True)
++
++    class Meta:
++        indexes = [models.Index(fields=["case", "device"])]
++
++    def __str__(self):
++        return self.evidence_id
++
++
++class TsCollectionRun(_TsRecord):
++    FINAL = ("SUCCEEDED", "FAILED", "PARTIAL", "DENIED", "UNAVAILABLE", "SKIPPED")
++
++    seq = models.PositiveIntegerField()
++    idempotency_key = models.CharField(max_length=128)
++    collector = models.CharField(max_length=64)
++    adapter = models.CharField(max_length=64, blank=True, default="")
++    adapter_version = models.CharField(max_length=32, blank=True, default="")
++    targets = models.JSONField(default=list, blank=True)
++    privileges = models.CharField(max_length=32, default="read-only")
++    command_or_api = models.CharField(max_length=255, blank=True, default="")
++    started_at = models.DateTimeField(null=True, blank=True)
++    finished_at = models.DateTimeField(null=True, blank=True)
++    attempts = models.PositiveIntegerField(default=0)
++    max_attempts = models.PositiveIntegerField(default=3)
++    timeout_seconds = models.PositiveIntegerField(default=30)
++    rate_budget = models.JSONField(default=dict, blank=True)
++    status = models.CharField(max_length=16, default="PENDING")
++    error = models.CharField(max_length=512, blank=True, default="")
++    raw_ref = models.ForeignKey(TsEvidenceRef, null=True, blank=True, on_delete=models.PROTECT, related_name="collection_runs")
++
++    class Meta:
++        ordering = ["case_id", "seq"]
++        constraints = [
++            models.UniqueConstraint(fields=["case", "seq"], name="ts_collection_unique_seq"),
++            models.UniqueConstraint(fields=["case", "idempotency_key"], name="ts_collection_unique_idem"),
++        ]
++
++    def save(self, *args, **kwargs):
++        if self.pk:
++            persisted = type(self).objects.filter(pk=self.pk).values_list("status", flat=True).first()
++            if persisted in self.FINAL:
++                raise ValueError("TsCollectionRun records are immutable once finalised.")
++        _TsAppendOnly.full_clean_json(self)
++        super().save(*args, **kwargs)
++
++    def delete(self, *args, **kwargs):
++        raise ValueError("TsCollectionRun records cannot be deleted.")
++
++
++class TsObservation(_TsRecord, _TsAppendOnly):
++    objects = _TsAppendOnlyManager()
++
++    run = models.ForeignKey(TsCollectionRun, null=True, blank=True, on_delete=models.PROTECT, related_name="observations")
++    evidence = models.ForeignKey(TsEvidenceRef, null=True, blank=True, on_delete=models.PROTECT, related_name="observations")
++    dedupe_key = models.CharField(max_length=128, blank=True, default="")
++    key = models.CharField(max_length=128, help_text="Canonical metric/state key, e.g. interface.oper_state.")
++    value = models.JSONField(null=True, blank=True)
++    unit = models.CharField(max_length=24, blank=True, default="")
++    target = models.CharField(max_length=128, blank=True, default="")
++    observed_at = models.DateTimeField()
++    max_age_seconds = models.PositiveIntegerField(default=300)
++    source = models.CharField(max_length=64, blank=True, default="")
++    quality = models.CharField(max_length=16, default="GOOD", help_text="GOOD|PARTIAL|AMBIGUOUS|UNTRUSTED|MISSING")
++    confidence = models.FloatField(default=1.0)
++    parser_version = models.CharField(max_length=32, blank=True, default="")
++    raw_hash = models.CharField(max_length=64, blank=True, default="")
++    raw_pointer = models.CharField(max_length=512, blank=True, default="")
++    redaction_status = models.CharField(max_length=16, default="NOT_APPLICABLE")
++    is_missing_data = models.BooleanField(default=False, help_text="A permission-denied/error/unavailable record: NOT an observed value (spec UT-024).")
++    missing_reason = models.CharField(max_length=255, blank=True, default="")
++
++    class Meta:
++        ordering = ["case_id", "observed_at", "id"]
++        indexes = [models.Index(fields=["case", "key", "target"])]
++        constraints = [
++            models.UniqueConstraint(fields=["case", "dedupe_key"], condition=~Q(dedupe_key=""), name="ts_observation_unique_dedupe"),
++        ]
++
++    delete = _TsAppendOnly.delete
++    save = _TsAppendOnly.save
++
++
++class TsBaselineReference(_TsRecord, _TsAppendOnly):
++    objects = _TsAppendOnlyManager()
++
++    baseline_type = models.CharField(max_length=24, help_text="INTENT|GOLDEN_CONFIG|LIVE_NORMAL|LEARNED_HISTORICAL|SLO")
++    subject = models.CharField(max_length=128, blank=True, default="")
++    revision = models.CharField(max_length=128, blank=True, default="")
++    revision_hash = models.CharField(max_length=64, blank=True, default="")
++    valid_from = models.DateTimeField(null=True, blank=True)
++    valid_until = models.DateTimeField(null=True, blank=True)
++    operator_url = models.CharField(max_length=512, blank=True, default="")
++    link_status = models.CharField(max_length=16, default="MISSING")
++    approved_change_id = models.CharField(max_length=64, blank=True, default="")
++    soak_state = models.CharField(max_length=24, blank=True, default="")
++    data = models.JSONField(default=dict, blank=True)
++
++    delete = _TsAppendOnly.delete
++    save = _TsAppendOnly.save
++
++
++class TsDriftAssessment(_TsRecord, _TsAppendOnly):
++    objects = _TsAppendOnlyManager()
++
++    baseline = models.ForeignKey(TsBaselineReference, null=True, blank=True, on_delete=models.PROTECT, related_name="drifts")
++    subject = models.CharField(max_length=128)
++    expected = models.JSONField(null=True, blank=True)
++    observed = models.JSONField(null=True, blank=True)
++    delta = models.JSONField(null=True, blank=True)
++    drift_kind = models.CharField(max_length=24, default="NONE", help_text="NONE|APPROVED|UNAPPROVED|UNKNOWN|STALE")
++    applicability = models.CharField(max_length=24, default="APPLICABLE")
++    approved_change_id = models.CharField(max_length=64, blank=True, default="")
++    production_impact = models.CharField(max_length=24, default="UNKNOWN", help_text="NONE|DEGRADED|OUTAGE|UNKNOWN")
++    materiality = models.CharField(max_length=16, default="UNKNOWN")
++    conclusion = models.CharField(max_length=255, blank=True, default="")
++
++    delete = _TsAppendOnly.delete
++    save = _TsAppendOnly.save
++
++
++class TsTopologyPath(_TsRecord, _TsAppendOnly):
++    objects = _TsAppendOnlyManager()
++
++    source = models.CharField(max_length=128)
++    destination = models.CharField(max_length=128)
++    vrf = models.CharField(max_length=64, blank=True, default="")
++    address_family = models.CharField(max_length=8, blank=True, default="")
++    service = models.CharField(max_length=64, blank=True, default="")
++    intended_hops = models.JSONField(default=list, blank=True)
++    observed_hops = models.JSONField(default=list, blank=True)
++    links = models.JSONField(default=list, blank=True)
++    next_hops = models.JSONField(default=list, blank=True)
++    adjacency = models.JSONField(default=list, blank=True)
++    lookup_provenance = models.JSONField(default=dict, blank=True)
++    divergence = models.JSONField(default=list, blank=True)
++
++    delete = _TsAppendOnly.delete
++    save = _TsAppendOnly.save
++
++
++class TsHypothesis(_TsRecord):
++    title = models.CharField(max_length=255)
++    failure_domain = models.CharField(max_length=32, blank=True, default="")
++    supporting_evidence = models.JSONField(default=list, blank=True)
++    contradicting_evidence = models.JSONField(default=list, blank=True)
++    ranking = models.PositiveIntegerField(default=0)
++    confidence = models.FloatField(default=0.0)
++    state = models.CharField(max_length=16, default="OPEN", help_text="OPEN|SUPPORTED|ELIMINATED|CONFIRMED|UNVERIFIED")
++    test_ids = models.JSONField(default=list, blank=True)
++    elimination_rationale = models.TextField(blank=True, default="")
++    proposed_by = models.CharField(max_length=64, blank=True, default="")
++
++    def save(self, *args, **kwargs):
++        if self.state not in ("OPEN", "SUPPORTED", "ELIMINATED", "CONFIRMED", "UNVERIFIED"):
++            raise ValueError(f"Invalid hypothesis state {self.state!r}.")
++        _TsAppendOnly.full_clean_json(self)
++        super().save(*args, **kwargs)
++
++
++class TsDiagnosticTest(_TsRecord, _TsAppendOnly):
++    objects = _TsAppendOnlyManager()
++    VERDICTS = ("PASS", "FAIL", "INCONCLUSIVE", "SKIPPED", "UNAVAILABLE")
++
++    seq = models.PositiveIntegerField()
++    attempt = models.PositiveIntegerField(default=1)
++    test_id = models.CharField(max_length=32, help_text="Stable deterministic catalogue id, e.g. HC07.")
++    test_version = models.CharField(max_length=16, default="1")
++    hypothesis = models.ForeignKey(TsHypothesis, null=True, blank=True, on_delete=models.PROTECT, related_name="tests")
++    hypothesized_condition = models.CharField(max_length=255, blank=True, default="")
++    preconditions = models.JSONField(default=list, blank=True)
++    target = models.CharField(max_length=128, blank=True, default="")
++    command_or_api = models.CharField(max_length=255, blank=True, default="")
++    expected = models.CharField(max_length=255, blank=True, default="")
++    observed = models.JSONField(default=dict, blank=True)
++    observed_summary = models.CharField(max_length=512, blank=True, default="")
++    verdict = models.CharField(max_length=16)
++    reason = models.CharField(max_length=512, blank=True, default="")
++    interpretation = models.CharField(max_length=512, blank=True, default="")
++    next_action = models.CharField(max_length=255, blank=True, default="")
++    executed_at = models.DateTimeField(null=True, blank=True)
++
++    class Meta:
++        ordering = ["case_id", "seq", "attempt"]
++        constraints = [models.UniqueConstraint(fields=["case", "seq", "attempt"], name="ts_test_unique_seq")]
++
++    delete = _TsAppendOnly.delete
++    save = _TsAppendOnly.save
++
++
++class TsCorrelationRecord(_TsRecord, _TsAppendOnly):
++    objects = _TsAppendOnlyManager()
++
++    alert_ids = models.JSONField(default=list, blank=True)
++    common_fault_candidate = models.CharField(max_length=255, blank=True, default="")
++    topology_edge = models.JSONField(default=dict, blank=True)
++    time_window = models.JSONField(default=dict, blank=True)
++    rules = models.JSONField(default=list, blank=True)
++    metrics = models.JSONField(default=dict, blank=True)
++    role = models.CharField(max_length=16, default="CAUSE", help_text="CAUSE|SYMPTOM|UNRELATED")
++    drift_kind = models.CharField(max_length=24, blank=True, default="")
++    observed_value = models.JSONField(null=True, blank=True)
++    baseline_value = models.JSONField(null=True, blank=True)
++    confidence = models.FloatField(default=0.0)
++    conclusion = models.CharField(max_length=255, blank=True, default="")
++
++    delete = _TsAppendOnly.delete
++    save = _TsAppendOnly.save
++
++
++class TsProductionFlowMonitor(_TsRecord):
++    selector = models.JSONField(default=dict, blank=True, help_text="protocol/ports/endpoints/VRF")
++    criticality = models.CharField(max_length=16, default="UNKNOWN")
++    baseline = models.JSONField(default=dict, blank=True, help_text="loss/latency/availability")
++    sample_windows = models.JSONField(default=list, blank=True)
++    current_loss_pct = models.FloatField(null=True, blank=True)
++    uncertainty = models.JSONField(default=dict, blank=True)
++    coverage = models.JSONField(default=dict, blank=True)
++    classification = models.CharField(max_length=24, default="PRODUCTION", help_text="PRODUCTION|TEST_TRAFFIC|INTENTIONALLY_BLOCKED")
++
++    def save(self, *args, **kwargs):
++        _TsAppendOnly.full_clean_json(self)
++        super().save(*args, **kwargs)
++
++
++class TsExceptionPolicy(_TsRecord):
++    scope = models.JSONField(default=dict, blank=True, help_text="Narrow service/protocol/path scope; empty scope is rejected.")
++    reason = models.TextField(blank=True, default="")
++    requested_by = models.CharField(max_length=150, blank=True, default="")
++    approvals = models.JSONField(default=list, blank=True)
++    expires_at = models.DateTimeField()
++    bound_revisions = models.JSONField(default=dict, blank=True, help_text="Policy/config revisions at approval; a change invalidates the exception.")
++    status = models.CharField(max_length=16, default="ACTIVE", help_text="ACTIVE|EXPIRED|INVALIDATED|REVOKED")
++
++    def save(self, *args, **kwargs):
++        if not self.scope:
++            raise ValueError("An exception policy needs a narrow, non-empty scope.")
++        _TsAppendOnly.full_clean_json(self)
++        super().save(*args, **kwargs)
++
++
++class TsAIHandoff(_TsRecord):
++    coverage_manifest = models.JSONField(default=dict, blank=True)
++    trigger_uncertainty = models.TextField(blank=True, default="")
++    allowed_tools = models.JSONField(default=list, blank=True)
++    allowed_targets = models.JSONField(default=list, blank=True)
++    budget = models.JSONField(default=dict, blank=True)
++    reasoning_log = models.JSONField(default=list, blank=True)
++    return_conditions = models.JSONField(default=list, blank=True)
++    agent_identity = models.CharField(max_length=128, blank=True, default="")
++    checkpoint = models.JSONField(default=dict, blank=True)
++    status = models.CharField(max_length=16, default="OPEN")
++
++    def save(self, *args, **kwargs):
++        _TsAppendOnly.full_clean_json(self)
++        super().save(*args, **kwargs)
++
++
++class TsRemediationPlan(_TsRecord):
++    tier = models.PositiveSmallIntegerField(default=1)
++    operations = models.JSONField(default=list, blank=True)
++    risk = models.CharField(max_length=16, default="UNKNOWN")
++    blast_radius = models.JSONField(default=dict, blank=True)
++    impacted_flows = models.JSONField(default=list, blank=True)
++    preconditions = models.JSONField(default=list, blank=True)
++    alternative_paths = models.JSONField(default=list, blank=True)
++    dry_run = models.JSONField(default=dict, blank=True)
++    causal_proof = models.JSONField(default=list, blank=True)
++    rollback_plan = models.JSONField(default=dict, blank=True)
++    approval = models.JSONField(default=dict, blank=True)
++    expires_at = models.DateTimeField(null=True, blank=True)
++    status = models.CharField(max_length=16, default="PROPOSED", help_text="PROPOSED|APPROVED|REJECTED|BLOCKED|EXPIRED|EXECUTED")
++
++    def save(self, *args, **kwargs):
++        _TsAppendOnly.full_clean_json(self)
++        super().save(*args, **kwargs)
++
++
++class TsActionExecution(_TsRecord):
++    plan = models.ForeignKey(TsRemediationPlan, on_delete=models.PROTECT, related_name="executions")
++    pre_state = models.JSONField(default=dict, blank=True)
++    command_or_intent = models.JSONField(default=dict, blank=True)
++    idempotency_key = models.CharField(max_length=128, unique=True)
++    lock_lease = models.CharField(max_length=128, blank=True, default="")
++    executed_at = models.DateTimeField(null=True, blank=True)
++    observed_effect = models.JSONField(default=dict, blank=True)
++    stop_reason = models.CharField(max_length=255, blank=True, default="")
++    rollback = models.JSONField(default=dict, blank=True)
++    status = models.CharField(max_length=16, default="PENDING")
++
++    def save(self, *args, **kwargs):
++        _TsAppendOnly.full_clean_json(self)
++        super().save(*args, **kwargs)
++
++
++class TsVerificationRecord(_TsRecord):
++    original_symptom = models.TextField(blank=True, default="")
++    before_after = models.JSONField(default=dict, blank=True)
++    test_steps = models.JSONField(default=list, blank=True)
++    observed_values = models.JSONField(default=dict, blank=True)
++    soak_status = models.CharField(max_length=24, blank=True, default="")
++    regressions = models.JSONField(default=list, blank=True)
++    final_diagnosis = models.CharField(max_length=255, blank=True, default="")
++    residual_impact = models.CharField(max_length=255, blank=True, default="")
++    outcome = models.CharField(max_length=24, default="INCONCLUSIVE", help_text="VERIFIED|FAILED|INCONCLUSIVE|SOAKING")
++
++    def save(self, *args, **kwargs):
++        _TsAppendOnly.full_clean_json(self)
++        super().save(*args, **kwargs)
++
++
++class TsAuditEvent(_TsAppendOnly):
++    """Ordered, append-only, hash-chained per case.  event_hash = sha256(prev_hash || canonical(payload))."""
++
++    case = models.ForeignKey(TsCase, on_delete=models.PROTECT, related_name="audit_events")
++    seq = models.PositiveIntegerField()
++    actor = models.CharField(max_length=150)
++    actor_type = models.CharField(max_length=16, default="system", help_text="user|agent|tool|system")
++    tool_id = models.CharField(max_length=128, blank=True, default="")
++    action = models.CharField(max_length=64)
++    decision = models.CharField(max_length=255, blank=True, default="")
++    result = models.CharField(max_length=64, blank=True, default="")
++    risk = models.CharField(max_length=16, blank=True, default="")
++    approver = models.CharField(max_length=150, blank=True, default="")
++    operation = models.CharField(max_length=255, blank=True, default="")
++    rationale = models.TextField(blank=True, default="")
++    evidence_ids = models.JSONField(default=list, blank=True)
++    occurred_at = models.DateTimeField()
++    prev_hash = models.CharField(max_length=64, blank=True, default="")
++    event_hash = models.CharField(max_length=64)
++
++    class Meta:
++        ordering = ["case_id", "seq"]
++        constraints = [models.UniqueConstraint(fields=["case", "seq"], name="ts_audit_unique_seq")]
+diff --git a/web/core/services/devices/lifecycle.py b/web/core/services/devices/lifecycle.py
+--- a/web/core/services/devices/lifecycle.py
++++ b/web/core/services/devices/lifecycle.py
+@@ -614,6 +614,10 @@
+                 raise _Refused([blocker("OBSERVATION_INVALID")])
+             if observation.trust != models.ObservationTrust.OBSERVED or observation.source != models.ObservationSource.AUTHENTICATED_SESSION:
+                 raise _Refused([blocker("IDENTITY_NOT_OBSERVED", source=observation.source, trust=observation.trust)])
++            recorder = str(observation.recorded_by or "").strip().lower()
++            if actor.strip().lower() == recorder or actor.strip().lower().startswith(("source:", "system:")):
++                # independent approval: the party that recorded (or an automated principal) never verifies its own observation
++                raise _Refused([blocker("ACTOR_NOT_AUTHORIZED", action="VERIFY_IDENTITY", reason="NOT_INDEPENDENT")])
+             claims = observation.claims or {}
+             if not claims.get("host_key") or (fresh.expected_serial and not claims.get("serial")) \
+                     or (fresh.expected_base_mac and not claims.get("base_mac")):
+diff --git a/web/core/services/identity/policy.py b/web/core/services/identity/policy.py
+--- a/web/core/services/identity/policy.py
++++ b/web/core/services/identity/policy.py
+@@ -82,6 +82,11 @@
+     "commissioning_overview", "commissioning_device", "commissioning_device_json",
+     # V2 Phases 7 / 8 -- decommissioning and the infrastructure projections (NMAS database reads only on a page view)
+     "decommission_overview", "decommission_device", "infrastructure_overview", "infrastructure_json",
++    # Troubleshooting -- persisted case/evidence reads (no device is contacted on a GET).  The views additionally require a
++    # ``ts-*`` role and enforce tenant and device scope (core.troubleshooting_views).
++    "troubleshooting_list", "troubleshooting_detail", "ts_api_case", "ts_api_stages", "ts_api_evidence",
++    "ts_api_evidence_item", "ts_api_report", "ts_api_ai", "ts_api_remediation", "ts_api_audit", "ts_api_export",
++    "ts_api_metrics",
+ })
+ 
+ READ_ACTION_OVERRIDES: dict[str, Action] = {
+@@ -100,6 +105,8 @@
+     "ztp_session_json",
+     "management_spof_json", "management_device_json",
+     "commissioning_device_json",
++    # Troubleshooting raw (redacted) evidence, case report/export and the case audit journal are always audited
++    "ts_api_evidence_item", "ts_api_report", "ts_api_export", "ts_api_audit",
+ })
+ 
+ MUTATION_ROUTES: dict[str, Action] = {
+@@ -301,6 +308,17 @@
+     "notification_mark_all_read": Action.VIEW,
+     "notification_retry_slack": Action.EDIT,
+     "set_theme": Action.VIEW,
++    # Troubleshooting.  Opening a case records intake only.  A run performs bounded READ-ONLY diagnostic collection against
++    # admitted devices (like decommission_evaluate: VALIDATE).  An operator-confirmed expected-anomaly exception suppresses
++    # alarms for a narrow scope, so it is an approval.  Remediation plan actions map one route per action; the views keep
++    # PLAN_ACTION_PERMISSION equal to these values (contract test).
++    "troubleshooting_intake": Action.EDIT,
++    "ts_api_cases": Action.EDIT,
++    "ts_api_run": Action.VALIDATE,
++    "ts_api_exception": Action.APPROVE,
++    **{f"{prefix}{a}": action for prefix in ("troubleshooting_plan_", "ts_api_plan_")
++       for a, action in (("dry_run", Action.VALIDATE), ("precheck", Action.VALIDATE), ("approve", Action.APPROVE),
++                         ("reject", Action.APPROVE), ("execute", Action.EXECUTE))},
+ }
+ 
+ SAFE_METHODS = frozenset({"GET", "HEAD", "OPTIONS"})
+diff --git a/web/core/urls.py b/web/core/urls.py
+--- a/web/core/urls.py
++++ b/web/core/urls.py
+@@ -1,6 +1,6 @@
+ from django.urls import path
+ 
+-from . import auth_views, commissioning_views, decommission_views, infrastructure_views, lifecycle_views, maintenance_views, management_views, test_governance_views, views, ztp_views
++from . import auth_views, commissioning_views, decommission_views, infrastructure_views, lifecycle_views, maintenance_views, management_views, test_governance_views, troubleshooting_urls, views, ztp_views
+ 
+ app_name = "core"
+ 
+@@ -481,3 +481,6 @@
+     path("device-builder/changes/<str:change_id>/intent/<int:intent_id>/template-version/", views.template_version_from_change,
+          name="template_version_from_change"),
+ ]
++
++# Troubleshooting UI + API v1 (additive include; see troubleshooting_urls.py)
++urlpatterns += troubleshooting_urls.urlpatterns

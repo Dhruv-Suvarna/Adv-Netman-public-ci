@@ -7,6 +7,7 @@ import unittest
 import sync_worker_credential as s
 
 FULL = {"schema_version": 3, "secrets": {"r2-nmas-automation": {"current": {"password": "A"}, "pending": None},
+                                         "s2-nmas-diag": {"current": {"password": "D"}, "pending": None},
                                          "r1-breakglass": {"current": {"password": "X"}, "pending": None}}}
 
 
@@ -25,12 +26,14 @@ class SyncTests(unittest.TestCase):
             json.dump(data, fh)
 
     def run_sync(self):
-        return s.sync(self.full, self.copy, ["r2-nmas-automation"], getpass.getuser(), lambda: setattr(self, "restarts", self.restarts + 1))
+        return s.sync(self.full, self.copy, ["r2-nmas-automation", "s2-nmas-diag"], getpass.getuser(),
+                      lambda: setattr(self, "restarts", self.restarts + 1))
 
     def test_copies_only_the_allowlisted_secret_with_0600(self):
         self.assertEqual(self.run_sync(), "SYNCED")
-        data = json.load(open(self.copy))
-        self.assertEqual(sorted(data["secrets"]), ["r2-nmas-automation"])          # never the rest of the store
+        with open(self.copy, encoding="utf-8") as stream:
+            data = json.load(stream)
+        self.assertEqual(sorted(data["secrets"]), ["r2-nmas-automation", "s2-nmas-diag"])  # never the rest of the store
         self.assertEqual(os.stat(self.copy).st_mode & 0o777, 0o600)
         self.assertEqual(self.restarts, 1)
 
@@ -45,7 +48,9 @@ class SyncTests(unittest.TestCase):
         rotated["secrets"]["r2-nmas-automation"]["current"] = {"password": "B"}
         self.write(rotated)
         self.assertEqual(self.run_sync(), "SYNCED")
-        self.assertEqual(json.load(open(self.copy))["secrets"]["r2-nmas-automation"]["current"], {"password": "B"})
+        with open(self.copy, encoding="utf-8") as stream:
+            copied = json.load(stream)
+        self.assertEqual(copied["secrets"]["r2-nmas-automation"]["current"], {"password": "B"})
         self.assertEqual(self.restarts, 2)
 
     def test_missing_allowlisted_secret_fails_closed_without_touching_the_copy(self):
@@ -53,7 +58,9 @@ class SyncTests(unittest.TestCase):
         self.write({"schema_version": 3, "secrets": {"r1-breakglass": {"current": {}}}})
         with self.assertRaises(s.SyncError):
             self.run_sync()
-        self.assertIn("r2-nmas-automation", json.load(open(self.copy))["secrets"])
+        with open(self.copy, encoding="utf-8") as stream:
+            copied = json.load(stream)
+        self.assertEqual(sorted(copied["secrets"]), ["r2-nmas-automation", "s2-nmas-diag"])
 
     def test_cli_never_prints_secret_values(self):
         import contextlib, io

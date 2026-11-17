@@ -1,0 +1,6 @@
+# Provider SDKs for /opt/nmas-model/venv only.  This virtual environment is separate from the worker runtime
+# (worker-runtime.lock), which keeps no network SDK.  Resolve to an exact, hash-pinned lock at install time with
+#   pip-compile --generate-hashes model-broker-requirements.in
+# and install with  pip install --require-hashes -r model-broker-requirements.txt
+anthropic
+openai

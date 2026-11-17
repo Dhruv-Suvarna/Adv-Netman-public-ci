@@ -1,0 +1,27 @@
+{
+  "topology_id": "srlceos01-simulated",
+  "inventory_revision": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "deployment_paths": {
+    "production_database": "/home/student/Scripts/clab_dualstack_lab-deploy/web/db.sqlite3",
+    "production_web_directory": "/home/student/Scripts/clab_dualstack_lab-deploy/web",
+    "production_inventory": "/home/student/Scripts/clab_dualstack_lab-deploy/inventory.yml",
+    "device_credential_store": "/home/student/Scripts/clab_dualstack_lab-deploy/monitoring/runtime/device-credentials/store.json"
+  },
+  "protected_addresses": ["10.224.77.10", "192.168.200.100", "2001:db8:200::100"],
+  "approved_targets": [
+    {
+      "device": "R6",
+      "identity_state": "VERIFIED",
+      "lifecycle_state": "IN_SERVICE",
+      "admission_state": "ADMITTED",
+      "approved_paths": [
+        {"address": "192.168.200.6", "port": 22, "transport": "SSH"},
+        {"address": "2001:db8:200::6", "port": 22, "transport": "SSH"}
+      ]
+    }
+  ],
+  "dns_resolvers": ["1.1.1.1", "2606:4700:4700::1111"],
+  "research_destinations": [
+    {"hostname": "www.rfc-editor.org", "addresses": ["104.18.20.81", "2606:4700::6812:1451"]}
+  ]
+}

@@ -1,0 +1,65 @@
+{
+  "schema": "nmas.stage-b-diagnostic-candidate-batch/1",
+  "captured_at": "2026-11-15T23:50:07-07:00",
+  "capture_authority": "read-only container-host channel; candidate evidence, not trust enrollment or approval",
+  "nmas_attachment": {
+    "name": "nmas-mgmt",
+    "host_interface": "nmas-mgmt",
+    "source_address": "192.168.200.100",
+    "network": "192.168.200.0/24",
+    "upstream_device": "mgmt_swt",
+    "upstream_interface": "Ethernet9",
+    "failure_domain": "mgmt_swt"
+  },
+  "approved_eligible": [],
+  "candidates": [
+    {
+      "device": "R1", "platform": "arista_ceos", "address": "192.168.200.1", "port": 22,
+      "path_type": "DIRECT_OOB", "local_interface": "Ethernet3", "via_device": "mgmt_swt", "upstream_interface": "Ethernet1",
+      "host_key_candidate": "SHA256:y8B6G1mNVvWqLtA2Tg+PJRykEnfm1/tD2ftr+syJ9JI",
+      "public_key_evidence_sha256": "888d4f3435991b44a731471c7440c12b3f5bd1063e7e5ab595952747d608418a",
+      "blockers": ["NOT_ADOPTED", "IDENTITY_UNVERIFIED", "HOST_KEY_NOT_ENROLLED", "NMAS_ATTACHMENT_NOT_APPROVED", "DEVICE_MANAGEMENT_ATTACHMENT_NOT_APPROVED", "MANAGEMENT_PATH_NOT_APPROVED_HEALTHY_ACTIVE"]
+    },
+    {
+      "device": "R2", "platform": "arista_ceos", "address": "192.168.200.2", "port": 22,
+      "path_type": "DIRECT_OOB", "local_interface": "Ethernet3", "via_device": "mgmt_swt", "upstream_interface": "Ethernet2",
+      "host_key_candidate": "SHA256:OyuxmXszJ9liLZjlWuKOvoKhGCxuryrmLDf0GIB4dtk",
+      "public_key_evidence_sha256": "3f29a4d351e99fb1453f9771b31ad38fc9c4bd27f66b5ac7d63e7f36cd5248c7",
+      "blockers": ["IDENTITY_UNVERIFIED", "HOST_KEY_NOT_ENROLLED", "NMAS_ATTACHMENT_NOT_APPROVED", "DEVICE_MANAGEMENT_ATTACHMENT_NOT_APPROVED", "MANAGEMENT_PATH_NOT_APPROVED_HEALTHY_ACTIVE"]
+    },
+    {
+      "device": "S1", "platform": "arista_ceos", "address": "192.168.200.11", "port": 22,
+      "path_type": "DIRECT_OOB", "local_interface": "Ethernet5", "via_device": "mgmt_swt", "upstream_interface": "Ethernet5",
+      "host_key_candidate": "SHA256:xXEM3ufwHxXNZj7yvS95DqCduvfsLp+emRKHYTYI2fg",
+      "public_key_evidence_sha256": "6fbbcd376678464d3fa81797ba7b84be625d5ee68fb676c3b805ca3da93123fc",
+      "blockers": ["NOT_ADOPTED", "IDENTITY_UNVERIFIED", "HOST_KEY_NOT_ENROLLED", "NMAS_ATTACHMENT_NOT_APPROVED", "DEVICE_MANAGEMENT_ATTACHMENT_NOT_APPROVED", "MANAGEMENT_PATH_NOT_APPROVED_HEALTHY_ACTIVE"]
+    },
+    {
+      "device": "S2", "platform": "arista_ceos", "address": "192.168.200.12", "port": 22,
+      "path_type": "DIRECT_OOB", "local_interface": "Ethernet5", "via_device": "mgmt_swt", "upstream_interface": "Ethernet6",
+      "host_key_candidate": "SHA256:gP+fDNPL/e7fhS5B9Gv3k5GJTD/51mmlBUvNcaT/xh0",
+      "public_key_evidence_sha256": "c598f10ffdb13f58c30fc32af67de6ee1d78722455fe9b9d127193ddf0df39df",
+      "blockers": ["NOT_ADOPTED", "IDENTITY_UNVERIFIED", "HOST_KEY_NOT_ENROLLED", "NMAS_ATTACHMENT_NOT_APPROVED", "DEVICE_MANAGEMENT_ATTACHMENT_NOT_APPROVED", "MANAGEMENT_PATH_NOT_APPROVED_HEALTHY_ACTIVE"]
+    },
+    {
+      "device": "S3", "platform": "arista_ceos", "address": "192.168.200.13", "port": 22,
+      "path_type": "DIRECT_OOB", "local_interface": "Ethernet4", "via_device": "mgmt_swt", "upstream_interface": "Ethernet7",
+      "host_key_candidate": "SHA256:KQy/cTH2PcNWzDJgwsOiV0+29hHRO/8HkxOuRMB1NGo",
+      "public_key_evidence_sha256": "1c01edc99de9b607e4ff8211d4d3d5bda9362244275505b6de323e319dbacbab",
+      "blockers": ["NOT_ADOPTED", "IDENTITY_UNVERIFIED", "HOST_KEY_NOT_ENROLLED", "NMAS_ATTACHMENT_NOT_APPROVED", "DEVICE_MANAGEMENT_ATTACHMENT_NOT_APPROVED", "MANAGEMENT_PATH_NOT_APPROVED_HEALTHY_ACTIVE"]
+    },
+    {
+      "device": "S4", "platform": "arista_ceos", "address": "192.168.200.14", "port": 22,
+      "path_type": "DIRECT_OOB", "local_interface": "Ethernet4", "via_device": "mgmt_swt", "upstream_interface": "Ethernet8",
+      "host_key_candidate": "SHA256:zkq3EvkJx3SD/0TaC6D9U4+vCrDOX3c7JPRUJe6IrGU",
+      "public_key_evidence_sha256": "e64522559aeb12a25b7b0cb9a4ca0dee110335485dce70436dcd75f87aed88d3",
+      "blockers": ["NOT_ADOPTED", "IDENTITY_UNVERIFIED", "HOST_KEY_NOT_ENROLLED", "NMAS_ATTACHMENT_NOT_APPROVED", "DEVICE_MANAGEMENT_ATTACHMENT_NOT_APPROVED", "MANAGEMENT_PATH_NOT_APPROVED_HEALTHY_ACTIVE"]
+    }
+  ],
+  "unsupported": [
+    {"device": "R3", "reason": "Ubuntu/FRR ManagementPath verifier and diagnostic SSH consumer not implemented"},
+    {"device": "R4", "reason": "Ubuntu/FRR ManagementPath verifier and diagnostic SSH consumer not implemented"},
+    {"device": "mgmt_swt", "reason": "current schema cannot truthfully model the direct NMAS-host-to-same-switch path"}
+  ],
+  "excluded": ["R5", "WebServer", "H1", "H2", "H3", "H4", "R6", "R7", "R8", "S5"]
+}

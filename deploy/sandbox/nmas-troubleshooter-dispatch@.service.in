@@ -1,0 +1,55 @@
+[Unit]
+Description=NMAS governed Troubleshooter AI dispatch %i (global lease: Codex, ClaudeA, ClaudeB)
+After=nmas-troubleshooter-device-worker.service nmas-research-broker.service nmas-ts-model-broker@codex.service nmas-ts-model-broker@claude-a.service nmas-ts-model-broker@claude-b.service
+ConditionPathExists=/etc/nmas/troubleshooter-ipc-client.env
+
+[Service]
+Type=oneshot
+User=nmas-ts-runtime
+Group=nmas-ts-runtime
+SupplementaryGroups=nmas-ts-diagnostic-ipc nmas-ts-research-ipc nmas-ts-model-ipc
+EnvironmentFile=/etc/nmas/troubleshooter-ipc-client.env
+WorkingDirectory=/opt/nmas-dispatch/current/web
+ExecStart=/opt/nmas-dispatch/venv/bin/python /opt/nmas-dispatch/current/web/manage.py troubleshooting_ai dispatch --handoff %i --tenant default --actor nmas-ts-runtime
+NoNewPrivileges=yes
+PrivateNetwork=yes
+PrivateDevices=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ProtectHome=yes
+ProtectProc=invisible
+ProcSubset=pid
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectKernelLogs=yes
+ProtectControlGroups=yes
+ProtectClock=yes
+RestrictSUIDSGID=yes
+RestrictRealtime=yes
+LockPersonality=yes
+MemoryDenyWriteExecute=yes
+RemoveIPC=yes
+RestrictNamespaces=yes
+CapabilityBoundingSet=
+AmbientCapabilities=
+SystemCallArchitectures=native
+SystemCallFilter=@system-service
+SystemCallErrorNumber=EPERM
+RestrictAddressFamilies=AF_UNIX
+IPAddressDeny=any
+ReadOnlyPaths=/opt/nmas-dispatch/current /etc/nmas/troubleshooter-ipc-client.env
+BindReadOnlyPaths=@PRODUCTION_INVENTORY@:/opt/nmas-dispatch/current/inventory.yml
+# Expose exactly the live SQLite file, not the production web source directory.  SQLite creates its transient journal
+# beside this mount in the runtime-owned StateDirectory; an ACL grants this identity write access to the DB file only.
+BindPaths=@PRODUCTION_WEB_DIRECTORY@/db.sqlite3:/var/lib/nmas-ts-runtime/db.sqlite3
+InaccessiblePaths=/run/docker.sock /var/run/docker.sock /run/containerd/containerd.sock -/etc/nmas/troubleshooter-device-worker.env -/etc/nmas/research-broker.env -/etc/nmas/model-broker-codex.env -/etc/nmas/model-broker-claude-a.env -/etc/nmas/model-broker-claude-b.env -/var/lib/nmas-ts-diagnostic -/var/lib/nmas-ts-research -/var/log/nmas-ts-diagnostic -/var/log/nmas-ts-research /opt/nmas-dispatch/current/monitoring/runtime -/opt/nmas-dispatch/current/netbox/.env /opt/nmas-dispatch/current/web/db.sqlite3
+UMask=0077
+StateDirectory=nmas-ts-runtime
+StateDirectoryMode=0700
+TimeoutStartSec=900s
+
+# Unlike nmas-troubleshooter-runtime@, neither worker is a hard requirement: an absent worker yields UNAVAILABLE
+# evidence in the application, and its protected paths are therefore optional (leading '-') so their absence
+# cannot stop the unit with 226/NAMESPACE.
+# Deliberately no [Install]: a trusted operator starts one reviewed
+# handoff instance.  This is not a persistent general-purpose agent service.

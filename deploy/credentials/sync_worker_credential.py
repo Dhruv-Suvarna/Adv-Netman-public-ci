@@ -2,7 +2,7 @@
 """Keep the Troubleshooter diagnostic worker's RESTRICTED credential copy in sync after a rotation (run as root).
 
 The worker never sees the full device credential store: its unit bind-mounts a copy that holds ONLY the allowlisted secret
-ids (default: r2-nmas-automation).  When nmas-credential-rotation rotates that secret in the full store, this copies exactly
+ids (default: r2-nmas-automation and s2-nmas-diag).  When either credential changes in the full store, this copies exactly
 those entries (current + pending), writes the copy atomically (0600, owner nmas-ts-diagnostic) and try-restarts the worker
 (a bind mount pins the old inode, so a restart is what makes the new file visible).  Unchanged => no write, no restart.
 Secret values are never printed or logged.  Triggered by nmas-ts-worker-credential-sync.path (store changed) and an hourly timer.
@@ -18,7 +18,7 @@ import sys
 import tempfile
 
 FULL = "/home/student/Scripts/clab_dualstack_lab-deploy/monitoring/runtime/device-credentials/store.json"
-COPY = "/etc/nmas/troubleshooter-worker-store.r2.json"
+COPY = "/etc/nmas/troubleshooter-worker-store.r2-s2.json"
 OWNER = "nmas-ts-diagnostic"
 UNIT = "nmas-troubleshooter-device-worker.service"
 
@@ -74,11 +74,12 @@ def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--full", default=FULL)
     ap.add_argument("--copy", default=COPY)
-    ap.add_argument("--allow", action="append", default=None, help="secret id to copy (repeatable; default r2-nmas-automation)")
+    ap.add_argument("--allow", action="append", default=None,
+                    help="secret id to copy (repeatable; defaults: r2-nmas-automation, s2-nmas-diag)")
     ap.add_argument("--owner", default=OWNER)
     ap.add_argument("--no-restart", action="store_true")
     args = ap.parse_args(argv)
-    allow = args.allow or ["r2-nmas-automation"]
+    allow = args.allow or ["r2-nmas-automation", "s2-nmas-diag"]
     restart = (lambda: None) if args.no_restart else (lambda: subprocess.run(["systemctl", "try-restart", UNIT], check=True))
     try:
         result = sync(args.full, args.copy, allow, args.owner, restart)

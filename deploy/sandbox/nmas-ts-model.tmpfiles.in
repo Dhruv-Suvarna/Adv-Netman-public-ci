@@ -1,0 +1,3 @@
+# Shared socket directory for the three brokers.  Sticky so one broker cannot unlink or replace another's socket;
+# every response is additionally authenticated with that broker's own IPC key.
+d /run/nmas-ts-model 1770 root nmas-ts-model-ipc -
