@@ -16,6 +16,8 @@ Plan status machine (``TsRemediationPlan.status``)::
 
 from __future__ import annotations
 
+import json
+
 import uuid
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta, timezone
@@ -340,6 +342,13 @@ def propose(actor: repo.Actor, case: m.TsCase, *, operations: list[dict], causal
         problem = validate_operation(op) or _rollback_target_problem(op)
         if problem:
             raise GovernanceRefused("INVALID_OPERATION", problem)
+    from . import faults   # noqa: PLC0415 - deterministic evidence check, no model involvement
+    for op in operations:
+        problem = faults.proposal_problem(case, op, now=now)
+        if problem:
+            repo.audit(actor, case, "PROPOSAL_REJECTED", decision=problem[:255], result="INEFFECTIVE_OPERATION",
+                       operation=json.dumps(op, sort_keys=True)[:255], now=now)
+            raise GovernanceRefused("INEFFECTIVE_OPERATION", problem)
     for op in operations:
         dev = op.get("device")
         if not dev or not actor.can_see_device(dev):
@@ -759,6 +768,7 @@ class RecoveryContext:
     protected_flows_healthy: bool
     rollback_ready: bool
     scope_executions: tuple[datetime, ...] = ()   # executions of predecessor policies for the same scope (cooldown only)
+    observed_oper_state: str | None = None        # live operational state; None == not read (legacy callers)
 
 
 def evaluate_recovery_policy(policy: RecoveryPolicy | None, op: dict, ctx: RecoveryContext, *, risk: str) -> dict[str, Any]:
@@ -802,7 +812,15 @@ def evaluate_recovery_policy(policy: RecoveryPolicy | None, op: dict, ctx: Recov
     if not ctx.rollback_ready:
         reasons.append("ROLLBACK_NOT_READY")
     wanted = {"admin_up": "up", "admin_down": "down"}.get(str(op.get("intended_state")))
-    noop = ctx.observed_admin_state is not None and wanted is not None and str(ctx.observed_admin_state).lower() == wanted
+    admin = str(ctx.observed_admin_state).lower() if ctx.observed_admin_state is not None else None
+    oper = str(ctx.observed_oper_state).lower() if ctx.observed_oper_state is not None else None
+    if admin == "down" and oper == "up":
+        reasons.append("CONTRADICTORY_EVIDENCE")              # configured shutdown yet carrying traffic: never act on it
+    if wanted == "up" and admin == "up" and oper == "down":
+        # administratively already UP but operationally DOWN: enabling cannot help (physical / peer / flapping fault).
+        # This is a refusal, not an idempotent no-op: the service is NOT healthy.
+        reasons.append("INEFFECTIVE_OPERATION_ADMIN_UP_OPER_DOWN")
+    noop = admin is not None and wanted is not None and admin == wanted and oper != "down"
     if ctx.observed_admin_state is None:
         reasons.append("OBSERVED_STATE_UNAVAILABLE")
     return {"authorized": not reasons and not noop, "noop": noop and not reasons, "authorization_type": AUTOMATED_RECOVERY,

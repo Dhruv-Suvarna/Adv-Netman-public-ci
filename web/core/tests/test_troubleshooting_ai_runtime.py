@@ -45,6 +45,23 @@ class CountingRunner(air.RuntimeDiagnosticRunner):
     pass
 
 
+class OperationalDownRunner:
+    read_only_tests = frozenset({"HC04"})
+
+    def __init__(self):
+        self.executed = []
+
+    def catalog(self):
+        return [{"test_id": "HC04"}]
+
+    def run(self, test_id, target, params):
+        self.executed.append((test_id, target, dict(params)))
+        return {"test_id": test_id, "test_version": "1", "target": target,
+                "expected": "read-only Layer-1 evidence", "verdict": "INCONCLUSIVE",
+                "reason": "fixture worker returned no optic discriminator", "observed_summary": "fixture worker reached",
+                "evidence_ids": [], "executed_at": T0.isoformat()}
+
+
 class Base(TestCase):
     def setUp(self):
         self.tr = Transport(OUT)
@@ -146,3 +163,15 @@ class ContinuationTests(Base):
                                 {"action": "conclude", "conclude": {"outcome": "INCONCLUSIVE", "summary": "no usable test available"}}]))
         self.assertEqual(self.runner.executed, [])
         self.assertEqual(res.status, air.ST_ESCALATED)
+
+    def test_operational_down_runs_one_idempotent_worker_test_before_model(self):
+        self.case.service_intent = {**self.case.service_intent, "fault_category": "OPERATIONAL_LINK_DOWN"}
+        self.case.save(update_fields=["service_intent"])
+        runner = OperationalDownRunner()
+        prov = Provider([{"action": "conclude", "conclude": {"outcome": "INCONCLUSIVE", "summary": "physical cause remains uncertain"}}])
+        result = self.go(prov, runner=runner)
+        self.assertEqual(result.status, air.ST_ESCALATED)
+        self.assertEqual(runner.executed, [("HC04", "R1", FORCE)])
+        self.assertEqual(m.TsDiagnosticTest.objects.filter(case=self.case, test_id="HC04").count(), 1)
+        checkpoint = m.TsAIHandoff.objects.get(pk=self.h.pk).checkpoint
+        self.assertIn(f"system-op-down-hc04-{self.h.record_id}", checkpoint["results"])

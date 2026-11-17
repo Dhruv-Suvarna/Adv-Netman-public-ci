@@ -236,12 +236,18 @@ def recover(plan_id: str, *, deps: RecoveryDeps | None = None, policy_file: str 
         gov._set_status(actor, plan, "BLOCKED", f"{code}: {', '.join(reasons)}"[:250], now=deps.now())
         repo.audit(actor, case, "AUTOMATED_RECOVERY_REFUSED", decision=code, result="REFUSED", risk=plan.risk, operation=plan.record_id,
                    rationale="; ".join(reasons)[:900], evidence_ids=plan.evidence_ids, now=deps.now())
+        ineffective = any(r.startswith(("INEFFECTIVE", "CONTRADICTORY")) for r in reasons)
+        repo.audit(actor, case, "REMEDIATION_DECISION", decision=f"{'DIAGNOSE_AND_ESCALATE' if ineffective else 'PROPOSE_FOR_APPROVAL'} {code}"[:255],
+                   result="DIAGNOSE_AND_ESCALATE" if ineffective else "PROPOSE_FOR_APPROVAL", operation=plan.record_id,
+                   rationale=json.dumps({"stage": "policy-recovery", "denied": reasons, "policy_id": pol.id})[:3000],
+                   evidence_ids=plan.evidence_ids, now=deps.now())
         summary.update(result="REFUSED", code=code, reasons=reasons, **extra)
         deps.notify(f"[NMAS] Automated recovery REFUSED for {case.case_id} ({device} {iface})",
                     f"Policy {pol.id} refused plan {plan.record_id}: {code}\nReasons: {', '.join(reasons)}\nA human must review the case.\n")
         return summary
 
     def facts(snapshot, line, *, rollback_ready: bool) -> gov.RecoveryContext:
+        oper = deps.oper_state(raw, iface) if snapshot is not None else None
         intents = deps.intent(device) or {}
         intended = {"up": "admin_up", "down": "admin_down"}.get(intents.get(iface, ""))
         return gov.RecoveryContext(
@@ -250,7 +256,7 @@ def recover(plan_id: str, *, deps: RecoveryDeps | None = None, policy_file: str 
             observed_at=snapshot.captured_at if snapshot is not None else None,
             maintenance_active=bool(eligibility._maintenance_conflicts([device])), conflicting_change=_conflicting_change(device),
             management_path_healthy=snapshot is not None, protected_flows_healthy=deps.flows(raw.get("protected_flows") or []),
-            rollback_ready=rollback_ready, scope_executions=scope_executions(raw, policies))
+            rollback_ready=rollback_ready, scope_executions=scope_executions(raw, policies), observed_oper_state=oper)
 
     # 1. fresh evidence through the management path; first evaluation (rollback readiness is proven in step 2)
     snapshot, error = deps.snapshot(device, actor_name)
@@ -421,6 +427,53 @@ def pending_plans() -> list[str]:
         if len(ops) == 1 and isinstance(ops[0], dict) and policy_for(ops[0], policies):
             out.append(plan.record_id)
     return out
+
+
+def undecided_plans(*, now: datetime | None = None, policy_file: str | None = None) -> list[str]:
+    """Fresh RISK_ASSESSED plans that NO active standing policy covers and that have no recorded remediation decision yet.
+    They are never executed; each gets one explicit PROPOSE_FOR_APPROVAL decision instead of being silently ignored."""
+    now = now or datetime.now(timezone.utc)
+    policies = load_policies(policy_file)
+    out = []
+    for plan in models.TsRemediationPlan.objects.filter(status="RISK_ASSESSED", created_at__gte=now - timedelta(hours=1)).order_by("created_at"):
+        ops = [o for o in (plan.operations or []) if isinstance(o, dict)]
+        raw = policy_for(ops[0], policies) if len(ops) == 1 else None
+        if raw is not None and policy_active(raw, now):
+            continue                                               # pending_plans()/recover() own it
+        if models.TsAuditEvent.objects.filter(case=plan.case, action="REMEDIATION_DECISION", operation=plan.record_id).exists():
+            continue
+        out.append(plan.record_id)
+    return out
+
+
+def record_plan_decision(plan_id: str, *, now: datetime | None = None, policy_file: str | None = None,
+                         send: Callable[[str, str], Any] | None = None) -> dict:
+    """Record why a proposal cannot run unattended (PROPOSE_FOR_APPROVAL).  Nothing is changed on any device or plan."""
+    now = now or datetime.now(timezone.utc)
+    plan = models.TsRemediationPlan.objects.select_related("case").get(record_id=plan_id)
+    policies = load_policies(policy_file)
+    ops = [o for o in (plan.operations or []) if isinstance(o, dict)]
+    denied = []
+    if len(ops) != 1:
+        denied.append(f"MULTI_OPERATION_PLAN: {len(ops)} operations; a standing policy covers exactly one")
+    for op in ops:
+        kind, target = op.get("kind"), f"{op.get('device')} {op.get('interface') or ''}".strip()
+        raw = policy_for(op, policies)
+        if kind not in gov.RECOVERY_OPERATIONS:
+            denied.append(f"NOT_PREAUTHORIZABLE: {kind} on {target} can never be covered by a standing policy")
+        elif raw is None:
+            denied.append(f"NO_STANDING_POLICY: no policy authorizes {kind} on {target}")
+        elif not policy_active(raw, now):
+            denied.append(f"POLICY_NOT_ACTIVE: {raw.get('id')} (expired, revoked or disabled)")
+    actor = repo.Actor("nmas-recovery-governance", "system", tenant=plan.case.tenant, devices=frozenset(repo._case_devices(plan.case)))  # pylint: disable=protected-access
+    decision = {"outcome": "PROPOSE_FOR_APPROVAL", "plan": plan.record_id, "risk": plan.risk, "operations": ops, "denied": denied}
+    repo.audit(actor, plan.case, "REMEDIATION_DECISION", decision=f"PROPOSE_FOR_APPROVAL plan {plan.record_id}"[:255],
+               result="PROPOSE_FOR_APPROVAL", risk=plan.risk, operation=plan.record_id,
+               rationale=json.dumps({"stage": "proposal-governance", "denied": denied})[:3000], evidence_ids=plan.evidence_ids, now=now)
+    (send or notify.send)(f"[NMAS] {plan.case.case_id}: proposal {plan.record_id} needs human approval",
+                          f"Plan {plan.record_id} ({plan.risk}) was proposed but cannot run unattended:\n  - " + "\n  - ".join(denied or ["-"])
+                          + "\nIt stays RISK_ASSESSED for review; nothing was executed.\n")
+    return decision
 
 
 # ------------------------------------------------------------------------------------------------- operations / restart safety

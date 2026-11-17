@@ -149,7 +149,7 @@ class NmasSshExecutor:
         if current.pk != path.pk or current.version != path.version:
             raise IpcRefused("MANAGEMENT_PATH_CHANGED")
         try:
-            username, methods = probes.auth_material(current)
+            username, methods = _diagnostic_auth_material(current)
         except probes.CredentialUnavailable as exc:
             raise IpcRefused("CREDENTIAL_BROKER_UNAVAILABLE", type(exc).__name__) from exc
         report = probes.ProbeReport(path_id=current.path_id)
@@ -179,6 +179,47 @@ class NmasSshExecutor:
         endpoint_hash = hashlib.sha256(f"{current.endpoint_address}:{current.port}".encode()).hexdigest()[:24]
         return raw, {"path_id": current.path_id, "path_version": current.version, "endpoint_hash": endpoint_hash,
                      "host_key_verified": bool(report.presented_host_key), "bytes": size}
+
+
+def _diagnostic_auth_material(path, *, credential_lookup=None, provider=None) -> tuple[str, list[dict]]:
+    """Resolve a device's dedicated read-only diagnostic identity when one is enrolled.
+
+    The approved ManagementPath remains the endpoint/identity authority.  A
+    ``nmas-diag`` row may narrow only the SSH login used by this isolated
+    worker; it cannot change the path, endpoint, host-key pin, target policy or
+    command catalogue.  If no dedicated row exists, the existing path
+    credential behavior is preserved (currently R2).  If a row exists but is
+    not the exact least-privileged contract, fail closed rather than falling
+    back to a write-capable credential.
+    """
+    from core import models
+    from core.services.management import probes
+    from modules.device_credentials import FileSecretProvider, SecretProviderError
+
+    lookup = credential_lookup or (
+        lambda device: models.DeviceCredential.objects.filter(device_name=device, username="nmas-diag").first()
+    )
+    credential = lookup(path.device.name)
+    if credential is None:
+        return probes.auth_material(path)
+    valid = (
+        credential.account_kind == models.AccountKind.SERVICE
+        and credential.auth_method == models.DeviceAuthMethod.PASSWORD
+        and credential.account_role == "network-operator"
+        and credential.privilege_level == 1
+        and credential.secret_ref == f"runtime://device-credentials/{path.device.name.lower()}-nmas-diag"
+        and not credential.ssh_key_ref
+    )
+    if not valid:
+        raise probes.CredentialUnavailable("dedicated diagnostic credential metadata is invalid")
+    try:
+        source = provider or FileSecretProvider()
+        methods = [{"password": item.value} for item in source.candidates(credential.secret_ref)]
+    except (SecretProviderError, OSError, ValueError) as exc:
+        raise probes.CredentialUnavailable(type(exc).__name__) from None
+    if not methods:
+        raise probes.CredentialUnavailable("dedicated diagnostic credential material is absent")
+    return credential.username, methods
 
 
 class DiagnosticHandler:

@@ -119,7 +119,18 @@ def build_request(context: dict, *, identity: dict, catalog: list[dict], seq: in
                             "proximity alone is not causation, and a state that conflicts with current intent is corrected toward intent, "
                             "not by rolling back an earlier change. Workflow: when a root cause is supported and a registered corrective operation "
                             "applies, call propose_remediation BEFORE submit_investigation_result; a conclusion without a proposal leaves the "
-                            "incident unremediated for a human. Proposing never executes anything: NMAS governance decides."),
+                            "incident unremediated for a human. Proposing never executes anything: NMAS governance decides. "
+                            "Fault discrimination: administrative DOWN (configured shutdown), operational DOWN with admin UP (no carrier: "
+                            "medium, optic, peer, negotiation), repeated link transitions (flapping), error/discard degradation, routing "
+                            "adjacency failure and route/reachability failure are different faults. Reason in order: define the symptom, "
+                            "establish the affected scope, form competing evidence-backed hypotheses, test them, name the most likely "
+                            "fault domain, then decide whether a registered corrective operation is supported by the evidence. An "
+                            "administrative enable corrects ONLY an interface observed administratively down; never propose it for an "
+                            "interface that is administratively up, and never propose interface bounce/shutdown, routing, neighbor or "
+                            "process changes speculatively. A context.deterministic_classification or a 'Deterministic pre-classification' "
+                            "in the uncertainty is NMAS's model-free reading of the evidence: confirm or refute it with live tests. When no "
+                            "safe registered correction applies, do not invent a change: submit an evidence-backed escalation (fault domain, "
+                            "evidence ids, what was ruled out, what remains uncertain); NMAS records it as safe non-remediation."),
            "tools": tools, "diagnostic_tests": catalog, "context": context,
            "response_schema": {"action": "tool|conclude", "tool": "str", "args": "dict", "why_informative": "str", "rationale": "str",
                                "hypotheses": "list[{title,domain,supporting,contradicting,confidence: number 0..1}]",
@@ -341,6 +352,31 @@ def continue_handoff(actor: repo.Actor, handoff_id: str, *, provider: Any = None
     ai_rt = ai.Runtime(runner=runner, research=research_broker, clock=clock_fn, fencing_token=fencing_token,
                        lease_validator=lease_validator)
     ag = ai.agent_actor(h)
+
+    # An operational-down incident must not let a fast model conclusion bypass
+    # the restricted device worker.  Perform one exact, registered, read-only
+    # Layer-1 test under the same handoff, scope, budget and fencing token before
+    # the first model turn.  The deterministic nonce makes dispatcher retries
+    # replay the stored result instead of touching the device twice.  Failure is
+    # evidence (and remains safe); it never falls back to a privileged transport.
+    fault_category = str((h.case.service_intent or {}).get("fault_category") or "")
+    if (fault_category == "OPERATIONAL_LINK_DOWN" and "request_diagnostic_test" in h.allowed_tools
+            and "HC04" in set(getattr(runner, "read_only_tests", ())) and h.allowed_targets):
+        target = h.allowed_targets[0]
+        ai.call_tool(
+            ag,
+            h.record_id,
+            "request_diagnostic_test",
+            {
+                "test_id": "HC04",
+                "target": target,
+                "params": {"force_refresh": True},
+                "why": "Collect current Layer-1 evidence through the restricted worker before diagnosing an operational-down incident.",
+            },
+            nonce=f"system-op-down-hc04-{h.record_id}",
+            rt=ai_rt,
+            now=clock_fn(),
+        )
     state = {"seq": 0}
     max_model = h.budget["max_iterations"] + h.budget["max_model_retries"] * 2
 

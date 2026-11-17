@@ -16,7 +16,7 @@ from unittest.mock import patch
 from django.test import SimpleTestCase
 
 from core.services.troubleshooting.diagnostic_worker import (
-    DIAGNOSTIC_SCHEMA, DiagnosticCliTransport, DiagnosticHandler,
+    DIAGNOSTIC_SCHEMA, DiagnosticCliTransport, DiagnosticHandler, _diagnostic_auth_material,
 )
 from core.services.troubleshooting.research import ResearchBroker, ResearchRefused
 from core.services.troubleshooting.research_worker import RESEARCH_SCHEMA, ResearchHandler, ResearchWorkerClient
@@ -190,6 +190,26 @@ class DiagnosticWorkerTests(SimpleTestCase):
             transport.execute_operation("version", {}, "show running-config")
         with self.assertRaises(IpcRefused):
             transport.execute_operation("running_config", {}, "show running-config")
+
+    def test_dedicated_diagnostic_identity_is_exact_and_fail_closed(self):
+        path = self.path()
+        credential = SimpleNamespace(
+            username="nmas-diag", account_kind="SERVICE", auth_method="PASSWORD",
+            account_role="network-operator", privilege_level=1,
+            secret_ref="runtime://device-credentials/r6-nmas-diag", ssh_key_ref="",
+        )
+        provider = SimpleNamespace(candidates=lambda _ref: (SimpleNamespace(value="fixture-only"),))
+        username, methods = _diagnostic_auth_material(path, credential_lookup=lambda _device: credential, provider=provider)
+        self.assertEqual(username, "nmas-diag")
+        self.assertEqual(methods, [{"password": "fixture-only"}])
+
+        for field, value in (("account_role", "network-admin"), ("privilege_level", 15),
+                             ("secret_ref", "runtime://device-credentials/r2-nmas-diag")):
+            invalid = SimpleNamespace(**vars(credential))
+            setattr(invalid, field, value)
+            with self.assertRaises(Exception) as caught:
+                _diagnostic_auth_material(path, credential_lookup=lambda _device, row=invalid: row, provider=provider)
+            self.assertEqual(type(caught.exception).__name__, "CredentialUnavailable")
 
 
 class ResearchWorkerTests(SimpleTestCase):

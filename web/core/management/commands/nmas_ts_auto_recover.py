@@ -47,6 +47,11 @@ class Command(BaseCommand):
                         self.stderr.write(f"{plan_id}: {recovery.fail_closed(plan_id, f'{type(exc).__name__}: {exc}')}")
                     except Exception as inner:  # noqa: BLE001
                         self.stderr.write(f"{plan_id}: fail_closed error {type(inner).__name__}: {inner}")
+            for plan_id in recovery.undecided_plans():
+                try:
+                    self.stdout.write(f"{plan_id}: decision {recovery.record_plan_decision(plan_id)['outcome']}")
+                except Exception as exc:  # noqa: BLE001 - recording a decision never stops the watcher
+                    self.stderr.write(f"{plan_id}: decision error {type(exc).__name__}: {exc}")
             self.stdout.flush()
             if not opts["watch"]:
                 return
