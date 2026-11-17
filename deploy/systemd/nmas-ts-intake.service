@@ -1,0 +1,19 @@
+[Unit]
+Description=NMAS Troubleshooter automatic incident intake (monitoring -> case -> Codex dispatch; read-only)
+After=network-online.target nmas-web.service
+StartLimitBurst=5
+StartLimitIntervalSec=300
+
+[Service]
+Type=simple
+User=student
+Group=student
+EnvironmentFile=/etc/nmas/nmas-web.env
+WorkingDirectory=/home/student/Scripts/clab_dualstack_lab-deploy/web
+ExecStart=/home/student/Scripts/.venv/bin/python manage.py nmas_ts_intake --watch --interval 10
+Restart=always
+RestartSec=5
+NoNewPrivileges=yes
+
+[Install]
+WantedBy=multi-user.target
