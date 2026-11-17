@@ -354,3 +354,16 @@ NMAS_CONFIGURATION_VALIDATION_ENABLED = True
 NMAS_GITHUB_REPOSITORY = os.environ.get("NMAS_GITHUB_REPOSITORY", "").strip() or "Dhruv-Suvarna/Adv-Netman"
 NMAS_GITHUB_API_URL = "https://api.github.com"
 NMAS_GITHUB_TOKEN_ENV = "NMAS_GITHUB_TOKEN"
+
+# Outbound mail relay for notifications, from the protected environment file only (never source).
+EMAIL_HOST = os.environ.get("EMAIL_HOST", "localhost")
+EMAIL_PORT = int(os.environ.get("EMAIL_PORT", "25"))
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", "")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "")
+EMAIL_USE_TLS = os.environ.get("EMAIL_USE_TLS", "0") == "1"
+EMAIL_TIMEOUT = 10
+DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL", "nmas@localhost")
+# Standing PREAUTHORIZED_AUTOMATED_RECOVERY policies (owner-created JSON; absent == disabled).
+NMAS_TS_RECOVERY_POLICY_FILE = os.environ.get("NMAS_TS_RECOVERY_POLICY_FILE", "")
+# Engineer issue notification (core.services.troubleshooting.notify): comma-separated recipients, kept out of source.
+NMAS_TS_ALERT_EMAILS = tuple(a.strip() for a in os.environ.get("NMAS_TS_ALERT_EMAILS", "").split(",") if a.strip())
