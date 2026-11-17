@@ -9,6 +9,7 @@ only ever read interactively through getpass and stored as Django password hashe
 
 import getpass
 
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group, Permission
 from django.contrib.auth.password_validation import validate_password
@@ -26,11 +27,16 @@ class Command(BaseCommand):
         parser.add_argument("--username", required=True)
         parser.add_argument("--role", action="append", default=[], choices=sorted(policy.ROLE_PERMISSIONS))
         parser.add_argument("--all-roles", action="store_true")
+        parser.add_argument("--troubleshooter-role", choices=("ts-viewer", "ts-operator", "ts-approver", "ts-admin"),
+                            help="Assign one Troubleshooter role; this does not grant NMAS action permissions.")
+        parser.add_argument("--troubleshooter-tenant", default="",
+                            help="Troubleshooter tenant/project scope (defaults to the deployment tenant).")
         parser.add_argument("--create", action="store_true", help="Create the user if missing (prompts for a password).")
         parser.add_argument("--staff", action="store_true", help="Also allow Django admin access (is_staff).")
         parser.add_argument("--set-password", action="store_true", help="Prompt for a new password.")
 
-    def handle(self, *args, username, role, all_roles, create, staff, set_password, **options):
+    def handle(self, *args, username, role, all_roles, troubleshooter_role, troubleshooter_tenant,
+               create, staff, set_password, **options):
         User = get_user_model()
         user = User.objects.filter(username=username).first()
         if user is None and not create:
@@ -51,11 +57,22 @@ class Command(BaseCommand):
             codenames = [a.value for a in policy.ROLE_PERMISSIONS[name]]
             group.permissions.add(*Permission.objects.filter(content_type__app_label="core", codename__in=codenames))
             user.groups.add(group)
+        ts_groups = []
+        if troubleshooter_role:
+            tenant = (troubleshooter_tenant or getattr(settings, "NMAS_TS_TENANT", "default")).strip()
+            allowed = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_.-"
+            if not tenant or len(tenant) > 64 or any(ch not in allowed for ch in tenant):
+                raise CommandError("Troubleshooter tenant must contain only letters, digits, dot, underscore or hyphen.")
+            ts_groups = [troubleshooter_role, f"ts-tenant:{tenant}"]
+            for name in ts_groups:
+                user.groups.add(Group.objects.get_or_create(name=name)[0])
         audit.record(AuditEventType.WEB_ACTION, f"NMAS roles granted to {username} (console)", actor="nmas-console-admin",
                      outcome=audit.OUTCOME_SUCCESS, object_type="User", object_id=str(user.pk),
                      metadata={"category": "security_admin", "target_username": username, "roles": roles,
+                               "troubleshooter_groups": ts_groups,
                                "created": created, "staff": user.is_staff, "path": "management_command"})
-        self.stdout.write(f"{'Created' if created else 'Updated'} {username}; roles: {', '.join(roles) or '(unchanged)'}.")
+        assigned = [*roles, *ts_groups]
+        self.stdout.write(f"{'Created' if created else 'Updated'} {username}; roles: {', '.join(assigned) or '(unchanged)'}.")
 
     def _prompt_password(self, user) -> str:
         for _ in range(3):

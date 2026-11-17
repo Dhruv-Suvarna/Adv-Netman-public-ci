@@ -142,3 +142,23 @@ class ButtonGatingTests(TestCase):
                                                    {"reason": "approve without permission", "acknowledgements": ["x"]})
         self.assertEqual(ctx.exception.code, "ACTION_DISABLED")
         self.assertEqual(m.TsRemediationPlan.objects.get(pk=self.plan.pk).status, "DRY_RUN_PASS")
+
+
+class DispositionRenderingTests(TestCase):
+    """Campaign 017 regression: intake closes a non-remediated case with a disposition that has an ``outcome`` but neither
+    ``why`` nor ``reason``.  ``{{ x.why|default:x.reason }}`` raises VariableDoesNotExist for a missing FILTER ARGUMENT, so the
+    case page returned HTTP 500 for every such case (TS-20261117-73612A0C/-DE55BBB8/-DFBE1EB8)."""
+
+    def test_TSACC_030_safe_non_remediation_disposition_without_reason_renders(self):
+        case = make_case(actor=repo.Actor("alice", "user", tenant="acme"))
+        seed_deterministic(case)
+        case.disposition = {"outcome": "SAFE_NON_REMEDIATION", "remediation_decision": "DIAGNOSE_AND_ESCALATE",
+                            "fault_category": "OPERATIONAL_LINK_DOWN", "cleared_externally": True, "nmas_performed_repair": False}
+        case.save(update_fields=["disposition"])
+        ts_sign_in(self.client, ts_user("viewer", "ts-admin", "ts-tenant:acme"))
+        page = self.client.get(f"/troubleshooting/{case.case_id}/")
+        self.assertEqual(page.status_code, 200)
+        self.assertIn(b"SAFE_NON_REMEDIATION", page.content)
+        case.disposition = {**case.disposition, "reason": "fault cleared externally"}
+        case.save(update_fields=["disposition"])
+        self.assertIn(b"fault cleared externally", self.client.get(f"/troubleshooting/{case.case_id}/").content)

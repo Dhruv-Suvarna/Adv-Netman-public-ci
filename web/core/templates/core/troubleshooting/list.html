@@ -1,0 +1,56 @@
+{% extends "core/base.html" %}
+{% block title %}{{ page_title }}{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>Troubleshooting cases</h1>
+  <p><a href="{% url 'core:automation_landing' %}">&larr; Automation</a></p>
+  <p>Evidence-first incident cases. Stage and outcome reflect recorded facts only; a case is "resolved" only after service-specific verification.</p>
+  {% if can_open %}<p><a href="{% url 'core:troubleshooting_intake' %}">Open a new case</a></p>{% endif %}
+</div>
+<div class="card">
+  <h2>Operational status</h2>
+  <p>Admission binding: <strong>{{ operations.admission_binding }}</strong> &middot; eligible diagnostic paths:
+     <strong>{{ operations.eligible_management_paths }}</strong></p>
+  <p>Diagnostic worker service: <strong>{{ operations.diagnostic.service }}</strong> ({{ operations.diagnostic.reason }}) &middot;
+     Research worker service: <strong>{{ operations.research.service }}</strong>.</p>
+  <p>Global AI lease: <strong>{{ operations.lease.state }}</strong>{% if operations.lease.active_agent %}, active agent
+     {{ operations.lease.active_agent }}, fence {{ operations.lease.fencing_token }}{% endif %}.</p>
+  {% if operations.lease.pause_reason %}<p><strong>AI work is safely paused:</strong> {{ operations.lease.pause_reason }}. Checkpoints are preserved, no agent holds tool authority, and deterministic diagnostics remain available.</p>{% endif %}
+  <p>AI provider policy: <strong>{{ operations.provider_pool|join:", "|default:"none" }}</strong> ({{ operations.failover }}).</p>
+  <ul>{% for agent in operations.agents %}<li>{{ agent.name }}: <strong>{{ agent.status }}</strong>{% if agent.enabled %} (service {{ agent.service }}, socket {{ agent.state }}){% endif %}</li>{% endfor %}</ul>
+  {% if operations.ai_prerequisite %}<p><strong>AI escalation is blocked:</strong> {{ operations.ai_prerequisite }}.</p>{% endif %}
+  <p><small>Service state is systemd's answer for each fixed NMAS worker unit. Worker sockets are private to their IPC groups, so a socket the website cannot inspect is shown as STATUS_UNAVAILABLE. Neither value implies provider quota or a successful model call.</small></p>
+  <h3>Agent lease and handoff history</h3>
+  <table class="data-table"><caption class="sr-only">Global agent lease history</caption>
+    <thead><tr><th scope="col">When</th><th scope="col">Event</th><th scope="col">From</th><th scope="col">To</th><th scope="col">Fence</th><th scope="col">Handoff</th><th scope="col">Reason</th></tr></thead>
+    <tbody>{% for e in operations.lease.history %}<tr><td>{{ e.at }}</td><td>{{ e.event }}</td><td>{{ e.from }}</td><td>{{ e.to }}</td><td>{{ e.fence }}</td><td>{{ e.handoff }}</td><td>{{ e.reason }}</td></tr>
+    {% empty %}<tr><td colspan="7">No agent has held the global lease.</td></tr>{% endfor %}</tbody></table>
+  <h3>Fault-recovery campaigns</h3>
+  {% for campaign in operations.fault_campaigns %}<p>{{ campaign.id }}: {{ campaign.state }}</p>
+  {% empty %}<p>No live fault-recovery campaign has been authorized or run. Fixture simulations are not production evidence and are not listed.</p>{% endfor %}
+</div>
+<form method="get" class="card" role="search" aria-label="Filter cases">
+  <label for="q">Search</label> <input id="q" name="q" value="{{ q }}">
+  <label for="state">State</label>
+  <select id="state" name="state"><option value="">any</option>{% for v, l in states %}<option value="{{ v }}">{{ l }}</option>{% endfor %}</select>
+  <label for="device">Device</label> <input id="device" name="device">
+  <button type="submit">Filter</button>
+</form>
+<div class="card">
+  <h2>Metrics</h2>
+  <p>MTTD: {{ metrics.mttd_seconds|default:"n/a" }}s &middot; MTTI: {{ metrics.mtti_seconds|default:"n/a" }}s &middot;
+     MTTR: {{ metrics.mttr_seconds|default:"n/a" }}s (verified-resolved only, n={{ metrics.mttr_sample }}); {{ metrics.censored_unresolved_or_open }} open/unresolved case(s) excluded.</p>
+</div>
+<div class="card">
+  <table class="data-table">
+    <caption class="sr-only">Troubleshooting cases</caption>
+    <thead><tr><th scope="col">Case</th><th scope="col">Title</th><th scope="col">Stage</th><th scope="col">Severity</th><th scope="col">Devices</th><th scope="col">Outcome</th><th scope="col">Opened</th></tr></thead>
+    <tbody>
+    {% for c in cases %}
+      <tr><td><a href="{% url 'core:troubleshooting_detail' case_id=c.case_id %}">{{ c.case_id }}</a></td><td>{{ c.title }}</td><td>{{ c.stage }}</td>
+          <td>{{ c.severity }}</td><td>{{ c.devices|join:", " }}</td><td>{{ c.outcome|default:"—" }}</td><td>{{ c.opened_at }}</td></tr>
+    {% empty %}<tr><td colspan="7">No cases in your scope.</td></tr>{% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

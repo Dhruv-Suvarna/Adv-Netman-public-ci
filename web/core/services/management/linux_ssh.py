@@ -54,9 +54,16 @@ def command_line(argv, username: str) -> str:
 class LinuxSession:
     """One open SSH connection; ``run(argv, timeout) -> (exit status, stdout)``."""
 
-    def __init__(self, client, username: str):
+    def __init__(self, client, username: str, host_key: str = ""):
         self._client = client
         self.username = username
+        # Provenance: the fingerprint the peer actually presented, set only by ``connect_found`` after it matched the pin.
+        # Sessions built any other way carry no host-key evidence (never invented).
+        self.host_key = host_key
+
+    @property
+    def host_key_pinned(self) -> bool:
+        return bool(self.host_key)
 
     def run(self, argv, timeout: float) -> tuple[int, str]:
         command = command_line(argv, self.username)
@@ -98,13 +105,20 @@ def target(device_name: str, *, purpose: str = "WRITE") -> dict:
 
 def connect(device_name: str, *, timeout: float, purpose: str = "WRITE") -> LinuxSession:
     """Open an authorized session to ``device_name`` (see the module docstring)."""
+    return connect_found(target(device_name, purpose=purpose), timeout=timeout, observe_host_key=False)
+
+
+def connect_found(found: dict, *, timeout: float, observe_host_key: bool = True) -> LinuxSession:
+    """Open the session for an already resolved ``target()`` result.
+
+    With ``observe_host_key`` the key the peer actually presented is re-read from the live transport, must equal the pin, and is
+    exposed as ``LinuxSession.host_key`` / ``host_key_pinned`` (read-only observation).  Without it the session carries no
+    host-key evidence (the executors' behaviour, unchanged)."""
     import paramiko
 
     from . import probes
 
-    found = target(device_name, purpose=purpose)          # importing nsot_live first puts the repository root on sys.path
     from modules.device_credentials import SecretProviderError, load_ssh_private_key  # pylint: disable=import-outside-toplevel
-
 
     try:
         key = load_ssh_private_key(found["ssh_key_ref"])
@@ -122,6 +136,12 @@ def connect(device_name: str, *, timeout: float, purpose: str = "WRITE") -> Linu
     try:
         client.connect(found["address"], port=found["port"], username=found["username"], pkey=key, timeout=timeout,
                        banner_timeout=timeout, auth_timeout=timeout, allow_agent=False, look_for_keys=False)
+        presented = ""
+        if observe_host_key:
+            transport = client.get_transport()
+            presented = probes.fingerprint(transport.get_remote_server_key()) if transport is not None else ""
+            if presented != expected:
+                raise paramiko.SSHException("HOST_KEY_MISMATCH")
     except paramiko.AuthenticationException as exc:
         client.close()
         raise ExecutorError("AUTH_FAILED") from exc
@@ -131,4 +151,4 @@ def connect(device_name: str, *, timeout: float, purpose: str = "WRITE") -> Linu
     except (paramiko.SSHException, OSError, EOFError) as exc:          # includes HOST_KEY_MISMATCH
         client.close()
         raise ExecutorError("CONNECTION_FAILED") from exc
-    return LinuxSession(client, found["username"])
+    return LinuxSession(client, found["username"], host_key=presented)

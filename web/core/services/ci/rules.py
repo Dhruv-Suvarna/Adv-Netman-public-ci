@@ -66,6 +66,7 @@ SUBSYSTEM_LIST = (
     Subsystem("management_vrf", "management VRF intent, per-platform rendering, validation, Configlets, cEOS execution inverse and import", SOURCE),
     Subsystem("device_secrets", "protected runtime device-secret provider consumed by every device session", SOURCE),
     Subsystem("credentials", "managed-device credential metadata, rotation policy / engine / scheduler and device-login 2FA policy", SOURCE),
+    Subsystem("troubleshooting", "evidence-driven troubleshooting: case/evidence store, collectors, normalization, baselines, correlation, runbooks RB01-RB07 / HC01-HC28, NMAS-governed AI, remediation governance, verification, reports and API", SOURCE),
     Subsystem("identity_security", "NMAS website authentication / RBAC / website MFA / request audit middleware", SOURCE),
     Subsystem("capability_framework", "capability evidence framework (aggregation over the capability registries + empirical evidence)", SOURCE),
     Subsystem("web_deployment", "website hosting templates: Gunicorn / systemd / Apache / cloudflared (website only)", SOURCE),
@@ -109,9 +110,13 @@ def _svc(*names: str) -> tuple[str, ...]:
 
 
 PATH_RULES: tuple[PathRule, ...] = (
+    PathRule("troubleshooting", (f"{_SVC}/troubleshooting/**", "web/core/troubleshooting_views.py", "web/core/troubleshooting_urls.py",
+                                 "web/core/templates/core/troubleshooting/**", "web/core/management/commands/troubleshooting_*.py",
+                                 "web/core/tests/fixtures/troubleshooting_collectors/**", "web/core/tests/fixtures/troubleshooting_runbooks/**",
+                                 "break.py")),
     PathRule("models_schema", ("web/core/models.py",)),
     PathRule("migrations", ("web/core/migrations/**",)),
-    PathRule("shared_core", ("web/core/__init__.py", "web/core/apps.py", *_svc("__init__", "base", "secret_policy"))),
+    PathRule("shared_core", ("web/core/__init__.py", "web/core/apps.py", "web/core/checks.py", *_svc("__init__", "base", "secret_policy"))),
     PathRule("django_project", ("web/config/**", "web/manage.py")),
     PathRule("dependencies", ("requirements.txt", "monitoring/requirements.txt", "web/requirements.txt")),
     PathRule("control_plane", _svc("change_service", "intent_service", "lifecycle_service")),
@@ -147,7 +152,11 @@ PATH_RULES: tuple[PathRule, ...] = (
                               # PR #69 live acceptance: the NMAS-active managed scope against a disposable NetBox
                               "web/core/tests/live_managed_scope_fixture.py", "labs/managed-scope-isolated/**",
                               "docs/evidence/pr69-managed-scope/**")),
-    PathRule("device_lifecycle", (f"{_SVC}/devices/**", "web/core/lifecycle_views.py", "web/core/management/commands/nmas_devices.py")),
+    PathRule("device_lifecycle", (f"{_SVC}/devices/**", "web/core/lifecycle_views.py", "web/core/management/commands/nmas_devices.py",
+                                  # authenticated read-only observations, their authorizations, pin evidence and inventory reconciliation
+                                  "web/core/management/commands/device_observe.py", "web/core/management/commands/observation_authorize.py",
+                                  "web/core/management/commands/host_key_pin_check.py",
+                                  "web/core/management/commands/nmas_reconcile_inventory.py")),
     PathRule("device_ztp", (f"{_SVC}/ztp/**", "web/core/ztp_views.py", "web/core/management/commands/nmas_ztp.py",
                             "web/core/templates/core/provisioning/_ztp_panel.html", "web/core/templates/core/provisioning/ztp_networks.html",
                             "labs/ztp-isolated/**", "web/core/tests/fixtures/ztp/**", "docs/evidence/v2-phase3-ztp/**",
@@ -414,6 +423,14 @@ IMPACT_EDGES: tuple[Edge, ...] = (
     Edge("probation_soak", "challenge_console", "the console reports soak collector freshness and eligibility with the soak overview's own rules"),
     Edge("health", "challenge_console", "the console classifies telemetry freshness with the health engine's thresholds"),
     Edge("lab_config", "challenge_console", "the probed endpoints and the managed-device list are read from the tracked inventory"),
+    Edge("models_schema", "troubleshooting", "Ts* case / evidence / journal / remediation records are model-backed"),
+    Edge("identity_security", "troubleshooting", "every troubleshooting route carries an RBAC permission and runs behind website MFA"),
+    Edge("health", "troubleshooting", "device admission, live read-only sessions and telemetry come from the health inventory / live / telemetry services"),
+    Edge("execution", "troubleshooting", "governed remediation runs through the execution eligibility gate, execution engine and its device locks"),
+    Edge("probation_soak", "troubleshooting", "probation soak state (ProbationSoakRun) is correlated into baselines and remediation decisions"),
+    Edge("bundles", "troubleshooting", "approved / last-known-good configuration baselines are immutable configuration bundles"),
+    Edge("nsot", "troubleshooting", "intended devices and interfaces are read from the NSOT / NetBox cache"),
+    Edge("topology", "troubleshooting", "intended paths and peer scope come from the topology service"),
 )
 
 # A change here can affect every Django-side subsystem: the impact is "django-wide", not chain-shaped.
@@ -422,7 +439,7 @@ DJANGO_WIDE_CONSUMERS = (
     "control_plane", "device_builder", "candidate_rendering", "platform_drivers", "validation", "network_config_validation", "planning", "health", "execution", "raw_configlets",
     "bundles", "probation_soak", "legacy_bootstrap", "credentials", "config_workbench", "config_templates", "netbox_ipam", "nsot", "topology", "notifications", "django_views_api", "ui_presentation",
     "identity_security", "capability_framework", "provisioning", "traffic", "device_lifecycle", "device_ztp", "device_management", "management_vrf",
-    "device_commissioning",
+    "device_commissioning", "troubleshooting",
 )
 
 
@@ -488,8 +505,10 @@ SELECTIONS: dict[str, Selection] = {
     ),
     "device_lifecycle": Selection(
         django=("lifecycle_identity", "lifecycle_service", "lifecycle_authorization", "lifecycle_resolver", "lifecycle_views",
-                "lifecycle_capability_vocabulary", "contracts"),
-        reason="managed-device identity / lifecycle / attachments / bootstrap authorization / resolver changed",
+                "lifecycle_capability_vocabulary", "contracts", "device_observations", "device_observe", "observation_collector",
+                "observation_connections", "observation_evidence", "observation_sessions", "observation_authorizations",
+                "host_key_pins", "deploy_bindings", "reconcile_inventory"),
+        reason="managed-device identity / lifecycle / attachments / bootstrap authorization / resolver / observations changed",
     ),
     "device_ztp": Selection(
         django=("ztp_adapters", "ztp_dhcp", "ztp_discovery", "ztp_artifacts", "ztp_workflow", "ztp_views", "lifecycle_service",
@@ -534,6 +553,7 @@ SELECTIONS: dict[str, Selection] = {
                 "routes", "admin_surface", "contracts"),
         reason="managed-device credential metadata / rotation policy / engine / scheduler / 2FA policy changed",
     ),
+    "troubleshooting": Selection(django=("troubleshooting_access", "troubleshooting_acl_history", "troubleshooting_acl_source", "troubleshooting_ai", "troubleshooting_ai_runtime", "troubleshooting_baseline_history", "troubleshooting_baseline_scope", "troubleshooting_collectors", "troubleshooting_config_snapshot", "troubleshooting_deployment", "troubleshooting_dns_rules", "troubleshooting_dns_source", "troubleshooting_engine", "troubleshooting_evidence", "troubleshooting_fib_source", "troubleshooting_flow_runtime", "troubleshooting_flow_wire", "troubleshooting_forwarding_source", "troubleshooting_governance", "troubleshooting_l2_history", "troubleshooting_l2_source", "troubleshooting_nmas_providers", "troubleshooting_physical_source", "troubleshooting_pmtu_source", "troubleshooting_probe_source", "troubleshooting_protocol_source", "troubleshooting_qos_source", "troubleshooting_readiness", "troubleshooting_runbooks", "troubleshooting_runtime", "troubleshooting_runtime_ports", "troubleshooting_stp_source", "troubleshooting_views",), reason="troubleshooting substrate / collectors / runbooks / AI / governance / views changed"),
     "identity_security": Selection(full_django=True, reason="the access middleware / identity layer sits in front of every view"),
     "capability_framework": Selection(django=("capability_framework", "capabilities", "transport_capability", "contracts",
                                               "phase9_option82", "tg_phase9_closure", "tg_phase9_live_runner_closure"),

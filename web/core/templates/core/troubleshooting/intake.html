@@ -1,0 +1,32 @@
+{% extends "core/base.html" %}
+{% block title %}{{ page_title }}{% endblock %}
+{% block content %}
+<div class="page-header"><h1>Open troubleshooting case</h1>
+<p>Intake only starts <strong>read-only</strong> diagnosis. Devices not yet verified by NMAS are refused for probing.</p></div>
+{% if error %}<div class="card" role="alert"><strong>Could not open case:</strong> {{ error }}</div>{% endif %}
+<form method="post" class="card">{% csrf_token %}
+  <p><label for="title">Title</label> <input id="title" name="title" value="{{ form.title }}"></p>
+  <p><label for="symptom">Symptom</label> <textarea id="symptom" name="symptom">{{ form.symptom }}</textarea></p>
+  <fieldset><legend>Affected devices</legend>
+    <p>Select one or more managed devices. A case may be opened for an ineligible device, but live diagnostics remain blocked until the displayed admission prerequisite is satisfied.</p>
+    {% for device in scope_options.devices %}
+      <p><label><input type="checkbox" name="devices" value="{{ device.name }}"{% if device.name in selected_devices %} checked{% endif %}>
+        {{ device.name }} ({{ device.platform }}) — <strong>{% if device.diagnostic_ready %}DIAGNOSTIC READY{% else %}{{ device.lifecycle }} / BLOCKED{% endif %}</strong>:
+        {{ device.reason }}</label></p>
+    {% empty %}<p><strong>No managed devices are visible in your authorized scope.</strong></p>{% endfor %}
+  </fieldset>
+  <p><label for="link">Affected link (optional)</label>
+    <select id="link" name="link"><option value="">No single link selected</option>
+      {% for link in scope_options.links %}<option value="{{ link.value }}"{% if form.link == link.value %} selected{% endif %}>{{ link.label }}</option>{% endfor %}
+    </select>
+    <small>Links are read from the tracked topology; choosing one adds both managed endpoints to the case scope.</small></p>
+  <p><label for="service">Service intent</label> <input id="service" name="service" value="{{ form.service }}" required></p>
+  <p><label for="protocol">Protocol</label> <input id="protocol" name="protocol" value="{{ form.protocol }}">
+     <label for="ports">Ports</label> <input id="ports" name="ports" value="{{ form.ports }}">
+     <label for="vrf">VRF</label> <input id="vrf" name="vrf" value="{{ form.vrf }}"></p>
+  <p><label for="severity">Severity</label>
+     <select id="severity" name="severity"><option>LOW</option><option selected>MEDIUM</option><option>HIGH</option><option>CRITICAL</option></select></p>
+  <p><label for="runbook">Runbook</label> <input id="runbook" name="runbook" value="{{ form.runbook }}" placeholder="RB01..RB07"></p>
+  <button type="submit">Open case</button>
+</form>
+{% endblock %}

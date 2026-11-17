@@ -158,24 +158,40 @@ def register_nmas_attachment(*, name: str, host_interface: str, upstream_device:
     return Result(True, action, attachment=row)
 
 
-def approve_nmas_attachment(attachment, *, actor: str) -> Result:
+def approve_nmas_attachment(attachment, *, actor: str, exception=None) -> Result:
     action = "NMAS_ATTACHMENT_APPROVE"
     blockers = []
     if attachment.approval_state != Approval.PENDING:
         blockers.append(codes.blocker("MGMT_PATH_NOT_PENDING", state=attachment.approval_state))
+    exceptional = None
     if actor == attachment.created_by:
-        blockers.append(codes.blocker("MGMT_PATH_SELF_APPROVAL"))
+        from ..identity import single_admin_exception
+
+        exceptional = single_admin_exception.authorize(
+            exception, action=action, target=attachment.attachment_id, actor=actor)
+        if not exceptional.ok:
+            blockers.append(codes.blocker("MGMT_PATH_SELF_APPROVAL"))
     if blockers:
         return _refuse_attachment(action, blockers, actor=actor, object_id=attachment.attachment_id)
     with transaction.atomic():
         locked = models.NmasManagementAttachment.objects.select_for_update().get(pk=attachment.pk)
         if locked.approval_state != Approval.PENDING:
             return _refuse_attachment(action, [codes.blocker("MGMT_STATE_CONFLICT")], actor=actor, object_id=attachment.attachment_id)
+        if exceptional is not None:
+            used = single_admin_exception.consume(
+                exception, action=action, target=locked.attachment_id, actor=actor,
+                original_requester=locked.created_by,
+                evidence={"verification_state": locked.verification_state, "source_address": locked.source_address})
+            if not used.ok:
+                return _refuse_attachment(action, [codes.blocker("MGMT_PATH_SELF_APPROVAL")], actor=actor,
+                                          object_id=attachment.attachment_id)
         locked.approval_state, locked.approved_by, locked.approved_at = Approval.APPROVED, actor[:150], timezone.now()
         locked.version += 1
         locked.save()
         _audit(action, Outcome.RECORDED, actor=actor, object_type="NmasManagementAttachment", object_id=locked.attachment_id,
-               summary=f"{locked.attachment_id} approved")
+               summary=f"{locked.attachment_id} approved",
+               metadata={"approval_mode": "SINGLE_ADMIN_EXCEPTION", "exception_id": exception.exception_id,
+                         "separation_of_duties_satisfied": False} if exceptional is not None else None)
     return Result(True, action, attachment=locked)
 
 
@@ -394,14 +410,20 @@ def register_path(device, *, path_type: str, endpoint_address: str, nmas_attachm
     return Result(True, action, path=row, event=event)
 
 
-def approve_path(path, *, actor: str) -> Result:
+def approve_path(path, *, actor: str, exception=None) -> Result:
     action = "MGMT_PATH_APPROVE"
     device = path.device
     blockers = list(_device_scope_problems(device))
     if path.approval_state != Approval.PENDING:
         blockers.append(codes.blocker("MGMT_PATH_NOT_PENDING", state=path.approval_state))
+    exceptional = None
     if actor == path.created_by:
-        blockers.append(codes.blocker("MGMT_PATH_SELF_APPROVAL"))
+        from ..identity import single_admin_exception
+
+        exceptional = single_admin_exception.authorize(
+            exception, action=action, target=path.path_id, actor=actor)
+        if not exceptional.ok:
+            blockers.append(codes.blocker("MGMT_PATH_SELF_APPROVAL"))
     if path.nmas_attachment.approval_state != Approval.APPROVED:
         blockers.append(codes.blocker("NMAS_ATTACHMENT_NOT_APPROVED"))
     if path.attachment_id and path.attachment.approval_state != models.AttachmentApproval.APPROVED:
@@ -412,10 +434,23 @@ def approve_path(path, *, actor: str) -> Result:
         locked = models.ManagementPath.objects.select_for_update().get(pk=path.pk)
         if locked.approval_state != Approval.PENDING:
             return _refuse_device(device, action, [codes.blocker("MGMT_STATE_CONFLICT")], actor=actor)
+        if exceptional is not None:
+            used = single_admin_exception.consume(
+                exception, action=action, target=locked.path_id, actor=actor,
+                original_requester=locked.created_by,
+                evidence={"endpoint": locked.endpoint_address, "port": locked.port,
+                          "nmas_attachment": locked.nmas_attachment.attachment_id,
+                          "device_attachment": locked.attachment_id})
+            if not used.ok:
+                return _refuse_device(device, action, [codes.blocker("MGMT_PATH_SELF_APPROVAL")], actor=actor)
         locked.approval_state, locked.approved_by, locked.approved_at = Approval.APPROVED, actor[:150], timezone.now()
         locked.save(update_fields=["approval_state", "approved_by", "approved_at", "updated_at"])
-        event = events.record(device, action, Outcome.RECORDED, actor=actor, from_state=device.lifecycle_state,
-                              to_state=device.lifecycle_state, evidence={"path": locked.path_id, "approval_state": Approval.APPROVED})
+        event = events.record(
+            device, action, Outcome.RECORDED, actor=actor, from_state=device.lifecycle_state,
+            to_state=device.lifecycle_state,
+            evidence={"path": locked.path_id, "approval_state": Approval.APPROVED,
+                      **({"approval_mode": "SINGLE_ADMIN_EXCEPTION", "exception_id": exception.exception_id,
+                          "separation_of_duties_satisfied": False} if exceptional is not None else {})})
     return Result(True, action, path=locked, event=event)
 
 

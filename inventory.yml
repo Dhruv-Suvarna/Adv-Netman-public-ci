@@ -8,6 +8,10 @@ toggles:
 
 management:
   host_interface: nmas-mgmt
+  # Physical provenance for the host-side management attachment.  This is
+  # descriptive desired-state metadata only; it does not configure either end.
+  upstream_device: mgmt_swt
+  upstream_interface: Ethernet9
   nmas_ipv4: 192.168.200.100/24
   nmas_ipv6: 2001:db8:200::100/64
   primary_dhcp_ipv4: 192.168.200.100

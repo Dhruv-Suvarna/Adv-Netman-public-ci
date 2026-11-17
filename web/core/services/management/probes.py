@@ -36,7 +36,10 @@ from ..devices.attachments import MANAGEMENT_VLAN
 from . import eos_facts, guard, paths, policy
 
 LAYER_NAMES = {1: "TOPOLOGY", 2: "CONFIGURATION", 3: "REACHABILITY", 4: "RETURN_PATH", 5: "AUTHENTICATION", 6: "SERVICE"}
-EOS_COMMANDS = ("show hostname | json", "show version | json", "show interfaces status | json", "show running-config")
+EOS_COMMANDS = (
+    "show hostname | json", "show version | json", "show interfaces status | json", "show running-config",
+    "show ip interface brief | json", "show interfaces switchport | json", "show vlan | json", "show spanning-tree | json",
+)
 MAX_OUTPUT = 512 * 1024
 
 
@@ -275,6 +278,40 @@ def eos_config_problems(path, facts: eos_facts.EosFacts) -> list[dict]:
     return problems
 
 
+def eos_operational_config_problems(path, outputs: dict) -> list[dict]:
+    """Verify the same direct management-path facts without privileged running-config access."""
+    interfaces = (_json(outputs.get("show ip interface brief | json", "")).get("interfaces") or {})
+    holder = next((name for name, data in interfaces.items()
+                   if str((((data or {}).get("interfaceAddress") or {}).get("ipAddr") or {}).get("address") or "")
+                   == path.endpoint_address), "")
+    if not holder:
+        return [codes.blocker("L2_CONFIG_MISMATCH", reason="the endpoint address is not configured on the device")]
+    if path.path_type == models.ManagementPathType.ROUTED_VRF:
+        return [codes.blocker("L2_CONFIG_MISMATCH", reason="routed VRF verification requires privileged configuration facts")]
+    vlan = path.vlan or MANAGEMENT_VLAN
+    if holder.lower() != f"vlan{vlan}".lower():
+        return [codes.blocker("L2_CONFIG_MISMATCH", reason="the endpoint is not the management VLAN interface")]
+    switchports = (_json(outputs.get("show interfaces switchport | json", "")).get("switchports") or {})
+    switchport = switchports.get(path.local_interface) or {}
+    info = switchport.get("switchportInfo") or {}
+    mode = str(info.get("mode") or "").lower()
+    carries = (mode == "access" and int(info.get("accessVlanId") or 0) == vlan and not path.tagged) or \
+        (mode == "trunk" and (str(info.get("trunkAllowedVlans") or "").upper() == "ALL" or str(vlan) in
+                              str(info.get("trunkAllowedVlans") or "").replace("-", ",").split(",")))
+    if not switchport.get("enabled") or not carries:
+        return [codes.blocker("L2_CONFIG_MISMATCH", reason="management VLAN is not carried on the local interface")]
+    vlans = (_json(outputs.get("show vlan | json", "")).get("vlans") or {})
+    vlan_data = vlans.get(str(vlan)) or {}
+    members = set((vlan_data.get("interfaces") or {}).keys())
+    if str(vlan_data.get("status") or "").lower() != "active" or path.local_interface not in members:
+        return [codes.blocker("L2_CONFIG_MISMATCH", reason="management VLAN is not active on the local interface")]
+    others = sorted(members - {"Cpu", path.local_interface})
+    stp = _json(outputs.get("show spanning-tree | json", "")).get("spanningTreeInstances") or {}
+    if others and not stp:
+        return [codes.blocker("MGMT_VLAN_LOOP_RISK", ports=others[:8])]
+    return []
+
+
 def _identity_problems(device, outputs: dict) -> list[dict]:
     hostname = str(_json(outputs.get("show hostname | json", "")).get("hostname") or "")
     serial = str(_json(outputs.get("show version | json", "")).get("serialNumber") or "")
@@ -351,9 +388,15 @@ def _session_layers(path, report: ProbeReport, transport, limits) -> None:
             report.facts["local_link"] = "down"
         elif connected:
             report.facts["local_link"] = "connected"
-    facts = eos_facts.parse(outputs.get("show running-config", ""))
-    problems = eos_config_problems(path, facts)
-    report.facts.update({"stp_mode": facts.spanning_tree_mode, "hostname": facts.hostname})
+    running = outputs.get("show running-config", "")
+    if "privileged mode required" in running or "% Invalid input" in running:
+        problems = eos_operational_config_problems(path, outputs)
+        report.facts.update({"config_source": "read-only operational JSON", "hostname": path.device.name})
+    else:
+        facts = eos_facts.parse(running)
+        problems = eos_config_problems(path, facts)
+        report.facts.update({"config_source": "running configuration", "stp_mode": facts.spanning_tree_mode,
+                             "hostname": facts.hostname})
     if problems:
         detail = problems[0].get("details", {})
         report.set(2, False, problems[0]["code"], detail.get("reason", "") if isinstance(detail, dict) else "")

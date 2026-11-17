@@ -215,6 +215,17 @@ class AdminCommandTests(TestCase):
             call_command("nmas_grant_roles", "--username", "ghost", "--create", stderr=mock.MagicMock())
         self.assertFalse(get_user_model().objects.filter(username="ghost").exists())
 
+    def test_grant_roles_assigns_troubleshooter_scope_without_implicit_nmas_permissions(self):
+        user = get_user_model().objects.create_user("dhruv", password="S3cure-pass-phrase-77")
+        call_command("nmas_grant_roles", "--username", "dhruv", "--role", "NMAS Operator",
+                     "--troubleshooter-role", "ts-admin", "--troubleshooter-tenant", "default",
+                     stdout=mock.MagicMock())
+        user = get_user_model().objects.get(pk=user.pk)
+        self.assertEqual(set(user.groups.values_list("name", flat=True)), {"NMAS Operator", "ts-admin", "ts-tenant:default"})
+        self.assertTrue(user.has_perm("core.nmas_validate"))
+        self.assertFalse(user.has_perm("core.nmas_approve"))
+        self.assertFalse(user.has_perm("core.nmas_execute"))
+
     def test_mfa_reset_refuses_without_confirm_or_for_an_unknown_user(self):
         user = ia.make_user("bob")
         ia.enroll(user)
