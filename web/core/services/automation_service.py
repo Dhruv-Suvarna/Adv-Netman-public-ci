@@ -38,7 +38,7 @@ def get_automation_summary() -> dict:
     return not_integrated(
         "This page is a navigation shell: each section below links to its real page where one exists "
         "(Health, Configuration Changes, Remove Configuration, Device Builder Changes, Soak Management, Initial Golden "
-        "Bootstrap). Standalone rollback/recovery and troubleshooting have no dedicated operator page yet -- see "
+        "Bootstrap and Troubleshooting). Standalone rollback/recovery has no dedicated operator page yet -- see "
         "docs/AUTOMATION_CONFIGURATION_WORKFLOWS.md and docs/PHASE_22_NETWORK_AUTOMATION.md.",
     )
 
@@ -59,6 +59,7 @@ IMPLEMENTED_SECTIONS = {
     "credential-management": "core:credential_status",     # Phase 23 metadata/status only; scheduler performs due rotations
     "unit-test-matrix": "core:quality_unit_tests",          # Lab 7 test governance (persisted Tier-3 evidence)
     "code-coverage": "core:quality_coverage",               # Lab 7 test governance (persisted Tier-3 evidence)
+    "troubleshooting": "core:troubleshooting_list",         # NMAS V2 evidence-first investigation workflow
 }
 
 # Sections whose real page performs ONLY read-only actions.  A section absent here but present in

@@ -1,0 +1,48 @@
+# Sandbox trust-boundary matrix
+
+Status vocabulary: **enforced** means active in existing code/runtime or unconditionally exercised in tests; **staged** means implemented but not activated on VM1; **gap** means it cannot be claimed as contained.
+
+| Component / identity | Privilege and filesystem | Network scope | Permitted operations | Prohibited operations | Actual enforcement | Status/gap |
+|---|---|---|---|---|---|---|
+| Production Gunicorn (`student`) | NMAS source/read paths; systemd hardening; supplementary `docker` group observed | Host network | Existing web and governed NMAS functions | Autonomous Docker or arbitrary target access | Django permissions; service sandbox; no Troubleshooter routes today | **Gap:** Docker group is equivalent to major host privilege; do not use as autonomous worker |
+| Maintenance/probation services (`student`) | Existing production and Docker group | Host network | Existing governed jobs | Troubleshooter execution | Existing unit and NMAS governance | Preserved; out of this change's runtime scope |
+| gNMI collector (`root`) | Broad host privilege | Host network/lab | Existing telemetry | Agent delegation | Existing service config | **Gap:** root component is not a sandbox; unchanged |
+| Traffic runner | Dynamic user, no capabilities; Docker supplementary group | systemd denies IP, Unix-oriented | Existing traffic workflow | General egress | systemd restrictions | Preserved; Docker group remains a broader capability |
+| Dispatcher | dedicated unprivileged identity | Unix/control plane | queue/dispatch | Device management | service account and gateway role | Existing enforcement |
+| Codex/Claude development agents | dedicated users; workspace mounts for both project roots | bubblewrap unshared network; provider proxy | Development/test tasks within grants | Direct network from sandbox | namespace/seccomp/provider broker | Strong process boundary, but development identities remain broader than production Troubleshooter |
+| Root AI gateway | root; root-owned policy and sockets | host network/control plane | allowlisted gateway operations | Unapproved role/grant operations | Unix peer identity, roles, grants, root-owned policy | **Gap:** a compromised root gateway can bypass app policy; production Troubleshooter must not receive a broad role |
+| Slack/model provider broker | constrained provider hosts and TLS | approved external providers | model/control communication | private address connection | double resolution, global-address checks, pinned TLS, limits/audit | Existing Zone-5 enforcement; not device/research authorization |
+| Troubleshooter web/API user | Django process and DB records | no transport by default | case/evidence/read UI | raw shell, Docker, direct config | action permissions, MFA, tenant/device scope | Enforced in code; not deployed |
+| Troubleshooter AI principal | typed handoff tools only | through injected runtime/brokers | read evidence, request registered tests, public research, submit conclusion | raw command, shell, Docker, approvals, apply | tool registry, schema, forbidden keys/verbs, target/budget/nonce checks | Enforced/tested in development; provider not configured in production |
+| Common `TargetPolicy` | no OS privilege; reads authoritative snapshot through adapter | exact IP/port/transport only | READ_DIAGNOSTIC, identity observation, proposal check | unknown/R5/unverified/cross-tenant/cross-topology/substituted/expired targets | expiring digest-bound grant, exact path and protected host checks, revalidation | Implemented/tested; worker integration staged |
+| NMAS target-policy adapter | Django DB and tracked inventory read-only | none while building snapshot | resolve inventory/lifecycle/identity/approved paths | discovery-derived authority | resolver + ManagedDevice + `ManagementPath` + management guard | Implemented; production currently has zero approved paths, therefore admits no endpoint |
+| Direct runtime network providers | Python callable could connect while constructed | potentially host-reachable networks | test fixtures only | production device access | production settings reject all network-capable provider keys when sandbox enforcement is on | Enforced/tested; prevents unsafe Phase-C activation |
+| Dedicated diagnostic worker (planned UID `nmas-ts-worker`) | strict read-only FS; no home/device/capability/Docker access | exact `/32` and `/128` destinations only | typed read-only connector | DNS/internet/host management/other devices | systemd cgroup `IPAddressDeny=any` plus exact allows, short-lived target grants | **Staged:** unit template and renderer tested; live account/service/worker command not activated |
+| Change Engine | existing governed service path | approved device targets | validated APPLY_CHANGE after approval/lock/precheck | AI direct apply, alternate writer | existing approvals, executor eligibility, locks, rollback; Troubleshooter executor unavailable | Existing enforcement; no second writer introduced |
+| `ResearchBroker` | process memory only; no file/shell interface | HTTPS/443 to exact host set and validated public IP | bounded GET/HEAD textual docs | private/link-local/metadata, credentials, arbitrary methods, binary/code execution | URL, DNS, pinned IP/TLS SNI, redirect, type/size/time limits, sanitized audit | Implemented/tested; empty hostname set by default |
+| Research namespace (planned UID `nmas-research`) | strict systemd FS/process sandbox | explicit DNS resolvers; public TCP/443; private/reserved blocked v4/v6 | broker egress | lab/shared/metadata/non-HTTPS | dedicated network namespace+nft template plus application broker | **Staged:** requires root activation/change window |
+| VM1 management address | host OS | Zone 1 | ordinary VM administration | Troubleshooter device target | protected-address set, exact path policy, worker exact-IP policy | Code enforced; worker kernel enforcement staged |
+| R5 | inventory read-only/excluded | lab reachable in some contexts | existing explicitly governed bootstrap/read-only workflows only | Troubleshooter managed target/write | resolver scope plus explicit exclusion | Enforced/tested |
+| Other students/university/vSphere | no authorized identity | may be technically reachable | ordinary approved client dependencies only | scan, auth, troubleshooting, configuration | absent from inventory/path grants; protected worker/research policies | App-level denial implemented; **kernel proof awaits worker activation and authority data** |
+| Production source/DB/package | protected operational assets | local | approved deployment/read-only audit | autonomous modification | policy/procedure; no deployment grants | Preserved; no files changed in production or immutable package |
+
+## Non-bypass conditions
+
+- A route, RFC1918/ULA membership, ARP/ND entry, LLDP report, DNS answer, Docker address or successful connection never creates a `TargetSnapshot`.
+- Read diagnostics require an exact inventory endpoint that is also an approved current `ManagementPath`, verified identity, eligible lifecycle/admission, topology/tenant match, permission and unexpired authorization.
+- Grant revalidation detects digest tampering, expiry, operation/address substitution, revision/revocation and path changes.
+- Proposal authority has no connection parameters. Apply authority is refused at this policy boundary and handed to the existing Change Engine.
+- Public research content is labelled untrusted and cannot add a tool, target, permission or approval.
+- Complete containment cannot be claimed while an autonomous runtime identity retains root or Docker-admin access or while the staged worker/network namespace is inactive.
+
+## Implemented worker boundary (supersedes the planned-worker rows above)
+
+| Component | Identity/filesystem | Network | Enforcement and status |
+|---|---|---|---|
+| Governed continuation runtime | staged `nmas-ts-runtime`; read-only code/inventory, intentional Troubleshooter DB write, no credential store/Docker sockets | `PrivateNetwork=yes`, `AF_UNIX` only, `IPAddressDeny=any` | Reaches authenticated diagnostic/research Unix sockets and a future completion-only Unix model provider. Implemented/tested; inactive. SQLite cannot provide per-table OS authorization, so DB integrity still relies on trusted runtime code and review. |
+| Diagnostic worker | staged `nmas-ts-diagnostic`; read-only DB/inventory/credential-store binds; private replay/audit state; no Docker/root/capabilities | dedicated namespace; nft exact IP+TCP port; systemd exact `/32` and `/128` | Signed IPC, peer UID, durable replay ledger, typed operation, independently selected healthy path, grant revalidation, source binding and pinned SSH. Implemented/tested; inactive. |
+| Research worker | staged `nmas-research`; web code only; production DB, inventory, credentials and diagnostic state inaccessible | separate namespace; explicit DNS; public TCP/443; dual-stack private/reserved drops | Distinct key/socket, DNS/IP pinning, redirect reauthorization, TLS, method/content/size/time limits. Implemented/tested; inactive. |
+| Existing Django web | live `student` + Docker group | host network | Creates/governs handoffs only. It receives no new worker key or socket group. Existing privilege is not part of the isolation proof. |
+| Existing AI orchestrator/gateway | live `student` / root | host/control plane | No Troubleshooter grant. The root execution gateway is not an acceptable model provider. |
+
+Live containment remains not activated. Institution-approved source addresses, exact paths, resolver/hostname approvals and a maintenance window are required.

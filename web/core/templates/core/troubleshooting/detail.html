@@ -1,0 +1,124 @@
+{% extends "core/base.html" %}
+{% block title %}{{ page_title }}{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>{{ d.case.case_id }} &mdash; {{ d.case.title|default:"(untitled)" }}</h1>
+  <p><a href="{% url 'core:troubleshooting_list' %}">&larr; All cases</a></p>
+  {% if notice %}<p role="status"><strong>{{ notice }}</strong></p>{% endif %}
+</div>
+
+<div class="card"><h2>Stage and state</h2>
+  <p>Current stage: <strong>{{ d.case.stage }}</strong> (state {{ d.case.state }}) &middot; severity {{ d.case.severity }} &middot; runbook {{ d.case.runbook|default:"—" }}</p>
+  <p>Worked before: {{ d.case.worked_before|default_if_none:"UNKNOWN" }} &middot; Changed recently: {{ d.case.changed_recently|default_if_none:"UNKNOWN" }}</p>
+  {% if d.disposition.outcome %}<p>Final disposition: <strong>{{ d.disposition.outcome }}</strong> {% firstof d.disposition.why d.disposition.reason %}</p>
+  {% elif terminal %}<p>Closed without a recorded outcome.</p>{% else %}<p>No final disposition yet. This case is <strong>not</strong> resolved.</p>{% endif %}
+  <table class="data-table"><caption class="sr-only">Stage progress</caption><thead><tr><th scope="col">Stage</th><th scope="col">Records</th></tr></thead><tbody>
+  {% for s in d.stages.stages %}<tr><td>{{ s.stage }}</td><td>{{ s.records }}</td></tr>{% endfor %}</tbody></table>
+</div>
+
+{% if can_operate and not terminal %}
+<div class="card"><h2>Run read-only diagnostics</h2>
+  <p>This action uses the authoritative device-admission and ManagementPath gates. An ineligible target is refused and no device configuration is changed.</p>
+  <form method="post" action="{% url 'core:troubleshooting_run' case_id=d.case.case_id %}">{% csrf_token %}
+    <label for="runbook">Runbook</label>
+    <select id="runbook" name="runbook">
+      <option value="">Use case runbook</option>
+      <option value="RB01">RB01 — link flapping</option><option value="RB02">RB02 — reachability</option>
+      <option value="RB03">RB03 — routing neighborship</option><option value="RB04">RB04 — STP loops</option>
+      <option value="RB05">RB05 — DNS</option><option value="RB06">RB06 — MTU/PMTUD</option>
+      <option value="RB07">RB07 — layer 1</option>
+    </select>
+    <input type="hidden" name="run_key" value="{{ d.case.case_id }}-operator-run">
+    <button type="submit">Run permitted diagnostics</button>
+  </form>
+</div>
+{% endif %}
+
+<div class="card"><h2>Topology-aware investigation</h2>
+  <p>Affected devices: <strong>{{ topology.affected_devices|join:", "|default:"—" }}</strong>{% if topology.interfaces %} &middot; interfaces {{ topology.interfaces|join:", " }}{% endif %}</p>
+  <p>Primary fault domain (deterministic): <strong>{{ topology.fault_category|default:"—" }}</strong> &middot; remediation eligibility: <strong>{{ topology.decision|default:"not decided" }}</strong></p>
+  {% if topology.admission %}<p>Device admission: {{ topology.admission|join:"; " }}</p>{% endif %}
+  <h3>Correlated symptoms</h3>
+  <ul>{% for line in topology.secondary %}<li>{{ line }}</li>{% empty %}<li>No secondary symptom was correlated to this incident.</li>{% endfor %}</ul>
+  <h3>Forwarding paths (RIB-based; ECMP branches listed separately)</h3>
+  {% for line in topology.paths_summary %}<p>{{ line }}</p>{% endfor %}
+  {% for flow, branches in topology.flows.items %}
+  <table class="data-table"><caption>{{ flow }}</caption><thead><tr><th scope="col">AF</th><th scope="col">Branch</th><th scope="col">Verdict</th><th scope="col">Hops</th><th scope="col">Incident on path</th></tr></thead><tbody>
+  {% for b in branches %}<tr><td>{{ b.af }}</td><td>{{ b.branch }}</td><td>{{ b.verdict }}{% if b.reason %} ({{ b.reason }}){% endif %}</td><td>{{ b.hops|default:"—" }}</td><td>{{ b.divergence|join:"; "|default:"no" }}</td></tr>{% endfor %}
+  </tbody></table>
+  {% empty %}<p>No forwarding-path evidence was recorded for this case (cases opened before the topology-aware intake, or path collection unavailable).</p>{% endfor %}
+  {% if topology.cleared %}<p>Verification: {{ topology.cleared|join:"; " }}</p>{% endif %}
+</div>
+
+<div class="card"><h2>Configuration drift vs live service impact</h2>
+  <p>{{ d.drift_vs_live_impact.note }}. Drift records: {{ d.drift_vs_live_impact.config_drift_records }}.</p>
+  <table class="data-table"><caption class="sr-only">Production flows</caption><thead><tr><th scope="col">Flow</th><th scope="col">Class</th><th scope="col">Loss %</th></tr></thead><tbody>
+  {% for f in d.drift_vs_live_impact.production_flows %}<tr><td>{{ f.selector }}</td><td>{{ f.classification }}</td><td>{% if f.loss_pct is None %}UNKNOWN (unmeasured){% else %}{{ f.loss_pct }}{% endif %}</td></tr>
+  {% empty %}<tr><td colspan="3">No production-flow monitors recorded.</td></tr>{% endfor %}</tbody></table>
+  <h3>Expected-anomaly exceptions</h3>
+  <table class="data-table"><caption class="sr-only">Exceptions</caption><thead><tr><th scope="col">Id</th><th scope="col">Scope</th><th scope="col">Status</th><th scope="col">Expires</th><th scope="col">By</th><th scope="col">Reason</th></tr></thead><tbody>
+  {% for e in d.exceptions %}<tr><td>{{ e.exception_id }}</td><td>{{ e.scope }}</td><td>{{ e.status }}</td><td>{{ e.expires_at }}</td><td>{{ e.requested_by }}</td><td>{{ e.reason }}</td></tr>
+  {% empty %}<tr><td colspan="6">None.</td></tr>{% endfor %}</tbody></table>
+</div>
+
+<div class="card"><h2>AI investigation</h2>
+  {% for h in d.ai.handoffs %}
+  <p>Handoff {{ h.handoff_id }} &mdash; <strong>{{ h.status }}</strong>, agent {{ h.agent }}; {{ h.usage.calls }} tool call(s), {{ h.usage.iteration }} iteration(s). Why: {{ h.uncertainty }}</p>
+  <p>Execution lease: {% if h.lease %}<strong>{{ h.lease.state }}</strong>{% if h.lease.agent %}, agent {{ h.lease.agent }}{% endif %}, fence {{ h.lease.fence }} ({{ h.lease.reason }}, {{ h.lease.updated_at }}){% else %}never leased{% endif %}. Checkpoint: {{ h.usage.iteration }} iteration(s), {{ h.usage.calls }} tool call(s) preserved.
+     Model: {% if h.model.identity %}{{ h.model.identity.provider }} / {{ h.model.identity.model_id }}; {{ h.model.requests }} completion(s), {{ h.model.failures }} failure(s){% if h.model.last_failure %}, last failure {{ h.model.last_failure }}{% endif %}{% else %}no model completion recorded{% endif %}.</p>
+  {% if h.status == "OPEN" %}<p><small>This handoff is OPEN and checkpointed. It runs only when an administrator starts <code>nmas-troubleshooter-dispatch@{{ h.handoff_id }}.service</code>{% if operations.ai_prerequisite %}; currently blocked: {{ operations.ai_prerequisite }}{% endif %}.</small></p>{% endif %}
+  <ol>{% for it in h.iterations %}<li>iteration {{ it.iteration }}: tool <code>{{ it.tool }}</code> &mdash; {{ it.access_decision }}; {{ it.rationale }}</li>{% endfor %}</ol>
+  {% empty %}<p>AI was not engaged. (AI is engaged only after deterministic coverage is exhausted.)</p>{% endfor %}
+  {% if can_operate and not terminal %}
+  <form method="post" action="{% url 'core:troubleshooting_escalate' case_id=d.case.case_id %}">{% csrf_token %}
+    <label for="uncertainty">Why deterministic rules cannot conclude</label>
+    <input id="uncertainty" name="uncertainty" required minlength="12" maxlength="300">
+    <button type="submit">Escalate to AI ({{ operations.provider_pool|join:" / " }})</button>
+    <small>Opens a governed handoff only if deterministic coverage is complete. The model cannot change configuration or approve anything.</small>
+  </form>
+  {% endif %}
+  <h3>Hypotheses</h3>
+  <ul>{% for x in d.ai.hypotheses %}<li>{{ x.title }} &mdash; {{ x.state }} ({{ x.basis }}, confidence {{ x.confidence }}); supports {{ x.supporting|join:", "|default:"none" }}</li>{% empty %}<li>None.</li>{% endfor %}</ul>
+</div>
+
+<div class="card"><h2>Remediation governance</h2>
+  {% for pl in d.remediation %}
+  <h3>{{ pl.plan_id }} &mdash; {{ pl.status }} (tier {{ pl.tier }}, risk {{ pl.risk }})</h3>
+  <p>Proposed by {{ pl.approval.proposed_by }} ({{ pl.approval.proposer_type }}); approved by {{ pl.approval.approved_by|default:"nobody yet" }}. Fault: {{ pl.approval.addressed_fault }}</p>
+  <p>Operations: {% for o in pl.operations %}<code>{{ o.kind }}@{{ o.device }}</code> {% endfor %}</p>
+  <p>Dry run: {{ pl.dry_run.ok|default_if_none:"not run" }} {{ pl.dry_run.errors|join:"; " }}</p>
+  {% if not pl.supported %}<p><em>No change-workflow executor is configured: write actions are unavailable.</em></p>{% endif %}
+  {% for e in pl.executions %}<p>Execution {{ e.record_id }}: {{ e.status }} {{ e.stop_reason }}</p>{% endfor %}
+  {% if can_operate %}
+  <ul>
+  {% for name, a in pl.actions.items %}
+    <li>
+    {% if a.enabled %}
+      <form method="post" action="{% url 'core:troubleshooting_detail' case_id=d.case.case_id %}remediation/{{ pl.plan_id|urlencode }}/{{ name|urlencode }}/">{% csrf_token %}
+        {% if name == "approve" or name == "reject" %}<label>Reason <input name="reason" required minlength="8"></label>{% endif %}
+        {% if name == "approve" %}<label><input type="checkbox" name="acknowledgements" value="I understand this may affect production traffic"> I understand this may affect production traffic</label>{% endif %}
+        {% if name == "execute" %}<input type="hidden" name="idempotency_key" value="{{ pl.plan_id }}-exec-1">{% endif %}
+        <button type="submit">{{ name }}</button>
+      </form>
+    {% else %}<button type="button" disabled aria-disabled="true">{{ name }}</button> <small>unavailable: {{ a.reason }}</small>{% endif %}
+    </li>
+  {% endfor %}
+  </ul>
+  {% endif %}
+  {% empty %}<p>No remediation plans. Diagnosis is read-only.</p>{% endfor %}
+</div>
+
+<div class="card"><h2>Evidence ({{ evidence|length }})</h2>
+  <table class="data-table"><caption class="sr-only">Evidence references</caption><thead><tr><th scope="col">Id</th><th scope="col">Source</th><th scope="col">Device</th><th scope="col">Collected</th><th scope="col">Quality</th><th scope="col">Link</th></tr></thead><tbody>
+  {% for e in evidence %}<tr><td>{{ e.evidence_id }}</td><td>{{ e.source_type }}</td><td>{{ e.device }}</td><td>{{ e.collected_at }}</td><td>{{ e.quality }}</td>
+    <td>{% if e.link_status == "OK" and e.operator_url %}<a href="{{ e.operator_url }}">open</a>{% else %}{{ e.link_status }}{% endif %}</td></tr>
+  {% empty %}<tr><td colspan="6">No evidence.</td></tr>{% endfor %}</tbody></table>
+  <p>Raw outputs are not shown here; they stay behind immutable evidence references.</p>
+</div>
+
+<div class="card" id="report"><h2>Case report</h2>
+  <p>{{ freshness.note }} {% if freshness.stale_observations %}<strong>{{ freshness.stale_observations }} stale observation(s) are UNKNOWN, not live.</strong>{% endif %}</p>
+  {{ report_html|safe }}
+  <p><a href="{% url 'core:ts_api_report' case_id=d.case.case_id %}?format=md">Markdown</a> &middot; <a href="{% url 'core:ts_api_report' case_id=d.case.case_id %}">JSON</a> &middot; <a href="{% url 'core:ts_api_audit' case_id=d.case.case_id %}">Audit</a></p>
+</div>
+{% endblock %}

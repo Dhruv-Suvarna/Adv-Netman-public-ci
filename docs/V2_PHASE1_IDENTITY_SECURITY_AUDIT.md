@@ -30,9 +30,14 @@ Two validation systems stay distinct:
 ```bash
 cd <deploy-root>/web
 python manage.py nmas_grant_roles --username <operator> --all-roles --create --staff   # prompts for the password
+python manage.py nmas_grant_roles --username <operator> --role "NMAS Operator" \
+  --troubleshooter-role ts-admin --troubleshooter-tenant default
 ```
 
 The operator signs in, is sent to **Set up Microsoft Authenticator**, scans the QR code, enters the code, and is in.
+The Troubleshooter options assign only the application role and tenant scope;
+they never imply NMAS approve or execute permission. Those remain separate
+role grants.
 Console recovery always remains: `manage.py nmas_app_mfa_reset --username <u> --confirm` (MFA) and
 `manage.py changepassword <u>` (password). The local Apache vhost and `127.0.0.1:8002` (Gunicorn) stay reachable from
 the host console.

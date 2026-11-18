@@ -1,0 +1,142 @@
+{
+    "interfaces": {
+        "Ethernet2": {
+            "name": "Ethernet2",
+            "interfaceStatus": "connected",
+            "lineProtocolStatus": "up",
+            "mtu": 1500,
+            "linkLocal": {
+                "address": "fe80::a8c1:abff:fef2:aede",
+                "subnet": "fe80::/64",
+                "active": true,
+                "leastpref": false,
+                "dadfailed": false
+            },
+            "addresses": [
+                {
+                    "address": "2001:db8:110:1::1",
+                    "subnet": "2001:db8:110:1::/64",
+                    "active": true,
+                    "leastpref": false,
+                    "dadfailed": false
+                }
+            ],
+            "addrSource": "manual"
+        },
+        "Loopback0": {
+            "name": "Loopback0",
+            "interfaceStatus": "connected",
+            "lineProtocolStatus": "up",
+            "mtu": 65535,
+            "linkLocal": {
+                "address": "fe80::ff:fe00:0",
+                "subnet": "fe80::/64",
+                "active": true,
+                "leastpref": false,
+                "dadfailed": false
+            },
+            "addresses": [
+                {
+                    "address": "2001:db8:255::1",
+                    "subnet": "2001:db8:255::1/128",
+                    "active": true,
+                    "leastpref": false,
+                    "dadfailed": false
+                }
+            ],
+            "addrSource": "manual"
+        },
+        "Management0": {
+            "name": "Management0",
+            "interfaceStatus": "connected",
+            "lineProtocolStatus": "up",
+            "mtu": 1500,
+            "linkLocal": {
+                "address": "fe80::21c:73ff:feeb:86b5",
+                "subnet": "fe80::/64",
+                "active": true,
+                "leastpref": false,
+                "dadfailed": false
+            },
+            "addresses": [
+                {
+                    "address": "3fff:172:20:20::c",
+                    "subnet": "3fff:172:20:20::/64",
+                    "active": true,
+                    "leastpref": false,
+                    "dadfailed": false
+                }
+            ],
+            "addrSource": "manual"
+        },
+        "Vlan101": {
+            "name": "Vlan101",
+            "interfaceStatus": "connected",
+            "lineProtocolStatus": "up",
+            "mtu": 1500,
+            "linkLocal": {
+                "address": "fe80::21c:73ff:fe20:ab82",
+                "subnet": "fe80::/64",
+                "active": true,
+                "leastpref": false,
+                "dadfailed": false
+            },
+            "addresses": [
+                {
+                    "address": "2001:db8:100:101::1",
+                    "subnet": "2001:db8:100:101::/64",
+                    "active": true,
+                    "leastpref": false,
+                    "dadfailed": false
+                }
+            ],
+            "addrSource": "manual"
+        },
+        "Vlan102": {
+            "name": "Vlan102",
+            "interfaceStatus": "connected",
+            "lineProtocolStatus": "up",
+            "mtu": 1500,
+            "linkLocal": {
+                "address": "fe80::21c:73ff:fe20:ab82",
+                "subnet": "fe80::/64",
+                "active": true,
+                "leastpref": false,
+                "dadfailed": false
+            },
+            "addresses": [
+                {
+                    "address": "2001:db8:100:102::1",
+                    "subnet": "2001:db8:100:102::/64",
+                    "active": true,
+                    "leastpref": false,
+                    "dadfailed": false
+                }
+            ],
+            "addrSource": "manual"
+        },
+        "Vlan200": {
+            "name": "Vlan200",
+            "interfaceStatus": "connected",
+            "lineProtocolStatus": "up",
+            "mtu": 1500,
+            "linkLocal": {
+                "address": "fe80::21c:73ff:fe20:ab82",
+                "subnet": "fe80::/64",
+                "active": true,
+                "leastpref": false,
+                "dadfailed": false
+            },
+            "addresses": [
+                {
+                    "address": "2001:db8:200::1",
+                    "subnet": "2001:db8:200::/64",
+                    "active": true,
+                    "leastpref": false,
+                    "dadfailed": false
+                }
+            ],
+            "addrSource": "manual"
+        }
+    }
+}

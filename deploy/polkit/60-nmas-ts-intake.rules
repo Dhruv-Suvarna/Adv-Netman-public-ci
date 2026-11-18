@@ -1,0 +1,9 @@
+// NMAS automatic incident intake: user "student" (nmas-ts-intake.service) may START -- nothing else -- the existing
+// sandboxed Troubleshooter dispatcher template for one well-formed handoff id.  No stop/restart/enable, no other unit.
+polkit.addRule(function(action, subject) {
+    if (action.id == "org.freedesktop.systemd1.manage-units" && subject.user == "student" &&
+        action.lookup("verb") == "start" &&
+        /^nmas-troubleshooter-dispatch@AIH-[0-9a-f]{12}\.service$/.test(action.lookup("unit"))) {
+        return polkit.Result.YES;
+    }
+});

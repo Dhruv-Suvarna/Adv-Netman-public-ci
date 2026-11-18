@@ -1,0 +1,59 @@
+[Unit]
+Description=NMAS Troubleshooter exact-target diagnostic worker (zero-target fail-closed staging)
+After=network-online.target
+ConditionPathExists=/etc/nmas/troubleshooter-device-worker.env
+ConditionPathExists=/run/netns/nmas-ts-diagnostic
+StartLimitBurst=3
+StartLimitIntervalSec=60s
+
+[Service]
+Type=simple
+User=nmas-ts-diagnostic
+Group=nmas-ts-diagnostic
+SupplementaryGroups=nmas-ts-diagnostic-ipc
+EnvironmentFile=/etc/nmas/troubleshooter-device-worker.env
+ExecStart=/opt/nmas/venv/bin/python /opt/nmas/current/web/manage.py troubleshooting_device_worker
+WorkingDirectory=/opt/nmas/current/web
+NoNewPrivileges=yes
+PrivateDevices=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ProtectHome=yes
+ProtectProc=invisible
+ProcSubset=pid
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectKernelLogs=yes
+ProtectControlGroups=yes
+ProtectClock=yes
+RestrictSUIDSGID=yes
+RestrictRealtime=yes
+LockPersonality=yes
+MemoryDenyWriteExecute=yes
+RemoveIPC=yes
+RestrictNamespaces=yes
+CapabilityBoundingSet=
+AmbientCapabilities=
+SystemCallArchitectures=native
+SystemCallFilter=@system-service
+SystemCallErrorNumber=EPERM
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+NetworkNamespacePath=/run/netns/nmas-ts-diagnostic
+IPAddressDeny=any
+ReadOnlyPaths=/opt/nmas/current /etc/nmas/troubleshooter-device-worker.env
+BindReadOnlyPaths=/home/student/Scripts/clab_dualstack_lab-deploy/web/db.sqlite3:/opt/nmas/current/web/db.sqlite3
+BindReadOnlyPaths=/home/student/Scripts/clab_dualstack_lab-deploy/inventory.yml:/opt/nmas/current/inventory.yml
+BindReadOnlyPaths=/home/student/Scripts/clab_dualstack_lab-deploy/monitoring/runtime/device-credentials/store.json:/opt/nmas/current/monitoring/runtime/device-credentials/store.json
+InaccessiblePaths=/run/docker.sock /var/run/docker.sock /run/containerd/containerd.sock
+ReadWritePaths=/run/nmas-ts-diagnostic /var/lib/nmas-ts-diagnostic /var/log/nmas-ts-diagnostic
+RuntimeDirectory=nmas-ts-diagnostic
+RuntimeDirectoryMode=0750
+StateDirectory=nmas-ts-diagnostic
+StateDirectoryMode=0750
+LogsDirectory=nmas-ts-diagnostic
+LogsDirectoryMode=0750
+UMask=0027
+Restart=on-failure
+RestartSec=2s
+
+# Intentionally no [Install] section: zero-target staging cannot be enabled.

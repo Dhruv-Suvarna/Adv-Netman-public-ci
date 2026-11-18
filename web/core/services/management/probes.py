@@ -36,7 +36,10 @@ from ..devices.attachments import MANAGEMENT_VLAN
 from . import eos_facts, guard, paths, policy
 
 LAYER_NAMES = {1: "TOPOLOGY", 2: "CONFIGURATION", 3: "REACHABILITY", 4: "RETURN_PATH", 5: "AUTHENTICATION", 6: "SERVICE"}
-EOS_COMMANDS = ("show hostname | json", "show version | json", "show interfaces status | json", "show running-config")
+EOS_COMMANDS = (
+    "show hostname | json", "show version | json", "show interfaces status | json", "show running-config",
+    "show ip interface brief | json", "show interfaces switchport | json", "show vlan | json", "show spanning-tree | json",
+)
 MAX_OUTPUT = 512 * 1024
 
 
@@ -252,8 +255,9 @@ def eos_config_problems(path, facts: eos_facts.EosFacts) -> list[dict]:
         return problems
     if holder.vrf:
         problems.append(codes.blocker("L2_CONFIG_MISMATCH", reason="layer-2 path endpoint sits in a non-default VRF"))
-    local = facts.interfaces.get(path.local_interface) if path.local_interface else None
-    if path.local_interface and local is None:
+    port = _local_port(path)
+    local = facts.interfaces.get(port) if port else None
+    if port and local is None:
         return problems + [codes.blocker("L2_CONFIG_MISMATCH", reason="the path's local interface is not configured")]
     if local is not None:
         if local.shutdown:
@@ -267,12 +271,60 @@ def eos_config_problems(path, facts: eos_facts.EosFacts) -> list[dict]:
                 problems.append(codes.blocker("L2_CONFIG_MISMATCH", reason="tagging differs from the attachment"))
             if holder.name.lower() != f"vlan{vlan}":
                 problems.append(codes.blocker("L2_CONFIG_MISMATCH", reason="the endpoint is not the management VLAN interface"))
-            others = [name for name in facts.management_vlan_ports(vlan) if name != path.local_interface]
+            others = [name for name in facts.management_vlan_ports(vlan) if name != port]
             if others and facts.spanning_tree_mode == "none":
                 problems.append(codes.blocker("MGMT_VLAN_LOOP_RISK", ports=others[:8]))
-        elif local.name != holder.name:
+        elif local.name != holder.name and port == path.local_interface:
             problems.append(codes.blocker("L2_CONFIG_MISMATCH", reason="the endpoint is not on the path's local interface"))
     return problems
+
+
+def _local_port(path) -> str:
+    """The device port that must carry the management VLAN: the path's local interface, or -- for NMAS's own management switch,
+    which has no device attachment -- the switch port NMAS's host interface is cabled to (the NMAS attachment's upstream port)."""
+    if path.local_interface:
+        return path.local_interface
+    if path.path_type != models.ManagementPathType.DIRECT_OOB or path.attachment_id or not path.nmas_attachment_id or not path.device_id:
+        return ""
+    nmas = path.nmas_attachment
+    if paths.is_nmas_switch_self(path.device, path.path_type, None, nmas, path.via_device):
+        return str(nmas.upstream_interface or "")
+    return ""
+
+
+def eos_operational_config_problems(path, outputs: dict) -> list[dict]:
+    """Verify the same direct management-path facts without privileged running-config access."""
+    interfaces = (_json(outputs.get("show ip interface brief | json", "")).get("interfaces") or {})
+    holder = next((name for name, data in interfaces.items()
+                   if str((((data or {}).get("interfaceAddress") or {}).get("ipAddr") or {}).get("address") or "")
+                   == path.endpoint_address), "")
+    if not holder:
+        return [codes.blocker("L2_CONFIG_MISMATCH", reason="the endpoint address is not configured on the device")]
+    if path.path_type == models.ManagementPathType.ROUTED_VRF:
+        return [codes.blocker("L2_CONFIG_MISMATCH", reason="routed VRF verification requires privileged configuration facts")]
+    vlan = path.vlan or MANAGEMENT_VLAN
+    if holder.lower() != f"vlan{vlan}".lower():
+        return [codes.blocker("L2_CONFIG_MISMATCH", reason="the endpoint is not the management VLAN interface")]
+    local_port = _local_port(path)
+    switchports = (_json(outputs.get("show interfaces switchport | json", "")).get("switchports") or {})
+    switchport = switchports.get(local_port) or {}
+    info = switchport.get("switchportInfo") or {}
+    mode = str(info.get("mode") or "").lower()
+    carries = (mode == "access" and int(info.get("accessVlanId") or 0) == vlan and not path.tagged) or \
+        (mode == "trunk" and (str(info.get("trunkAllowedVlans") or "").upper() == "ALL" or str(vlan) in
+                              str(info.get("trunkAllowedVlans") or "").replace("-", ",").split(",")))
+    if not switchport.get("enabled") or not carries:
+        return [codes.blocker("L2_CONFIG_MISMATCH", reason="management VLAN is not carried on the local interface")]
+    vlans = (_json(outputs.get("show vlan | json", "")).get("vlans") or {})
+    vlan_data = vlans.get(str(vlan)) or {}
+    members = set((vlan_data.get("interfaces") or {}).keys())
+    if str(vlan_data.get("status") or "").lower() != "active" or local_port not in members:
+        return [codes.blocker("L2_CONFIG_MISMATCH", reason="management VLAN is not active on the local interface")]
+    others = sorted(members - {"Cpu", local_port})
+    stp = _json(outputs.get("show spanning-tree | json", "")).get("spanningTreeInstances") or {}
+    if others and not stp:
+        return [codes.blocker("MGMT_VLAN_LOOP_RISK", ports=others[:8])]
+    return []
 
 
 def _identity_problems(device, outputs: dict) -> list[dict]:
@@ -319,7 +371,86 @@ def probe(path, *, transport=None, purpose: str = models.ProbePurpose.VERIFY, ac
     return report, row, []
 
 
+# Ubuntu/FRR: the exact command strings the device's restricted diagnostic broker allowlists (no shell on the far end).
+LINUX_COMMANDS = ("hostname", "ip -j addr show")
+
+
+def linux_identity_problems(device, outputs: dict) -> list[dict]:
+    hostname = str(outputs.get("hostname", "")).strip().splitlines()[:1]
+    if not hostname or not hostname[0]:
+        return [codes.blocker("L6_SERVICE_UNAVAILABLE", reason="no identity output")]
+    if hostname[0].lower() != device.name.lower():
+        return [codes.blocker("L6_IDENTITY_MISMATCH", reason="hostname")]
+    return []
+
+
+def linux_config_problems(path, outputs: dict) -> tuple[list[dict], bool | None]:
+    """L2 for a Linux/FRR path from ``ip -j addr show``: the endpoint sits on the management VLAN interface (a bridge here), that
+    interface is UP, and the path's local interface is a member of it with carrier.  -> (problems, local link connected?)."""
+    try:
+        links = json.loads(outputs.get("ip -j addr show", "") or "[]")
+    except ValueError:
+        links = []
+    if not isinstance(links, list) or not links:
+        return [codes.blocker("L6_SERVICE_UNAVAILABLE", reason="no interface output")], None
+    by_name = {str(link.get("ifname")): link for link in links if isinstance(link, dict)}
+    holder = next((link for link in by_name.values()
+                   if any(str(a.get("local")) == path.endpoint_address for a in link.get("addr_info") or [])), None)
+    if holder is None:
+        return [codes.blocker("L2_CONFIG_MISMATCH", reason="the endpoint address is not configured on the device")], None
+    vlan = path.vlan or MANAGEMENT_VLAN
+    if str(holder.get("ifname", "")).lower() != f"vlan{vlan}":
+        return [codes.blocker("L2_CONFIG_MISMATCH", reason="the endpoint is not the management VLAN interface")], None
+    if "UP" not in (holder.get("flags") or []) or "LOWER_UP" not in (holder.get("flags") or []):
+        return [codes.blocker("L2_CONFIG_MISMATCH", reason="the management VLAN interface is down")], None
+    local = by_name.get(path.local_interface) if path.local_interface else None
+    if path.local_interface:
+        if local is None:
+            return [codes.blocker("L2_CONFIG_MISMATCH", reason="the path's local interface is not present")], None
+        if local.get("master") != holder.get("ifname"):
+            return [codes.blocker("L2_CONFIG_MISMATCH", reason="management VLAN is not carried on the local interface")], None
+        connected = "LOWER_UP" in (local.get("flags") or [])
+        return ([] if connected else [codes.blocker("L1_LINK_DOWN", reason=path.local_interface)]), connected
+    return [], None
+
+
+def _linux_session_layers(path, report: ProbeReport, transport, limits) -> None:
+    try:
+        username, methods = auth_material(path)
+    except CredentialUnavailable as exc:
+        report.set(5, False, "L5_AUTH_FAILED", f"credential unavailable ({exc})")
+        return
+    try:
+        outputs = transport.run(source=path.nmas_attachment.source_address, interface=path.nmas_attachment.host_interface,
+                                address=path.endpoint_address, port=path.port, timeout=limits.probe_timeout_seconds,
+                                expected_host_key=path.expected_host_key, username=username, methods=methods,
+                                commands=LINUX_COMMANDS, report=report)
+    except ProbeFailure as failure:
+        report.set(failure.layer, False, failure.code, failure.detail)
+        return
+    finally:
+        methods.clear()
+    identity = linux_identity_problems(path.device, outputs)
+    if identity:
+        report.set(6, False, identity[0]["code"], identity[0].get("details", {}).get("reason", ""))
+        return
+    report.set(6, True, detail="restricted diagnostic broker answered as the expected host")
+    problems, connected = linux_config_problems(path, outputs)
+    if connected is not None:
+        report.facts["local_link"] = "connected" if connected else "down"
+    report.facts.update({"config_source": "read-only ip -j addr (restricted broker)", "hostname": path.device.name})
+    if problems:
+        detail = problems[0].get("details", {})
+        layer = 1 if problems[0]["code"] == "L1_LINK_DOWN" else 2
+        report.set(layer, False, problems[0]["code"], detail.get("reason", "") if isinstance(detail, dict) else "")
+    else:
+        report.set(2, True, detail="management bridge / address / member link match the path")
+
+
 def _session_layers(path, report: ProbeReport, transport, limits) -> None:
+    if path.device.platform == models.Platform.UBUNTU_FRR.value and path.device.platform in paths.VERIFIED_PLATFORMS:
+        _linux_session_layers(path, report, transport, limits)
+        return
     if path.device.platform not in paths.VERIFIED_PLATFORMS:
         # The session layers could run, but the path could never pass L2 -- fail closed without contacting the device.
         report.set(2, False, "L2_PLATFORM_NOT_IMPLEMENTED", path.device.platform)
@@ -344,16 +475,23 @@ def _session_layers(path, report: ProbeReport, transport, limits) -> None:
         report.set(6, False, identity[0]["code"], identity[0].get("details", {}).get("reason", ""))
         return
     report.set(6, True, detail="management CLI answered as the expected device")
-    if path.local_interface:
-        connected = eos_link_connected(outputs, path.local_interface)
+    port = _local_port(path)
+    if port:
+        connected = eos_link_connected(outputs, port)
         if connected is False:
-            report.set(1, False, "L1_LINK_DOWN", path.local_interface)
+            report.set(1, False, "L1_LINK_DOWN", port)
             report.facts["local_link"] = "down"
         elif connected:
             report.facts["local_link"] = "connected"
-    facts = eos_facts.parse(outputs.get("show running-config", ""))
-    problems = eos_config_problems(path, facts)
-    report.facts.update({"stp_mode": facts.spanning_tree_mode, "hostname": facts.hostname})
+    running = outputs.get("show running-config", "")
+    if "privileged mode required" in running or "% Invalid input" in running:
+        problems = eos_operational_config_problems(path, outputs)
+        report.facts.update({"config_source": "read-only operational JSON", "hostname": path.device.name})
+    else:
+        facts = eos_facts.parse(running)
+        problems = eos_config_problems(path, facts)
+        report.facts.update({"config_source": "running configuration", "stp_mode": facts.spanning_tree_mode,
+                             "hostname": facts.hostname})
     if problems:
         detail = problems[0].get("details", {})
         report.set(2, False, problems[0]["code"], detail.get("reason", "") if isinstance(detail, dict) else "")

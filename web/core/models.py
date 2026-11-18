@@ -3713,6 +3713,152 @@ class DeviceObservation(models.Model):
         raise ValueError("DeviceObservation records are evidence and cannot be deleted.")
 
 
+class DeviceVersionObservation(models.Model):
+    """One authenticated read of a device's NOS version (``core.services.devices.observations``).  Append-only evidence.
+
+    The version is what a supported platform parser extracted from the retained raw output (``raw_digest`` is its SHA-256), read
+    over a host-key-pinned management session by the trusted source ``source_id``.  It is bound to the device, its platform and
+    the AUTHENTICATED_SESSION identity observation recorded with it.  It never changes identity or admission state.
+    """
+
+    device = models.ForeignKey(ManagedDevice, on_delete=models.PROTECT, related_name="version_observations", editable=False)
+    platform = models.CharField(max_length=32, choices=Platform.choices, editable=False)
+    version = models.CharField(max_length=64, editable=False)
+    source_id = models.CharField(max_length=64, editable=False, help_text="Authenticated identity of the trusted collector.")
+    nonce = models.CharField(max_length=64, editable=False)
+    command = models.CharField(max_length=64, editable=False)
+    raw_digest = models.CharField(max_length=64, editable=False, help_text="SHA-256 of the raw command output.")
+    evidence_ref = models.CharField(max_length=200, blank=True, default="", editable=False, help_text="Reference to the retained raw evidence.")
+    signature = models.CharField(max_length=64, editable=False, help_text="HMAC-SHA256 the collector produced over the canonical envelope.")
+    host_key = models.CharField(max_length=51, editable=False)
+    serial = models.CharField(max_length=64, blank=True, default="", editable=False)
+    base_mac = models.CharField(max_length=17, blank=True, default="", editable=False)
+    identity_observation = models.ForeignKey(DeviceObservation, on_delete=models.PROTECT, related_name="version_observations", editable=False)
+    observed_at = models.DateTimeField(editable=False)
+    recorded_at = models.DateTimeField(auto_now_add=True)
+
+    objects = _ImmutableManager()
+
+    class Meta:
+        ordering = ["-observed_at", "-id"]
+        default_permissions = ()
+        indexes = [models.Index(fields=["device", "-observed_at"])]
+        constraints = [
+            models.UniqueConstraint(fields=["source_id", "nonce"], name="unique_version_observation_nonce"),
+        ]
+
+    def __str__(self):
+        return f"{self.device.name} {self.version} @ {self.observed_at:%Y-%m-%dT%H:%M:%SZ}"
+
+    def save(self, *args, **kwargs):
+        if self.platform not in Platform.values or not self.version or not self.source_id or not self.nonce:
+            raise ValueError("Invalid DeviceVersionObservation.")
+        _forbid_row_mutation(self)
+        super().save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        raise ValueError("DeviceVersionObservation records are evidence and cannot be deleted.")
+
+
+OBSERVATION_COMMAND_IDS = ("nos-version",)        # command scopes an observation authorization may grant (observations.SPECS)
+
+
+class ObservationUseState(models.TextChoices):
+    RESERVED = "RESERVED", "Reserved (session about to open)"
+    ACCEPTED = "ACCEPTED", "Observation accepted"
+    REFUSED = "REFUSED", "Observation refused"
+
+
+class ObservationAuthorization(models.Model):
+    """A scoped, expiring approval for read-only device observations (``core.services.devices.observation_authorizations``).
+
+    It replaces the free-form ``--authorization-ref`` label: an observation runs only inside an authorization whose device scope,
+    command scope, validity window and use budget it fits, approved by an NMAS account holding the APPROVE permission and run by a
+    *different* account holding EXECUTE.  ``scope_digest`` binds the approved scope; a row whose scope no longer matches its digest
+    is refused.  The only permitted change after creation is a single revocation.  Never deleted.
+    """
+
+    devices = models.JSONField(default=list, editable=False)            # sorted device names (resolver WRITABLE scope only)
+    commands = models.JSONField(default=list, editable=False)           # sorted OBSERVATION_COMMAND_IDS
+    ticket = models.CharField(max_length=64, editable=False)
+    reason = models.CharField(max_length=200, blank=True, default="", editable=False)
+    requested_by = models.CharField(max_length=150, editable=False)
+    approved_by = models.CharField(max_length=150, editable=False)
+    not_before = models.DateTimeField(editable=False)
+    expires_at = models.DateTimeField(editable=False)
+    max_observations = models.PositiveSmallIntegerField(editable=False)
+    scope_digest = models.CharField(max_length=64, editable=False)
+    revoked_at = models.DateTimeField(null=True, blank=True)
+    revoked_by = models.CharField(max_length=150, blank=True, default="")
+    revoke_reason = models.CharField(max_length=200, blank=True, default="")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-created_at", "-id"]
+        default_permissions = ()
+        indexes = [models.Index(fields=["expires_at"])]
+
+    @property
+    def auth_id(self) -> str:
+        return f"OBSAUTH-{self.pk:06d}" if self.pk else ""
+
+    def __str__(self):
+        return f"{self.auth_id} {','.join(self.devices or [])} until {self.expires_at:%Y-%m-%dT%H:%M:%SZ}"
+
+    def save(self, *args, **kwargs):
+        if not self.pk:
+            if (not isinstance(self.devices, list) or not self.devices or not isinstance(self.commands, list) or not self.commands
+                    or any(c not in OBSERVATION_COMMAND_IDS for c in self.commands) or not _HEX64.fullmatch(self.scope_digest or "")
+                    or not self.approved_by or not self.requested_by or self.expires_at <= self.not_before or self.revoked_at):
+                raise ValueError("Invalid ObservationAuthorization.")
+            return super().save(*args, **kwargs)
+        stored = type(self).objects.filter(pk=self.pk).values("revoked_at").first()
+        if stored is None or stored["revoked_at"] is not None or self.revoked_at is None or not self.revoked_by:
+            raise ValueError("An observation authorization can only be revoked, once.")
+        super().save(update_fields=["revoked_at", "revoked_by", "revoke_reason"])
+
+    def delete(self, *args, **kwargs):
+        raise ValueError("ObservationAuthorization records are approval evidence and cannot be deleted.")
+
+
+class ObservationAuthorizationUse(models.Model):
+    """One use of an ``ObservationAuthorization``: reserved before any session opens, then finished exactly once."""
+
+    authorization = models.ForeignKey(ObservationAuthorization, on_delete=models.PROTECT, related_name="uses", editable=False)
+    device = models.CharField(max_length=64, editable=False)
+    command = models.CharField(max_length=32, editable=False)
+    operator = models.CharField(max_length=150, editable=False)
+    state = models.CharField(max_length=10, choices=ObservationUseState.choices, default=ObservationUseState.RESERVED)
+    outcome_codes = models.JSONField(default=list, blank=True)
+    nonce = models.CharField(max_length=64, blank=True, default="")
+    evidence_ref = models.CharField(max_length=200, blank=True, default="")
+    version_observation = models.ForeignKey(DeviceVersionObservation, null=True, blank=True, on_delete=models.PROTECT,
+                                            related_name="authorization_uses")
+    reserved_at = models.DateTimeField(auto_now_add=True)
+    finished_at = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        ordering = ["-reserved_at", "-id"]
+        default_permissions = ()
+        indexes = [models.Index(fields=["authorization", "state"])]
+
+    _FINISH_FIELDS = ["state", "outcome_codes", "nonce", "evidence_ref", "version_observation", "finished_at"]
+
+    def save(self, *args, **kwargs):
+        if not self.pk:
+            if self.state != ObservationUseState.RESERVED or self.command not in OBSERVATION_COMMAND_IDS or not self.operator:
+                raise ValueError("A use is created RESERVED, for an authorized command, by a named operator.")
+            return super().save(*args, **kwargs)
+        stored = type(self).objects.filter(pk=self.pk).values("state").first()
+        if stored is None or stored["state"] != ObservationUseState.RESERVED or self.state == ObservationUseState.RESERVED \
+                or self.finished_at is None:
+            raise ValueError("A use is finished exactly once.")
+        super().save(update_fields=self._FINISH_FIELDS)
+
+    def delete(self, *args, **kwargs):
+        raise ValueError("ObservationAuthorizationUse records are evidence and cannot be deleted.")
+
+
 class BootstrapAuthorizationState(models.TextChoices):
     PENDING_APPROVAL = "PENDING_APPROVAL", "Pending approval"
     APPROVED = "APPROVED", "Approved (bootstrap only -- never production admission)"
@@ -4461,7 +4607,10 @@ class ManagementPath(models.Model):
                                     name="unique_live_management_path"),
             models.CheckConstraint(condition=(Q(path_type="DIRECT_OOB", preference_class=1) | Q(path_type="VLAN_ADJACENT_SWITCH", preference_class=2)
                                               | Q(path_type="ROUTED_VRF", preference_class=3)), name="management_path_class_matches_type"),
-            models.CheckConstraint(condition=Q(path_type="ROUTED_VRF") | Q(attachment__isnull=False), name="management_path_needs_attachment"),
+            # A non-routed path needs its device attachment -- except NMAS's OWN management switch, whose direct path has no
+            # intermediate switch and whose L1 provenance is the NMAS attachment (services enforce paths.is_nmas_switch_self).
+            models.CheckConstraint(condition=Q(path_type="ROUTED_VRF") | Q(attachment__isnull=False) | Q(path_type="DIRECT_OOB", via_device=""),
+                                   name="management_path_needs_attachment"),
             models.CheckConstraint(condition=~Q(path_type="VLAN_ADJACENT_SWITCH") | (Q(vlan__isnull=False) & ~Q(via_device="")),
                                    name="vlan_path_names_vlan_and_switch"),
             models.CheckConstraint(condition=~Q(path_type="ROUTED_VRF") | ~Q(vrf=""), name="routed_path_names_vrf"),
@@ -5472,3 +5621,607 @@ class NsotProjection(models.Model):
     class Meta:
         ordering = ["name"]
         default_permissions = ()
+
+
+# ═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+# NMAS V2 troubleshooting substrate (spec section 2).  ADDITIVE ONLY: nothing above this line is touched.
+#
+# Every entity is a typed, case-scoped record.  History rules (enforced here AND by core.services.troubleshooting):
+#   * append-only (never modifiable, never deletable):  TsEvidenceBlob, TsEvidenceRef, TsObservation, TsDiagnosticTest,
+#     TsAuditEvent, TsDriftAssessment, TsCorrelationRecord, TsTopologyPath, TsBaselineReference
+#   * finalisable (modifiable only while still in a non-final status; frozen afterwards): TsCollectionRun
+#   * lifecycle-mutable (state moves are written to the hash-chained audit journal by the repository): TsCase,
+#     TsHypothesis, TsProductionFlowMonitor, TsExceptionPolicy, TsAIHandoff, TsRemediationPlan, TsActionExecution,
+#     TsVerificationRecord
+# The class names carry a ``Ts`` prefix because ``AuditEvent`` (control-plane audit) and others already exist; the
+# spec's entity names map one-to-one (see docs/troubleshooting/architecture.md).
+# ═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+
+TS_SCHEMA_VERSION = "nmas.troubleshooting/1"
+
+
+class TsBasis(models.TextChoices):
+    """Strict separation of what a statement IS (spec 2.1): observation / inference / hypothesis / root cause / plan / execution."""
+
+    OBSERVED = "OBSERVED", "Directly observed"
+    DERIVED = "DERIVED", "Deterministically derived"
+    AI_INFERRED = "AI_INFERRED", "AI-inferred"
+    OPERATOR_CONFIRMED = "OPERATOR_CONFIRMED", "Operator-confirmed"
+
+
+class TsCaseState(models.TextChoices):
+    OPEN = "OPEN", "Open"
+    SCOPING = "SCOPING", "Scoping"
+    COLLECTING = "COLLECTING", "Collecting"
+    ANALYSING = "ANALYSING", "Analysing"
+    TESTING = "TESTING", "Testing"
+    AI_INVESTIGATING = "AI_INVESTIGATING", "AI investigating"
+    REMEDIATING = "REMEDIATING", "Remediating"
+    VERIFYING = "VERIFYING", "Verifying"
+    RESOLVED_VERIFIED = "RESOLVED_VERIFIED", "Resolved (verified)"
+    NO_FAULT_FOUND = "NO_FAULT_FOUND", "No fault found"
+    UNRESOLVED = "UNRESOLVED", "Unresolved"
+    EXTERNALLY_BLOCKED = "EXTERNALLY_BLOCKED", "Externally blocked"
+
+
+TS_TERMINAL_CASE_STATES = (
+    TsCaseState.RESOLVED_VERIFIED, TsCaseState.NO_FAULT_FOUND, TsCaseState.UNRESOLVED, TsCaseState.EXTERNALLY_BLOCKED,
+)
+
+
+class TsStage(models.TextChoices):
+    COLLECT = "COLLECT", "Collect"
+    NORMALIZE = "NORMALIZE", "Normalize"
+    BASELINE = "BASELINE", "Baseline"
+    CORRELATE = "CORRELATE", "Correlate"
+    TEST = "TEST", "Test"
+    DIAGNOSE = "DIAGNOSE", "Diagnose"
+    AI = "AI", "AI investigation"
+    REMEDIATE = "REMEDIATE", "Remediate"
+    VERIFY = "VERIFY", "Verify"
+    DOCUMENT = "DOCUMENT", "Document"
+
+
+TS_STAGE_ORDER = tuple(TsStage.values)
+
+
+def _ts_forbid_update(instance) -> None:
+    if instance.pk and type(instance).objects.filter(pk=instance.pk).exists():
+        raise ValueError(f"{type(instance).__name__} records are append-only and cannot be modified.")
+
+
+class _TsAppendOnlyQuerySet(models.QuerySet):
+    def update(self, **kwargs):
+        raise ValueError(f"{self.model.__name__} records are append-only and cannot be updated.")
+
+    def bulk_update(self, objs, fields, batch_size=None):
+        raise ValueError(f"{self.model.__name__} records are append-only and cannot be updated.")
+
+    def delete(self):
+        raise ValueError(f"{self.model.__name__} records are append-only and cannot be deleted.")
+
+
+_TsAppendOnlyManager = models.Manager.from_queryset(_TsAppendOnlyQuerySet)
+
+
+class _TsAppendOnly(models.Model):
+    """Mixin: rows can be created, never modified or deleted (instance, queryset or bulk)."""
+
+    objects = _TsAppendOnlyManager()
+
+    class Meta:
+        abstract = True
+
+    def save(self, *args, **kwargs):
+        _ts_forbid_update(self)
+        self.full_clean_json()
+        super().save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        raise ValueError(f"{type(self).__name__} records are append-only and cannot be deleted.")
+
+    def full_clean_json(self) -> None:
+        """Secrets never live in structured metadata (shared policy).  Value-level redaction is the repository's job."""
+        from core.services.secret_policy import assert_no_secret_shaped_keys
+
+        for field in self._meta.fields:
+            if isinstance(field, models.JSONField):
+                value = getattr(self, field.name)
+                if isinstance(value, (dict, list)):
+                    assert_no_secret_shaped_keys({"v": value}, context=f"{type(self).__name__}.{field.name}")
+
+
+class _TsRecord(models.Model):
+    """Common envelope of every case-scoped record: identity, provenance of the claim, stage decision and timestamps."""
+
+    record_id = models.CharField(max_length=40, unique=True)
+    case = models.ForeignKey("core.TsCase", on_delete=models.PROTECT, related_name="%(class)s_records")
+    schema_version = models.CharField(max_length=40, default=TS_SCHEMA_VERSION)
+    basis = models.CharField(max_length=24, choices=TsBasis.choices, default=TsBasis.OBSERVED)
+    stage = models.CharField(max_length=16, choices=TsStage.choices, blank=True, default="")
+    stage_decision = models.CharField(max_length=255, blank=True, default="")
+    evidence_ids = models.JSONField(default=list, blank=True, help_text="TsEvidenceRef.evidence_id values this claim rests on.")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        abstract = True
+
+    def __str__(self):
+        return self.record_id
+
+    def full_clean_json(self) -> None:
+        _TsAppendOnly.full_clean_json(self)
+
+
+class TsCase(models.Model):
+    case_id = models.CharField(max_length=40, unique=True)
+    tenant = models.CharField(max_length=64, default="default", help_text="Tenant/project scope; every read is filtered by it.")
+    trigger_source = models.CharField(max_length=64)
+    trigger_ref = models.CharField(max_length=255, blank=True, default="")
+    idempotency_key = models.CharField(max_length=128, blank=True, default="")
+    title = models.CharField(max_length=255, blank=True, default="")
+    symptom = models.TextField(blank=True, default="")
+    runbook = models.CharField(max_length=16, blank=True, default="")
+    service_intent = models.JSONField(default=dict, blank=True)
+    flow_scope = models.JSONField(default=dict, blank=True, help_text="Production-flow scope: protocol/ports/endpoints/VRF/criticality.")
+    severity = models.CharField(max_length=16, default="MEDIUM")
+    affected_scope = models.JSONField(default=dict, blank=True, help_text="{'devices': [...], 'interfaces': [...], 'links': [...], 'flows': [...]}")
+    target_states = models.JSONField(default=dict, blank=True, help_text="device -> admission/lifecycle state captured at intake (VERIFIED only is probe-able).")
+    state = models.CharField(max_length=24, choices=TsCaseState.choices, default=TsCaseState.OPEN)
+    opened_at = models.DateTimeField()
+    closed_at = models.DateTimeField(null=True, blank=True)
+    first_detected_at = models.DateTimeField(null=True, blank=True)
+    isolation_strategy = models.CharField(max_length=32, blank=True, default="")
+    strategy_rationale = models.TextField(blank=True, default="")
+    last_known_good_at = models.DateTimeField(null=True, blank=True)
+    last_known_good_ref = models.CharField(max_length=255, blank=True, default="")
+    worked_before = models.BooleanField(null=True, blank=True)
+    changed_recently = models.BooleanField(null=True, blank=True)
+    change_window_refs = models.JSONField(default=list, blank=True)
+    owner = models.CharField(max_length=150, blank=True, default="")
+    confidence = models.FloatField(null=True, blank=True)
+    disposition = models.JSONField(default=dict, blank=True)
+    schema_version = models.CharField(max_length=40, default=TS_SCHEMA_VERSION)
+
+    _IMMUTABLE = ("case_id", "tenant", "trigger_source", "opened_at", "idempotency_key")
+
+    class Meta:
+        ordering = ["-opened_at"]
+        constraints = [
+            models.UniqueConstraint(fields=["tenant", "idempotency_key"], condition=~Q(idempotency_key=""), name="ts_case_unique_idempotency"),
+        ]
+
+    def __str__(self):
+        return self.case_id
+
+    def save(self, *args, **kwargs):
+        if self.state not in TsCaseState.values:
+            raise ValueError(f"Invalid case state {self.state!r}.")
+        if self.pk:
+            persisted = type(self).objects.filter(pk=self.pk).first()
+            if persisted is not None:
+                for name in self._IMMUTABLE:
+                    if getattr(persisted, name) != getattr(self, name):
+                        raise ValueError(f"TsCase.{name} is immutable after creation.")
+                if persisted.state in TS_TERMINAL_CASE_STATES and persisted.state != self.state:
+                    raise ValueError("A closed case cannot change state; open a follow-up case instead.")
+        _TsAppendOnly.full_clean_json(self)
+        super().save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        raise ValueError("TsCase records are historical artifacts and cannot be deleted.")
+
+
+class TsEvidenceBlob(_TsAppendOnly):
+    """Content-addressed, ALREADY-REDACTED raw evidence (CLI/log/pcap-metadata/config).  Operator views never render it."""
+
+    stored_sha256 = models.CharField(max_length=64, unique=True)
+    raw_sha256 = models.CharField(max_length=64, help_text="sha256 of the original bytes before redaction (provenance only; the original is never stored).")
+    content = models.TextField()
+    size_bytes = models.PositiveIntegerField(default=0)
+    redaction_count = models.PositiveIntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+
+class TsEvidenceRef(_TsAppendOnly):
+    evidence_id = models.CharField(max_length=40, unique=True)
+    case = models.ForeignKey(TsCase, on_delete=models.PROTECT, related_name="evidence_refs")
+    source_type = models.CharField(max_length=24, help_text="cli|gnmi|snmp|syslog|netflow|pcap|config|netbox|golden|operator|ai_tool|replay")
+    device = models.CharField(max_length=64, blank=True, default="")
+    command_or_api = models.CharField(max_length=255, blank=True, default="")
+    adapter = models.CharField(max_length=64, blank=True, default="")
+    adapter_version = models.CharField(max_length=32, blank=True, default="")
+    parser = models.CharField(max_length=64, blank=True, default="")
+    parser_version = models.CharField(max_length=32, blank=True, default="")
+    collected_at = models.DateTimeField()
+    raw_sha256 = models.CharField(max_length=64, blank=True, default="")
+    raw_blob = models.ForeignKey(TsEvidenceBlob, null=True, blank=True, on_delete=models.PROTECT, related_name="refs")
+    raw_pointer = models.CharField(max_length=512, blank=True, default="", help_text="Opaque pointer to externally held raw evidence (gateway evidence seq, pcap path...).")
+    raw_size_bytes = models.PositiveIntegerField(default=0)
+    redaction_status = models.CharField(max_length=16, default="NOT_APPLICABLE", help_text="REDACTED|CLEAN|NOT_APPLICABLE")
+    operator_url = models.CharField(max_length=512, blank=True, default="", help_text="Operator-view URL; blank when none exists. NEVER invented.")
+    link_status = models.CharField(max_length=16, default="MISSING", help_text="OK|BROKEN|MISSING|UNVERIFIED")
+    link_note = models.CharField(max_length=255, blank=True, default="")
+    quality = models.CharField(max_length=16, default="GOOD")
+    scope = models.JSONField(default=dict, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        indexes = [models.Index(fields=["case", "device"])]
+
+    def __str__(self):
+        return self.evidence_id
+
+
+class TsCollectionRun(_TsRecord):
+    FINAL = ("SUCCEEDED", "FAILED", "PARTIAL", "DENIED", "UNAVAILABLE", "SKIPPED")
+
+    seq = models.PositiveIntegerField()
+    idempotency_key = models.CharField(max_length=128)
+    collector = models.CharField(max_length=64)
+    adapter = models.CharField(max_length=64, blank=True, default="")
+    adapter_version = models.CharField(max_length=32, blank=True, default="")
+    targets = models.JSONField(default=list, blank=True)
+    privileges = models.CharField(max_length=32, default="read-only")
+    command_or_api = models.CharField(max_length=255, blank=True, default="")
+    started_at = models.DateTimeField(null=True, blank=True)
+    finished_at = models.DateTimeField(null=True, blank=True)
+    attempts = models.PositiveIntegerField(default=0)
+    max_attempts = models.PositiveIntegerField(default=3)
+    timeout_seconds = models.PositiveIntegerField(default=30)
+    rate_budget = models.JSONField(default=dict, blank=True)
+    status = models.CharField(max_length=16, default="PENDING")
+    error = models.CharField(max_length=512, blank=True, default="")
+    raw_ref = models.ForeignKey(TsEvidenceRef, null=True, blank=True, on_delete=models.PROTECT, related_name="collection_runs")
+
+    class Meta:
+        ordering = ["case_id", "seq"]
+        constraints = [
+            models.UniqueConstraint(fields=["case", "seq"], name="ts_collection_unique_seq"),
+            models.UniqueConstraint(fields=["case", "idempotency_key"], name="ts_collection_unique_idem"),
+        ]
+
+    def save(self, *args, **kwargs):
+        if self.pk:
+            persisted = type(self).objects.filter(pk=self.pk).values_list("status", flat=True).first()
+            if persisted in self.FINAL:
+                raise ValueError("TsCollectionRun records are immutable once finalised.")
+        _TsAppendOnly.full_clean_json(self)
+        super().save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        raise ValueError("TsCollectionRun records cannot be deleted.")
+
+
+class TsObservation(_TsRecord, _TsAppendOnly):
+    objects = _TsAppendOnlyManager()
+
+    run = models.ForeignKey(TsCollectionRun, null=True, blank=True, on_delete=models.PROTECT, related_name="observations")
+    evidence = models.ForeignKey(TsEvidenceRef, null=True, blank=True, on_delete=models.PROTECT, related_name="observations")
+    dedupe_key = models.CharField(max_length=128, blank=True, default="")
+    key = models.CharField(max_length=128, help_text="Canonical metric/state key, e.g. interface.oper_state.")
+    value = models.JSONField(null=True, blank=True)
+    unit = models.CharField(max_length=24, blank=True, default="")
+    target = models.CharField(max_length=128, blank=True, default="")
+    observed_at = models.DateTimeField()
+    max_age_seconds = models.PositiveIntegerField(default=300)
+    source = models.CharField(max_length=64, blank=True, default="")
+    quality = models.CharField(max_length=16, default="GOOD", help_text="GOOD|PARTIAL|AMBIGUOUS|UNTRUSTED|MISSING")
+    confidence = models.FloatField(default=1.0)
+    parser_version = models.CharField(max_length=32, blank=True, default="")
+    raw_hash = models.CharField(max_length=64, blank=True, default="")
+    raw_pointer = models.CharField(max_length=512, blank=True, default="")
+    redaction_status = models.CharField(max_length=16, default="NOT_APPLICABLE")
+    is_missing_data = models.BooleanField(default=False, help_text="A permission-denied/error/unavailable record: NOT an observed value (spec UT-024).")
+    missing_reason = models.CharField(max_length=255, blank=True, default="")
+
+    class Meta:
+        ordering = ["case_id", "observed_at", "id"]
+        indexes = [models.Index(fields=["case", "key", "target"])]
+        constraints = [
+            models.UniqueConstraint(fields=["case", "dedupe_key"], condition=~Q(dedupe_key=""), name="ts_observation_unique_dedupe"),
+        ]
+
+    delete = _TsAppendOnly.delete
+    save = _TsAppendOnly.save
+
+
+class TsBaselineReference(_TsRecord, _TsAppendOnly):
+    objects = _TsAppendOnlyManager()
+
+    baseline_type = models.CharField(max_length=24, help_text="INTENT|GOLDEN_CONFIG|LIVE_NORMAL|LEARNED_HISTORICAL|SLO")
+    subject = models.CharField(max_length=128, blank=True, default="")
+    revision = models.CharField(max_length=128, blank=True, default="")
+    revision_hash = models.CharField(max_length=64, blank=True, default="")
+    valid_from = models.DateTimeField(null=True, blank=True)
+    valid_until = models.DateTimeField(null=True, blank=True)
+    operator_url = models.CharField(max_length=512, blank=True, default="")
+    link_status = models.CharField(max_length=16, default="MISSING")
+    approved_change_id = models.CharField(max_length=64, blank=True, default="")
+    soak_state = models.CharField(max_length=24, blank=True, default="")
+    data = models.JSONField(default=dict, blank=True)
+
+    delete = _TsAppendOnly.delete
+    save = _TsAppendOnly.save
+
+
+class TsDriftAssessment(_TsRecord, _TsAppendOnly):
+    objects = _TsAppendOnlyManager()
+
+    baseline = models.ForeignKey(TsBaselineReference, null=True, blank=True, on_delete=models.PROTECT, related_name="drifts")
+    subject = models.CharField(max_length=128)
+    expected = models.JSONField(null=True, blank=True)
+    observed = models.JSONField(null=True, blank=True)
+    delta = models.JSONField(null=True, blank=True)
+    drift_kind = models.CharField(max_length=24, default="NONE", help_text="NONE|APPROVED|UNAPPROVED|UNKNOWN|STALE")
+    applicability = models.CharField(max_length=24, default="APPLICABLE")
+    approved_change_id = models.CharField(max_length=64, blank=True, default="")
+    production_impact = models.CharField(max_length=24, default="UNKNOWN", help_text="NONE|DEGRADED|OUTAGE|UNKNOWN")
+    materiality = models.CharField(max_length=16, default="UNKNOWN")
+    conclusion = models.CharField(max_length=255, blank=True, default="")
+
+    delete = _TsAppendOnly.delete
+    save = _TsAppendOnly.save
+
+
+class TsTopologyPath(_TsRecord, _TsAppendOnly):
+    objects = _TsAppendOnlyManager()
+
+    source = models.CharField(max_length=128)
+    destination = models.CharField(max_length=128)
+    vrf = models.CharField(max_length=64, blank=True, default="")
+    address_family = models.CharField(max_length=8, blank=True, default="")
+    service = models.CharField(max_length=64, blank=True, default="")
+    intended_hops = models.JSONField(default=list, blank=True)
+    observed_hops = models.JSONField(default=list, blank=True)
+    links = models.JSONField(default=list, blank=True)
+    next_hops = models.JSONField(default=list, blank=True)
+    adjacency = models.JSONField(default=list, blank=True)
+    lookup_provenance = models.JSONField(default=dict, blank=True)
+    divergence = models.JSONField(default=list, blank=True)
+
+    delete = _TsAppendOnly.delete
+    save = _TsAppendOnly.save
+
+
+class TsHypothesis(_TsRecord):
+    title = models.CharField(max_length=255)
+    failure_domain = models.CharField(max_length=32, blank=True, default="")
+    supporting_evidence = models.JSONField(default=list, blank=True)
+    contradicting_evidence = models.JSONField(default=list, blank=True)
+    ranking = models.PositiveIntegerField(default=0)
+    confidence = models.FloatField(default=0.0)
+    state = models.CharField(max_length=16, default="OPEN", help_text="OPEN|SUPPORTED|ELIMINATED|CONFIRMED|UNVERIFIED")
+    test_ids = models.JSONField(default=list, blank=True)
+    elimination_rationale = models.TextField(blank=True, default="")
+    proposed_by = models.CharField(max_length=64, blank=True, default="")
+
+    def save(self, *args, **kwargs):
+        if self.state not in ("OPEN", "SUPPORTED", "ELIMINATED", "CONFIRMED", "UNVERIFIED"):
+            raise ValueError(f"Invalid hypothesis state {self.state!r}.")
+        _TsAppendOnly.full_clean_json(self)
+        super().save(*args, **kwargs)
+
+
+class TsDiagnosticTest(_TsRecord, _TsAppendOnly):
+    objects = _TsAppendOnlyManager()
+    VERDICTS = ("PASS", "FAIL", "INCONCLUSIVE", "SKIPPED", "UNAVAILABLE")
+
+    seq = models.PositiveIntegerField()
+    attempt = models.PositiveIntegerField(default=1)
+    test_id = models.CharField(max_length=32, help_text="Stable deterministic catalogue id, e.g. HC07.")
+    test_version = models.CharField(max_length=16, default="1")
+    hypothesis = models.ForeignKey(TsHypothesis, null=True, blank=True, on_delete=models.PROTECT, related_name="tests")
+    hypothesized_condition = models.CharField(max_length=255, blank=True, default="")
+    preconditions = models.JSONField(default=list, blank=True)
+    target = models.CharField(max_length=128, blank=True, default="")
+    command_or_api = models.CharField(max_length=255, blank=True, default="")
+    expected = models.CharField(max_length=255, blank=True, default="")
+    observed = models.JSONField(default=dict, blank=True)
+    observed_summary = models.CharField(max_length=512, blank=True, default="")
+    verdict = models.CharField(max_length=16)
+    reason = models.CharField(max_length=512, blank=True, default="")
+    interpretation = models.CharField(max_length=512, blank=True, default="")
+    next_action = models.CharField(max_length=255, blank=True, default="")
+    executed_at = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        ordering = ["case_id", "seq", "attempt"]
+        constraints = [models.UniqueConstraint(fields=["case", "seq", "attempt"], name="ts_test_unique_seq")]
+
+    delete = _TsAppendOnly.delete
+    save = _TsAppendOnly.save
+
+
+class TsCorrelationRecord(_TsRecord, _TsAppendOnly):
+    objects = _TsAppendOnlyManager()
+
+    alert_ids = models.JSONField(default=list, blank=True)
+    common_fault_candidate = models.CharField(max_length=255, blank=True, default="")
+    topology_edge = models.JSONField(default=dict, blank=True)
+    time_window = models.JSONField(default=dict, blank=True)
+    rules = models.JSONField(default=list, blank=True)
+    metrics = models.JSONField(default=dict, blank=True)
+    role = models.CharField(max_length=16, default="CAUSE", help_text="CAUSE|SYMPTOM|UNRELATED")
+    drift_kind = models.CharField(max_length=24, blank=True, default="")
+    observed_value = models.JSONField(null=True, blank=True)
+    baseline_value = models.JSONField(null=True, blank=True)
+    confidence = models.FloatField(default=0.0)
+    conclusion = models.CharField(max_length=255, blank=True, default="")
+
+    delete = _TsAppendOnly.delete
+    save = _TsAppendOnly.save
+
+
+class TsProductionFlowMonitor(_TsRecord):
+    selector = models.JSONField(default=dict, blank=True, help_text="protocol/ports/endpoints/VRF")
+    criticality = models.CharField(max_length=16, default="UNKNOWN")
+    baseline = models.JSONField(default=dict, blank=True, help_text="loss/latency/availability")
+    sample_windows = models.JSONField(default=list, blank=True)
+    current_loss_pct = models.FloatField(null=True, blank=True)
+    uncertainty = models.JSONField(default=dict, blank=True)
+    coverage = models.JSONField(default=dict, blank=True)
+    classification = models.CharField(max_length=24, default="PRODUCTION", help_text="PRODUCTION|TEST_TRAFFIC|INTENTIONALLY_BLOCKED")
+
+    def save(self, *args, **kwargs):
+        _TsAppendOnly.full_clean_json(self)
+        super().save(*args, **kwargs)
+
+
+class TsExceptionPolicy(_TsRecord):
+    scope = models.JSONField(default=dict, blank=True, help_text="Narrow service/protocol/path scope; empty scope is rejected.")
+    reason = models.TextField(blank=True, default="")
+    requested_by = models.CharField(max_length=150, blank=True, default="")
+    approvals = models.JSONField(default=list, blank=True)
+    expires_at = models.DateTimeField()
+    bound_revisions = models.JSONField(default=dict, blank=True, help_text="Policy/config revisions at approval; a change invalidates the exception.")
+    status = models.CharField(max_length=16, default="ACTIVE", help_text="ACTIVE|EXPIRED|INVALIDATED|REVOKED")
+
+    def save(self, *args, **kwargs):
+        if not self.scope:
+            raise ValueError("An exception policy needs a narrow, non-empty scope.")
+        _TsAppendOnly.full_clean_json(self)
+        super().save(*args, **kwargs)
+
+
+class TsAIHandoff(_TsRecord):
+    coverage_manifest = models.JSONField(default=dict, blank=True)
+    trigger_uncertainty = models.TextField(blank=True, default="")
+    allowed_tools = models.JSONField(default=list, blank=True)
+    allowed_targets = models.JSONField(default=list, blank=True)
+    budget = models.JSONField(default=dict, blank=True)
+    reasoning_log = models.JSONField(default=list, blank=True)
+    return_conditions = models.JSONField(default=list, blank=True)
+    agent_identity = models.CharField(max_length=128, blank=True, default="")
+    checkpoint = models.JSONField(default=dict, blank=True)
+    status = models.CharField(max_length=16, default="OPEN")
+
+    def save(self, *args, **kwargs):
+        _TsAppendOnly.full_clean_json(self)
+        super().save(*args, **kwargs)
+
+
+class TsGlobalAgentLease(models.Model):
+    """Singleton, durable ownership record for all Troubleshooter AI execution.
+
+    A case handoff is still the authority for tools and targets.  This row adds
+    the cross-case invariant that only one model identity may execute at once.
+    ``fencing_token`` increases on every acquisition, transfer, revocation, or
+    pause so a delayed process cannot regain authority with an old grant.
+    """
+
+    STATE_CHOICES = (
+        ("IDLE", "Idle"),
+        ("ACTIVE", "Active"),
+        ("TRANSFERRING", "Transferring"),
+        ("PAUSED", "Paused"),
+    )
+
+    singleton_key = models.PositiveSmallIntegerField(primary_key=True, default=1, editable=False)
+    handoff = models.ForeignKey(TsAIHandoff, null=True, blank=True, on_delete=models.PROTECT,
+                                related_name="global_execution_leases")
+    active_agent = models.CharField(max_length=128, blank=True, default="")
+    fencing_token = models.PositiveBigIntegerField(default=0)
+    state = models.CharField(max_length=16, choices=STATE_CHOICES, default="IDLE")
+    lease_expires_at = models.DateTimeField(null=True, blank=True)
+    heartbeat_at = models.DateTimeField(null=True, blank=True)
+    progress_at = models.DateTimeField(null=True, blank=True)
+    checkpoint_digest = models.CharField(max_length=64, blank=True, default="")
+    capacity_snapshot = models.JSONField(default=dict, blank=True)
+    history = models.JSONField(default=list, blank=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        constraints = [
+            models.CheckConstraint(condition=models.Q(singleton_key=1), name="ts_global_agent_lease_singleton"),
+        ]
+
+    def save(self, *args, **kwargs):
+        if self.singleton_key != 1:
+            raise ValueError("TsGlobalAgentLease is a singleton with key 1.")
+        if self.state not in {choice[0] for choice in self.STATE_CHOICES}:
+            raise ValueError(f"Invalid TsGlobalAgentLease state {self.state!r}.")
+        if self.state == "ACTIVE" and (not self.active_agent or not self.handoff_id or self.lease_expires_at is None):
+            raise ValueError("An ACTIVE global agent lease requires an agent, handoff, and expiry.")
+        if self.state != "ACTIVE" and self.active_agent:
+            raise ValueError("Only an ACTIVE global agent lease may name an active agent.")
+        _TsAppendOnly.full_clean_json(self)
+        super().save(*args, **kwargs)
+
+
+class TsRemediationPlan(_TsRecord):
+    tier = models.PositiveSmallIntegerField(default=1)
+    operations = models.JSONField(default=list, blank=True)
+    risk = models.CharField(max_length=16, default="UNKNOWN")
+    blast_radius = models.JSONField(default=dict, blank=True)
+    impacted_flows = models.JSONField(default=list, blank=True)
+    preconditions = models.JSONField(default=list, blank=True)
+    alternative_paths = models.JSONField(default=list, blank=True)
+    dry_run = models.JSONField(default=dict, blank=True)
+    causal_proof = models.JSONField(default=list, blank=True)
+    rollback_plan = models.JSONField(default=dict, blank=True)
+    approval = models.JSONField(default=dict, blank=True)
+    expires_at = models.DateTimeField(null=True, blank=True)
+    status = models.CharField(max_length=16, default="PROPOSED", help_text="PROPOSED|APPROVED|REJECTED|BLOCKED|EXPIRED|EXECUTED")
+
+    def save(self, *args, **kwargs):
+        _TsAppendOnly.full_clean_json(self)
+        super().save(*args, **kwargs)
+
+
+class TsActionExecution(_TsRecord):
+    plan = models.ForeignKey(TsRemediationPlan, on_delete=models.PROTECT, related_name="executions")
+    pre_state = models.JSONField(default=dict, blank=True)
+    command_or_intent = models.JSONField(default=dict, blank=True)
+    idempotency_key = models.CharField(max_length=128, unique=True)
+    lock_lease = models.CharField(max_length=128, blank=True, default="")
+    executed_at = models.DateTimeField(null=True, blank=True)
+    observed_effect = models.JSONField(default=dict, blank=True)
+    stop_reason = models.CharField(max_length=255, blank=True, default="")
+    rollback = models.JSONField(default=dict, blank=True)
+    status = models.CharField(max_length=16, default="PENDING")
+
+    def save(self, *args, **kwargs):
+        _TsAppendOnly.full_clean_json(self)
+        super().save(*args, **kwargs)
+
+
+class TsVerificationRecord(_TsRecord):
+    original_symptom = models.TextField(blank=True, default="")
+    before_after = models.JSONField(default=dict, blank=True)
+    test_steps = models.JSONField(default=list, blank=True)
+    observed_values = models.JSONField(default=dict, blank=True)
+    soak_status = models.CharField(max_length=24, blank=True, default="")
+    regressions = models.JSONField(default=list, blank=True)
+    final_diagnosis = models.CharField(max_length=255, blank=True, default="")
+    residual_impact = models.CharField(max_length=255, blank=True, default="")
+    outcome = models.CharField(max_length=24, default="INCONCLUSIVE", help_text="VERIFIED|FAILED|INCONCLUSIVE|SOAKING")
+
+    def save(self, *args, **kwargs):
+        _TsAppendOnly.full_clean_json(self)
+        super().save(*args, **kwargs)
+
+
+class TsAuditEvent(_TsAppendOnly):
+    """Ordered, append-only, hash-chained per case.  event_hash = sha256(prev_hash || canonical(payload))."""
+
+    case = models.ForeignKey(TsCase, on_delete=models.PROTECT, related_name="audit_events")
+    seq = models.PositiveIntegerField()
+    actor = models.CharField(max_length=150)
+    actor_type = models.CharField(max_length=16, default="system", help_text="user|agent|tool|system")
+    tool_id = models.CharField(max_length=128, blank=True, default="")
+    action = models.CharField(max_length=64)
+    decision = models.CharField(max_length=255, blank=True, default="")
+    result = models.CharField(max_length=64, blank=True, default="")
+    risk = models.CharField(max_length=16, blank=True, default="")
+    approver = models.CharField(max_length=150, blank=True, default="")
+    operation = models.CharField(max_length=255, blank=True, default="")
+    rationale = models.TextField(blank=True, default="")
+    evidence_ids = models.JSONField(default=list, blank=True)
+    occurred_at = models.DateTimeField()
+    prev_hash = models.CharField(max_length=64, blank=True, default="")
+    event_hash = models.CharField(max_length=64)
+
+    class Meta:
+        ordering = ["case_id", "seq"]
+        constraints = [models.UniqueConstraint(fields=["case", "seq"], name="ts_audit_unique_seq")]

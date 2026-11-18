@@ -1,0 +1,30 @@
+{
+  "schema": "nmas.troubleshooting.fault-policy/1",
+  "topology": "nmas-disposable-fixture",
+  "campaign": {
+    "id": "FIXTURE-CAMPAIGN-1",
+    "authorization_id": "FIXTURE-AUTH-1",
+    "expires_at": "2099-01-01T00:00:00Z",
+    "fixture_only": true
+  },
+  "allowed_faults": [
+    {
+      "id": "fixture-link-down",
+      "device": "fixture-r1",
+      "platform": "mock",
+      "object_type": "interface",
+      "object_name": "fixture0",
+      "fault_type": "admin_shutdown",
+      "management_path_ref": "FIXTURE-PATH-1",
+      "identity_verified": true,
+      "lifecycle_eligible": true,
+      "write_eligible": true,
+      "maximum_seconds": 30
+    }
+  ],
+  "protected_flows": [
+    {"id": "fixture-v4", "family": "IPv4", "selector_ref": "FIXTURE-FLOW-V4"},
+    {"id": "fixture-v6", "family": "IPv6", "selector_ref": "FIXTURE-FLOW-V6"}
+  ],
+  "loss_threshold_pct": 0.0
+}

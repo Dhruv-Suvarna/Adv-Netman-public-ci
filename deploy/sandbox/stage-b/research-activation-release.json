@@ -1,0 +1,32 @@
+{
+  "schema": "nmas.stage-b-research-release/1",
+  "release_id": "CHG-NMAS-20261116-FINAL-WEB-003-COMPLETE-11-INSTALLER-MODE",
+  "identities": {
+    "overlay_sha256": "ecbfc3687bbe0c1ac7565fc6489a577f3517b5598fb9ae286306d1fa40b40430",
+    "controller_sha256": "fd375d3cc4b86cca7a8d888745122a682999ab369d501a98b543d67009a992b8",
+    "host_policy_sha256": "7a1ba4249d09b896ddaedd9b3d111992925338230bdee7655ca0924d8382d0e4",
+    "resolver_root_sha256": "35515c56d96dbc86714d232784e8dce2e0db5e949daa592da09a0ca897f066fc",
+    "namespace_config_sha256": "1175073d795a8bd906d87da85f22b93f284af002daab570bb4a310bc0cab1343",
+    "nft_policy_sha256": "49e1f29de49a3a0a9bfc1b1c6a7cea9c855d8b119d241f2fae1a71379fb26970"
+  },
+  "files": [
+    {"path": "deploy/sandbox/namespace_activation.py", "sha256": "fd375d3cc4b86cca7a8d888745122a682999ab369d501a98b543d67009a992b8", "size": 75059, "install_mode": 420},
+    {"path": "deploy/sandbox/namespace-activate.sh", "sha256": "63d0adf44c4cc9befb9d05835b0d7b7ecb9d05324e53ff911067af2fba2a9043", "size": 379, "install_mode": 493},
+    {"path": "deploy/sandbox/resolver_root.py", "sha256": "35515c56d96dbc86714d232784e8dce2e0db5e949daa592da09a0ca897f066fc", "size": 11583, "install_mode": 420},
+    {"path": "deploy/sandbox/worker_runtime.py", "sha256": "4330630026c6a2b09d072d18de8e3f8cf2eb1e7fd1c6cf3ce8311ba2a92a979e", "size": 23560, "install_mode": 420},
+    {"path": "deploy/sandbox/stage-b/worker-source-manifest.json.proposed", "sha256": "5093674fec9064d4e287c103a9acfdc81d1e7df2288bbe2549581827f74e818b", "size": 390516, "install_mode": 420},
+    {"path": "deploy/sandbox/stage-b/worker-overlay-manifest.json.legacy-receipt-review", "sha256": "ecbfc3687bbe0c1ac7565fc6489a577f3517b5598fb9ae286306d1fa40b40430", "size": 1003, "install_mode": 420},
+    {"path": "deploy/sandbox/worker-runtime.lock", "sha256": "71fd8820338b2ce757bac57580d445a9f95e580b48c8d175165fe4087f23bcfa", "size": 394, "install_mode": 420},
+    {"path": "deploy/sandbox/nmas-research-broker.service.in", "sha256": "f4aea87ff4cd12fe47e6efa40dc84e579dafecd9a22d213b0ebe3a20682aea89", "size": 2317, "install_mode": 420},
+    {"path": "deploy/sandbox/nmas-troubleshooter.sysusers.in", "sha256": "87c6f4be0a6738eadd4a11a908b3dcfd278c09b789eb0812de587a53eefcf2f4", "size": 534, "install_mode": 420},
+    {"path": "deploy/sandbox/research-broker.env.in", "sha256": "a15c3ca4df3b1de6adc00dd7308596524aee6c7588111ca829e931f9a57e9919", "size": 489, "install_mode": 416},
+    {"path": "deploy/sandbox/stage-b/research-namespace.env.activation-review", "sha256": "1175073d795a8bd906d87da85f22b93f284af002daab570bb4a310bc0cab1343", "size": 1136, "install_mode": 384},
+    {"path": "deploy/sandbox/stage-b/research-egress.nft.proposed", "sha256": "49e1f29de49a3a0a9bfc1b1c6a7cea9c855d8b119d241f2fae1a71379fb26970", "size": 1540, "install_mode": 384},
+    {"path": "deploy/sandbox/stage-b/research-host-egress.nft.activation-review", "sha256": "7a1ba4249d09b896ddaedd9b3d111992925338230bdee7655ca0924d8382d0e4", "size": 1791, "install_mode": 420},
+    {"path": "deploy/sandbox/stage-b/research-destinations.json.proposed", "sha256": "945a47225fbc351c3dc5106e15d9dbc9d38c86ae9ae566ff884a752dd893d548", "size": 163, "install_mode": 420},
+    {"path": "web/core/services/troubleshooting/research.py", "sha256": "c37d23950cdeabcbcdddd27628ece017b2e5dd7b211349a4bbb45e8769fb869a", "size": 13668, "install_mode": 420},
+    {"path": "web/core/services/troubleshooting/research_worker.py", "sha256": "0db14db8bc0494fefcd75aa55e470adcc5c5bad7e52263359191a87ef89d4319", "size": 6073, "install_mode": 420},
+    {"path": "deploy/sandbox/research_release.py", "sha256": "6fb08198896ff5f4d6797a2bc4d73bd1c71bca8966d205e8f7252f8116382958", "size": 8045, "install_mode": 493},
+    {"path": "deploy/sandbox/fixtures/research-v2-rollback-receipt.json", "sha256": "988679369598a7a6012d1885700e7a0385aba8dc969dbfc98afa53a33f75c5e8", "size": 1139, "install_mode": 384}
+  ]
+}

@@ -1,0 +1,19 @@
+# Intentionally empty fail-closed proposal. No target may be added until an
+# approved, verified, healthy, active pinned-SSH ManagementPath exists.
+table inet nmas_diagnostic {
+  set targets4 { type ipv4_addr . inet_service; }
+  set targets6 { type ipv6_addr . inet_service; }
+  chain input {
+    type filter hook input priority filter; policy drop;
+    ct state established,related accept
+  }
+  chain forward {
+    type filter hook forward priority filter; policy drop;
+  }
+  chain output {
+    type filter hook output priority filter; policy drop;
+    ct state established,related accept
+    ip daddr . tcp dport @targets4 accept
+    ip6 daddr . tcp dport @targets6 accept
+  }
+}

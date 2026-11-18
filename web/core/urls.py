@@ -1,6 +1,6 @@
 from django.urls import path
 
-from . import auth_views, commissioning_views, decommission_views, infrastructure_views, lifecycle_views, maintenance_views, management_views, test_governance_views, views, ztp_views
+from . import auth_views, commissioning_views, decommission_views, infrastructure_views, lifecycle_views, maintenance_views, management_views, test_governance_views, troubleshooting_urls, views, ztp_views
 
 app_name = "core"
 
@@ -481,3 +481,6 @@ urlpatterns = [
     path("device-builder/changes/<str:change_id>/intent/<int:intent_id>/template-version/", views.template_version_from_change,
          name="template_version_from_change"),
 ]
+
+# Troubleshooting UI + API v1 (additive include; see troubleshooting_urls.py)
+urlpatterns += troubleshooting_urls.urlpatterns

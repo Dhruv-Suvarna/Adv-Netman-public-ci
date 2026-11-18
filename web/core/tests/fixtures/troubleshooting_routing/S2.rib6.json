@@ -1,0 +1,134 @@
+{
+    "vrfs": {
+        "default": {
+            "routingDisabled": false,
+            "allRoutesProgrammedHardware": true,
+            "allRoutesProgrammedKernel": true,
+            "defaultRouteState": "notReachable",
+            "routes": {
+                "2001:db8:10::/64": {
+                    "hardwareProgrammed": true,
+                    "routeType": "connected",
+                    "routeLeaked": false,
+                    "kernelProgrammed": true,
+                    "preference": 0,
+                    "metric": 0,
+                    "vias": [
+                        {
+                            "interface": "Vlan10"
+                        }
+                    ],
+                    "routeAction": "forward",
+                    "directlyConnected": true
+                },
+                "2001:db8:20::/64": {
+                    "hardwareProgrammed": true,
+                    "routeType": "connected",
+                    "routeLeaked": false,
+                    "kernelProgrammed": true,
+                    "preference": 0,
+                    "metric": 0,
+                    "vias": [
+                        {
+                            "interface": "Vlan20"
+                        }
+                    ],
+                    "routeAction": "forward",
+                    "directlyConnected": true
+                },
+                "2001:db8:30::/64": {
+                    "hardwareProgrammed": true,
+                    "routeType": "connected",
+                    "routeLeaked": false,
+                    "kernelProgrammed": true,
+                    "preference": 0,
+                    "metric": 0,
+                    "vias": [
+                        {
+                            "interface": "Vlan30"
+                        }
+                    ],
+                    "routeAction": "forward",
+                    "directlyConnected": true
+                },
+                "2001:db8:110:1::/64": {
+                    "hardwareProgrammed": true,
+                    "routeType": "isisL2",
+                    "routeLeaked": false,
+                    "kernelProgrammed": true,
+                    "preference": 115,
+                    "metric": 20,
+                    "vias": [
+                        {
+                            "nexthopAddr": "fe80::21c:73ff:fed0:7d66",
+                            "interface": "Vlan99"
+                        }
+                    ],
+                    "routeAction": "forward",
+                    "directlyConnected": false
+                },
+                "2001:db8:110:2::/64": {
+                    "hardwareProgrammed": true,
+                    "routeType": "connected",
+                    "routeLeaked": false,
+                    "kernelProgrammed": true,
+                    "preference": 0,
+                    "metric": 0,
+                    "vias": [
+                        {
+                            "interface": "Ethernet1"
+                        }
+                    ],
+                    "routeAction": "forward",
+                    "directlyConnected": true
+                },
+                "2001:db8:110:3::/64": {
+                    "hardwareProgrammed": true,
+                    "routeType": "connected",
+                    "routeLeaked": false,
+                    "kernelProgrammed": true,
+                    "preference": 0,
+                    "metric": 0,
+                    "vias": [
+                        {
+                            "interface": "Vlan99"
+                        }
+                    ],
+                    "routeAction": "forward",
+                    "directlyConnected": true
+                },
+                "2001:db8:200::/64": {
+                    "hardwareProgrammed": true,
+                    "routeType": "connected",
+                    "routeLeaked": false,
+                    "kernelProgrammed": true,
+                    "preference": 0,
+                    "metric": 0,
+                    "vias": [
+                        {
+                            "interface": "Vlan200"
+                        }
+                    ],
+                    "routeAction": "forward",
+                    "directlyConnected": true
+                },
+                "2001:db8::/32": {
+                    "hardwareProgrammed": true,
+                    "routeType": "isisL2",
+                    "routeLeaked": false,
+                    "kernelProgrammed": true,
+                    "preference": 115,
+                    "metric": 10,
+                    "vias": [
+                        {
+                            "nexthopAddr": "fe80::a8c1:abff:fe3e:640d",
+                            "interface": "Ethernet1"
+                        }
+                    ],
+                    "routeAction": "forward",
+                    "directlyConnected": false
+                }
+            }
+        }
+    }
+}

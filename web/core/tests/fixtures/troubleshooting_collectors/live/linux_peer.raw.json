@@ -1,0 +1,30 @@
+{
+ "ip -j -4 route show": {
+  "hash": "sha256:fefede21e49b0de21d9bbefcc46a65329cf6dd52bab17c9dc9909e09a6ab8921",
+  "redacted_text": "[{\"dst\":\"172.31.200.0/24\",\"dev\":\"eth0\",\"protocol\":\"kernel\",\"scope\":\"link\",\"prefsrc\":\"172.31.200.11\",\"flags\":[]}]\n"
+ },
+ "ip -j -s link show": {
+  "hash": "sha256:3e69bd34579157445e1c0e2bf04c142fe2637f82e56260a76744a13325a6e131",
+  "redacted_text": "[{\"ifindex\":1,\"ifname\":\"lo\",\"flags\":[\"LOOPBACK\",\"UP\",\"LOWER_UP\"],\"mtu\":65536,\"qdisc\":\"noqueue\",\"operstate\":\"UNKNOWN\",\"linkmode\":\"DEFAULT\",\"group\":\"default\",\"txqlen\":1000,\"link_type\":\"loopback\",\"address\":\"00:00:00:00:00:00\",\"broadcast\":\"00:00:00:00:00:00\",\"stats64\":{\"rx\":{\"bytes\":0,\"packets\":0,\"errors\":0,\"dropped\":0,\"over_errors\":0,\"multicast\":0},\"tx\":{\"bytes\":0,\"packets\":0,\"errors\":0,\"dropped\":0,\"carrier_errors\":0,\"collisions\":0}}},{\"ifindex\":2374,\"link_index\":2375,\"ifname\":\"eth0\",\"flags\":[\"BROADCAST\",\"MULTICAST\",\"UP\",\"LOWER_UP\"],\"mtu\":1500,\"qdisc\":\"noqueue\",\"operstate\":\"UP\",\"linkmode\":\"DEFAULT\",\"group\":\"default\",\"link_type\":\"ether\",\"address\":\"02:42:ac:1f:c8:0b\",\"broadcast\":\"ff:ff:ff:ff:ff:ff\",\"link_netnsid\":0,\"stats64\":{\"rx\":{\"bytes\":12797,\"packets\":84,\"errors\":0,\"dropped\":17,\"over_errors\":0,\"multicast\":0},\"tx\":{\"bytes\":1006,\"packets\":13,\"errors\":0,\"dropped\":0,\"carrier_errors\":0,\"collisions\":0}}},{\"ifindex\":2381,\"link_index\":2380,\"ifname\":\"eth1\",\"flags\":[\"BROADCAST\",\"MULTICAST\",\"UP\",\"LOWER_UP\"],\"mtu\":9500,\"qdisc\":\"noqueue\",\"operstate\":\"UP\",\"linkmode\":\"DEFAULT\",\"group\":\"default\",\"link_type\":\"ether\",\"address\":\"aa:c1:ab:b9:4f:6b\",\"broadcast\":\"ff:ff:ff:ff:ff:ff\",\"link_netnsid\":1,\"stats64\":{\"rx\":{\"bytes\":34294,\"packets\":275,\"errors\":0,\"dropped\":19,\"over_errors\":0,\"multicast\":0},\"tx\":{\"bytes\":1006,\"packets\":13,\"errors\":0,\"dropped\":0,\"carrier_errors\":0,\"collisions\":0}},\"altnames\":[\"clab-o-83c1f81dc711698f\"]}]\n"
+ },
+ "ip -j addr show": {
+  "hash": "sha256:98c14e21452dad2ba7e604732c7d6d5ee95ba60d2e92fa1666878013b7fd567d",
+  "redacted_text": "[{\"ifindex\":1,\"ifname\":\"lo\",\"flags\":[\"LOOPBACK\",\"UP\",\"LOWER_UP\"],\"mtu\":65536,\"qdisc\":\"noqueue\",\"operstate\":\"UNKNOWN\",\"group\":\"default\",\"txqlen\":1000,\"link_type\":\"loopback\",\"address\":\"00:00:00:00:00:00\",\"broadcast\":\"00:00:00:00:00:00\",\"addr_info\":[{\"family\":\"inet\",\"local\":\"127.0.0.1\",\"prefixlen\":8,\"scope\":\"host\",\"label\":\"lo\",\"valid_life_time\":4294967295,\"preferred_life_time\":4294967295},{\"family\":\"inet6\",\"local\":\"::1\",\"prefixlen\":128,\"scope\":\"host\",\"valid_life_time\":4294967295,\"preferred_life_time\":4294967295}]},{\"ifindex\":2374,\"link_index\":2375,\"ifname\":\"eth0\",\"flags\":[\"BROADCAST\",\"MULTICAST\",\"UP\",\"LOWER_UP\"],\"mtu\":1500,\"qdisc\":\"noqueue\",\"operstate\":\"UP\",\"group\":\"default\",\"link_type\":\"ether\",\"address\":\"02:42:ac:1f:c8:0b\",\"broadcast\":\"ff:ff:ff:ff:ff:ff\",\"link_netnsid\":0,\"addr_info\":[{\"family\":\"inet\",\"local\":\"172.31.200.11\",\"prefixlen\":24,\"broadcast\":\"172.31.200.255\",\"scope\":\"global\",\"label\":\"eth0\",\"valid_life_time\":4294967295,\"preferred_life_time\":4294967295},{\"family\":\"inet6\",\"local\":\"fe80::42:acff:fe1f:c80b\",\"prefixlen\":64,\"scope\":\"link\",\"valid_life_time\":4294967295,\"preferred_life_time\":4294967295}]},{\"ifindex\":2381,\"link_index\":2380,\"ifname\":\"eth1\",\"flags\":[\"BROADCAST\",\"MULTICAST\",\"UP\",\"LOWER_UP\"],\"mtu\":9500,\"qdisc\":\"noqueue\",\"operstate\":\"UP\",\"group\":\"default\",\"link_type\":\"ether\",\"address\":\"aa:c1:ab:b9:4f:6b\",\"broadcast\":\"ff:ff:ff:ff:ff:ff\",\"link_netnsid\":1,\"altnames\":[\"clab-o-83c1f81dc711698f\"],\"addr_info\":[{\"family\":\"inet6\",\"local\":\"fe80::a8c1:abff:feb9:4f6b\",\"prefixlen\":64,\"scope\":\"link\",\"valid_life_time\":4294967295,\"preferred_life_time\":4294967295}]}]\n"
+ },
+ "vtysh -c show bgp summary json": {
+  "hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "redacted_text": ""
+ },
+ "vtysh -c show ip ospf neighbor json": {
+  "hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "redacted_text": ""
+ },
+ "vtysh -c show running-config": {
+  "hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "redacted_text": ""
+ },
+ "vtysh -c show version": {
+  "hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "redacted_text": ""
+ }
+}

@@ -1,0 +1,34 @@
+{
+    "interfaces": {
+        "Management0": {
+            "name": "Management0",
+            "interfaceStatus": "connected",
+            "lineProtocolStatus": "up",
+            "mtu": 1500,
+            "ipv4Routable240": false,
+            "ipv4Routable0": false,
+            "interfaceAddress": {
+                "ipAddr": {
+                    "address": "172.20.20.4",
+                    "maskLen": 24
+                }
+            },
+            "nonRoutableClassEIntf": false
+        },
+        "Vlan200": {
+            "name": "Vlan200",
+            "interfaceStatus": "connected",
+            "lineProtocolStatus": "up",
+            "mtu": 1500,
+            "ipv4Routable240": false,
+            "ipv4Routable0": false,
+            "interfaceAddress": {
+                "ipAddr": {
+                    "address": "192.168.200.13",
+                    "maskLen": 24
+                }
+            },
+            "nonRoutableClassEIntf": false
+        }
+    }
+}

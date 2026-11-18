@@ -1,0 +1,50 @@
+{
+    "interfaces": {
+        "Management0": {
+            "name": "Management0",
+            "interfaceStatus": "connected",
+            "lineProtocolStatus": "up",
+            "mtu": 1500,
+            "linkLocal": {
+                "address": "fe80::21c:73ff:fe81:41c7",
+                "subnet": "fe80::/64",
+                "active": true,
+                "leastpref": false,
+                "dadfailed": false
+            },
+            "addresses": [
+                {
+                    "address": "3fff:172:20:20::4",
+                    "subnet": "3fff:172:20:20::/64",
+                    "active": true,
+                    "leastpref": false,
+                    "dadfailed": false
+                }
+            ],
+            "addrSource": "manual"
+        },
+        "Vlan200": {
+            "name": "Vlan200",
+            "interfaceStatus": "connected",
+            "lineProtocolStatus": "up",
+            "mtu": 1500,
+            "linkLocal": {
+                "address": "fe80::21c:73ff:fef9:6f07",
+                "subnet": "fe80::/64",
+                "active": true,
+                "leastpref": false,
+                "dadfailed": false
+            },
+            "addresses": [
+                {
+                    "address": "2001:db8:200::13",
+                    "subnet": "2001:db8:200::/64",
+                    "active": true,
+                    "leastpref": false,
+                    "dadfailed": false
+                }
+            ],
+            "addrSource": "manual"
+        }
+    }
+}

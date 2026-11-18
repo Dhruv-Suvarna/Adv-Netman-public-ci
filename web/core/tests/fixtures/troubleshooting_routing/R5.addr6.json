@@ -1,0 +1,119 @@
+{
+    "interfaces": {
+        "Ethernet1": {
+            "name": "Ethernet1",
+            "interfaceStatus": "connected",
+            "lineProtocolStatus": "up",
+            "mtu": 1500,
+            "linkLocal": {
+                "address": "fe80::a8c1:abff:fe20:1c08",
+                "subnet": "fe80::/64",
+                "active": true,
+                "leastpref": false,
+                "dadfailed": false
+            },
+            "addresses": [
+                {
+                    "address": "2001:db8:205:1::2",
+                    "subnet": "2001:db8:205:1::/64",
+                    "active": true,
+                    "leastpref": false,
+                    "dadfailed": false
+                }
+            ],
+            "addrSource": "manual"
+        },
+        "Ethernet2": {
+            "name": "Ethernet2",
+            "interfaceStatus": "connected",
+            "lineProtocolStatus": "up",
+            "mtu": 1500,
+            "linkLocal": {
+                "address": "fe80::a8c1:abff:fe35:505b",
+                "subnet": "fe80::/64",
+                "active": true,
+                "leastpref": false,
+                "dadfailed": false
+            },
+            "addresses": [
+                {
+                    "address": "2001:db8:205:2::2",
+                    "subnet": "2001:db8:205:2::/64",
+                    "active": true,
+                    "leastpref": false,
+                    "dadfailed": false
+                }
+            ],
+            "addrSource": "manual"
+        },
+        "Ethernet3": {
+            "name": "Ethernet3",
+            "interfaceStatus": "connected",
+            "lineProtocolStatus": "up",
+            "mtu": 1500,
+            "linkLocal": {
+                "address": "fe80::a8c1:abff:fe57:15aa",
+                "subnet": "fe80::/64",
+                "active": true,
+                "leastpref": false,
+                "dadfailed": false
+            },
+            "addresses": [
+                {
+                    "address": "2001:db8:3150::1",
+                    "subnet": "2001:db8:3150::/64",
+                    "active": true,
+                    "leastpref": false,
+                    "dadfailed": false
+                }
+            ],
+            "addrSource": "manual"
+        },
+        "Loopback0": {
+            "name": "Loopback0",
+            "interfaceStatus": "connected",
+            "lineProtocolStatus": "up",
+            "mtu": 65535,
+            "linkLocal": {
+                "address": "fe80::ff:fe00:0",
+                "subnet": "fe80::/64",
+                "active": true,
+                "leastpref": false,
+                "dadfailed": false
+            },
+            "addresses": [
+                {
+                    "address": "2001:db8:255::5",
+                    "subnet": "2001:db8:255::5/128",
+                    "active": true,
+                    "leastpref": false,
+                    "dadfailed": false
+                }
+            ],
+            "addrSource": "manual"
+        },
+        "Management0": {
+            "name": "Management0",
+            "interfaceStatus": "connected",
+            "lineProtocolStatus": "up",
+            "mtu": 1500,
+            "linkLocal": {
+                "address": "fe80::21c:73ff:fe34:c2b2",
+                "subnet": "fe80::/64",
+                "active": true,
+                "leastpref": false,
+                "dadfailed": false
+            },
+            "addresses": [
+                {
+                    "address": "3fff:172:20:20::10",
+                    "subnet": "3fff:172:20:20::/64",
+                    "active": true,
+                    "leastpref": false,
+                    "dadfailed": false
+                }
+            ],
+            "addrSource": "manual"
+        }
+    }
+}

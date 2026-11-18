@@ -113,6 +113,12 @@ class PageTests(TestCase):
         self.assertEqual((one["lifecycle_state"], one["admission_state"], one["event_chain_intact"]), ("IN_SERVICE", "LEGACY_PREEXISTING", True))
         self.assertNotIn("password", str(one).lower())
 
+    def test_legacy_device_exposes_independent_identity_verification(self):
+        device = L.adopt("R1", role="router").device
+        detail = self.approver.get(device.get_absolute_url())
+        self.assertContains(detail, "Verify identity from observation")
+        self.assertNotContains(detail, "Save expected identity")
+
     def test_managed_device_json_unknown_is_404(self):
         self.assertEqual(self.operator.get(reverse("core:managed_device_json", args=["DEV-0"])).status_code, 404)
 

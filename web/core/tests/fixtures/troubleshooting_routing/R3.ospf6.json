@@ -1,0 +1,24 @@
+{
+  "neighbors":[
+    {
+      "neighborId":"192.168.255.1",
+      "priority":1,
+      "deadTime":"00:00:39",
+      "state":"Full",
+      "ifState":"BDR",
+      "duration":"14d22:56:02",
+      "interfaceName":"Vlan101",
+      "interfaceState":"DR"
+    },
+    {
+      "neighborId":"192.168.255.2",
+      "priority":1,
+      "deadTime":"00:00:30",
+      "state":"Full",
+      "ifState":"BDR",
+      "duration":"02:33:49",
+      "interfaceName":"Vlan103",
+      "interfaceState":"DR"
+    }
+  ]
+}

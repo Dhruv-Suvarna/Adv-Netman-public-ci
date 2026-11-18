@@ -1,0 +1,60 @@
+[Unit]
+Description=NMAS constrained public-document research broker
+After=network-online.target
+ConditionPathExists=/etc/nmas/research-broker.env
+ConditionPathExists=/run/netns/nmas-ts-research
+ConditionPathExists=/etc/netns/nmas-ts-research/resolv.conf
+ConditionPathExists=/var/lib/nmas-stage-b-resolver-root.json
+StartLimitBurst=3
+StartLimitIntervalSec=60s
+
+[Service]
+Type=simple
+User=nmas-research
+Group=nmas-research
+SupplementaryGroups=nmas-ts-research-ipc
+EnvironmentFile=/etc/nmas/research-broker.env
+ExecStartPre=+/usr/bin/python3 -I /opt/nmas/current/deploy/sandbox/namespace_activation.py service-preflight research /etc/nmas/research-namespace.env
+ExecStart=/opt/nmas/venv/bin/python -s -m core.services.troubleshooting.research_worker
+WorkingDirectory=/opt/nmas/current/web
+NoNewPrivileges=yes
+PrivateDevices=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ProtectHome=yes
+ProtectProc=invisible
+ProcSubset=pid
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectKernelLogs=yes
+ProtectControlGroups=yes
+ProtectClock=yes
+RestrictSUIDSGID=yes
+RestrictRealtime=yes
+LockPersonality=yes
+RemoveIPC=yes
+RestrictNamespaces=yes
+MemoryDenyWriteExecute=yes
+CapabilityBoundingSet=
+AmbientCapabilities=
+SystemCallArchitectures=native
+SystemCallFilter=@system-service
+SystemCallErrorNumber=EPERM
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+NetworkNamespacePath=/run/netns/nmas-ts-research
+BindReadOnlyPaths=/etc/netns/nmas-ts-research/resolv.conf:/etc/resolv.conf
+ReadOnlyPaths=/opt/nmas/current /etc/nmas/research-broker.env /etc/nmas/research-namespace.env /etc/nmas/research-egress.nft /var/lib/nmas-stage-b-resolver-root.json
+InaccessiblePaths=/run/docker.sock /var/run/docker.sock /run/containerd/containerd.sock -/etc/nmas/troubleshooter-device-worker.env -/var/lib/nmas-ts-diagnostic -/var/log/nmas-ts-diagnostic -/opt/nmas/current/web/db.sqlite3 /opt/nmas/current/inventory.yml -/opt/nmas/current/device_configs -/opt/nmas/current/configs /opt/nmas/current/monitoring
+ReadWritePaths=/run/nmas-ts-research /var/lib/nmas-ts-research /var/log/nmas-ts-research
+RuntimeDirectory=nmas-ts-research
+RuntimeDirectoryMode=0750
+StateDirectory=nmas-ts-research
+StateDirectoryMode=0750
+LogsDirectory=nmas-ts-research
+LogsDirectoryMode=0750
+UMask=0027
+Restart=on-failure
+RestartSec=2s
+
+[Install]
+WantedBy=multi-user.target

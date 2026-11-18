@@ -1,0 +1,39 @@
+{
+    "vrfs": {
+        "default": {
+            "vrf": "default",
+            "routerId": "192.168.255.5",
+            "asn": "65005",
+            "peers": {
+                "172.20.5.0": {
+                    "version": 4,
+                    "msgReceived": 112039,
+                    "msgSent": 131537,
+                    "inMsgQueue": 0,
+                    "outMsgQueue": 0,
+                    "asn": "65003",
+                    "prefixAccepted": 2,
+                    "prefixReceived": 2,
+                    "upDownTime": 1788242848.960612,
+                    "underMaintenance": false,
+                    "peerState": "Established",
+                    "prefixAdvertised": 1
+                },
+                "172.20.5.2": {
+                    "version": 4,
+                    "msgReceived": 112044,
+                    "msgSent": 131570,
+                    "inMsgQueue": 0,
+                    "outMsgQueue": 0,
+                    "asn": "65004",
+                    "prefixAccepted": 2,
+                    "prefixReceived": 2,
+                    "upDownTime": 1788242848.573052,
+                    "underMaintenance": false,
+                    "peerState": "Established",
+                    "prefixAdvertised": 1
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,1325 @@
+{
+ "built_at": "2026-11-14T06:16:33Z",
+ "entries": [
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "docs/troubleshooting/acl-history.md",
+   "post_sha256": "939406dd2c863dd24d80a77f962904623ea4a621ef5ca575ff650056160f307d",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "docs/troubleshooting/acl-source.md",
+   "post_sha256": "99b65d316c9e3bea905659427871d0afcc1fd34ba9f359836b8655f463bc2f38",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "docs/troubleshooting/ai-mcp.md",
+   "post_sha256": "1e98e767b73476de2aa5df2c2aee9e0590d1b932db7a68417c1ab2655a6fad95",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "docs/troubleshooting/ai-runtime.md",
+   "post_sha256": "b90a961e98bee03729ec3849b2c238a38a0f0c8d1f15e4e68251ed9592587ded",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "docs/troubleshooting/architecture.md",
+   "post_sha256": "1325bb20eafee3f746efa14159e4e3ad34ca6c4a4e0224963487fde79197ca7a",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "docs/troubleshooting/baseline-history.md",
+   "post_sha256": "160ea7d35b79c7ead9a1028946ae0ae1599dbdb59eb1018a8b16f97725fc8f90",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "docs/troubleshooting/baseline-scope.md",
+   "post_sha256": "ba0401f924906510226af6977c4a7fe75fb9a70d904dc1686aeec3a8055d4452",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "docs/troubleshooting/collection.md",
+   "post_sha256": "366964aff4aa761b30e4ed771f970539830474720ca1a147a9c601bd1691913a",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "docs/troubleshooting/compat-deployment.md",
+   "post_sha256": "91129467eb93c2ab29678cafcd5d3e86fe0279d0fcaa4a1291d59539c5bf56e5",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "docs/troubleshooting/config-snapshot.md",
+   "post_sha256": "58737e4fd9d021ee11a83e1cca7caa0f01ff19483479454a4de4763c4c7d48b4",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "docs/troubleshooting/deployment-bindings.md",
+   "post_sha256": "91244574cedf698b95b7cc61adc1f555a83ae28342c9dd055900b1d65c73e870",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "docs/troubleshooting/deployment-rollback.md",
+   "post_sha256": "9baeafee406080ea29828f92564d934f8896798fba5fd3d944b46c8f3bf85319",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "docs/troubleshooting/deterministic-engine.md",
+   "post_sha256": "ee57f76d3b6ea754063bc4f6f482370ac0e1ce85cfd778ddbb785631df7ad8ab",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "docs/troubleshooting/device-observations.md",
+   "post_sha256": "1e602f0d4df0fd32860d34b104ec87b418aae4fae66857985ebb8f90a6045588",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "docs/troubleshooting/dns-rules.md",
+   "post_sha256": "cf4e0017b0c67c29db4b12664df0b570c5d9b5d5f78b8b808f34d097f6caad91",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "docs/troubleshooting/dns-source.md",
+   "post_sha256": "15923b872d60468f8248125ee85755c462ed0cc3809c4c00cb4d802e9403698e",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "docs/troubleshooting/evidence-contracts.md",
+   "post_sha256": "aadca64411152f352c2b9a76f3c2e90ede9f4a96b4d1ab1652e7811ef9f78ea3",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "docs/troubleshooting/fib-source.md",
+   "post_sha256": "50e1f1036f3437270cbbb902a9182f0e0e6d0cfd6755207d732b74e3dc9da26b",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "docs/troubleshooting/flow-runtime.md",
+   "post_sha256": "3cd2ef92065a66cb89071eeed66e5da8de10413e2db9fc49b0f84a5e8cbacee8",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "docs/troubleshooting/flow-wire.md",
+   "post_sha256": "216c52826f916b3a0c9c121d975985031981ef146b22cb42d3817d48cdc8dd8c",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "docs/troubleshooting/forwarding-source.md",
+   "post_sha256": "8f83f1ae86c9e57715555ec6dbb9acd13bb1e866183180e3d5f4ca91ccf0167f",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "docs/troubleshooting/governance.md",
+   "post_sha256": "979f6af4e2a64aca1bd07ed51f462e2811601f5603fc48d832852a5db25d7684",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "docs/troubleshooting/host-key-pin-enrollment.md",
+   "post_sha256": "a288e2d743e1c6097b9e2e5239543175bed6fd15a5571c33b945e98464f52cc8",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "docs/troubleshooting/l2-history.md",
+   "post_sha256": "a372159401ebee62c5d6dbf08bdcca5699fd8c0d94628974ebd80dac12eeacb1",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "docs/troubleshooting/l2-source.md",
+   "post_sha256": "50143aa142a186a34e1a052e9e1a49c5f2eef50fd416e1e66659a79aebfe9335",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "docs/troubleshooting/observation-collector.md",
+   "post_sha256": "37c4517e8066f87bd2122b018ad3cde477db43a1305c82e0c36e475c3383b49f",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "docs/troubleshooting/observation-connections.md",
+   "post_sha256": "ef982347c37220a19fb788e04e2ce5c1e5db8c3a6a1a2ad4a9437740cceacec5",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "docs/troubleshooting/observation-runner.md",
+   "post_sha256": "eeef9335a34a64e6e83e853be62a291c995aa5d339c27301ba80d2776b2c5de0",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "docs/troubleshooting/observation-sessions.md",
+   "post_sha256": "e32cabff1daa3ad2ad261f9993c10a42e6082a069a1d634405093d7f49a3db19",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "docs/troubleshooting/operator-guide.md",
+   "post_sha256": "9416e669f405bccf50ae6c6797b925f50b2be28ee0dfe42958e39bea0c32c91a",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "docs/troubleshooting/physical-source.md",
+   "post_sha256": "c49cce2f1d56f7416051baf7800afad5b4dfc5a46e6b07ae4918480f20e9f478",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "docs/troubleshooting/pmtu-source.md",
+   "post_sha256": "b5c82702333776a96098e4212dd3d7fb5d6301d1c2756b312cd577f0cf556534",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "docs/troubleshooting/port-to-public.md",
+   "post_sha256": "627326743f89e2355d0eee5bae31fe6d67377086899f57d7ac5c2c1d73cbf738",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "docs/troubleshooting/probe-source.md",
+   "post_sha256": "8578567f0ac8f010f1e470f061f16745c4415c80eca11fdcf625f76360c91004",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "docs/troubleshooting/protocol-source.md",
+   "post_sha256": "4ca8e2d45bc7a68279f49edb4495387843edb474200423921342f0553e0ce54e",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "docs/troubleshooting/qos-source.md",
+   "post_sha256": "492456336069dfe2c50e98988e558fe387aa40e6a8435469e738b1c7d077bfb9",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "docs/troubleshooting/runbooks/RB01-link-flapping.md",
+   "post_sha256": "fe9be9188792b91706b06c189a5c9ad8fe8f038f445bcd68ea878c4d6332ef67",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "docs/troubleshooting/runbooks/RB02-reachability.md",
+   "post_sha256": "9038dc0fa89ae407ff148586d2c9955c618fe65b08baae96b1dc88771aa567b2",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "docs/troubleshooting/runbooks/RB03-routing-neighborship.md",
+   "post_sha256": "a711ab3e6d577646525aae59982fc5b5d56ced85dfb61c1ffb4392f68c597301",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "docs/troubleshooting/runbooks/RB04-stp-loops.md",
+   "post_sha256": "3c73b853af9ab60923639378f79c3bc3b57e3c21284bbc8b41e67b9b8f866baa",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "docs/troubleshooting/runbooks/RB05-dns.md",
+   "post_sha256": "f742ef21f5db5bd7a45498e2491b92dd841d3f9dc713cdcaff7755834e8332bb",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "docs/troubleshooting/runbooks/RB06-mtu-pmtud.md",
+   "post_sha256": "071e560a332773fff9f6ed4410fe28bc6c7fda747b88d17f154fb12d3f67a183",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "docs/troubleshooting/runbooks/RB07-layer1.md",
+   "post_sha256": "39651256a73ca9db92e9bef5ed8dbdc84d764d32973fb56e55bf7b43cfa4a140",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "docs/troubleshooting/runtime-ports.md",
+   "post_sha256": "7f5299cddb3f530e91db7f5683136a89fe484398ff452207871b19bbee1101ea",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "docs/troubleshooting/runtime.md",
+   "post_sha256": "9cb99b3f84588acb1987fc43e158f534dac349abe8eff44b60b4d40775b36acf",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "docs/troubleshooting/stp-source.md",
+   "post_sha256": "d19189128d2bc26cdf65e7376d4bdd841166f407f3a921cfb2eebf331f946c2f",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/checks.py",
+   "post_sha256": "13663ead04161071560946514dc39c6d5db137ba72ebb02957179500687aec45",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/management/commands/device_observe.py",
+   "post_sha256": "2387756560f4b7b503f0d2d3ad5072934a09a9906dfe22f7449aa1f0f3302cc7",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/management/commands/host_key_pin_check.py",
+   "post_sha256": "98a995ef28e1ed04b9dcabd8ce914ae01e70958d71a07d5b277d3c270514dd44",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/management/commands/nmas_reconcile_inventory.py",
+   "post_sha256": "46363bc0db37a20bfdf579100615543769b1c61db1aac2deb95be28b69ac99ff",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/management/commands/observation_authorize.py",
+   "post_sha256": "c383da0144a0c138bc0a588821d4fe3e66be3f359c6ea67f5034cd9b2a7c985e",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/management/commands/troubleshooting_ai.py",
+   "post_sha256": "90e6b3369f962f3223cc3d9658ef3bb4cede44dad6ad8fad06eeacccbe259073",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/management/commands/troubleshooting_monitor.py",
+   "post_sha256": "4bee6976f0cdd9c21856eb7097eae40fcbd8f016bf159811a31587ee14c90729",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/management/commands/troubleshooting_readiness.py",
+   "post_sha256": "741cee127316358851af7112d06f6b0777e9ad982ef0af5c3c0a95156964bc73",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/migrations/0036_v2_phase9_relay_option82_readback.py",
+   "post_sha256": "eb11d8a80cccde431888eff1cfeb47993dda3c1acddb55c1ca3117386f07b9d5",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/migrations/0037_troubleshooting.py",
+   "post_sha256": "428313937c3391f4305c0e118ede6db4ab10f9b48642b23f3ffff291b4252701",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/migrations/0038_device_observations.py",
+   "post_sha256": "f8c4a288f2ea5e57cd5dd0f53970bc5bbfcea9a87e6373a7244bd6829beab000",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/migrations/0039_observation_authorizations.py",
+   "post_sha256": "381764c7ca8b617f3ed636fb696d290525fabb2bfab4260234953290fe6124ab",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/services/devices/host_key_pins.py",
+   "post_sha256": "74872f98002bb442bb25b87b8a68f0b2be5da01f6e2fafa0ff029f5a9c8fb813",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/services/devices/observation_authorizations.py",
+   "post_sha256": "74718cc2eb1d0e0971ea5019a680ab4cb5052ad0a98498adbd3f4d9caed81d9a",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/services/devices/observation_collector.py",
+   "post_sha256": "7ec38f3cc0ed48f4bd5e60d873b5d0c5d85e12fcd9866e980705a4c887d14cc3",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/services/devices/observation_connections.py",
+   "post_sha256": "ee41d93a9b3745d7e8d58f0d8e2524c8735df1df732279a64fedd5652535ff59",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/services/devices/observation_evidence.py",
+   "post_sha256": "1bb1050eadbc15deab8d19f3fdb4aa73c225610a98a4a2ba7724b49f501963cf",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/services/devices/observation_sessions.py",
+   "post_sha256": "e761d558dfbbade26740c006b03130a97a48d055769e5aac36e6d5bfa90b63a8",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/services/devices/observations.py",
+   "post_sha256": "4ef3b2dcdcc2b97c60acefde1303c5b3083630f31dfcbca2a6a0c16b9fa50326",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/services/devices/reconciliation.py",
+   "post_sha256": "5da6594aeac7b12d63f71bf465993e3c25d5d4d880bfba71d0998b0844539da9",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/services/management/linux_ssh.py",
+   "post_sha256": "e92940d14de959cda1284b05924dcb846a1f2446843e4516e31bcf529b245112",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/services/troubleshooting/__init__.py",
+   "post_sha256": "fe4bf6fccd0488656490c279235a42a8492e2274a3f53d4ea170a425a0d61056",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/services/troubleshooting/adapters/__init__.py",
+   "post_sha256": "532e1b8463d62f1f91d29000838ce9681f111f0a256a463d84de5776bd5df30b",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/services/troubleshooting/adapters/acl.py",
+   "post_sha256": "0edc0879a1f716f8cd518f52893683b121987adf6ef2fb9cce8b4379aa838dec",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/services/troubleshooting/adapters/baseline_history.py",
+   "post_sha256": "3443ffb07d1ee9c7c2fe49a0da23f7f5fdd900b8e775fef380d99e131098a720",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/services/troubleshooting/adapters/capabilities.py",
+   "post_sha256": "3660de4dc0a301d02cf5ae6ea4230449898ceed78ab5d8a18eb2150cc96f6973",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/services/troubleshooting/adapters/config_snapshot.py",
+   "post_sha256": "244c388391b103933e79af77bcc2f6e6bed76386b2682cc7b0e3e0bfb645fbb2",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/services/troubleshooting/adapters/contracts_bridge.py",
+   "post_sha256": "5fb6034575f597e2419108fea8adbe6dded5d06a8db2cd4a730f7ca18d9360b2",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/services/troubleshooting/adapters/dns.py",
+   "post_sha256": "c31c022a0ba7cb025dfb34d519306045179da35fb797e830d3806eeab1dcc333",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/services/troubleshooting/adapters/flow_runtime.py",
+   "post_sha256": "f436adf1da882f0c0b8e08f0faad2e6149a3ec698f0bbe1e7e5f2ab6ca2a6a45",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/services/troubleshooting/adapters/flow_wire.py",
+   "post_sha256": "ae6c57fb3bf29040ce63191c77d6d9635e25c528fb39e74de7565032dc47b65f",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/services/troubleshooting/adapters/forwarding.py",
+   "post_sha256": "264e1d8074da9862532cdd72d505b65d91c5790a14559213bddcd3b8e6082557",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/services/troubleshooting/adapters/l2.py",
+   "post_sha256": "f7be3a694790f8789265cf0c2fc339db1ffbae6fed5f670a50d3e84b0d2db4ee",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/services/troubleshooting/adapters/monitoring.py",
+   "post_sha256": "6918610d9d2e54d326c4ee2bf8c4738bdce1f215f3b2b33052566b160a1e1717",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/services/troubleshooting/adapters/nmas_providers.py",
+   "post_sha256": "48d4b5c032303820c325b2702f75eac251f5264aeb916848ac75abf1b05f5647",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/services/troubleshooting/adapters/physical.py",
+   "post_sha256": "be39c42cfd473d804c80f0d80345f7c42b807899bc16f7e4544a9a07066a2a05",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/services/troubleshooting/adapters/probes.py",
+   "post_sha256": "8b9eb2d8a47bb6938fe7f272472c1f22693ce28548910677854573a13f22eae9",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/services/troubleshooting/adapters/protocol.py",
+   "post_sha256": "8fdfadfdbb3d34f8a0e5f8a30a6d41483455256b818b73ebcc196ba0b8b74bf6",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/services/troubleshooting/adapters/qos.py",
+   "post_sha256": "d0adadb2535f6b66243e0c04be59195d5ccdd01186896b0384db5574e4318a60",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/services/troubleshooting/adapters/stp.py",
+   "post_sha256": "431d09f88c4e2160f0fc18588ad8bb14329c85ab5172819da62211a0650117b5",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/services/troubleshooting/adapters/transports.py",
+   "post_sha256": "000252705b8e735e8994548e2c67dc5bd3c98c0d94d24108aebb84cef7e23559",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/services/troubleshooting/ai.py",
+   "post_sha256": "0e1e4cd3d236a456d302e12fc03201ed1b4ef6dbc29d0436599285160affcd4d",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/services/troubleshooting/ai_runtime.py",
+   "post_sha256": "4f7e7d6c0709292c24c32b574f389958fe4362c03505adb4c9ddf42fcafbe787",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/services/troubleshooting/baselines.py",
+   "post_sha256": "6cd6d6f03f877f44fe975d6650da9258103780f1315ff53951be031dde5fd2ac",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/services/troubleshooting/collectors.py",
+   "post_sha256": "b874f049255a51abf3aa532dd649d0abcb2e3a1db883e5d725d1aa46fbf951e5",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/services/troubleshooting/contracts.py",
+   "post_sha256": "e1b634f61cf7c86042822d0ddb0f1c9af8f30ed3b1d3d0922be2e68c7694fc8c",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/services/troubleshooting/correlation.py",
+   "post_sha256": "1dd59fa366b3bfd7d29a994b85e509d9e7244d8918d45b36923ff49426fa3e37",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/services/troubleshooting/deployment.py",
+   "post_sha256": "84de8501661146a749e633e43f6ef7199494ad9b46febdb1de7067bf268cdef5",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/services/troubleshooting/engine.py",
+   "post_sha256": "9062c1c9defafe1240853844896e9f6d38245c561a0faec5d486f097f938dc60",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/services/troubleshooting/governance.py",
+   "post_sha256": "210d8ce23a297867e670e8638bed8d73b8ac63edbb665ee2b3da72dbacc6b183",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/services/troubleshooting/normalization.py",
+   "post_sha256": "95c8323cce0ee9b6e3bb280829f6a95b896274d6d25a8d72abacbc95acf513e4",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/services/troubleshooting/qualification.py",
+   "post_sha256": "b2e7cb36ed1e828ebfc4f4ce0b31c27c5caffc9aa383a56f070f1218f6490900",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/services/troubleshooting/readiness.py",
+   "post_sha256": "0faf16ebe298bde8b55e1d1d714c2ba12991299e0a668a0a264511ea69ace550",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/services/troubleshooting/reporting.py",
+   "post_sha256": "4c997bac8cdf321d126e783d887435c3f07fa3f2f5e2e8da0e06da7c98c23e42",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/services/troubleshooting/repository.py",
+   "post_sha256": "9edcde0c45184aef12282c86fc4908cc1e46bff5f1d1eb2e447355018a89144f",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/services/troubleshooting/runbooks/__init__.py",
+   "post_sha256": "2520f00eb49dac04f81bb7464935536f3aeba1de160c46ea4c33d94cd19c14f5",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/services/troubleshooting/runbooks/base.py",
+   "post_sha256": "f1063b618b34187bd1e7b57e6d4e12be7bdb36ec52ee340a3e5479bf1d32db01",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/services/troubleshooting/runbooks/hc.py",
+   "post_sha256": "05ca57e3e67599c1648d3af04231ce03665e48af44f984c8464fa39a501c28d8",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/services/troubleshooting/runbooks/rb01_link_flap.py",
+   "post_sha256": "b5708266963435d411595b8f3a4e71a3260432976247c7a8711cf40dddc60a63",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/services/troubleshooting/runbooks/rb03_neighbor.py",
+   "post_sha256": "2f2c8b4b2a502edb169683941a42b9411afb1d38f8ee9f3cdf5ae9dc6c0d2a51",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/services/troubleshooting/runbooks/rb04_stp.py",
+   "post_sha256": "567fcd3ac7cb38bbc5548b29e1509b72200bfa90b421ace68fce43a6fcbbf4db",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/services/troubleshooting/runbooks/rb05_dns.py",
+   "post_sha256": "844e2b57d38d6aa327e217b932aa0364cefa923c1a2abeb4f3128db55d071676",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/services/troubleshooting/runbooks/rb06_mtu.py",
+   "post_sha256": "72f757d393619c026845c3c32fee20fdea114b84ef71a1f7200c60f02cca04ab",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/services/troubleshooting/runbooks/rb07_layer1.py",
+   "post_sha256": "e22f43cec039127398c12dcc530a7894ff7d19f862221666469161617ca557e6",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/services/troubleshooting/runtime.py",
+   "post_sha256": "6ffa0adf3e626dfc2d76757b361ce7fc368132a69577e2defcbb4f79fcad2660",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/services/troubleshooting/runtime_ports.py",
+   "post_sha256": "b27cf260302da3184ac6bacd5ba8221ae6aed745bf9fc870823944467a52641f",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/services/troubleshooting/verification.py",
+   "post_sha256": "9e535472f7716b0ebba67a1c915fe952333b6c1c011a5fd6d5faf0a647980a9b",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/templates/core/troubleshooting/detail.html",
+   "post_sha256": "03f4e6f1ebd574852b811842f29c653035131f0012ba2415ec9b89e9335ed363",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/templates/core/troubleshooting/intake.html",
+   "post_sha256": "4f250d67be38a5695b6aec1dba1285ea715a724173dfafb45192c1a493ca9cf4",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/templates/core/troubleshooting/list.html",
+   "post_sha256": "1fb2dcea6604666107d0013d980861f77e6bc193e4c8aed9a44b02f8a917ffff",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/tests/fixtures/troubleshooting_collectors/capture_live.py",
+   "post_sha256": "023c33aed32e2fe86e6e8fe47762d130298f919bbcd450fe3e752faddd1639de",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/tests/fixtures/troubleshooting_collectors/live/ceos_r1.bundle.json",
+   "post_sha256": "f4453e559ff19486179c98edda04a730b600d7d231118fa1cd084c3ff87cac8f",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/tests/fixtures/troubleshooting_collectors/live/ceos_r1.raw.json",
+   "post_sha256": "a10a00b986341bc8e2baa409f3a557ca9c90f1d31ecfa74da6d0195b6b7cc2e3",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/tests/fixtures/troubleshooting_collectors/live/iosxe_iosxe.bundle.json",
+   "post_sha256": "9416f575a6a42ee41768ab5b0adde985c9794179c8c4a0926c2c5dae6453cf58",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/tests/fixtures/troubleshooting_collectors/live/iosxe_iosxe.raw.json",
+   "post_sha256": "e8f9c25b2731c2a0850682355fdc76d65bd2110f64a6361dc378732f5199d8ca",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/tests/fixtures/troubleshooting_collectors/live/linux_peer.bundle.json",
+   "post_sha256": "c97005c132df8b4d621d81c5239d8d8fa003835cb30b33bc57a708d600f1c91e",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/tests/fixtures/troubleshooting_collectors/live/linux_peer.raw.json",
+   "post_sha256": "1488df76252055344449c9e68b204e3351a09acc62ba7be8a28fd6d00acbc741",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/tests/fixtures/troubleshooting_runbooks/scenarios.py",
+   "post_sha256": "d7eefc866829319f48564842e3d62217692c5438ddfae7de987efbde3255cad5",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/tests/helpers/troubleshooting.py",
+   "post_sha256": "bc327173050ee49a80d1b5ce841559edc7ee8330931ebd2eb66d703e6a546f56",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/tests/test_deploy_bindings.py",
+   "post_sha256": "606aee98931361a6781490923dc9f133cba66ed87eb42811afcd12b59f909d6b",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/tests/test_device_observations.py",
+   "post_sha256": "622f228a281cfa0c1b4bd34eb6cd07d2365fd0d8eccffd790f0367fa35d0b8a3",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/tests/test_device_observe.py",
+   "post_sha256": "c0f205a20e2e16e7a5fb1dad5d90935e48afebfb19aec1eb8a57a3193da4a11d",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/tests/test_host_key_pins.py",
+   "post_sha256": "a8cbd410bc2cf14f8e3e2a894e8aa5f5ff7b0f388e929ac3c5609f866e0ca92c",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/tests/test_observation_authorizations.py",
+   "post_sha256": "4de044cffdf1be58c20a9e1449bda28899716f9f13283c039e8df5ee7b7ccf7f",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/tests/test_observation_collector.py",
+   "post_sha256": "ac81736df0a4ee0128caea5081bd995c6b104364bc03e6ce3c907a8c00779ccf",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/tests/test_observation_connections.py",
+   "post_sha256": "bc5382e6f9ac386f367f7a38a5f5fe3725d161791ebb12a371cc804b7e86e92f",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/tests/test_observation_evidence.py",
+   "post_sha256": "3b1d077008d48e601844c07ee0f8e626249d4c34da1997e1c395cc89ad1b0209",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/tests/test_observation_sessions.py",
+   "post_sha256": "bf6fbe19865355a33228c77b0f75c367c302abe9cf72bf3f87579b436f8f6c2d",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/tests/test_reconcile_inventory.py",
+   "post_sha256": "d1b0b4b78fd6642a723d0fe7ef9031224cd222659da4b44b5e6e368d0973ecbc",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/tests/test_troubleshooting_access.py",
+   "post_sha256": "c44e8e71e061789820c2b2380a05fecf262032658234482ea32697de16ff8d28",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/tests/test_troubleshooting_acl_history.py",
+   "post_sha256": "f5f89b797fa18faf7c65042af141a5c4b044863321c315cbdae757e3e09d3500",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/tests/test_troubleshooting_acl_source.py",
+   "post_sha256": "816d4b47e99564bb789b7fa750b86016b4081caf87e044a260a67b67ede8ad82",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/tests/test_troubleshooting_ai.py",
+   "post_sha256": "812f91d6c54d74a04d9f5026d7dfa043ecc4b3dd4dd384d950ea862e0e5f4c74",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/tests/test_troubleshooting_ai_runtime.py",
+   "post_sha256": "503d57e7c5bb4981972272c3d94b536e7af8a8f19954806290f927e6607427fc",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/tests/test_troubleshooting_baseline_history.py",
+   "post_sha256": "bef13eb8201762d00123825543e8802bfcae42d71bc1c39cb83c2214c3a27288",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/tests/test_troubleshooting_baseline_scope.py",
+   "post_sha256": "70571ec75dfa4882f0bbb5c3ebf733bd55e0425dbbc895440400b9b446a778cc",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/tests/test_troubleshooting_collectors.py",
+   "post_sha256": "51f1b17f53488627b1c30532974f9be4f82b6d10b2442d83bf6a13eda458962c",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/tests/test_troubleshooting_config_snapshot.py",
+   "post_sha256": "e33bba42a2c234482f9816e63f2bee548c808fd6e5f348a4c2375523d8a2966c",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/tests/test_troubleshooting_deployment.py",
+   "post_sha256": "2bb1fc5590ebd3825006a220547931d6ddeb566cf120369d0ffe7063b6babda7",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/tests/test_troubleshooting_dns_rules.py",
+   "post_sha256": "2fc819933accdb76825c86a4ef261c85dba86182f07b4920049cc7b683466039",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/tests/test_troubleshooting_dns_source.py",
+   "post_sha256": "91132364f8be389b675e0af89066da5129bd52956a074474adfa43f87ec2eca4",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/tests/test_troubleshooting_engine.py",
+   "post_sha256": "487ceac8c22c7684ebdd86b556b0d9f970bf95792ffd9a93e799bb664ecd4e5c",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/tests/test_troubleshooting_evidence.py",
+   "post_sha256": "8bbdaccf893b517f280ae8979125807e2ec507371c5b86a2bfcc7fd365abd4df",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/tests/test_troubleshooting_fib_source.py",
+   "post_sha256": "e663aae912d862edc20488fff3b2380e459cdf51bad0a4fa183f4d8b40984d1a",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/tests/test_troubleshooting_flow_runtime.py",
+   "post_sha256": "0bfae33d7502f6ed753a00d1823430d3604fcf4c246cbc643a919b73e2db2589",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/tests/test_troubleshooting_flow_wire.py",
+   "post_sha256": "24fade88ebcc7b954491a629bf762dbf0909d6e5aa734832edafda497ad29e20",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/tests/test_troubleshooting_forwarding_source.py",
+   "post_sha256": "99844bb78c02b93af53a3f44e7f32e9a192d4ba6888fbc84c8752116dd593e93",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/tests/test_troubleshooting_governance.py",
+   "post_sha256": "7692f83e02c1185d6c996fa7a22994076877d02db1eaef12527002a9f92158c8",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/tests/test_troubleshooting_l2_history.py",
+   "post_sha256": "5cf1b7b9ae825a7abbea0681adb7bba00a0df2a08502e49329666e1bfcb4d5c0",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/tests/test_troubleshooting_l2_source.py",
+   "post_sha256": "ee8021967d2506a2b6651ab5f8930dc0792b0b37102ac469d1e1685d74254073",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/tests/test_troubleshooting_nmas_providers.py",
+   "post_sha256": "352a718597b6913268b6e06ebb470982dce8f3d32d1166bd954ec8c3f9d25109",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/tests/test_troubleshooting_physical_source.py",
+   "post_sha256": "18cfde18aa11c34add698c9c1593d290cafc85bfab4051511d5bc69e55b4b9cc",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/tests/test_troubleshooting_pmtu_source.py",
+   "post_sha256": "c64c75d243a732fee041b4fef3a885ee9228ab51fcc27df0e1f00d5634a3d4f5",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/tests/test_troubleshooting_probe_source.py",
+   "post_sha256": "bf55611249adc854640413fc89333992cde4609ad210b82a2f493a4b1b938b99",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/tests/test_troubleshooting_protocol_source.py",
+   "post_sha256": "61f16dbc196223cadb3768114099bb00fc95f446cdfa04bfe7a0799f98c94a56",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/tests/test_troubleshooting_qos_source.py",
+   "post_sha256": "5a99e601a07150aee2a842e24392a5604be18be47cf8187a813d1f19e27448f5",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/tests/test_troubleshooting_qualification.py",
+   "post_sha256": "0343deacb2aa6f2f663de6f6b82ac6d3162f656e28c406355d825608b83ce6ff",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/tests/test_troubleshooting_readiness.py",
+   "post_sha256": "cebf388a80cb71d951a28cbe3e2c54228b643b97af3a0b98eb2bc511e13b5b95",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/tests/test_troubleshooting_runbooks.py",
+   "post_sha256": "b617e06bbd1d733a44b568a0b97a3cdd95742d24be50732ac05a4ecc53ef3853",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/tests/test_troubleshooting_runtime.py",
+   "post_sha256": "a0b8666c2537ee66af58c46ad59df3924de536b548e72c6f176cd660b57c4596",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/tests/test_troubleshooting_runtime_ports.py",
+   "post_sha256": "ccd098255eb8bb87384f103f45a9c3c8faa1a0af45a8b569d46d8457efd950fa",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/tests/test_troubleshooting_stp_source.py",
+   "post_sha256": "ecf1c931a1344f26bb1aca84e6ae7af96465d5f90f48d1caa6c10a7d60cc5c38",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/tests/test_troubleshooting_views.py",
+   "post_sha256": "a36fedf14bf6073c48abab0e3bb69e3aac1441df4e7c81a12dab3f4334112d5c",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/troubleshooting_urls.py",
+   "post_sha256": "2b07bd0ffb5b21f06a6dbfc6c677d1bbc2d55f0d69d69f2cd29a699e27cabda9",
+   "pre_sha256": null
+  },
+  {
+   "action": "ADD",
+   "mode": "0664",
+   "path": "web/core/troubleshooting_views.py",
+   "post_sha256": "1ec78382917567c309975ae9b9b6c7462ae25391a015e67186a4070bd2cc6273",
+   "pre_sha256": null
+  },
+  {
+   "action": "MERGE",
+   "added_lines": 24,
+   "mode": "0664",
+   "patch": "patches/web__core__services__ci__rules.py.patch",
+   "path": "web/core/services/ci/rules.py",
+   "post_sha256": "ba53b84879b80ca79d441df6bb16c4c4a7fa9216b593de513fd31d34c2d93f1e",
+   "pre_sha256": "b4d202baf4b20ad6113cafe81d002eca13cd55dcf2543111d2d371ba5883612d",
+   "removed_lines": 5,
+   "removed_text": [
+    "    PathRule(\"shared_core\", (\"web/core/__init__.py\", \"web/core/apps.py\", *_svc(\"__init__\", \"base\", \"secret_policy\"))),",
+    "    PathRule(\"device_lifecycle\", (f\"{_SVC}/devices/**\", \"web/core/lifecycle_views.py\", \"web/core/management/commands/nmas_devices.py\")),",
+    "    \"device_commissioning\",",
+    "                \"lifecycle_capability_vocabulary\", \"contracts\"),",
+    "        reason=\"managed-device identity / lifecycle / attachments / bootstrap authorization / resolver changed\","
+   ]
+  },
+  {
+   "action": "REPLACE",
+   "added_lines": 27,
+   "mode": "0664",
+   "patch": "patches/web__config__settings.py.patch",
+   "path": "web/config/settings.py",
+   "post_sha256": "3a6d949ae355ed1dd6d9eb754d4d0ad18f6357207802ef73c8cb2bb95caf6c09",
+   "pre_sha256": "8ff9759cb75b72eaf76ce3a9eb640a7493b01344263161a68599f2f2efe82baf",
+   "removed_lines": 0,
+   "removed_text": []
+  },
+  {
+   "action": "REPLACE",
+   "added_lines": 1,
+   "mode": "0664",
+   "patch": "patches/web__core__apps.py.patch",
+   "path": "web/core/apps.py",
+   "post_sha256": "503e618ed524d22b7239ca7717eab8cd021c8b08fbe9db103170d39fcafaff66",
+   "pre_sha256": "ecd22f6e46421027953419dd1fcae9887cd81987edfdacaa885b3c7b4f69325f",
+   "removed_lines": 0,
+   "removed_text": []
+  },
+  {
+   "action": "REPLACE",
+   "added_lines": 3,
+   "mode": "0664",
+   "patch": "patches/web__core__middleware.py.patch",
+   "path": "web/core/middleware.py",
+   "post_sha256": "2c8d0c03a8479c81bbfd5562bccd38b676065e41b7c6eb8e22644ca0fa1f53ce",
+   "pre_sha256": "9ec0f4d3ee06c68d0b12d498ee7248f3ce44aa7f603ea6d2df51dbd9f6ed58fc",
+   "removed_lines": 1,
+   "removed_text": [
+    "    return url_name in _JSON_ROUTES or request.path.endswith(_JSON_SUFFIXES)"
+   ]
+  },
+  {
+   "action": "REPLACE",
+   "added_lines": 746,
+   "mode": "0664",
+   "patch": "patches/web__core__models.py.patch",
+   "path": "web/core/models.py",
+   "post_sha256": "3af3a03bd08eb86b95f97f7b50ad4eaab23c1c8f1766d07e55c9ca58682d6807",
+   "pre_sha256": "9dff13f5a70cd7bea458c55e886b66420f7b1dbabd167adfb80897806fe19e55",
+   "removed_lines": 0,
+   "removed_text": []
+  },
+  {
+   "action": "REPLACE",
+   "added_lines": 4,
+   "mode": "0664",
+   "patch": "patches/web__core__services__devices__lifecycle.py.patch",
+   "path": "web/core/services/devices/lifecycle.py",
+   "post_sha256": "5936888790a0dcaf4604f301f2123e20b7b8d73c72413906754e0751f18f6b42",
+   "pre_sha256": "fdfbb4da91381ddc775154260d7ebadca5b6b420e7cd95c8fc0b1556e7d28001",
+   "removed_lines": 0,
+   "removed_text": []
+  },
+  {
+   "action": "REPLACE",
+   "added_lines": 18,
+   "mode": "0664",
+   "patch": "patches/web__core__services__identity__policy.py.patch",
+   "path": "web/core/services/identity/policy.py",
+   "post_sha256": "e22adc2088190a68ee439d00c449341a668553cfb41dcd66ba9b196ec0dac2c2",
+   "pre_sha256": "0ebfa948b083f4bf012ddcf82d15d007ec1a79a37b9162c6ab9aca734ea189be",
+   "removed_lines": 0,
+   "removed_text": []
+  },
+  {
+   "action": "REPLACE",
+   "added_lines": 4,
+   "mode": "0664",
+   "patch": "patches/web__core__urls.py.patch",
+   "path": "web/core/urls.py",
+   "post_sha256": "cd862e7183d5cebd50833f8d08240b217408b67f7357887eddbf7ae70db85d3c",
+   "pre_sha256": "1b74737fd8de361630373801fa82698d51c8b05f079ea2b07674e75347519e60",
+   "removed_lines": 1,
+   "removed_text": [
+    "from . import auth_views, commissioning_views, decommission_views, infrastructure_views, lifecycle_views, maintenance_views, management_views, test_governance_views, views, ztp_views"
+   ]
+  }
+ ],
+ "entries_sha256": "8a4111f7b9f9553c0b78db5d633813b00beede08bd2a04bf57c9a3b6c49b8f70",
+ "merge_base": "4f950b36f97188f4d7b2c879006c472d9607bace",
+ "overlay_migrations": [
+  "0036_v2_phase9_relay_option82_readback",
+  "0037_troubleshooting",
+  "0038_device_observations",
+  "0039_observation_authorizations"
+ ],
+ "problems": [],
+ "production_head": "129d3f090f8b94b982178b1e8f3ec51047278068",
+ "public_dirty": true,
+ "public_head": "4f950b36f97188f4d7b2c879006c472d9607bace",
+ "schema": "nmas.compat-overlay/1",
+ "services": [
+  "nmas-web.service",
+  "nmas-maintenance-tick.timer",
+  "nmas-maintenance-tick.service",
+  "nmas-probation-soak-tick.timer",
+  "nmas-probation-soak-tick.service",
+  "nmas-credential-rotation.timer",
+  "nmas-credential-rotation.service",
+  "nmas-demo-telemetry.timer",
+  "nmas-demo-telemetry.service"
+ ],
+ "tool_sha256": "897c7923146e45c3988a1f8aac7d6194c5d79fe3447d688b84efe8faee29e8c1"
+}

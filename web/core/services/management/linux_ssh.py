@@ -9,8 +9,9 @@ transport requires, and checks before any credential is offered:
 * a pinned host key (``ssh_host_key``: ``SHA256:<base64>`` in the device's inventory entry) -- an unknown or different
   key refuses the session (no trust-on-first-use, no system ``known_hosts``);
 * key-only authentication from the provider (no agent, no key files, no password);
-* the legacy management source only: Linux devices cannot register a management path yet (``paths.VERIFIED_PLATFORMS``),
-  so a device that somehow has one is refused rather than reached by a different route.
+* the legacy management source only: this WRITE-capable executor transport never follows a registered management path.
+  Ubuntu/FRR paths (``paths.VERIFIED_PLATFORMS``) are read-only: they reach the device's restricted diagnostic broker
+  account, never ``nmas-automation``; a device with a path is therefore refused here rather than reached by another route.
 
 Commands are argv lists.  Each token is quoted with ``shlex.quote`` (the remote login shell sees exactly one word per
 token; a multi-line nftables ruleset stays one single-quoted word -- newlines are literal inside single quotes).  A token
@@ -28,6 +29,9 @@ import socket
 from ..execution.executors.base import ExecutorError
 
 PRIVILEGED = frozenset({"nft", "vtysh"})
+# The read-only diagnostic broker account: its forced command matches the exact command string against an allowlist and runs
+# ``vtysh`` as an frrvty member -- it never uses (and holds no) sudo, so no prefix is added for it.
+BROKER_USERNAME = "nmas-diag"
 _FINGERPRINT = re.compile(r"^SHA256:[A-Za-z0-9+/]{43}$")
 _TOKEN = re.compile(r"^[^\x00]*$")
 _SHOW = re.compile(r"^show [A-Za-z0-9 ._:/-]+$")
@@ -47,16 +51,23 @@ def command_line(argv, username: str) -> str:
     """The exact remote command for ``argv``: shell-quoted tokens, ``sudo -n --`` for the privileged programs."""
     if not argv or not all(isinstance(token, str) and _TOKEN.fullmatch(token) for token in argv):
         raise ExecutorError("UNSUPPORTED")
-    prefix = ["sudo", "-n", "--"] if username != "root" and argv[0] in PRIVILEGED else []
+    prefix = ["sudo", "-n", "--"] if username not in ("root", BROKER_USERNAME) and argv[0] in PRIVILEGED else []
     return shlex.join([*prefix, *argv])
 
 
 class LinuxSession:
     """One open SSH connection; ``run(argv, timeout) -> (exit status, stdout)``."""
 
-    def __init__(self, client, username: str):
+    def __init__(self, client, username: str, host_key: str = ""):
         self._client = client
         self.username = username
+        # Provenance: the fingerprint the peer actually presented, set only by ``connect_found`` after it matched the pin.
+        # Sessions built any other way carry no host-key evidence (never invented).
+        self.host_key = host_key
+
+    @property
+    def host_key_pinned(self) -> bool:
+        return bool(self.host_key)
 
     def run(self, argv, timeout: float) -> tuple[int, str]:
         command = command_line(argv, self.username)
@@ -98,13 +109,20 @@ def target(device_name: str, *, purpose: str = "WRITE") -> dict:
 
 def connect(device_name: str, *, timeout: float, purpose: str = "WRITE") -> LinuxSession:
     """Open an authorized session to ``device_name`` (see the module docstring)."""
+    return connect_found(target(device_name, purpose=purpose), timeout=timeout, observe_host_key=False)
+
+
+def connect_found(found: dict, *, timeout: float, observe_host_key: bool = True) -> LinuxSession:
+    """Open the session for an already resolved ``target()`` result.
+
+    With ``observe_host_key`` the key the peer actually presented is re-read from the live transport, must equal the pin, and is
+    exposed as ``LinuxSession.host_key`` / ``host_key_pinned`` (read-only observation).  Without it the session carries no
+    host-key evidence (the executors' behaviour, unchanged)."""
     import paramiko
 
     from . import probes
 
-    found = target(device_name, purpose=purpose)          # importing nsot_live first puts the repository root on sys.path
     from modules.device_credentials import SecretProviderError, load_ssh_private_key  # pylint: disable=import-outside-toplevel
-
 
     try:
         key = load_ssh_private_key(found["ssh_key_ref"])
@@ -122,6 +140,12 @@ def connect(device_name: str, *, timeout: float, purpose: str = "WRITE") -> Linu
     try:
         client.connect(found["address"], port=found["port"], username=found["username"], pkey=key, timeout=timeout,
                        banner_timeout=timeout, auth_timeout=timeout, allow_agent=False, look_for_keys=False)
+        presented = ""
+        if observe_host_key:
+            transport = client.get_transport()
+            presented = probes.fingerprint(transport.get_remote_server_key()) if transport is not None else ""
+            if presented != expected:
+                raise paramiko.SSHException("HOST_KEY_MISMATCH")
     except paramiko.AuthenticationException as exc:
         client.close()
         raise ExecutorError("AUTH_FAILED") from exc
@@ -131,4 +155,4 @@ def connect(device_name: str, *, timeout: float, purpose: str = "WRITE") -> Linu
     except (paramiko.SSHException, OSError, EOFError) as exc:          # includes HOST_KEY_MISMATCH
         client.close()
         raise ExecutorError("CONNECTION_FAILED") from exc
-    return LinuxSession(client, found["username"])
+    return LinuxSession(client, found["username"], host_key=presented)

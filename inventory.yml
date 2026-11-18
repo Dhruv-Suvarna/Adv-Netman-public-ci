@@ -8,6 +8,10 @@ toggles:
 
 management:
   host_interface: nmas-mgmt
+  # Physical provenance for the host-side management attachment.  This is
+  # descriptive desired-state metadata only; it does not configure either end.
+  upstream_device: mgmt_swt
+  upstream_interface: Ethernet9
   nmas_ipv4: 192.168.200.100/24
   nmas_ipv6: 2001:db8:200::100/64
   primary_dhcp_ipv4: 192.168.200.100
@@ -30,8 +34,10 @@ network_devices:
   # host-side console path for bootstrap/read-only inspection.
   R1: {template: R1.cfg.j2, username: nmas-automation, credential_ref: runtime://device-credentials/r1-nmas-automation, monitoring: {platform: ceos, address: 192.168.200.1, address_v6: 2001:db8:200::1, source_interface: Vlan200}}
   R2: {template: R2.cfg.j2, username: nmas-automation, credential_ref: runtime://device-credentials/r2-nmas-automation, monitoring: {platform: ceos, address: 192.168.200.2, address_v6: 2001:db8:200::2, source_interface: Vlan200}}
-  R3: {template: R3.cfg.j2, username: nmas-automation, ssh_key_ref: runtime://device-credentials/r3-nmas-automation-sshkey, monitoring: {platform: linux, address: 192.168.200.3, address_v6: 2001:db8:200::3, source_interface: Vlan200}}
-  R4: {template: R4.cfg.j2, username: nmas-automation, ssh_key_ref: runtime://device-credentials/r4-nmas-automation-sshkey, monitoring: {platform: linux, address: 192.168.200.4, address_v6: 2001:db8:200::4, source_interface: Vlan200}}
+  # R3 ssh_host_key: host-key pin evidence sha256 1f31e60628095d8e888834760839e1f076a83139cdc2e6898091b678ecae8075 (CONTAINER_HOST_ADMIN capture of /etc/ssh/ssh_host_ed25519_key.pub; network key identical; bulk admission CHG-NMAS-20261117-BULK-ADMISSION-019)
+  R3: {template: R3.cfg.j2, username: nmas-automation, ssh_key_ref: runtime://device-credentials/r3-nmas-automation-sshkey, ssh_host_key: 'SHA256:/M98uBiD/docUMe17ro994EfIYL5aXwiRc3qEm4f61Q', monitoring: {platform: linux, address: 192.168.200.3, address_v6: 2001:db8:200::3, source_interface: Vlan200}}
+  # R4 ssh_host_key: host-key pin evidence sha256 fe4afbc1031f1fad1179c3557d422397be4aa25ff68acb04a935b4e6e8d1eb2f (CONTAINER_HOST_ADMIN capture of /etc/ssh/ssh_host_ed25519_key.pub; network key identical; bulk admission CHG-NMAS-20261117-BULK-ADMISSION-019)
+  R4: {template: R4.cfg.j2, username: nmas-automation, ssh_key_ref: runtime://device-credentials/r4-nmas-automation-sshkey, ssh_host_key: 'SHA256:Q8t+/BDy/FG8iBlG5rnSZegauBeg64d4MuOEAjfmLLU', monitoring: {platform: linux, address: 192.168.200.4, address_v6: 2001:db8:200::4, source_interface: Vlan200}}
   R5: {template: R5.cfg.j2, edge: true, monitoring: {platform: ceos, address: auto, source_interface: Management0}}
   S1: {template: S1.cfg.j2, username: nmas-automation, credential_ref: runtime://device-credentials/s1-nmas-automation, monitoring: {platform: ceos, address: 192.168.200.11, address_v6: 2001:db8:200::11, source_interface: Vlan200}}
   S2: {template: S2.cfg.j2, username: nmas-automation, credential_ref: runtime://device-credentials/s2-nmas-automation, monitoring: {platform: ceos, address: 192.168.200.12, address_v6: 2001:db8:200::12, source_interface: Vlan200}}

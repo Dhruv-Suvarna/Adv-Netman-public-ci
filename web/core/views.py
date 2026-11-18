@@ -1146,6 +1146,11 @@ def automation_section(request, slug):
     section = automation_service.get_automation_section(slug)
     if section is None:
         raise Http404("Unknown automation section")
+    # Preserve the Phase-3 legacy URL while making Automation -> Troubleshooting
+    # land on the real NMAS V2 workflow.  The Automation card already links
+    # directly; this redirect keeps old bookmarks compatible without a loop.
+    if slug == "troubleshooting":
+        return redirect("core:troubleshooting_list")
     context = {
         "page_title": f"Automation · {section['label']}",
         "summary": automation_service.get_automation_summary(),
