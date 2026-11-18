@@ -135,3 +135,12 @@ Link faults have these safety properties:
 - They are persisted `ACTIVE`, with the hard deadline, **before** the link is touched, so `break.py rollback` always works.
 - The flap is synchronous: the link is always left up in a `finally` block, and the flap stops early if a protected flow degrades.
 - The baseline is the interface configuration digest plus kernel UP + carrier.
+
+## 8. Topology-wide scope (bulk admission, 2026-11-18)
+
+- **Incidents.** Link incidents correlate across platforms: an FRR end keeps its kernel name (`R3:eth1`) and pairs with the
+  cEOS end (`S3:Ethernet1`) as ONE `LINK:` incident.
+- **Path evidence.** Every new monitoring case stores the forwarding paths of the protected flows (H1->H2 v4/v6) and the
+  service flows (H1->WebServer v4/v6), every ECMP branch. A branch that egresses an incident interface is marked; the
+  TOPOLOGY_PATHS audit names the affected flows.
+- **Routing reads.** FRR adjacencies and route counts on R3/R4 are now read live, using the same classifiers as cEOS.

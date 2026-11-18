@@ -1,4 +1,4 @@
-# NMAS V2 Troubleshooter support matrix (2026-11-17, routing-aware milestone)
+# NMAS V2 Troubleshooter support matrix (2026-11-18, bulk topology admission)
 
 Earlier revisions: this file's git history, `CHG-NMAS-20261117-MULTIFAULT-010/` (multi-fault milestone) and
 `CHG-NMAS-20261117-ROUTING-018/` (this revision). The campaign evidence is in `~/nmas-evidence/fault-campaigns/`; nothing
@@ -43,7 +43,7 @@ Replay-only routing results are **not** live validation and are not described as
 | `LINK_FLAPPING` | **LIVE** (013) | **LIVE** (013) | **LIVE** (013) | **LIVE** (013) | **LIVE** (013) | LIVE-RO + FIXTURE | **NO** | **LIVE** (013) |
 | `INTERFACE_DEGRADATION` | REPLAY | REPLAY | REPLAY | REPLAY (real Codex, `INCONCLUSIVE_ESCALATED`) | REPLAY | FIXTURE + LIVE-RO | **NO** | REPLAY |
 | `ROUTING_ADJACENCY_FAILURE`: OSPFv2, OSPFv3, BGP-IPv4, BGP-IPv6 on cEOS R1/R2/R5 | DEPLOYED (intake reads all four families live; healthy lab → no incident); fault: REPLAY + FIXTURE | REPLAY (cEOS JSON) | FIXTURE | catalogue (RB03); worker R2/S2 only | REPLAY + FIXTURE (`DIAGNOSE_AND_ESCALATE`) | FIXTURE | **NO** | **NO** auto-close (ADJ cases stay with humans) |
-| `ROUTING_ADJACENCY_FAILURE`: FRR R3/R4 (ospfd, ospf6d, bgpd) | **BLOCKED-AUTH** (R3 unregistered, R4 identity unverified; host-key enrollment not approved) | REPLAY (FRR JSON, incl. `Full/Backup` and `state` vs `peerState`) | **NO** | BLOCKED-AUTH + **NO** (worker Linux transport: `PLATFORM_TRANSPORT_NOT_SUPPORTED`) | REPLAY | FIXTURE | **NO** | **NO** |
+| `ROUTING_ADJACENCY_FAILURE`: FRR R3/R4 (ospfd, ospf6d, bgpd) | DEPLOYED (intake reads R3/R4 live; healthy lab -> no incident); fault: REPLAY | REPLAY (FRR JSON, incl. `Full/Backup` and `state` vs `peerState`) | FIXTURE | worker LIVE via broker (R3/R4 admitted) | REPLAY | FIXTURE | **NO** | **NO** auto-close |
 | `ROUTE_OR_REACHABILITY_FAILURE` / `SOURCE_COLLAPSE` (RIP, OSPF, OSPF externals, OSPFv3, IS-IS, BGP; IPv4 + IPv6 summaries; R1/R2/R5/S1/S2) | DEPLOYED (learned baseline, live counts read; no false positive); fault: FIXTURE | REPLAY + FIXTURE | FIXTURE | catalogue (RB02/RB03) | FIXTURE (`DIAGNOSE_AND_ESCALATE`) | FIXTURE | **NO** | **NO** auto-close |
 | `ROUTE_OR_REACHABILITY_FAILURE` / `MISSING_ROUTE`, `WRONG_NEXT_HOP` (per prefix) | **NO** (no authoritative per-prefix expectation; see note 3) | REPLAY (live RIB captures, both families) | FIXTURE | catalogue (RB02) | REPLAY | FIXTURE | **NO** | **NO** |
 | `ROUTE_OR_REACHABILITY_FAILURE` / `UNEXPECTED_SOURCE` (redistribution mismatch) | **NO** live per prefix; source-collapse covers loss of redistributed externals | REPLAY (RIP↔OSPF at R1, BGP→OSPF chain) | FIXTURE | catalogue | REPLAY | FIXTURE | **NO** | **NO** |
@@ -61,24 +61,21 @@ Replay-only routing results are **not** live validation and are not described as
 | Path-aware multi-device correlation (`correlate_with_paths`) | REPLAY + FIXTURE | One incident for a common link fault, including a flow symptom on a redundant topology whose baseline path used the link; an unrelated link fault is a separate group; an SVI hop is claimed only with explicit L2 membership |
 | Service-flow impact (`flow_impact`) | REPLAY | UNCHANGED / REROUTED / BROKEN / UNKNOWN |
 | Evidence quality / freshness (`evidence_quality`) | FIXTURE | stale or missing devices → PARTIAL / NONE |
-| Case-page display of path reconstruction / routing correlation | **NO** | The library and intake integration exist; the per-case Correlate stage still records `paths=0` |
+| Case-page display of path reconstruction / routing correlation | FIXTURE (TSACC-031) + REPLAY (TS-20261118-C82A083C, live RIBs, HTTP 200) | `TsTopologyPath` rows + TOPOLOGY_PATHS audit per new monitoring case; 'Topology-aware investigation' section |
 
-## Device coverage (2026-11-17 21:28Z)
+## Device coverage (2026-11-18, after bulk admission CHG-NMAS-20261117-BULK-ADMISSION-019)
 
-| Device | Identity | ManagementPath | Diagnostic credential | Worker live reads | Intake console reads | Telemetry (age) | Restriction |
-|---|---|---|---|---|---|---|---|
-| R1 | UNREGISTERED | none | none | **NO** | interfaces, OSPFv2/v3, route summaries | gNMI 0 s | BLOCKED-AUTH: registration + path approval |
-| R2 | VERIFIED | MPATH-000001 HEALTHY | path credential `nmas-automation` (network-admin; command catalogue is read-only) | LIVE (`cli:interfaces`, campaigns 009–013) | interfaces, OSPFv2/v3, route summaries | gNMI 1.5 s | recommend a dedicated `nmas-diag` (owner decision) |
-| R3 | UNREGISTERED | none | — | **NO** | none (FRR; not an intake device) | Linux adapter 0 s | BLOCKED-AUTH: host-key enrollment (keys captured in `CHG-NMAS-20261117-S2-ADMISSION-011/R3.*hostkeys.txt`, console and network agree); worker Linux transport NO |
-| R4 | IN_SERVICE, identity UNVERIFIED | none | — | **NO** | none | Linux adapter 18 s | BLOCKED-AUTH as R3 |
-| S1 | UNREGISTERED | none | — | **NO** | interfaces, route summaries | gNMI 20 s | BLOCKED-AUTH |
-| S2 | VERIFIED | MPATH-000002 HEALTHY | `nmas-diag` network-operator, privilege 1 (`aaa authorization commands all default local`) | **LIVE** (017: `code=OK cli:interfaces uid 972`) | interfaces, route summaries | gNMI 20 s | — |
-| S3 | UNREGISTERED | none | — | **NO** | interfaces | gNMI 0 s | BLOCKED-AUTH |
-| S4 | UNREGISTERED | none | — | **NO** | interfaces | gNMI 18 s | BLOCKED-AUTH |
-| mgmt_swt | identity UNVERIFIED | none | — | **NO** | none | gNMI 20 s | BLOCKED-AUTH |
+All nine managed devices: identity VERIFIED, ManagementPath APPROVED/ACTIVE/HEALTHY, a dedicated read-only `nmas-diag`
+identity with live-proven RBAC, and LIVE worker reads (code=OK, dispatcher uid 972). Full matrix and evidence:
+`TOPOLOGY_ADMISSION_ACCEPTANCE.md`. The R3/R4 authorization blockers of the previous revision are closed: their host-key
+pins were enrolled from console evidence and their paths were approved inside the owner's exact-target single-admin windows.
 
-Sources: `troubleshooting_readiness --json` (only R2 and S2 admitted), `ManagementPath` rows, the topology service
-freshness API (healthy ≤ 60 s), and the worker egress set `{192.168.200.2:22, 192.168.200.12:22}`.
+| Device | Path | Diagnostic identity | Intake (live, read-only) | Telemetry |
+|---|---|---|---|---|
+| R1, R2, S1, S2, S3, S4, mgmt_swt (cEOS) | MPATH-000001..7 | nmas-diag network-operator, priv 1 | interfaces; routing on R1/R2/S1/S2 | gNMI |
+| R3, R4 (FRR) | MPATH-000008/9 (Linux probe via broker) | nmas-diag forced-command broker | interfaces (`ip -j -s link`), OSPFv2/v3/BGP v4/v6, route counts | Linux adapter |
+
+Topology-wide forwarding-path evidence on every new monitoring case: REPLAY_VERIFIED (TS-20261118-C82A083C, live RIBs).
 
 ## Notes
 

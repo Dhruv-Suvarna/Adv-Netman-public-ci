@@ -64,7 +64,7 @@ Use `manage.py nmas_ts_auto_recover --status` to see a policy's state.
 
 `core/services/troubleshooting/intake.py`
 
-- **Detection.** Every 10 s the intake reads `show interfaces | json` on R1, R2, R5 and S1–S4, read-only. Every third pass it also reads, on R1, R2, R5, S1 and S2, the OSPFv2, OSPFv3, BGP-IPv4 and BGP-IPv6 neighbors and the IPv4/IPv6 route summaries. `faults.py` classifies each interface against intent and its bounded history (see `MULTI_FAULT_CLASSIFICATION.md`):
+- **Detection.** Every 10 s the intake reads `show interfaces | json` on R1, R2, R5 and S1–S4, read-only. Interfaces are read on all nine managed devices plus R5 (cEOS `show interfaces`; R3/R4 `ip -j -s link`, cabled ports only). Every third pass it also reads, on R1, R2, R3, R4, R5, S1 and S2, the OSPFv2, OSPFv3, BGP-IPv4 and BGP-IPv6 neighbors and the IPv4/IPv6 route counts (FRR through `vtysh ... json`). Each new case records topology-wide forwarding paths (`TsTopologyPath`, TOPOLOGY_PATHS audit) for H1->H2 and H1->WebServer, v4 and v6, every ECMP branch. `faults.py` classifies each interface against intent and its bounded history (see `MULTI_FAULT_CLASSIFICATION.md`):
   - `ADMIN_STATE_MISMATCH` and `OPERATIONAL_LINK_DOWN` must persist for 30 s.
   - `LINK_FLAPPING` needs ≥ 4 transitions in 300 s, counted from poll edges and the device's own `linkStatusChanges` counter.
   - `INTERFACE_DEGRADATION` uses deltas over 2 consecutive intervals; counter resets are excluded.
@@ -143,3 +143,15 @@ restore is never Change Engine remediation, and the case records `nmas_performed
 Restarting `nmas-troubleshooter-device-worker` with no case open recreates `/run/nmas-ts-diagnostic/worker.sock` (0660,
 group `nmas-ts-diagnostic-ipc`) within a few seconds. The namespace routes to 192.168.200.2 and 192.168.200.12 persist
 (they are owned by the overlay unit), and the S2 host key seen from the namespace still matches the pin.
+
+## Diagnostic worker scope after bulk admission (CHG-NMAS-20261117-BULK-ADMISSION-019)
+
+- Overlay `/etc/nmas/diagnostic-target-overlay.json`: eight exact tcp/22 targets on top of the R2 base (nine in total).
+- Worker drop-in `zz-managed-scope.conf`: `IPAddressAllow` of exactly nine /32 addresses, and a bind-mount of
+  `/etc/nmas/troubleshooter-worker-store.managed.json`.
+- Credential sync copies exactly the nine `nmas-diag` secrets; any missing id fails closed.
+- `nmas-diag` rotation: `modules/diagnostic_accounts.ensure_password(rotate=True)` stages, the IaC applies, verification is
+  followed by a promote, and the sync path unit propagates to the worker. No timer schedules it yet.
+- SQLite lock contention: governed calls in the bulk tooling retry safely, and the dispatcher's pre-model calls retry under
+  distinct nonces. Recommended long-term fix: `transaction_mode=IMMEDIATE` or PostgreSQL. Not WAL: the sandboxed units
+  bind-mount the database file alone.
