@@ -274,7 +274,9 @@ class MultiFaultIntakeTests(TestCase):
                                       policy_lookup=lambda op: POLICY if (op["device"], op["interface"]) == ("R2", "Ethernet1") else None,
                                       maintenance=lambda devs: self.maintenance,
                                       flows=lambda: [{"name": "H1-H2-v4"}, {"name": "H1-H2-v6"}],
-                                      measure=lambda flows: self.flows_measured.append(1) or {f["name"]: {"loss_pct": 0.0} for f in flows})
+                                      measure=lambda flows: self.flows_measured.append(1) or {f["name"]: {"loss_pct": 0.0} for f in flows},
+                                      dispatch_active=lambda hid: self.unit_running)
+        self.unit_running = True
         self.engine = self.make()
 
     def make(self, **kw):
@@ -389,6 +391,26 @@ class MultiFaultIntakeTests(TestCase):
         self.assertEqual(out[0]["fingerprint"], "ADJ:R2:ospf:192.168.255.4")
         self.assertEqual(out[0]["decision"], F.DIAGNOSE_AND_ESCALATE)
 
+    def test_a_dispatch_that_exited_without_progress_is_retried_and_audited(self):
+        """22:35Z 2026-11-17: the unit started, then exited GLOBAL_LEASE_BUSY; intake recorded started=True and never retried."""
+        from core.services.troubleshooting import ai
+
+        self.deps.open_handoff = ai.open_handoff                     # a real OPEN handoff row (the engine shares this deps object)
+        self.poll(0)
+        self.world.carrier_loss()
+        self.poll(10)
+        case_id = [r for r in self.poll(45) if "case" in r][0]["case"]
+        self.assertEqual(len(self.dispatched), 1)
+        self.unit_running = True
+        self.poll(200)
+        self.assertEqual(len(self.dispatched), 1)                  # still running: never a second dispatcher
+        self.unit_running = False                                  # the unit exited (lease busy) without touching the handoff
+        later = int((datetime.now(timezone.utc) - T0).total_seconds()) + 400   # the dispatch audit carries wall-clock time
+        out = [r for r in self.poll(later) if "dispatch_retry" in r]
+        self.assertEqual((len(out), len(self.dispatched)), (1, 2))
+        retry = models.TsAuditEvent.objects.get(case__case_id=case_id, action="INTAKE_DISPATCH_RETRY")
+        self.assertIn("without progress", retry.rationale)
+
     def test_standalone_route_source_collapse_opens_one_routing_case_and_never_a_write(self):
         self.engine = self.make(routing=("R2",))
         self.poll(0)                                            # learns the baseline
@@ -471,7 +493,7 @@ class CodexOutageTests(TestCase):
 
         deps = intake.IntakeDeps(run_case=lambda actor, cid, d: None, open_handoff=ai.open_handoff, dispatch=dispatch,
                                  notify=lambda s, b: mail.append(s), policy_lookup=lambda op: None, maintenance=lambda d: "",
-                                 flows=lambda: [], measure=lambda f: {})
+                                 flows=lambda: [], measure=lambda f: {}, dispatch_active=lambda hid: True)
         cfg = intake.IntakeConfig(devices=("R2", "S4"), confirm_seconds=30)
         engine = intake.Intake(cfg=cfg, reader=world.read, intent=INTENT.get, deps=deps, _peers=PEERS, config_admin=lambda d, i, c: "up")
         now = datetime.now(timezone.utc)

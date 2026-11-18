@@ -34,6 +34,22 @@
 </div>
 {% endif %}
 
+<div class="card"><h2>Topology-aware investigation</h2>
+  <p>Affected devices: <strong>{{ topology.affected_devices|join:", "|default:"—" }}</strong>{% if topology.interfaces %} &middot; interfaces {{ topology.interfaces|join:", " }}{% endif %}</p>
+  <p>Primary fault domain (deterministic): <strong>{{ topology.fault_category|default:"—" }}</strong> &middot; remediation eligibility: <strong>{{ topology.decision|default:"not decided" }}</strong></p>
+  {% if topology.admission %}<p>Device admission: {{ topology.admission|join:"; " }}</p>{% endif %}
+  <h3>Correlated symptoms</h3>
+  <ul>{% for line in topology.secondary %}<li>{{ line }}</li>{% empty %}<li>No secondary symptom was correlated to this incident.</li>{% endfor %}</ul>
+  <h3>Forwarding paths (RIB-based; ECMP branches listed separately)</h3>
+  {% for line in topology.paths_summary %}<p>{{ line }}</p>{% endfor %}
+  {% for flow, branches in topology.flows.items %}
+  <table class="data-table"><caption>{{ flow }}</caption><thead><tr><th scope="col">AF</th><th scope="col">Branch</th><th scope="col">Verdict</th><th scope="col">Hops</th><th scope="col">Incident on path</th></tr></thead><tbody>
+  {% for b in branches %}<tr><td>{{ b.af }}</td><td>{{ b.branch }}</td><td>{{ b.verdict }}{% if b.reason %} ({{ b.reason }}){% endif %}</td><td>{{ b.hops|default:"—" }}</td><td>{{ b.divergence|join:"; "|default:"no" }}</td></tr>{% endfor %}
+  </tbody></table>
+  {% empty %}<p>No forwarding-path evidence was recorded for this case (cases opened before the topology-aware intake, or path collection unavailable).</p>{% endfor %}
+  {% if topology.cleared %}<p>Verification: {{ topology.cleared|join:"; " }}</p>{% endif %}
+</div>
+
 <div class="card"><h2>Configuration drift vs live service impact</h2>
   <p>{{ d.drift_vs_live_impact.note }}. Drift records: {{ d.drift_vs_live_impact.config_drift_records }}.</p>
   <table class="data-table"><caption class="sr-only">Production flows</caption><thead><tr><th scope="col">Flow</th><th scope="col">Class</th><th scope="col">Loss %</th></tr></thead><tbody>

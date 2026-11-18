@@ -175,3 +175,42 @@ class ContinuationTests(Base):
         self.assertEqual(m.TsDiagnosticTest.objects.filter(case=self.case, test_id="HC04").count(), 1)
         checkpoint = m.TsAIHandoff.objects.get(pk=self.h.pk).checkpoint
         self.assertIn(f"system-op-down-hc04-{self.h.record_id}", checkpoint["results"])
+
+
+class LockedOnceRunner(OperationalDownRunner):
+    """First call fails exactly like SQLite writer contention in the dispatcher (TS-20261117-84ED42B7); then succeeds."""
+
+    def run(self, test_id, target, params):
+        from django.db import OperationalError
+
+        if not self.executed:
+            self.executed.append(("LOCKED", target, dict(params)))
+            raise OperationalError("database is locked")
+        return super().run(test_id, target, params)
+
+
+class PreModelLockRetryTests(Base):
+    def test_a_lock_refusal_is_retried_once_under_a_distinct_nonce_and_never_reaches_the_device_twice(self):
+        from unittest import mock
+
+        self.case.service_intent = {**self.case.service_intent, "fault_category": "OPERATIONAL_LINK_DOWN"}
+        self.case.save(update_fields=["service_intent"])
+        runner = LockedOnceRunner()
+        prov = Provider([{"action": "conclude", "conclude": {"outcome": "INCONCLUSIVE", "summary": "physical cause remains uncertain"}}])
+        with mock.patch.object(air.time, "sleep"):
+            self.go(prov, runner=runner)
+        self.assertEqual(runner.executed, [("LOCKED", "R1", FORCE), ("HC04", "R1", FORCE)])      # one refusal, one real collection
+        results = m.TsAIHandoff.objects.get(pk=self.h.pk).checkpoint["results"]
+        first, retry = f"system-op-down-hc04-{self.h.record_id}", f"system-op-down-hc04-{self.h.record_id}-lockretry1"
+        self.assertEqual(results[first]["error_code"], "TOOL_FAILED")                              # the refusal stays recorded
+        self.assertTrue(results[retry]["ok"])
+
+    def test_admission_acceptance_collects_on_every_delegated_target(self):
+        self.case.service_intent = {**self.case.service_intent, "fault_category": air.ADMISSION_ACCEPTANCE}
+        self.case.save(update_fields=["service_intent"])
+        runner = OperationalDownRunner()
+        prov = Provider([{"action": "conclude", "conclude": {"outcome": "INCONCLUSIVE", "summary": "acceptance evidence reviewed"}}])
+        self.go(prov, runner=runner)
+        self.assertEqual([t for _x, t, _p in runner.executed], sorted(self.h.allowed_targets)[:5])
+        self.assertIn(f"system-acceptance-hc04-{self.h.record_id}-{sorted(self.h.allowed_targets)[0]}",
+                      m.TsAIHandoff.objects.get(pk=self.h.pk).checkpoint["results"])

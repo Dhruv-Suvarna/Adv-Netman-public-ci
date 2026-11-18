@@ -56,8 +56,9 @@ log = logging.getLogger("nmas.ts.intake")
 ACTOR_NAME = "nmas-intake"
 TRIGGER_SOURCE = "monitoring"
 HANDOFF_ID = re.compile(r"^AIH-[0-9a-f]{12}$")
-DEFAULT_DEVICES = ("R1", "R2", "R5", "S1", "S2", "S3", "S4")
-DEFAULT_ROUTING_DEVICES = ("R1", "R2", "R5", "S1", "S2")   # S1/S2: RIP (IPv4) and IS-IS (IPv6) route sources
+DEFAULT_DEVICES = ("R1", "R2", "R3", "R4", "R5", "S1", "S2", "S3", "S4", "mgmt_swt")
+DEFAULT_ROUTING_DEVICES = ("R1", "R2", "R3", "R4", "R5", "S1", "S2")   # S1/S2: RIP + IS-IS; R3/R4: FRR (ospfd/ospf6d/bgpd)
+FRR_DEVICES = frozenset({"R3", "R4"})
 INCIDENT_CATEGORIES = (faults.ADMIN_STATE_MISMATCH, faults.OPERATIONAL_LINK_DOWN, faults.LINK_FLAPPING, faults.INTERFACE_DEGRADATION)
 ADJ_SECONDARY_GRACE_S = 300           # an adjacency loss this close to a link incident on the same device is treated as secondary
 DISPATCH_RETRY_SECONDS = 120
@@ -112,6 +113,14 @@ def _cli_json(container: str, command: str) -> dict | None:
 
 def read_device(device: str, cfg: IntakeConfig) -> list[faults.InterfaceSample] | None:
     """Read-only interface state + counters of one managed device (the same console read path the recovery service uses)."""
+    if device in FRR_DEVICES:
+        try:
+            out = subprocess.run(["docker", "exec", f"{cfg.container_prefix}{device}", "ip", "-j", "-s", "link", "show"],
+                                 capture_output=True, text=True, timeout=20, check=False)
+            links = json.loads(out.stdout) if out.returncode == 0 else None
+        except (OSError, subprocess.SubprocessError, ValueError):
+            links = None
+        return None if not isinstance(links, list) else faults.linux_interface_samples(device, links, datetime.now(timezone.utc))
     doc = _cli_json(f"{cfg.container_prefix}{device}", "show interfaces")
     if doc is None or not isinstance(doc.get("interfaces"), dict):
         return None
@@ -122,8 +131,39 @@ ADJACENCY_COMMANDS = {"ospf": "show ip ospf neighbor", "ospf3": "show ipv6 ospf 
                       "bgp": "show ip bgp summary", "bgp6": "show ipv6 bgp summary"}
 
 
+def _vtysh_json(container: str, command: str) -> dict | None:
+    """Read-only FRR query through the trusted Containerlab console (``vtysh -c 'show ... json'``)."""
+    argv = ["docker", "exec", container, "vtysh", "-c", f"{command} json"]
+    try:
+        out = subprocess.run(argv, capture_output=True, text=True, timeout=20, check=False)
+        return json.loads(out.stdout) if out.returncode == 0 else None
+    except (OSError, subprocess.SubprocessError, ValueError):
+        return None
+
+
+def _frr_route_counts(doc: dict | None, af: str) -> dict[str, int] | None:
+    """FRR ``show ip[v6] route json`` -> the same normalised source counts as the cEOS summaries (selected routes only)."""
+    if not isinstance(doc, dict):
+        return None
+    rows = {}
+    for prefix, entries in doc.items():
+        best = next((e for e in entries if e.get("selected")), None) if isinstance(entries, list) else None
+        if best:
+            rows[prefix] = routing.RibEntry(prefix, routing._LINUX_SOURCES.get(best.get("protocol", ""), best.get("protocol", "")), "", (), af)  # pylint: disable=protected-access
+    if af == "ipv6":
+        rows = {k: routing.RibEntry(k, routing._V6_RENAME.get(v.source, v.source), "", (), af) for k, v in rows.items()}  # pylint: disable=protected-access
+    counts = routing.source_counts(rows)
+    return {k: int(counts.get(k, 0)) for k in ("bgp", "connected", "isis", "ospf", "ospf3", "rip", "static")}
+
+
 def read_adjacencies(device: str, cfg: IntakeConfig) -> list[faults.AdjacencySample] | None:
     container = f"{cfg.container_prefix}{device}"
+    if device in FRR_DEVICES:
+        docs = {"ospf": _vtysh_json(container, "show ip ospf neighbor"), "ospf6": _vtysh_json(container, "show ipv6 ospf6 neighbor"),
+                "bgp": _vtysh_json(container, "show bgp summary")}
+        if all(d is None for d in docs.values()):
+            return None
+        return routing.frr_adjacency_samples(device, docs, datetime.now(timezone.utc))
     docs = {key: _cli_json(container, cmd) for key, cmd in ADJACENCY_COMMANDS.items()}
     if all(d is None for d in docs.values()):
         return None
@@ -133,9 +173,112 @@ def read_adjacencies(device: str, cfg: IntakeConfig) -> list[faults.AdjacencySam
 def read_route_sources(device: str, cfg: IntakeConfig) -> dict[str, dict[str, int] | None] | None:
     """Normalised per-protocol route counts from the IPv4 and IPv6 route summaries (two small read-only documents)."""
     container = f"{cfg.container_prefix}{device}"
+    if device in FRR_DEVICES:
+        out = {"ipv4": _frr_route_counts(_vtysh_json(container, "show ip route"), "ipv4"),
+               "ipv6": _frr_route_counts(_vtysh_json(container, "show ipv6 route"), "ipv6")}
+        return None if all(v is None for v in out.values()) else out
     out = {"ipv4": routing.ceos_summary_counts(_cli_json(container, "show ip route summary"), "ipv4"),
            "ipv6": routing.ceos_summary_counts(_cli_json(container, "show ipv6 route summary"), "ipv6")}
     return None if all(v is None for v in out.values()) else out
+
+
+# ----------------------------------------------------------------------------------------------- topology-wide path evidence
+RIB_DEVICES = ("R1", "R2", "R3", "R4", "R5", "S1", "S2", "H1")
+ADDRESS_DEVICES = RIB_DEVICES + ("S3", "S4", "mgmt_swt", "H2", "H3", "H4", "WebServer")
+LINUX_NODES = frozenset({"R3", "R4", "H1", "H2", "H3", "H4", "WebServer"})
+TOPOLOGY_FLOWS = (   # (name, source, destination, family, class)
+    ("H1-H2-v4", "H1", "192.168.20.101", "ipv4", "protected"),
+    ("H1-H2-v6", "H1", "2001:db8:20::2001", "ipv6", "protected"),
+    ("H1-WEB-v4", "H1", "172.30.50.10", "ipv4", "service"),
+    ("H1-WEB-v6", "H1", "2001:db8:3050::10", "ipv6", "service"),
+)
+
+
+def _docker_json(argv: list[str]):
+    try:
+        out = subprocess.run(["docker", "exec", *argv], capture_output=True, text=True, timeout=20, check=False)
+        return json.loads(out.stdout) if out.returncode == 0 else None
+    except (OSError, subprocess.SubprocessError, ValueError):
+        return None
+
+
+def topology_snapshot(cfg: IntakeConfig) -> dict:
+    """Read-only RIB / address snapshot of the managed topology through the trusted console (the intake's read channel)."""
+    import yaml
+    from pathlib import Path
+
+    ribs4, ribs6, addresses, unreadable = {}, {}, {}, []
+    for dev in ADDRESS_DEVICES:
+        c = f"{cfg.container_prefix}{dev}"
+        if dev in LINUX_NODES:
+            addresses[dev] = routing.linux_addresses(_docker_json([c, "ip", "-j", "addr", "show"]))
+            if dev in RIB_DEVICES:
+                ribs4[dev] = routing.linux_rib(_docker_json([c, "ip", "-j", "-4", "route", "show"]), "ipv4")
+                ribs6[dev] = routing.linux_rib(_docker_json([c, "ip", "-j", "-6", "route", "show"]), "ipv6")
+        else:
+            addresses[dev] = routing.ceos_addresses(_cli_json(c, "show ip interface brief"), _cli_json(c, "show ipv6 interface brief"))
+            if dev in RIB_DEVICES:
+                ribs4[dev] = routing.ceos_rib(_cli_json(c, "show ip route"))
+                ribs6[dev] = routing.ceos_rib(_cli_json(c, "show ipv6 route"))
+        if not addresses[dev] or (dev in RIB_DEVICES and (ribs4.get(dev) is None or ribs6.get(dev) is None)):
+            unreadable.append(dev)
+    links = routing.clab_links(yaml.safe_load((Path(settings.REPO_ROOT) / "srlceos01.clab.yml").read_text(encoding="utf-8")))
+    return {"ribs4": ribs4, "ribs6": ribs6, "addresses": addresses, "links": links, "unreadable": sorted(set(unreadable)),
+            "collected_at": datetime.now(timezone.utc).isoformat()}
+
+
+def _kernel(device: str, interface: str) -> str:
+    m = re.fullmatch(r"Ethernet(\d+)", interface or "")
+    return f"eth{m.group(1)}" if m else interface
+
+
+def flow_paths(snapshot: dict, incident_ports: set[tuple[str, str]]) -> list[dict]:
+    """Every ECMP branch of every topology flow, marked when it egresses an incident interface (either end)."""
+    out = []
+    for name, src, dst, af, klass in TOPOLOGY_FLOWS:
+        ribs = snapshot["ribs6" if af == "ipv6" else "ribs4"]
+        allp = routing.reconstruct_all_paths(src, dst, ribs, snapshot["addresses"], links=snapshot["links"])
+        for i, br in enumerate(allp["branches"]):
+            hops = br.get("hops", [])
+            hits = [f"{h['device']}:{h.get('egress', '')}" for h in hops
+                    if (h["device"], _kernel(h["device"], h.get("egress", ""))) in incident_ports]
+            out.append({"flow": name, "class": klass, "source": src, "destination": dst, "af": af, "branch": i + 1,
+                        "branches": len(allp["branches"]), "verdict": br["verdict"], "overall": allp["verdict"],
+                        "reason": br.get("reason", ""), "delivered_to": br.get("delivered_to", ""),
+                        "hops": [{"device": h["device"], "prefix": h["prefix"], "source": h["source"], "egress": h.get("egress", ""),
+                                  "next_device": h.get("next_device") or ""} for h in hops],
+                        "traverses_incident": hits})
+    return out
+
+
+def record_topology_paths(actor, case, incident: "Incident", cfg: IntakeConfig, now: datetime, *, snapshot: dict | None = None) -> list[str]:
+    """Persist the topology-wide forwarding-path evidence of an incident (CORRELATE stage).  Read-only; failures are audited."""
+    snapshot = snapshot or topology_snapshot(cfg)
+    ports = {(s.device, _kernel(s.device, s.interface)) for s in (incident.samples or incident.members)}
+    rows = flow_paths(snapshot, ports)
+    ev = repo.store_evidence(actor, case, source_type="topology_paths", device=(incident.devices or ["-"])[0],
+                             command_or_api="RIB + interface addresses via trusted console (read-only; RIB is not a validated FIB)",
+                             adapter="nmas-intake", parser="routing.reconstruct_all_paths", parser_version="1",
+                             collected_at=now, raw=json.dumps({"paths": rows, "unreadable": snapshot["unreadable"],
+                                                               "collected_at": snapshot["collected_at"]}, sort_keys=True))
+    ids = []
+    for row in rows:
+        rec = repo.record(actor, case, "topology_path", basis="OBSERVED", evidence_ids=[ev.evidence_id], now=now,
+                          source=row["source"], destination=row["destination"], address_family=row["af"],
+                          service=f"{row['flow']} ({row['class']})", observed_hops=row["hops"],
+                          links=[f"{h['device']}:{h['egress']}->{h['next_device']}" for h in row["hops"] if h["next_device"]],
+                          next_hops=[h["next_device"] for h in row["hops"] if h["next_device"]],
+                          lookup_provenance={"method": "hop-by-hop RIB longest-prefix match", "branch": f"{row['branch']}/{row['branches']}",
+                                             "verdict": row["verdict"], "overall": row["overall"], "reason": row["reason"],
+                                             "rib_is_not_fib": True, "unreadable_devices": snapshot["unreadable"]},
+                          divergence=[f"egresses incident interface {h}" for h in row["traverses_incident"]])
+        ids.append(rec.record_id)
+    affected = sorted({r["flow"] for r in rows if r["traverses_incident"] or r["overall"] in (routing.BLACKHOLE, routing.LOOP)})
+    repo.audit(actor, case, "TOPOLOGY_PATHS", decision=(f"{len(rows)} path branch(es) over {len(TOPOLOGY_FLOWS)} flows; "
+                                                       f"affected: {', '.join(affected) or 'none'}")[:255],
+               result="AFFECTED" if affected else "UNAFFECTED", evidence_ids=[ev.evidence_id], now=now,
+               rationale=json.dumps({"incident_ports": sorted(f"{d}:{i}" for d, i in ports), "unreadable": snapshot["unreadable"]})[:3000])
+    return ids
 
 
 def _as_sample(row: Any, now: datetime) -> faults.InterfaceSample:
@@ -165,14 +308,14 @@ def peers(devices: set[str]) -> dict[tuple[str, str], tuple[str, str]]:
     """Link peers from the tracked Containerlab topology (cEOS ``ethN`` == ``EthernetN``)."""
     from .intake_scope import _links
 
-    def name(iface: str) -> str:
+    def name(device: str, iface: str) -> str:
         m = re.fullmatch(r"eth(\d+)", iface)
-        return f"Ethernet{m.group(1)}" if m else iface
+        return f"Ethernet{m.group(1)}" if m and device not in FRR_DEVICES else iface     # Linux/FRR keeps its kernel name
 
     out = {}
     for row in _links(devices):
         s = row["scope"]
-        a, b = (s["a"], name(s["a_if"])), (s["b"], name(s["b_if"]))
+        a, b = (s["a"], name(s["a"], s["a_if"])), (s["b"], name(s["b"], s["b_if"]))
         out[a], out[b] = b, a
     return out
 
@@ -284,6 +427,18 @@ def start_dispatch(handoff_id: str) -> bool:
     return rc == 0
 
 
+def dispatch_active(handoff_id: str) -> bool:
+    """True while the handoff's dispatcher unit is running (or starting); failures read as not running."""
+    if not HANDOFF_ID.fullmatch(handoff_id):
+        return False
+    try:
+        out = subprocess.run(["systemctl", "is-active", f"nmas-troubleshooter-dispatch@{handoff_id}.service"],
+                             capture_output=True, text=True, timeout=15, check=False).stdout.strip()
+    except (OSError, subprocess.SubprocessError):
+        return True                                  # unknown: never start a second dispatcher on a guess
+    return out in ("active", "activating", "reloading")
+
+
 def fingerprint_ends(fp: str, prefix: str = "") -> list[tuple[str, str]]:
     """``LINK:a:ifa|b:ifb`` / ``IFACE:dev:if`` (optionally prefixed) -> [(device, interface), ...]; anything else -> []."""
     body = fp[len(prefix):] if prefix and fp.startswith(prefix) else fp
@@ -361,6 +516,9 @@ class IntakeDeps:
     maintenance: Callable[[list[str]], str] | None = maintenance_reason
     flows: Callable[[], list[dict]] = _protected_flows
     measure: Callable[[list[dict]], dict] = _measure_flows
+    dispatch_active: Callable[[str], bool] = dispatch_active
+    topology_paths: bool = False                 # production intake: True (record_topology_paths reads the live topology)
+    topology_cfg: Any = None
 
 
 def _store_incident_evidence(actor, case, incident: Incident, now: datetime) -> list[str]:
@@ -425,6 +583,11 @@ def open_incident(incident: Incident, deps: IntakeDeps | None = None, *, now: da
         evidence_ids = _store_incident_evidence(actor, case, incident, now)
         if incident.decision is not None:
             record_decision(actor, case, incident.decision, evidence_ids=evidence_ids, now=now)
+        if deps.topology_paths:
+            try:
+                record_topology_paths(actor, case, incident, deps.topology_cfg or IntakeConfig(), now)
+            except Exception as exc:  # noqa: BLE001 - path evidence is additive; its absence is audited, never fatal
+                repo.audit(actor, case, "TOPOLOGY_PATHS_ERROR", decision=f"{type(exc).__name__}: {exc}"[:255], result="ERROR", now=now)
             for line in incident.secondary:
                 repo.audit(actor, case, "SECONDARY_SYMPTOM", decision=line[:255], result="CORRELATED", now=now)
     except Exception as exc:  # noqa: BLE001 - evidence persistence never blocks the case; the failure is audited
@@ -695,10 +858,17 @@ class Intake:
             cases = cases.exclude(trigger_ref__startswith="REPLAY")      # a replay engine owns its own cases
         for case in cases:
             last = models.TsAuditEvent.objects.filter(case=case, action__in=("INTAKE_DISPATCH", "INTAKE_DISPATCH_RETRY")).order_by("-seq").first()
-            if last is None or last.result != "NOT_STARTED":
+            if last is None:
                 continue
             handoff = models.TsAIHandoff.objects.filter(case=case, status="OPEN").first()
             if handoff is None:
+                continue
+            cp = handoff.checkpoint or {}
+            # A unit that STARTED but exited without any progress (e.g. GLOBAL_LEASE_BUSY while another handoff held the single
+            # global lease) leaves an OPEN, untouched handoff: treat it like a start failure, once the unit is no longer running.
+            stalled = (last.result == "OK" and not cp.get("iteration") and not cp.get("calls")
+                       and not (cp.get("model") or {}).get("requests") and not self.deps.dispatch_active(handoff.record_id))
+            if last.result != "NOT_STARTED" and not stalled:
                 continue
             at, count = self.dispatch_attempts.get(case.case_id, (last.occurred_at, 0))
             if (now - at).total_seconds() < DISPATCH_RETRY_SECONDS or count >= DISPATCH_RETRY_MAX:
@@ -707,7 +877,8 @@ class Intake:
             self.dispatch_attempts[case.case_id] = (now, count + 1)
             actor = repo.Actor(ACTOR_NAME, "system", tenant=case.tenant, devices=frozenset(repo._case_devices(case)))  # pylint: disable=protected-access
             repo.audit(actor, case, "INTAKE_DISPATCH_RETRY", decision=f"{handoff.record_id} attempt {count + 1} started={started}",
-                       result="OK" if started else "NOT_STARTED", now=now)
+                       result="OK" if started else "NOT_STARTED", now=now,
+                       rationale="previous dispatch exited without progress (e.g. GLOBAL_LEASE_BUSY)" if stalled else "previous start failed")
             out.append({"case": case.case_id, "dispatch_retry": count + 1, "started": started})
         return out
 

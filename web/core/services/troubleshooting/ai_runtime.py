@@ -19,6 +19,8 @@ re-executing).  Provider doubles used in tests are NOT live-model evidence.
 
 from __future__ import annotations
 
+import time
+
 import hashlib
 import importlib
 import json
@@ -307,6 +309,11 @@ def _persist_model(handoff_id: str, system: repo.Actor, identity: dict, entry: d
     h.save()
 
 
+ADMISSION_ACCEPTANCE = "ADMISSION_ACCEPTANCE"
+PREMODEL_LOCK_RETRIES = 2
+PREMODEL_LOCK_BACKOFF_S = 2.0
+
+
 def continue_handoff(actor: repo.Actor, handoff_id: str, *, provider: Any = None, provider_path: str | None = None, runner: Any = None,
                      deps: rt.RuntimeDeps | None = None, runbook: str | None = None, run_budget: dict | None = None,
                      clock: Callable[[], datetime] | None = None, fencing_token: int | None = None,
@@ -360,23 +367,40 @@ def continue_handoff(actor: repo.Actor, handoff_id: str, *, provider: Any = None
     # replay the stored result instead of touching the device twice.  Failure is
     # evidence (and remains safe); it never falls back to a privileged transport.
     fault_category = str((h.case.service_intent or {}).get("fault_category") or "")
-    if (fault_category == "OPERATIONAL_LINK_DOWN" and "request_diagnostic_test" in h.allowed_tools
-            and "HC04" in set(getattr(runner, "read_only_tests", ())) and h.allowed_targets):
-        target = h.allowed_targets[0]
-        ai.call_tool(
-            ag,
-            h.record_id,
-            "request_diagnostic_test",
-            {
-                "test_id": "HC04",
-                "target": target,
-                "params": {"force_refresh": True},
-                "why": "Collect current Layer-1 evidence through the restricted worker before diagnosing an operational-down incident.",
-            },
-            nonce=f"system-op-down-hc04-{h.record_id}",
-            rt=ai_rt,
-            now=clock_fn(),
-        )
+    if ("request_diagnostic_test" in h.allowed_tools and "HC04" in set(getattr(runner, "read_only_tests", ()))
+            and h.allowed_targets):
+        if fault_category == "OPERATIONAL_LINK_DOWN":
+            premodel = [(h.allowed_targets[0], f"system-op-down-hc04-{h.record_id}")]          # unchanged since campaign 017
+        elif fault_category == ADMISSION_ACCEPTANCE:
+            # Topology admission acceptance: one genuine restricted-worker collection on EVERY delegated target (bounded by the
+            # handoff's own device budget) before any model turn -- proof that each admitted device answers through its approved
+            # path with its dedicated read-only identity.  Deterministic nonces make retries replay instead of re-collecting.
+            limit = int(h.budget.get("max_devices", 5))
+            premodel = [(t, f"system-acceptance-hc04-{h.record_id}-{t}") for t in sorted(h.allowed_targets)[:limit]]
+        else:
+            premodel = []
+        for target, nonce in premodel:
+            for attempt in range(PREMODEL_LOCK_RETRIES + 1):
+                # A SQLite writer-lock refusal never touched the device; its result is stored under its nonce (a replay would
+                # return the same failure), so a bounded retry uses a distinct deterministic nonce.  Any other outcome stops.
+                result = ai.call_tool(
+                    ag,
+                    h.record_id,
+                    "request_diagnostic_test",
+                    {
+                        "test_id": "HC04",
+                        "target": target,
+                        "params": {"force_refresh": True},
+                        "why": "Collect current Layer-1 evidence through the restricted worker before the first model turn.",
+                    },
+                    nonce=nonce if attempt == 0 else f"{nonce}-lockretry{attempt}",
+                    rt=ai_rt,
+                    now=clock_fn(),
+                )
+                if not (isinstance(result, dict) and result.get("error_code") == "TOOL_FAILED"
+                        and "database is locked" in str(result.get("error") or "")):
+                    break
+                time.sleep(PREMODEL_LOCK_BACKOFF_S * (attempt + 1))
     state = {"seq": 0}
     max_model = h.budget["max_iterations"] + h.budget["max_model_retries"] * 2
 

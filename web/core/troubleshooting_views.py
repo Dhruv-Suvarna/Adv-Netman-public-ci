@@ -580,7 +580,33 @@ def ui_detail(request, p, case_id):
         "page_title": f"Case {case.case_id}", "d": detail, "report_html": reporting.to_html(report), "evidence": _evidence_rows(p, case),
         "limitations": report["limitations"], "freshness": report["freshness"], "can_operate": p.allows("operator"),
         "terminal": case.state in m.TS_TERMINAL_CASE_STATES, "notice": request.GET.get("notice", "")[:300],
-        "operations": _operational_status()})
+        "operations": _operational_status(), "topology": _topology_view(case)})
+
+
+def _topology_view(case) -> dict:
+    """Topology-aware investigation summary from records already on the case (read-only; nothing is recomputed here)."""
+    audits = list(m.TsAuditEvent.objects.filter(case=case, action__in=(
+        "REMEDIATION_DECISION", "SECONDARY_SYMPTOM", "TOPOLOGY_PATHS", "TOPOLOGY_PATHS_ERROR", "FAULT_CLEARED_VERIFIED", "INTAKE_DISPATCH",
+        "ADMISSION_RESOLVED")).order_by("seq"))
+    flows: dict[str, list] = {}
+    for row in m.TsTopologyPath.objects.filter(case=case).order_by("id"):
+        prov = row.lookup_provenance or {}
+        flows.setdefault(row.service or f"{row.source}->{row.destination}", []).append({
+            "af": row.address_family, "source": row.source, "destination": row.destination, "branch": prov.get("branch", ""),
+            "verdict": prov.get("verdict", ""), "reason": prov.get("reason", ""),
+            "hops": " > ".join(f"{h.get('device')}[{h.get('source')} {h.get('prefix')}]" for h in (row.observed_hops or [])),
+            "divergence": row.divergence or [], "unreadable": prov.get("unreadable_devices") or []})
+    decision = next((a for a in audits if a.action == "REMEDIATION_DECISION"), None)
+    return {
+        "affected_devices": (case.affected_scope or {}).get("devices") or [],
+        "interfaces": (case.affected_scope or {}).get("interfaces") or [],
+        "fault_category": (case.service_intent or {}).get("fault_category", ""),
+        "decision": decision.result if decision else "", "decision_detail": decision.decision if decision else "",
+        "secondary": [a.decision for a in audits if a.action == "SECONDARY_SYMPTOM"],
+        "paths_summary": [a.decision for a in audits if a.action in ("TOPOLOGY_PATHS", "TOPOLOGY_PATHS_ERROR")],
+        "flows": flows, "admission": [a.decision for a in audits if a.action == "ADMISSION_RESOLVED"],
+        "cleared": [a.decision for a in audits if a.action == "FAULT_CLEARED_VERIFIED"],
+    }
 
 
 @_ui("operator", ("POST",))

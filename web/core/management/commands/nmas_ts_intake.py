@@ -23,7 +23,7 @@ class Command(BaseCommand):
         parser.add_argument("--interval", type=float, default=10.0)
 
     def handle(self, *args, **opts):
-        engine = intake.Intake(config_admin=intake.read_config_admin)
+        engine = intake.Intake(config_admin=intake.read_config_admin, deps=intake.IntakeDeps(topology_paths=True))
         if opts["observe"]:
             engine._peers = intake.peers(set(engine.cfg.devices))                     # pylint: disable=protected-access
             incidents, samples, unread = engine._interface_incidents(datetime.now(timezone.utc))   # pylint: disable=protected-access

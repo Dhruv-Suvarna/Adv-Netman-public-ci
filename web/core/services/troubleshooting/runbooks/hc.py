@@ -162,7 +162,13 @@ def hc04(ctx: Ctx) -> Result:
             if rx is not None and lo is not None and rx < lo + DOM_MARGIN_DB:
                 problems.append(f"{d}:{i} Rx {rx} dBm within {DOM_MARGIN_DB} dB of low alarm {lo}")
     if not checked:
-        ctx.need("interface.speed", *_link_ends(ctx)[0])  # raises Gap with the precise missing source
+        ends = _link_ends(ctx)
+        if not ends:
+            # No forwarding path in the case scope (e.g. a single-device admission check): there is no link pair to compare.
+            # That is an honest INCONCLUSIVE with its reason -- never an IndexError reported as a test failure.
+            return inconclusive("no path link in the case scope: speed/duplex/DOM comparison needs both ends of a link",
+                                "physical-layer pair comparison not applicable to this scope")
+        ctx.need("interface.speed", *ends[0])  # raises Gap with the precise missing source
     if problems:
         return fault("; ".join(problems), Finding("F-phy", "Physical-layer mismatch or optics degradation on the path", "L1", hypothesis="H-l1", causal=True,
                      confidence=0.8, remediation_hint="correct speed/duplex or replace optic/cable (physical work: external acknowledgement)"), **{"problems": problems})

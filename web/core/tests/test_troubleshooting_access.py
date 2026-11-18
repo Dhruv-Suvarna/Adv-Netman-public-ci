@@ -162,3 +162,37 @@ class DispositionRenderingTests(TestCase):
         case.disposition = {**case.disposition, "reason": "fault cleared externally"}
         case.save(update_fields=["disposition"])
         self.assertIn(b"fault cleared externally", self.client.get(f"/troubleshooting/{case.case_id}/").content)
+
+
+class TopologyPathPageTests(TestCase):
+    """Topology-wide path evidence is persisted as TsTopologyPath rows and rendered (every ECMP branch, incident hits marked)."""
+
+    def test_TSACC_031_paths_are_recorded_and_rendered_with_incident_traversal(self):
+        from datetime import datetime, timezone
+        from types import SimpleNamespace
+
+        from core.services.troubleshooting import intake
+        from core.tests.test_troubleshooting_routing import lab
+
+        ribs4, ribs6, addrs, links = lab()
+        snapshot = {"ribs4": ribs4, "ribs6": ribs6, "addresses": addrs, "links": links, "unreadable": [], "collected_at": "x"}
+        case = make_case(actor=repo.Actor("alice", "user", tenant="acme"))
+        seed_deterministic(case)
+        scope_device = sorted(repo._case_devices(case))[0]  # pylint: disable=protected-access
+        incident = SimpleNamespace(devices=[scope_device], samples=[SimpleNamespace(device="S1", interface="Ethernet1")], members=[])
+        actor = repo.Actor("nmas-intake", "system", tenant="acme", devices=frozenset({scope_device}))
+        ids = intake.record_topology_paths(actor, case, incident, None, datetime.now(timezone.utc), snapshot=snapshot)
+        self.assertEqual(len(ids), 6)                                   # 1 + 1 protected branches, 2 + 2 ECMP service branches
+        rows = m.TsTopologyPath.objects.filter(case=case)
+        web = [r for r in rows if r.service.startswith("H1-WEB-v4")]
+        self.assertEqual(len(web), 2)
+        self.assertTrue(all("egresses incident interface S1:Ethernet1" in r.divergence for r in web))
+        self.assertTrue(all(not r.divergence for r in rows if r.service.startswith("H1-H2")))
+        audit = m.TsAuditEvent.objects.get(case=case, action="TOPOLOGY_PATHS")
+        self.assertEqual(audit.result, "AFFECTED")
+        ts_sign_in(self.client, ts_user("viewer", "ts-admin", "ts-tenant:acme"))
+        page = self.client.get(f"/troubleshooting/{case.case_id}/").content.decode()
+        self.assertIn("Topology-aware investigation", page)
+        self.assertIn("H1-WEB-v6 (service)", page)
+        section = page.split("Topology-aware investigation", 1)[1].split("Configuration drift vs live service impact", 1)[0]
+        self.assertEqual(section.count("egresses incident interface S1:Ethernet1"), 4)          # 4 service branches; also in the report

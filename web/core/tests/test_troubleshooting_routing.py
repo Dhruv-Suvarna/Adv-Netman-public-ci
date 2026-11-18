@@ -274,3 +274,29 @@ class EvidenceQualityTests(SimpleTestCase):
         self.assertEqual(q["stale"], ["R3:rib4", "S1:rib4"])
         self.assertEqual(q["missing_devices"], ["R3", "R4", "S1"])
         self.assertEqual(r.evidence_quality([], now=NOW, required_devices=["R1"])["quality"], "NONE")
+
+
+class FrrIntakeReaderTests(SimpleTestCase):
+    def test_linux_interface_samples_cover_cabled_ports_only(self):
+        links = [{"ifname": "lo", "flags": ["LOOPBACK", "UP", "LOWER_UP"]},
+                 {"ifname": "eth0@if352", "flags": ["UP", "LOWER_UP"]},
+                 {"ifname": "eth1@if366", "flags": ["BROADCAST", "UP", "LOWER_UP"],
+                  "stats64": {"rx": {"errors": 3, "dropped": 1, "packets": 10}, "tx": {"errors": 0, "dropped": 0, "packets": 9}}},
+                 {"ifname": "eth2@if397", "flags": ["BROADCAST", "UP"]},
+                 {"ifname": "eth3", "flags": ["BROADCAST"]},
+                 {"ifname": "Vlan200", "flags": ["UP", "LOWER_UP"]}, {"ifname": "eth1.101@eth1", "flags": ["UP", "LOWER_UP"]}]
+        got = {s.interface: (s.admin, s.oper, s.link_status) for s in faults.linux_interface_samples("R3", links, NOW)}
+        self.assertEqual(got, {"eth1": ("up", "up", "connected"), "eth2": ("up", "down", "notconnect"), "eth3": ("down", "down", "disabled")})
+        eth1 = next(s for s in faults.linux_interface_samples("R3", links, NOW) if s.interface == "eth1")
+        self.assertEqual((eth1.counters["totalInErrors"], eth1.counters["inDiscards"]), (3, 1))
+
+    def test_frr_route_counts_use_selected_routes_and_ospf3_on_ipv6(self):
+        from core.services.troubleshooting import intake
+
+        doc4 = {"10.0.0.0/24": [{"protocol": "ospf", "selected": True}, {"protocol": "connected", "selected": False}],
+                "10.1.0.0/24": [{"protocol": "bgp", "selected": True}], "10.2.0.0/24": [{"protocol": "ospf", "selected": False}]}
+        self.assertEqual(intake._frr_route_counts(doc4, "ipv4")["ospf"], 1)          # pylint: disable=protected-access
+        self.assertEqual(intake._frr_route_counts(doc4, "ipv4")["bgp"], 1)           # pylint: disable=protected-access
+        doc6 = {"2001:db8::/64": [{"protocol": "ospf6", "selected": True}]}
+        self.assertEqual(intake._frr_route_counts(doc6, "ipv6")["ospf3"], 1)         # pylint: disable=protected-access
+        self.assertIsNone(intake._frr_route_counts(None, "ipv4"))                    # pylint: disable=protected-access

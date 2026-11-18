@@ -23,6 +23,8 @@ Pipeline (each stage is a pure function over structured, time-stamped evidence s
 
 from __future__ import annotations
 
+import re
+
 from collections import deque
 from dataclasses import asdict, dataclass, field
 from datetime import datetime, timedelta, timezone
@@ -127,6 +129,31 @@ def interface_samples(device: str, document: dict, at: datetime, *, source: str 
             bandwidth_bps=row.get("bandwidth") if isinstance(row.get("bandwidth"), int) else None,
             rates={k: stats[k] for k in ("inBitsRate", "outBitsRate", "inPktsRate", "outPktsRate") if isinstance(stats.get(k), (int, float))},
             duplex=str(row.get("duplex", "")), source=source))
+    return out
+
+
+_LINUX_PORT = re.compile(r"^eth[1-9][0-9]*$")
+
+
+def linux_interface_samples(device: str, links: list | None, at: datetime, *, source: str = "linux:ip -j -s link show") -> list[InterfaceSample]:
+    """Ubuntu/FRR ``ip -j -s link show``: the cabled topology ports only (``ethN``, N >= 1; ``eth0`` is the Containerlab management
+    veth).  admin = kernel UP flag; oper = carrier (LOWER_UP); counters mapped to the same keys the cEOS sampler uses."""
+    out = []
+    for row in links or []:
+        name = str((row or {}).get("ifname", "")).split("@", 1)[0]
+        if not _LINUX_PORT.fullmatch(name):
+            continue
+        flags = row.get("flags") or []
+        admin = "up" if "UP" in flags else "down"
+        oper = "up" if admin == "up" and "LOWER_UP" in flags else "down"
+        stats = row.get("stats64") or row.get("stats") or {}
+        rx, tx = stats.get("rx") or {}, stats.get("tx") or {}
+        counters = {"totalInErrors": rx.get("errors"), "totalOutErrors": tx.get("errors"), "inDiscards": rx.get("dropped"),
+                    "outDiscards": tx.get("dropped"), "inTotalPkts": rx.get("packets"), "outTotalPkts": tx.get("packets")}
+        out.append(InterfaceSample(device=device, interface=name, at=at, admin=admin, oper=oper,
+                                   link_status="disabled" if admin == "down" else ("connected" if oper == "up" else "notconnect"),
+                                   protocol="up" if oper == "up" else "down",
+                                   counters={k: v for k, v in counters.items() if isinstance(v, int)}, source=source))
     return out
 
 
