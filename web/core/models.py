@@ -4607,7 +4607,10 @@ class ManagementPath(models.Model):
                                     name="unique_live_management_path"),
             models.CheckConstraint(condition=(Q(path_type="DIRECT_OOB", preference_class=1) | Q(path_type="VLAN_ADJACENT_SWITCH", preference_class=2)
                                               | Q(path_type="ROUTED_VRF", preference_class=3)), name="management_path_class_matches_type"),
-            models.CheckConstraint(condition=Q(path_type="ROUTED_VRF") | Q(attachment__isnull=False), name="management_path_needs_attachment"),
+            # A non-routed path needs its device attachment -- except NMAS's OWN management switch, whose direct path has no
+            # intermediate switch and whose L1 provenance is the NMAS attachment (services enforce paths.is_nmas_switch_self).
+            models.CheckConstraint(condition=Q(path_type="ROUTED_VRF") | Q(attachment__isnull=False) | Q(path_type="DIRECT_OOB", via_device=""),
+                                   name="management_path_needs_attachment"),
             models.CheckConstraint(condition=~Q(path_type="VLAN_ADJACENT_SWITCH") | (Q(vlan__isnull=False) & ~Q(via_device="")),
                                    name="vlan_path_names_vlan_and_switch"),
             models.CheckConstraint(condition=~Q(path_type="ROUTED_VRF") | ~Q(vrf=""), name="routed_path_names_vrf"),

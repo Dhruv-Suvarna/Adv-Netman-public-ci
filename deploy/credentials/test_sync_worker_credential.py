@@ -66,11 +66,22 @@ class SyncTests(unittest.TestCase):
         import contextlib, io
         out, err = io.StringIO(), io.StringIO()
         with contextlib.redirect_stdout(out), contextlib.redirect_stderr(err):
-            rc = s.main(["--full", self.full, "--copy", self.copy, "--owner", getpass.getuser(), "--no-restart"])
+            rc = s.main(["--full", self.full, "--copy", self.copy, "--owner", getpass.getuser(), "--no-restart",
+                         "--allow", "r2-nmas-automation", "--allow", "s2-nmas-diag"])
         self.assertEqual(rc, 0)
+        with contextlib.redirect_stdout(out), contextlib.redirect_stderr(err):
+            default_rc = s.main(["--full", self.full, "--copy", self.copy, "--owner", getpass.getuser(), "--no-restart"])
+        self.assertEqual(default_rc, 1)              # the nine-identity default fails closed when any id is absent
         self.assertNotIn('"A"', out.getvalue() + err.getvalue())
         self.assertNotIn("password", out.getvalue() + err.getvalue())
 
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class DefaultScopeTest(unittest.TestCase):
+    def test_default_copy_is_exactly_the_nine_read_only_diagnostic_identities(self):
+        self.assertEqual(len(s.DEFAULT_ALLOW), 9)
+        self.assertTrue(all("nmas-diag" in ref for ref in s.DEFAULT_ALLOW))
+        self.assertFalse(any("automation" in ref or "admin" in ref or "breakglass" in ref for ref in s.DEFAULT_ALLOW))

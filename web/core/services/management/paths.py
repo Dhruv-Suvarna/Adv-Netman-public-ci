@@ -37,7 +37,9 @@ MAX_VLAN_HOPS = 8
 RESERVED_VRF_NAMES = frozenset({"default", "global", "mgmt-default"})
 # Platforms with a path verifier (L2 configuration read-back + L6 identity).  A path for any other platform could never
 # verify, and approving one would make the device fail closed -- so it is refused at registration instead.
-VERIFIED_PLATFORMS = frozenset({models.Platform.ARISTA_CEOS.value})
+# Platforms whose management paths have a verified probe (L2 + L6 checks) and a verified consumer transport.  Ubuntu/FRR
+# paths are probed and used ONLY through the device's restricted read-only diagnostic broker (probes.LINUX_COMMANDS).
+VERIFIED_PLATFORMS = frozenset({models.Platform.ARISTA_CEOS.value, models.Platform.UBUNTU_FRR.value})
 
 
 @dataclass
@@ -283,6 +285,16 @@ def _ztp_pk(reference: str):
     return int(match.group(1)) if match else None
 
 
+def is_nmas_switch_self(device, path_type: str, attachment, nmas_attachment, via_device: str) -> bool:
+    """The device IS the management switch NMAS's own host interface is cabled to (e.g. ``mgmt_swt``).
+
+    Its management SVI is reached directly over that approved NMAS attachment, so the attachment's approved + verified physical
+    provenance is the path's L1 evidence: no device-side attachment exists or can exist (it would point at itself).  Only a
+    DIRECT_OOB path to the management VLAN with no intermediate switch qualifies."""
+    return (path_type == T.DIRECT_OOB and attachment is None and nmas_attachment is not None
+            and nmas_attachment.upstream_device == device.name and str(via_device or "") in ("", device.name))
+
+
 def _attachment_problems(device, path_type: str, attachment, nmas_attachment, via_device: str, vlan) -> list[dict]:
     if path_type == T.ROUTED_VRF:
         # A bound source socket proves the egress interface, but by itself it
@@ -294,6 +306,10 @@ def _attachment_problems(device, path_type: str, attachment, nmas_attachment, vi
             return [codes.blocker("L1_TOPOLOGY_UNVERIFIED", reason="routed path has no verified direct NMAS neighbor")]
         if attachment is not None or (via_device and via_device != device.name):
             return [codes.blocker("MGMT_PATH_ATTACHMENT_INVALID", reason="direct routed path cannot name an intermediate switch")]
+        return []
+    if is_nmas_switch_self(device, path_type, attachment, nmas_attachment, via_device):
+        if vlan not in (None, MANAGEMENT_VLAN):
+            return [codes.blocker("MGMT_VLAN_INVALID")]
         return []
     if attachment is None:
         return [codes.blocker("MGMT_PATH_ATTACHMENT_REQUIRED")]
@@ -356,7 +372,8 @@ def register_path(device, *, path_type: str, endpoint_address: str, nmas_attachm
         blockers.append(codes.blocker("INTERFACE_INVALID"))
     if nmas_attachment is not None and not blockers:
         blockers += _attachment_problems(device, path_type, attachment, nmas_attachment, via_device, vlan)
-        if path_type in (T.DIRECT_OOB, T.VLAN_ADJACENT_SWITCH):
+        if path_type in (T.DIRECT_OOB, T.VLAN_ADJACENT_SWITCH) and not is_nmas_switch_self(
+                device, path_type, attachment, nmas_attachment, via_device):
             blockers += _switch_problems(device.name, via_device)
         blockers += guard.address_problems(endpoint_address, network=nmas_attachment.network,
                                            layer2=path_type != T.ROUTED_VRF or nmas_attachment.upstream_device == device.name)
@@ -530,6 +547,8 @@ def topology_problems(path) -> list[dict]:
         problems.extend(guard.address_problems(path.endpoint_address, network=nmas.network, layer2=True))
         return problems
     attachment = path.attachment
+    if is_nmas_switch_self(path.device, path.path_type, attachment, nmas, path.via_device):
+        return problems          # L1 provenance == the approved + VERIFIED NMAS attachment checked above
     if attachment is None or attachment.approval_state != models.AttachmentApproval.APPROVED:
         problems.append(codes.blocker("L1_TOPOLOGY_UNVERIFIED", reason="attachment not approved"))
         return problems

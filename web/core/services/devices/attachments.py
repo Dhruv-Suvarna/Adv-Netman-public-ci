@@ -181,7 +181,12 @@ def approve_attachment(device, attachment_id, *, actor: str, exception=None) -> 
                     device=device, attachment=locked, kind=models.ObservationKind.ATTACHMENT,
                     source=models.ObservationSource.TRUSTED_UPSTREAM_INTERFACE,
                     trust=models.ObservationTrust.OBSERVED, result=models.ObservationResult.MATCH)
-                expected = (exception.evidence or {}).get("attachment_observation_id")
+                # A bulk exception binds each exact target to its own retained observation
+                # (``attachment_observations: {"<DEV-id>:<attachment pk>": <observation pk>}``); the single-target form
+                # (``attachment_observation_id``) is unchanged.  No target without its own matching evidence passes.
+                bulk = (exception.evidence or {}).get("attachment_observations")
+                expected = (bulk.get(f"{device.device_id}:{locked.pk}") if isinstance(bulk, dict)
+                            else (exception.evidence or {}).get("attachment_observation_id"))
                 observation = observations.filter(pk=expected).first() if str(expected).isdigit() else None
                 if observation is None or locked.verification_state != Verification.VERIFIED:
                     raise _Refused([blocker("APPROVAL_SELF")])
@@ -189,7 +194,9 @@ def approve_attachment(device, attachment_id, *, actor: str, exception=None) -> 
                     exception, action=action, target=f"{device.device_id}:{locked.pk}", actor=actor,
                     original_requester=locked.created_by,
                     evidence={"observation": observation.pk, "verification_state": locked.verification_state,
-                              "evidence_sha256": (exception.evidence or {}).get("attachment_evidence_sha256", "")})
+                              "evidence_sha256": ((exception.evidence or {}).get("attachment_evidence_sha256s") or {}).get(
+                                  f"{device.device_id}:{locked.pk}", "") if isinstance(bulk, dict)
+                              else (exception.evidence or {}).get("attachment_evidence_sha256", "")})
                 if not used.ok:
                     raise _Refused([blocker("APPROVAL_SELF")])
             locked.approval_state, locked.approved_by, locked.approved_at = Approval.APPROVED, actor[:150], timezone.now()

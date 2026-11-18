@@ -9,8 +9,9 @@ transport requires, and checks before any credential is offered:
 * a pinned host key (``ssh_host_key``: ``SHA256:<base64>`` in the device's inventory entry) -- an unknown or different
   key refuses the session (no trust-on-first-use, no system ``known_hosts``);
 * key-only authentication from the provider (no agent, no key files, no password);
-* the legacy management source only: Linux devices cannot register a management path yet (``paths.VERIFIED_PLATFORMS``),
-  so a device that somehow has one is refused rather than reached by a different route.
+* the legacy management source only: this WRITE-capable executor transport never follows a registered management path.
+  Ubuntu/FRR paths (``paths.VERIFIED_PLATFORMS``) are read-only: they reach the device's restricted diagnostic broker
+  account, never ``nmas-automation``; a device with a path is therefore refused here rather than reached by another route.
 
 Commands are argv lists.  Each token is quoted with ``shlex.quote`` (the remote login shell sees exactly one word per
 token; a multi-line nftables ruleset stays one single-quoted word -- newlines are literal inside single quotes).  A token
@@ -28,6 +29,9 @@ import socket
 from ..execution.executors.base import ExecutorError
 
 PRIVILEGED = frozenset({"nft", "vtysh"})
+# The read-only diagnostic broker account: its forced command matches the exact command string against an allowlist and runs
+# ``vtysh`` as an frrvty member -- it never uses (and holds no) sudo, so no prefix is added for it.
+BROKER_USERNAME = "nmas-diag"
 _FINGERPRINT = re.compile(r"^SHA256:[A-Za-z0-9+/]{43}$")
 _TOKEN = re.compile(r"^[^\x00]*$")
 _SHOW = re.compile(r"^show [A-Za-z0-9 ._:/-]+$")
@@ -47,7 +51,7 @@ def command_line(argv, username: str) -> str:
     """The exact remote command for ``argv``: shell-quoted tokens, ``sudo -n --`` for the privileged programs."""
     if not argv or not all(isinstance(token, str) and _TOKEN.fullmatch(token) for token in argv):
         raise ExecutorError("UNSUPPORTED")
-    prefix = ["sudo", "-n", "--"] if username != "root" and argv[0] in PRIVILEGED else []
+    prefix = ["sudo", "-n", "--"] if username not in ("root", BROKER_USERNAME) and argv[0] in PRIVILEGED else []
     return shlex.join([*prefix, *argv])
 
 

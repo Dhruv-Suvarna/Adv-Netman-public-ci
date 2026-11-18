@@ -323,6 +323,10 @@ _CEOS = [
     _spec("bgp6_summary", "ceos", "show ipv6 bgp summary | json", "bgp.summary", ("routing",), description="BGP IPv6 peers"),
     _spec("ip_route", "ceos", "show ip route | json", "route.table", ("reachability", "routing"), description="IPv4 RIB (parser eos-json-1.0, EOS 4.28 <= v < 5.0; never a FIB)"),
     _spec("ipv6_route", "ceos", "show ipv6 route | json", "route.table", ("reachability", "routing"), description="IPv6 RIB (parser eos-json-1.0; never a FIB)"),
+    _spec("ip_route_summary", "ceos", "show ip route summary | json", None, ("routing",),
+          description="IPv4 route counts per protocol incl. OSPF externals and RIP (redistribution evidence; routing.ceos_summary_counts)"),
+    _spec("ipv6_route_summary", "ceos", "show ipv6 route summary | json", None, ("routing",),
+          description="IPv6 route counts per protocol (routing.ceos_summary_counts)"),
     _spec("arp", "ceos", "show ip arp | json", "neighbor.table", ("reachability",), description="ARP cache (parser eos-json-1.0)"),
     _spec("ipv6_neighbors", "ceos", "show ipv6 neighbors | json", "neighbor.table", ("reachability",), description="IPv6 ND cache (parser eos-json-1.0)"),
     _spec("mac_table", "ceos", "show mac address-table | json", "mac.table", ("stp", "reachability", "l2"), description="MAC table (version-gated parser eos-json-1.0, EOS 4.28 <= v < 5.0; movement needs history)"),
@@ -355,6 +359,12 @@ _LINUX = [
     _spec("ospf_neighbors", "linux", ("vtysh", "-c", "show ip ospf neighbor json"), "ospf.neighbors", ("routing",), description="FRR OSPFv2 neighbors"),
     _spec("ospf6_neighbors", "linux", ("vtysh", "-c", "show ipv6 ospf6 neighbor json"), None, ("routing",), description="FRR OSPFv3 neighbors (evidence only)"),
     _spec("bgp_summary", "linux", ("vtysh", "-c", "show bgp summary json"), "bgp.summary", ("routing",), description="FRR BGP summary"),
+    _spec("frr_route4", "linux", ("vtysh", "-c", "show ip route json"), None, ("routing", "reachability"),
+          description="FRR IPv4 RIB: protocol, selected/installed flags, next hops (evidence; parsed by routing.py)"),
+    _spec("frr_route6", "linux", ("vtysh", "-c", "show ipv6 route json"), None, ("routing", "reachability"),
+          description="FRR IPv6 RIB (evidence; parsed by routing.py)"),
+    _spec("ospf_interfaces", "linux", ("vtysh", "-c", "show ip ospf interface json"), None, ("routing",),
+          description="FRR OSPFv2 interfaces: area, network type, timers (evidence only)"),
     _spec("frr_config", "linux", ("vtysh", "-c", "show running-config"), None, ("snapshot",), kind="config", description="FRR running config"),
 ]
 FORWARDING_V4_KEYS = frozenset({"ip_route", "route4", "arp"})

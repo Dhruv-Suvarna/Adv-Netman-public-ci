@@ -109,10 +109,17 @@ class RegistryTests(_Base):
     def test_register_refuses_unverified_platform(self):
         from core.services.devices import lifecycle
 
+        # Ubuntu/FRR became a verified path platform (bulk admission: Linux L2/L6 probe through the restricted diagnostic
+        # broker); every platform without a verified probe and consumer transport is still refused.
         r3 = lifecycle.adopt_existing("R3", role="router", actor=M.APPROVER).device
         result = paths.register_path(r3, path_type=T.ROUTED_VRF, vrf="MGMT", endpoint_address="10.1.1.1", nmas_attachment_id=self.nmas.pk,
                                      credential_source="INVENTORY", expected_host_key=M.HOST_KEY, actor=M.OPERATOR)
-        self.assertIn("L2_PLATFORM_NOT_IMPLEMENTED", result.codes)
+        self.assertNotIn("L2_PLATFORM_NOT_IMPLEMENTED", result.codes)
+        self.assertFalse(result.ok)                                  # the routed shape is still refused on its own merits
+        r3.platform = models.Platform.CISCO_C8000V_IOSXE
+        refused = paths.register_path(r3, path_type=T.ROUTED_VRF, vrf="MGMT", endpoint_address="10.1.1.1", nmas_attachment_id=self.nmas.pk,
+                                      credential_source="INVENTORY", expected_host_key=M.HOST_KEY, actor=M.OPERATOR)
+        self.assertIn("L2_PLATFORM_NOT_IMPLEMENTED", refused.codes)
 
     def test_register_refuses_human_credential(self):
         credential = models.DeviceCredential.objects.create(device_name="R1", platform="ceos", username="olivia",

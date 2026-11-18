@@ -221,6 +221,7 @@ class ObservationConnectionFactory:
             raise ObservationConnectionError("ENDPOINT_CHANGED")
         if found.get("host_key") != pin:
             raise ObservationConnectionError("PIN_CHANGED")
+        found = _frr_diagnostic_identity(request.device, found)
         try:
             session = self._linux_connect(found, timeout=self._timeout)
         except Exception as exc:  # noqa: BLE001
@@ -241,6 +242,23 @@ class ObservationConnectionFactory:
 
             document = inventory.load_inventory()
         return str((((document.get("network_devices") or {}).get(name)) or {}).get("ssh_host_key") or "")
+
+
+def _frr_diagnostic_identity(device: str, found: dict) -> dict:
+    """Prefer the device's own read-only broker account for an FRR observation.
+
+    ``nmas-automation`` holds no sudo grant on the Phase 26B hosts, so it cannot run the version query; granting it one would add
+    write capability.  When the device has its dedicated ``nmas-diag`` broker credential (exact contract: SERVICE, PUBLICKEY,
+    role ``diagnostic-broker``, ``<device>-nmas-diag-sshkey``), the session logs in as that account instead -- same address, port
+    and pinned host key -- and the broker runs only allowlisted queries.  Without it the original target is unchanged."""
+    from ..management.linux_ssh import BROKER_USERNAME
+
+    row = models.DeviceCredential.objects.filter(device_name=device, username=BROKER_USERNAME).first()
+    if row is None or row.account_kind != models.AccountKind.SERVICE or row.auth_method != models.DeviceAuthMethod.PUBLICKEY \
+            or row.account_role != "diagnostic-broker" or row.secret_ref \
+            or row.ssh_key_ref != f"runtime://device-credentials/{device.lower()}-nmas-diag-sshkey":
+        return found
+    return {**found, "username": BROKER_USERNAME, "ssh_key_ref": row.ssh_key_ref}
 
 
 def _fleet_profile(target) -> bool:

@@ -10,6 +10,7 @@ credential broker.
 from __future__ import annotations
 
 import hashlib
+import shlex
 import grp
 import os
 import re
@@ -29,6 +30,7 @@ _AUTH = re.compile(r"^handoff:[A-Za-z0-9][A-Za-z0-9_.:-]{1,127}$")
 _PAYLOAD_FIELDS = frozenset({"schema", "topology_id", "tenant", "agent", "authorization_ref",
                              "authorization_expires_at", "device", "operation_id", "params"})
 MAX_OUTPUT_BYTES = 512 * 1024
+LINUX_DIAG_ROLE = "diagnostic-broker"      # Ubuntu/FRR nmas-diag: forced-command broker, no shell, no sudo
 
 
 def _parse_time(value: Any) -> datetime:
@@ -110,12 +112,32 @@ def _operation(path, request: DiagnosticRequest):
         rendered = collectors.render_command(spec, request.params)
     except collectors.CommandNotAllowed as exc:
         raise IpcRefused("INVALID_OPERATION_PARAMETERS", type(exc).__name__) from exc
+    if isinstance(rendered, (tuple, list)):
+        # Ubuntu/FRR: the far end is the device's restricted diagnostic broker (forced command, no shell).  The argv becomes ONE
+        # exact string that the broker compares against its allowlist, which is generated from this same catalogue
+        # (``broker_allowlist``); an argv outside the catalogue never reaches this point (render_command validated it).
+        if collectors.nz.canonical_platform(path.device.platform) != "linux":
+            raise IpcRefused("PLATFORM_TRANSPORT_NOT_SUPPORTED")
+        return spec, broker_command(rendered)
     if not isinstance(rendered, str):
-        # Current approved ManagementPath session verification supports cEOS
-        # only.  Linux argv execution is intentionally not converted to a
-        # remote shell string.
         raise IpcRefused("PLATFORM_TRANSPORT_NOT_SUPPORTED")
     return spec, rendered
+
+
+def broker_command(argv) -> str:
+    """The exact command string the Linux diagnostic broker receives for one catalogue argv."""
+    if not argv or any(not isinstance(t, str) or not t or "\x00" in t or "\n" in t for t in argv):
+        raise IpcRefused("INVALID_OPERATION_PARAMETERS")
+    return shlex.join(list(argv))
+
+
+def broker_allowlist() -> list[str]:
+    """Every read-only Linux catalogue command (no config kinds) plus the path-probe commands: the device-side allowlist."""
+    from core.services.management.probes import LINUX_COMMANDS
+
+    rows = {broker_command(spec.command) for spec in collectors.COMMAND_CATALOG.get("linux", {}).values()
+            if spec.kind != "config" and isinstance(spec.command, tuple) and not spec.params}
+    return sorted(rows | set(LINUX_COMMANDS))
 
 
 def _worker_bind(path) -> tuple[str, str]:
@@ -201,7 +223,22 @@ def _diagnostic_auth_material(path, *, credential_lookup=None, provider=None) ->
     )
     credential = lookup(path.device.name)
     if credential is None:
+        if path.device.platform == models.Platform.UBUNTU_FRR:
+            # never fall back to the path's (or the inventory's) automation account on a Linux host
+            raise probes.CredentialUnavailable("no dedicated diagnostic broker credential")
         return probes.auth_material(path)
+    if path.device.platform == models.Platform.UBUNTU_FRR:
+        if not (credential.account_kind == models.AccountKind.SERVICE
+                and credential.auth_method == models.DeviceAuthMethod.PUBLICKEY
+                and credential.account_role == LINUX_DIAG_ROLE and credential.privilege_level is None
+                and credential.ssh_key_ref == f"runtime://device-credentials/{path.device.name.lower()}-nmas-diag-sshkey"
+                and not credential.secret_ref):
+            raise probes.CredentialUnavailable("dedicated diagnostic credential metadata is invalid")
+        from modules.device_credentials import load_ssh_private_key
+        try:
+            return credential.username, [{"pkey": load_ssh_private_key(credential.ssh_key_ref)}]
+        except (SecretProviderError, OSError, ValueError) as exc:
+            raise probes.CredentialUnavailable(type(exc).__name__) from None
     valid = (
         credential.account_kind == models.AccountKind.SERVICE
         and credential.auth_method == models.DeviceAuthMethod.PASSWORD

@@ -32,7 +32,7 @@ REFUSALS = {
     "ENDPOINT_EMPTY": "The policy-selected endpoint has no address.",
     "ENDPOINT_PROHIBITED": "The endpoint is forbidden as a management target (loopback, link-local, Containerlab/Docker, ...).",
     "PATH_NOT_AUTHORIZED": "The selected management path is not registered/approved for probing.",
-    "PATH_PLATFORM_UNSUPPORTED": "Management paths are not supported for this platform (Linux/FRR is legacy-only).",
+    "PATH_PLATFORM_UNSUPPORTED": "Identity observations over a management path are cEOS-only (Linux/FRR identity uses the legacy route).",
     "CONNECTION_FAILED": "The connection factory could not open a session.",
     "CONNECTION_UNUSABLE": "The connection does not offer the required execution interface.",
     "HOST_KEY_MISSING": "The connection presented no valid host key.",
@@ -148,7 +148,9 @@ class ObservationSessionProvider:
         if guard.address_problems(selected.address):
             return self._refuse("ENDPOINT_PROHIBITED")
         if selected.source == management_resolve.PATH:
-            if target.platform not in paths.VERIFIED_PLATFORMS:
+            # Identity observations over a management PATH are cEOS-only: Linux/FRR paths serve the read-only diagnostic broker,
+            # and an FRR identity is observed on the legacy route before its path exists (bulk admission ordering).
+            if target.platform not in paths.VERIFIED_PLATFORMS or target.platform != models.Platform.ARISTA_CEOS.value:
                 return self._refuse("PATH_PLATFORM_UNSUPPORTED")
             stored = self._authorize(target, selected)
             if not stored:
