@@ -48,6 +48,7 @@ from ... import models
 from . import faults
 from . import notify
 from . import repository as repo
+from . import route_intent
 from . import routing
 from .runbooks import hc
 
@@ -86,6 +87,9 @@ class IntakeConfig:
     routing_devices: tuple[str, ...] = ()
     routing_every: int = 3                # read adjacencies every N passes
     verify_clear: bool = True
+    route_intent_path: str = ""           # explicit reviewed source; empty preserves the existing intake
+    topology_revision: str = ""           # trusted active-inventory revision, never inferred from an observed RIB
+    route_intent_max_age_seconds: int = 60
 
     @classmethod
     def from_settings(cls) -> "IntakeConfig":
@@ -98,7 +102,10 @@ class IntakeConfig:
                    confirm_seconds=int(getattr(settings, "NMAS_TS_INTAKE_CONFIRM_SECONDS", 30)),
                    cooldown_seconds=int(getattr(settings, "NMAS_TS_INTAKE_COOLDOWN_SECONDS", 900)),
                    max_cases_per_hour=int(getattr(settings, "NMAS_TS_INTAKE_MAX_CASES_PER_HOUR", 4)),
-                   routing_devices=names("NMAS_TS_INTAKE_ROUTING_DEVICES", DEFAULT_ROUTING_DEVICES))
+                   routing_devices=names("NMAS_TS_INTAKE_ROUTING_DEVICES", DEFAULT_ROUTING_DEVICES),
+                   route_intent_path=str(getattr(settings, "NMAS_TS_ROUTE_INTENT_FILE", "") or ""),
+                   topology_revision=str(getattr(settings, "NMAS_TS_TOPOLOGY_REVISION", "") or ""),
+                   route_intent_max_age_seconds=int(getattr(settings, "NMAS_TS_ROUTE_INTENT_MAX_AGE_SECONDS", 60)))
 
 
 # ------------------------------------------------------------------------------------------------------------- observation
@@ -227,6 +234,33 @@ def topology_snapshot(cfg: IntakeConfig) -> dict:
             "collected_at": datetime.now(timezone.utc).isoformat()}
 
 
+def read_route_intent_ribs(intent: route_intent.RouteIntent, cfg: IntakeConfig) -> dict:
+    """Collect only the RIBs named by reviewed intent through the intake's existing read-only console channel.
+
+    The active topology revision is supplied independently by deployment configuration.  It is deliberately not learned
+    from these observations.  A failed family read remains ``None`` so evaluation is INDETERMINATE, never MISSING_ROUTE.
+    """
+    devices = sorted({item.device for item in intent.expectations})
+    ribs = {"ipv4": {}, "ipv6": {}}
+    observed = {}
+    for device in devices:
+        container = f"{cfg.container_prefix}{device}"
+        if device in LINUX_NODES:
+            ribs["ipv4"][device] = routing.linux_rib(
+                _docker_json([container, "ip", "-j", "-4", "route", "show"]), "ipv4",
+            )
+            ribs["ipv6"][device] = routing.linux_rib(
+                _docker_json([container, "ip", "-j", "-6", "route", "show"]), "ipv6",
+            )
+        else:
+            ribs["ipv4"][device] = routing.ceos_rib(_cli_json(container, "show ip route"))
+            ribs["ipv6"][device] = routing.ceos_rib(_cli_json(container, "show ipv6 route"))
+        observed[device] = datetime.now(timezone.utc).isoformat()
+    collected = datetime.now(timezone.utc).isoformat()
+    return {"ribs": ribs, "observed_at": collected, "device_observed_at": observed,
+            "collector": "nmas-intake trusted-console-read-only"}
+
+
 def _kernel(device: str, interface: str) -> str:
     m = re.fullmatch(r"Ethernet(\d+)", interface or "")
     return f"eth{m.group(1)}" if m else interface
@@ -330,6 +364,7 @@ class Incident:
     decision: dict | None = None
     samples: list[faults.InterfaceSample] = field(default_factory=list)    # every end (incl. healthy far end) for evidence
     secondary: list[str] = field(default_factory=list)
+    route_evidence: dict | None = None
 
     @property
     def category(self) -> str:
@@ -337,6 +372,9 @@ class Incident:
 
     def symptom(self) -> str:
         seen = "; ".join(f"{o.device} {o.interface} link={o.link_status} protocol={o.protocol}" for o in self.members)
+        if not seen and self.classification is not None:
+            return (f"Monitoring alarm (automatic intake): {self.category}. Deterministic classification: "
+                    f"{self.classification.summary}.")[:4000]
         head = ("Monitoring alarm (automatic intake): interface state deviates from intended up state for >= confirmation window. "
                 if self.category in (faults.ADMIN_STATE_MISMATCH, faults.OPERATIONAL_LINK_DOWN) else
                 f"Monitoring alarm (automatic intake): {self.category}. ")
@@ -524,6 +562,47 @@ class IntakeDeps:
 def _store_incident_evidence(actor, case, incident: Incident, now: datetime) -> list[str]:
     """Persist the structured observations, classification and decision on the case (no model needed to read them)."""
     ids: list[str] = []
+    if incident.route_evidence is not None:
+        route_doc = incident.route_evidence
+        ev = repo.store_evidence(
+            actor, case, source_type="route_intent", device=incident.devices[0],
+            command_or_api="authorized read-only RIB collection",
+            adapter="nmas-intake", parser="route_intent.evaluate", parser_version="1",
+            collected_at=route_doc["observed_at"], raw=json.dumps(route_doc, sort_keys=True, default=str),
+        )
+        ids.append(ev.evidence_id)
+        scope = (incident.classification.scope if incident.classification else {})
+        repo.record_observation(
+            actor, case, key=f"intake.route_intent@{scope.get('target_id', '-')}",
+            target=incident.devices[0], observed_at=route_doc["observed_at"],
+            value={"intent_revision": route_doc["intent_revision"],
+                   "topology_revision": route_doc["topology_revision"],
+                   "classification": route_doc["classification"],
+                   "gateway_evidence": route_doc.get("gateway_evidence", []),
+                   "service_telemetry": route_doc.get("service_telemetry", {}),
+                   "collector": route_doc["collector"]},
+            source="nmas-intake", evidence=ev,
+            max_age_seconds=route_doc["max_age_seconds"], parser_version="1",
+            dedupe_key=(f"route-intent:{route_doc['intent_revision']}:{scope.get('target_id', '-')}:"
+                        f"{incident.devices[0]}:{int(route_doc['observed_at'].timestamp())}"),
+        )
+        telemetry = route_doc.get("service_telemetry") or {}
+        service_devices = route_doc.get("service_devices") or []
+        if telemetry and len(service_devices) >= 2:
+            failed = sorted(name for name, ok in telemetry.items() if ok is False)
+            repo.record(
+                actor, case, "correlation", basis="DERIVED", evidence_ids=[ev.evidence_id],
+                stage_decision="automatic route-intent/service-telemetry correlation",
+                alert_ids=[incident.fingerprint], common_fault_candidate=f"{incident.devices[0]} intended route missing",
+                topology_edge={"from": service_devices[0], "to": service_devices[1],
+                               "af": scope.get("af", "")}, role="CAUSE", confidence=0.99,
+                rules=["C1 gateway-measured flow crosses the declared service edge",
+                       "C2 failed address family matches the missing intended route",
+                       "C3 unaffected measured address families/directions remain explicit"],
+                metrics={"devices": service_devices, "gateway_probe": telemetry, "failed_probes": failed},
+                conclusion=(f"Measured failures {failed} correlate with {scope.get('target_id', '-')}; "
+                            "all measured outcomes are retained, including healthy controls."),
+            )
     for s in incident.samples or incident.members:
         if s.device not in repo._case_devices(case):                  # pylint: disable=protected-access
             continue
@@ -570,13 +649,17 @@ def open_incident(incident: Incident, deps: IntakeDeps | None = None, *, now: da
     title_kind = {faults.ADMIN_STATE_MISMATCH: "interface intent violation", faults.OPERATIONAL_LINK_DOWN: "operational link down",
                   faults.LINK_FLAPPING: "link flapping", faults.INTERFACE_DEGRADATION: "interface degradation",
                   faults.ROUTING_ADJACENCY_FAILURE: "routing adjacency failure"}.get(incident.category, incident.category)
+    is_route_intent = incident.route_evidence is not None
     case = repo.open_case(
         actor, trigger_source=TRIGGER_SOURCE, trigger_ref=incident.fingerprint, severity="HIGH",
         idempotency_key=f"intake:{incident.fingerprint}:{int(incident.onset.timestamp())}",
         title=f"Monitoring: {', '.join(incident.devices)} {title_kind}", symptom=incident.symptom(),
-        service_intent={"service": "managed-device interface intent", "source": "nmas-intake", "fault_category": incident.category},
+        service_intent={"service": "versioned per-prefix routing intent" if is_route_intent else "managed-device interface intent",
+                        "source": (f"route-intent:{incident.route_evidence['intent_revision']}" if is_route_intent else "nmas-intake"),
+                        "fault_category": incident.category},
         affected_scope={"devices": incident.devices,
-                        "interfaces": [f"{s.device}:{s.interface}" for s in (incident.samples or incident.members)]},
+                        "interfaces": [f"{s.device}:{s.interface}" for s in (incident.samples or incident.members)],
+                        **({"route": incident.classification.scope} if is_route_intent and incident.classification else {})},
         target_states={d: "UNKNOWN" for d in incident.devices}, runbook="RB02", first_detected_at=incident.onset, now=now)
     evidence_ids: list[str] = []
     try:
@@ -649,8 +732,11 @@ class Intake:
     adj_first_missing: dict[tuple, datetime] = field(default_factory=dict)
     link_incident_at: dict[str, tuple[datetime, str]] = field(default_factory=dict)   # device -> (last abnormal time, fingerprint)
     route_reader: Callable[[str, IntakeConfig], dict | None] | None = read_route_sources
+    route_intent_reader: Callable[[route_intent.RouteIntent, IntakeConfig], dict | None] | None = read_route_intent_ribs
+    freshness_clock: Callable[[], datetime] = lambda: datetime.now(timezone.utc)
     rsrc_baseline: dict[tuple[str, str], dict[str, int]] = field(default_factory=dict)   # (device, af) -> learned healthy counts
     rsrc_first_bad: dict[tuple[str, str, str], datetime] = field(default_factory=dict)
+    route_intent_first_bad: dict[tuple[str, str, str], datetime] = field(default_factory=dict)
     adj_incident_at: dict[str, tuple[datetime, str]] = field(default_factory=dict)
     cleared_since: dict[str, datetime] = field(default_factory=dict)
     dispatch_attempts: dict[str, tuple[datetime, int]] = field(default_factory=dict)
@@ -787,6 +873,96 @@ class Intake:
                     out.append(inc)
         return out
 
+    def _intent_route_incidents(self, now: datetime) -> tuple[list[Incident], list[dict]]:
+        """Evaluate reviewed per-prefix intent against one fresh, independently revision-pinned RIB snapshot."""
+        if not self.cfg.route_intent_path or self.passes % max(1, self.cfg.routing_every):
+            return [], []
+        try:
+            intent = route_intent.load(self.cfg.route_intent_path)
+        except route_intent.IntentError as exc:
+            return [], [{"route_intent": "REFUSED", "reason": f"INTENT_INVALID: {exc}"}]
+        if not self.cfg.topology_revision:
+            return [], [{"route_intent": "REFUSED", "reason": "TOPOLOGY_REVISION_UNBOUND",
+                         "intent_revision": intent.revision}]
+        if self.cfg.topology_revision != intent.topology_revision:
+            return [], [{"route_intent": "REFUSED", "reason": "TOPOLOGY_REVISION_MISMATCH",
+                         "intent_revision": intent.revision, "expected": intent.topology_revision,
+                         "observed": self.cfg.topology_revision}]
+        if self.route_intent_reader is None:
+            return [], [{"route_intent": "REFUSED", "reason": "RIB_READER_UNBOUND",
+                         "intent_revision": intent.revision}]
+        snapshot = self.route_intent_reader(intent, self.cfg)
+        if not isinstance(snapshot, dict) or not isinstance(snapshot.get("ribs"), dict):
+            return [], [{"route_intent": "INDETERMINATE", "reason": "RIB_SNAPSHOT_UNREADABLE",
+                         "intent_revision": intent.revision}]
+        try:
+            observed_at = datetime.fromisoformat(str(snapshot["observed_at"]).replace("Z", "+00:00"))
+            freshness_now = self.freshness_clock()
+            age = (freshness_now - observed_at).total_seconds()
+        except (KeyError, TypeError, ValueError):
+            return [], [{"route_intent": "INDETERMINATE", "reason": "RIB_TIMESTAMP_INVALID",
+                         "intent_revision": intent.revision}]
+        if observed_at.tzinfo is None or age < 0 or age > self.cfg.route_intent_max_age_seconds:
+            return [], [{"route_intent": "INDETERMINATE", "reason": "RIB_SNAPSHOT_STALE_OR_FUTURE",
+                         "intent_revision": intent.revision, "age_seconds": round(age, 1)}]
+        device_times = snapshot.get("device_observed_at") or {}
+        stale_devices = []
+        for device in sorted({item.device for item in intent.expectations}):
+            try:
+                stamp = datetime.fromisoformat(str(device_times[device]).replace("Z", "+00:00"))
+                device_age = (freshness_now - stamp).total_seconds()
+                if stamp.tzinfo is None or device_age < 0 or device_age > self.cfg.route_intent_max_age_seconds:
+                    stale_devices.append(device)
+            except (KeyError, TypeError, ValueError):
+                stale_devices.append(device)
+        if stale_devices:
+            return [], [{"route_intent": "INDETERMINATE", "reason": "RIB_DEVICE_TIMESTAMPS_MISSING_OR_STALE",
+                         "intent_revision": intent.revision, "devices": stale_devices}]
+        results = route_intent.evaluate(intent, snapshot["ribs"], now=observed_at)
+        incidents, inconclusive = [], 0
+        active = set()
+        for classification in results:
+            scope = classification.scope
+            key = (scope["target_id"], scope["device"], classification.evidence["route_prefix"])
+            if classification.category == faults.INDETERMINATE:
+                inconclusive += 1
+                continue
+            if classification.category == faults.NO_FAULT:
+                self.route_intent_first_bad.pop(key, None)
+                continue
+            active.add(key)
+            first = self.route_intent_first_bad.setdefault(key, now)
+            if (now - first).total_seconds() < self.cfg.confirm_seconds:
+                continue
+            fp = f"RINT:{intent.revision}:{scope['target_id']}:{scope['device']}"
+            route_doc = {
+                "schema": "nmas.troubleshooting.route-intent-observation/1",
+                "intent_revision": intent.revision, "topology_revision": intent.topology_revision,
+                "observed_at": observed_at, "age_seconds": round(age, 1),
+                "max_age_seconds": self.cfg.route_intent_max_age_seconds,
+                "collector": str(snapshot.get("collector") or "nmas-intake read-only RIB"),
+                "gateway_evidence": sorted({int(seq) for seq in snapshot.get("gateway_evidence", [])
+                                             if isinstance(seq, int) and not isinstance(seq, bool)}),
+                "service_telemetry": {str(name)[:64]: value for name, value in
+                                      (snapshot.get("service_telemetry") or {}).items()
+                                      if isinstance(name, str) and isinstance(value, bool)},
+                "service_devices": sorted({str(device)[:64] for device in (snapshot.get("service_devices") or [])
+                                           if isinstance(device, str) and device})[:8],
+                "device_observed_at": (snapshot.get("device_observed_at") or {}).get(scope["device"]),
+                "classification": classification.as_dict(),
+            }
+            incidents.append(Incident(fp, [scope["device"]], [], first, classification=classification,
+                                      route_evidence=route_doc))
+        for key in list(self.route_intent_first_bad):
+            if key not in active and not any(r.scope.get("target_id") == key[0] and r.scope.get("device") == key[1]
+                                             and r.category == faults.INDETERMINATE for r in results):
+                self.route_intent_first_bad.pop(key)
+        state = "DEGRADED" if active else ("INDETERMINATE" if inconclusive else "HEALTHY")
+        status = {"route_intent": state, "intent_revision": intent.revision,
+                  "topology_revision": intent.topology_revision, "evaluated": len(results),
+                  "faults": len(active), "inconclusive": inconclusive, "age_seconds": round(age, 1)}
+        return incidents, [status]
+
     def _attach_secondary(self, inc: Incident, now: datetime) -> dict | None:
         """An adjacency loss explained by a concurrent link incident is appended to that incident's open case (no new case)."""
         related = inc.classification.evidence.get("possibly_secondary_to") if inc.classification else None
@@ -811,8 +987,10 @@ class Intake:
         incidents, samples, unread = self._interface_incidents(now)
         adj = self._adjacency_incidents(now)
         adj += self._route_incidents(now)
+        intent_incidents, intent_status = self._intent_route_incidents(now)
+        adj += intent_incidents
         self.passes += 1
-        results = []
+        results = intent_status
         for inc in adj:
             attached = self._attach_secondary(inc, now)
             if attached is not None:

@@ -9,6 +9,9 @@ Type=simple
 User=student
 Group=student
 EnvironmentFile=/etc/nmas/nmas-web.env
+Environment=NMAS_TS_ROUTE_INTENT_FILE=/home/student/Scripts/clab_dualstack_lab-deploy/web/core/tests/fixtures/troubleshooting_routing/acceptance-intent-v1.json
+Environment=NMAS_TS_TOPOLOGY_REVISION=adf5fb5ac3c8bc0cbbc058595ee1207075b9cb30
+Environment=NMAS_TS_ROUTE_INTENT_MAX_AGE_SECONDS=60
 WorkingDirectory=/home/student/Scripts/clab_dualstack_lab-deploy/web
 ExecStart=/home/student/Scripts/.venv/bin/python manage.py nmas_ts_intake --watch --interval 10
 Restart=always

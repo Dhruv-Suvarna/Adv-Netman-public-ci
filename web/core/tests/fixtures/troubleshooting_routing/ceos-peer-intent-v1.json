@@ -1,0 +1,35 @@
+{
+  "schema": "nmas.troubleshooting.route-intent/1",
+  "revision": "ceos-peer-disposable-v1",
+  "topology_revision": "88a735d06dca5e64f0e2efb15f7bbefba36c82b8",
+  "provenance": [
+    "Reviewed disposable ceos_peer fixture topology; never production inventory",
+    "Dual-stack forward and return static-route acceptance"
+  ],
+  "targets": [
+    {
+      "id": "r1-peer-v4",
+      "direction": "forward",
+      "target_prefix": "198.51.100.2/32",
+      "expectations": [{"device": "r1", "af": "ipv4", "route_prefix": "198.51.100.2/32", "source": "static", "next_hops": ["10.77.0.2"]}]
+    },
+    {
+      "id": "r1-peer-v6",
+      "direction": "forward",
+      "target_prefix": "2001:db8:200::2/128",
+      "expectations": [{"device": "r1", "af": "ipv6", "route_prefix": "2001:db8:200::2/128", "source": "static", "next_hops": ["2001:db8:77::2"]}]
+    },
+    {
+      "id": "peer-r1-v4",
+      "direction": "return",
+      "target_prefix": "192.0.2.1/32",
+      "expectations": [{"device": "peer", "af": "ipv4", "route_prefix": "192.0.2.1/32", "source": "static", "next_hops": ["10.77.0.1"]}]
+    },
+    {
+      "id": "peer-r1-v6",
+      "direction": "return",
+      "target_prefix": "2001:db8:100::1/128",
+      "expectations": [{"device": "peer", "af": "ipv6", "route_prefix": "2001:db8:100::1/128", "source": "static", "next_hops": ["2001:db8:77::1"]}]
+    }
+  ]
+}

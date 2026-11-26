@@ -407,6 +407,11 @@ EMAIL_TIMEOUT = 10
 DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL", "nmas@localhost")
 # Standing PREAUTHORIZED_AUTOMATED_RECOVERY policies (owner-created JSON; absent == disabled).
 NMAS_TS_RECOVERY_POLICY_FILE = os.environ.get("NMAS_TS_RECOVERY_POLICY_FILE", "")
+# Reviewed per-prefix routing intent is opt-in and revision-pinned.  The deployment must provide the active inventory revision
+# independently of the observed RIB; an empty or mismatched value makes route-intent evaluation refuse closed.
+NMAS_TS_ROUTE_INTENT_FILE = os.environ.get("NMAS_TS_ROUTE_INTENT_FILE", "").strip()
+NMAS_TS_TOPOLOGY_REVISION = os.environ.get("NMAS_TS_TOPOLOGY_REVISION", "").strip()
+NMAS_TS_ROUTE_INTENT_MAX_AGE_SECONDS = int(_bounded_seconds("NMAS_TS_ROUTE_INTENT_MAX_AGE_SECONDS", "60", 5, 300))
 # Engineer issue notification (core.services.troubleshooting.notify): comma-separated recipients, kept out of source.
 NMAS_TS_ALERT_EMAILS = tuple(a.strip() for a in os.environ.get("NMAS_TS_ALERT_EMAILS", "").split(",") if a.strip())
 NMAS_TS_DIAGNOSTIC_WORKER = {

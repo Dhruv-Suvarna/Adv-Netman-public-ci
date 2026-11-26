@@ -1,0 +1,66 @@
+{
+  "schema": "nmas.troubleshooting.route-intent/1",
+  "revision": "srlceos01-h1-web-v1",
+  "topology_revision": "adf5fb5ac3c8bc0cbbc058595ee1207075b9cb30",
+  "provenance": [
+    "srlceos01.clab.yml",
+    "templates/R1.cfg.j2",
+    "templates/R3.cfg.j2",
+    "templates/R4.cfg.j2",
+    "templates/R5.cfg.j2",
+    "templates/S1.cfg.j2",
+    "web/core/tests/fixtures/troubleshooting_routing/CAPTURED_AT"
+  ],
+  "targets": [
+    {
+      "id": "h1-to-web-v4",
+      "direction": "forward",
+      "target_prefix": "172.30.50.10/32",
+      "expectations": [
+        {"device": "H1", "af": "ipv4", "route_prefix": "0.0.0.0/0", "source": "static", "next_hops": ["192.168.10.1"]},
+        {"device": "S1", "af": "ipv4", "route_prefix": "172.30.50.10/32", "source": "rip", "next_hops": ["192.168.110.0"]},
+        {"device": "R1", "af": "ipv4", "route_prefix": "172.30.50.10/32", "source": "ospf_external", "next_hops": ["192.168.100.1", "192.168.100.3"]},
+        {"device": "R3", "af": "ipv4", "route_prefix": "172.30.50.10/32", "source": "bgp", "next_hops": ["172.20.5.1"]},
+        {"device": "R4", "af": "ipv4", "route_prefix": "172.30.50.10/32", "source": "bgp", "next_hops": ["172.20.5.3"]},
+        {"device": "R5", "af": "ipv4", "route_prefix": "172.30.50.10/32", "source": "static", "next_hops": ["172.31.50.1"]}
+      ]
+    },
+    {
+      "id": "h1-to-web-v6",
+      "direction": "forward",
+      "target_prefix": "2001:db8:3050::10/128",
+      "expectations": [
+        {"device": "H1", "af": "ipv6", "route_prefix": "::/0", "source": "ra", "next_hops": ["fe80::21c:73ff:fe00:99"]},
+        {"device": "S1", "af": "ipv6", "route_prefix": "2001:db8::/32", "source": "isis", "next_hops": ["fe80::a8c1:abff:fef2:aede"]},
+        {"device": "R1", "af": "ipv6", "route_prefix": "2001:db8:3050::10/128", "source": "ospf3", "next_hops": ["fe80::a8c1:abff:fe28:6415", "fe80::a8c1:abff:febf:a78"]},
+        {"device": "R3", "af": "ipv6", "route_prefix": "2001:db8:3050::10/128", "source": "bgp", "next_hops": ["2001:db8:205:1::2"]},
+        {"device": "R4", "af": "ipv6", "route_prefix": "2001:db8:3050::10/128", "source": "bgp", "next_hops": ["2001:db8:205:2::2"]},
+        {"device": "R5", "af": "ipv6", "route_prefix": "2001:db8:3050::10/128", "source": "static", "next_hops": ["2001:db8:3150::2"]}
+      ]
+    },
+    {
+      "id": "web-to-h1-v4",
+      "direction": "return",
+      "target_prefix": "192.168.10.102/32",
+      "expectations": [
+        {"device": "R5", "af": "ipv4", "route_prefix": "192.168.10.0/24", "source": "bgp", "next_hops": ["172.20.5.0"]},
+        {"device": "R3", "af": "ipv4", "route_prefix": "192.168.10.0/24", "source": "ospf", "next_hops": ["192.168.100.0", "192.168.100.4"]},
+        {"device": "R4", "af": "ipv4", "route_prefix": "192.168.10.0/24", "source": "ospf", "next_hops": ["192.168.100.2", "192.168.100.6"]},
+        {"device": "R1", "af": "ipv4", "route_prefix": "192.168.10.0/24", "source": "rip", "next_hops": ["192.168.110.1"]},
+        {"device": "S1", "af": "ipv4", "route_prefix": "192.168.10.0/24", "source": "connected", "next_hops": []}
+      ]
+    },
+    {
+      "id": "web-to-h1-v6",
+      "direction": "return",
+      "target_prefix": "2001:db8:10::2001/128",
+      "expectations": [
+        {"device": "R5", "af": "ipv6", "route_prefix": "2001:db8:10::/64", "source": "bgp", "next_hops": ["2001:db8:205:1::1"]},
+        {"device": "R3", "af": "ipv6", "route_prefix": "2001:db8:10::/64", "source": "ospf3", "next_hops": ["fe80::21c:73ff:fe17:db73", "fe80::21c:73ff:fe20:ab82"]},
+        {"device": "R4", "af": "ipv6", "route_prefix": "2001:db8:10::/64", "source": "ospf3", "next_hops": ["fe80::21c:73ff:fe17:db73", "fe80::21c:73ff:fe20:ab82"]},
+        {"device": "R1", "af": "ipv6", "route_prefix": "2001:db8:10::/64", "source": "isis", "next_hops": ["fe80::a8c1:abff:feb7:5285"]},
+        {"device": "S1", "af": "ipv6", "route_prefix": "2001:db8:10::/64", "source": "connected", "next_hops": []}
+      ]
+    }
+  ]
+}
