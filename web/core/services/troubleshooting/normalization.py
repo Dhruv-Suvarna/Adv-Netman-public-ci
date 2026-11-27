@@ -286,8 +286,9 @@ def freshness(observed_at: datetime | None, now: datetime, max_age_s: float) -> 
 # --------------------------------------------------------------------------------------------------------------------
 REDACTED = "<redacted>"
 _REDACTIONS = (
-    re.compile(r"(?im)^(\s*(?:enable\s+)?(?:secret|password)\s+(?:\d+\s+)?)\S+"),
-    re.compile(r"(?im)^(\s*username\s+\S+.*?\s(?:secret|password)\s+(?:\d+\s+)?)\S+"),
+    # ``(?![=:])``: a ``password = value`` / ``secret: value`` line is the key/value form below; matching here would redact only the ``=``
+    re.compile(r"(?im)^(\s*(?:enable\s+)?(?:secret|password)\s+(?:\d+\s+)?)(?![=:])\S+"),
+    re.compile(r"(?im)^(\s*username\s+\S+.*?\s(?:secret|password)\s+(?:\d+\s+)?)(?![=:])\S+"),
     re.compile(r"(?im)^(\s*(?:snmp-server\s+community|snmp-server\s+host\s+\S+(?:\s+version\s+\S+)?)\s+)\S+"),
     re.compile(r"(?im)((?:authentication-key|message-digest-key\s+\d+\s+md5|key-string|key|shared-secret|pre-shared-key|"
                r"auth-password|priv-password|authentication\s+(?:md5|sha)|privacy\s+(?:aes|des)(?:\s+\d+)?|neighbor\s+\S+\s+password)\s+(?:\d+\s+)?)\S+"),
