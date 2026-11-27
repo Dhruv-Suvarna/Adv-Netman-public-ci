@@ -19,6 +19,10 @@ from .constants import REPO_ROOT, ArtifactType, Scope
 from .policy import Policy, default_policy
 
 TEST_ROOTS = ("web/core/tests/", "monitoring/tests/", "challenge_console/tests/")
+# Standalone script suites kept beside the deploy tooling they exercise and run explicitly on the sandbox host
+# (``python3 deploy/sandbox/test_namespace_activation.py``; several need root and real namespaces).  They are test code:
+# their functions are never deployed behaviour, so they carry no required cases themselves.
+TEST_SCRIPT_PATTERNS = ("deploy/**/test_*.py",)
 _TEST_KINDS = ("test", "doc", "runtime", "meta")
 
 # (path glob, deploy/runtime role) -- first match wins; presentation only.
@@ -127,7 +131,10 @@ def role_for(path: str) -> str:
 
 
 def is_test_file(path: str) -> bool:
-    return path.endswith(".py") and any(path.startswith(root) for root in TEST_ROOTS)
+    from ..ci.rules import glob_match
+
+    return path.endswith(".py") and (any(path.startswith(root) for root in TEST_ROOTS)
+                                     or any(glob_match(pattern, path) for pattern in TEST_SCRIPT_PATTERNS))
 
 
 def list_repository_files(repo: Path = REPO_ROOT) -> list[str]:

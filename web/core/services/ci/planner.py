@@ -24,7 +24,7 @@ from .rules import UNCLASSIFIED
 
 _MIGRATION_RE = re.compile(r"^web/core/migrations/0\d+_[^/]+\.py$")
 _TEST_MODULE_RE = re.compile(r"^web/core/tests/test_([a-z0-9_]+)\.py$")
-_TEST_PATH_RE = re.compile(r"^(web/core/tests|monitoring/tests|challenge_console/tests|docs)/")
+_TEST_PATH_RE = re.compile(r"^(?:(web/core/tests|monitoring/tests|challenge_console/tests|docs)/|deploy/(?:[^/]+/)*test_[^/]*\.py$)")
 
 
 @dataclass
