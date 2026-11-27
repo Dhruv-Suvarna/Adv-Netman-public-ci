@@ -7,8 +7,6 @@ generators.
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
-
 from django.test import SimpleTestCase
 
 from core.services.troubleshooting import collectors as c
@@ -108,5 +106,3 @@ class InputTests(SimpleTestCase):
         self.assertEqual(bundle["wire_ingest"]["records_drained"], 1)
         self.assertNotIn("10.1.1.5", str(bundle["observations"]))
 
-
-assert datetime(2026, 11, 9, 12, tzinfo=timezone.utc) == T0     # the suite's fixed clock
