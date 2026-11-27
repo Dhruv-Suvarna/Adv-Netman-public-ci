@@ -1,0 +1,55 @@
+--- a/web/core/management/commands/nmas_ztp.py
++++ b/web/core/management/commands/nmas_ztp.py
+@@ -12,6 +12,9 @@
+     nmas_ztp enroll-host-key --session ZTP-x --fingerprint SHA256:... --basis TEXT --actor U   (approver; out-of-band value)
+     nmas_ztp verify --session ZTP-x --actor U                      authenticated, host-key-pinned verification -> BOOTSTRAPPED
+     nmas_ztp status --session ZTP-x                                READ-ONLY: every evidence stage as JSON
++    nmas_ztp lease-status --session ZTP-x                          READ-ONLY: DHCP lease lifetime + re-discovery window state
++    nmas_ztp expect-renewal --session ZTP-x [--family 4|6] --actor U  open the bounded native re-discovery window once the
++                                                                   bootstrap path qualifies (no link flap; DHCPv6 refused)
+     nmas_ztp expire                                                expire artifacts and authorizations whose window is over
+ 
+ Operator actions require ``--actor`` to be an active website user holding the same permission as the page.  Nothing here
+@@ -29,10 +32,11 @@
+ from ... import models
+ from ...services.devices import authorization, lifecycle
+ from ...services.identity.policy import Action, permission_name
+-from ...services.ztp import adapters, artifacts, discovery, policy, servers, workflow
++from ...services.ztp import adapters, artifacts, discovery, lease, policy, servers, workflow
+ 
+ PERMISSION = {"network-create": Action.APPROVE, "session-open": Action.EDIT, "dhcp-validate": Action.VALIDATE, "dhcp-apply": Action.EXECUTE,
+-              "dhcp-rollback": Action.EXECUTE, "contact": Action.VALIDATE, "enroll-host-key": Action.APPROVE, "verify": Action.EXECUTE}
++              "dhcp-rollback": Action.EXECUTE, "contact": Action.VALIDATE, "enroll-host-key": Action.APPROVE, "verify": Action.EXECUTE,
++              "expect-renewal": Action.VALIDATE}
+ 
+ 
+ class Command(BaseCommand):
+@@ -62,8 +66,11 @@
+         serve.add_argument("--network", required=True)
+         serve.add_argument("--no-tftp", action="store_true")
+         serve.add_argument("--follow-ingest", type=int, default=0)
+-        for name in ("contact", "verify", "status"):
++        for name in ("contact", "verify", "status", "lease-status"):
+             sub.add_parser(name).add_argument("--session", required=True)
++        renewal = sub.add_parser("expect-renewal")
++        renewal.add_argument("--session", required=True)
++        renewal.add_argument("--family", type=int, choices=(4, 6), default=4)
+         enroll = sub.add_parser("enroll-host-key")
+         enroll.add_argument("--session", required=True)
+         enroll.add_argument("--fingerprint", required=True)
+@@ -152,6 +159,15 @@
+             return self._result(result)
+         if action == "status":
+             return self._out(workflow.status(self._session(options["session"])))
++        if action == "lease-status":
++            session = self._session(options["session"])
++            return self._out({"lease": lease.status(session), "renewal": lease.renewal_status(session)})
++        if action == "expect-renewal":
++            ok, problems, record = lease.expect_renewal(self._session(options["session"]), actor=actor, family=options["family"])
++            if not ok:
++                self._out({"refused": problems})
++                raise CommandError(f"refused: {', '.join(p['code'] for p in problems)}")
++            return self._out(record)
+         expired = artifacts.expire_due()
+         auths = authorization.expire_due()
+         return self.stdout.write(f"expired artifacts {expired}; authorizations {', '.join(auths) or '-'}")

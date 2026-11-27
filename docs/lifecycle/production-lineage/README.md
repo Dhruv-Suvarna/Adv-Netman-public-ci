@@ -27,7 +27,8 @@ branch's changes as hunks onto the deployed files. Every hunk applied unchanged 
 
 `ztp/policy.py`, `ztp/artifacts.py`, `ztp/lease.py` (new), `management/commands/nmas_ztp.py` and
 `tests/test_single_admin_lab_exception.py` are byte-identical in both lineages. The other files carry identical hunks on
-lineage-specific context.
+lineage-specific context, with one exception: on the branch, `identity/single_admin_exception.py` also drops two unused imports
+(`os`, `timedelta`) that the deployed variant never had.
 
 `chg-023/` holds the exact per-file diffs from the deployed pre-change content to the deployed release. Their hashes are
 recorded in the change record and the release `PROVENANCE.json`.
