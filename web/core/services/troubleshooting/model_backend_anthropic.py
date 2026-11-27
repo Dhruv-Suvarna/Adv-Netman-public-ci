@@ -29,7 +29,7 @@ def _retry_after(error: Any) -> float | None:
 class AnthropicCompletionBackend:
     def __init__(self, *, model: str, api_key: str, timeout: float = 50.0, max_tokens: int = 16000, effort: str = "medium",
                  client: Any = None):
-        import anthropic
+        import anthropic  # pylint: disable=import-error  # installed only in the model-broker runtime (deploy/sandbox/model-broker-requirements.txt)
 
         self._sdk = anthropic
         self.model = str(model)

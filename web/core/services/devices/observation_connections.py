@@ -203,7 +203,7 @@ class ObservationConnectionFactory:
                 if str(exc) == "HOST_KEY_MISMATCH":
                     raise ObservationConnectionError("HOST_KEY_MISMATCH") from None
                 raise ObservationConnectionError("ENDPOINT_CHANGED" if "CHANGED" in str(exc) else "CONNECTION_FAILED") from None
-            except Exception as exc:  # noqa: BLE001
+            except Exception as exc:  # pylint: disable=broad-exception-caught  # noqa: BLE001 - any non-authentication failure is CONNECTION_FAILED; the exception text may carry connection parameters
                 if not _is_auth_failure(exc):
                     failure = "CONNECTION_FAILED"
                     break

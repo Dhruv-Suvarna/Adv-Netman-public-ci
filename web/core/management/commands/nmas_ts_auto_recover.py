@@ -41,16 +41,16 @@ class Command(BaseCommand):
                     self.stdout.write(f"{plan_id}: {recovery.recover(plan_id)}")
                 except recovery.RecoveryRefused as exc:
                     self.stdout.write(f"{plan_id}: refused {exc}")
-                except Exception as exc:  # noqa: BLE001 - the watcher must keep running; the plan is failed closed for a human
+                except Exception as exc:  # pylint: disable=broad-exception-caught  # noqa: BLE001 - the watcher must keep running; the plan is failed closed for a human
                     self.stderr.write(f"{plan_id}: error {type(exc).__name__}: {exc}")
                     try:
                         self.stderr.write(f"{plan_id}: {recovery.fail_closed(plan_id, f'{type(exc).__name__}: {exc}')}")
-                    except Exception as inner:  # noqa: BLE001
+                    except Exception as inner:  # pylint: disable=broad-exception-caught  # noqa: BLE001 - failing the plan closed must not stop the watcher
                         self.stderr.write(f"{plan_id}: fail_closed error {type(inner).__name__}: {inner}")
             for plan_id in recovery.undecided_plans():
                 try:
                     self.stdout.write(f"{plan_id}: decision {recovery.record_plan_decision(plan_id)['outcome']}")
-                except Exception as exc:  # noqa: BLE001 - recording a decision never stops the watcher
+                except Exception as exc:  # pylint: disable=broad-exception-caught  # noqa: BLE001 - recording a decision never stops the watcher
                     self.stderr.write(f"{plan_id}: decision error {type(exc).__name__}: {exc}")
             self.stdout.flush()
             if not opts["watch"]:

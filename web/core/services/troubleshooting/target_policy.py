@@ -209,7 +209,7 @@ class TargetPolicy:
                      "transport": request.transport, "operation_id": request.operation_id,
                      "authorization_ref_hash": ref, "allowed": decision.allowed, "code": decision.code})
 
-    def decide(self, request: TargetRequest, *, at: datetime | None = None) -> tuple[Decision, TargetSnapshot | None]:
+    def decide(self, request: TargetRequest, *, at: datetime | None = None) -> tuple[Decision, TargetSnapshot | None]:  # pylint: disable=too-many-branches  # one flat fail-closed check per target-policy condition; each branch returns a distinct refusal
         now = _utc(at or self._now())
         reasons: list[str] = []
         if request.topology_id != self.topology_id:
@@ -294,7 +294,7 @@ class TargetPolicy:
                 try:
                     if not self._authorization_validator(request, target, now):
                         reasons.append("authorization reference is not active for this principal and target")
-                except Exception:  # fail closed without exposing provider/DB detail
+                except Exception:  # pylint: disable=broad-exception-caught  # fail closed without exposing provider/DB detail
                     reasons.append("authorization validation failed")
         decision = Decision(not reasons, "ALLOWED" if not reasons else "TARGET_REFUSED", tuple(reasons))
         self._emit(request, decision)

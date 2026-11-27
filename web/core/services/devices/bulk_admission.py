@@ -413,7 +413,7 @@ def observe_identity(batch: Batch, member: Member, *, authorization_ref: str, so
         with redirect_stdout(out):
             call_command("device_observe", device=member.name, source=source_id, authorization_ref=authorization_ref,
                          operator=ACTOR, evidence_dir=evidence_dir, stdout=out)
-    except Exception as exc:  # noqa: BLE001 - CommandError text carries only stable codes
+    except Exception as exc:  # pylint: disable=broad-exception-caught  # noqa: BLE001 - CommandError text carries only stable codes
         return batch.mark(member.name, "IDENTITY", "FAILED", codes=[str(exc)[:200]])
     observation = models.DeviceObservation.objects.filter(
         device=device, kind=models.ObservationKind.IDENTITY, source=models.ObservationSource.AUTHENTICATED_SESSION).order_by("-pk").first()

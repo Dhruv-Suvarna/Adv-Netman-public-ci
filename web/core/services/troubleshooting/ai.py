@@ -240,7 +240,7 @@ def call_tool(actor: repo.Actor, handoff_id: str, tool: str, args: dict, *, nonc
         if valid and rt.lease_validator is not None:
             try:
                 valid = bool(rt.lease_validator(handoff_id, expected))
-            except Exception:  # fail closed if durable lease validation is unavailable
+            except Exception:  # pylint: disable=broad-exception-caught  # fail closed if durable lease validation is unavailable
                 valid = False
         if not valid:
             return _deny(actor, h, tool, "STALE_EXECUTION_LEASE", "the global execution lease is missing, stale, or revoked", now, nonce)

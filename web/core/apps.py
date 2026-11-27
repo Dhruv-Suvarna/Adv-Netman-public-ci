@@ -6,5 +6,5 @@ class CoreConfig(AppConfig):
     name = 'core'
 
     def ready(self):
-        from . import signals  # noqa: F401  (V2 Phase 1: identity audit receivers)
-        from . import checks  # noqa: F401  (troubleshooting bindings / observation source deployment checks)
+        from . import signals  # pylint: disable=unused-import  # noqa: F401  (imported for its side effect: V2 Phase 1 identity audit receivers)
+        from . import checks  # pylint: disable=unused-import  # noqa: F401  (imported for its side effect: troubleshooting bindings / observation source deployment checks)

@@ -294,7 +294,7 @@ def main() -> int:
         server_from_environment().serve()
     except KeyboardInterrupt:
         return 0
-    except Exception as exc:
+    except Exception as exc:  # pylint: disable=broad-exception-caught  # startup refusal of any kind reports only the exception class
         # Startup diagnostics disclose only the exception class, never a key or configuration value.
         print(f"model broker refused startup: {type(exc).__name__}", file=os.sys.stderr)
         return 1

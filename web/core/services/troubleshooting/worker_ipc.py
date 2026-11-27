@@ -336,7 +336,7 @@ class UnixWorkerServer:
             response = make_response(kind=self.config.kind, request_id=request_id if REQUEST_ID.fullmatch(request_id) else "0" * 32,
                                      key=self.config.key, ok=False, error={"code": exc.code, "detail": exc.detail})
             code, decision = exc.code, "refused"
-        except Exception as exc:  # fail closed; exception text is not returned
+        except Exception as exc:  # pylint: disable=broad-exception-caught  # fail closed; exception text is not returned
             response = make_response(kind=self.config.kind, request_id=request_id if REQUEST_ID.fullmatch(request_id) else "0" * 32,
                                      key=self.config.key, ok=False, error={"code": "WORKER_INTERNAL_ERROR"})
             code, decision = type(exc).__name__[:64], "error"

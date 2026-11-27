@@ -124,3 +124,4 @@ class Command(BaseCommand):
         self.stdout.write(json.dumps(res.as_dict(), sort_keys=True, default=str))
         if res.status in (ai_runtime.ST_PROVIDER_UNAVAILABLE, ai_runtime.ST_NOT_AUTHORIZED, ai_runtime.ST_NOT_OPEN):
             raise CommandError(f"{res.status}: {res.reason}")
+        return None

@@ -131,7 +131,7 @@ def read_device(device: str, cfg: IntakeConfig) -> list[faults.InterfaceSample] 
             links = None
         return None if not isinstance(links, list) else faults.linux_interface_samples(device, links, datetime.now(timezone.utc))
     doc = _cli_json(f"{cfg.container_prefix}{device}", "show interfaces")
-    if doc is None or not isinstance(doc.get("interfaces"), dict):
+    if not isinstance(doc, dict) or not isinstance(doc.get("interfaces"), dict):     # valid JSON of another shape is unreadable too
         return None
     return faults.interface_samples(device, doc, datetime.now(timezone.utc))
 
@@ -499,7 +499,7 @@ def maintenance_reason(devices: list[str]) -> str:
 
     try:
         conflicts = eligibility._maintenance_conflicts(devices)        # pylint: disable=protected-access
-    except Exception:  # noqa: BLE001 - unreadable maintenance state: do not suppress (fail toward a human-visible case)
+    except Exception:  # pylint: disable=broad-exception-caught  # noqa: BLE001 - unreadable maintenance state: do not suppress (fail toward a human-visible case)
         return ""
     return "; ".join(f"{d}: {r}" for d, r in sorted(conflicts.items()))
 
@@ -590,7 +590,7 @@ def _policy_lookup(op: dict) -> dict | None:
 
     try:
         raw = recovery.policy_for(op, recovery.load_policies())
-    except Exception:  # noqa: BLE001 - an unreadable policy file authorizes nothing
+    except Exception:  # pylint: disable=broad-exception-caught  # noqa: BLE001 - an unreadable policy file authorizes nothing
         return None
     return raw if raw is not None and recovery.policy_active(raw) else None
 
@@ -607,7 +607,7 @@ def _protected_flows() -> list[dict]:
 
     try:
         policies = recovery.load_policies()
-    except Exception:  # noqa: BLE001
+    except Exception:  # pylint: disable=broad-exception-caught  # noqa: BLE001 - an unreadable recovery policy names no protected flow
         return []
     seen, out = set(), []
     for p in policies.values():
@@ -749,11 +749,11 @@ def open_incident(incident: Incident, deps: IntakeDeps | None = None, *, now: da
         if deps.topology_paths:
             try:
                 record_topology_paths(actor, case, incident, deps.topology_cfg or IntakeConfig(), now)
-            except Exception as exc:  # noqa: BLE001 - path evidence is additive; its absence is audited, never fatal
+            except Exception as exc:  # pylint: disable=broad-exception-caught  # noqa: BLE001 - path evidence is additive; its absence is audited, never fatal
                 repo.audit(actor, case, "TOPOLOGY_PATHS_ERROR", decision=f"{type(exc).__name__}: {exc}"[:255], result="ERROR", now=now)
             for line in incident.secondary:
                 repo.audit(actor, case, "SECONDARY_SYMPTOM", decision=line[:255], result="CORRELATED", now=now)
-    except Exception as exc:  # noqa: BLE001 - evidence persistence never blocks the case; the failure is audited
+    except Exception as exc:  # pylint: disable=broad-exception-caught  # noqa: BLE001 - evidence persistence never blocks the case; the failure is audited
         repo.audit(actor, case, "INTAKE_EVIDENCE_ERROR", decision=f"{type(exc).__name__}: {exc}"[:255], result="ERROR", now=now)
     decision = incident.decision or {}
     if decision.get("outcome") in (faults.DIAGNOSE_AND_ESCALATE, faults.PROPOSE_FOR_APPROVAL, faults.INSUFFICIENT_EVIDENCE):
@@ -967,7 +967,7 @@ class Intake:
         self._route_intent_detail = None
         try:
             incidents, status = self._intent_route_pass(now)
-        except Exception as exc:  # noqa: BLE001 - one failed pass never stops the intake
+        except Exception as exc:  # pylint: disable=broad-exception-caught  # noqa: BLE001 - one failed pass never stops the intake
             log.error("route intent pass %s failed: %s", self._route_intent_pass_id, type(exc).__name__)
             incidents, status = [], [{"route_intent": "ERROR", "reason": "ROUTE_INTENT_PASS_EXCEPTION",
                                       "exception": type(exc).__name__}]
@@ -1123,7 +1123,7 @@ class Intake:
                 results.append(opened)
                 if incident.route_evidence is not None:
                     results.append(route_intent_case_record(incident, opened, now))
-            except Exception as exc:  # noqa: BLE001 - one failed intake never stops monitoring
+            except Exception as exc:  # pylint: disable=broad-exception-caught  # noqa: BLE001 - one failed intake never stops monitoring
                 results.append({"fingerprint": incident.fingerprint, "error": f"{type(exc).__name__}: {exc}"[:300]})
                 if incident.route_evidence is not None:
                     results.append(route_intent_case_record(incident, None, now, error=type(exc).__name__))

@@ -77,7 +77,7 @@ def options(actor: repo.Actor) -> dict:
             lifecycle = nmas_providers.lifecycle(name)
             state = str(lifecycle.get("state") or "UNKNOWN")
             detail = str(lifecycle.get("detail") or "")
-        except Exception:  # noqa: BLE001 - presentation fails closed; runtime still rechecks admission
+        except Exception:  # pylint: disable=broad-exception-caught  # noqa: BLE001 - presentation fails closed; runtime still rechecks admission
             state, detail = "STATUS_UNAVAILABLE", "lifecycle status could not be read"
         ready = bool(name in live and state == "IN_SERVICE" and name in ready_path_devices)
         reason = readiness_reason(state, detail, ready)

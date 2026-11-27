@@ -13,7 +13,6 @@ from __future__ import annotations
 import json
 import os
 import secrets
-from typing import Any
 
 from .worker_ipc import IpcRefused, UnixWorkerClient, load_key
 

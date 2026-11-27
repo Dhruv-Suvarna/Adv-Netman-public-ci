@@ -71,7 +71,7 @@ def probe(name: str, factory: Callable[[], Any]) -> tuple[orch.AgentHealth, Any]
     down = orch.AgentHealth(name=name, authenticated=False, responsive=False, restricted_interface=False, process_alive=False)
     try:
         provider = factory()
-    except Exception as exc:  # noqa: BLE001 - missing key / identity: the adapter is not configured
+    except Exception as exc:  # pylint: disable=broad-exception-caught  # noqa: BLE001 - missing key / identity: the adapter is not configured
         return orch.AgentHealth(name=name, authenticated=False, responsive=False, restricted_interface=False, process_alive=False,
                                 recent_error=str(getattr(exc, "code", type(exc).__name__))[:80]), None
     health = getattr(provider, "health", None)

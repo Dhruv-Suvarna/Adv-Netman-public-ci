@@ -91,7 +91,7 @@ class ObservationSession:
         if callable(closer):
             try:
                 closer()
-            except Exception:  # noqa: BLE001 - closing never changes the outcome
+            except Exception:  # pylint: disable=broad-exception-caught  # noqa: BLE001 - closing never changes the outcome
                 pass
 
 
@@ -162,7 +162,7 @@ class ObservationSessionProvider:
                                     selected.path_id, self._auth, pin)
         try:
             connection = self._factory(request)
-        except Exception:  # noqa: BLE001 - factory detail may contain connection parameters
+        except Exception:  # pylint: disable=broad-exception-caught  # noqa: BLE001 - factory detail may contain connection parameters
             return self._refuse("CONNECTION_FAILED")
         if connection is None:
             return self._refuse("CONNECTION_FAILED")
