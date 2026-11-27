@@ -22,9 +22,8 @@ Every statement below carries one of four labels. **LIVE-PROD** means observed o
 - **Lab 9 isolation and admission integration**, verified with LIVE-FIXTURE and UNIT evidence. Production already runs its own
   live-verified Lab 9 implementation, which admitted R8 and S5 on 2026-11-03. The two lineages diverge in 24 lifecycle modules,
   so replacing production's versions is a separate reconciliation release.
-- **ZTP DHCP lease lifetime and the controlled re-discovery window** (`ztp/lease.py`), verified with UNIT evidence. Production's
-  `ztp/discovery.py` and `ztp/workflow.py` belong to the diverged lineage, which predates option 82, and production has no open
-  ZTP session.
+- **ZTP DHCP lease lifetime and the controlled re-discovery window** (`ztp/lease.py`): **deployed by CHG-NMAS-20261127-ZTP-LEASE-023**
+  (see §3); it was UNIT-only at the time of CHG-022.
 - **R6-first / R7-second sequencing, isolation against unauthorized routing, failed-admission rollback**, verified with
   LIVE-FIXTURE evidence (R4→R6→R7 analogue: UP1→NEW1→NEW2).
 - **Management-path failover** (OOB → VLAN 200 adjacent switch → management VRF), verified with UNIT and PRIOR-FIXTURE evidence.
@@ -162,3 +161,32 @@ not revoked, expiry 2026-12-01.
 | `nmas_revision` | `a62722ff…` | `ae26d5fc…` (accepted) |
 
 `devices_admitted=0` / `credential_ready=false` is the unchanged, truthful legacy classification.
+
+## 3. CHG-NMAS-20261127-ZTP-LEASE-023 (2026-11-27 06:33Z): ZTP lease handling deployed (LIVE-PROD)
+
+**Release.** Source `de67a54` (PR #13). The release is production's own ZTP lineage plus the reviewed hunks in
+`production-lineage/chg-023/`, reproduced byte-identically from live production before the deploy. There are 12 files and no
+migration. Only `nmas-web` was HUP-reloaded; every other service kept its PID.
+
+**Behaviour.**
+- An expired or released pre-delivery lease returns the session to discovery.
+- A renewal re-decides the bootstrap authorization and re-checks the upstream's readiness, so R7 waits for R6.
+- The renewal window uses the session-open path gate, including production's live option 82 relay read. DHCPv6 is refused.
+- An authorization past its time window stops contact, verification, the renewal window and commissioning.
+- ZTP alone never admits a device.
+
+**Live evidence.**
+- Production imports the new code and executes it on its 4 real sessions (read-only). Post-delivery leases read ENDED or
+  EXPIRED, which is the expected outcome, and nothing regressed. This was exercised through `nmas_ztp lease-status` and the ZTP
+  session JSON view.
+- Deployed hashes equal the release.
+- Collector: 9/9 management paths ready and diagnostics fresh.
+- Lifecycle `--verify`: 13 devices, 13 chains intact.
+
+**Tests.**
+- The deployed tree ran 108 modules, 2423 tests. Every Troubleshooter, ZTP, lease and lifecycle module passes.
+- 23 production admission/isolation tests fail. They fail identically on pristine production and were not touched.
+- Hosted CI on PR #13 passed: secret scanning, and Tier-3 with 9295 Django tests, the governance catalog and Pylint.
+
+**Live R6/R7 re-onboarding** still needs a separate disruptive-change authorization. Ordering and renewal are proven by tests
+plus the earlier isolated cEOS fixture.
