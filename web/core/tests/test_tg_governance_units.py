@@ -226,6 +226,16 @@ class InventoryHelperTests(SimpleTestCase):
         self.assertFalse(inventory.is_test_file("web/core/views.py"))
         self.assertFalse(inventory.is_test_file("web/core/tests/fixtures/x.json"))
 
+    def test_is_test_file_accepts_the_deploy_script_suites_only(self):
+        self.assertTrue(inventory.is_test_file("deploy/sandbox/test_namespace_activation.py"))
+        self.assertTrue(inventory.is_test_file("deploy/credentials/test_sync_worker_credential.py"))
+
+    def test_is_test_file_rejects_the_deploy_tooling_the_suites_exercise(self):
+        for path in ("deploy/sandbox/namespace_activation.py", "deploy/sandbox/latest_test_report.json", "deploy/test_notes.md",
+                     "web/core/services/test_governance/inventory.py"):
+            with self.subTest(path=path):
+                self.assertFalse(inventory.is_test_file(path))
+
     def test_template_variables_returns_sorted_undeclared_names(self):
         self.assertEqual(inventory.template_variables("{{ b }} {% for i in items %}{{ i }}{% endfor %} {{ a }}"), ("a", "b", "items"))
 

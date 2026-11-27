@@ -24,7 +24,6 @@ from datetime import datetime
 
 from django.utils import timezone
 
-from ... import models
 from . import identity, observations, resolver
 
 REFUSALS = {
@@ -72,7 +71,7 @@ def _close(session) -> None:
     if callable(closer):
         try:
             closer()
-        except Exception:  # noqa: BLE001 - closing never changes the outcome
+        except Exception:  # pylint: disable=broad-exception-caught  # noqa: BLE001 - closing never changes the outcome
             pass
 
 
@@ -105,7 +104,7 @@ def collect(device_name: str, *, source_id: str, sources: dict, session_provider
     for candidate in candidates:                       # declared order; first the provider can serve
         try:
             session = session_provider(target, candidate.address)
-        except Exception:  # noqa: BLE001 - provider detail may contain connection parameters
+        except Exception:  # pylint: disable=broad-exception-caught  # noqa: BLE001 - provider detail may contain connection parameters
             session = None
         if session is not None:
             break
@@ -120,7 +119,7 @@ def collect(device_name: str, *, source_id: str, sources: dict, session_provider
             return _refuse("HOST_KEY_MISSING")
         try:
             output = session.execute(spec.command)
-        except Exception:  # noqa: BLE001 - never echo connection details
+        except Exception:  # pylint: disable=broad-exception-caught  # noqa: BLE001 - never echo connection details
             return _refuse("SESSION_FAILED")
         if not isinstance(output, str) or not output.strip():
             return _refuse("OUTPUT_EMPTY")
@@ -132,7 +131,7 @@ def collect(device_name: str, *, source_id: str, sources: dict, session_provider
                       "session_evidence": list(getattr(session, "evidence_refs", None) or ())}
         try:
             ref = evidence_sink(provenance)
-        except Exception:  # noqa: BLE001
+        except Exception:  # pylint: disable=broad-exception-caught  # noqa: BLE001 - a failing evidence sink yields no reference, which refuses the observation
             ref = ""
         ref, bad = identity.clean_text(ref if isinstance(ref, str) else "", max_length=200)
         if bad or not ref:
@@ -143,7 +142,7 @@ def collect(device_name: str, *, source_id: str, sources: dict, session_provider
     if pre_ingest_guard is not None:
         try:
             blocked = str(pre_ingest_guard() or "")
-        except Exception:  # noqa: BLE001 - an unanswerable guard refuses
+        except Exception:  # pylint: disable=broad-exception-caught  # noqa: BLE001 - an unanswerable guard refuses
             blocked = "AUTHORIZATION_UNVERIFIABLE"
         if blocked:
             return CollectResult(False, [blocked], None, ref)

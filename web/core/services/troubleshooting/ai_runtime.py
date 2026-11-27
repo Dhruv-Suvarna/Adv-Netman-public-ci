@@ -351,7 +351,7 @@ def continue_handoff(actor: repo.Actor, handoff_id: str, *, provider: Any = None
     catalog = runner.catalog() if hasattr(runner, "catalog") else [{"test_id": t} for t in sorted(runner.read_only_tests)]
     try:
         research_broker = load_research_broker(h.agent_identity)
-    except Exception as exc:  # fail closed; diagnostics remain usable
+    except Exception as exc:  # pylint: disable=broad-exception-caught  # fail closed; diagnostics remain usable
         repo.audit(system, h.case, "RESEARCH_BROKER_UNAVAILABLE", decision=type(exc).__name__, result="UNAVAILABLE", now=clock_fn())
         research_broker = None
     # ``fencing_token`` / ``lease_validator`` are supplied only by the global agent dispatcher; every governed tool

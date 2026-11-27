@@ -125,11 +125,11 @@ class Command(BaseCommand):
             for target in cap.scope.get("ATTACHMENT_APPROVE", ()):
                 device_id, pk = target.split(":")
                 device = next(d for d in models.ManagedDevice.objects.all() if d.device_id == device_id)
-                r = _retry(lambda: attachments.approve_attachment(device, int(pk), actor=ba.ACTOR, exception=cap))
+                r = _retry(lambda device=device, pk=pk: attachments.approve_attachment(device, int(pk), actor=ba.ACTOR, exception=cap))
                 results.append(("ATTACHMENT_APPROVE", target, r.ok, r.codes))
             for target in cap.scope.get("OBSERVATION_AUTHORIZATION_GRANT", ()):
                 ticket, names, cmds = target.split("|")
-                r = _retry(lambda: observation_authorizations.grant(
+                r = _retry(lambda ticket=ticket, names=names, cmds=cmds: observation_authorizations.grant(
                     devices=names.split(","), commands=cmds.split(","), ttl_seconds=6 * 3600, approver=ba.ACTOR, requested_by=ba.ACTOR,
                     ticket=ticket, reason="bulk admission identity observations", exception=cap,
                     max_observations=2 * len(names.split(","))))      # one retry per device, still bounded
@@ -139,7 +139,7 @@ class Command(BaseCommand):
                 results.append(("OBSERVATION_AUTHORIZATION_GRANT", target, r.ok, r.codes))
             for target in cap.scope.get("MGMT_PATH_APPROVE", ()):
                 path = models.ManagementPath.objects.get(pk=int(target.removeprefix("MPATH-")))
-                r = _retry(lambda: paths.approve_path(path, actor=ba.ACTOR, exception=cap))
+                r = _retry(lambda path=path: paths.approve_path(path, actor=ba.ACTOR, exception=cap))
                 results.append(("MGMT_PATH_APPROVE", target, r.ok, r.codes))
         finally:
             revoked = _retry(lambda: exception.revoke(cap, actor=ba.ACTOR, reason=f"bulk admission window {opts['window']} complete"))

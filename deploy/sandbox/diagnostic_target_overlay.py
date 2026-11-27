@@ -242,4 +242,4 @@ if __name__ == "__main__":
         raise SystemExit(main())
     except (OSError, ValueError, json.JSONDecodeError, subprocess.CalledProcessError, Refused) as exc:
         print(json.dumps({"status": "refused", "reason": type(exc).__name__}), file=os.sys.stderr)
-        raise SystemExit(2)
+        raise SystemExit(2) from exc

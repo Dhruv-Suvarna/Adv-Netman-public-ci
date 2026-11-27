@@ -26,7 +26,7 @@ def _retry_after(error: Any) -> float | None:
 
 class OpenAICompletionBackend:
     def __init__(self, *, model: str, api_key: str, timeout: float = 50.0, max_tokens: int = 16000, client: Any = None):
-        import openai
+        import openai  # pylint: disable=import-error  # installed only in the model-broker runtime (deploy/sandbox/model-broker-requirements.txt)
 
         self._sdk = openai
         self.model = str(model)

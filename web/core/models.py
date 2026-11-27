@@ -3815,7 +3815,7 @@ class ObservationAuthorization(models.Model):
         stored = type(self).objects.filter(pk=self.pk).values("revoked_at").first()
         if stored is None or stored["revoked_at"] is not None or self.revoked_at is None or not self.revoked_by:
             raise ValueError("An observation authorization can only be revoked, once.")
-        super().save(update_fields=["revoked_at", "revoked_by", "revoke_reason"])
+        return super().save(update_fields=["revoked_at", "revoked_by", "revoke_reason"])
 
     def delete(self, *args, **kwargs):
         raise ValueError("ObservationAuthorization records are approval evidence and cannot be deleted.")
@@ -3853,7 +3853,7 @@ class ObservationAuthorizationUse(models.Model):
         if stored is None or stored["state"] != ObservationUseState.RESERVED or self.state == ObservationUseState.RESERVED \
                 or self.finished_at is None:
             raise ValueError("A use is finished exactly once.")
-        super().save(update_fields=self._FINISH_FIELDS)
+        return super().save(update_fields=self._FINISH_FIELDS)
 
     def delete(self, *args, **kwargs):
         raise ValueError("ObservationAuthorizationUse records are evidence and cannot be deleted.")

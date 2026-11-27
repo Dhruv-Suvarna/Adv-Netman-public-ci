@@ -979,7 +979,7 @@ def prepare_resolver(config: dict[str, Any], state_path: Path, netns_etc: Path, 
     except BaseException:
         try:
             cleanup(config, state_path, state, netns_etc, "resolver-prepare-failed-cleaned")
-        except BaseException as cleanup_error:
+        except BaseException as cleanup_error:  # pylint: disable=broad-exception-caught  # a failed cleanup of any kind is recorded as cleanup-required before the original failure is re-raised
             state["status"] = "activation-failed-cleanup-required"
             state["cleanup_error"] = str(cleanup_error)
             persist(state_path, state)
@@ -1215,7 +1215,7 @@ def activate(config: dict[str, Any], state_path: Path, netns_etc: Path, *, fail_
     except BaseException:
         try:
             cleanup(config, state_path, state, netns_etc, "activation-failed-cleaned")
-        except BaseException as cleanup_error:
+        except BaseException as cleanup_error:  # pylint: disable=broad-exception-caught  # a failed cleanup of any kind is recorded as cleanup-required before the original failure is re-raised
             state["status"] = "activation-failed-cleanup-required"
             state["cleanup_error"] = str(cleanup_error)
             persist(state_path, state)
@@ -1226,7 +1226,7 @@ def link_addresses(argv: list[str]) -> set[str]:
     return {info["local"] + "/" + str(info["prefixlen"]) for link in run_json(argv) for info in link.get("addr_info", [])}
 
 
-def validate_active(config: dict[str, Any], state_path: Path, netns_etc: Path) -> dict[str, Any]:
+def validate_active(config: dict[str, Any], state_path: Path, netns_etc: Path) -> dict[str, Any]:  # pylint: disable=too-many-branches  # one flat fail-closed check per activation invariant; each branch raises a distinct refusal
     state = read_state(state_path)
     if not state:
         raise Refused("no ownership state exists")
@@ -1404,4 +1404,4 @@ if __name__ == "__main__":
         raise SystemExit(main())
     except Refused as exc:
         print(f"REFUSED: {exc}", file=sys.stderr)
-        raise SystemExit(65)
+        raise SystemExit(65) from exc

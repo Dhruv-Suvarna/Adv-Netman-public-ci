@@ -51,11 +51,20 @@ class FaultRefused(RuntimeError):
 class FaultDriver(Protocol):
     restricted_interface: bool
 
-    def capture_baseline(self, fault: dict) -> dict: ...
-    def protected_health(self, flows: list[dict]) -> dict: ...
-    def inject(self, fault: dict, operation_id: str) -> dict: ...
-    def rollback(self, fault: dict, baseline: dict, operation_id: str) -> dict: ...
-    def matches_baseline(self, fault: dict, baseline: dict) -> bool: ...
+    def capture_baseline(self, fault: dict) -> dict:
+        raise NotImplementedError
+
+    def protected_health(self, flows: list[dict]) -> dict:
+        raise NotImplementedError
+
+    def inject(self, fault: dict, operation_id: str) -> dict:
+        raise NotImplementedError
+
+    def rollback(self, fault: dict, baseline: dict, operation_id: str) -> dict:
+        raise NotImplementedError
+
+    def matches_baseline(self, fault: dict, baseline: dict) -> bool:
+        raise NotImplementedError
 
 
 def _now() -> datetime:
@@ -491,7 +500,12 @@ class ContainerlabCeosDriver:
         self.flow_map = dict(flow_map or {})
         self._run = run or self._subprocess
         self._management_probe = management_probe or self._nmas_health
-        self._flow_stop = None              # set by the controller during a flap: () -> True to stop early
+        # replaced by the controller during a flap: () -> True to stop early
+        self._flow_stop: Callable[[], bool] = self._never_stop
+
+    @staticmethod
+    def _never_stop() -> bool:
+        return False
 
     @staticmethod
     def _subprocess(argv: list[str], timeout: int = 20) -> tuple[int, str]:
@@ -507,7 +521,7 @@ class ContainerlabCeosDriver:
         try:
             with urllib.request.urlopen("http://127.0.0.1:8001/healthz", timeout=4) as response:
                 return response.status == 200
-        except Exception:  # noqa: BLE001
+        except Exception:  # pylint: disable=broad-exception-caught  # noqa: BLE001 - any failure to read NMAS health is "unhealthy"
             return False
 
     def _container(self, node: str) -> str:
@@ -744,7 +758,7 @@ class ContainerlabCeosDriver:
                 self._set_link(container, interface, "up")
                 transitions.append({"at": _iso(_now()), "state": "up", "cycle": cycle + 1})
                 time.sleep(spec["up_seconds"])
-                if self._flow_stop and self._flow_stop():
+                if self._flow_stop():
                     stopped = "protected-flow stop condition"
                     break
         finally:

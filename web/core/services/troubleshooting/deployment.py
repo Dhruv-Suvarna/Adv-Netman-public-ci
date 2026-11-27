@@ -390,7 +390,7 @@ def runtime_deps(config: dict | None = None) -> rt.RuntimeDeps:
             from .diagnostic_worker import DiagnosticCliTransport, DiagnosticWorkerClient
             from .worker_ipc import load_key
 
-            def diagnostic_worker(info, context):
+            def _worker_transport(info, context):
                 required = {"agent", "tenant", "authorization_ref", "authorization_expires_at"}
                 if not isinstance(context, dict) or set(context) != required:
                     raise ValueError("a complete live handoff context is required")
@@ -403,7 +403,9 @@ def runtime_deps(config: dict | None = None) -> rt.RuntimeDeps:
                     timeout_seconds=float(worker_cfg.get("timeout", 20)),
                 )
                 return DiagnosticCliTransport(device=info.device, platform=info.platform, client=client)
-    except Exception as exc:  # configuration/key errors leave the runtime without a network transport
+
+            diagnostic_worker = _worker_transport
+    except Exception as exc:  # pylint: disable=broad-exception-caught  # configuration/key errors leave the runtime without a network transport
         problems.append(f"diagnostic worker unavailable: {type(exc).__name__}")
         diagnostic_worker = None
     return build_runtime_deps(health_capability=health_capability, diagnostic_worker=diagnostic_worker,

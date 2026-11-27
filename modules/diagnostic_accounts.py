@@ -291,7 +291,7 @@ def verify_ceos(device: str, address: str, *, pin: str, password: str) -> Verifi
     result = Verification(device)
     try:
         transport, result.presented_host_key = _connect(address, pin=pin, username=USERNAME, password=password)
-    except (DiagnosticAccountError, OSError, Exception) as exc:  # noqa: BLE001 - any failure is "no login"
+    except (DiagnosticAccountError, OSError, Exception) as exc:  # pylint: disable=broad-exception-caught  # noqa: BLE001 - any failure is "no login"
         result.details["login_error"] = getattr(exc, "args", ["?"])[0] if isinstance(exc, DiagnosticAccountError) else type(exc).__name__
         return result
     result.login = True
@@ -343,7 +343,7 @@ def verify_frr(device: str, address: str, *, pin: str, pkey) -> Verification:
     result = Verification(device)
     try:
         transport, result.presented_host_key = _connect(address, pin=pin, username=USERNAME, pkey=pkey)
-    except (DiagnosticAccountError, OSError, Exception) as exc:  # noqa: BLE001
+    except (DiagnosticAccountError, OSError, Exception) as exc:  # pylint: disable=broad-exception-caught  # noqa: BLE001 - any failure of the RBAC probe is a refused proof, never a pass
         result.details["login_error"] = getattr(exc, "args", ["?"])[0] if isinstance(exc, DiagnosticAccountError) else type(exc).__name__
         return result
     result.login = True

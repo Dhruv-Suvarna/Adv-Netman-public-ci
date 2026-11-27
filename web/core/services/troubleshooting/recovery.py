@@ -531,7 +531,9 @@ def sweep_interrupted() -> list[dict]:
     Nothing is ever re-executed.  Pre-execution plans are BLOCKED; an EXECUTING action is marked INTERRUPTED -> BLOCKED with the
     Change Engine run outcome recorded; VERIFYING is left for a human.  Every case is audited and the engineer is emailed."""
     out = []
-    actor_for = lambda case: repo.Actor("nmas-recovery-watcher", "system", tenant=case.tenant)  # noqa: E731
+    def actor_for(case):
+        return repo.Actor("nmas-recovery-watcher", "system", tenant=case.tenant)
+
     plans = models.TsRemediationPlan.objects.select_related("case").filter(
         status__in=(*IN_FLIGHT_PRE_EXECUTION, "EXECUTING", "VERIFYING"), approval__mode=gov.AUTOMATED_RECOVERY)
     for plan in plans:

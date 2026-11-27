@@ -186,7 +186,7 @@ def _unit_state(name: str) -> str:
     try:
         import subprocess
         done = subprocess.run(["/usr/bin/systemctl", "is-active", unit], capture_output=True, text=True, timeout=3, check=False)
-    except Exception:  # noqa: BLE001 - no systemd access from this process: say so rather than guess
+    except Exception:  # pylint: disable=broad-exception-caught  # noqa: BLE001 - no systemd access from this process: say so rather than guess
         return "UNKNOWN"
     state = (done.stdout or "").strip().upper()
     return state if state in {"ACTIVE", "INACTIVE", "FAILED", "ACTIVATING", "DEACTIVATING"} else "UNKNOWN"

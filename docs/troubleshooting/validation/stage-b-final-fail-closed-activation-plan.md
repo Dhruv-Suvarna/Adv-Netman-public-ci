@@ -26,6 +26,15 @@ escalation page) added fourteen production files and changed fourteen. COMPLETE-
 supersedes COMPLETE-09 (`05ce9cc1…696bad`, source manifest `1d5e4934…efba9`). The controller, overlay, resolver, research
 broker, nftables policies, destinations and systemd unit are byte-identical to COMPLETE-09.
 
+**This release record is historical, not a description of this branch.** `research-activation-release.json` (COMPLETE-11)
+pins the exact files of the tree it was cut from. On the ported public-dev lineage, `namespace_activation.py` and
+`worker_runtime.py` already differed from those pins at `99282bc`. The CI repair and Pylint-debt commits that followed
+(`namespace-activate.sh` shell-hygiene fixes; reasoned pragmas and an unused-import removal in `namespace_activation.py`,
+`research_worker.py` and `research_release.py`) also changed pinned files, though not their behaviour. On this tree,
+`research_release.py` therefore refuses the record with `release input drift`. That refusal is correct, and the record is
+kept byte-for-byte as evidence of what was reviewed. A future Stage B activation from this lineage must cut, review and
+approve a NEW content-addressed release over the then-current tree. Never re-hash this record to match.
+
 Diagnostic activation remains prohibited because `TARGETS` is empty. Live AI
 models, autonomous device writes, `break.py` and
 `nmas-troubleshooter-runtime@` remain outside this plan.
