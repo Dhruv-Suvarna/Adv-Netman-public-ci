@@ -113,6 +113,12 @@ PATH_RULES: tuple[PathRule, ...] = (
     PathRule("troubleshooting", (f"{_SVC}/troubleshooting/**", "web/core/troubleshooting_views.py", "web/core/troubleshooting_urls.py",
                                  "web/core/templates/core/troubleshooting/**", "web/core/management/commands/troubleshooting_*.py",
                                  "web/core/tests/fixtures/troubleshooting_collectors/**", "web/core/tests/fixtures/troubleshooting_runbooks/**",
+                                 # the production Troubleshooter's operations: unattended intake / recovery, engineer reconciliation,
+                                 # status, topology-wide acceptance and bulk admission, their read-only diagnostic identities and the
+                                 # captured routing fixtures + live route-intent fixture they are tested against
+                                 "web/core/management/commands/nmas_ts_*.py", "web/core/management/commands/nmas_topology_acceptance.py",
+                                 "web/core/management/commands/nmas_bulk_admission.py", "modules/diagnostic_accounts.py",
+                                 "web/core/tests/fixtures/troubleshooting_routing/**", "web/core/tests/live_route_intent_fixture.py",
                                  "break.py")),
     PathRule("models_schema", ("web/core/models.py",)),
     PathRule("migrations", ("web/core/migrations/**",)),
@@ -210,6 +216,7 @@ PATH_RULES: tuple[PathRule, ...] = (
         "web/core/middleware.py", "web/core/signals.py", "web/core/auth_views.py", f"{_SVC}/identity/**",
         "web/core/templates/core/auth/**", "web/core/management/commands/nmas_app_mfa_reset.py",
         "web/core/management/commands/nmas_grant_roles.py",
+        "web/core/management/commands/nmas_single_admin_lab_exception.py",   # the owner-authorized single-admin exception
     )),
     PathRule("capability_framework", (
         f"{_SVC}/capabilities/**", "web/core/management/commands/nmas_capabilities.py",
@@ -553,7 +560,14 @@ SELECTIONS: dict[str, Selection] = {
                 "routes", "admin_surface", "contracts"),
         reason="managed-device credential metadata / rotation policy / engine / scheduler / 2FA policy changed",
     ),
-    "troubleshooting": Selection(django=("troubleshooting_access", "troubleshooting_acl_history", "troubleshooting_acl_source", "troubleshooting_ai", "troubleshooting_ai_runtime", "troubleshooting_baseline_history", "troubleshooting_baseline_scope", "troubleshooting_collectors", "troubleshooting_config_snapshot", "troubleshooting_deployment", "troubleshooting_dns_rules", "troubleshooting_dns_source", "troubleshooting_engine", "troubleshooting_evidence", "troubleshooting_fib_source", "troubleshooting_flow_runtime", "troubleshooting_flow_wire", "troubleshooting_forwarding_source", "troubleshooting_governance", "troubleshooting_l2_history", "troubleshooting_l2_source", "troubleshooting_nmas_providers", "troubleshooting_physical_source", "troubleshooting_pmtu_source", "troubleshooting_probe_source", "troubleshooting_protocol_source", "troubleshooting_qos_source", "troubleshooting_readiness", "troubleshooting_runbooks", "troubleshooting_runtime", "troubleshooting_runtime_ports", "troubleshooting_stp_source", "troubleshooting_views",), reason="troubleshooting substrate / collectors / runbooks / AI / governance / views changed"),
+    "troubleshooting": Selection(django=("troubleshooting_access", "troubleshooting_acl_history", "troubleshooting_acl_source", "troubleshooting_ai", "troubleshooting_ai_runtime", "troubleshooting_baseline_history", "troubleshooting_baseline_scope", "troubleshooting_collectors", "troubleshooting_config_snapshot", "troubleshooting_deployment", "troubleshooting_dns_rules", "troubleshooting_dns_source", "troubleshooting_engine", "troubleshooting_evidence", "troubleshooting_fib_source", "troubleshooting_flow_runtime", "troubleshooting_flow_wire", "troubleshooting_forwarding_source", "troubleshooting_governance", "troubleshooting_l2_history", "troubleshooting_l2_source", "troubleshooting_nmas_providers", "troubleshooting_physical_source", "troubleshooting_pmtu_source", "troubleshooting_probe_source", "troubleshooting_protocol_source", "troubleshooting_qos_source", "troubleshooting_readiness", "troubleshooting_runbooks", "troubleshooting_runtime", "troubleshooting_runtime_ports", "troubleshooting_stp_source", "troubleshooting_views",
+    # the production Troubleshooter's agents, model broker, intake / recovery / reconciliation, routing and route intent, and its operations
+    "troubleshooting_agent_dispatch", "troubleshooting_agent_orchestrator", "troubleshooting_change_authorization", "troubleshooting_fault_injection",
+    "troubleshooting_intake", "troubleshooting_model_broker", "troubleshooting_model_provider", "troubleshooting_multifault", "troubleshooting_notify",
+    "troubleshooting_qualification", "troubleshooting_reconcile", "troubleshooting_recovery_execution", "troubleshooting_recovery_operations",
+    "troubleshooting_recovery_policy", "troubleshooting_remediation_contract", "troubleshooting_research", "troubleshooting_route_intake",
+    "troubleshooting_route_intent", "troubleshooting_routing", "troubleshooting_sandbox_artifacts", "troubleshooting_target_policy",
+    "troubleshooting_workers", "live_route_intent_fixture", "bulk_admission", "single_admin_lab_exception",), reason="troubleshooting substrate / collectors / runbooks / AI / governance / views changed"),
     "identity_security": Selection(full_django=True, reason="the access middleware / identity layer sits in front of every view"),
     "capability_framework": Selection(django=("capability_framework", "capabilities", "transport_capability", "contracts",
                                               "phase9_option82", "tg_phase9_closure", "tg_phase9_live_runner_closure"),

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # Independent NMAS namespace lifecycle launcher. Production mutations still
 # require the separately approved configuration and change window documented in
 # docs/troubleshooting/validation/staged-production-rollout-and-rollback.md.

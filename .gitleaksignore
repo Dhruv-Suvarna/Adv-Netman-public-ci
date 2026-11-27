@@ -41,3 +41,13 @@ web/core/tests/test_tg_identity_mfa_units.py:generic-api-key:140
 4a4748b335ef24d9aac1f903bb4b91ab5b4fc0d9:web/core/services/credentials/engine.py:generic-api-key:253
 4a4748b335ef24d9aac1f903bb4b91ab5b4fc0d9:web/core/services/credentials/engine.py:generic-api-key:264
 4a4748b335ef24d9aac1f903bb4b91ab5b4fc0d9:web/core/services/credentials/engine.py:generic-api-key:278
+# Reviewed false positives introduced by the Troubleshooter port (PR #12), 2026-11-27: a list of
+# credential-store KEY NAMES (identifiers, no values), a validation-matrix sentence saying key
+# placeholders stay unset, and the synthetic "Bearer abcdef0123456789" payload a collector test
+# proves is dropped.  Exact current-tree and commit fingerprints; secret values are not stored here.
+deploy/credentials/sync_worker_credential.py:generic-api-key:25
+docs/troubleshooting/validation/infrastructure-missing-input-matrix.md:generic-api-key:60
+web/core/tests/test_troubleshooting_collectors.py:generic-api-key:454
+4e284a5ed769c63e5df7d3d7fba6158e78c15912:deploy/credentials/sync_worker_credential.py:generic-api-key:25
+b08de7b8d0bb6f8a2f788de4493bd00a4cd643ef:docs/troubleshooting/validation/infrastructure-missing-input-matrix.md:generic-api-key:60
+b08de7b8d0bb6f8a2f788de4493bd00a4cd643ef:web/core/tests/test_troubleshooting_collectors.py:generic-api-key:454

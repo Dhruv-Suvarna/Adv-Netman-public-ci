@@ -54,6 +54,7 @@
  "templates/features/ubuntu_frr/routing_rip.j2": "af5090b2edcf2cf177a8fd49f47794c9aeac925db605f4d311b05332da361259",
  "templates/features/ubuntu_frr/routing_static_route.j2": "e62f7f773c5ada631807e5055520fd78d541add27ea2ff56e405cd3fb96b59f4",
  "templates/mgmt_swt.cfg.j2": "078f0c4fedd9dfde87523766d074e549eaa7571a1c7b670617119e8734b400f9",
+ "templates/monitoring/ceos_diag_user.j2": "981db51f4d19fa6b3d8abe15563208ef5595dc1572b0d57c2d9a93834f4d5d82",
  "templates/monitoring/ceos_gnmi_enable.j2": "9e9a9acfe4f4204536310b15deb48e13a7b8eb9c64ea2685dc4d93b8a49364b3",
  "templates/monitoring/ceos_gnmi_security.j2": "7c941f2be3e5ade2f51824d00eca1c5d70013c475cbde37d802933cf52f6a93e",
  "templates/monitoring/ceos_snmp.j2": "be134cad3b57b3bb8d819c54cad77da4d8c48b13afd1f3b84e94120b382761c3",
