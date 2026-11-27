@@ -10,6 +10,7 @@ Reports:
 - intake configuration and open or idle monitoring cases
 - stale execution locks and leases, in-flight plans
 - audit-chain integrity
+- last structured route-intent pass of the running intake (from its journal; no device is read)
 """
 from __future__ import annotations
 
@@ -33,6 +34,41 @@ def _unit(name: str) -> dict:
     def q(*args):
         return subprocess.run(["systemctl", *args, name], capture_output=True, text=True, timeout=10, check=False).stdout.strip()
     return {"active": q("is-active"), "enabled": q("is-enabled")}
+
+
+def last_route_intent_pass(reader=None) -> dict:
+    """Most recent ``route_intent_pass`` record the running intake wrote to its journal (read-only, bounded window)."""
+    def journal() -> str:
+        return subprocess.run(["journalctl", "-u", "nmas-ts-intake.service", "-o", "cat", "-n", "400", "--no-pager"],
+                              capture_output=True, text=True, timeout=10, check=False).stdout
+    try:
+        lines = (reader or journal)().splitlines()
+    except (OSError, subprocess.SubprocessError):
+        return {"available": False, "error_code": "JOURNAL_UNAVAILABLE"}
+    for line in reversed(lines):
+        body = line[line.find("{"):] if "{" in line else ""
+        if intake.ROUTE_INTENT_PASS_SCHEMA not in body:
+            continue
+        try:
+            rec = json.loads(body)
+        except ValueError:
+            continue
+        if rec.get("schema") != intake.ROUTE_INTENT_PASS_SCHEMA:
+            continue
+        try:
+            age = int((datetime.now(timezone.utc) - datetime.fromisoformat(rec["at"])).total_seconds())
+        except (KeyError, TypeError, ValueError):
+            age = None
+        keep = ("pass_id", "at", "state", "severity", "error_code", "intent_revision", "topology_revision", "routes",
+                "confirmed_fingerprints", "items_truncated")
+        return {"available": True, "age_seconds": age, **{k: rec.get(k) for k in keep},
+                "non_healthy_items": rec.get("items", [])}
+    return {"available": False, "error_code": "NO_ROUTE_INTENT_PASS_IN_JOURNAL"}
+
+
+def _route_intent_status() -> dict:
+    binding = intake.unit_route_intent_binding()
+    return {**binding, "last_pass": last_route_intent_pass() if binding.get("bound") else None}
 
 
 def status() -> dict:
@@ -62,7 +98,8 @@ def status() -> dict:
         "intake": {"devices": list(cfg.devices), "confirm_seconds": cfg.confirm_seconds, "cooldown_seconds": cfg.cooldown_seconds,
                    "max_cases_per_hour": cfg.max_cases_per_hour, "open_monitoring_cases": open_cases,
                    "monitoring_cases_last_hour": m.TsCase.objects.filter(trigger_source=intake.TRIGGER_SOURCE,
-                                                                          opened_at__gte=now - timedelta(hours=1)).count()},
+                                                                          opened_at__gte=now - timedelta(hours=1)).count(),
+                   "route_intent": _route_intent_status()},
         "execution": {"device_locks": list(m.ExecutionDeviceLock.objects.values_list("device", flat=True)),
                       "stale_locks": list(m.ExecutionDeviceLock.objects.filter(run__lease_expires_at__lte=now).values_list("device", flat=True)),
                       "plans_in_flight": list(m.TsRemediationPlan.objects.filter(

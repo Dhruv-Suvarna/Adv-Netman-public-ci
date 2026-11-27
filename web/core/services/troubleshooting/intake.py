@@ -37,7 +37,9 @@ import dataclasses
 import json
 import logging
 import re
+import secrets
 import subprocess
+from collections import Counter
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta, timezone
 from typing import Any, Callable
@@ -259,6 +261,84 @@ def read_route_intent_ribs(intent: route_intent.RouteIntent, cfg: IntakeConfig) 
     collected = datetime.now(timezone.utc).isoformat()
     return {"ribs": ribs, "observed_at": collected, "device_observed_at": observed,
             "collector": "nmas-intake trusted-console-read-only"}
+
+
+ROUTE_INTENT_PASS_SCHEMA = "nmas.troubleshooting.route-intent-pass/1"
+ROUTE_INTENT_CASE_SCHEMA = "nmas.troubleshooting.route-intent-case/1"
+ROUTE_INTENT_SEVERITY = {"HEALTHY": "info", "DEGRADED": "warning", "INDETERMINATE": "warning", "REFUSED": "error", "ERROR": "error"}
+ROUTE_INTENT_MAX_ITEMS = 32
+
+
+def route_intent_pass_record(row: dict, *, pass_id: str, at: datetime, results: list | None = None, expectations: int = 0,
+                             confirmed: frozenset = frozenset()) -> dict:
+    """One structured, journal-safe record per evaluated route-intent pass.
+
+    Carries the pass correlation id, the evaluated route counts by classification, every non-healthy (target, device, prefix)
+    item with its intake fingerprint, and a stable ``error_code``.  It never carries observed next hops, RIB documents,
+    console output or credentials; the full per-route evidence is stored on the case, keyed by the same ``pass_id``.
+    """
+    state = str(row.get("route_intent") or "ERROR")
+    reason = str(row.get("reason") or "")
+    code = reason.split(":", 1)[0] if reason else None
+    if code is None and state == "INDETERMINATE":
+        code = "RIB_ENTRIES_INDETERMINATE"
+    rec = {"schema": ROUTE_INTENT_PASS_SCHEMA, "event": "route_intent_pass", "pass_id": pass_id,
+           "at": at.astimezone(timezone.utc).isoformat(), "state": state,
+           "severity": ROUTE_INTENT_SEVERITY.get(state, "error"), "error_code": code, **row}
+    if results is not None:
+        by_category = Counter(r.category for r in results)
+        items = []
+        for r in results:
+            if r.category == faults.NO_FAULT:
+                continue
+            fp = f"RINT:{row.get('intent_revision', '-')}:{r.scope.get('target_id', '-')}:{r.scope.get('device', '-')}"
+            items.append({"target_id": r.scope.get("target_id"), "direction": r.scope.get("direction"),
+                          "device": r.scope.get("device"), "af": r.scope.get("af"),
+                          "route_prefix": r.evidence.get("route_prefix"), "category": r.category,
+                          "status": ("INDETERMINATE" if r.category == faults.INDETERMINATE else
+                                     "CONFIRMED" if fp in confirmed else "PENDING_CONFIRMATION"),
+                          "fingerprint": fp})
+        rec["routes"] = {"expected": expectations, "evaluated": len(results),
+                         "devices": len({r.scope.get("device") for r in results}),
+                         "by_category": dict(sorted(by_category.items()))}
+        rec["items"] = items[:ROUTE_INTENT_MAX_ITEMS]
+        rec["items_truncated"] = max(0, len(items) - ROUTE_INTENT_MAX_ITEMS)
+        rec["confirmed_fingerprints"] = sorted(confirmed)
+    return rec
+
+
+ROUTE_INTENT_ENV = ("NMAS_TS_ROUTE_INTENT_FILE", "NMAS_TS_TOPOLOGY_REVISION", "NMAS_TS_ROUTE_INTENT_MAX_AGE_SECONDS")
+
+
+def unit_route_intent_binding(reader=None) -> dict:
+    """The route-intent binding of the *running* intake unit (its Environment=), not of this shell's settings."""
+    def show() -> str:
+        return subprocess.run(["systemctl", "show", "nmas-ts-intake.service", "-p", "Environment", "--value"],
+                              capture_output=True, text=True, timeout=10, check=False).stdout
+    try:
+        raw = (reader or show)()
+    except (OSError, subprocess.SubprocessError):
+        return {"bound": False, "error_code": "UNIT_ENVIRONMENT_UNAVAILABLE"}
+    env = dict(item.split("=", 1) for item in raw.split() if "=" in item and item.split("=", 1)[0] in ROUTE_INTENT_ENV)
+    return {"bound": bool(env.get("NMAS_TS_ROUTE_INTENT_FILE")), "intent_file": env.get("NMAS_TS_ROUTE_INTENT_FILE", ""),
+            "topology_revision": env.get("NMAS_TS_TOPOLOGY_REVISION", ""),
+            "max_age_seconds": env.get("NMAS_TS_ROUTE_INTENT_MAX_AGE_SECONDS", "")}
+
+
+def route_intent_case_record(incident: "Incident", opened: dict | None, at: datetime, *, error: str = "") -> dict:
+    """Correlates a confirmed route-intent fault (journal ``pass_id``/fingerprint) with the case and handoff it opened."""
+    doc = incident.route_evidence or {}
+    cls = incident.classification
+    return {"schema": ROUTE_INTENT_CASE_SCHEMA, "event": "route_intent_case", "pass_id": doc.get("pass_id", ""),
+            "at": at.astimezone(timezone.utc).isoformat(), "severity": "error" if error else "warning",
+            "error_code": "ROUTE_INTENT_CASE_OPEN_FAILED" if error else None, "exception": error or None,
+            "fingerprint": incident.fingerprint, "case_id": (opened or {}).get("case"), "handoff_id": (opened or {}).get("handoff"),
+            "dispatch_started": (opened or {}).get("dispatch_started"),
+            "intent_revision": doc.get("intent_revision"), "topology_revision": doc.get("topology_revision"),
+            "category": cls.category if cls else None,
+            "decision": (incident.decision or {}).get("outcome"),
+            "target_id": cls.scope.get("target_id") if cls else None, "device": incident.devices[0] if incident.devices else None,
+            "route_prefix": cls.evidence.get("route_prefix") if cls else None}
 
 
 def _kernel(device: str, interface: str) -> str:
@@ -737,6 +817,8 @@ class Intake:
     rsrc_baseline: dict[tuple[str, str], dict[str, int]] = field(default_factory=dict)   # (device, af) -> learned healthy counts
     rsrc_first_bad: dict[tuple[str, str, str], datetime] = field(default_factory=dict)
     route_intent_first_bad: dict[tuple[str, str, str], datetime] = field(default_factory=dict)
+    _route_intent_pass_id: str = field(default="", init=False, repr=False)           # correlation id of the current pass
+    _route_intent_detail: dict | None = field(default=None, init=False, repr=False)
     adj_incident_at: dict[str, tuple[datetime, str]] = field(default_factory=dict)
     cleared_since: dict[str, datetime] = field(default_factory=dict)
     dispatch_attempts: dict[str, tuple[datetime, int]] = field(default_factory=dict)
@@ -874,9 +956,30 @@ class Intake:
         return out
 
     def _intent_route_incidents(self, now: datetime) -> tuple[list[Incident], list[dict]]:
-        """Evaluate reviewed per-prefix intent against one fresh, independently revision-pinned RIB snapshot."""
+        """Run one route-intent pass and return its incidents plus one structured ``route_intent_pass`` record.
+
+        A pass never stops monitoring: an unexpected failure becomes ``ERROR`` / ``ROUTE_INTENT_PASS_EXCEPTION`` (exception
+        type only, no message, so no device output can leak) and the remaining intake work for this poll continues.
+        """
         if not self.cfg.route_intent_path or self.passes % max(1, self.cfg.routing_every):
             return [], []
+        self._route_intent_pass_id = f"RIP-{secrets.token_hex(6)}"
+        self._route_intent_detail = None
+        try:
+            incidents, status = self._intent_route_pass(now)
+        except Exception as exc:  # noqa: BLE001 - one failed pass never stops the intake
+            log.error("route intent pass %s failed: %s", self._route_intent_pass_id, type(exc).__name__)
+            incidents, status = [], [{"route_intent": "ERROR", "reason": "ROUTE_INTENT_PASS_EXCEPTION",
+                                      "exception": type(exc).__name__}]
+        detail = self._route_intent_detail or {}
+        confirmed = frozenset(i.fingerprint for i in incidents)
+        records = [route_intent_pass_record(row, pass_id=self._route_intent_pass_id, at=now, results=detail.get("results"),
+                                            expectations=detail.get("expectations", 0), confirmed=confirmed)
+                   for row in status]
+        return incidents, records
+
+    def _intent_route_pass(self, now: datetime) -> tuple[list[Incident], list[dict]]:
+        """Evaluate reviewed per-prefix intent against one fresh, independently revision-pinned RIB snapshot."""
         try:
             intent = route_intent.load(self.cfg.route_intent_path)
         except route_intent.IntentError as exc:
@@ -919,6 +1022,7 @@ class Intake:
             return [], [{"route_intent": "INDETERMINATE", "reason": "RIB_DEVICE_TIMESTAMPS_MISSING_OR_STALE",
                          "intent_revision": intent.revision, "devices": stale_devices}]
         results = route_intent.evaluate(intent, snapshot["ribs"], now=observed_at)
+        self._route_intent_detail = {"results": results, "expectations": len(intent.expectations)}
         incidents, inconclusive = [], 0
         active = set()
         for classification in results:
@@ -937,6 +1041,7 @@ class Intake:
             fp = f"RINT:{intent.revision}:{scope['target_id']}:{scope['device']}"
             route_doc = {
                 "schema": "nmas.troubleshooting.route-intent-observation/1",
+                "pass_id": getattr(self, "_route_intent_pass_id", ""),
                 "intent_revision": intent.revision, "topology_revision": intent.topology_revision,
                 "observed_at": observed_at, "age_seconds": round(age, 1),
                 "max_age_seconds": self.cfg.route_intent_max_age_seconds,
@@ -1014,9 +1119,14 @@ class Intake:
                                 **({"category": incident.category} if incident.classification else {})})
                 continue
             try:
-                results.append(open_incident(incident, self.deps, now=now))
+                opened = open_incident(incident, self.deps, now=now)
+                results.append(opened)
+                if incident.route_evidence is not None:
+                    results.append(route_intent_case_record(incident, opened, now))
             except Exception as exc:  # noqa: BLE001 - one failed intake never stops monitoring
                 results.append({"fingerprint": incident.fingerprint, "error": f"{type(exc).__name__}: {exc}"[:300]})
+                if incident.route_evidence is not None:
+                    results.append(route_intent_case_record(incident, None, now, error=type(exc).__name__))
         live = {i.fingerprint for i in incidents}
         self.suppressed = {s for s in self.suppressed if s[0] in live}
         results += self._retry_dispatch(now)

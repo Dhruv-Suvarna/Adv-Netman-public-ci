@@ -13,6 +13,17 @@ from django.core.management.base import BaseCommand
 from core.services.troubleshooting import faults, intake
 
 
+# journald (SyslogLevelPrefix=yes, the systemd default) maps a leading "<N>" to PRIORITY, so a structured record is filterable
+# with `journalctl -t nmas-ts-intake -p warning` while the JSON body stays the single source of the event.
+_JOURNAL_PRIORITY = {"error": 3, "warning": 4, "info": 6}
+
+
+def journal_line(row: dict) -> str:
+    body = json.dumps(row, default=str, sort_keys="schema" in row)
+    severity = row.get("severity") if "schema" in row else None
+    return f"<{_JOURNAL_PRIORITY[severity]}>{body}" if severity in _JOURNAL_PRIORITY else body
+
+
 class Command(BaseCommand):
     help = "Detect managed-device interface intent violations and open/dispatch Troubleshooter cases automatically."
 
@@ -38,7 +49,7 @@ class Command(BaseCommand):
                           f"budget={engine.cfg.max_cases_per_hour}/h routing={engine.cfg.routing_devices} flap>={faults.FLAP_MIN_TRANSITIONS}/{faults.FLAP_WINDOW_SECONDS}s")
         while True:
             for row in engine.poll():
-                self.stdout.write(json.dumps(row, default=str))
+                self.stdout.write(journal_line(row))
             self.stdout.flush()
             if not opts["watch"]:
                 return

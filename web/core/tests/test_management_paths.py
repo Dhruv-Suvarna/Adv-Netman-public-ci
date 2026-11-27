@@ -757,6 +757,53 @@ class BoundSshTransportTests(SimpleTestCase):
         self.assertEqual(str(caught.exception), "HOST_KEY_MISMATCH")
         self.assertEqual(server.auth_attempts, [])
 
+    def _bound_server_and_target(self, expected_host_key=None):
+        import io
+        from types import SimpleNamespace
+
+        import paramiko
+
+        from core.services.ztp import workflow
+
+        private, public, _fingerprint = workflow.generate_enrollment_key(("ssh-ed25519",), "nmas@test")
+        key = paramiko.Ed25519Key.from_private_key(io.StringIO(private))
+        server = M.KeyOnlySshServer(username="nmas-automation", authorized_public=public, outputs={})
+        self.addCleanup(server.close)
+        attachment = SimpleNamespace(host_interface="lo", source_address="127.0.0.1")
+        path = SimpleNamespace(endpoint_address="127.0.0.1", port=server.port, nmas_attachment=attachment,
+                               expected_host_key=expected_host_key or server.fingerprint)
+        return server, path, key, {"address": "127.0.0.1", "management": {"source": "PATH"}}
+
+    def test_host_key_rejection_keeps_the_netmiko_failure_as_its_cause(self):
+        server, path, key, target = self._bound_server_and_target(M.OTHER_HOST_KEY)
+        auth = {"username": "nmas-automation", "password": "", "ssh_auth": {"use_keys": True, "pkey": key}}
+        with mock.patch.object(ssh_transport, "active_path", return_value=path):
+            with self.assertRaises(ssh_transport.ManagedConnectionRejected) as caught:
+                ssh_transport.connect_eos(target, auth, 5)
+        self.assertEqual(str(caught.exception), "HOST_KEY_MISMATCH")
+        self.assertIsNotNone(caught.exception.__cause__)          # original failure chained for diagnosis, not swallowed
+        self.assertEqual(server.auth_attempts, [])
+
+    def test_non_host_key_failure_is_not_reclassified_as_a_host_key_rejection(self):
+        """Only a pinned-key refusal becomes HOST_KEY_MISMATCH; a correctly pinned host with a refused client key fails as itself."""
+        import io
+
+        import paramiko
+
+        from core.services.ztp import workflow
+
+        server, path, _authorized, target = self._bound_server_and_target()
+        other_private, _pub, _fp = workflow.generate_enrollment_key(("ssh-ed25519",), "nmas@other")
+        unauthorized = paramiko.Ed25519Key.from_private_key(io.StringIO(other_private))
+        auth = {"username": "nmas-automation", "password": "", "ssh_auth": {"use_keys": True, "pkey": unauthorized}}
+        with mock.patch.object(ssh_transport, "active_path", return_value=path):
+            with self.assertRaises(Exception) as caught:
+                ssh_transport.connect_eos(target, auth, 5)
+        self.assertNotEqual(str(caught.exception), "HOST_KEY_MISMATCH")
+        self.assertFalse(isinstance(caught.exception, ssh_transport.ManagedConnectionRejected)
+                         and str(caught.exception) == "HOST_KEY_MISMATCH")
+        self.assertIn("nmas-automation", server.auth_attempts)    # the pinned host key was accepted; authentication was tried
+
 
 class DockerFallbackGuardTests(SimpleTestCase):
     def test_container_address_never_uses_docker_when_a_managed_path_exists(self):
