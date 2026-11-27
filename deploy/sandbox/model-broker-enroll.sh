@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # Enroll or replace the provider credential (and optionally the model id) of one NMAS model broker.
 # Run in your own terminal:  sudo sh deploy/sandbox/model-broker-enroll.sh <codex|claude-a|claude-b> [model-id]
 # The key is read without echo, written only to the root-owned broker environment file, and never printed.

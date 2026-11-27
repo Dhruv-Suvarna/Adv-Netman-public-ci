@@ -30,6 +30,7 @@ from unittest import mock
 
 import yaml
 from django.test import SimpleTestCase
+from jinja2 import Environment, FileSystemLoader, StrictUndefined
 from jinja2.exceptions import UndefinedError
 
 from core.services import feature_template_renderer, platform_drivers
@@ -41,7 +42,7 @@ from core.services.test_governance.constants import REPO_ROOT, ArtifactType, Sco
 if str(REPO_ROOT) not in sys.path:
     sys.path.append(str(REPO_ROOT))
 
-from modules import eos_render, gnmi, snmp, syslog  # noqa: E402
+from modules import diagnostic_accounts, eos_render, gnmi, snmp, syslog  # noqa: E402
 
 GOLDEN = Path(__file__).resolve().parent / "fixtures" / "test_governance" / "template_golden.json"
 FAKE_SECRET = "fake-not-a-credential"
@@ -71,6 +72,12 @@ class Render:
             return eos_render.render(self.name, ctx)
         if self.kind in ("snmp", "syslog", "gnmi"):
             return {"snmp": snmp.render, "syslog": syslog.render, "gnmi": gnmi.render}[self.kind](self.name, ctx)
+        if self.kind == "diag":
+            if ctx == self.context:                      # the real producer: diagnostic_accounts.render_ceos (username is its constant)
+                return diagnostic_accounts.render_ceos(ctx["password"])
+            # a modified context: the same template through the producer's own loader and StrictUndefined policy
+            env = Environment(loader=FileSystemLoader(diagnostic_accounts.BASE / "templates/monitoring"), undefined=StrictUndefined)
+            return env.get_template(self.name).render(**ctx) + "\n"
         rows = feature_template_renderer.render_descriptors(template_name=self.name, fields=ctx["fields"], flags=ctx["flags"])
         return json.dumps(rows, sort_keys=True)
 
@@ -114,6 +121,9 @@ def produced() -> dict[str, list[Render]]:
     keep(Render("templates/monitoring/ceos_gnmi_security.j2", "gnmi", "ceos_gnmi_security.j2",
                 {"ssl_profile": gnmi.SSL_PROFILE, "username": "nmas-telemetry", "password": FAKE_SECRET}))
     keep(Render("templates/monitoring/ceos_gnmi_enable.j2", "gnmi", "ceos_gnmi_enable.j2", {"ssl_profile": gnmi.SSL_PROFILE}))
+    # modules/diagnostic_accounts.apply_ceos: the dedicated read-only Troubleshooter identity (network-operator role)
+    keep(Render("templates/monitoring/ceos_diag_user.j2", "diag", "ceos_diag_user.j2",
+                {"username": diagnostic_accounts.USERNAME, "password": FAKE_SECRET}))
 
     original = feature_template_renderer.render_descriptors
 

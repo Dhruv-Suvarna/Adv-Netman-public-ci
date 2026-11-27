@@ -51,5 +51,11 @@ class RouteSmokeTests(TestCase):
     def test_automation_section_shells_load_and_unknown_section_is_404(self):
         for section in get_automation_sections():
             with self.subTest(slug=section["slug"]):
-                self.assertEqual(self.client.get(reverse("core:automation_section", args=[section["slug"]])).status_code, 200)
+                response = self.client.get(reverse("core:automation_section", args=[section["slug"]]))
+                if section["slug"] == "troubleshooting":
+                    # the legacy Phase-3 shell URL lands on the real Troubleshooter workflow (views.automation_section)
+                    # (access to the target itself is RBAC-gated and covered by test_troubleshooting_access)
+                    self.assertRedirects(response, reverse("core:troubleshooting_list"), fetch_redirect_response=False)
+                else:
+                    self.assertEqual(response.status_code, 200)
         self.assertEqual(self.client.get(reverse("core:automation_section", args=["not-a-real-section"])).status_code, 404)

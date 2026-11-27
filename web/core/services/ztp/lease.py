@@ -17,13 +17,16 @@ Rules (generic: no device is special-cased).
   frees its lease): it is recorded on the session, never a regression, and management contact uses the reserved address, which
   the open session still holds exclusively (``unique_open_ztp_reserved_address``).
 * A renewal of the same binding (same idempotency key) on a lapsed session re-advances it to DISCOVERED -- but only after the
-  bootstrap authorization is decided again for the fresh lease (a time-bounded authorization that expired meanwhile refuses).
+  bootstrap authorization is decided again for the fresh lease (a time-bounded authorization that expired meanwhile refuses)
+  and the attachment's upstream is still ready to carry it (``attachments.upstream_problems``: for a downstream device, its
+  NMAS upstream IN_SERVICE and ADMITTED).  A refused renewal is recorded; the session stays awaiting discovery.
 * Controlled re-discovery ("renew / solicit when the provisioning interface becomes available").  NMAS cannot make a DHCP client
   renew; it never flaps a link to provoke one.  When an open session's bootstrap path has just become usable (typically: the
-  upstream it waits behind was commissioned and admitted -- R4 -> R6 -> R7), ``expect_renewal`` checks the path with
-  ``dependencies.evaluate`` and records a bounded window derived from the platform adapter's DOCUMENTED native retry interval.
+  upstream it waits behind was commissioned and admitted -- R4 -> R6 -> R7), ``expect_renewal`` checks the authorization is
+  still in force and the path with the session-open gate (``workflow.bootstrap_path_checks``) and records a bounded window derived from the platform adapter's DOCUMENTED native retry interval.
   ``renewal_status`` then reports PENDING / OBSERVED / OVERDUE from lease evidence alone; OVERDUE returns the adapter's native
   recovery actions.  An adapter without a documented interval cannot open a window (``NATIVE_RETRY_UNDOCUMENTED``).
+* No lease outcome grants anything beyond discovery: admission, isolation release and routing stay with commissioning.
 * DHCPv6 SOLICIT: no adapter in this codebase discovers over DHCPv6 (``DiscoveryParameters.dhcp_family`` is 4 for every
   implemented adapter), so an IPv6 re-discovery is refused as ``DHCPV6_DISCOVERY_NOT_IMPLEMENTED`` rather than assumed.
 """
@@ -36,6 +39,7 @@ from django.db import transaction
 from django.utils import timezone
 
 from ... import models
+from ..devices import attachments as attachment_service
 from ..devices import authorization as authorization_service
 from ..devices import events
 from ..devices.codes import blocker
@@ -135,6 +139,9 @@ def resume(observation, *, now=None):
     request = {**request_for_lease(session, observation), "scope": "DHCP_DISCOVERY"}
     auth = models.BootstrapAuthorization.objects.get(pk=session.authorization_id)
     decision = authorization_service.decide(auth, request, now=now)
+    attachment = auth.attachment
+    upstream = attachment_service.upstream_problems(session.device.name, attachment.upstream_device) if attachment else \
+        [blocker("ATTACHMENT_NOT_FOUND")]
     with transaction.atomic():
         fresh = models.ZtpSession.objects.select_for_update().get(pk=session.pk)
         device = models.ManagedDevice.objects.get(pk=fresh.device_id)
@@ -148,6 +155,12 @@ def resume(observation, *, now=None):
                           from_state=device.lifecycle_state, to_state=device.lifecycle_state, bootstrap_authorization=fresh.authorization,
                           blockers=list(decision.blockers), evidence={**evidence, "meaning": "renewed lease, but the bootstrap is no longer authorized"})
             return f"REFUSED:{decision.decision}"
+        if upstream:
+            events.record(device, "ZTP_LEASE_RENEWED", Outcome.REFUSED, actor=ACTOR, actor_kind=events.AUTOMATION,
+                          from_state=device.lifecycle_state, to_state=device.lifecycle_state, bootstrap_authorization=fresh.authorization,
+                          blockers=upstream, evidence={**evidence, "upstream": getattr(attachment, "upstream_device", ""),
+                                                       "meaning": "renewed lease, but the upstream no longer meets its readiness gates"})
+            return f"REFUSED:{upstream[0]['code']}"
         fresh.stage = Stage.DISCOVERED
         fresh.discovery = {"lease_observation": observation.pk, "address": observation.address, "relay": observation.relay_address,
                            "upstream": f"{observation.upstream_device}:{observation.upstream_interface}", "observed_at": now.isoformat(),
@@ -173,22 +186,26 @@ def renewal_window_seconds(adapter) -> int | None:
 def expect_renewal(session, *, actor: str, family: int = 4, checks=None, now=None):
     """Open the bounded window in which the device's native DHCP retry must reach NMAS over a path that just became usable.
 
-    -> (ok, blockers, window dict).  Refused when the session is not awaiting discovery, the path's dependency checks fail (e.g.
-    the upstream is not yet commissioned / admitted), the adapter documents no retry interval, or IPv6 discovery is requested."""
+    -> (ok, blockers, window dict).  Refused when the session is not awaiting discovery, the bootstrap authorization is no longer
+    in force (revoked, or past its window even if not yet swept), the path's dependency checks fail (e.g. the upstream is not
+    yet commissioned / admitted), the adapter documents no retry interval, or IPv6 discovery is requested."""
     now = now or timezone.now()
     problems = []
     if family != 4:
         problems.append(blocker("DHCPV6_DISCOVERY_NOT_IMPLEMENTED", family=family))
     if session.stage != Stage.AWAITING_DISCOVERY:
         problems.append(blocker("ZTP_SESSION_STATE_INVALID", stage=session.stage))
+    from . import policy
+
+    problems += policy.authorization_problems(models.BootstrapAuthorization.objects.filter(pk=session.authorization_id).first(), now=now)
     adapter = adapters.get(session.adapter)
     window = renewal_window_seconds(adapter)
     if window is None:
         problems.append(blocker("NATIVE_RETRY_UNDOCUMENTED", adapter=session.adapter))
     if checks is None:
-        from . import dependencies
+        from . import workflow
 
-        checks = dependencies.evaluate(session.device, session.authorization.attachment, session.network)
+        checks = workflow.bootstrap_path_checks(session.device, session.authorization.attachment, session.network)
     failing = [c for c in checks if not c["ok"]]
     if failing:
         problems.append(blocker("ZTP_BOOTSTRAP_PATH_NOT_READY", failing=[{"check": c["check"], "code": c["code"], "detail": c["detail"]}

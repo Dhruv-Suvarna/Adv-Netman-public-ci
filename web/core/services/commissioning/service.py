@@ -25,7 +25,7 @@ from __future__ import annotations
 import hashlib
 import json
 from dataclasses import dataclass, field
-from datetime import timedelta
+from datetime import datetime, timedelta
 
 from django.conf import settings
 from django.db import IntegrityError, transaction
@@ -190,16 +190,34 @@ def _check(rows, name, ok, code, detail=""):
     rows.append({"check": name, "ok": bool(ok), "code": "" if ok else code, "detail": str(detail)[:200]})
 
 
-def authorization_intact(auth) -> bool:
+def authorization_intact(auth, *, completed_at=None, now=None) -> bool:
     """The bootstrap authorization was used as approved and never withdrawn by a person: CONSUMED, still APPROVED, or closed by
     the ZTP workflow itself when the bootstrap completed (its remaining uses).  An operator's revocation or an expiry before
-    completion stops commissioning."""
+    completion stops commissioning.
+
+    Expiry is read from the window, not only from the state (the sweep runs on demand): a still-APPROVED grant must be inside
+    ``valid_from``/``valid_until`` now, and a completion-closed grant (CONSUMED / closed by the workflow) only counts when the
+    bootstrap completed (``completed_at``: the session's verification time) before ``valid_until``."""
     from ..ztp import workflow
 
     if auth is None:
         return False
+    now = now or timezone.now()
     State = models.BootstrapAuthorizationState
-    return auth.state in (State.APPROVED, State.CONSUMED) or (auth.state == State.REVOKED and auth.revoked_by == workflow.SYSTEM)
+    if auth.state == State.APPROVED:
+        return auth.valid_from <= now < auth.valid_until
+    if auth.state == State.CONSUMED or (auth.state == State.REVOKED and auth.revoked_by == workflow.SYSTEM):
+        return completed_at is None or completed_at < auth.valid_until
+    return False
+
+
+def bootstrap_completed_at(session):
+    """When NMAS's authenticated verification of the bootstrap succeeded (None: not recorded)."""
+    value = (getattr(session, "verification", None) or {}).get("verified_at") if session is not None else None
+    try:
+        return datetime.fromisoformat(value) if value else None
+    except (TypeError, ValueError):
+        return None
 
 
 def readiness(record, *, approved: bool = False) -> tuple[list[dict], dict]:
@@ -218,8 +236,10 @@ def readiness(record, *, approved: bool = False) -> tuple[list[dict], dict]:
            and policy.attachment.approval_state == models.AttachmentApproval.APPROVED, "ISOLATION_DEVICE_NOT_OBSERVED",
            policy.attachment.verification_state)
     auth = session.authorization if session is not None else None
-    _check(rows, "bootstrap_authorization", authorization_intact(auth), "AUTHORIZATION_STATE_INVALID",
-           f"{getattr(auth, 'state', 'none')} by {getattr(auth, 'revoked_by', '') or '-'}")
+    completed_at = bootstrap_completed_at(session)
+    _check(rows, "bootstrap_authorization", authorization_intact(auth, completed_at=completed_at), "AUTHORIZATION_STATE_INVALID",
+           f"{getattr(auth, 'state', 'none')} by {getattr(auth, 'revoked_by', '') or '-'}; window ends "
+           f"{getattr(getattr(auth, 'valid_until', None), 'isoformat', lambda: '-')()}; bootstrap completed {completed_at or '-'}")
     _check(rows, "native_bootstrap", session is not None and bool((session.verification or {}).get("ok")), "BOOTSTRAP_VERIFICATION_FAILED",
            f"ztp_state={device.ztp_state} (observed; native ZTP completion is never admission)")
     found = transport.problems(device, purpose="READ")

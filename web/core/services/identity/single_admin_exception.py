@@ -11,10 +11,9 @@ from __future__ import annotations
 
 import hashlib
 import json
-import os
 import stat
 from dataclasses import dataclass, field
-from datetime import datetime, timedelta, timezone as dt_timezone
+from datetime import datetime, timezone as dt_timezone
 from pathlib import Path
 
 from django.contrib.auth import get_user_model
@@ -119,6 +118,22 @@ def load(path: Path = CONFIG_PATH) -> Result:
     return parse(document)
 
 
+def deployment_lab_id() -> str:
+    """The lab this NMAS deployment serves: ``lab_name`` of the tracked deployment descriptor (``REPO_ROOT/inventory.yml``).
+
+    Read directly, never through the device-health engine: the identity package (website MFA / RBAC) must not depend on device
+    health, credentials or execution.  An unreadable descriptor yields "" and so fails closed (EXCEPTION_LAB_MISMATCH)."""
+    import yaml
+    from django.conf import settings
+
+    try:
+        with open(Path(settings.REPO_ROOT) / "inventory.yml", encoding="utf-8") as handle:
+            document = yaml.safe_load(handle)
+    except (OSError, yaml.YAMLError):
+        return ""
+    return str(document.get("lab_name") or "") if isinstance(document, dict) else ""
+
+
 def _user(capability: Capability):
     user = get_user_model().objects.filter(username=capability.actor, is_active=True).first()
     if user is None or not policy.user_can(user, policy.Action.SECURITY_ADMIN) \
@@ -144,9 +159,7 @@ def state(capability: Capability, *, now=None) -> Result:
     now = now or timezone.now()
     if _user(capability) is None:
         return _refuse("EXCEPTION_ACTOR_UNAUTHORIZED", capability=capability)
-    from ..health import inventory as health_inventory
-
-    if str((health_inventory.load_inventory() or {}).get("lab_name") or "") != capability.lab_id:
+    if deployment_lab_id() != capability.lab_id:
         return _refuse("EXCEPTION_LAB_MISMATCH", capability=capability)
     events = _events(capability)
     activations = [e for e in events if _operation(e) == "ACTIVATE" and (e.metadata or {}).get("scope_digest") == capability.digest]
