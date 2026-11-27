@@ -24,7 +24,7 @@ from django.test import TestCase
 from core import models
 from core.services.devices import bulk_admission as ba, host_key_pins
 from core.services.management import paths
-from core.tests.test_single_admin_lab_exception import SingleAdminExceptionTests
+from core.tests import test_single_admin_lab_exception as sae_tests
 
 KEY = "ssh-ed25519 " + base64.b64encode(b"\x00\x00\x00\x0bssh-ed25519\x00\x00\x00\x20" + bytes(range(32))).decode()
 OTHER = "ssh-ed25519 " + base64.b64encode(b"\x00\x00\x00\x0bssh-ed25519\x00\x00\x00\x20" + bytes(range(1, 33))).decode()
@@ -69,7 +69,7 @@ class BatchTests(TestCase):
 
 
 class HostKeyEvidenceTests(TestCase):
-    setUp = SingleAdminExceptionTests.setUp
+    setUp = sae_tests.SingleAdminExceptionTests.setUp
     # set by SingleAdminExceptionTests.setUp
     device: models.ManagedDevice
     attachment: models.DeviceAttachment
@@ -120,7 +120,7 @@ class HostKeyEvidenceTests(TestCase):
 
 
 class GovernedPhaseTests(TestCase):
-    setUp = SingleAdminExceptionTests.setUp
+    setUp = sae_tests.SingleAdminExceptionTests.setUp
     # set by SingleAdminExceptionTests.setUp
     device: models.ManagedDevice
     attachment: models.DeviceAttachment
