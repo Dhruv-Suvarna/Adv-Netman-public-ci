@@ -175,6 +175,11 @@ def _static_route(req, ctx):
     return Outcome(S.FAIL, "ROUTE_MISSING", f"Route {prefix} is not present with the expected next hop.", {"routes_for_prefix": candidates[:5]}, expected, group)
 
 
+def _never_adjacent(facts) -> bool:
+    """A loopback never forms an IGP adjacency (OSPF advertises it as a stub host route; IS-IS treats it as passive)."""
+    return str(facts.get("interface") or "").strip().lower().startswith(("loopback", "lo"))
+
+
 def _ospf(req, ctx):
     group, missing = _need(ctx, req.device, "ospf")
     if missing:
@@ -182,6 +187,8 @@ def _ospf(req, ctx):
     facts = _facts(req)
     if facts.get("passive"):
         return Outcome(S.NOT_APPLICABLE, "OSPF_EXPECTED_FULL", "The interface is passive; no adjacency is expected.")
+    if _never_adjacent(facts):
+        return Outcome(S.NOT_APPLICABLE, "OSPF_EXPECTED_FULL", "The interface is a loopback; no adjacency is expected.")
     interface, family = facts.get("interface"), str(facts.get("version") or "OSPFV2").upper()
     neighbors = [n for n in group.data if n["interface"] == interface and n["family"] == family]
     expected = {"interface": interface, "family": family, "state": "FULL"}
@@ -205,6 +212,8 @@ def _isis(req, ctx):
     facts = _facts(req)
     if facts.get("passive"):
         return Outcome(S.NOT_APPLICABLE, "ISIS_EXPECTED_UP", "The interface is passive; no adjacency is expected.")
+    if _never_adjacent(facts):
+        return Outcome(S.NOT_APPLICABLE, "ISIS_EXPECTED_UP", "The interface is a loopback; no adjacency is expected.")
     interface = facts.get("interface")
     neighbors = [n for n in group.data if n["interface"] == interface]
     expected = {"interface": interface, "state": "UP"}

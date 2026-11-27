@@ -177,7 +177,7 @@ class CommissioningViewClosureTests(Base):
         first = models.ProductionAdmission.objects.get(device=self.device)
         self.assertEqual(self.codes(self.approver.post(self.url("admission_cancel", first.admission_id), {"reason": "window closed"})), [])
         self.assertEqual(A.get_admission(first.pk).state, models.AdmissionState.CANCELLED)
-        planned = A.plan(C.get_record(record.pk), actor=L.OPERATOR, expectations=SERVICE_EXPECT).admission
+        planned = A.plan(C.get_record(record.pk), actor=L.OPERATOR, expectations=SERVICE_EXPECT, access=self.f.access).admission
         checked = A.precheck(planned, actor=L.OPERATOR, access=self.f.access).admission
         approved = A.approve(checked, actor=L.APPROVER, confirmation=checked.evidence_digest).admission
         releasing = A._save(approved, state=models.AdmissionState.RELEASING)            # a crash right after the write-ahead

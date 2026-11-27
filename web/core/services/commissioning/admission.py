@@ -172,6 +172,10 @@ def validate_expectations(raw: dict) -> tuple[dict, list[dict]]:
     return clean, [blocker("ADMISSION_EXPECTATIONS_INVALID", detail=p) for p in problems]
 
 
+def _default_access_for(policy):
+    return isolation.default_access(policy.upstream_platform)
+
+
 def _default_access(admission):
     """The production access of the admission's upstream platform (cEOS unless the policy names Ubuntu/FRR)."""
     policy = models.IsolationPolicy.objects.filter(pk=admission.isolation_policy_id).first()
@@ -312,7 +316,7 @@ def current_problems(admission) -> list[dict]:
 
 
 # ------------------------------------------------------------------------------------------------------------- workflow
-def plan(record, *, actor: str, expectations: dict) -> AdmissionResult:
+def plan(record, *, actor: str, expectations: dict, access=None) -> AdmissionResult:
     action = "ADM_PLAN"
     problems = plan_problems(record)
     clean, invalid = validate_expectations(expectations)
@@ -320,9 +324,17 @@ def plan(record, *, actor: str, expectations: dict) -> AdmissionResult:
     if problems:
         return _refuse(record.device, action, problems, actor=actor)
     policy = record.isolation_policy
+    reference = {"commissioning": record.commissioning_id}
+    if clean["routing"] == "OSPF" and not isolation.is_frr(policy):
+        # the adjacency the admission expects needs the port out of OSPF passive: read which processes hold it passive now
+        executor, text, _digest, problem = isolation._read_upstream(policy, access or _default_access_for(policy))
+        isolation._close(executor)
+        if problem:
+            return _refuse(record.device, action, [problem], actor=actor)
+        reference["ospf_release"] = isolation.admission_ospf_release(policy, text)
     try:
         with transaction.atomic():
-            released = isolation.create_release(policy, actor=actor, reference={"commissioning": record.commissioning_id})
+            released = isolation.create_release(policy, actor=actor, reference=reference)
             if not released.ok:
                 raise _Abort(released.blockers)
             policy = models.IsolationPolicy.objects.get(pk=policy.pk)

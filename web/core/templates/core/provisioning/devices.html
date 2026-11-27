@@ -3,7 +3,7 @@
 {% block content %}
 <div class="page-header">
   <h1>Managed devices</h1>
-  <p><a href="{% url 'core:provisioning_list' %}">&larr; New device provisioning</a> · <a href="{% url 'core:managed_devices_json' %}">JSON</a> · <a href="{% url 'core:ztp_networks' %}">Bootstrap networks (native ZTP)</a></p>
+  <p><a href="{% url 'core:provisioning_list' %}">&larr; New device provisioning</a> · <a href="{% url 'core:managed_devices_json' %}">JSON</a> · <a href="{% url 'core:ztp_networks' %}">Bootstrap networks (native ZTP)</a> · <a href="{% url 'core:lifecycle_overview' %}">Lifecycle stages</a></p>
   <p>One resolver decides which devices NMAS manages and how. <code>inventory.yml</code> is authoritative for the devices it lists; the
      provisioning registry and the lifecycle registry can only add names. Every action on this page writes the NMAS database only:
      no device is contacted, nothing is written to NetBox and no credential is created.</p>

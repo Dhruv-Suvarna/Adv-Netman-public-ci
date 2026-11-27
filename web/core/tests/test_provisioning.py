@@ -518,6 +518,22 @@ class CancelAndImmutabilityTests(TestCase):
         lab.through("provision")
         self.assertEqual(ps.cancel(lab.run, actor="op", gateway=lab.gateway).codes, ["WRONG_STAGE"])
 
+    def test_a_configured_run_whose_commissioning_was_aborted_is_closed(self):
+        lab = p.Lab()
+        lab.through("provision")
+        self.assertEqual(lab.run.status, S.POSTCHECKED)
+        result = ps.close_configured(lab.run, actor="op", gateway=lab.gateway, reason="commissioning aborted")
+        self.assertTrue(result.ok)
+        self.assertEqual(lab.run.status, S.CANCELLED)
+        self.assertEqual(lab.run.failure["code"], "COMMISSIONING_ABORTED")
+        self.assertTrue(lab.run.failure["production_configuration_left_on_device"])
+        self.assertIsNone(registry.live_entry(lab.run.device_name))   # the name can be commissioned again
+
+    def test_close_configured_refuses_any_other_stage(self):
+        lab = p.Lab()
+        lab.through("candidate")
+        self.assertEqual(ps.close_configured(lab.run, actor="op", gateway=lab.gateway).codes, ["WRONG_STAGE"])
+
     def test_finished_run_and_its_evidence_are_immutable(self):
         lab = p.Lab()
         lab.through("identity")

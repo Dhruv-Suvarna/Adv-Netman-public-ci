@@ -412,6 +412,9 @@ def abort(record, *, actor: str, reason: str) -> CommissioningResult:
                            failure={"code": "ABORTED", "reason": text, "production_configuration_left_on_isolated_device": configured})
             if run is not None and not run.is_terminal and run.status not in (P.PROVISIONING, P.POSTCHECKED, P.NSOT_SYNCED):
                 ps.cancel(run, actor=actor, reason=f"commissioning aborted: {text}")
+            elif run is not None and configured and not run.is_terminal and run.status == P.POSTCHECKED:
+                # configured but never admitted: close the run so the device can be commissioned again
+                ps.close_configured(run, actor=actor, reason=f"commissioning aborted: {text}")
             state = models.ManagedDevice.objects.get(pk=record.device_id).lifecycle_state
             if state in (S.READY_FOR_COMMISSIONING, S.COMMISSIONING):
                 _transition(record.device, S.ISOLATED, actor=actor, record=record)

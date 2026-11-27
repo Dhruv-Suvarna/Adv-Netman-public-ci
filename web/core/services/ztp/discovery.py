@@ -34,13 +34,13 @@ from django.utils import timezone
 from ... import models
 from ..devices import authorization as authorization_service
 from ..devices import events, lifecycle
-from . import adapters, dhcp, policy
+from . import adapters, dhcp, lease, policy
 
 ACTOR = "system:ztp-dhcp-ingest"
 Outcome = models.DeviceLifecycleEventOutcome
 L = models.DhcpLeaseOutcome
 MAX_LEASE_FILE = 4 * 1024 * 1024
-INACTIVE_STATES = frozenset({"free", "released", "expired", "abandoned", "backup", "reset"})
+INACTIVE_STATES = lease.INACTIVE_STATES
 
 
 def idempotency_key(network, row: dict) -> str:
@@ -70,6 +70,8 @@ def ingest(network, *, text: str | None = None, now=None, runner=None) -> dict:
             continue
         summary["new" if created else "repeat"] += 1
         summary["outcomes"][observation.outcome] = summary["outcomes"].get(observation.outcome, 0) + 1
+    # lease lifetime: a DISCOVERED session whose only proof of presence expired or ended goes back to awaiting discovery
+    summary["lapsed"] = lease.reconcile(network, now=now)
     return summary
 
 
@@ -112,6 +114,7 @@ def fold(network, row: dict, *, now=None):
         existing.binding_state = row.get("binding_state", "")[:16]
         existing.lease_starts, existing.lease_ends = row.get("starts"), row.get("ends")
         existing.save(update_fields=["last_seen", "seen_count", "binding_state", "lease_starts", "lease_ends"])
+        lease.resume(existing, now=now)            # a genuine renewal re-advances a lapsed session (authorization re-decided)
         return existing, False
     upstream = _trusted_upstream(network, row)
     interface = str(row.get("circuit_id") or "")[:64]
@@ -186,7 +189,9 @@ def _correlate(session, fields: dict, row: dict, now):
         if outcome == L.CORRELATED:
             fresh.discovery = {"lease_observation": observation.pk, "address": observation.address, "relay": observation.relay_address,
                                "upstream": f"{observation.upstream_device}:{observation.upstream_interface}",
-                               "native_ztp_request": native, "claimed_keys": sorted(identity_claims), "observed_at": now.isoformat()}
+                               "native_ztp_request": native, "claimed_keys": sorted(identity_claims), "observed_at": now.isoformat(),
+                               # an open controlled re-discovery window stays on the session (its outcome is read from lease evidence)
+                               **({"renewal": fresh.discovery["renewal"]} if "renewal" in (fresh.discovery or {}) else {})}
         fresh.version += 1
         fresh.save(update_fields=["stage", "discovery", "version", "updated_at"])
         device = models.ManagedDevice.objects.get(pk=device.pk)

@@ -89,7 +89,8 @@ def build(*, device_id: str, upstream: str, interface: str, network, config_text
                               # OSPFv3 keys only when the port runs OSPFv3: an IPv4-only policy keeps its earlier intent hash
                               **({"ospf6_passive": routing["ospf6"], "already_passive6": routing["already_passive6"]}
                                  if routing["ospf6"] or routing["already_passive6"] else {})},
-            "MANAGEMENT_PLANE": {"V4": management["V4"], "V6": management["V6"]},
+            # the control-plane key only when other services need it: an SSH-only policy keeps its earlier intent hash
+            "MANAGEMENT_PLANE": {"V4": management["V4"], "V6": management["V6"], **({"CP": management["CP"]} if management.get("CP") else {})},
         },
     }
     if problems:
@@ -104,7 +105,8 @@ def build(*, device_id: str, upstream: str, interface: str, network, config_text
         if found:
             problems.append(_problem("ISOLATION_NAME_COLLISION", f"{op['key']}: the upstream already holds {found[0][:120]}"))
     for name, keyword in ((names["in4"], "ip"), (names["out4"], "ip"), (names["mgmt4"], "ip"),
-                          (names["in6"], "ipv6"), (names["out6"], "ipv6"), (names["mgmt6"], "ipv6")):
+                          (names["in6"], "ipv6"), (names["out6"], "ipv6"), (names["mgmt6"], "ipv6"),
+                          (names["cp4"], "ip"), (names["cp6"], "ipv6")):
         if eos.acl_entries(config_text, name, keyword) is not None and not any(p["code"] == "ISOLATION_NAME_COLLISION" for p in problems):
             problems.append(_problem("ISOLATION_NAME_COLLISION", f"{keyword} access-list {name} already exists"))
     return intent, ([] if problems else ops), problems, facts
@@ -130,6 +132,10 @@ def acl_exact(config_text: str, intent: dict) -> list[str]:
         element = elements["MANAGEMENT_PLANE"].get(family)
         if element and element["mode"] == "ADD":
             wanted.append((element["acl"], keyword, element["entries"]))
+    for tag, keyword in (("v4", "ip"), ("v6", "ipv6")):
+        control = (elements["MANAGEMENT_PLANE"].get("CP") or {}).get(tag)
+        if control:
+            wanted.append((control["acl"], keyword, control["entries"]))
     for name, keyword, entries in wanted:
         configured = eos.acl_entries(config_text, name, keyword)
         if configured is None or [e for e in configured if e != "counters per-entry"] != list(entries):

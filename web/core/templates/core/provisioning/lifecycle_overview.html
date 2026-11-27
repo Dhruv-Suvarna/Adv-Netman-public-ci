@@ -1,0 +1,37 @@
+{% extends "core/base.html" %}
+{% block title %}Device lifecycle{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>Device lifecycle</h1>
+  <p><a href="{% url 'core:managed_devices' %}">&larr; Managed devices</a> · <a href="{% url 'core:lifecycle_overview_json' %}">JSON</a></p>
+  <p>Each stage is derived from the record that owns it (registration, DHCP discovery, identity verification, bootstrap authorization,
+     ZTP, isolation, commissioning / admission, maintenance, decommissioning). Nothing on this page contacts a device or writes a record.
+     <strong>PREDATES_NMAS</strong> marks a device adopted into NMAS: it has no NMAS onboarding history and its admission stays
+     <code>LEGACY_PREEXISTING</code>. That is a truthful classification, not a gap to fill in.</p>
+</div>
+
+<div class="card-grid">
+  <div class="card"><h3>{{ report.summary.devices }}</h3><p>registered devices</p></div>
+  <div class="card"><h3>{{ report.summary.admitted }}</h3><p>admitted by NMAS</p></div>
+  <div class="card"><h3>{{ report.summary.legacy_preexisting }}</h3><p>legacy pre-existing</p></div>
+  <div class="card"><h3>{{ report.summary.identity_verified }}</h3><p>identity verified</p></div>
+  <div class="card"><h3>{{ report.summary.chains_intact }} / {{ report.summary.devices }}</h3><p>evidence chains intact</p></div>
+  <div class="card"><h3>{{ report.summary.ready }}</h3><p>ready (stored records)</p></div>
+</div>
+
+<div class="card" style="margin-top:16px; overflow-x:auto;">
+  <table class="data-table">
+    <thead><tr><th>Device</th><th>Platform</th><th>Admission</th>{% for s in stages %}<th><small>{{ s }}</small></th>{% endfor %}<th>Ready</th><th>Chain</th></tr></thead>
+    <tbody>{% for d in report.devices %}<tr>
+      <td><a href="{% url 'core:lifecycle_device' d.device %}">{{ d.name }}</a> <small><code>{{ d.device }}</code></small></td>
+      <td>{{ d.platform }}</td>
+      <td>{{ d.admission_state }}</td>
+      {% for s in d.stages %}<td title="{{ s.basis }}"><span class="badge badge--{{ s.badge }}">{{ s.status }}</span></td>{% endfor %}
+      <td>{% if d.verdicts.readiness.ready %}<span class="badge badge--success">yes</span>{% else %}<span class="badge badge--danger" title="{{ d.verdicts.readiness.reasons|join:'; ' }}">no</span>{% endif %}</td>
+      <td>{% if d.evidence.chain_intact %}<span class="badge badge--success">intact</span>{% else %}<span class="badge badge--danger">BROKEN</span>{% endif %}</td>
+    </tr>{% endfor %}</tbody>
+  </table>
+</div>
+<p style="color:var(--text-muted); font-size:0.85rem;">Generated {{ report.generated_at }}. "Ready" is computed from stored lifecycle records;
+   live reachability is the health engine's verdict.</p>
+{% endblock %}

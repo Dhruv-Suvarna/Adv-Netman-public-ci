@@ -11,6 +11,12 @@ Every rendered statement was exercised on cEOS 4.36.2F in a disposable namespace
   both.  RIP has no ``passive-interface`` on 4.36.2F; IS-IS, OSPFv3 and BGP on the port are refused, never guessed.
 * ``ip access-group <acl> out`` / ``ipv6 access-group <acl> out`` drops FORWARDED traffic leaving the port towards the
   device; traffic the upstream originates itself (its DHCP relay replies, ND / RA, its own pings) is not filtered.
+* ``system control-plane / ip access-group <acl> in`` and ``ipv6 access-group <acl> in`` replace the built-in
+  ``default-control-plane-acl`` for traffic ADDRESSED TO the switch (every service: SSH, eAPI HTTP/HTTPS, NETCONF, gNMI,
+  SNMP).  Per-service ACLs are not enough on 4.36.2F (live, evidence lab9-mgmt-plane): the eAPI ``vrf default / ip
+  access-group`` is accepted but does not filter, gNMI has no IPv6 ACL and NETCONF has none.  NMAS installs, only while the
+  port is isolated, a copy of the built-in ACL preceded by the bootstrap denies; ``no ip access-group <acl> in`` restores the
+  built-in ACL exactly.  IPv6 link-local is denied for TCP and SNMP only (OSPFv3 hellos and ND on other links are link-local).
 * ``management ssh / ip access-group <acl> in`` and ``ipv6 access-group <acl> in`` close the upstream's SSH service to
   the denied sources.  The device reaches that service over IPv4, its SLAAC / static IPv6 address AND link-local, so the
   IPv6 service ACL also denies fe80::/10 while the port is isolated (link-local SSH to the upstream is closed for all).
@@ -46,7 +52,7 @@ def acl_names(device_id: str) -> dict:
         raise RenderError("ISOLATION_DEVICE_INELIGIBLE", "malformed device id")
     base = f"{ACL_PREFIX}{device_id}"
     return {"in4": f"{base}-V4", "in6": f"{base}-V6", "out4": f"{base}-V4-OUT", "out6": f"{base}-V6-OUT",
-            "mgmt4": f"{base}-MGMT4", "mgmt6": f"{base}-MGMT6"}
+            "mgmt4": f"{base}-MGMT4", "mgmt6": f"{base}-MGMT6", "cp4": f"{base}-CP4", "cp6": f"{base}-CP6"}
 
 
 def _port(value: int) -> str:
@@ -95,6 +101,85 @@ def management_entries(family: str, prefixes: list[str]) -> list[str]:
         entries.append(f"{sequence} deny {keyword} {ipaddress.ip_network(prefix, strict=True)} any")
         sequence += 10
     return [*entries, f"{sequence} permit {keyword} any any"]
+
+
+# cEOS 4.36.2F built-in ``default-control-plane-acl`` (read-only; ``show ip|ipv6 access-lists default-control-plane-acl``),
+# copied after NMAS's bootstrap entries so every other source keeps exactly the built-in treatment.
+# Written in RUNNING-CONFIG form (EOS reorders port lists on read-back: bootps bootpc ntp snmp ... rip ldp), so read-back is exact.
+DEFAULT_CONTROL_PLANE = {
+    "v4": ("10 permit icmp any any", "20 permit ip any any tracked", "30 permit udp any any eq bfd ttl eq 255",
+           "40 permit udp any any eq bfd-echo ttl eq 254", "50 permit udp any any eq multihop-bfd micro-bfd sbfd",
+           "60 permit udp any eq sbfd any eq sbfd-initiator", "70 permit ospf any any",
+           "80 permit tcp any any eq ssh telnet www snmp bgp https msdp ldp netconf-ssh gnmi",
+           "90 permit udp any any eq bootps bootpc ntp snmp ptp-event ptp-general rip ldp", "100 permit tcp any any eq mlag ttl eq 255",
+           "110 permit udp any any eq mlag ttl eq 255", "120 permit vrrp any any", "130 permit ahp any any", "140 permit pim any any",
+           "150 permit igmp any any", "160 permit tcp any any range 5900 5910", "170 permit tcp any any range 50000 50100",
+           "180 permit udp any any range 51000 51100", "190 permit tcp any any eq 3333", "200 permit tcp any any eq nat ttl eq 255",
+           "210 permit tcp any eq bgp any", "220 permit rsvp any any", "230 permit tcp any any eq 9340", "240 permit tcp any any eq 9559",
+           "250 permit udp any any eq 8503", "260 permit udp any any eq lsp-ping", "270 permit udp any eq lsp-ping any range 51900 51999"),
+    "v6": ("10 permit icmpv6 any any", "20 permit ipv6 any any tracked", "30 permit udp any any eq bfd hop-limit eq 255",
+           "40 permit udp any any eq bfd-echo hop-limit eq 254", "50 permit udp any any eq multihop-bfd micro-bfd sbfd",
+           "60 permit udp any eq sbfd any eq sbfd-initiator", "70 permit ospf any any", "80 permit 51 any any", "90 permit 50 any any",
+           "100 permit tcp any any eq ssh telnet www snmp bgp https netconf-ssh gnmi",
+           "110 permit udp any any eq bootps bootpc ntp snmp ptp-event ptp-general", "120 permit tcp any any eq mlag hop-limit eq 255",
+           "130 permit udp any any eq mlag hop-limit eq 255", "140 permit tcp any any range 5900 5910",
+           "150 permit tcp any any range 50000 50100", "160 permit udp any any range 51000 51100",
+           "170 permit udp any any eq dhcpv6-client dhcpv6-server", "180 permit tcp any eq bgp any",
+           "190 permit tcp any any eq nat hop-limit eq 255", "200 permit udp any any eq nat hop-limit eq 255", "210 permit rsvp any any",
+           "220 permit pim any any", "230 permit tcp any any eq 9340", "240 permit tcp any any eq 9559", "250 permit udp any any eq 8503",
+           "260 permit udp any any eq lsp-ping", "270 permit udp any eq lsp-ping any range 51900 51999"),
+}
+CONTROL_PLANE_OFFSET = 1000
+
+
+def control_plane_entries(family: str, prefixes: list[str]) -> list[str]:
+    """The control-plane ACL NMAS installs while the port is isolated: the bootstrap side may only reach the DHCP relay
+    (IPv4) and ICMPv6 (neighbour discovery); everything else from it addressed to the upstream is denied; every other
+    source keeps the built-in entries (renumbered after the denies)."""
+    entries, sequence = [], 1
+    if family == "v4":
+        for prefix in prefixes:
+            net = ipaddress.ip_network(prefix, strict=True)
+            entries += [f"{sequence} permit udp {net} any eq bootps", f"{sequence + 1} deny ip {net} any"]
+            sequence += 2
+    else:
+        for prefix in prefixes:
+            net = ipaddress.ip_network(prefix, strict=True)
+            if net == ipaddress.ip_network("fe80::/10"):
+                entries += [f"{sequence} deny tcp {net} any", f"{sequence + 1} deny udp {net} any eq snmp"]
+            else:
+                entries += [f"{sequence} permit icmpv6 {net} any", f"{sequence + 1} deny ipv6 {net} any"]
+            sequence += 2
+    for entry in DEFAULT_CONTROL_PLANE[family]:
+        number, rest = entry.split(" ", 1)
+        entries.append(f"{int(number) + CONTROL_PLANE_OFFSET} {rest}")
+    return entries
+
+
+def control_plane_acls(text: str) -> dict:
+    """{"v4": name | None, "v6": name | None}: a non-default control-plane ACL in the default VRF (None = built-in)."""
+    found = {"v4": None, "v6": None}
+    for line in _children(dict(_blocks(text)).get("system control-plane") or []):
+        match = re.fullmatch(r"(ip|ipv6) access-group (\S+) in", line)
+        if match and match.group(2) != "default-control-plane-acl":
+            found["v4" if match.group(1) == "ip" else "v6"] = match.group(2)
+    return found
+
+
+def control_plane_closed(text: str, denied: dict) -> bool:
+    """Is the upstream's whole control plane closed to the bootstrap side by NMAS's own control-plane ACL (exact entries)?"""
+    acls = control_plane_acls(text)
+    for family, keyword in (("v4", "ip"), ("v6", "ipv6")):
+        prefixes = denied.get(family) or []
+        if not prefixes:
+            continue
+        name = acls[family]
+        if not name or not name.startswith(ACL_PREFIX):
+            return False
+        configured = acl_entries(text, name, keyword)
+        if configured is None or [e for e in configured if e != "counters per-entry"] != control_plane_entries(family, prefixes):
+            return False
+    return True
 
 
 def management_denied(port_ipv4: list[str], port_ipv6: list[str]) -> dict:
@@ -166,6 +251,14 @@ def render_apply(intent: dict) -> list[dict]:
         keyword = "ip" if tag == "v4" else "ipv6"
         attach_mgmt.append(_child(f"attach-mgmt-{tag}", "management ssh", f"{keyword} access-group {element['acl']} in",
                                   f"upstream SSH service closed to the bootstrap side ({family})"))
+    control = mgmt.get("CP")
+    if control:
+        for tag, keyword in (("v4", "ip"), ("v6", "ipv6")):
+            if control.get(tag):
+                ops.append(_acl(f"acl-cp-{tag}", tag, control[tag]["acl"], control[tag]["entries"],
+                                f"upstream control-plane ACL ({tag.upper()}): every service closed to the bootstrap side"))
+                attach_mgmt.append(_child(f"attach-cp-{tag}", "system control-plane", f"{keyword} access-group {control[tag]['acl']} in",
+                                          f"upstream control plane closed to the bootstrap side ({tag.upper()})"))
     ops.extend(attach_mgmt)
     header = f"interface {interface}"
     for key, keyword, acl, direction in (("attach-v4", "ip", v4["acl"], "in"), ("attach-v6", "ipv6", v6["acl"], "in"),
@@ -185,8 +278,8 @@ def render_apply(intent: dict) -> list[dict]:
     return ops
 
 
-RELEASE_ORDER = ("attach-v4", "attach-v6", "attach-v4-out", "attach-v6-out", "ospf-passive-", "ospf6-passive-", "attach-mgmt-v4",
-                 "attach-mgmt-v6", "acl-v4", "acl-v6", "acl-v4-out", "acl-v6-out", "acl-mgmt-v4", "acl-mgmt-v6")
+RELEASE_ORDER = ("attach-v4", "attach-v6", "attach-v4-out", "attach-v6-out", "ospf-passive-", "ospf6-passive-", "attach-cp-v4", "attach-cp-v6", "attach-mgmt-v4",
+                 "attach-mgmt-v6", "acl-v4", "acl-v6", "acl-v4-out", "acl-v6-out", "acl-mgmt-v4", "acl-mgmt-v6", "acl-cp-v4", "acl-cp-v6")
 
 
 def render_release(intent: dict) -> list[dict]:
@@ -202,6 +295,22 @@ def render_release(intent: dict) -> list[dict]:
         raise RenderError("ISOLATION_PLAN_STALE", f"release order does not cover {sorted(missing)}")
     return [_op(f"release-{key}", "REMOVE", applied[key]["inverse"], applied[key]["lines"], applied[key]["paths"],
                 f"release: {applied[key]['description']}") for key in order]
+
+
+def render_admission_ospf_release(processes: list[dict], interface: str) -> list[dict]:
+    """An OSPF admission's routing release: the upstream port is passive in an OSPF process that covers it (made passive for this
+    admission, outside the isolation intent) and the admission expects an adjacency there.  Removed after the port filters
+    (``default`` restores the process byte for byte on cEOS 4.36.2F); a failed admission puts ``passive-interface`` back."""
+    if not _INTERFACE.fullmatch(interface or ""):
+        raise RenderError("INTERFACE_INVALID", interface)
+    ops = []
+    for process in processes:
+        router = f"router ospf {process['process']}" + (f" vrf {process['vrf']}" if process.get("vrf") else "")
+        ops.append(_op(f"release-admission-ospf-passive-{process['process']}", "REMOVE",
+                       [router, f"   default passive-interface {interface}"], [router, f"   passive-interface {interface}"],
+                       [f"{router} > passive-interface {interface}"],
+                       f"release: OSPF process {process['process']} adjacency on {interface} (admission)"))
+    return ops
 
 
 # ------------------------------------------------------------------------------------------------------------- read-back
@@ -455,6 +564,9 @@ def _other_services(text: str) -> list[dict]:
         exposed.append({"service": "GNMI", "family": "", "acl": "", "reason": "enabled; its access control is not verified by NMAS"})
     if any(name.startswith(("snmp-server community", "snmp-server user")) for name in blocks):
         exposed.append({"service": "SNMP", "family": "", "acl": "", "reason": "enabled; its access control is not verified by NMAS"})
+    netconf = blocks.get("management api netconf")
+    if netconf is not None and any(line.strip().startswith("transport ssh") for line in netconf):
+        exposed.append({"service": "NETCONF", "family": "", "acl": "", "reason": "enabled; its access control is not verified by NMAS"})
     return exposed
 
 
@@ -471,7 +583,10 @@ def management_exposure(text: str, denied: dict, vrf: str = "") -> list[dict]:
                 ok, reason = acl_denies_ssh_from(acl_entries(text, acl, keyword) if acl else None, prefix)
                 if not ok:
                     exposed.append({"service": "SSH", "family": family, "acl": acl or "", "reason": reason})
-    return [*exposed, *_other_services(text)]
+    others = _other_services(text)
+    if others and not vrf and control_plane_closed(text, denied):
+        others = []                                       # NMAS's own control-plane ACL closes every service (live-verified)
+    return [*exposed, *others]
 
 
 def management_plan(text: str, denied: dict, vrf: str, names: dict) -> dict:
@@ -481,7 +596,18 @@ def management_plan(text: str, denied: dict, vrf: str, names: dict) -> dict:
     removes its own service ACL: the service had none), VERIFY (an operator ACL already denies every prefix) or CLOSED
     (the service is shut down).  An operator ACL that does not deny is never edited: the policy is BLOCKED."""
     ssh = _ssh_service(text, vrf)
-    plan: dict = {"V4": None, "V6": None, "blocked": [item["service"] + ": " + item["reason"] for item in _other_services(text)]}
+    plan: dict = {"V4": None, "V6": None, "blocked": []}
+    others = _other_services(text)
+    if others:
+        custom = {k: v for k, v in control_plane_acls(text).items() if v}
+        if vrf:
+            plan["blocked"] += [f"{o['service']}: enabled; a control-plane ACL is installed only in the default VRF" for o in others]
+        elif custom and not control_plane_closed(text, denied):
+            plan["blocked"] += [f"{o['service']}: enabled; the custom control-plane ACL {sorted(custom.values())[0]} is not evaluated"
+                                for o in others]
+        elif not custom:
+            plan["CP"] = {tag: {"acl": names[f"cp{tag[1]}"], "entries": control_plane_entries(tag, denied[tag])}
+                          for tag in ("v4", "v6") if denied.get(tag)}
     for family, keyword in (("v4", "ip"), ("v6", "ipv6")):
         prefixes = denied.get(family) or []
         if not prefixes:

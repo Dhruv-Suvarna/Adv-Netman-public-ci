@@ -1,0 +1,237 @@
+"""DHCP lease freshness, renewal and the controlled re-discovery window of an open ZTP session.
+
+What a lease means here.  A correlated trusted binding (``DhcpLeaseObservation`` CORRELATED + relay_trusted) is the only evidence
+that the expected device is on the authorized port asking for the reserved address.  It is evidence with a lifetime:
+
+    ACTIVE     binding state active (or unstated) and ``lease_ends`` in the future (or not given by the provider)
+    EXPIRED    ``lease_ends`` has passed without a renewal
+    ENDED      the provider wrote a release / expiry / free block for the binding (``discovery._end_of_binding``)
+    NONE       the session never correlated a binding
+
+Rules (generic: no device is special-cased).
+
+* Before delivery (session DISCOVERED) the binding is the session's only proof of presence.  When it EXPIRES or ENDS the session
+  goes back to AWAITING_DISCOVERY, the stale facts move to ``discovery["previous"]`` and a ``ZTP_LEASE_LAPSED`` event joins the
+  device's hash chain.  The device keeps its lifecycle state (it *was* discovered; nothing is rewritten).
+* After delivery a release is the expected, live-observed behaviour (cEOS applies the artifact's static bootstrap address and
+  frees its lease): it is recorded on the session, never a regression, and management contact uses the reserved address, which
+  the open session still holds exclusively (``unique_open_ztp_reserved_address``).
+* A renewal of the same binding (same idempotency key) on a lapsed session re-advances it to DISCOVERED -- but only after the
+  bootstrap authorization is decided again for the fresh lease (a time-bounded authorization that expired meanwhile refuses).
+* Controlled re-discovery ("renew / solicit when the provisioning interface becomes available").  NMAS cannot make a DHCP client
+  renew; it never flaps a link to provoke one.  When an open session's bootstrap path has just become usable (typically: the
+  upstream it waits behind was commissioned and admitted -- R4 -> R6 -> R7), ``expect_renewal`` checks the path with
+  ``dependencies.evaluate`` and records a bounded window derived from the platform adapter's DOCUMENTED native retry interval.
+  ``renewal_status`` then reports PENDING / OBSERVED / OVERDUE from lease evidence alone; OVERDUE returns the adapter's native
+  recovery actions.  An adapter without a documented interval cannot open a window (``NATIVE_RETRY_UNDOCUMENTED``).
+* DHCPv6 SOLICIT: no adapter in this codebase discovers over DHCPv6 (``DiscoveryParameters.dhcp_family`` is 4 for every
+  implemented adapter), so an IPv6 re-discovery is refused as ``DHCPV6_DISCOVERY_NOT_IMPLEMENTED`` rather than assumed.
+"""
+
+from __future__ import annotations
+
+from datetime import datetime, timedelta
+
+from django.db import transaction
+from django.utils import timezone
+
+from ... import models
+from ..devices import authorization as authorization_service
+from ..devices import events
+from ..devices.codes import blocker
+from . import adapters
+
+ACTOR = "system:ztp-lease"
+Outcome = models.DeviceLifecycleEventOutcome
+Stage = models.ZtpSessionStage
+L = models.DhcpLeaseOutcome
+INACTIVE_STATES = frozenset({"free", "released", "expired", "abandoned", "backup", "reset"})
+ACTIVE, EXPIRED, ENDED, NONE = "ACTIVE", "EXPIRED", "ENDED", "NONE"
+RENEWAL_RETRY_FACTOR = 4          # window = documented native retry interval x 4 (cEOS: 30 s -> 120 s)
+RENEWAL_MIN_SECONDS = 60
+PENDING, OBSERVED, OVERDUE, NOT_EXPECTED = "PENDING", "OBSERVED", "OVERDUE", "NOT_EXPECTED"
+
+
+def binding(session):
+    """The session's most recent correlated trusted binding (None when it never correlated one)."""
+    return (models.DhcpLeaseObservation.objects.filter(session=session, outcome=L.CORRELATED, relay_trusted=True)
+            .order_by("-last_seen", "-id").first())
+
+
+def classify(observation, now=None) -> str:
+    if observation is None:
+        return NONE
+    now = now or timezone.now()
+    if str(observation.binding_state or "").lower() in INACTIVE_STATES:
+        return ENDED
+    if observation.lease_ends is not None and observation.lease_ends <= now:
+        return EXPIRED
+    return ACTIVE
+
+
+def status(session, now=None) -> dict:
+    now = now or timezone.now()
+    observation = binding(session)
+    state = classify(observation, now)
+    out = {"state": state, "session": session.session_id, "stage": session.stage}
+    if observation is not None:
+        out.update({"lease_observation": observation.pk, "address": observation.address, "binding_state": observation.binding_state,
+                    "lease_ends": observation.lease_ends.isoformat() if observation.lease_ends else None,
+                    "seconds_left": int((observation.lease_ends - now).total_seconds()) if observation.lease_ends else None,
+                    "upstream": f"{observation.upstream_device}:{observation.upstream_interface}"})
+    if state in (EXPIRED, ENDED) and session.stage not in (Stage.AWAITING_DISCOVERY, Stage.DISCOVERED):
+        out["meaning"] = "lease no longer held after delivery: expected (the bootstrap applies the reserved address statically)"
+    return out
+
+
+# --- lapse and renewal --------------------------------------------------------------------------------------------------------
+def _lapse(session, state: str, observation, now) -> bool:
+    with transaction.atomic():
+        fresh = models.ZtpSession.objects.select_for_update().get(pk=session.pk)
+        if fresh.stage != Stage.DISCOVERED:
+            return False                           # moved on (delivered) or closed meanwhile: nothing to regress
+        previous = {k: v for k, v in (fresh.discovery or {}).items() if k != "previous"}
+        fresh.stage = Stage.AWAITING_DISCOVERY
+        fresh.discovery = {"previous": previous, "lapsed": {"state": state, "lease_observation": observation.pk, "at": now.isoformat(),
+                                                            "lease_starts": observation.lease_starts.isoformat() if observation.lease_starts else None}}
+        fresh.version += 1
+        fresh.save(update_fields=["stage", "discovery", "version", "updated_at"])
+        device = models.ManagedDevice.objects.get(pk=fresh.device_id)
+        events.record(device, "ZTP_LEASE_LAPSED", Outcome.RECORDED, actor=ACTOR, actor_kind=events.AUTOMATION,
+                      from_state=device.lifecycle_state, to_state=device.lifecycle_state, bootstrap_authorization=fresh.authorization,
+                      evidence={"session": fresh.session_id, "lease_observation": observation.pk, "lease_state": state,
+                                "address": observation.address, "session_stage": f"{Stage.DISCOVERED} -> {Stage.AWAITING_DISCOVERY}",
+                                "meaning": "the only proof of presence lapsed before delivery: await the device's native re-discovery"})
+    return True
+
+
+def reconcile(network, *, now=None) -> list[str]:
+    """Regress every DISCOVERED session of ``network`` whose correlated binding expired or ended -> the session ids regressed."""
+    now = now or timezone.now()
+    regressed = []
+    for session in models.ZtpSession.objects.filter(network=network, stage=Stage.DISCOVERED).select_related("authorization"):
+        observation = binding(session)
+        state = classify(observation, now)
+        if state in (EXPIRED, ENDED) and _lapse(session, state, observation, now):
+            regressed.append(session.session_id)
+    return regressed
+
+
+def resume(observation, *, now=None):
+    """A repeat of a correlated binding: when it is ACTIVE again and its session lapsed, re-decide the authorization for this
+    lease and re-advance the session to DISCOVERED.  -> "RESUMED" | "REFUSED:<decision>" | "" (nothing to do)."""
+    now = now or timezone.now()
+    if observation.outcome != L.CORRELATED or not observation.relay_trusted or observation.session_id is None:
+        return ""
+    session = models.ZtpSession.objects.select_related("authorization", "device").get(pk=observation.session_id)
+    lapsed = (session.discovery or {}).get("lapsed")
+    if session.stage != Stage.AWAITING_DISCOVERY or not lapsed or classify(observation, now) != ACTIVE:
+        return ""
+    before = datetime.fromisoformat(lapsed["lease_starts"]) if lapsed.get("lease_starts") else None
+    if observation.lease_starts is None or (before is not None and observation.lease_starts <= before):
+        return ""                                   # a re-read of the lapsed lease, not a renewal by the device
+    from .artifacts import request_for_lease
+
+    request = {**request_for_lease(session, observation), "scope": "DHCP_DISCOVERY"}
+    auth = models.BootstrapAuthorization.objects.get(pk=session.authorization_id)
+    decision = authorization_service.decide(auth, request, now=now)
+    with transaction.atomic():
+        fresh = models.ZtpSession.objects.select_for_update().get(pk=session.pk)
+        device = models.ManagedDevice.objects.get(pk=fresh.device_id)
+        if fresh.stage != Stage.AWAITING_DISCOVERY:
+            return ""
+        evidence = {"session": fresh.session_id, "lease_observation": observation.pk, "address": observation.address,
+                    "lease_ends": observation.lease_ends.isoformat() if observation.lease_ends else None,
+                    "bootstrap_decision": {"decision": decision.decision, "production_admission": False}}
+        if not decision.authorized:
+            events.record(device, "ZTP_LEASE_RENEWED", Outcome.REFUSED, actor=ACTOR, actor_kind=events.AUTOMATION,
+                          from_state=device.lifecycle_state, to_state=device.lifecycle_state, bootstrap_authorization=fresh.authorization,
+                          blockers=list(decision.blockers), evidence={**evidence, "meaning": "renewed lease, but the bootstrap is no longer authorized"})
+            return f"REFUSED:{decision.decision}"
+        fresh.stage = Stage.DISCOVERED
+        fresh.discovery = {"lease_observation": observation.pk, "address": observation.address, "relay": observation.relay_address,
+                           "upstream": f"{observation.upstream_device}:{observation.upstream_interface}", "observed_at": now.isoformat(),
+                           "renewed_after": lapsed, **({"renewal": fresh.discovery["renewal"]} if "renewal" in fresh.discovery else {})}
+        fresh.version += 1
+        fresh.save(update_fields=["stage", "discovery", "version", "updated_at"])
+        events.record(device, "ZTP_LEASE_RENEWED", Outcome.RECORDED, actor=ACTOR, actor_kind=events.AUTOMATION,
+                      from_state=device.lifecycle_state, to_state=device.lifecycle_state, bootstrap_authorization=fresh.authorization,
+                      evidence={**evidence, "session_stage": f"{Stage.AWAITING_DISCOVERY} -> {Stage.DISCOVERED}",
+                                "meaning": "the device renewed the same trusted binding; discovery only, not identity proof"})
+    return "RESUMED"
+
+
+# --- controlled re-discovery window -------------------------------------------------------------------------------------------
+def renewal_window_seconds(adapter) -> int | None:
+    retry = adapter.determine_native_retry_behavior() if adapter else None
+    interval = getattr(retry, "dhcp_retry_interval_seconds", None)
+    if not interval:
+        return None
+    return max(RENEWAL_MIN_SECONDS, int(interval) * RENEWAL_RETRY_FACTOR)
+
+
+def expect_renewal(session, *, actor: str, family: int = 4, checks=None, now=None):
+    """Open the bounded window in which the device's native DHCP retry must reach NMAS over a path that just became usable.
+
+    -> (ok, blockers, window dict).  Refused when the session is not awaiting discovery, the path's dependency checks fail (e.g.
+    the upstream is not yet commissioned / admitted), the adapter documents no retry interval, or IPv6 discovery is requested."""
+    now = now or timezone.now()
+    problems = []
+    if family != 4:
+        problems.append(blocker("DHCPV6_DISCOVERY_NOT_IMPLEMENTED", family=family))
+    if session.stage != Stage.AWAITING_DISCOVERY:
+        problems.append(blocker("ZTP_SESSION_STATE_INVALID", stage=session.stage))
+    adapter = adapters.get(session.adapter)
+    window = renewal_window_seconds(adapter)
+    if window is None:
+        problems.append(blocker("NATIVE_RETRY_UNDOCUMENTED", adapter=session.adapter))
+    if checks is None:
+        from . import dependencies
+
+        checks = dependencies.evaluate(session.device, session.authorization.attachment, session.network)
+    failing = [c for c in checks if not c["ok"]]
+    if failing:
+        problems.append(blocker("ZTP_BOOTSTRAP_PATH_NOT_READY", failing=[{"check": c["check"], "code": c["code"], "detail": c["detail"]}
+                                                                          for c in failing]))
+    device = models.ManagedDevice.objects.get(pk=session.device_id)
+    if problems:
+        with transaction.atomic():
+            events.record(device, "ZTP_RENEWAL_EXPECTED", Outcome.REFUSED, actor=actor, from_state=device.lifecycle_state,
+                          to_state=device.lifecycle_state, bootstrap_authorization=session.authorization, blockers=problems,
+                          evidence={"session": session.session_id, "family": family})
+        return False, problems, {}
+    record = {"expected_at": now.isoformat(), "deadline": (now + timedelta(seconds=window)).isoformat(), "window_seconds": window,
+              "basis": "native DHCP retry of the platform adapter (no link flap, no device-side action)", "requested_by": actor[:150],
+              "path_checks": [c["check"] for c in checks]}
+    with transaction.atomic():
+        fresh = models.ZtpSession.objects.select_for_update().get(pk=session.pk)
+        fresh.discovery = {**(fresh.discovery or {}), "renewal": record}
+        fresh.version += 1
+        fresh.save(update_fields=["discovery", "version", "updated_at"])
+        events.record(device, "ZTP_RENEWAL_EXPECTED", Outcome.RECORDED, actor=actor, from_state=device.lifecycle_state,
+                      to_state=device.lifecycle_state, bootstrap_authorization=fresh.authorization,
+                      evidence={"session": fresh.session_id, **record})
+    return True, [], record
+
+
+def renewal_status(session, now=None) -> dict:
+    """PENDING / OBSERVED / OVERDUE of the recorded window, from lease evidence only (NOT_EXPECTED when none was opened)."""
+    now = now or timezone.now()
+    record = (session.discovery or {}).get("renewal")
+    if not record:
+        return {"state": NOT_EXPECTED}
+    expected_at = datetime.fromisoformat(record["expected_at"]).replace(microsecond=0)   # providers record whole seconds
+    deadline = datetime.fromisoformat(record["deadline"])
+    # lease_starts is the provider's ack time of the device's own request; last_seen also moves on a mere re-read of the lease file
+    seen = (models.DhcpLeaseObservation.objects.filter(session=session, outcome=L.CORRELATED, relay_trusted=True, lease_starts__gte=expected_at)
+            .order_by("lease_starts", "id").first())
+    out = {**record}
+    if seen is not None:
+        out.update({"state": OBSERVED, "lease_observation": seen.pk, "observed_at": seen.lease_starts.isoformat(),
+                    "within_window": seen.lease_starts <= deadline})
+    elif now > deadline:
+        adapter = adapters.get(session.adapter)
+        out.update({"state": OVERDUE, "recovery": [a.as_dict() for a in adapter.determine_supported_recovery_actions()] if adapter else []})
+    else:
+        out.update({"state": PENDING, "seconds_left": int((deadline - now).total_seconds())})
+    return out
