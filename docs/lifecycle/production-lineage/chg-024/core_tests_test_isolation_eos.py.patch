@@ -1,0 +1,54 @@
+--- production-pre/web/core/tests/test_isolation_eos.py
++++ release/web/core/tests/test_isolation_eos.py
+@@ -100,7 +100,7 @@
+         with self.assertRaises(eos.RenderError) as raised:
+             from unittest import mock
+ 
+-            with mock.patch.object(eos, "RELEASE_ORDER", eos.RELEASE_ORDER[:-1]):
++            with mock.patch.object(eos, "RELEASE_ORDER", tuple(k for k in eos.RELEASE_ORDER if k != "acl-v4")):
+                 eos.render_release(it)
+         self.assertEqual(raised.exception.code, "ISOLATION_PLAN_STALE")
+ 
+@@ -152,11 +152,39 @@
+         self.assertEqual(problems, [])
+         self.assertEqual(it["elements"]["CONTROL_PLANE"]["ospf_passive"], [])
+ 
+-    def test_management_plane_exposed_by_other_services_or_nmas_lockout(self):
+-        eapi = I.upstream_config(extra="management api http-commands\n   no shutdown")
+-        self.assertIn("ISOLATION_MGMT_PLANE_EXPOSED", codes(build(eapi)[2]))
++    def test_management_plane_exposed_by_a_custom_control_plane_acl_or_nmas_lockout(self):
++        custom = I.upstream_config(extra="management api http-commands\n   no shutdown\n"
++                                         "ip access-list OPS-CP\n   10 permit ip any any\nsystem control-plane\n   ip access-group OPS-CP in")
++        self.assertIn("ISOLATION_MGMT_PLANE_EXPOSED", codes(build(custom)[2]))
+         self.assertIn("ISOLATION_MGMT_PLANE_EXPOSED", codes(build(nmas_sources=["10.254.30.50"])[2]))
+ 
++    def test_other_services_are_closed_by_an_nmas_control_plane_acl_and_released_exactly(self):
++        """Lab 9 (R2): eAPI / gNMI / SNMP / NETCONF behind the built-in control-plane ACL -> NMAS installs a copy of the
++        built-in ACL preceded by the bootstrap denies, attaches it under ``system control-plane`` and removes it at release."""
++        services = ("management api http-commands\n   no shutdown\nmanagement api gnmi\n   transport grpc default\n"
++                    "management api netconf\n   transport ssh default\nsnmp-server user u1 g1 v3")
++        it, ops, problems, _f = build(I.upstream_config(extra=services))
++        self.assertEqual(problems, [])
++        control = it["elements"]["MANAGEMENT_PLANE"]["CP"]
++        self.assertEqual(control["v4"]["acl"], "NMAS-ISO-DEV-000002-CP4")
++        self.assertEqual(control["v4"]["entries"][:2], ["1 permit udp 10.254.30.0/24 any eq bootps", "2 deny ip 10.254.30.0/24 any"])
++        self.assertEqual(control["v4"]["entries"][2], "1010 permit icmp any any")
++        keys = [op["key"] for op in ops]
++        self.assertIn("attach-cp-v4", keys)
++        self.assertEqual(next(op for op in ops if op["key"] == "attach-cp-v4")["lines"],
++                         ["system control-plane", "   ip access-group NMAS-ISO-DEV-000002-CP4 in"])
++        release = eos.render_release(it)
++        self.assertEqual(next(op for op in release if op["key"] == "release-attach-cp-v4")["lines"],
++                         ["system control-plane", "   no ip access-group NMAS-ISO-DEV-000002-CP4 in"])
++        self.assertLess([op["key"] for op in release].index("release-attach-cp-v4"), [op["key"] for op in release].index("release-acl-cp-v4"))
++        self.assertEqual(eos.management_exposure(I.upstream_config(extra=services), eos.management_denied(["10.254.30.1/24"], []))[-1]["service"], "NETCONF")
++
++    def test_control_plane_v6_denies_link_local_tcp_and_snmp_only(self):
++        entries = eos.control_plane_entries("v6", ["2001:db8:30::/64", "fe80::/10"])
++        self.assertEqual(entries[:4], ["1 permit icmpv6 2001:db8:30::/64 any", "2 deny ipv6 2001:db8:30::/64 any",
++                                       "3 deny tcp fe80::/10 any", "4 deny udp fe80::/10 any eq snmp"])
++        self.assertIn("1070 permit ospf any any", entries)
++
+     def test_operator_ssh_acl_verified_or_blocked(self):
+         good = ("ip access-list OPS-SSH\n   10 deny ip 10.254.30.0/24 any\n   20 permit ip any any\n"
+                 "ipv6 access-list OPS-SSH6\n   10 deny ipv6 any any\n"

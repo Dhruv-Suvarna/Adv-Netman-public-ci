@@ -26,6 +26,7 @@ sync_nsot = lifecycle.sync_nsot
 start_probation = lifecycle.start_probation
 probation_candidate = lifecycle.probation_candidate
 cancel = lifecycle.cancel
+close_configured = lifecycle.close_configured
 decommission = lifecycle.decommission
 transport_support = bootstrap.transport_support
 supported_features = capability_gate.supported_features

@@ -74,6 +74,8 @@ READ_ROUTES = frozenset({
     "quality_unit_tests", "quality_artifact", "quality_coverage", "quality_cell",
     # V2 Lifecycle Phase 2 -- managed devices (NMAS database reads only; no device or NetBox call on a page view)
     "managed_devices", "managed_devices_json", "managed_device_detail", "managed_device_json",
+    # Lifecycle stage projection (NMAS database reads only; no device is contacted)
+    "lifecycle_overview", "lifecycle_overview_json", "lifecycle_device", "lifecycle_device_json",
     # V2 Phase 3 -- native ZTP (NMAS database reads only; no device, DHCP or lease-file access on a page view)
     "ztp_networks", "ztp_adapters_json", "ztp_session_json",
     # V2 Phase 4 -- management multihoming (NMAS database reads only; no device or host access on a page view)
@@ -102,6 +104,7 @@ SENSITIVE_READ_ROUTES = frozenset({
     "nsot_device_running_config", "health_run_report", "change_execution_report", "bundle_manifest",
     "credential_status", "credential_status_json", "audit_log",
     "managed_devices_json", "managed_device_json",
+    "lifecycle_overview_json", "lifecycle_device_json",
     "ztp_session_json",
     "management_spof_json", "management_device_json",
     "commissioning_device_json",

@@ -1,0 +1,52 @@
+--- production-pre/web/core/tests/helpers/isolation.py
++++ release/web/core/tests/helpers/isolation.py
+@@ -56,8 +56,10 @@
+     def find(self, header):
+         return next((b for b in self.blocks if b[0] == header), None)
+ 
++    # interface settings EOS holds one value of (live-verified, cEOS 4.36.2F: DHCP relay option 82 circuit-id / remote-id)
++    SINGLE_VALUED = ("ip dhcp relay information option circuit-id", "ip dhcp relay information option remote-id")
+     # commands that open a configuration mode; EOS falls back to the global mode for one of these typed inside another mode
+-    MODES = ("interface ", "router ", "ip access-list ", "ipv6 access-list ", "management ")
++    MODES = ("interface ", "router ", "ipv6 router ", "ip access-list ", "ipv6 access-list ", "management ")
+ 
+     def apply(self, commands):
+         """A flattened configuration set (``exit`` closes a mode; a mode command inside another mode re-enters globally)."""
+@@ -85,7 +87,12 @@
+                 elif self.find(stripped) is None:
+                     self.blocks.append([stripped, []])
+                 continue
+-            if stripped.startswith("default "):               # back to the default: neither the line nor its negation
++            stem = next((stem for stem in self.SINGLE_VALUED if stripped.removeprefix("no ").startswith(stem)), None)
++            if stem is not None:                               # EOS keeps one value: a new one replaces it, ``no`` (any value) removes it
++                context[1] = [c for c in context[1] if not c.startswith(stem)]
++                if not stripped.startswith("no "):
++                    context[1].append(stripped)
++            elif stripped.startswith("default "):               # back to the default: neither the line nor its negation
+                 context[1] = [c for c in context[1] if c not in (stripped[8:], f"no {stripped[8:]}")]
+             elif stripped.startswith("no passive-interface "):  # cEOS 4.36.2F keeps this negation as an explicit line
+                 context[1] = [c for c in context[1] if c != stripped[3:]]
+@@ -113,12 +120,22 @@
+         return "\n".join(out) + "\nend\n"
+ 
+ 
++NO_OSPF6 = '{\n    "vrfs": {}\n}\n'
++
++
++def ospf6_neighbors(*rows, process="1") -> str:
++    """``show ipv6 ospf neighbor | json`` with (router id, state, interface) rows (the cEOS shape ``decommission.observe`` reads)."""
++    entries = [{"routerId": rid, "adjacencyState": state, "interfaceName": iface} for rid, state, iface in rows]
++    return json.dumps({"vrfs": {"default": {"instList": {process: {"ospf3NeighborEntries": entries}}}}})
++
++
+ class FakeEosSession:
+     """``show running-config`` from the model; other commands from ``outputs`` (a value may be a callable of the session)."""
+ 
+     def __init__(self, text, *, outputs=None, reject=None, pings=None):
+         self.config = EosText(text)
+-        self.outputs = dict(outputs or {})
++        # cEOS 4.36.2F with no OSPFv3 process (read live from the Phases 5+6 fixture upstream)
++        self.outputs = {"show ipv6 ospf neighbor | json": NO_OSPF6, **(outputs or {})}
+         self.reject = reject                    # callable(commands) -> bool: refuse that configuration set
+         self.pings = dict(pings or {})          # address -> bool
+         self.sent, self.commands = [], []

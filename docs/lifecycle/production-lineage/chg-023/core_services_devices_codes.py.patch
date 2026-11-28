@@ -1,0 +1,15 @@
+--- a/web/core/services/devices/codes.py
++++ b/web/core/services/devices/codes.py
+@@ -102,6 +102,12 @@
+                                   "Use an isolated, non-VLAN-200 IPv4 subnet whose pool, gateway and relays are consistent."),
+     "BOOTSTRAP_NETWORK_NOT_FOUND": ("The bootstrap network does not exist or is retired.", "Select an active bootstrap network."),
+     "BOOTSTRAP_POOL_EXHAUSTED": ("The bootstrap pool has no free address.", "Close finished sessions or widen the isolated pool."),
++    "ZTP_BOOTSTRAP_PATH_NOT_READY": ("The device's bootstrap path does not qualify yet (e.g. its upstream is not commissioned and admitted).",
++                                     "Complete the failing path checks first; no re-discovery window is opened before the path is usable."),
++    "NATIVE_RETRY_UNDOCUMENTED": ("The platform adapter documents no native DHCP retry interval.",
++                                  "No renewal window can be bounded from evidence; use the adapter's documented recovery actions."),
++    "DHCPV6_DISCOVERY_NOT_IMPLEMENTED": ("No implemented ZTP adapter discovers over DHCPv6 (SOLICIT).",
++                                         "Use DHCPv4 discovery; IPv6 bootstrap is not claimed for any platform."),
+     "BOOTSTRAP_PATH_UNAVAILABLE": ("No trusted relay of the bootstrap network sits on the device's upstream.",
+                                    "The upstream of the authorized attachment must be a listed trusted relay of the network."),
+     "DHCP_PROVIDER_ERROR": ("The DHCP provider refused or failed the operation.", "Read the recorded provider output; the previous configuration was kept."),

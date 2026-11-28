@@ -1,0 +1,73 @@
+{% extends "core/base.html" %}
+{% block title %}Lifecycle {{ device.device_id }}{% endblock %}
+{% block content %}
+{% with v=report.verdicts %}
+<div class="page-header">
+  <h1>{{ device.name }} <code>{{ device.device_id }}</code> — lifecycle</h1>
+  <p><a href="{% url 'core:lifecycle_overview' %}">&larr; Device lifecycle</a> · <a href="{% url 'core:managed_device_detail' device.device_id %}">Device</a>
+     · <a href="{% url 'core:management_device' device.device_id %}">Management paths</a> · <a href="{% url 'core:commissioning_device' device.device_id %}">Isolation &amp; commissioning</a>
+     · <a href="{% url 'core:decommission_device' device.device_id %}">Decommissioning</a> · <a href="{% url 'core:lifecycle_device_json' device.device_id %}">JSON</a></p>
+  <p>{{ report.platform }} · {{ report.role }} · origin <code>{{ report.origin }}</code> · lifecycle <code>{{ report.lifecycle_state }}</code>
+     · admission <code>{{ report.admission_state }}</code>{% if report.legacy %} · <span class="badge badge--neutral">predates NMAS onboarding</span>{% endif %}</p>
+</div>
+
+<div class="card">
+  <h3>Stages</h3>
+  <table class="data-table"><thead><tr><th>Stage</th><th>Status</th><th>Basis</th><th>Evidence</th></tr></thead>
+  <tbody>{% for s in report.stages %}<tr><td>{{ s.stage }}</td><td><span class="badge badge--{{ s.badge }}">{{ s.status }}</span></td><td>{{ s.basis }}</td>
+    <td>{% for k, val in s.evidence.items %}<small>{{ k }}</small> <code>{{ val }}</code>{% if not forloop.last %}<br>{% endif %}{% empty %}—{% endfor %}</td></tr>{% endfor %}</tbody></table>
+</div>
+
+<div class="card-grid" style="margin-top:16px;">
+  <div class="card"><h3>Identity <span class="badge badge--{% if v.identity.state == 'VERIFIED' %}success{% elif v.identity.state == 'MISMATCH' %}danger{% else %}warning{% endif %}">{{ v.identity.state }}</span></h3>
+    <table class="data-table"><tbody>
+      <tr><th>Expected</th><td>serial <code>{{ v.identity.expected.serial|default:"—" }}</code> · MAC <code>{{ v.identity.expected.base_mac|default:"—" }}</code></td></tr>
+      <tr><th>Claimed</th><td>{% if v.identity.claimed %}{{ v.identity.claimed.source }}: {% for k, val in v.identity.claimed.claims.items %}{{ k }} <code>{{ val }}</code> {% endfor %}({{ v.identity.claimed.result }}){% else %}none recorded{% endif %}</td></tr>
+      <tr><th>Observed</th><td>{% if v.identity.observed %}{{ v.identity.observed.source }} / {{ v.identity.observed.trust }}: {% for k, val in v.identity.observed.claims.items %}{{ k }} <code>{{ val }}</code> {% endfor %}({{ v.identity.observed.result }}){% else %}none recorded{% endif %}</td></tr>
+      <tr><th>Verified</th><td>{% if v.identity.verified %}serial <code>{{ v.identity.verified.serial|default:"—" }}</code> · MAC <code>{{ v.identity.verified.base_mac|default:"—" }}</code> · host key <code>{{ v.identity.verified.host_key }}</code><br><small>{{ v.identity.verified.at }} by {{ v.identity.verified.by }}</small>{% else %}not verified{% endif %}</td></tr>
+    </tbody></table>
+    <p style="color:var(--text-muted); font-size:0.85rem;">{{ v.identity.meaning }}</p></div>
+  <div class="card"><h3>Bootstrap authorization <span class="badge badge--neutral">{{ v.authorization.state }}</span></h3>
+    {% if v.authorization.auth_id %}<p><code>{{ v.authorization.auth_id }}</code> · uses {{ v.authorization.uses }} · scope {{ v.authorization.scope|join:", " }}</p>
+    <p>valid {{ v.authorization.valid_from }} → {{ v.authorization.valid_until }} {% if v.authorization.expired %}<span class="badge badge--neutral">expired</span>{% elif v.authorization.live %}<span class="badge badge--warning">live</span>{% endif %}</p>
+    <p><small>requested by {{ v.authorization.requested_by }} · approved by {{ v.authorization.approved_by|default:"—" }}</small></p>
+    {% else %}<p>{{ v.authorization.meaning }}</p>{% endif %}</div>
+  <div class="card"><h3>Admission <span class="badge badge--neutral">{{ v.admission.state }}</span></h3>
+    {% if v.admission.admission %}<p><code>{{ v.admission.admission }}</code> {{ v.admission.record_state }} · {{ v.admission.finished_at|default:"" }}</p>{% endif %}
+    {% if v.admission.meaning %}<p>{{ v.admission.meaning }}</p>{% endif %}</div>
+  <div class="card"><h3>Operational readiness <span class="badge badge--{% if v.readiness.ready %}success{% else %}danger{% endif %}">{% if v.readiness.ready %}ready{% else %}not ready{% endif %}</span></h3>
+    <ul>{% for r in v.readiness.reasons %}<li>{{ r }}</li>{% endfor %}{% for n in v.readiness.notes %}<li><small>{{ n }}</small></li>{% endfor %}</ul>
+    <p style="color:var(--text-muted); font-size:0.85rem;">{{ v.readiness.meaning }}</p></div>
+</div>
+
+<div class="card" style="margin-top:16px;">
+  <h3>Attachment &amp; topology evidence</h3>
+  <table class="data-table"><thead><tr><th>#</th><th>Upstream</th><th>Local</th><th>Purpose</th><th>Connectivity</th><th>VLAN</th><th>Approval</th><th>Verification</th></tr></thead>
+  <tbody>{% for a in v.observation.attachments %}<tr><td>{{ a.id }}</td><td><code>{{ a.upstream }}</code></td><td>{{ a.local_interface|default:"—" }}</td><td>{{ a.purpose }}</td><td>{{ a.connectivity }}</td><td>{{ a.vlan|default:"—" }}</td><td>{{ a.approval }}</td><td>{{ a.verification }}</td></tr>{% empty %}<tr><td colspan="8">No expected attachment recorded.</td></tr>{% endfor %}</tbody></table>
+  {% if v.observation.latest_attachment_observation %}<p>Latest attachment observation: {{ v.observation.latest_attachment_observation.source }} / {{ v.observation.latest_attachment_observation.trust }} <code>{{ v.observation.latest_attachment_observation.upstream }}</code> ({{ v.observation.latest_attachment_observation.result }})</p>{% endif %}
+</div>
+
+<div class="card" style="margin-top:16px;">
+  <h3>Management path selection <span class="badge badge--neutral">{{ v.management.status }}</span></h3>
+  <p><small>{{ v.management.hierarchy }}</small>{% if v.management.reconciliation_required %} · <span class="badge badge--danger">reconciliation required</span>{% endif %}</p>
+  <table class="data-table"><thead><tr><th>Path</th><th>Type</th><th>Class</th><th>Via</th><th>VLAN</th><th>VRF</th><th>Approval</th><th>Health</th><th>Active</th></tr></thead>
+  <tbody>{% for p in v.management.paths %}<tr><td><code>{{ p.path }}</code></td><td>{{ p.type }}</td><td>{{ p.class }}</td><td>{{ p.via|default:"—" }}</td><td>{{ p.vlan|default:"—" }}{% if p.tagged %} tagged{% endif %}</td><td>{{ p.vrf|default:"—" }}</td><td>{{ p.approval }}</td><td>{{ p.health }}</td><td>{% if p.active %}<span class="badge badge--success">active</span>{% endif %}</td></tr>{% empty %}<tr><td colspan="9">No management path registered with the selector.</td></tr>{% endfor %}</tbody></table>
+</div>
+
+<div class="card-grid" style="margin-top:16px;">
+  <div class="card"><h3>Maintenance / decommission eligibility</h3>
+    <p>Allowed transitions: {% for t in report.eligibility.allowed_transitions %}<code>{{ t }}</code> {% empty %}none{% endfor %}</p>
+    <p>Maintenance request: {% if report.eligibility.maintenance.eligible_to_request %}eligible{% else %}not eligible{% endif %} — <small>{{ report.eligibility.maintenance.rule }}</small></p>
+    <p>Decommission request: {% if report.eligibility.decommission.eligible_to_request %}eligible{% else %}not eligible{% endif %}{% if report.eligibility.decommission.open_record %} (open <code>{{ report.eligibility.decommission.open_record }}</code>){% endif %} — <small>{{ report.eligibility.decommission.rule }}</small></p></div>
+  <div class="card"><h3>Immutable evidence</h3>
+    <p>Hash chain: {% if report.evidence.chain_intact %}<span class="badge badge--success">intact</span>{% else %}<span class="badge badge--danger">BROKEN</span>{% endif %} · {{ report.evidence.events }} events (last #{{ report.evidence.last_sequence }})</p>
+    <p><small>head <code>{{ report.evidence.head_digest|default:"—" }}</code></small></p></div>
+</div>
+
+<div class="card" style="margin-top:16px;">
+  <h3>Transition failures &amp; rollback evidence</h3>
+  <table class="data-table"><thead><tr><th>Kind</th><th>Reference</th><th>Outcome / state</th><th>Codes</th><th>At</th><th>Rollback</th></tr></thead>
+  <tbody>{% for f in report.failures %}<tr><td>{{ f.kind }}</td><td><code>{{ f.reference }}</code></td><td>{{ f.status }}</td><td>{{ f.codes|join:", " }}</td><td><small>{{ f.at|default:"" }}</small></td><td>{% if f.rollback %}yes{% endif %}</td></tr>{% empty %}<tr><td colspan="6">No refused or failed transition recorded.</td></tr>{% endfor %}</tbody></table>
+</div>
+{% endwith %}
+{% endblock %}

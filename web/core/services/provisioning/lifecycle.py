@@ -557,6 +557,32 @@ def cancel(run, *, actor: str, gateway=None, reason: str = "") -> StageResult:
     return StageResult(run, True, stage, [], _event(run, stage, E.RECONCILED, previous, actor=actor, evidence=run.failure))
 
 
+def close_configured(run, *, actor: str, gateway=None, reason: str = "") -> StageResult:
+    """Close a POSTCHECKED run whose commissioning was aborted before production admission.
+
+    The configuration was applied and verified on the still-isolated device, but the device will not enter service under this
+    run.  ``cancel`` refuses this stage (the device was provisioned), so without this the run stays open forever and blocks a
+    fresh commissioning of the same name.  The run ends CANCELLED with the configuration recorded as left on the device; its
+    NetBox reservation is released and its registry entry retired, exactly as a cancellation does."""
+    stage = "CANCEL"
+    if run.is_terminal:
+        return _refuse(run, stage, [blocker("RUN_FINISHED", status=run.status)], actor=actor)
+    if run.status != S.POSTCHECKED:
+        return _refuse(run, stage, [blocker("WRONG_STAGE", status=run.status, stage=stage)], actor=actor)
+    previous = run.status
+    reconciliation = reconcile(run, gateway=gateway)
+    run.failure = {"stage": stage, "code": "COMMISSIONING_ABORTED", "reason": secret_policy.redact_text(reason)[:500],
+                   "production_configuration_left_on_device": True, "reconciliation": reconciliation}
+    run.status, run.finished_at = S.CANCELLED, timezone.now()
+    run.save(update_fields=["status", "failure", "finished_at", "updated_at"])
+    models.AuditEvent.objects.create(
+        event_type=models.AuditEventType.PROVISIONING_CANCELLED, change=run.change, object_type="ProvisioningRun", object_id=run.prov_id,
+        actor=actor[:150], summary=f"{run.prov_id} closed: commissioning aborted after configuration"[:255],
+        metadata={"prov_id": run.prov_id, "clean": reconciliation["clean"], "configuration_left_on_device": True},
+    )
+    return StageResult(run, True, stage, [], _event(run, stage, E.RECONCILED, previous, actor=actor, evidence=run.failure))
+
+
 # --- 11. NSOT synchronization --------------------------------------------------------------------------------------------------
 def sync_nsot(run, *, actor: str, gateway=None) -> StageResult:
     """The device is provisioned and verified: NetBox objects become active and the registry entry becomes an ordinary managed device.

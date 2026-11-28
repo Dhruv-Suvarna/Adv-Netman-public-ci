@@ -31,6 +31,23 @@ MANAGEMENT_VLAN = attachment_service.MANAGEMENT_VLAN
 DHCP_ELIGIBLE_AUTH = (models.BootstrapAuthorizationState.APPROVED, models.BootstrapAuthorizationState.CONSUMED)
 
 
+def authorization_problems(auth, *, now=None) -> list[dict]:
+    """[] while ``auth`` may still carry an open bootstrap: a DHCP-eligible state AND inside its ``valid_from``/``valid_until``
+    window -- the same rule as the DHCP reservations (``eligible_sessions``).  The state alone is not enough: the expiry sweep
+    (``authorization.expire_due``) runs on demand, so a grant past its window can still read APPROVED / CONSUMED."""
+    now = now or timezone.now()
+    if auth is None:
+        return [blocker("AUTHORIZATION_NOT_FOUND")]
+    if auth.state not in DHCP_ELIGIBLE_AUTH:
+        return [blocker("EXPIRED" if auth.state == models.BootstrapAuthorizationState.EXPIRED else "AUTHORIZATION_STATE_INVALID",
+                        state=auth.state)]
+    if now >= auth.valid_until:
+        return [blocker("EXPIRED", valid_until=auth.valid_until.isoformat())]
+    if now < auth.valid_from:
+        return [blocker("NOT_YET_VALID", valid_from=auth.valid_from.isoformat())]
+    return []
+
+
 def protected_prefixes() -> list:
     extra = getattr(settings, "NMAS_ZTP_PROTECTED_PREFIXES", ()) or ()
     return [ipaddress.ip_network(p) for p in (*PROTECTED_PREFIXES, *extra)]

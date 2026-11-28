@@ -218,6 +218,7 @@ class EvaluatorTests(SimpleTestCase):
              {"ospf": [{"family": "OSPFV2", "neighbor_id": "10.0.0.2", "interface": "Ethernet1", "state": "EX_START"}]}, S.FAIL, "OSPF_ADJACENCY_DOWN"),
             ("ospf no neighbor", req("ROUTING_INTERFACE_ENABLED", {"protocol": "ospf", "interface": "Ethernet1", "version": "OSPFV2"}), {"ospf": []}, S.FAIL, "OSPF_ADJACENCY_DOWN"),
             ("ospf passive interface", req("ROUTING_INTERFACE_ENABLED", {"protocol": "ospf", "interface": "Ethernet1", "passive": True}), {"ospf": []}, S.NOT_APPLICABLE, "OSPF_EXPECTED_FULL"),
+            ("ospf loopback interface", req("ROUTING_INTERFACE_ENABLED", {"protocol": "ospf", "interface": "Loopback0", "passive": False}), {"ospf": []}, S.NOT_APPLICABLE, "OSPF_EXPECTED_FULL"),
             ("bgp established", req("BGP_PEER_INTENDED", {"peer": "192.0.2.1"}), {}, S.PASS, "BGP_EXPECTED_ESTABLISHED"),
             ("bgp idle", req("BGP_PEER_INTENDED", {"peer": "192.0.2.1"}),
              {"bgp": [{"peer": "192.0.2.1", "remote_as": "65002", "state": "IDLE", "family": 4}]}, S.FAIL, "BGP_SESSION_DOWN"),

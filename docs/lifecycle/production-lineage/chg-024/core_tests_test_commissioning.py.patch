@@ -1,0 +1,29 @@
+--- production-pre/web/core/tests/test_commissioning.py
++++ release/web/core/tests/test_commissioning.py
+@@ -66,7 +66,7 @@
+ 
+     def admission_approved(self, expectations=None):
+         self.configured()
+-        planned = A.plan(self.record, actor=L.OPERATOR, expectations=expectations or EXPECT)
++        planned = A.plan(self.record, actor=L.OPERATOR, expectations=expectations or EXPECT, access=self.flow.access)
+         self.assertTrue(planned.ok, planned.codes)
+         checked = A.precheck(planned.admission, actor=L.OPERATOR, access=self.flow.access)
+         self.assertTrue(checked.ok, checked.codes)
+@@ -264,7 +264,7 @@
+ 
+     def test_approval_is_separated_and_bound_to_the_evidence(self):
+         self.configured()
+-        planned = A.plan(self.record, actor=L.OPERATOR, expectations=EXPECT).admission
++        planned = A.plan(self.record, actor=L.OPERATOR, expectations=EXPECT, access=self.flow.access).admission
+         A.precheck(planned, actor=L.OPERATOR, access=self.flow.access)
+         admission = A.get_admission(planned.pk)
+         self.assertEqual(A.approve(admission, actor=L.OPERATOR, confirmation=admission.evidence_digest).codes, ["ADMISSION_SELF_APPROVAL"])
+@@ -304,7 +304,7 @@
+ 
+     def test_execute_refused_when_unapproved_or_stale(self):
+         self.configured()
+-        planned = A.plan(self.record, actor=L.OPERATOR, expectations=EXPECT).admission
++        planned = A.plan(self.record, actor=L.OPERATOR, expectations=EXPECT, access=self.flow.access).admission
+         self.assertEqual(A.execute(planned, actor=L.APPROVER, access=self.flow.access).codes, ["ADMISSION_STATE_INVALID"])
+         self.assertEqual(A.cancel(planned, actor=L.OPERATOR, reason="").codes, ["ADMISSION_STATE_INVALID"])
+         self.assertEqual(A.cancel(planned, actor=L.OPERATOR, reason="window closed").admission.state, ASt.CANCELLED)

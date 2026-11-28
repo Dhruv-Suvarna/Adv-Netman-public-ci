@@ -1,0 +1,31 @@
+--- a/web/core/tests/test_single_admin_lab_exception.py
++++ b/web/core/tests/test_single_admin_lab_exception.py
+@@ -92,6 +92,28 @@
+                             e.metadata["separation_of_duties_satisfied"] is False and
+                             e.metadata["original_requester"] == "dhruv" for e in uses))
+ 
++    def test_lab_binding_reads_the_deployment_descriptor_and_fails_closed(self):
++        """The lab check reads REPO_ROOT/inventory.yml directly (no device-health import) and refuses when it differs or is unreadable."""
++        import tempfile
++        from pathlib import Path
++
++        from django.test import override_settings
++
++        cap = self.capability()
++        self.activate(cap)
++        self.assertEqual(exception.deployment_lab_id(), "srlceos01")
++        self.assertTrue(exception.state(cap, now=self.now).ok)
++        with tempfile.TemporaryDirectory() as root:
++            with override_settings(REPO_ROOT=root):                       # no descriptor at all
++                self.assertEqual(exception.deployment_lab_id(), "")
++                self.assertEqual(exception.state(cap, now=self.now).codes, ["EXCEPTION_LAB_MISMATCH"])
++            (Path(root) / "inventory.yml").write_text("lab_name: another-lab\n", encoding="utf-8")
++            with override_settings(REPO_ROOT=root):
++                self.assertEqual(exception.state(cap, now=self.now).codes, ["EXCEPTION_LAB_MISMATCH"])
++            (Path(root) / "inventory.yml").write_text("lab_name: [unterminated\n", encoding="utf-8")
++            with override_settings(REPO_ROOT=root):
++                self.assertEqual(exception.state(cap, now=self.now).codes, ["EXCEPTION_LAB_MISMATCH"])
++
+     def test_unrelated_target_and_actor_are_denied(self):
+         cap = self.capability()
+         self.activate(cap)

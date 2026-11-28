@@ -1,0 +1,371 @@
+"""DHCP lease lifetime of an open ZTP session: lapse, genuine renewal, post-delivery release and the controlled re-discovery window;
+the bootstrap authorization's window on every later step; the upstream (R6) gate on a downstream (R7) re-discovery; and the rule
+that ZTP alone never grants production admission or routing.
+
+The bootstrap path gate is ``workflow.bootstrap_path_checks``.  ``ReadBackPath`` feeds it S1's relay read-back as S1 really relays
+the test network, so these tests run unchanged on both ZTP lineages (the deployed one reads the relay live over SSH, the branch
+one from NMAS's stored read-back); every other check of the gate is the real one."""
+
+from __future__ import annotations
+
+import io
+import json
+from datetime import timedelta
+from unittest import mock
+
+from django.core.management import CommandError, call_command
+from django.test import SimpleTestCase, TestCase
+from django.utils import timezone
+
+from core import models
+from core.services.commissioning import service as commissioning
+from core.services.devices import events, lifecycle, stage_report
+from core.services.devices.codes import blocker
+from core.services.ztp import adapters, artifacts, dependencies, discovery, lease, policy, workflow
+from core.tests.helpers import lifecycle as L
+from core.tests.helpers import ztp as Z
+
+Stage = models.ZtpSessionStage
+S = models.DeviceLifecycleState
+OK_PATH = [{"check": c, "ok": True, "code": "", "detail": ""} for c in
+           ("upstream_ready", "attachment_approved", "trusted_isolation", "bootstrap_network", "bootstrap_path_relay", "native_ztp_adapter")]
+
+
+def relay_readback() -> dict:
+    """S1's DHCP relay as it relays the test network: option 82 on, default circuit id, helper = the bootstrap service."""
+    return {"enabled": True, "interfaces": {"Ethernet7": {"circuit_id": "", "remote_id": "", "helpers": [Z.NET["service_address"]],
+                                                         "addresses": [Z.RELAY]}}}
+
+
+class ReadBackPath:
+    def setUp(self):
+        super().setUp()
+        real = dependencies.evaluate
+        patcher = mock.patch.object(workflow, "bootstrap_path_checks", side_effect=lambda device, attachment, network:
+                                    real(device, attachment, network, relay_readback=relay_readback()))
+        self.path_gate = patcher.start()
+        self.addCleanup(patcher.stop)
+
+
+def served(session):
+    artifact = session.artifacts.get(state=models.BootstrapArtifactState.ACTIVE)
+    decision = artifacts.authorize(f"/ztp/v1/{artifact.artifact_id}/{artifact.filename}", session.reserved_address, "HTTP")
+    assert decision.ok, decision.code
+    artifacts.record(decision, client_address=session.reserved_address, transport="HTTP", outcome="SERVED", bytes_sent=len(decision.content))
+    session.refresh_from_db()
+    return session
+
+
+class LeaseLapseTests(ReadBackPath, Z.ZtpTestMixin, TestCase):
+    def setUp(self):
+        super().setUp()
+        self.start = timezone.now().replace(microsecond=0) - timedelta(minutes=1)
+        self.session = self.open_session()
+        self.network = self.session.network
+        discovery.ingest(self.network, text=Z.lease(start=self.start, minutes=10))
+        self.session.refresh_from_db()
+        self.assertEqual(self.session.stage, Stage.DISCOVERED)
+
+    def actions(self):
+        return list(self.session.device.lifecycle_events.order_by("sequence").values_list("action", "outcome"))
+
+    def test_active_binding_is_reported_and_changes_nothing(self):
+        summary = discovery.ingest(self.network, text=Z.lease(start=self.start, minutes=10))
+        self.assertEqual(summary["lapsed"], [])
+        self.assertEqual(lease.status(self.session)["state"], lease.ACTIVE)
+
+    def test_expiry_before_delivery_returns_the_session_to_discovery(self):
+        later = self.start + timedelta(minutes=11)
+        summary = discovery.ingest(self.network, text=Z.lease(start=self.start, minutes=10), now=later)
+        self.assertEqual(summary["lapsed"], [self.session.session_id])
+        self.session.refresh_from_db()
+        self.assertEqual(self.session.stage, Stage.AWAITING_DISCOVERY)
+        self.assertEqual(self.session.discovery["lapsed"]["state"], lease.EXPIRED)
+        self.assertIn("address", self.session.discovery["previous"])            # stale facts kept, not erased
+        device = models.ManagedDevice.objects.get(pk=self.session.device_id)
+        self.assertEqual(device.lifecycle_state, models.DeviceLifecycleState.DISCOVERED)   # history is never rewritten
+        self.assertIn(("ZTP_LEASE_LAPSED", "RECORDED"), self.actions())
+        self.assertTrue(events.verify_chain(device))
+
+    def test_release_before_delivery_lapses_as_ended(self):
+        discovery.ingest(self.network, text=Z.lease(start=self.start, minutes=10) + Z.released())
+        self.session.refresh_from_db()
+        self.assertEqual((self.session.stage, self.session.discovery["lapsed"]["state"]), (Stage.AWAITING_DISCOVERY, lease.ENDED))
+
+    def test_a_reread_of_the_lapsed_lease_file_is_not_a_renewal(self):
+        text = Z.lease(start=self.start, minutes=10) + Z.released()
+        discovery.ingest(self.network, text=text)
+        for _ in range(3):
+            discovery.ingest(self.network, text=text)
+        self.session.refresh_from_db()
+        self.assertEqual(self.session.stage, Stage.AWAITING_DISCOVERY)
+        self.assertEqual([a for a in self.actions() if a[0].startswith("ZTP_LEASE")], [("ZTP_LEASE_LAPSED", "RECORDED")])
+
+    def test_genuine_renewal_readvances_after_the_authorization_is_decided_again(self):
+        later = self.start + timedelta(minutes=11)
+        discovery.ingest(self.network, text=Z.lease(start=self.start, minutes=10), now=later)
+        discovery.ingest(self.network, text=Z.lease(start=later, minutes=10), now=later + timedelta(seconds=5))
+        self.session.refresh_from_db()
+        self.assertEqual(self.session.stage, Stage.DISCOVERED)
+        self.assertEqual(self.session.discovery["renewed_after"]["state"], lease.EXPIRED)
+        renewed = self.session.device.lifecycle_events.get(action="ZTP_LEASE_RENEWED")
+        self.assertEqual(renewed.outcome, "RECORDED")
+        self.assertFalse(renewed.evidence["bootstrap_decision"]["production_admission"])
+        self.assertEqual(lease.status(self.session, now=later + timedelta(seconds=5))["state"], lease.ACTIVE)
+
+    def test_renewal_after_the_bootstrap_authorization_expired_is_refused(self):
+        auth = self.session.authorization
+        after = auth.valid_until + timedelta(minutes=1)
+        discovery.ingest(self.network, text=Z.lease(start=self.start, minutes=10), now=after)          # lapses
+        discovery.ingest(self.network, text=Z.lease(start=after, minutes=10), now=after + timedelta(seconds=5))
+        self.session.refresh_from_db()
+        self.assertEqual(self.session.stage, Stage.AWAITING_DISCOVERY)
+        self.assertEqual(self.session.device.lifecycle_events.get(action="ZTP_LEASE_RENEWED").outcome, "REFUSED")
+
+    def test_release_after_delivery_is_expected_and_never_regresses(self):
+        models.ZtpSession.objects.filter(pk=self.session.pk).update(stage=Stage.DELIVERED)
+        summary = discovery.ingest(self.network, text=Z.lease(start=self.start, minutes=10) + Z.released())
+        self.session.refresh_from_db()
+        self.assertEqual((summary["lapsed"], self.session.stage), ([], Stage.DELIVERED))
+        report = lease.status(self.session)
+        self.assertEqual(report["state"], lease.ENDED)
+        self.assertIn("expected", report["meaning"])
+
+    def test_delivery_refuses_an_ended_binding_even_with_a_future_end_time(self):
+        observation = lease.binding(self.session)
+        self.assertIsNotNone(artifacts._bound_lease(self.session, observation.address, timezone.now()))
+        models.DhcpLeaseObservation.objects.filter(pk=observation.pk).update(binding_state="released",
+                                                                             lease_ends=timezone.now() + timedelta(hours=1))
+        self.assertIsNone(artifacts._bound_lease(self.session, observation.address, timezone.now()))
+
+
+class LapseInStageReportTests(ReadBackPath, Z.ZtpTestMixin, TestCase):
+    def test_a_lapsed_lease_is_visible_as_pending_discovery_with_its_evidence(self):
+        session = self.discovered()
+        discovery.ingest(session.network, text=Z.lease(), now=timezone.now() + timedelta(hours=1))
+        session.refresh_from_db()
+        device = models.ManagedDevice.objects.get(pk=session.device_id)
+        report = stage_report.device_report(device)
+        self.assertEqual({s['stage']: s['status'] for s in report['stages']}["DISCOVERED"], stage_report.COMPLETE)       # history kept: it WAS discovered
+        self.assertEqual(session.stage, models.ZtpSessionStage.AWAITING_DISCOVERY)
+        self.assertIn("ZTP_LEASE_LAPSED", [e.action for e in device.lifecycle_events.all()])
+        self.assertTrue(report["evidence"]["chain_intact"])
+
+
+
+class RenewalWindowTests(ReadBackPath, Z.ZtpTestMixin, TestCase):
+    """The downstream device (R7 analogue) waits behind its upstream; once the path qualifies NMAS expects its native retry."""
+
+    def setUp(self):
+        super().setUp()
+        self.session = self.open_session()
+        self.network = self.session.network
+        self.now = timezone.now().replace(microsecond=0)
+
+    def test_window_is_refused_while_the_upstream_is_not_admitted(self):
+        waiting = [*OK_PATH[1:], {"check": "upstream_ready", "ok": False, "code": "UPSTREAM_NOT_TRUSTED", "detail": "R6"}]
+        ok, problems, record = lease.expect_renewal(self.session, actor=L.OPERATOR, checks=waiting, now=self.now)
+        self.assertFalse(ok)
+        self.assertEqual([p["code"] for p in problems], ["ZTP_BOOTSTRAP_PATH_NOT_READY"])
+        self.assertEqual(problems[0]["details"]["failing"][0]["code"], "UPSTREAM_NOT_TRUSTED")
+        self.assertEqual(record, {})
+        self.assertEqual(self.session.device.lifecycle_events.get(action="ZTP_RENEWAL_EXPECTED").outcome, "REFUSED")
+        self.session.refresh_from_db()
+        self.assertEqual(lease.renewal_status(self.session)["state"], lease.NOT_EXPECTED)
+
+    def test_dhcpv6_solicit_is_not_claimed(self):
+        ok, problems, _ = lease.expect_renewal(self.session, actor=L.OPERATOR, family=6, checks=OK_PATH, now=self.now)
+        self.assertFalse(ok)
+        self.assertIn("DHCPV6_DISCOVERY_NOT_IMPLEMENTED", [p["code"] for p in problems])
+
+    def test_window_from_the_adapter_retry_then_observed(self):
+        ok, problems, record = lease.expect_renewal(self.session, actor=L.OPERATOR, checks=OK_PATH, now=self.now)
+        self.assertTrue(ok, problems)
+        self.assertEqual(record["window_seconds"], 120)           # cEOS: documented 30 s DISCOVER retry x 4
+        self.session.refresh_from_db()
+        self.assertEqual(lease.renewal_status(self.session, now=self.now + timedelta(seconds=10))["state"], lease.PENDING)
+        discovery.ingest(self.network, text=Z.lease(start=self.now + timedelta(seconds=30)), now=self.now + timedelta(seconds=31))
+        self.session.refresh_from_db()
+        report = lease.renewal_status(self.session, now=self.now + timedelta(seconds=40))
+        self.assertEqual(report["state"], lease.OBSERVED)
+        self.assertTrue(report["within_window"])
+        self.assertEqual(self.session.stage, Stage.DISCOVERED)
+        self.assertIn("renewal", self.session.discovery)
+        self.assertTrue(events.verify_chain(self.session.device))
+
+    def test_no_request_in_the_window_is_overdue_with_native_recovery_only(self):
+        lease.expect_renewal(self.session, actor=L.OPERATOR, checks=OK_PATH, now=self.now)
+        self.session.refresh_from_db()
+        report = lease.renewal_status(self.session, now=self.now + timedelta(seconds=121))
+        self.assertEqual(report["state"], lease.OVERDUE)
+        self.assertEqual(report["recovery"][0]["key"], "WAIT_NATIVE_RETRY")
+        self.assertTrue(all(action["native"] for action in report["recovery"]))
+        self.assertNotIn("link", " ".join(a["command"] + a["label"] for a in report["recovery"]).lower())
+
+    def test_a_session_already_discovered_needs_no_window(self):
+        discovery.ingest(self.network, text=Z.lease())
+        self.session.refresh_from_db()
+        ok, problems, _ = lease.expect_renewal(self.session, actor=L.OPERATOR, checks=OK_PATH)
+        self.assertFalse(ok)
+        self.assertEqual(problems[0]["code"], "ZTP_SESSION_STATE_INVALID")
+
+
+class RenewalWindowUnitTests(SimpleTestCase):
+    def test_adapters_without_a_documented_interval_open_no_window(self):
+        windows = {name: lease.renewal_window_seconds(adapters.get(name)) for name in adapters.ADAPTERS}
+        self.assertEqual(windows["arista_eos"], 120)
+        self.assertIn(None, windows.values())                     # e.g. IOS XE documents no interval: no window is invented
+
+
+class AuthorizationWindowTests(ReadBackPath, Z.ZtpTestMixin, TestCase):
+    """No expired bootstrap authorization carries the onboarding further -- read from its window, not only its (swept) state."""
+
+    def test_the_in_force_rule(self):
+        auth = self.open_session().authorization
+        self.assertEqual(policy.authorization_problems(auth), [])
+        codes = lambda **kw: [p["code"] for p in policy.authorization_problems(auth, **kw)]
+        self.assertEqual(codes(now=auth.valid_until), ["EXPIRED"])                       # APPROVED, but the window is over
+        self.assertEqual(codes(now=auth.valid_from - timedelta(seconds=1)), ["NOT_YET_VALID"])
+        for state, code in ((models.BootstrapAuthorizationState.EXPIRED, "EXPIRED"),
+                            (models.BootstrapAuthorizationState.REVOKED, "AUTHORIZATION_STATE_INVALID")):
+            auth.state = state
+            self.assertEqual(codes(), [code])
+        self.assertEqual([p["code"] for p in policy.authorization_problems(None)], ["AUTHORIZATION_NOT_FOUND"])
+
+    def test_no_renewal_window_on_an_unswept_expired_grant(self):
+        session = self.open_session()
+        after = session.authorization.valid_until + timedelta(minutes=1)
+        ok, problems, _ = lease.expect_renewal(session, actor=L.OPERATOR, checks=OK_PATH, now=after)
+        self.assertFalse(ok)
+        self.assertIn("EXPIRED", [p["code"] for p in problems])
+        self.assertEqual(models.BootstrapAuthorization.objects.get(pk=session.authorization_id).state,
+                         models.BootstrapAuthorizationState.APPROVED)                       # never swept: the window decided
+
+    def test_contact_and_verification_stop_once_the_window_is_over(self):
+        session = served(self.discovered())
+        self.assertEqual(session.stage, Stage.DELIVERED)
+        models.BootstrapAuthorization.objects.filter(pk=session.authorization_id).update(valid_until=timezone.now() - timedelta(seconds=1))
+        contact = workflow.contact_management(session, actor=L.OPERATOR, observe=lambda address: self.fail("device contacted"))
+        self.assertEqual(contact.codes, ["EXPIRED"])
+        models.ZtpSession.objects.filter(pk=session.pk).update(enrolled_host_key=L.HOST_KEY, host_key_enrolled_by=L.APPROVER,
+                                                               host_key_enrollment_basis="console show management ssh hostkey")
+        session.refresh_from_db()
+        never = lambda *a, **k: self.fail("device contacted")
+        verify = workflow.verify_management(session, actor="erin", run=never)
+        self.assertEqual(verify.codes, ["EXPIRED"])
+        device = models.ManagedDevice.objects.get(pk=session.device_id)
+        self.assertEqual((device.lifecycle_state, device.admission_state), (S.DISCOVERED, models.ProductionAdmissionState.NOT_ADMITTED))
+
+    def test_commissioning_counts_a_grant_only_if_the_bootstrap_completed_inside_its_window(self):
+        auth = self.open_session().authorization
+        State = models.BootstrapAuthorizationState
+        self.assertTrue(commissioning.authorization_intact(auth))
+        self.assertFalse(commissioning.authorization_intact(auth, now=auth.valid_until))     # APPROVED past its window
+        inside, outside = auth.valid_until - timedelta(seconds=1), auth.valid_until + timedelta(seconds=1)
+        for state, revoked_by in ((State.CONSUMED, ""), (State.REVOKED, workflow.SYSTEM)):
+            auth.state, auth.revoked_by = state, revoked_by
+            self.assertTrue(commissioning.authorization_intact(auth, completed_at=inside))
+            self.assertFalse(commissioning.authorization_intact(auth, completed_at=outside))
+        auth.state, auth.revoked_by = State.REVOKED, L.OPERATOR
+        self.assertFalse(commissioning.authorization_intact(auth, completed_at=inside))
+        auth.state = State.EXPIRED
+        self.assertFalse(commissioning.authorization_intact(auth, completed_at=inside))
+        session = models.ZtpSession(verification={"verified_at": inside.isoformat()})
+        self.assertEqual(commissioning.bootstrap_completed_at(session), inside)
+        self.assertIsNone(commissioning.bootstrap_completed_at(models.ZtpSession(verification={"verified_at": "garbage"})))
+
+
+class DownstreamRenewalGateTests(ReadBackPath, Z.ZtpTestMixin, TestCase):
+    """R4 -> R6 -> R7: a downstream re-discovery waits for its upstream's readiness gates, generically (no device by name)."""
+
+    def setUp(self):
+        super().setUp()
+        self.start = timezone.now().replace(microsecond=0) - timedelta(minutes=1)
+        self.session = self.discovered()
+        self.network = self.session.network
+
+    def lapse_and_renew(self, at):
+        discovery.ingest(self.network, text=Z.lease(start=self.start, minutes=10), now=at)
+        discovery.ingest(self.network, text=Z.lease(start=at, minutes=10), now=at + timedelta(seconds=5))
+        self.session.refresh_from_db()
+
+    def test_a_renewal_waits_while_the_upstream_is_not_ready_and_resumes_once_it_is(self):
+        gate = mock.Mock()
+        gate.upstream_problems.return_value = [blocker("UPSTREAM_NOT_TRUSTED", dependency="DEV-R6", lifecycle_state=S.COMMISSIONING)]
+        with mock.patch.object(lease, "attachment_service", gate):
+            self.lapse_and_renew(self.start + timedelta(minutes=11))
+        self.assertEqual(self.session.stage, Stage.AWAITING_DISCOVERY)
+        refused = self.session.device.lifecycle_events.get(action="ZTP_LEASE_RENEWED")
+        self.assertEqual((refused.outcome, refused.blockers[0]["code"]), ("REFUSED", "UPSTREAM_NOT_TRUSTED"))
+        gate.upstream_problems.assert_called_with(self.session.device.name, "S1")
+        later = self.start + timedelta(minutes=13)                                  # the upstream qualifies; the device retries
+        discovery.ingest(self.network, text=Z.lease(start=later, minutes=10), now=later + timedelta(seconds=5))
+        self.session.refresh_from_db()
+        self.assertEqual(self.session.stage, Stage.DISCOVERED)
+        self.assertTrue(events.verify_chain(self.session.device))
+
+    def test_the_window_uses_the_session_open_path_gate(self):
+        self.lapse_and_renew(self.start + timedelta(minutes=11))
+        discovery.ingest(self.network, text=Z.lease(start=self.start, minutes=10), now=self.start + timedelta(minutes=30))
+        self.session.refresh_from_db()
+        self.assertEqual(self.session.stage, Stage.AWAITING_DISCOVERY)
+        self.path_gate.reset_mock()
+        waiting = [blocker("UPSTREAM_NOT_TRUSTED", dependency="DEV-R6", lifecycle_state=S.COMMISSIONING)]
+        with mock.patch("core.services.devices.attachments.upstream_problems", return_value=waiting):
+            ok, problems, _ = lease.expect_renewal(self.session, actor=L.OPERATOR)
+        self.assertTrue(self.path_gate.called)                                     # the real session-open gate, not an injected list
+        self.assertFalse(ok)
+        self.assertEqual(problems[-1]["code"], "ZTP_BOOTSTRAP_PATH_NOT_READY")
+        self.assertIn("UPSTREAM_NOT_TRUSTED", [f["code"] for f in problems[-1]["details"]["failing"]])
+        ok, problems, record = lease.expect_renewal(self.session, actor=L.OPERATOR)
+        self.assertTrue(ok, problems)
+        self.assertIn("upstream_ready", record["path_checks"])
+
+
+class ZtpAloneNeverAdmitsTests(ReadBackPath, Z.ZtpTestMixin, TestCase):
+    """A complete native bootstrap, then a lease that comes and goes: discovery and bootstrap only, never admission or routing."""
+
+    def test_bootstrap_and_lease_events_grant_no_production_privilege(self):
+        session = served(self.discovered())
+        self.assertTrue(workflow.contact_management(session, actor=L.OPERATOR, observe=lambda address: L.HOST_KEY).ok)
+        session.refresh_from_db()
+        self.assertTrue(workflow.enroll_host_key(session, fingerprint=L.HOST_KEY, actor=L.APPROVER, basis="console hostkey").ok)
+        session.refresh_from_db()
+        result = workflow.verify_management(session, actor="erin", run=Z.fake_run(Z.eos_outputs(session), L.HOST_KEY))
+        self.assertTrue(result.ok, result.codes)
+        session = workflow.get_session(session.session_id)
+        discovery.ingest(session.network, text=Z.lease() + Z.released())             # post-bootstrap release: expected
+        device = models.ManagedDevice.objects.get(pk=session.device_id)
+        self.assertEqual((session.stage, device.lifecycle_state, device.admission_state),
+                         (Stage.BOOTSTRAPPED, S.BOOTSTRAPPED, models.ProductionAdmissionState.NOT_ADMITTED))
+        self.assertFalse(models.ProductionAdmission.objects.filter(device=device).exists())
+        self.assertFalse(models.IsolationPolicy.objects.filter(device=device, state=models.IsolationState.RELEASED).exists())
+        status = workflow.status(session)
+        self.assertFalse(status["production_admission"]["allowed"])
+        self.assertIn(status["lease"]["state"], (lease.ENDED, lease.ACTIVE))
+        self.assertEqual(status["renewal"]["state"], lease.NOT_EXPECTED)
+        for target in (S.COMMISSIONING, S.IN_SERVICE):
+            self.assertFalse(lifecycle.transition(device, target, actor=L.OPERATOR).ok, target)
+        self.assertTrue(events.verify_chain(device))
+
+
+class LeaseCommandTests(ReadBackPath, Z.ZtpTestMixin, TestCase):
+    def call(self, *args) -> str:
+        out = io.StringIO()
+        call_command("nmas_ztp", *args, stdout=out, stderr=io.StringIO())
+        return out.getvalue()
+
+    def test_lease_status_and_the_window_from_the_shell(self):
+        from core.tests.test_lifecycle_views import user_client
+
+        session = self.open_session()
+        report = json.loads(self.call("lease-status", "--session", session.session_id))
+        self.assertEqual((report["lease"]["state"], report["renewal"]["state"]), (lease.NONE, lease.NOT_EXPECTED))
+        user_client("olivia", "NMAS Operator")
+        with self.assertRaisesMessage(CommandError, "DHCPV6_DISCOVERY_NOT_IMPLEMENTED"):
+            self.call("expect-renewal", "--session", session.session_id, "--family", "6", "--actor", "olivia")
+        record = json.loads(self.call("expect-renewal", "--session", session.session_id, "--actor", "olivia"))
+        self.assertEqual(record["window_seconds"], 120)
+        user_client("vera", "NMAS Viewer")
+        with self.assertRaises(CommandError):
+            self.call("expect-renewal", "--session", session.session_id, "--actor", "vera")

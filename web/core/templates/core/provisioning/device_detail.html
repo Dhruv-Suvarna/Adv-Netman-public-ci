@@ -3,7 +3,7 @@
 {% block content %}
 <div class="page-header">
   <h1>{{ device.name }} <code>{{ device.device_id }}</code></h1>
-  <p><a href="{% url 'core:managed_devices' %}">&larr; Managed devices</a> · <a href="{% url 'core:managed_device_json' device.device_id %}">JSON</a></p>
+  <p><a href="{% url 'core:managed_devices' %}">&larr; Managed devices</a> · <a href="{% url 'core:managed_device_json' device.device_id %}">JSON</a> · <a href="{% url 'core:lifecycle_device' device.device_id %}">Lifecycle stages &amp; evidence</a></p>
   <p>Nothing on this page contacts the device. Bootstrap authorization grants bootstrap scope only and never production admission.</p>
 </div>
 

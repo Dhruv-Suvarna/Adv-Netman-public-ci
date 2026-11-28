@@ -151,7 +151,7 @@ class AdmissionClosureTests(Base):
             self.assertEqual(A.plan_problems(C.get_record(self.record.pk)), [])
             found = A.evidence(C.get_record(self.record.pk), policy, EXPECT)
             self.assertEqual((found["commissioning"], found["release_change"]), (self.record.commissioning_id, ""))
-        admission = A.plan(C.get_record(self.record.pk), actor=L.OPERATOR, expectations=EXPECT).admission
+        admission = A.plan(C.get_record(self.record.pk), actor=L.OPERATOR, expectations=EXPECT, access=self.flow.access).admission
         with self.subTest("returns current evidence for the planned admission"):
             self.assertEqual(A.current_problems(admission), [])
             built = A.evidence(admission.commissioning, iso.device_policy(self.device), admission.expectations)
@@ -172,7 +172,7 @@ class AdmissionClosureTests(Base):
 
     def test_cancel_returns_a_cancelled_admission_and_nothing_sent(self):
         self.configured()
-        planned = A.plan(self.record, actor=L.OPERATOR, expectations=EXPECT).admission
+        planned = A.plan(self.record, actor=L.OPERATOR, expectations=EXPECT, access=self.flow.access).admission
         before = self.flow.session.config.text()
         self.assertEqual(A.cancel(planned, actor=L.OPERATOR, reason="window closed").admission.state, ASt.CANCELLED)
         self.assertEqual(self.flow.session.config.text(), before)
@@ -183,7 +183,7 @@ class AdmissionClosureTests(Base):
 
     def test_status_names_no_admission_before_approval(self):
         self.configured()
-        planned = A.plan(self.record, actor=L.OPERATOR, expectations=EXPECT).admission
+        planned = A.plan(self.record, actor=L.OPERATOR, expectations=EXPECT, access=self.flow.access).admission
         found = A.status(planned)
         self.assertEqual((found["state"], found["approved_by"]), (ASt.PLANNED, ""))
 
@@ -410,7 +410,7 @@ class ModelClosureTests(Base):
         self.assertFalse(policy.is_terminal)
         self.assertEqual(self.record.commissioning_id, f"COM-{self.record.pk:06d}")
         self.assertTrue(self.record.is_open)
-        admission = A.plan(self.record, actor=L.OPERATOR, expectations=EXPECT).admission
+        admission = A.plan(self.record, actor=L.OPERATOR, expectations=EXPECT, access=self.flow.access).admission
         self.assertEqual(admission.admission_id, f"ADM-{admission.pk:06d}")
         self.assertTrue(admission.is_open)
 
@@ -426,7 +426,7 @@ class ModelClosureTests(Base):
         record.version += 1
         record.__dict__["_commissioning_write"] = True
         record.save()
-        admission = A.plan(record, actor=L.OPERATOR, expectations=EXPECT).admission
+        admission = A.plan(record, actor=L.OPERATOR, expectations=EXPECT, access=self.flow.access).admission
         admission.version += 1
         admission.__dict__["_admission_write"] = True
         admission.save()
@@ -451,7 +451,7 @@ class ModelClosureTests(Base):
         record = C.get_record(self.record.pk)
         with self.assertRaises(ValueError):
             record.save()
-        admission = A.plan(record, actor=L.OPERATOR, expectations=EXPECT).admission
+        admission = A.plan(record, actor=L.OPERATOR, expectations=EXPECT, access=self.flow.access).admission
         with self.assertRaises(ValueError):
             admission.save()
         with self.assertRaises(ValueError):
@@ -464,7 +464,7 @@ class ModelClosureTests(Base):
     def test_model_deletes_preserve_history(self):
         self.configured()
         policy = iso.device_policy(self.device)
-        admission = A.plan(self.record, actor=L.OPERATOR, expectations=EXPECT).admission
+        admission = A.plan(self.record, actor=L.OPERATOR, expectations=EXPECT, access=self.flow.access).admission
         event = outbox.record(self.device, models.OutboxTopic.TOPOLOGY_DEVICE_ADMITTED, OutboxClosureTests.PAYLOAD, subject="ADM-9", actor=L.APPROVER)
         check = policy.checks.first()
         for row in (policy, check, self.record, admission, event):

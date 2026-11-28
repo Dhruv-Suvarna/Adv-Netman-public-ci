@@ -34,7 +34,7 @@ from ... import models
 from ..devices import authorization as authorization_service
 from ..devices import events, identity, lifecycle
 from ..devices.codes import blocker, codes
-from . import adapters, artifacts, dependencies, management, policy
+from . import adapters, artifacts, dependencies, lease, management, policy
 from .adapters.base import BootstrapContext, TransportPolicy
 
 Stage = models.ZtpSessionStage
@@ -148,7 +148,7 @@ def open_problems(device, auth, network, *, now=None) -> list[dict]:
         problems.append(blocker("AUTHORIZATION_SCOPE_INVALID", required=sorted(REQUIRED_SCOPE)))
     if models.ZtpSession.objects.filter(device=device, stage__in=tuple(models.ZTP_SESSION_OPEN)).exists():
         problems.append(blocker("ZTP_SESSION_OPEN_EXISTS"))
-    checks = dependencies.evaluate(device, auth.attachment, network)
+    checks = bootstrap_path_checks(device, auth.attachment, network)
     problems += [blocker(c["code"], check=c["check"], detail=c["detail"]) for c in checks if not c["ok"]]
     adapter = adapters.for_platform(device.platform)
     if adapter is not None and adapter.capability.implemented:
@@ -157,6 +157,14 @@ def open_problems(device, auth, network, *, now=None) -> list[dict]:
         if not adapter.capability.enrollment_key_types:
             problems.append(blocker("ZTP_ENROLLMENT_BLOCKED"))
     return problems
+
+
+def bootstrap_path_checks(device, attachment, network) -> list[dict]:
+    """[{check, ok, code, detail}] of the device's bootstrap path through ``attachment`` on ``network``: the ONE path gate shared by
+    opening a session and by a controlled re-discovery window (``lease.expect_renewal``), so a downstream device (R7) is
+    re-discovered under exactly the gates it was opened under -- its upstream (R6) IN_SERVICE and ADMITTED, the trusted
+    isolation, the trusted relay and its option 82 configuration (``dependencies.evaluate``)."""
+    return dependencies.evaluate(device, attachment, network)
 
 
 def open_session(device, *, authorization, network, actor: str, transport_policy: str = TransportPolicy.ISOLATED_LAB) -> ZtpResult:
@@ -281,6 +289,9 @@ def contact_management(session, *, actor: str, observe=management.observe_host_k
     action = "ZTP_MANAGEMENT_CONTACT"
     if session.stage not in (Stage.DELIVERED, Stage.MANAGEMENT_REACHED):
         return _refuse(session.device, action, [blocker("ZTP_SESSION_STATE_INVALID", stage=session.stage)], actor=actor, session=session)
+    lapsed = policy.authorization_problems(models.BootstrapAuthorization.objects.filter(pk=session.authorization_id).first())
+    if lapsed:                                       # revoked, withdrawn or past its window: the onboarding does not continue
+        return _refuse(session.device, action, lapsed, actor=actor, session=session)
     try:
         seen = observe(session.reserved_address)
     except management.ManagementError as exc:
@@ -347,9 +358,10 @@ def verify_management(session, *, actor: str, run=management.run_commands) -> Zt
         return _refuse(session.device, action, [blocker("ZTP_SESSION_STATE_INVALID", stage=session.stage)], actor=actor, session=session)
     if not session.enrolled_host_key:
         return _refuse(session.device, action, [blocker("HOST_KEY_NOT_ENROLLED")], actor=actor, session=session)
-    auth_state = models.BootstrapAuthorization.objects.filter(pk=session.authorization_id).values_list("state", flat=True).first()
-    if auth_state not in policy.DHCP_ELIGIBLE_AUTH:      # revoked / withdrawn: never contact the device to complete the onboarding
-        return _refuse(session.device, action, [blocker("AUTHORIZATION_STATE_INVALID", state=auth_state)], actor=actor, session=session)
+    # revoked / withdrawn / past its window (an unswept APPROVED or CONSUMED grant): never contact the device to complete the onboarding
+    lapsed = policy.authorization_problems(models.BootstrapAuthorization.objects.filter(pk=session.authorization_id).first())
+    if lapsed:
+        return _refuse(session.device, action, lapsed, actor=actor, session=session)
     adapter = adapters.get(session.adapter)
     try:
         found = run(session.reserved_address, username=ENROLLMENT_USER, key_reference=session.enrollment_key_ref,
@@ -424,4 +436,5 @@ def status(session) -> dict:
         "verification": session.verification, "failure": session.failure, "attempts": session.attempts,
         "identity_state": device.identity_state, "lifecycle_state": device.lifecycle_state, "ztp_state": device.ztp_state,
         "production_admission": {"state": device.admission_state, "allowed": False, "owner_phases": [5, 6]},
+        "lease": lease.status(session), "renewal": lease.renewal_status(session),
     }

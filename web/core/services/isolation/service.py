@@ -734,8 +734,34 @@ def presence_of(policy, text) -> dict:
     return frr.presence(policy.intent, text) if is_frr(policy) else intent_service.presence(text, eos.render_apply(policy.intent))
 
 
-def release_ops(policy) -> list[dict]:
-    return frr.render_release(policy.intent) if is_frr(policy) else eos.render_release(policy.intent)
+def admission_ospf_release(policy, text) -> list[dict]:
+    """OSPF processes an OSPF admission must release on the upstream port: they cover the port with an explicit
+    ``passive-interface <port>`` and the isolation intent does not already suppress (and release) them.  A process under
+    ``passive-interface default`` is never touched."""
+    if is_frr(policy):
+        return []
+    own = {(p["process"], p.get("vrf") or "") for p in policy.intent["elements"]["CONTROL_PLANE"]["ospf_passive"]}
+    explicit = {header for header, children in eos._blocks(text)
+                if header.startswith("router ospf ") and "passive-interface default" not in eos._children(children)
+                and f"passive-interface {policy.upstream_interface}" in eos._children(children)}
+    return [p for p in eos.routing_facts(text, policy.upstream_interface)["already_passive"]
+            if (p["process"], p.get("vrf") or "") not in own
+            and f"router ospf {p['process']}" + (f" vrf {p['vrf']}" if p.get("vrf") else "") in explicit]
+
+
+def _recorded_ospf_release(policy) -> list[dict]:
+    change = getattr(policy, "release_change", None)
+    return list((((change.metadata or {}).get("transition") or {}).get("ospf_release")) or []) if change is not None else []
+
+
+def release_ops(policy, ospf_release=None) -> list[dict]:
+    if is_frr(policy):
+        return frr.render_release(policy.intent)
+    ops = eos.render_release(policy.intent)          # validates the recorded intent first (refuses a tampered port name)
+    processes = _recorded_ospf_release(policy) if ospf_release is None else ospf_release
+    if not processes:
+        return ops
+    return ops + eos.render_admission_ospf_release(processes, policy.intent["upstream"]["interface"])
 
 
 def create_release(policy, *, actor: str, reference: dict) -> IsolationResult:
@@ -743,7 +769,7 @@ def create_release(policy, *, actor: str, reference: dict) -> IsolationResult:
     action = "ISO_RELEASE_PLAN"
     if policy.state != St.VERIFIED:
         return _refuse(policy.device, action, [blocker("ISOLATION_NOT_VERIFIED", state=policy.state)], actor=actor, policy=policy)
-    ops = release_ops(policy)
+    ops = release_ops(policy, ospf_release=list(reference.get("ospf_release") or []))
     try:
         with db_transaction.atomic():
             change = transaction.create_change(

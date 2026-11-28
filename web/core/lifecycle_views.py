@@ -29,6 +29,7 @@ from .services.devices import codes as device_codes
 from .services.devices import events as device_events
 from .services.devices import lifecycle, resolver
 from .services.devices import netbox as device_netbox
+from .services.devices import stage_report
 from .services.identity.audit import actor_for as _actor
 
 ROLES = lifecycle.ROLES
@@ -274,3 +275,42 @@ def bootstrap_authorization_evaluate(request, device_id, auth_id):
     described = {key: post.get(key, "").strip() for key in authorization_service.REQUEST_KEYS if post.get(key, "").strip()}
     outcome = authorization_service.evaluate(auth, described, actor=_actor(request))
     return _back(device.get_absolute_url(), decision=outcome.decision, codes=",".join(device_codes.codes(outcome.blockers)))
+
+
+# --- lifecycle stage projection (read-only) ---------------------------------------------------------------------------------------
+STATUS_BADGE = {stage_report.COMPLETE: "success", stage_report.CURRENT: "info", stage_report.PENDING: "warning",
+                stage_report.FAILED: "danger", stage_report.PREDATES: "neutral", stage_report.NA: "neutral"}
+
+
+def _badged(report: dict) -> dict:
+    for stage in report["stages"]:
+        stage["badge"] = STATUS_BADGE.get(stage["status"], "neutral")
+    return report
+
+
+@require_GET
+def lifecycle_overview(request):
+    """Every registered device across the ten conceptual lifecycle stages (NMAS database reads only; no device is contacted)."""
+    report = stage_report.fleet_report()
+    for device in report["devices"]:
+        _badged(device)
+    return render(request, "core/provisioning/lifecycle_overview.html",
+                  {"page_title": "Device lifecycle", "page_key": "automation", "report": report, "stages": stage_report.STAGES})
+
+
+@require_GET
+def lifecycle_overview_json(request):
+    return JsonResponse(stage_report.fleet_report())
+
+
+@require_GET
+def lifecycle_device(request, device_id):
+    device = _device_or_404(device_id)
+    return render(request, "core/provisioning/lifecycle_device.html",
+                  {"page_title": f"Lifecycle {device.device_id}", "page_key": "automation", "device": device,
+                   "report": _badged(stage_report.device_report(device))})
+
+
+@require_GET
+def lifecycle_device_json(request, device_id):
+    return JsonResponse(stage_report.device_report(_device_or_404(device_id)))

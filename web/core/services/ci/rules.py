@@ -162,7 +162,11 @@ PATH_RULES: tuple[PathRule, ...] = (
                                   # authenticated read-only observations, their authorizations, pin evidence and inventory reconciliation
                                   "web/core/management/commands/device_observe.py", "web/core/management/commands/observation_authorize.py",
                                   "web/core/management/commands/host_key_pin_check.py",
-                                  "web/core/management/commands/nmas_reconcile_inventory.py")),
+                                  "web/core/management/commands/nmas_reconcile_inventory.py",
+                                  # the read-only lifecycle stage projection (pages, JSON and the report command)
+                                  "web/core/management/commands/nmas_lifecycle_report.py",
+                                  "web/core/templates/core/provisioning/lifecycle_overview.html",
+                                  "web/core/templates/core/provisioning/lifecycle_device.html")),
     PathRule("device_ztp", (f"{_SVC}/ztp/**", "web/core/ztp_views.py", "web/core/management/commands/nmas_ztp.py",
                             "web/core/templates/core/provisioning/_ztp_panel.html", "web/core/templates/core/provisioning/ztp_networks.html",
                             "labs/ztp-isolated/**", "web/core/tests/fixtures/ztp/**", "docs/evidence/v2-phase3-ztp/**",
@@ -514,11 +518,11 @@ SELECTIONS: dict[str, Selection] = {
         django=("lifecycle_identity", "lifecycle_service", "lifecycle_authorization", "lifecycle_resolver", "lifecycle_views",
                 "lifecycle_capability_vocabulary", "contracts", "device_observations", "device_observe", "observation_collector",
                 "observation_connections", "observation_evidence", "observation_sessions", "observation_authorizations",
-                "host_key_pins", "deploy_bindings", "reconcile_inventory"),
+                "host_key_pins", "deploy_bindings", "reconcile_inventory", "lifecycle_stage_report"),
         reason="managed-device identity / lifecycle / attachments / bootstrap authorization / resolver / observations changed",
     ),
     "device_ztp": Selection(
-        django=("ztp_adapters", "ztp_dhcp", "ztp_discovery", "ztp_artifacts", "ztp_workflow", "ztp_views", "lifecycle_service",
+        django=("ztp_adapters", "ztp_dhcp", "ztp_discovery", "ztp_lease", "ztp_artifacts", "ztp_workflow", "ztp_views", "lifecycle_service",
                 "lifecycle_authorization", "lifecycle_views", "lifecycle_capability_vocabulary", "contracts"),
         reason="native ZTP adapters / isolated DHCP providers / discovery / artifact delivery / management verification changed",
     ),

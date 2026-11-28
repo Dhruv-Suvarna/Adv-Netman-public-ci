@@ -93,10 +93,13 @@ def expire_due(*, now=None) -> int:
     return count
 
 
+INACTIVE_BINDINGS = ("free", "released", "expired", "abandoned", "backup", "reset")    # == lease.INACTIVE_STATES
+
+
 def _bound_lease(session, client_address: str, now):
     """The session's correlated trusted lease for ``client_address`` that is still valid (None otherwise)."""
     return (session.lease_observations.filter(outcome=models.DhcpLeaseOutcome.CORRELATED, relay_trusted=True, address=client_address)
-            .exclude(lease_ends__lte=now).order_by("-last_seen", "-id").first())
+            .exclude(lease_ends__lte=now).exclude(binding_state__in=tuple(INACTIVE_BINDINGS)).order_by("-last_seen", "-id").first())
 
 
 def request_for_lease(session, lease) -> dict:
