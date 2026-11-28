@@ -76,13 +76,16 @@ def authorized_target(path) -> tuple[models.ManagementPath | None, list[dict]]:
     for field in ("endpoint_address", "port", "nmas_attachment_id"):
         if getattr(stored, field) != getattr(path, field):
             return None, [codes.blocker("PROBE_TARGET_FORBIDDEN", reason="in-memory path differs from the registered path")]
-    if stored.path_type == models.ManagementPathType.ROUTED_VRF and (
-            stored.nmas_attachment.upstream_device != stored.device.name or stored.attachment_id or
-            (stored.via_device and stored.via_device != stored.device.name)):
-        return None, [codes.blocker("L1_TOPOLOGY_UNVERIFIED", reason="routed path has no verified direct NMAS neighbor")]
-    # Routed VRF paths currently require an on-link NMAS/device pair, so the
-    # endpoint must also belong to this attachment's prefix.
-    problems = address_problems(stored.endpoint_address, network=stored.nmas_attachment.network, layer2=True)
+    on_link = True
+    if stored.path_type == models.ManagementPathType.ROUTED_VRF:
+        from . import paths            # paths imports guard
+        problems = paths.routed_problems(stored)
+        if problems:
+            return None, problems
+        on_link = paths.is_on_link_routed(stored.device, stored.nmas_attachment)
+    # On-link targets must also belong to the NMAS attachment's prefix; a multi-hop routed target is outside it by definition
+    # and is authorized by its proven hop chain above (never by a caller-supplied route).
+    problems = address_problems(stored.endpoint_address, network=stored.nmas_attachment.network, layer2=on_link)
     if problems:
         return None, problems
     return stored, []

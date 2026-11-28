@@ -91,6 +91,26 @@ class RedactionAndDigestTests(SimpleTestCase):
                 self.assertEqual(n, 1)
         self.assertEqual(N.sha256_json({"b": 1, "a": 2}), N.sha256_json({"a": 2, "b": 1}))
 
+    def test_typed_secrets_ssh_keys_and_crypt_hashes_are_redacted_with_structure_kept(self):
+        # synthetic values assembled at runtime (no credential-shaped literal is tracked)
+        crypt = "$" + "6" + "$" + "SYNTHsalt" + "$" + "Q" * 86
+        key = "AAAA" + "C3NzaC1lZDI1NTE5" + "B" * 48
+        config = "\n".join([f"username svc privilege 15 role network-admin secret sha512 {crypt}",
+                            f"username svc ssh-key ssh-ed25519 {key} svc@lab",
+                            f"username raw ssh-key {key}",
+                            "enable secret 8a SYNTHtyped9", f"   note {crypt}", "interface Ethernet1",
+                            f"Public Key: ssh-ed25519 {key}"])
+        text, count = N.redact_text(config)
+        for value in (crypt, key, "SYNTHtyped9"):
+            with self.subTest(value=value[:8]):
+                self.assertNotIn(value, text)
+        self.assertEqual(count, 6)
+        self.assertEqual(len(text.splitlines()), 7)                                   # every line survives, only the value goes
+        self.assertIn("secret sha512 <redacted>", text)
+        self.assertIn("ssh-key ssh-ed25519 <redacted> svc@lab", text)
+        self.assertIn("interface Ethernet1", text)
+        self.assertIn("Public Key: ssh-ed25519 <redacted>", text)
+
     def test_empty_or_secret_free_input_is_refused_no_redaction(self):
         with self.subTest("an empty or None text is refused with zero redactions"):
             self.assertEqual(N.redact_text(None), ("", 0))

@@ -252,6 +252,8 @@ def eos_config_problems(path, facts: eos_facts.EosFacts) -> list[dict]:
             problems.append(codes.blocker("L2_CONFIG_MISMATCH", reason="ip routing is not enabled in the management VRF"))
         if path.transport == models.ManagementTransport.SSH and not (facts.services.get("ssh") or {}).get(path.vrf):
             problems.append(codes.blocker("L2_CONFIG_MISMATCH", reason="management ssh is not enabled in the VRF"))
+        if path.attachment_id:
+            problems.extend(routed_hop_problems(path, facts, holder))
         return problems
     if holder.vrf:
         problems.append(codes.blocker("L2_CONFIG_MISMATCH", reason="layer-2 path endpoint sits in a non-default VRF"))
@@ -276,6 +278,39 @@ def eos_config_problems(path, facts: eos_facts.EosFacts) -> list[dict]:
                 problems.append(codes.blocker("MGMT_VLAN_LOOP_RISK", ports=others[:8]))
         elif local.name != holder.name and port == path.local_interface:
             problems.append(codes.blocker("L2_CONFIG_MISMATCH", reason="the endpoint is not on the path's local interface"))
+    return problems
+
+
+def routed_hop_problems(path, facts: eos_facts.EosFacts, holder) -> list[dict]:
+    """L2 of a multi-hop routed path, from the device's own running configuration:
+
+    * the endpoint is an 802.1Q subinterface of the path's attachment (the management VRF rides the routed link; no VLAN 200);
+    * the VRF holds a return route to the NMAS source whose next hop is on that subinterface's own link (the permitted
+      neighbour of the verified attachment -- never a default route or a next hop elsewhere);
+    * isolation: every interface in the VRF is a subinterface or loopback -- no data-plane port, SVI or host VLAN joins it.
+    """
+    problems = []
+    local = str(path.local_interface or "")
+    if not (local and holder.name.lower().startswith(local.lower() + ".") and holder.mode == "SUBINTERFACE"):
+        problems.append(codes.blocker("L2_CONFIG_MISMATCH", reason="the endpoint is not a subinterface of the path's attachment"))
+    source = ipaddress.ip_address(path.nmas_attachment.source_address)
+    links = [ipaddress.ip_interface(cidr).network for cidr in holder.addresses]
+    returns = []
+    for route in facts.routes:
+        try:
+            prefix, hop = ipaddress.ip_network(route["prefix"], strict=False), ipaddress.ip_address(route["next_hop"])
+        except ValueError:
+            continue
+        if route["vrf"] == path.vrf and prefix.version == source.version and source in prefix and prefix.prefixlen > 0:
+            returns.append(any(hop.version == link.version and hop in link for link in links))
+    if not returns:
+        problems.append(codes.blocker("L2_CONFIG_MISMATCH", reason="no specific return route to the NMAS source in the VRF"))
+    elif not all(returns):
+        problems.append(codes.blocker("L2_CONFIG_MISMATCH", reason="a return route's next hop is not on the attachment's link"))
+    members = sorted(name for name, data in facts.interfaces.items() if data.vrf == path.vrf
+                     and data.mode not in ("SUBINTERFACE", "LOOPBACK"))
+    if members:
+        problems.append(codes.blocker("L2_CONFIG_MISMATCH", reason=f"management VRF isolation: {', '.join(members[:4])} joined it"))
     return problems
 
 
