@@ -535,7 +535,7 @@ SELECTIONS: dict[str, Selection] = {
         reason="management paths / probes / selector / resolver / bootstrap credential retirement changed",
     ),
     "device_commissioning": Selection(
-        django=("isolation_eos", "isolation_service", "commissioning", "commissioning_dependencies", "commissioning_acceptance",
+        django=("isolation_eos", "isolation_service", "commissioning", "commissioning_dependencies", "commissioning_acceptance", "tg_commissioning_acceptance_units",
                 "commissioning_views",
                 "tg_isolation_closure", "tg_commissioning_closure", "tg_commissioning_views_closure", "tg_phase56_platform_fixes",
                 "provisioning", "lifecycle_service", "lifecycle_capability_vocabulary", "ztp_workflow", "bootstrap_retirement", "contracts",
