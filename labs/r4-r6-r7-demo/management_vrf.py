@@ -44,6 +44,16 @@ R4_ROUTES = [("10.254.251.4/30", "via 10.254.251.2 dev eth4.251"), (f"{NMAS_SOUR
 RULE = f"pref 900 iif {R4['svi']} from {NMAS_SOURCE}/32 to {PREFIX} lookup {TABLE}"
 SESSION, ACL, TIMER = "nmas-mgmt-vrf", "NMAS-MGMT-VRF", "00:10:00"
 
+# Bootstrap relay networks (NMAS BootstrapNetwork demo-r6-ztp-2 / demo-r7-ztp-2; DHCPv4 only -- DHCPv6 stays unsupported).
+# The NMAS dhcpd matches each ZTP class on giaddr, so the relay must SEND the bootstrap gateway as giaddr:
+#  * R6 (EOS) relays for R7 from a secondary address with ``ip dhcp relay all-subnets`` (one relayed copy per subnet);
+#  * R4's ISC dhcrelay always uses eth4's FIRST address as giaddr.  The secondary is added now (additive); the giaddr only
+#    becomes 10.254.98.1 when R6's production 10.254.90.1/29 is re-added after it, which happens inside R6's re-bootstrap
+#    window (``relay-window R4``), never while R6 carries production traffic.
+RELAY_SESSION = "nmas-bootstrap-relay"   # EOS session names are single-use: one per change
+RELAY = {"R4": {"interface": "eth4", "gateway": "10.254.98.1/29"},
+         "R6": {"interface": "Ethernet2", "gateway": "10.254.99.1/29", "helper": "10.254.92.2"}}
+
 
 def run(argv, *, input_text=None, check=True) -> str:
     result = subprocess.run(argv, input=input_text, capture_output=True, text=True, timeout=60)
@@ -60,10 +70,10 @@ def eos(device: str, command: str) -> str:
     return run(["docker", "exec", EOS[device]["container"], "Cli", "-p", "15", "-c", command])
 
 
-def eos_session(device: str, lines: list[str]) -> list[str]:
+def eos_session(device: str, lines: list[str], session: str = SESSION) -> list[str]:
     """Feed one configure session on stdin; -> the CLI error lines (``%``)."""
     # ``commit timer`` leaves configuration mode, so no trailing ``end`` (it would only report "% Invalid input")
-    script = "\n".join([f"configure session {SESSION}", *lines, f"commit timer {TIMER}", ""])
+    script = "\n".join([f"configure session {session}", *lines, f"commit timer {TIMER}", ""])
     out = run(["docker", "exec", "-i", EOS[device]["container"], "Cli", "-p", "15"], input_text=script, check=False)
     return [line.strip() for line in out.splitlines() if line.lstrip().startswith("%")]
 
@@ -117,9 +127,9 @@ def apply_eos(device: str) -> dict:
     return {"device": device, "cli_errors": errors, "pending_confirm_within": TIMER if not errors else ""}
 
 
-def confirm_eos(device: str) -> dict:
+def confirm_eos(device: str, session: str = SESSION) -> dict:
     out = run(["docker", "exec", "-i", EOS[device]["container"], "Cli", "-p", "15"],
-              input_text=f"configure session {SESSION} commit\n", check=False)
+              input_text=f"configure session {session} commit\n", check=False)
     return {"device": device, "cli_errors": [line.strip() for line in out.splitlines() if line.lstrip().startswith("%")]}
 
 
@@ -127,6 +137,65 @@ def rollback_eos(device: str) -> dict:
     script = "\n".join(["configure session nmas-mgmt-vrf-rollback", *eos_rollback_lines(device), "commit", ""])
     out = run(["docker", "exec", "-i", EOS[device]["container"], "Cli", "-p", "15"], input_text=script, check=False)
     return {"device": device, "cli_errors": [line.strip() for line in out.splitlines() if line.lstrip().startswith("%")]}
+
+
+def apply_relay(target: str) -> dict:
+    spec = RELAY[target]
+    if target == "R4":
+        r4(f"ip addr show dev {spec['interface']} | grep -q ' {spec['gateway']} ' || ip addr add {spec['gateway']} dev {spec['interface']}")
+        return verify_relay("R4")
+    lines = [f"interface {spec['interface']}", f"   ip address {spec['gateway']} secondary", "   ip dhcp relay all-subnets"]
+    errors = eos_session(target, lines, RELAY_SESSION)
+    return {"device": target, "session": RELAY_SESSION, "cli_errors": errors, "pending_confirm_within": "" if errors else TIMER}
+
+
+def rollback_relay(target: str) -> dict:
+    spec = RELAY[target]
+    if target == "R4":
+        r4(f"ip addr del {spec['gateway']} dev {spec['interface']} 2>/dev/null; true", check=False)
+        return verify_relay("R4")
+    script = "\n".join(["configure session nmas-relay-rollback", f"interface {spec['interface']}",
+                        "   no ip dhcp relay all-subnets", f"   no ip address {spec['gateway']} secondary", "commit", ""])
+    out = run(["docker", "exec", "-i", EOS[target]["container"], "Cli", "-p", "15"], input_text=script, check=False)
+    return {"device": target, "cli_errors": [line.strip() for line in out.splitlines() if line.lstrip().startswith("%")]}
+
+
+def relay_window_r4(*, restore: bool) -> dict:
+    """INSIDE R6's re-bootstrap window only: re-add 10.254.90.1/29 after the bootstrap gateway so dhcrelay's giaddr is
+    10.254.98.1 (``restore``: the reverse, so 10.254.90.1 is first again), then restart dhcrelay with its own argv."""
+    first, second = ("10.254.90.1/29", "10.254.98.1/29") if restore else ("10.254.98.1/29", "10.254.90.1/29")
+    r4(f"ip addr del {second} dev eth4 2>/dev/null; ip addr add {second} dev eth4; "
+       f"ip addr show dev eth4 | grep -q ' {first} ' || ip addr add {first} dev eth4")
+    restart_dhcrelay()
+    return verify_relay("R4")
+
+
+def restart_dhcrelay() -> None:
+    """Restart R4's dhcrelay with its exact running argv (it reads interface addresses, hence giaddr, at start)."""
+    pid = r4("ps -eo pid,args | awk '/[d]hcrelay -4/{print $1; exit}'").strip()
+    if not pid.isdigit():
+        raise SystemExit("REFUSED: dhcrelay is not running")
+    argv = r4(f"tr '\\0' ' ' < /proc/{pid}/cmdline").strip()
+    if not argv.startswith("/usr/local/sbin/dhcrelay "):
+        raise SystemExit("REFUSED: dhcrelay argv not recognised")
+    r4(f"kill {pid}; sleep 1")
+    run(["docker", "exec", "-d", R4["container"], "sh", "-c", f"exec {argv} >/dev/null 2>&1"])
+
+
+def verify_relay(target: str) -> dict:
+    spec = RELAY[target]
+    if target == "R4":
+        addrs = json.loads(r4(f"ip -j -4 addr show dev {spec['interface']}", check=False) or "[]")
+        local = [f"{a['local']}/{a['prefixlen']}" for a in (addrs[0].get("addr_info") if addrs else [])]
+        relay = r4("ps -eo args | grep '[d]hcrelay'", check=False).strip()
+        return {"device": "R4", "addresses": local, "gateway_present": spec["gateway"] in local,
+                "giaddr_would_be": local[0] if local else "", "dhcrelay_running": bool(relay),
+                "dhcrelay_server": relay.split()[-1] if relay else ""}
+    brief = _json(target, f"show ip interface {spec['interface']}").get("interfaces", {}).get(spec["interface"], {})
+    secondaries = [f"{a.get('address')}/{a.get('maskLen')}" for a in (brief.get("interfaceAddress") or {}).get("secondaryIpsOrderedList") or []]
+    section = eos(target, f"show running-config interfaces {spec['interface']}")
+    return {"device": target, "secondary": secondaries, "gateway_present": spec["gateway"] in secondaries,
+            "all_subnets": "ip dhcp relay all-subnets" in section, "helper": f"ip helper-address {spec['helper']}" in section}
 
 
 # --- verify (facts only) -----------------------------------------------------------------------------------------------------
@@ -198,13 +267,28 @@ def reach(endpoint: str) -> dict:
 
 def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.split("\n", 1)[0])
-    parser.add_argument("action", choices=["plan", "apply", "confirm", "verify", "rollback"])
+    parser.add_argument("action", choices=["plan", "apply", "confirm", "verify", "rollback", "relay-apply", "relay-verify",
+                                           "relay-rollback", "relay-window", "relay-window-restore"])
     parser.add_argument("target", choices=["host", "R4", "R6", "R7", "all"])
+    parser.add_argument("--session", default=SESSION, help="the EOS configure session to confirm")
     args = parser.parse_args(argv)
     targets = ["host", "R4", "R6", "R7"] if args.target == "all" else [args.target]
     if args.action in ("apply", "confirm") and args.target == "all":
         raise SystemExit("apply / confirm one target at a time (R4, then R6, verify, then R7)")
     out = []
+    if args.action.startswith("relay"):
+        relay_targets = [t for t in targets if t in RELAY]
+        for target in relay_targets:
+            if args.action == "relay-apply":
+                out.append(apply_relay(target))
+            elif args.action == "relay-verify":
+                out.append(verify_relay(target))
+            elif args.action == "relay-rollback":
+                out.append(rollback_relay(target))
+            elif target == "R4":
+                out.append(relay_window_r4(restore=args.action == "relay-window-restore"))
+        print(json.dumps(out, indent=1))
+        return 0
     for target in targets:
         if args.action == "plan":
             out.append({"target": target, "lines": eos_lines(target) if target in EOS else
@@ -212,7 +296,7 @@ def main(argv=None) -> int:
         elif args.action == "apply":
             out.append(apply_eos(target) if target in EOS else (apply_r4() or verify_r4()) if target == "R4" else (apply_host() or verify_host()))
         elif args.action == "confirm":
-            out.append(confirm_eos(target) if target in EOS else {"target": target, "note": "Linux changes need no confirm"})
+            out.append(confirm_eos(target, args.session) if target in EOS else {"target": target, "note": "Linux changes need no confirm"})
         elif args.action == "verify":
             out.append(verify_eos(target) if target in EOS else verify_r4() if target == "R4" else verify_host())
             if target in EOS:
