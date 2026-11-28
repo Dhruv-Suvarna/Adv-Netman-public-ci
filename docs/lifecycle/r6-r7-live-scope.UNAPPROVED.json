@@ -1,0 +1,360 @@
+{
+  "schema": "nmas.lifecycle.live-scope/1",
+  "status": "UNAPPROVED DRAFT -- prepared for operator review; authorizes nothing",
+  "change": "",
+  "prepared_by": "",
+  "approved_by": "",
+  "signing": "Operator A (preparer) and a DIFFERENT authorized operator B (approver) fill prepared_by / approved_by; LIVE_SCOPE refuses self-approval.",
+  "window": {
+    "start": "",
+    "end": "",
+    "note": "timezone-aware ISO-8601; open the window only after every prerequisite below is closed"
+  },
+  "devices": [
+    {
+      "name": "R6",
+      "operations": [
+        "MANAGEMENT_PATH_APPROVE",
+        "BOOTSTRAP_AUTHORIZE",
+        "ISOLATION_ENFORCE",
+        "ZTP_REBOOTSTRAP",
+        "DHCP_RENEWAL_WINDOW",
+        "COMMISSIONING_CONFIGURE",
+        "ADMISSION"
+      ]
+    },
+    {
+      "name": "R7",
+      "operations": [
+        "MANAGEMENT_PATH_APPROVE",
+        "BOOTSTRAP_AUTHORIZE",
+        "ISOLATION_ENFORCE",
+        "ZTP_REBOOTSTRAP",
+        "DHCP_RENEWAL_WINDOW",
+        "COMMISSIONING_CONFIGURE",
+        "ADMISSION"
+      ]
+    }
+  ],
+  "execution_order": {
+    "order": [
+      "R6",
+      "R7"
+    ],
+    "rule": "No R7 operation starts until R6 is ADMITTED / IN_SERVICE and `check --devices R6 R7 --completed R6:<op>...` shows no FAIL (ORDER + DEPENDENCY + UPSTREAM gates enforce it)."
+  },
+  "allowed_operations": {
+    "BOOTSTRAP_AUTHORIZE": "bootstrap authorization (request -> second-person approval), bounded window and use count",
+    "ISOLATION_ENFORCE": "isolation policy plan -> governed Change on the trusted upstream -> enforce -> verify",
+    "ZTP_REBOOTSTRAP": "device erase + reload into native ZTP behind the enforced isolation, DHCP via the trusted relay",
+    "DHCP_RENEWAL_WINDOW": "controlled re-discovery window (ztp.lease.expect_renewal) re-deciding authorization + upstream",
+    "COMMISSIONING_CONFIGURE": "commissioning record: configure while isolated (isolation stays VERIFIED, no drift)",
+    "ADMISSION": "production admission plan -> precheck -> second-person approval -> execute -> verify",
+    "MANAGEMENT_PATH_APPROVE": "management path register -> second-person approval (Management VRF or VLAN 200)"
+  },
+  "traffic_continuity": {
+    "mode": "APPROVED_OUTAGE_WINDOW",
+    "max_outage_seconds": 3600,
+    "max_outage_rationale": "proposed ceiling for the cumulative H5 interruption across both devices (R6 then R7: isolate, erase/reload into native ZTP, DHCP, commission, admit); the approver confirms or lowers it",
+    "outage_scope": "only the flows that traverse R6/R7 (outage_flows); every lossless_flows entry must keep 0 % loss for the whole window",
+    "outage_flows": [
+      {
+        "source": "H5",
+        "destination": "WebServer",
+        "protocol": "ICMP",
+        "family": "IPV4",
+        "through": [
+          "R4",
+          "R6",
+          "R7"
+        ]
+      },
+      {
+        "source": "H5",
+        "destination": "WebServer",
+        "protocol": "ICMP",
+        "family": "IPV6",
+        "through": [
+          "R4",
+          "R6",
+          "R7"
+        ]
+      },
+      {
+        "source": "H5",
+        "destination": "WebServer",
+        "protocol": "TCP_CONNECT",
+        "family": "IPV4",
+        "through": [
+          "R4",
+          "R6",
+          "R7"
+        ]
+      },
+      {
+        "source": "H5",
+        "destination": "WebServer",
+        "protocol": "TCP_CONNECT",
+        "family": "IPV6",
+        "through": [
+          "R4",
+          "R6",
+          "R7"
+        ]
+      }
+    ],
+    "lossless_flows": [
+      {
+        "source": "H1",
+        "destination": "H2",
+        "protocol": "ICMP",
+        "family": "IPV4",
+        "through": []
+      },
+      {
+        "source": "H2",
+        "destination": "H3",
+        "protocol": "ICMP",
+        "family": "IPV4",
+        "through": []
+      },
+      {
+        "source": "H2",
+        "destination": "H4",
+        "protocol": "ICMP",
+        "family": "IPV6",
+        "through": []
+      },
+      {
+        "source": "H3",
+        "destination": "WebServer",
+        "protocol": "ICMP",
+        "family": "IPV4",
+        "through": []
+      },
+      {
+        "source": "H3",
+        "destination": "WebServer",
+        "protocol": "ICMP",
+        "family": "IPV6",
+        "through": []
+      },
+      {
+        "source": "H4",
+        "destination": "WebServer",
+        "protocol": "ICMP",
+        "family": "IPV6",
+        "through": []
+      }
+    ]
+  },
+  "retain_management": true,
+  "flows": [
+    {
+      "source": "H5",
+      "destination": "WebServer",
+      "protocol": "ICMP",
+      "family": "IPV4",
+      "through": [
+        "R4",
+        "R6",
+        "R7"
+      ]
+    },
+    {
+      "source": "H5",
+      "destination": "WebServer",
+      "protocol": "ICMP",
+      "family": "IPV6",
+      "through": [
+        "R4",
+        "R6",
+        "R7"
+      ]
+    },
+    {
+      "source": "H5",
+      "destination": "WebServer",
+      "protocol": "TCP_CONNECT",
+      "family": "IPV4",
+      "through": [
+        "R4",
+        "R6",
+        "R7"
+      ]
+    },
+    {
+      "source": "H5",
+      "destination": "WebServer",
+      "protocol": "TCP_CONNECT",
+      "family": "IPV6",
+      "through": [
+        "R4",
+        "R6",
+        "R7"
+      ]
+    },
+    {
+      "source": "H1",
+      "destination": "H2",
+      "protocol": "ICMP",
+      "family": "IPV4",
+      "through": []
+    },
+    {
+      "source": "H2",
+      "destination": "H3",
+      "protocol": "ICMP",
+      "family": "IPV4",
+      "through": []
+    },
+    {
+      "source": "H2",
+      "destination": "H4",
+      "protocol": "ICMP",
+      "family": "IPV6",
+      "through": []
+    },
+    {
+      "source": "H3",
+      "destination": "WebServer",
+      "protocol": "ICMP",
+      "family": "IPV4",
+      "through": []
+    },
+    {
+      "source": "H3",
+      "destination": "WebServer",
+      "protocol": "ICMP",
+      "family": "IPV6",
+      "through": []
+    },
+    {
+      "source": "H4",
+      "destination": "WebServer",
+      "protocol": "ICMP",
+      "family": "IPV6",
+      "through": []
+    }
+  ],
+  "baseline": {
+    "freshness_seconds": 900,
+    "rule": "re-run every flow through the traffic runner <= 15 min before step 0 and after every step; historical runs never substitute",
+    "current_state_baseline": "10/10 PASSED 2026-11-28T09:13Z (traffic-baseline.json); stale for any window"
+  },
+  "boundaries": {
+    "R6": {
+      "device_port": "Ethernet1",
+      "upstream": "R4:eth4 (FRR; isolation by nftables on R4)",
+      "downstream": "Ethernet2 -> R7:Ethernet1 (carried traffic is H5 only)",
+      "untouched": [
+        "R4 interfaces other than eth4",
+        "mgmt_swt",
+        "Lab 1 routing outside the R4:eth4 attachment",
+        "R7 until R6 ADMITTED"
+      ]
+    },
+    "R7": {
+      "device_port": "Ethernet1",
+      "upstream": "R6:Ethernet2 (cEOS; isolation by ACLs on R6)",
+      "access": "Ethernet2 VLAN10 -> H5 (LAB8_H5_ACCESS)",
+      "untouched": [
+        "R6 interfaces other than Ethernet2",
+        "R4",
+        "Lab 1"
+      ]
+    }
+  },
+  "bootstrap_authorizations": {
+    "R6": "NEW grant: request -> second-person approval; valid_until >= window.end; single use. BAUTH-000001 (REVOKED) is history.",
+    "R7": "NEW grant: request -> second-person approval; valid_until >= window.end; single use. BAUTH-000002 (CONSUMED) is history."
+  },
+  "bootstrap_networks": {
+    "R6": {
+      "name": "demo-r6-ztp-2",
+      "ipv4_prefix": "10.254.98.0/29",
+      "gateway": "10.254.98.1",
+      "pool_start": "10.254.98.2",
+      "pool_end": "10.254.98.6",
+      "service_prefix": "10.254.92.0/30",
+      "service_address": "10.254.92.2",
+      "trusted_relays": [
+        {
+          "relay_address": "10.254.98.1",
+          "upstream_device": "R4"
+        }
+      ],
+      "config_root": "/home/student/Scripts/nmas-demo-release/monitoring/runtime/r4-r6-r7-demo",
+      "http_port": 8080,
+      "tftp_port": 69,
+      "validated": "ztp.policy.network_problems == [] (check_upstreams=True) on production 2026-11-28",
+      "device_side_prerequisite": "relay address 10.254.98.1 + DHCP helper on R4:eth4 -- a device change inside the window, not yet authorized"
+    },
+    "R7": {
+      "name": "demo-r7-ztp-2",
+      "ipv4_prefix": "10.254.99.0/29",
+      "gateway": "10.254.99.1",
+      "pool_start": "10.254.99.2",
+      "pool_end": "10.254.99.6",
+      "service_prefix": "10.254.92.0/30",
+      "service_address": "10.254.92.2",
+      "trusted_relays": [
+        {
+          "relay_address": "10.254.99.1",
+          "upstream_device": "R6"
+        }
+      ],
+      "config_root": "/home/student/Scripts/nmas-demo-release/monitoring/runtime/r4-r6-r7-demo",
+      "http_port": 8080,
+      "tftp_port": 69,
+      "validated": "ztp.policy.network_problems == [] (check_upstreams=True) on production 2026-11-28",
+      "device_side_prerequisite": "relay address 10.254.99.1 + DHCP helper on R6:Ethernet2 -- a device change inside the window, not yet authorized"
+    },
+    "historical": "demo-r6-ztp 10.254.90.0/29 / demo-r7-ztp 10.254.96.0/29 now contain the devices' production addresses -> BOOTSTRAP_NETWORK_INVALID and their config_root is outside the provider root (DHCP_CONFIG_ROOT_UNSAFE)"
+  },
+  "restore_points": {
+    "captured_at": "2026-11-28T09:15:53Z",
+    "files": {
+      "R6.startup-config": "3ec9559f437e60014b0da5bf5451df68b9c8fd4b953e3ebffb17959a5325c03b",
+      "R7.startup-config": "cda07310b020eb46558340874e5dfa070d216df7712ced59e46cd3658a5baa2b",
+      "R6.running-config": "a8176393834857f22f35d8e168c1a22469512634599a954d79aad5d2b7078bd6",
+      "R7.running-config": "878167742bbf6296b72f1ab20c3407c3b65931e6232dfdd53d11e0d619edf711"
+    },
+    "storage": "~/nmas-backups/CHG-NMAS-20261128-R6R7-ACCEPTANCE-PREP-028/restore-points (0600, contains secret hashes)",
+    "finding": "on BOTH devices the saved startup-config is the bootstrap-era config: it lacks the production addressing / routing in the running config (R6: Ethernet2, ip routing, OSPF, RIP, IPv6; R7: nearly all). A reload today would interrupt H5.",
+    "required_before_step_0": "under the approved change: copy running-config startup-config on R6 and R7, re-capture, record the new startup-config SHA-256 here; that saved startup-config is the ZTP_REBOOTSTRAP restore artefact"
+  },
+  "management_path_prerequisite": {
+    "status": "BLOCKED (physical / topology)",
+    "VLAN_200": "refused by the registry: R6/R7 have only ROUTED PRODUCTION attachments (R4:eth4, R6:Ethernet2), no VLAN 200 access/trunk port; stretching VLAN 200 across R4's routed link is prohibited",
+    "MANAGEMENT_VRF": "refused by the registry: L1_TOPOLOGY_UNVERIFIED -- the only NMAS attachment (NMA-000001 on mgmt_swt) is not on-link with R6/R7; multi-hop routed management via R4 needs explicit route + physical-neighbour proof the code does not yet support",
+    "not_in_band": "nmas-demo-ssh-proxy-r6/r7 (TCP relay in the ZTP service namespace via R4 host routes) is NOT a management path",
+    "options_for_owner": [
+      "approve a dedicated management link from mgmt_swt (VLAN 200 access port) to R6 and R7 (physical change)",
+      "approve an on-link NMAS management attachment to R6 (routed Management VRF) and implement + review multi-hop VRF proof for R7",
+      "explicitly accept commissioning-proxy-only management for this window (the gate stays BLOCKED on MANAGEMENT; requires a recorded exception)"
+    ]
+  },
+  "abort": {
+    "triggers": [
+      "any gate FAIL",
+      "any lossless flow loss > 0 %",
+      "H5 interruption > max_outage_seconds",
+      "management reachability lost > 60 s",
+      "DHCP renewal window OVERDUE",
+      "identity / host-key mismatch",
+      "isolation DRIFTED / UNCERTAIN"
+    ],
+    "procedure": "stop at the current step; run that operation's rollback (acceptance.OPERATIONS); re-run `check ... --completed` until it equals the step-0 baseline digest; re-run every flow",
+    "rollback": {
+      "BOOTSTRAP_AUTHORIZE": "revoke the authorization (authorization.revoke); expiry closes it on its own",
+      "ISOLATION_ENFORCE": "isolation release / restore of the recorded exact inverse (plan ops), upstream digest re-checked",
+      "ZTP_REBOOTSTRAP": "restore the device's saved startup-config; the DHCP policy rollback (ztp.policy.rollback_policy)",
+      "DHCP_RENEWAL_WINDOW": "window lapses on its own deadline; OVERDUE offers native-only recovery actions",
+      "COMMISSIONING_CONFIGURE": "commissioning abort -> restore the device to its pre-commissioning digest",
+      "ADMISSION": "failed verification restores the upstream byte-identical and re-verifies isolation (ADMISSION_VERIFICATION_FAILED)",
+      "MANAGEMENT_PATH_APPROVE": "revoke the path (management.paths.revoke_path); the selector fails closed to the remaining paths"
+    },
+    "restore": "ZTP_REBOOTSTRAP: restore the saved startup-config recorded in restore_points (after the step-0 save), then DHCP policy rollback; ISOLATION_ENFORCE: exact-inverse release; ADMISSION failure restores the upstream byte-identical"
+  }
+}
