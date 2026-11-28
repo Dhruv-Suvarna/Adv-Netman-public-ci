@@ -83,7 +83,7 @@ class RoutedChainTests(_Chain):
         self.assertTrue(paths.is_on_link_routed(self.devices["R4"], M.nmas_attachment(name="n2", interface="n2", upstream="R4",
                                                                                      source="10.40.0.2", network="10.40.0.0/30")))
 
-    def test_is_on_link_routed_is_false_for_a_device_behind_a_hop(self):
+    def test_is_on_link_routed_is_not_set_for_a_device_behind_a_hop_or_without_an_attachment(self):
         self.assertFalse(paths.is_on_link_routed(self.devices["R2"], self.nmas))
         self.assertFalse(paths.is_on_link_routed(self.devices["R2"], None))
 
