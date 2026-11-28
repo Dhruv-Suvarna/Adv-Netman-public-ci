@@ -287,10 +287,18 @@ def freshness(observed_at: datetime | None, now: datetime, max_age_s: float) -> 
 REDACTED = "<redacted>"
 _REDACTIONS = (
     # ``(?![=:])``: a ``password = value`` / ``secret: value`` line is the key/value form below; matching here would redact only the ``=``
-    re.compile(r"(?im)^(\s*(?:enable\s+)?(?:secret|password)\s+(?:\d+\s+)?)(?![=:])\S+"),
-    re.compile(r"(?im)^(\s*username\s+\S+.*?\s(?:secret|password)\s+(?:\d+\s+)?)(?![=:])\S+"),
+    # ``(?:<type>\s+)?``: the encryption-type token before the value -- IOS ``5`` / ``9`` / ``8a``, EOS ``sha512`` / ``md5``.
+    # Without it ``secret sha512 $6$...`` redacted the word ``sha512`` and left the hash in the evidence.
+    re.compile(r"(?im)^(\s*(?:enable\s+)?(?:secret|password)\s+(?:(?:\d+[a-z]?|sha512|sha256|md5)\s+)?)(?![=:])\S+"),
+    re.compile(r"(?im)^(\s*username\s+\S+.*?\s(?:secret|password)\s+(?:(?:\d+[a-z]?|sha512|sha256|md5)\s+)?)(?![=:])\S+"),
+    # an account's SSH public key (EOS ``username X ssh-key <algorithm> <key> [comment]``): key material is never kept
+    re.compile(r"(?im)^(\s*username\s+\S+\s+ssh-key\s+(?:(?:ssh-(?:rsa|dss|ed25519)|ecdsa-sha2-\S+|sk-\S+)\s+)?)\S+"),
+    # a bare OpenSSH public key blob anywhere (``show management ssh`` prints ``Public Key: ssh-ed25519 AAAA...``)
+    re.compile(r"((?:ssh-(?:rsa|dss|ed25519)|ecdsa-sha2-[a-z0-9]+|sk-[a-z0-9@.-]+)\s+)AAAA[0-9A-Za-z+/]{16,}={0,3}"),
+    # any crypt(3) hash that survives the line rules ($1$ md5, $5$ / $6$ sha-crypt, $2b$ bcrypt, $y$ yescrypt)
+    re.compile(r"\$(?:1|2[abxy]?|5|6|y)\$[./A-Za-z0-9$]{8,}"),
     re.compile(r"(?im)^(\s*(?:snmp-server\s+community|snmp-server\s+host\s+\S+(?:\s+version\s+\S+)?)\s+)\S+"),
-    re.compile(r"(?im)((?:authentication-key|message-digest-key\s+\d+\s+md5|key-string|key|shared-secret|pre-shared-key|"
+    re.compile(r"(?im)((?:authentication-key|message-digest-key\s+\d+\s+md5|key-string|(?<!ssh-)key|shared-secret|pre-shared-key|"
                r"auth-password|priv-password|authentication\s+(?:md5|sha)|privacy\s+(?:aes|des)(?:\s+\d+)?|neighbor\s+\S+\s+password)\s+(?:\d+\s+)?)\S+"),
     re.compile(r"(?im)((?:community|token|api[_-]?key|secret|passwd|password|bearer)\s*[=:]\s*)\S+"),
     re.compile(r"(?s)-----BEGIN [A-Z ]*PRIVATE KEY-----.*?-----END [A-Z ]*PRIVATE KEY-----"),

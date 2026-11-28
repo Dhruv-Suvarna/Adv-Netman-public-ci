@@ -7,6 +7,11 @@ Priority hierarchy (applied only among paths that are actually USABLE -- approve
                                 switch identity: natural order of the switch's managed name (S1 < S3 < S10), ties broken by
                                 its stable lifecycle id (DEV-000001 < DEV-000002)
     3. ROUTED_VRF            -- a routed management VRF
+                                on-link: the NMAS attachment's upstream IS the device;
+                                multi-hop: the device's own approved + VERIFIED routed attachment, then each hop's own
+                                approved + HEALTHY routed path in the same VRF, ending at a ``via_device`` gateway that NMAS
+                                reaches over the same NMAS attachment (``routed_chain``).  The management VRF rides 802.1Q
+                                subinterfaces of those links: the management VLAN is never stretched over a routed link.
 
 The class is a property of the path TYPE (``models.MANAGEMENT_PATH_CLASS``); no caller chooses it.
 
@@ -34,6 +39,7 @@ Approval = models.ManagementApproval
 Outcome = models.DeviceLifecycleEventOutcome
 LIVE_PATH = ~Q(approval_state=Approval.REVOKED)
 MAX_VLAN_HOPS = 8
+MAX_ROUTED_HOPS = 4
 RESERVED_VRF_NAMES = frozenset({"default", "global", "mgmt-default"})
 # Platforms with a path verifier (L2 configuration read-back + L6 identity).  A path for any other platform could never
 # verify, and approving one would make the device fail closed -- so it is refused at registration instead.
@@ -295,15 +301,63 @@ def is_nmas_switch_self(device, path_type: str, attachment, nmas_attachment, via
             and nmas_attachment.upstream_device == device.name and str(via_device or "") in ("", device.name))
 
 
-def _attachment_problems(device, path_type: str, attachment, nmas_attachment, via_device: str, vlan) -> list[dict]:
+def is_on_link_routed(device, nmas_attachment) -> bool:
+    """A routed path whose device IS the NMAS attachment's upstream neighbour (no intermediate hop)."""
+    return nmas_attachment is not None and nmas_attachment.upstream_device == device.name
+
+
+def _healthy_path(device_name: str, nmas_attachment, *, path_type=None, vrf: str = "", via_device: str = ""):
+    query = models.ManagementPath.objects.filter(device__name=device_name, nmas_attachment=nmas_attachment,
+                                                 approval_state=Approval.APPROVED, health_state=models.ManagementPathHealth.HEALTHY)
+    if path_type is not None:
+        query = query.filter(path_type=path_type, vrf=vrf, via_device=via_device)
+    return query.select_related("device", "attachment").order_by("preference_class", "id").first()
+
+
+def routed_chain(device, attachment, nmas_attachment, via_device: str, vrf: str) -> tuple[list[dict], list[dict]]:
+    """-> (hops, problems) of a multi-hop routed management path, from the device to its gateway ``via_device``.
+
+    Hop 1 is the device's own approved + VERIFIED routed attachment.  Every intermediate device must already hold an approved,
+    HEALTHY routed path in the same VRF through the same gateway (so a device is reachable only after the device in front of it
+    is), and the chain continues on that path's own attachment.  The gateway must hold an approved, HEALTHY path over the same
+    NMAS attachment.  No hop is taken on a caller's word: each one is a registry record with its own verification."""
+    hops: list[dict] = [{"device": device.name, "interface": attachment.local_interface if attachment else ""}]
+    if attachment is None:
+        return hops, [codes.blocker("L1_TOPOLOGY_UNVERIFIED", reason="routed path has neither a direct NMAS neighbor nor a routed attachment")]
+    if not via_device:
+        return hops, [codes.blocker("MGMT_PATH_ATTACHMENT_INVALID", reason="a multi-hop routed path names its gateway (via_device)")]
+    seen, current = {device.name}, attachment
+    for _ in range(MAX_ROUTED_HOPS):
+        if current.device_id is None or current.approval_state != models.AttachmentApproval.APPROVED \
+                or current.connectivity not in (models.AttachmentConnectivity.ROUTED, models.AttachmentConnectivity.SUBINTERFACE):
+            return hops, [codes.blocker("MGMT_PATH_ATTACHMENT_INVALID", reason=f"hop {current.device.name}:{current.local_interface}: not an approved routed attachment")]
+        if current.verification_state != models.AttachmentVerification.VERIFIED:
+            return hops, [codes.blocker("L1_TOPOLOGY_UNVERIFIED", reason=f"hop {current.device.name}:{current.local_interface}: {current.verification_state.lower()}")]
+        upstream = str(current.upstream_device or "")
+        hops.append({"device": upstream, "interface": str(current.upstream_interface or ""), "attachment": current.pk})
+        if upstream in seen:
+            return hops, [codes.blocker("L1_TOPOLOGY_UNVERIFIED", reason="routed hop chain loops")]
+        seen.add(upstream)
+        if upstream == via_device:
+            if _healthy_path(upstream, nmas_attachment) is None:
+                return hops, [codes.blocker("L1_TOPOLOGY_UNVERIFIED", reason=f"gateway {upstream} has no approved healthy path over {nmas_attachment.attachment_id}")]
+            hops.append({"nmas": nmas_attachment.attachment_id, "upstream": nmas_attachment.upstream_device})
+            return hops, []
+        transit = _healthy_path(upstream, nmas_attachment, path_type=T.ROUTED_VRF, vrf=vrf, via_device=via_device)
+        if transit is None or transit.attachment is None:
+            return hops, [codes.blocker("L1_TOPOLOGY_UNVERIFIED", reason=f"transit {upstream} has no approved healthy {vrf} path via {via_device}")]
+        current = transit.attachment
+    return hops, [codes.blocker("L1_TOPOLOGY_UNVERIFIED", reason=f"more than {MAX_ROUTED_HOPS} routed hops")]
+
+
+def _attachment_problems(device, path_type: str, attachment, nmas_attachment, via_device: str, vlan, vrf: str = "") -> list[dict]:
     if path_type == T.ROUTED_VRF:
-        # A bound source socket proves the egress interface, but by itself it
-        # cannot authorize an arbitrary routed next hop behind that interface.
-        # The currently verified routed shape is the on-link NMAS <-> device
-        # neighbor used by the isolated cEOS fixture.  Multi-hop routes need
-        # explicit upstream route and physical-neighbor proof before support.
-        if nmas_attachment.upstream_device != device.name:
-            return [codes.blocker("L1_TOPOLOGY_UNVERIFIED", reason="routed path has no verified direct NMAS neighbor")]
+        # A bound source socket proves the egress interface but cannot authorize an arbitrary next hop behind it: an on-link
+        # NMAS <-> device neighbour, or a registry-proven hop chain (``routed_chain``), is required.
+        if not is_on_link_routed(device, nmas_attachment):
+            if attachment is not None and attachment.device_id != device.pk:
+                return [codes.blocker("MGMT_PATH_ATTACHMENT_INVALID", reason="not this device's attachment")]
+            return routed_chain(device, attachment, nmas_attachment, via_device, vrf)[1]
         if attachment is not None or (via_device and via_device != device.name):
             return [codes.blocker("MGMT_PATH_ATTACHMENT_INVALID", reason="direct routed path cannot name an intermediate switch")]
         return []
@@ -371,12 +425,12 @@ def register_path(device, *, path_type: str, endpoint_address: str, nmas_attachm
     if remote_interface and not models.INTERFACE_RE.fullmatch(remote_interface):
         blockers.append(codes.blocker("INTERFACE_INVALID"))
     if nmas_attachment is not None and not blockers:
-        blockers += _attachment_problems(device, path_type, attachment, nmas_attachment, via_device, vlan)
+        blockers += _attachment_problems(device, path_type, attachment, nmas_attachment, via_device, vlan, vrf)
         if path_type in (T.DIRECT_OOB, T.VLAN_ADJACENT_SWITCH) and not is_nmas_switch_self(
                 device, path_type, attachment, nmas_attachment, via_device):
             blockers += _switch_problems(device.name, via_device)
         blockers += guard.address_problems(endpoint_address, network=nmas_attachment.network,
-                                           layer2=path_type != T.ROUTED_VRF or nmas_attachment.upstream_device == device.name)
+                                           layer2=path_type != T.ROUTED_VRF or is_on_link_routed(device, nmas_attachment))
     credential = models.DeviceCredential.objects.filter(pk=device_credential_id).first() if device_credential_id else None
     credential_reference = str(credential_reference or "").strip()
     if credential_source == models.ManagementCredentialSource.INVENTORY and not credential_reference:
@@ -396,6 +450,8 @@ def register_path(device, *, path_type: str, endpoint_address: str, nmas_attachm
     blockers += problems
     if blockers:
         return _refuse_device(device, action, blockers, actor=actor)
+    if path_type == T.ROUTED_VRF and not is_on_link_routed(device, nmas_attachment) and not expected_topology:
+        expected_topology = {"hops": routed_chain(device, attachment, nmas_attachment, via_device, vrf)[0], "vlan": vlan, "vrf": vrf}
     topology = dict(expected_topology or {}) or {
         "hops": [hop for hop in ({"device": device.name, "interface": local_interface},
                                  {"device": via_device, "interface": remote_interface} if via_device else None,
@@ -533,6 +589,18 @@ def vlan_chain(start: str, goal: str) -> list[str] | None:
     return None
 
 
+def routed_problems(path) -> list[dict]:
+    """L1 for a registered ROUTED_VRF path: the on-link shape, or a hop chain that still holds (``routed_chain``)."""
+    nmas = path.nmas_attachment
+    if is_on_link_routed(path.device, nmas):
+        if path.attachment_id or (path.via_device and path.via_device != path.device.name):
+            return [codes.blocker("L1_TOPOLOGY_UNVERIFIED", reason="routed path has no verified direct NMAS neighbor")]
+        return []
+    if path.attachment is not None and path.attachment.device_id != path.device_id:
+        return [codes.blocker("MGMT_PATH_ATTACHMENT_INVALID", reason="not this device's attachment")]
+    return routed_chain(path.device, path.attachment, nmas, path.via_device, path.vrf)[1]
+
+
 def topology_problems(path) -> list[dict]:
     """L1: the physical provenance of the path is approved, independently verified and continuous to NMAS."""
     problems = []
@@ -542,9 +610,9 @@ def topology_problems(path) -> list[dict]:
     elif nmas.verification_state != models.AttachmentVerification.VERIFIED:
         problems.append(codes.blocker("L1_NMAS_ATTACHMENT_DOWN", state=nmas.verification_state))
     if path.path_type == T.ROUTED_VRF:
-        if nmas.upstream_device != path.device.name or path.attachment_id or (path.via_device and path.via_device != path.device.name):
-            problems.append(codes.blocker("L1_TOPOLOGY_UNVERIFIED", reason="routed path has no verified direct NMAS neighbor"))
-        problems.extend(guard.address_problems(path.endpoint_address, network=nmas.network, layer2=True))
+        problems.extend(routed_problems(path))
+        on_link = is_on_link_routed(path.device, nmas)
+        problems.extend(guard.address_problems(path.endpoint_address, network=nmas.network, layer2=on_link))
         return problems
     attachment = path.attachment
     if is_nmas_switch_self(path.device, path.path_type, attachment, nmas, path.via_device):
