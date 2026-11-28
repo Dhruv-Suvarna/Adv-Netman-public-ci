@@ -82,6 +82,11 @@ READ_ROUTES = frozenset({
     "commissioning_overview", "commissioning_device", "commissioning_device_json",
     # V2 Phases 7 / 8 -- decommissioning and the infrastructure projections (NMAS database reads only on a page view)
     "decommission_overview", "decommission_device", "infrastructure_overview", "infrastructure_json",
+    # Troubleshooting -- persisted case/evidence reads (no device is contacted on a GET).  The views additionally require a
+    # ``ts-*`` role and enforce tenant and device scope (core.troubleshooting_views).
+    "troubleshooting_list", "troubleshooting_detail", "ts_api_case", "ts_api_stages", "ts_api_evidence",
+    "ts_api_evidence_item", "ts_api_report", "ts_api_ai", "ts_api_remediation", "ts_api_audit", "ts_api_export",
+    "ts_api_metrics",
 })
 
 READ_ACTION_OVERRIDES: dict[str, Action] = {
@@ -100,6 +105,8 @@ SENSITIVE_READ_ROUTES = frozenset({
     "ztp_session_json",
     "management_spof_json", "management_device_json",
     "commissioning_device_json",
+    # Troubleshooting raw (redacted) evidence, case report/export and the case audit journal are always audited
+    "ts_api_evidence_item", "ts_api_report", "ts_api_export", "ts_api_audit",
 })
 
 MUTATION_ROUTES: dict[str, Action] = {
@@ -301,6 +308,19 @@ MUTATION_ROUTES: dict[str, Action] = {
     "notification_mark_all_read": Action.VIEW,
     "notification_retry_slack": Action.EDIT,
     "set_theme": Action.VIEW,
+    # Troubleshooting.  Opening a case records intake only.  A run performs bounded READ-ONLY diagnostic collection against
+    # admitted devices (like decommission_evaluate: VALIDATE).  An operator-confirmed expected-anomaly exception suppresses
+    # alarms for a narrow scope, so it is an approval.  Remediation plan actions map one route per action; the views keep
+    # PLAN_ACTION_PERMISSION equal to these values (contract test).
+    "troubleshooting_intake": Action.EDIT,
+    "troubleshooting_run": Action.VALIDATE,
+    "troubleshooting_escalate": Action.VALIDATE,
+    "ts_api_cases": Action.EDIT,
+    "ts_api_run": Action.VALIDATE,
+    "ts_api_exception": Action.APPROVE,
+    **{f"{prefix}{a}": action for prefix in ("troubleshooting_plan_", "ts_api_plan_")
+       for a, action in (("dry_run", Action.VALIDATE), ("precheck", Action.VALIDATE), ("approve", Action.APPROVE),
+                         ("reject", Action.APPROVE), ("execute", Action.EXECUTE))},
 }
 
 SAFE_METHODS = frozenset({"GET", "HEAD", "OPTIONS"})

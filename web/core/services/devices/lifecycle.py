@@ -614,6 +614,10 @@ def verify_identity(device, observation_id, *, actor: str, expected_version=None
                 raise _Refused([blocker("OBSERVATION_INVALID")])
             if observation.trust != models.ObservationTrust.OBSERVED or observation.source != models.ObservationSource.AUTHENTICATED_SESSION:
                 raise _Refused([blocker("IDENTITY_NOT_OBSERVED", source=observation.source, trust=observation.trust)])
+            recorder = str(observation.recorded_by or "").strip().lower()
+            if actor.strip().lower() == recorder or actor.strip().lower().startswith(("source:", "system:")):
+                # independent approval: the party that recorded (or an automated principal) never verifies its own observation
+                raise _Refused([blocker("ACTOR_NOT_AUTHORIZED", action="VERIFY_IDENTITY", reason="NOT_INDEPENDENT")])
             claims = observation.claims or {}
             if not claims.get("host_key") or (fresh.expected_serial and not claims.get("serial")) \
                     or (fresh.expected_base_mac and not claims.get("base_mac")):

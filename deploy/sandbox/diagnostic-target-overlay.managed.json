@@ -1,0 +1,42 @@
+{
+  "schema": "nmas.diagnostic-target-overlay/1",
+  "overlay_id": "CHG-NMAS-20261117-BULK-ADMISSION-019",
+  "base_activation_id": "CHG-NMAS-20261117-R2-DIAGNOSTIC-001",
+  "base_config_digest": "072135a89607708dcdc2fd835d5e7ba1e72889cfa63260eca3b4d297f8deed76",
+  "authorization_id": "OWNER-NMAS-V2-BULK-ADMISSION-20261117",
+  "expires_at": "2026-12-01T00:00:00Z",
+  "targets": [
+    {
+      "address": "192.168.200.1",
+      "port": 22
+    },
+    {
+      "address": "192.168.200.3",
+      "port": 22
+    },
+    {
+      "address": "192.168.200.4",
+      "port": 22
+    },
+    {
+      "address": "192.168.200.10",
+      "port": 22
+    },
+    {
+      "address": "192.168.200.11",
+      "port": 22
+    },
+    {
+      "address": "192.168.200.12",
+      "port": 22
+    },
+    {
+      "address": "192.168.200.13",
+      "port": 22
+    },
+    {
+      "address": "192.168.200.14",
+      "port": 22
+    }
+  ]
+}

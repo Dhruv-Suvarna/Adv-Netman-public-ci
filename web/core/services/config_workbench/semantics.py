@@ -85,6 +85,7 @@ _ATTRIBUTE_KINDS = (
     (re.compile(r"^switchport trunk native vlan "), "native_vlan"), (re.compile(r"^neighbor \S+ "), "neighbor_attribute"),
     (re.compile(r"^passive-interface "), "passive_interface"), (re.compile(r"^ip ospf "), "ip_ospf"),
     (re.compile(r"^(match|set) "), "route_map_clause"), (re.compile(r"^ip rip "), "ip_rip"),
+    (re.compile(r"^shutdown$"), "admin_shutdown"),
 )
 
 
@@ -443,6 +444,9 @@ class _Builder:
                 obj = self.child_object(child, iface, "nat_rule", f"nat_rule:{name}/{child.number}", f"{name} {text}", text)
                 obj.references |= self.match_references(text)
             elif re.match(r"^(description|mtu|(?:ip|ipv6) ospf (cost|network|priority|hello-interval|dead-interval)|ip rip )", text):
+                self.attribute(child, iface.id, removable=True)
+            elif text == "shutdown":
+                # admin shutdown: removing it is ``no shutdown`` in the interface context; restore re-adds ``shutdown``
                 self.attribute(child, iface.id, removable=True)
             else:
                 self.attribute(child, iface.id, removable=False, reason=NEGATED if text.startswith("no ") else UNRECOGNISED_ATTRIBUTE)

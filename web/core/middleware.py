@@ -24,11 +24,13 @@ from .services.identity import context as audit_context
 
 _JSON_SUFFIXES = (".json",)
 _JSON_ROUTES = frozenset({"topology_data"})
+# Versioned JSON APIs whose clients must get a JSON 401/403, never an HTML login redirect (troubleshooting API v1).
+_JSON_ROUTE_PREFIXES = ("ts_api_",)
 _ADMIN_MFA_EXEMPT = frozenset({"login", "logout"})
 
 
 def _wants_json(request, url_name: str) -> bool:
-    return url_name in _JSON_ROUTES or request.path.endswith(_JSON_SUFFIXES)
+    return url_name in _JSON_ROUTES or url_name.startswith(_JSON_ROUTE_PREFIXES) or request.path.endswith(_JSON_SUFFIXES)
 
 
 class NmasAccessMiddleware:

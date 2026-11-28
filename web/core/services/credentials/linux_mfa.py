@@ -234,14 +234,30 @@ session [success=ok ignore=ignore module_unknown=ignore default=bad] pam_selinux
 """
 
 
-def sshd_dropin(target: LinuxMfaTarget) -> str:
+DIAGNOSTIC_USERNAME = "nmas-diag"     # read-only forced-command broker account (modules/diagnostic_accounts.py)
+
+
+def sshd_dropin(target: LinuxMfaTarget, *, include_diagnostic: bool = True) -> str:
+    """The managed sshd policy.  ``include_diagnostic=False`` renders the pre-bulk-admission (Phase 26B) form, used only to
+    drift-check the deployed file before it is replaced."""
+    diag_allow = f" {DIAGNOSTIC_USERNAME}@{target.source_address}" if include_diagnostic else ""
+    diag_match = (f"""Match User {DIAGNOSTIC_USERNAME} Address {target.source_address}
+    AuthenticationMethods publickey
+    PubkeyAuthentication yes
+    KbdInteractiveAuthentication no
+    PasswordAuthentication no
+    PermitTTY no
+    AllowTcpForwarding no
+    X11Forwarding no
+
+""" if include_diagnostic else "")
     return f"""# NMAS Phase 26B managed human/service/recovery separation.
 UsePAM yes
 PermitRootLogin no
 PasswordAuthentication no
 KbdInteractiveAuthentication no
 PubkeyAuthentication yes
-AllowUsers {HUMAN_USERNAME}@{target.source_address} {SERVICE_USERNAME}@{target.source_address} {target.breakglass_username}@{target.source_address}
+AllowUsers {HUMAN_USERNAME}@{target.source_address} {SERVICE_USERNAME}@{target.source_address} {target.breakglass_username}@{target.source_address}{diag_allow}
 
 Match User {HUMAN_USERNAME} Address {target.source_address}
     AuthenticationMethods keyboard-interactive:pam
@@ -261,7 +277,7 @@ Match User {target.breakglass_username} Address {target.source_address}
     KbdInteractiveAuthentication no
     PubkeyAuthentication no
 
-Match all
+{diag_match}Match all
 """
 
 

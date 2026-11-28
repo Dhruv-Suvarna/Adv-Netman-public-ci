@@ -1,0 +1,52 @@
+{
+    "protoModelStatus": {
+        "operatingProtoModel": "multi-agent",
+        "configuredProtoModel": "multi-agent"
+    },
+    "vrfs": {
+        "default": {
+            "connected": 5,
+            "static": 2,
+            "staticPersistent": 2,
+            "staticNonPersistent": 0,
+            "staticNexthopGroup": 0,
+            "dynamicPolicy": 0,
+            "vcs": 0,
+            "dhcp": 0,
+            "ospfCounts6": {
+                "ospfTotal": 5,
+                "ospfIntraArea": 2,
+                "ospfInterArea": 2,
+                "ospfExternal1": 0,
+                "ospfExternal2": 1,
+                "nssaExternal1": 0,
+                "nssaExternal2": 0
+            },
+            "bgpCounts6": {
+                "bgpTotal": 0,
+                "bgpExternal": 0,
+                "bgpInternal": 0,
+                "bgpLocal": 0
+            },
+            "isisCounts6": {
+                "isisTotal": 5,
+                "isisLevel1": 0,
+                "isisLevel2": 5
+            },
+            "gribi": 0,
+            "internal": 9,
+            "attached": 1126,
+            "aggregate": 0,
+            "maskLen": {
+                "10": 1,
+                "96": 1,
+                "104": 1,
+                "128": 1133,
+                "0": 1,
+                "32": 1,
+                "64": 14
+            },
+            "totalRoutes": 1152
+        }
+    }
+}

@@ -147,7 +147,7 @@ def get_attachment(device, attachment_id):
     return models.DeviceAttachment.objects.filter(device=device, pk=attachment_id).first() if str(attachment_id).isdigit() else None
 
 
-def approve_attachment(device, attachment_id, *, actor: str) -> object:
+def approve_attachment(device, attachment_id, *, actor: str, exception=None) -> object:
     """PENDING -> APPROVED by a different person than the one who recorded it; the upstream must still be trusted."""
     action = "ATTACHMENT_APPROVE"
     row = get_attachment(device, attachment_id)
@@ -156,8 +156,14 @@ def approve_attachment(device, attachment_id, *, actor: str) -> object:
     blockers = []
     if row.approval_state != Approval.PENDING:
         blockers.append(blocker("ATTACHMENT_STATE_INVALID", state=row.approval_state))
+    exceptional = None
     if actor == row.created_by:
-        blockers.append(blocker("APPROVAL_SELF"))
+        from ..identity import single_admin_exception
+
+        exceptional = single_admin_exception.authorize(
+            exception, action=action, target=f"{device.device_id}:{row.pk}", actor=actor)
+        if not exceptional.ok:
+            blockers.append(blocker("APPROVAL_SELF"))
     if device.is_terminal:
         blockers.append(blocker("DEVICE_TERMINAL", state=device.lifecycle_state))
     if not blockers:
@@ -169,10 +175,38 @@ def approve_attachment(device, attachment_id, *, actor: str) -> object:
             locked = models.DeviceAttachment.objects.select_for_update().get(pk=row.pk)
             if locked.approval_state != Approval.PENDING:     # a concurrent approver / revoker won
                 raise _Refused([blocker("CONCURRENT_MODIFICATION", state=locked.approval_state)])
+            if exceptional is not None:
+                # A management attachment exception requires already-retained, matching observed evidence.
+                observations = models.DeviceObservation.objects.filter(
+                    device=device, attachment=locked, kind=models.ObservationKind.ATTACHMENT,
+                    source=models.ObservationSource.TRUSTED_UPSTREAM_INTERFACE,
+                    trust=models.ObservationTrust.OBSERVED, result=models.ObservationResult.MATCH)
+                # A bulk exception binds each exact target to its own retained observation
+                # (``attachment_observations: {"<DEV-id>:<attachment pk>": <observation pk>}``); the single-target form
+                # (``attachment_observation_id``) is unchanged.  No target without its own matching evidence passes.
+                bulk = (exception.evidence or {}).get("attachment_observations")
+                expected = (bulk.get(f"{device.device_id}:{locked.pk}") if isinstance(bulk, dict)
+                            else (exception.evidence or {}).get("attachment_observation_id"))
+                observation = observations.filter(pk=expected).first() if str(expected).isdigit() else None
+                if observation is None or locked.verification_state != Verification.VERIFIED:
+                    raise _Refused([blocker("APPROVAL_SELF")])
+                used = single_admin_exception.consume(
+                    exception, action=action, target=f"{device.device_id}:{locked.pk}", actor=actor,
+                    original_requester=locked.created_by,
+                    evidence={"observation": observation.pk, "verification_state": locked.verification_state,
+                              "evidence_sha256": ((exception.evidence or {}).get("attachment_evidence_sha256s") or {}).get(
+                                  f"{device.device_id}:{locked.pk}", "") if isinstance(bulk, dict)
+                              else (exception.evidence or {}).get("attachment_evidence_sha256", "")})
+                if not used.ok:
+                    raise _Refused([blocker("APPROVAL_SELF")])
             locked.approval_state, locked.approved_by, locked.approved_at = Approval.APPROVED, actor[:150], timezone.now()
             locked.save(update_fields=["approval_state", "approved_by", "approved_at", "updated_at"])
-            event = events.record(device, action, Outcome.RECORDED, actor=actor, from_state=device.lifecycle_state,
-                                  to_state=device.lifecycle_state, attachment=locked, evidence={"approval_state": Approval.APPROVED})
+            event = events.record(
+                device, action, Outcome.RECORDED, actor=actor, from_state=device.lifecycle_state,
+                to_state=device.lifecycle_state, attachment=locked,
+                evidence={"approval_state": Approval.APPROVED,
+                          **({"approval_mode": "SINGLE_ADMIN_EXCEPTION", "exception_id": exception.exception_id,
+                              "separation_of_duties_satisfied": False} if exceptional is not None else {})})
     except _Refused as refusal:
         return _refuse(device, action, refusal.blockers, actor=actor, attachment=row)
     return _result(device, True, action, [], event, True, attachment=locked)

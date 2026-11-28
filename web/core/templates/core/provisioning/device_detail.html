@@ -46,7 +46,8 @@
       <input class="form-control" type="text" name="manufacturer" value="{{ device.manufacturer }}" placeholder="manufacturer" aria-label="Manufacturer" autocomplete="off">
       <input class="form-control" type="text" name="model" value="{{ device.model }}" placeholder="model" aria-label="Model" autocomplete="off">
       <button type="submit" class="btn">Save expected identity</button>
-    </form>
+    </form>{% endif %}
+    {% if not device.is_terminal %}
     <form method="post" action="{% url 'core:managed_device_verify_identity' device.device_id %}" style="margin-top:8px;">{% csrf_token %}
       <input type="hidden" name="expected_version" value="{{ device.version }}">
       <input class="form-control" type="text" name="observation_id" placeholder="observation # (authenticated session)" aria-label="Observation" inputmode="numeric" autocomplete="off" required>

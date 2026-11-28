@@ -1,0 +1,11 @@
+g nmas-ts-diagnostic-ipc -
+g nmas-ts-research-ipc -
+g nmas-ts-model-ipc -
+u nmas-ts-diagnostic - "NMAS typed diagnostic worker" /nonexistent /usr/sbin/nologin
+u nmas-research - "NMAS public documentation worker" /nonexistent /usr/sbin/nologin
+u nmas-ts-runtime - "NMAS governed AI troubleshooting runtime" /nonexistent /usr/sbin/nologin
+m nmas-ts-diagnostic nmas-ts-diagnostic-ipc
+m nmas-research nmas-ts-research-ipc
+m nmas-ts-runtime nmas-ts-diagnostic-ipc
+m nmas-ts-runtime nmas-ts-research-ipc
+m nmas-ts-runtime nmas-ts-model-ipc

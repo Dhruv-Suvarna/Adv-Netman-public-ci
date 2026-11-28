@@ -112,10 +112,19 @@ WSGI_APPLICATION = "config.wsgi.application"
 # state is stored here. Django's own contrib apps (auth/sessions/admin) are
 # the only tables that exist; theme selection deliberately uses a cookie,
 # not a model (see docs/DJANGO_UI_FOUNDATION.md).
+_runtime_database = os.environ.get("NMAS_TS_RUNTIME_DATABASE", "").strip()
+_runtime_restricted = os.environ.get("NMAS_TS_RUNTIME_DB_RESTRICTED", "") == "1"
+_reviewed_runtime_databases = frozenset({
+    "/var/lib/nmas-ts-runtime/dbroot/db.sqlite3",  # legacy combined runtime template
+    "/var/lib/nmas-ts-runtime/db.sqlite3",         # isolated dispatch file bind
+})
+if _runtime_restricted and _runtime_database not in _reviewed_runtime_databases:
+    raise RuntimeError("restricted Troubleshooter runtime requires its reviewed private database bind path")
+
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "NAME": Path(_runtime_database) if _runtime_restricted else BASE_DIR / "db.sqlite3",
     }
 }
 
@@ -354,3 +363,85 @@ NMAS_CONFIGURATION_VALIDATION_ENABLED = True
 NMAS_GITHUB_REPOSITORY = os.environ.get("NMAS_GITHUB_REPOSITORY", "").strip() or "Dhruv-Suvarna/Adv-Netman"
 NMAS_GITHUB_API_URL = "https://api.github.com"
 NMAS_GITHUB_TOKEN_ENV = "NMAS_GITHUB_TOKEN"
+
+
+# --- Troubleshooting runtime bindings and authenticated device observations ---------------------------------------------
+# Both troubleshooting consumers (REST views and ``manage.py troubleshooting_ai``) share ONE zero-argument factory
+# (docs/troubleshooting/deployment-bindings.md).  It reads no credential and contacts no device.  With NMAS_TS_DEPLOYMENT
+# empty every device is refused (LIFECYCLE_UNKNOWN): the fail-closed default.
+NMAS_TS_RUNTIME_FACTORY = "core.services.troubleshooting.deployment.runtime_deps"
+TROUBLESHOOTING_RUNTIME_DEPS = NMAS_TS_RUNTIME_FACTORY
+# The authoritative NMAS admission providers are bound only by an explicit environment decision (NMAS_TS_BINDING=nmas-v1);
+# any other non-empty value binds nothing and fails ``manage.py check`` (core.checks).  The literal must stay equal to
+# core.services.troubleshooting.adapters.nmas_providers.RECOMMENDED_BINDING (checked by core.checks and its tests).
+NMAS_TS_BINDING = os.environ.get("NMAS_TS_BINDING", "").strip()
+NMAS_TS_DEPLOYMENT = {
+    "inventory": "core.services.troubleshooting.adapters.nmas_providers.inventory",
+    "lifecycle_provider": "core.services.troubleshooting.adapters.nmas_providers.lifecycle",
+    "version_provider": "core.services.troubleshooting.adapters.nmas_providers.version",
+} if NMAS_TS_BINDING == "nmas-v1" else {}
+# Owner-selected production AI provider pool (ordered subset of Codex, ClaudeA, ClaudeB).  An agent outside the pool is
+# disabled by policy: it is never probed, selected or failed over to, whatever state its broker is in.  2026-11-16 owner
+# decision: Codex only; ClaudeA and ClaudeB are deferred.
+NMAS_TS_AI_PROVIDER_POOL = tuple(
+    name for name in (v.strip() for v in os.environ.get("NMAS_TS_AI_PROVIDER_POOL", "Codex").split(","))
+    if name in ("Codex", "ClaudeA", "ClaudeB"))
+NMAS_TS_TARGET_POLICY_FACTORY = "core.services.troubleshooting.adapters.nmas_providers.target_policy"
+NMAS_TS_SANDBOX_ENFORCEMENT = True
+NMAS_TS_TENANT = os.environ.get("NMAS_TS_TENANT", "default").strip() or "default"
+NMAS_TS_PROTECTED_ADDRESSES = tuple(
+    value.strip() for value in os.environ.get("NMAS_TS_PROTECTED_ADDRESSES", "").split(",") if value.strip()
+)
+
+# The web process receives only worker-specific IPC keys.  Device credentials
+# stay in the diagnostic worker and public Internet access stays in the
+# research worker.  Empty socket settings are fail-closed and expose neither a
+# direct SSH transport nor an in-process HTTP fallback.
+# Outbound mail relay for notifications, from the protected environment file only (never source).
+EMAIL_HOST = os.environ.get("EMAIL_HOST", "localhost")
+EMAIL_PORT = int(os.environ.get("EMAIL_PORT", "25"))
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", "")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "")
+EMAIL_USE_TLS = os.environ.get("EMAIL_USE_TLS", "0") == "1"
+EMAIL_TIMEOUT = 10
+DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL", "nmas@localhost")
+# Standing PREAUTHORIZED_AUTOMATED_RECOVERY policies (owner-created JSON; absent == disabled).
+NMAS_TS_RECOVERY_POLICY_FILE = os.environ.get("NMAS_TS_RECOVERY_POLICY_FILE", "")
+# Reviewed per-prefix routing intent is opt-in and revision-pinned.  The deployment must provide the active inventory revision
+# independently of the observed RIB; an empty or mismatched value makes route-intent evaluation refuse closed.
+NMAS_TS_ROUTE_INTENT_FILE = os.environ.get("NMAS_TS_ROUTE_INTENT_FILE", "").strip()
+NMAS_TS_TOPOLOGY_REVISION = os.environ.get("NMAS_TS_TOPOLOGY_REVISION", "").strip()
+NMAS_TS_ROUTE_INTENT_MAX_AGE_SECONDS = int(_bounded_seconds("NMAS_TS_ROUTE_INTENT_MAX_AGE_SECONDS", "60", 5, 300))
+# Engineer issue notification (core.services.troubleshooting.notify): comma-separated recipients, kept out of source.
+NMAS_TS_ALERT_EMAILS = tuple(a.strip() for a in os.environ.get("NMAS_TS_ALERT_EMAILS", "").split(",") if a.strip())
+NMAS_TS_DIAGNOSTIC_WORKER = {
+    "socket": os.environ.get("NMAS_TS_DIAGNOSTIC_SOCKET", "").strip(),
+    "key_env": "NMAS_TS_DIAGNOSTIC_IPC_KEY",
+    "timeout": int(_bounded_seconds("NMAS_TS_DIAGNOSTIC_TIMEOUT", "20", 2, 60)),
+} if os.environ.get("NMAS_TS_DIAGNOSTIC_SOCKET", "").strip() else {}
+NMAS_TS_RESEARCH_WORKER = {
+    "socket": os.environ.get("NMAS_TS_RESEARCH_SOCKET", "").strip(),
+    "key_env": "NMAS_TS_RESEARCH_IPC_KEY",
+    "timeout": int(_bounded_seconds("NMAS_TS_RESEARCH_WORKER_TIMEOUT", "12", 2, 60)),
+} if os.environ.get("NMAS_TS_RESEARCH_SOCKET", "").strip() else {}
+
+# Public-document research is a separate, HTTPS-only capability.  No hostname
+# is authorized by default; Phase-C operators supply a reviewed comma-separated
+# exact-host set.  Model/Slack/provider egress remains on its existing broker
+# and is never interpreted as device-management or research authority.
+NMAS_TS_RESEARCH = {
+    "allowed_hosts": tuple(h.lower().rstrip(".") for h in os.environ.get("NMAS_TS_RESEARCH_HOSTS", "").split(",") if h.strip()),
+    "timeout": int(_bounded_seconds("NMAS_TS_RESEARCH_TIMEOUT", "8", 2, 30)),
+    "max_bytes": int(_bounded_seconds("NMAS_TS_RESEARCH_MAX_BYTES", "262144", 1024, 2000000)),
+    "max_redirects": int(_bounded_seconds("NMAS_TS_RESEARCH_MAX_REDIRECTS", "3", 0, 5)),
+}
+
+# Authenticated device-observation source.  Registered only by an explicit environment decision in the OBSERVATION RUNNER's
+# environment (not the web service's: reading observed versions needs no key).  Only the NAME of the key variable is
+# configured here; the key itself (>= 32 characters) is read from that variable at use time by
+# core.services.devices.observations.trusted_sources() and is never stored in settings, source, arguments, the database or logs.
+NMAS_OBSERVATION_KEY_ENV = "NMAS_OBSERVATION_KEY"
+_observation_source_id = os.environ.get("NMAS_OBSERVATION_SOURCE_ID", "").strip()
+NMAS_OBSERVATION_SOURCES = {
+    _observation_source_id: {"key_env": NMAS_OBSERVATION_KEY_ENV, "platforms": ["arista_ceos", "ubuntu_frr"]},
+} if _observation_source_id else {}

@@ -1,0 +1,19 @@
+# REVIEW ARTIFACT ONLY. These exact candidates remain unusable until each
+# corresponding ManagementPath is independently approved, healthy and active.
+table inet nmas_diagnostic {
+  set targets4 { type ipv4_addr . inet_service; elements = { 192.168.200.1 . 22, 192.168.200.2 . 22, 192.168.200.11 . 22, 192.168.200.12 . 22, 192.168.200.13 . 22, 192.168.200.14 . 22 } }
+  set targets6 { type ipv6_addr . inet_service; }
+  chain input {
+    type filter hook input priority filter; policy drop;
+    ct state established,related accept
+  }
+  chain forward {
+    type filter hook forward priority filter; policy drop;
+  }
+  chain output {
+    type filter hook output priority filter; policy drop;
+    ct state established,related accept
+    ip daddr . tcp dport @targets4 accept
+    ip6 daddr . tcp dport @targets6 accept
+  }
+}

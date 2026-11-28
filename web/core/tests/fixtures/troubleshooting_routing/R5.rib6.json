@@ -1,0 +1,199 @@
+{
+    "vrfs": {
+        "default": {
+            "routingDisabled": false,
+            "allRoutesProgrammedHardware": true,
+            "allRoutesProgrammedKernel": true,
+            "defaultRouteState": "reachable",
+            "routes": {
+                "2001:db8:10::/64": {
+                    "hardwareProgrammed": true,
+                    "routeType": "eBGP",
+                    "routeLeaked": false,
+                    "kernelProgrammed": true,
+                    "preference": 200,
+                    "metric": 0,
+                    "vias": [
+                        {
+                            "nexthopAddr": "2001:db8:205:1::1",
+                            "interface": "Ethernet1"
+                        }
+                    ],
+                    "routeAction": "forward",
+                    "directlyConnected": false
+                },
+                "2001:db8:20::/64": {
+                    "hardwareProgrammed": true,
+                    "routeType": "eBGP",
+                    "routeLeaked": false,
+                    "kernelProgrammed": true,
+                    "preference": 200,
+                    "metric": 0,
+                    "vias": [
+                        {
+                            "nexthopAddr": "2001:db8:205:1::1",
+                            "interface": "Ethernet1"
+                        }
+                    ],
+                    "routeAction": "forward",
+                    "directlyConnected": false
+                },
+                "2001:db8:30::/64": {
+                    "hardwareProgrammed": true,
+                    "routeType": "eBGP",
+                    "routeLeaked": false,
+                    "kernelProgrammed": true,
+                    "preference": 200,
+                    "metric": 0,
+                    "vias": [
+                        {
+                            "nexthopAddr": "2001:db8:205:1::1",
+                            "interface": "Ethernet1"
+                        }
+                    ],
+                    "routeAction": "forward",
+                    "directlyConnected": false
+                },
+                "2001:db8:205:1::/64": {
+                    "hardwareProgrammed": true,
+                    "routeType": "connected",
+                    "routeLeaked": false,
+                    "kernelProgrammed": true,
+                    "preference": 0,
+                    "metric": 0,
+                    "vias": [
+                        {
+                            "interface": "Ethernet1"
+                        }
+                    ],
+                    "routeAction": "forward",
+                    "directlyConnected": true
+                },
+                "2001:db8:205:2::/64": {
+                    "hardwareProgrammed": true,
+                    "routeType": "connected",
+                    "routeLeaked": false,
+                    "kernelProgrammed": true,
+                    "preference": 0,
+                    "metric": 0,
+                    "vias": [
+                        {
+                            "interface": "Ethernet2"
+                        }
+                    ],
+                    "routeAction": "forward",
+                    "directlyConnected": true
+                },
+                "2001:db8:254:10::/64": {
+                    "hardwareProgrammed": true,
+                    "routeType": "eBGP",
+                    "routeLeaked": false,
+                    "kernelProgrammed": true,
+                    "preference": 200,
+                    "metric": 0,
+                    "vias": [
+                        {
+                            "nexthopAddr": "2001:db8:205:2::1",
+                            "interface": "Ethernet2"
+                        }
+                    ],
+                    "routeAction": "forward",
+                    "directlyConnected": false
+                },
+                "2001:db8:254:20::/64": {
+                    "hardwareProgrammed": true,
+                    "routeType": "eBGP",
+                    "routeLeaked": false,
+                    "kernelProgrammed": true,
+                    "preference": 200,
+                    "metric": 0,
+                    "vias": [
+                        {
+                            "nexthopAddr": "2001:db8:205:2::1",
+                            "interface": "Ethernet2"
+                        }
+                    ],
+                    "routeAction": "forward",
+                    "directlyConnected": false
+                },
+                "2001:db8:255::5/128": {
+                    "hardwareProgrammed": true,
+                    "routeType": "connected",
+                    "routeLeaked": false,
+                    "kernelProgrammed": true,
+                    "preference": 0,
+                    "metric": 0,
+                    "vias": [
+                        {
+                            "interface": "Loopback0"
+                        }
+                    ],
+                    "routeAction": "forward",
+                    "directlyConnected": true
+                },
+                "2001:db8:3050::10/128": {
+                    "hardwareProgrammed": true,
+                    "routeType": "static",
+                    "routeLeaked": false,
+                    "kernelProgrammed": true,
+                    "preference": 1,
+                    "metric": 0,
+                    "vias": [
+                        {
+                            "nexthopAddr": "2001:db8:3150::2",
+                            "interface": "Ethernet3"
+                        }
+                    ],
+                    "routeAction": "forward",
+                    "directlyConnected": false
+                },
+                "2001:db8:3150::/64": {
+                    "hardwareProgrammed": true,
+                    "routeType": "connected",
+                    "routeLeaked": false,
+                    "kernelProgrammed": true,
+                    "preference": 0,
+                    "metric": 0,
+                    "vias": [
+                        {
+                            "interface": "Ethernet3"
+                        }
+                    ],
+                    "routeAction": "forward",
+                    "directlyConnected": true
+                },
+                "3fff:172:20:20::/64": {
+                    "hardwareProgrammed": true,
+                    "routeType": "connected",
+                    "routeLeaked": false,
+                    "kernelProgrammed": true,
+                    "preference": 0,
+                    "metric": 0,
+                    "vias": [
+                        {
+                            "interface": "Management0"
+                        }
+                    ],
+                    "routeAction": "forward",
+                    "directlyConnected": true
+                },
+                "::/0": {
+                    "hardwareProgrammed": true,
+                    "routeType": "static",
+                    "routeLeaked": false,
+                    "kernelProgrammed": true,
+                    "preference": 1,
+                    "metric": 0,
+                    "vias": [
+                        {
+                            "nexthopAddr": "3fff:172:20:20::1",
+                            "interface": "Management0"
+                        }
+                    ],
+                    "routeAction": "forward",
+                    "directlyConnected": false
+                }
+            }
+        }
+    }
+}

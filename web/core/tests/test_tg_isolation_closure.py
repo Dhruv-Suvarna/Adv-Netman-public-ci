@@ -112,7 +112,7 @@ class ServiceClosureTests(Base):
     def test_upstream_device_of_another_policy_never_names_this_upstream(self):
         flow = self.flow()
         flow.required()
-        self.assertNotEqual(iso.upstream_device(SimpleNamespace(upstream_device="S2"))["name"], flow.policy.upstream_device)
+        self.assertNotEqual(iso.upstream_device(SimpleNamespace(upstream_device="S2", upstream_platform=flow.policy.upstream_platform))["name"], flow.policy.upstream_device)
 
     def test_lookups(self):
         flow = self.flow()
@@ -227,7 +227,9 @@ class ServiceClosureTests(Base):
         with self.subTest("refuses a drifted upstream and statements still present"):
             self.assertEqual(iso.release_preflight_problems(policy, I.upstream_config())[0]["code"], "ISOLATION_DRIFTED")
             self.assertTrue(iso.release_absent_problems(policy, enforced_text))
-            stale = SimpleNamespace(intent={**policy.intent, "upstream": {**policy.intent["upstream"], "interface": "Eth 7; reload"}})
+            # a policy double carries the model's non-null upstream_platform like every real IsolationPolicy row
+            stale = SimpleNamespace(upstream_platform=policy.upstream_platform,
+                                    intent={**policy.intent, "upstream": {**policy.intent["upstream"], "interface": "Eth 7; reload"}})
             with self.assertRaises(eos.RenderError):
                 iso.release_ops(stale)
         with self.subTest("accepts an upstream the release emptied"):

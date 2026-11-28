@@ -101,4 +101,7 @@ class NmasTestRunner(DiscoverRunner):
         # Configuration Validation dispatches to GitHub and gates execution in every real environment.  Its own tests turn it on
         # (``override_settings``) with a fake GitHub transport; every other test validates and executes without it.
         settings.NMAS_CONFIGURATION_VALIDATION_ENABLED = False
+        # Direct provider fixtures are in-process doubles. Real deployments
+        # always keep this True and must use the isolated target worker.
+        settings.NMAS_TS_SANDBOX_ENFORCEMENT = False
         config_state.SESSION_FACTORY = _no_device_session

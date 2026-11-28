@@ -37,6 +37,8 @@ CEOS_PARSER_VALIDATED: frozenset[str] = frozenset({
     # attribute lines (``no <line>`` in context), by attribute kind
     "attribute:description", "attribute:mtu", "attribute:native_vlan", "attribute:neighbor_attribute",
     "attribute:passive_interface", "attribute:ip_ospf", "attribute:route_map_clause",
+    # ``no shutdown`` under ``interface X``: parser-validated on R2 cEOS 4.36.2F, 2026-11-17, aborted session, running-config unchanged
+    "attribute:admin_shutdown",
 })
 EXECUTABLE_PLATFORMS = frozenset({"arista_ceos"})
 

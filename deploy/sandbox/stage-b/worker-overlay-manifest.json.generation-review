@@ -1,0 +1,31 @@
+{
+  "files": [
+    {
+      "mode": 420,
+      "path": "deploy/sandbox/namespace_activation.py",
+      "sha256": "0a87da4cfa65bbeb6073dec52d34ecdaa62e694fd7512046ba1aa0029f90d5a7",
+      "size": 73932
+    },
+    {
+      "mode": 420,
+      "path": "deploy/sandbox/nmas-research-broker.service.in",
+      "sha256": "f4aea87ff4cd12fe47e6efa40dc84e579dafecd9a22d213b0ebe3a20682aea89",
+      "size": 2317
+    },
+    {
+      "mode": 420,
+      "path": "web/core/services/troubleshooting/research.py",
+      "sha256": "c37d23950cdeabcbcdddd27628ece017b2e5dd7b211349a4bbb45e8769fb869a",
+      "size": 13668
+    },
+    {
+      "mode": 420,
+      "path": "web/core/services/troubleshooting/research_worker.py",
+      "sha256": "0db14db8bc0494fefcd75aa55e470adcc5c5bad7e52263359191a87ef89d4319",
+      "size": 6073
+    }
+  ],
+  "overlay_root": "/home/student/Scripts/nmas-public-dev-troubleshooting",
+  "release_id": "CHG-NMAS-20261115-STAGE-B-001-GENERATION-03",
+  "schema": "nmas.worker-overlay-manifest/1"
+}

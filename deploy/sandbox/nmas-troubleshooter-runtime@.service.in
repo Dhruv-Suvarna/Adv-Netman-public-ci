@@ -1,0 +1,51 @@
+[Unit]
+Description=NMAS governed Troubleshooter AI continuation %I
+After=nmas-troubleshooter-device-worker.service nmas-research-broker.service
+Requires=nmas-troubleshooter-device-worker.service nmas-research-broker.service
+ConditionPathExists=/etc/nmas/troubleshooter-ipc-client.env
+
+[Service]
+Type=oneshot
+User=nmas-ts-runtime
+Group=nmas-ts-runtime
+SupplementaryGroups=nmas-ts-diagnostic-ipc nmas-ts-research-ipc nmas-ts-model-ipc
+EnvironmentFile=/etc/nmas/troubleshooter-ipc-client.env
+WorkingDirectory=/opt/nmas/current/web
+ExecStart=/opt/nmas/venv/bin/python /opt/nmas/current/web/manage.py troubleshooting_ai continue --handoff %I --tenant default --actor nmas-ts-runtime
+NoNewPrivileges=yes
+PrivateNetwork=yes
+PrivateDevices=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ProtectHome=yes
+ProtectProc=invisible
+ProcSubset=pid
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectKernelLogs=yes
+ProtectControlGroups=yes
+ProtectClock=yes
+RestrictSUIDSGID=yes
+RestrictRealtime=yes
+LockPersonality=yes
+MemoryDenyWriteExecute=yes
+RemoveIPC=yes
+RestrictNamespaces=yes
+CapabilityBoundingSet=
+AmbientCapabilities=
+SystemCallArchitectures=native
+SystemCallFilter=@system-service
+SystemCallErrorNumber=EPERM
+RestrictAddressFamilies=AF_UNIX
+IPAddressDeny=any
+ReadOnlyPaths=/opt/nmas/current /etc/nmas/troubleshooter-ipc-client.env
+BindReadOnlyPaths=@PRODUCTION_INVENTORY@:/opt/nmas/current/inventory.yml
+BindPaths=@PRODUCTION_WEB_DIRECTORY@:/var/lib/nmas-ts-runtime/dbroot
+InaccessiblePaths=/run/docker.sock /var/run/docker.sock /run/containerd/containerd.sock /etc/nmas/troubleshooter-device-worker.env /etc/nmas/research-broker.env /var/lib/nmas-ts-diagnostic /var/lib/nmas-ts-research /var/log/nmas-ts-diagnostic /var/log/nmas-ts-research /opt/nmas/current/monitoring/runtime/device-credentials /var/lib/nmas-ts-runtime/dbroot/config /var/lib/nmas-ts-runtime/dbroot/core /var/lib/nmas-ts-runtime/dbroot/manage.py /var/lib/nmas-ts-runtime/dbroot/requirements.txt /var/lib/nmas-ts-runtime/dbroot/staticfiles /var/lib/nmas-ts-runtime/dbroot/var /var/lib/nmas-ts-runtime/dbroot/db.sqlite3.pre-phase5-20261006T080441Z
+UMask=0077
+StateDirectory=nmas-ts-runtime
+StateDirectoryMode=0700
+TimeoutStartSec=330s
+
+# Deliberately no [Install]: a trusted operator/dispatcher starts one reviewed
+# handoff instance.  This is not a persistent general-purpose agent service.

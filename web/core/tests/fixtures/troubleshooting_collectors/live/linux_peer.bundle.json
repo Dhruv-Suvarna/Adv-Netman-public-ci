@@ -1,0 +1,1074 @@
+{
+ "coverage": {
+  "collected": 7,
+  "missing_by_reason": {
+   "EMPTY": 2,
+   "PARSER_UNAVAILABLE": 2
+  },
+  "observations": 14,
+  "requested": 7
+ },
+ "evidence": [
+  {
+   "adapter": "gateway-fixture",
+   "adapter_version": "1.0.0",
+   "collected_at": "2026-11-09T22:16:31.216823Z",
+   "command_or_api": "vtysh -c show version",
+   "coverage": null,
+   "device": "peer",
+   "duration_s": 0.345,
+   "evidence_class": "operational",
+   "evidence_id": "ev-8659ff4c054d3624",
+   "extra": {
+    "attempts": 1
+   },
+   "freshness_max_age_s": 120.0,
+   "gateway": {
+    "fixture_id": "fxe85127d9",
+    "gateway_evidence_seqs": [
+     6189
+    ],
+    "live": true,
+    "node": "peer",
+    "pin_id": null
+   },
+   "os_version": "8.4.4",
+   "parser": null,
+   "platform": "linux",
+   "raw_ref": {
+    "bytes": 0,
+    "hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "operator_view": "reference-only",
+    "pointer": "mem:sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stored_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+   },
+   "redaction": {
+    "redactions": 0,
+    "status": "CHECKED_NO_SECRETS"
+   },
+   "schema": "nmas.troubleshooting.evidence/1",
+   "sequence": 1,
+   "source_type": "CLI",
+   "started_at": "2026-11-09T22:16:30.872270Z",
+   "status": "OK",
+   "status_detail": "",
+   "transport": "gateway-fixture"
+  },
+  {
+   "adapter": "gateway-fixture",
+   "adapter_version": "1.0.0",
+   "collected_at": "2026-11-09T22:16:31.364395Z",
+   "command_or_api": "ip -j addr show",
+   "coverage": null,
+   "device": "peer",
+   "duration_s": 0.147,
+   "evidence_class": "operational",
+   "evidence_id": "ev-79a070ebe526660e",
+   "extra": {
+    "attempts": 1
+   },
+   "freshness_max_age_s": 120.0,
+   "gateway": {
+    "fixture_id": "fxe85127d9",
+    "gateway_evidence_seqs": [
+     6189,
+     6190
+    ],
+    "live": true,
+    "node": "peer",
+    "pin_id": null
+   },
+   "os_version": "8.4.4",
+   "parser": {
+    "id": "interfaces.state",
+    "input_kind": "json",
+    "template": "iproute2.addr.json",
+    "version": "linux-ip-json-1.0"
+   },
+   "platform": "linux",
+   "raw_ref": {
+    "bytes": 1585,
+    "hash": "sha256:98c14e21452dad2ba7e604732c7d6d5ee95ba60d2e92fa1666878013b7fd567d",
+    "operator_view": "reference-only",
+    "pointer": "mem:sha256:98c14e21452dad2ba7e604732c7d6d5ee95ba60d2e92fa1666878013b7fd567d",
+    "stored_hash": "sha256:98c14e21452dad2ba7e604732c7d6d5ee95ba60d2e92fa1666878013b7fd567d"
+   },
+   "redaction": {
+    "redactions": 0,
+    "status": "CHECKED_NO_SECRETS"
+   },
+   "schema": "nmas.troubleshooting.evidence/1",
+   "sequence": 2,
+   "source_type": "CLI",
+   "started_at": "2026-11-09T22:16:31.216963Z",
+   "status": "OK",
+   "status_detail": "",
+   "transport": "gateway-fixture"
+  },
+  {
+   "adapter": "gateway-fixture",
+   "adapter_version": "1.0.0",
+   "collected_at": "2026-11-09T22:16:31.653929Z",
+   "command_or_api": "vtysh -c show ip ospf neighbor json",
+   "coverage": null,
+   "device": "peer",
+   "duration_s": 0.237,
+   "evidence_class": "operational",
+   "evidence_id": "ev-9860fa281ae44804",
+   "extra": {
+    "attempts": 1
+   },
+   "freshness_max_age_s": 120.0,
+   "gateway": {
+    "fixture_id": "fxe85127d9",
+    "gateway_evidence_seqs": [
+     6189,
+     6190,
+     6191
+    ],
+    "live": true,
+    "node": "peer",
+    "pin_id": null
+   },
+   "os_version": "8.4.4",
+   "parser": null,
+   "platform": "linux",
+   "raw_ref": {
+    "bytes": 0,
+    "hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "operator_view": "reference-only",
+    "pointer": "mem:sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stored_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+   },
+   "redaction": {
+    "redactions": 0,
+    "status": "CHECKED_NO_SECRETS"
+   },
+   "schema": "nmas.troubleshooting.evidence/1",
+   "sequence": 3,
+   "source_type": "CLI",
+   "started_at": "2026-11-09T22:16:31.417073Z",
+   "status": "OK",
+   "status_detail": "",
+   "transport": "gateway-fixture"
+  },
+  {
+   "adapter": "gateway-fixture",
+   "adapter_version": "1.0.0",
+   "collected_at": "2026-11-09T22:16:31.866920Z",
+   "command_or_api": "vtysh -c show bgp summary json",
+   "coverage": null,
+   "device": "peer",
+   "duration_s": 0.213,
+   "evidence_class": "operational",
+   "evidence_id": "ev-739e6a61f36dbbf2",
+   "extra": {
+    "attempts": 1
+   },
+   "freshness_max_age_s": 120.0,
+   "gateway": {
+    "fixture_id": "fxe85127d9",
+    "gateway_evidence_seqs": [
+     6189,
+     6190,
+     6191,
+     6192
+    ],
+    "live": true,
+    "node": "peer",
+    "pin_id": null
+   },
+   "os_version": "8.4.4",
+   "parser": null,
+   "platform": "linux",
+   "raw_ref": {
+    "bytes": 0,
+    "hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "operator_view": "reference-only",
+    "pointer": "mem:sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stored_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+   },
+   "redaction": {
+    "redactions": 0,
+    "status": "CHECKED_NO_SECRETS"
+   },
+   "schema": "nmas.troubleshooting.evidence/1",
+   "sequence": 4,
+   "source_type": "CLI",
+   "started_at": "2026-11-09T22:16:31.654094Z",
+   "status": "OK",
+   "status_detail": "",
+   "transport": "gateway-fixture"
+  },
+  {
+   "adapter": "gateway-fixture",
+   "adapter_version": "1.0.0",
+   "collected_at": "2026-11-09T22:16:32.045205Z",
+   "command_or_api": "ip -j -4 route show",
+   "coverage": null,
+   "device": "peer",
+   "duration_s": 0.178,
+   "evidence_class": "operational",
+   "evidence_id": "ev-62bbef80804416ef",
+   "extra": {
+    "attempts": 1
+   },
+   "freshness_max_age_s": 120.0,
+   "gateway": {
+    "fixture_id": "fxe85127d9",
+    "gateway_evidence_seqs": [
+     6189,
+     6190,
+     6191,
+     6192,
+     6193
+    ],
+    "live": true,
+    "node": "peer",
+    "pin_id": null
+   },
+   "os_version": "8.4.4",
+   "parser": null,
+   "platform": "linux",
+   "raw_ref": {
+    "bytes": 113,
+    "hash": "sha256:fefede21e49b0de21d9bbefcc46a65329cf6dd52bab17c9dc9909e09a6ab8921",
+    "operator_view": "reference-only",
+    "pointer": "mem:sha256:fefede21e49b0de21d9bbefcc46a65329cf6dd52bab17c9dc9909e09a6ab8921",
+    "stored_hash": "sha256:fefede21e49b0de21d9bbefcc46a65329cf6dd52bab17c9dc9909e09a6ab8921"
+   },
+   "redaction": {
+    "redactions": 0,
+    "status": "CHECKED_NO_SECRETS"
+   },
+   "schema": "nmas.troubleshooting.evidence/1",
+   "sequence": 5,
+   "source_type": "CLI",
+   "started_at": "2026-11-09T22:16:31.867115Z",
+   "status": "OK",
+   "status_detail": "",
+   "transport": "gateway-fixture"
+  },
+  {
+   "adapter": "gateway-fixture",
+   "adapter_version": "1.0.0",
+   "collected_at": "2026-11-09T22:16:32.578829Z",
+   "command_or_api": "ip -j -s link show",
+   "coverage": null,
+   "device": "peer",
+   "duration_s": 0.512,
+   "evidence_class": "operational",
+   "evidence_id": "ev-5fb6e9a2743af8fb",
+   "extra": {
+    "attempts": 1
+   },
+   "freshness_max_age_s": 120.0,
+   "gateway": {
+    "fixture_id": "fxe85127d9",
+    "gateway_evidence_seqs": [
+     6189,
+     6190,
+     6191,
+     6192,
+     6193,
+     6194
+    ],
+    "live": true,
+    "node": "peer",
+    "pin_id": null
+   },
+   "os_version": "8.4.4",
+   "parser": null,
+   "platform": "linux",
+   "raw_ref": {
+    "bytes": 1427,
+    "hash": "sha256:3e69bd34579157445e1c0e2bf04c142fe2637f82e56260a76744a13325a6e131",
+    "operator_view": "reference-only",
+    "pointer": "mem:sha256:3e69bd34579157445e1c0e2bf04c142fe2637f82e56260a76744a13325a6e131",
+    "stored_hash": "sha256:3e69bd34579157445e1c0e2bf04c142fe2637f82e56260a76744a13325a6e131"
+   },
+   "redaction": {
+    "redactions": 0,
+    "status": "CHECKED_NO_SECRETS"
+   },
+   "schema": "nmas.troubleshooting.evidence/1",
+   "sequence": 6,
+   "source_type": "CLI",
+   "started_at": "2026-11-09T22:16:32.067216Z",
+   "status": "OK",
+   "status_detail": "",
+   "transport": "gateway-fixture"
+  },
+  {
+   "adapter": "gateway-fixture",
+   "adapter_version": "1.0.0",
+   "collected_at": "2026-11-09T22:16:32.928529Z",
+   "command_or_api": "vtysh -c show running-config",
+   "coverage": null,
+   "device": "peer",
+   "duration_s": 0.349,
+   "evidence_class": "operational",
+   "evidence_id": "ev-afefac0d8ba4ebeb",
+   "extra": {
+    "attempts": 1
+   },
+   "freshness_max_age_s": 86400.0,
+   "gateway": {
+    "fixture_id": "fxe85127d9",
+    "gateway_evidence_seqs": [
+     6189,
+     6190,
+     6191,
+     6192,
+     6193,
+     6194,
+     6195
+    ],
+    "live": true,
+    "node": "peer",
+    "pin_id": null
+   },
+   "os_version": "8.4.4",
+   "parser": null,
+   "platform": "linux",
+   "raw_ref": {
+    "bytes": 0,
+    "hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "operator_view": "reference-only",
+    "pointer": "mem:sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stored_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+   },
+   "redaction": {
+    "redactions": 0,
+    "status": "CHECKED_NO_SECRETS"
+   },
+   "schema": "nmas.troubleshooting.evidence/1",
+   "sequence": 7,
+   "source_type": "CONFIG_SNAPSHOT",
+   "started_at": "2026-11-09T22:16:32.579462Z",
+   "status": "OK",
+   "status_detail": "",
+   "transport": "gateway-fixture"
+  }
+ ],
+ "missing": [
+  {
+   "command_or_api": "vtysh -c show ip ospf neighbor json",
+   "detail": "device returned empty output (feature/protocol not running or not supported on this platform); absence is NOT evidence of absence",
+   "device": "peer",
+   "evidence_id": "",
+   "interpretation": "UNKNOWN",
+   "kind": "missing",
+   "observation_emitted": false,
+   "reason": "EMPTY",
+   "recorded_at": "2026-11-09T22:16:31.654058Z",
+   "schema": "nmas.troubleshooting.missing-data/1",
+   "source_type": "CLI"
+  },
+  {
+   "command_or_api": "vtysh -c show bgp summary json",
+   "detail": "device returned empty output (feature/protocol not running or not supported on this platform); absence is NOT evidence of absence",
+   "device": "peer",
+   "evidence_id": "",
+   "interpretation": "UNKNOWN",
+   "kind": "missing",
+   "observation_emitted": false,
+   "reason": "EMPTY",
+   "recorded_at": "2026-11-09T22:16:31.867067Z",
+   "schema": "nmas.troubleshooting.missing-data/1",
+   "source_type": "CLI"
+  },
+  {
+   "command_or_api": "ip -j -4 route show",
+   "detail": "no validated parser for route4 on linux; evidence retained unparsed",
+   "device": "peer",
+   "evidence_id": "",
+   "interpretation": "UNKNOWN",
+   "kind": "missing",
+   "observation_emitted": false,
+   "reason": "PARSER_UNAVAILABLE",
+   "recorded_at": "2026-11-09T22:16:32.045401Z",
+   "schema": "nmas.troubleshooting.missing-data/1",
+   "source_type": "CLI"
+  },
+  {
+   "command_or_api": "ip -j -s link show",
+   "detail": "no validated parser for link_stats on linux; evidence retained unparsed",
+   "device": "peer",
+   "evidence_id": "",
+   "interpretation": "UNKNOWN",
+   "kind": "missing",
+   "observation_emitted": false,
+   "reason": "PARSER_UNAVAILABLE",
+   "recorded_at": "2026-11-09T22:16:32.579419Z",
+   "schema": "nmas.troubleshooting.missing-data/1",
+   "source_type": "CLI"
+  }
+ ],
+ "observations": [
+  {
+   "clock": null,
+   "collected_at": "2026-11-09T22:16:32.928529Z",
+   "confidence": 0.95,
+   "evidence_class": "snapshot",
+   "flags": [
+    "NO_OPERATOR_URL"
+   ],
+   "freshness": {
+    "age_s": 0.0,
+    "max_age_s": 86400.0,
+    "status": "FRESH"
+   },
+   "key": "config.snapshot",
+   "normalizer_version": "1.0.0",
+   "observation_id": "obs-ab35b03438b6c110",
+   "observed_at": "2026-11-09T22:16:32.928684Z",
+   "parser": {
+    "id": "snapshot.running-config",
+    "input_kind": "text",
+    "template": "running-config",
+    "version": "1.0"
+   },
+   "quality": "OK",
+   "raw_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "redaction_status": "CHECKED_NO_SECRETS",
+   "schema": "nmas.troubleshooting.observation/1",
+   "source": {
+    "adapter": "gateway-fixture",
+    "command_or_api": "vtysh -c show running-config",
+    "evidence_id": "ev-afefac0d8ba4ebeb",
+    "source_type": "CONFIG_SNAPSHOT",
+    "transport": "gateway-fixture"
+   },
+   "target": {
+    "device": "peer"
+   },
+   "unit": "",
+   "value": {
+    "bytes": 0,
+    "hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "kind": "running-config",
+    "lines": 0,
+    "operator_url": null,
+    "redactions": 0,
+    "revision": null
+   }
+  },
+  {
+   "clock": null,
+   "collected_at": "2026-11-09T22:16:31.364395Z",
+   "confidence": 0.95,
+   "evidence_class": "operational",
+   "flags": [
+    "OBSERVATION_TIME_IS_COLLECTION_TIME"
+   ],
+   "freshness": {
+    "age_s": 0.0,
+    "max_age_s": 120.0,
+    "status": "FRESH"
+   },
+   "key": "interface.admin_state",
+   "normalizer_version": "1.0.0",
+   "observation_id": "obs-40e301bf636ffe3b",
+   "observed_at": "2026-11-09T22:16:31.364395Z",
+   "parser": {
+    "id": "interfaces.state",
+    "input_kind": "json",
+    "template": "iproute2.addr.json",
+    "version": "linux-ip-json-1.0"
+   },
+   "quality": "OK",
+   "raw_hash": "sha256:98c14e21452dad2ba7e604732c7d6d5ee95ba60d2e92fa1666878013b7fd567d",
+   "redaction_status": "CHECKED_NO_SECRETS",
+   "schema": "nmas.troubleshooting.observation/1",
+   "source": {
+    "adapter": "gateway-fixture",
+    "command_or_api": "ip -j addr show",
+    "evidence_id": "ev-79a070ebe526660e",
+    "source_type": "CLI",
+    "transport": "gateway-fixture"
+   },
+   "target": {
+    "device": "peer",
+    "interface": "lo"
+   },
+   "unit": "",
+   "value": "up"
+  },
+  {
+   "clock": null,
+   "collected_at": "2026-11-09T22:16:31.364395Z",
+   "confidence": 0.95,
+   "evidence_class": "operational",
+   "flags": [
+    "OBSERVATION_TIME_IS_COLLECTION_TIME"
+   ],
+   "freshness": {
+    "age_s": 0.0,
+    "max_age_s": 120.0,
+    "status": "FRESH"
+   },
+   "key": "interface.mtu",
+   "normalizer_version": "1.0.0",
+   "observation_id": "obs-fdb10b51c4ccff3e",
+   "observed_at": "2026-11-09T22:16:31.364395Z",
+   "parser": {
+    "id": "interfaces.state",
+    "input_kind": "json",
+    "template": "iproute2.addr.json",
+    "version": "linux-ip-json-1.0"
+   },
+   "quality": "OK",
+   "raw_hash": "sha256:98c14e21452dad2ba7e604732c7d6d5ee95ba60d2e92fa1666878013b7fd567d",
+   "redaction_status": "CHECKED_NO_SECRETS",
+   "schema": "nmas.troubleshooting.observation/1",
+   "source": {
+    "adapter": "gateway-fixture",
+    "command_or_api": "ip -j addr show",
+    "evidence_id": "ev-79a070ebe526660e",
+    "source_type": "CLI",
+    "transport": "gateway-fixture"
+   },
+   "target": {
+    "device": "peer",
+    "interface": "lo"
+   },
+   "unit": "bytes",
+   "value": 65536
+  },
+  {
+   "clock": null,
+   "collected_at": "2026-11-09T22:16:31.364395Z",
+   "confidence": 0.95,
+   "evidence_class": "operational",
+   "flags": [
+    "OBSERVATION_TIME_IS_COLLECTION_TIME"
+   ],
+   "freshness": {
+    "age_s": 0.0,
+    "max_age_s": 120.0,
+    "status": "FRESH"
+   },
+   "key": "interface.address",
+   "normalizer_version": "1.0.0",
+   "observation_id": "obs-46088802a05df297",
+   "observed_at": "2026-11-09T22:16:31.364395Z",
+   "parser": {
+    "id": "interfaces.state",
+    "input_kind": "json",
+    "template": "iproute2.addr.json",
+    "version": "linux-ip-json-1.0"
+   },
+   "quality": "OK",
+   "raw_hash": "sha256:98c14e21452dad2ba7e604732c7d6d5ee95ba60d2e92fa1666878013b7fd567d",
+   "redaction_status": "CHECKED_NO_SECRETS",
+   "schema": "nmas.troubleshooting.observation/1",
+   "source": {
+    "adapter": "gateway-fixture",
+    "command_or_api": "ip -j addr show",
+    "evidence_id": "ev-79a070ebe526660e",
+    "source_type": "CLI",
+    "transport": "gateway-fixture"
+   },
+   "target": {
+    "device": "peer",
+    "interface": "lo"
+   },
+   "unit": "",
+   "value": "127.0.0.1/8"
+  },
+  {
+   "clock": null,
+   "collected_at": "2026-11-09T22:16:31.364395Z",
+   "confidence": 0.95,
+   "evidence_class": "operational",
+   "flags": [
+    "OBSERVATION_TIME_IS_COLLECTION_TIME"
+   ],
+   "freshness": {
+    "age_s": 0.0,
+    "max_age_s": 120.0,
+    "status": "FRESH"
+   },
+   "key": "interface.address",
+   "normalizer_version": "1.0.0",
+   "observation_id": "obs-b89968063f786a32",
+   "observed_at": "2026-11-09T22:16:31.364395Z",
+   "parser": {
+    "id": "interfaces.state",
+    "input_kind": "json",
+    "template": "iproute2.addr.json",
+    "version": "linux-ip-json-1.0"
+   },
+   "quality": "OK",
+   "raw_hash": "sha256:98c14e21452dad2ba7e604732c7d6d5ee95ba60d2e92fa1666878013b7fd567d",
+   "redaction_status": "CHECKED_NO_SECRETS",
+   "schema": "nmas.troubleshooting.observation/1",
+   "source": {
+    "adapter": "gateway-fixture",
+    "command_or_api": "ip -j addr show",
+    "evidence_id": "ev-79a070ebe526660e",
+    "source_type": "CLI",
+    "transport": "gateway-fixture"
+   },
+   "target": {
+    "device": "peer",
+    "interface": "lo"
+   },
+   "unit": "",
+   "value": "::1/128"
+  },
+  {
+   "clock": null,
+   "collected_at": "2026-11-09T22:16:31.364395Z",
+   "confidence": 0.95,
+   "evidence_class": "operational",
+   "flags": [
+    "OBSERVATION_TIME_IS_COLLECTION_TIME"
+   ],
+   "freshness": {
+    "age_s": 0.0,
+    "max_age_s": 120.0,
+    "status": "FRESH"
+   },
+   "key": "interface.admin_state",
+   "normalizer_version": "1.0.0",
+   "observation_id": "obs-2c28aab9260848e5",
+   "observed_at": "2026-11-09T22:16:31.364395Z",
+   "parser": {
+    "id": "interfaces.state",
+    "input_kind": "json",
+    "template": "iproute2.addr.json",
+    "version": "linux-ip-json-1.0"
+   },
+   "quality": "OK",
+   "raw_hash": "sha256:98c14e21452dad2ba7e604732c7d6d5ee95ba60d2e92fa1666878013b7fd567d",
+   "redaction_status": "CHECKED_NO_SECRETS",
+   "schema": "nmas.troubleshooting.observation/1",
+   "source": {
+    "adapter": "gateway-fixture",
+    "command_or_api": "ip -j addr show",
+    "evidence_id": "ev-79a070ebe526660e",
+    "source_type": "CLI",
+    "transport": "gateway-fixture"
+   },
+   "target": {
+    "device": "peer",
+    "interface": "eth0"
+   },
+   "unit": "",
+   "value": "up"
+  },
+  {
+   "clock": null,
+   "collected_at": "2026-11-09T22:16:31.364395Z",
+   "confidence": 0.95,
+   "evidence_class": "operational",
+   "flags": [
+    "OBSERVATION_TIME_IS_COLLECTION_TIME"
+   ],
+   "freshness": {
+    "age_s": 0.0,
+    "max_age_s": 120.0,
+    "status": "FRESH"
+   },
+   "key": "interface.oper_state",
+   "normalizer_version": "1.0.0",
+   "observation_id": "obs-a2effa6848c7c333",
+   "observed_at": "2026-11-09T22:16:31.364395Z",
+   "parser": {
+    "id": "interfaces.state",
+    "input_kind": "json",
+    "template": "iproute2.addr.json",
+    "version": "linux-ip-json-1.0"
+   },
+   "quality": "OK",
+   "raw_hash": "sha256:98c14e21452dad2ba7e604732c7d6d5ee95ba60d2e92fa1666878013b7fd567d",
+   "redaction_status": "CHECKED_NO_SECRETS",
+   "schema": "nmas.troubleshooting.observation/1",
+   "source": {
+    "adapter": "gateway-fixture",
+    "command_or_api": "ip -j addr show",
+    "evidence_id": "ev-79a070ebe526660e",
+    "source_type": "CLI",
+    "transport": "gateway-fixture"
+   },
+   "target": {
+    "device": "peer",
+    "interface": "eth0"
+   },
+   "unit": "",
+   "value": "up"
+  },
+  {
+   "clock": null,
+   "collected_at": "2026-11-09T22:16:31.364395Z",
+   "confidence": 0.95,
+   "evidence_class": "operational",
+   "flags": [
+    "OBSERVATION_TIME_IS_COLLECTION_TIME"
+   ],
+   "freshness": {
+    "age_s": 0.0,
+    "max_age_s": 120.0,
+    "status": "FRESH"
+   },
+   "key": "interface.mtu",
+   "normalizer_version": "1.0.0",
+   "observation_id": "obs-ac36e6ba0563b144",
+   "observed_at": "2026-11-09T22:16:31.364395Z",
+   "parser": {
+    "id": "interfaces.state",
+    "input_kind": "json",
+    "template": "iproute2.addr.json",
+    "version": "linux-ip-json-1.0"
+   },
+   "quality": "OK",
+   "raw_hash": "sha256:98c14e21452dad2ba7e604732c7d6d5ee95ba60d2e92fa1666878013b7fd567d",
+   "redaction_status": "CHECKED_NO_SECRETS",
+   "schema": "nmas.troubleshooting.observation/1",
+   "source": {
+    "adapter": "gateway-fixture",
+    "command_or_api": "ip -j addr show",
+    "evidence_id": "ev-79a070ebe526660e",
+    "source_type": "CLI",
+    "transport": "gateway-fixture"
+   },
+   "target": {
+    "device": "peer",
+    "interface": "eth0"
+   },
+   "unit": "bytes",
+   "value": 1500
+  },
+  {
+   "clock": null,
+   "collected_at": "2026-11-09T22:16:31.364395Z",
+   "confidence": 0.95,
+   "evidence_class": "operational",
+   "flags": [
+    "OBSERVATION_TIME_IS_COLLECTION_TIME"
+   ],
+   "freshness": {
+    "age_s": 0.0,
+    "max_age_s": 120.0,
+    "status": "FRESH"
+   },
+   "key": "interface.address",
+   "normalizer_version": "1.0.0",
+   "observation_id": "obs-8c2d2f44991ec3b2",
+   "observed_at": "2026-11-09T22:16:31.364395Z",
+   "parser": {
+    "id": "interfaces.state",
+    "input_kind": "json",
+    "template": "iproute2.addr.json",
+    "version": "linux-ip-json-1.0"
+   },
+   "quality": "OK",
+   "raw_hash": "sha256:98c14e21452dad2ba7e604732c7d6d5ee95ba60d2e92fa1666878013b7fd567d",
+   "redaction_status": "CHECKED_NO_SECRETS",
+   "schema": "nmas.troubleshooting.observation/1",
+   "source": {
+    "adapter": "gateway-fixture",
+    "command_or_api": "ip -j addr show",
+    "evidence_id": "ev-79a070ebe526660e",
+    "source_type": "CLI",
+    "transport": "gateway-fixture"
+   },
+   "target": {
+    "device": "peer",
+    "interface": "eth0"
+   },
+   "unit": "",
+   "value": "172.31.200.11/24"
+  },
+  {
+   "clock": null,
+   "collected_at": "2026-11-09T22:16:31.364395Z",
+   "confidence": 0.95,
+   "evidence_class": "operational",
+   "flags": [
+    "OBSERVATION_TIME_IS_COLLECTION_TIME"
+   ],
+   "freshness": {
+    "age_s": 0.0,
+    "max_age_s": 120.0,
+    "status": "FRESH"
+   },
+   "key": "interface.address",
+   "normalizer_version": "1.0.0",
+   "observation_id": "obs-8604dac55d3ab7ce",
+   "observed_at": "2026-11-09T22:16:31.364395Z",
+   "parser": {
+    "id": "interfaces.state",
+    "input_kind": "json",
+    "template": "iproute2.addr.json",
+    "version": "linux-ip-json-1.0"
+   },
+   "quality": "OK",
+   "raw_hash": "sha256:98c14e21452dad2ba7e604732c7d6d5ee95ba60d2e92fa1666878013b7fd567d",
+   "redaction_status": "CHECKED_NO_SECRETS",
+   "schema": "nmas.troubleshooting.observation/1",
+   "source": {
+    "adapter": "gateway-fixture",
+    "command_or_api": "ip -j addr show",
+    "evidence_id": "ev-79a070ebe526660e",
+    "source_type": "CLI",
+    "transport": "gateway-fixture"
+   },
+   "target": {
+    "device": "peer",
+    "interface": "eth0"
+   },
+   "unit": "",
+   "value": "fe80::42:acff:fe1f:c80b/64"
+  },
+  {
+   "clock": null,
+   "collected_at": "2026-11-09T22:16:31.364395Z",
+   "confidence": 0.95,
+   "evidence_class": "operational",
+   "flags": [
+    "OBSERVATION_TIME_IS_COLLECTION_TIME"
+   ],
+   "freshness": {
+    "age_s": 0.0,
+    "max_age_s": 120.0,
+    "status": "FRESH"
+   },
+   "key": "interface.admin_state",
+   "normalizer_version": "1.0.0",
+   "observation_id": "obs-cbcdf11039fe5b47",
+   "observed_at": "2026-11-09T22:16:31.364395Z",
+   "parser": {
+    "id": "interfaces.state",
+    "input_kind": "json",
+    "template": "iproute2.addr.json",
+    "version": "linux-ip-json-1.0"
+   },
+   "quality": "OK",
+   "raw_hash": "sha256:98c14e21452dad2ba7e604732c7d6d5ee95ba60d2e92fa1666878013b7fd567d",
+   "redaction_status": "CHECKED_NO_SECRETS",
+   "schema": "nmas.troubleshooting.observation/1",
+   "source": {
+    "adapter": "gateway-fixture",
+    "command_or_api": "ip -j addr show",
+    "evidence_id": "ev-79a070ebe526660e",
+    "source_type": "CLI",
+    "transport": "gateway-fixture"
+   },
+   "target": {
+    "device": "peer",
+    "interface": "eth1"
+   },
+   "unit": "",
+   "value": "up"
+  },
+  {
+   "clock": null,
+   "collected_at": "2026-11-09T22:16:31.364395Z",
+   "confidence": 0.95,
+   "evidence_class": "operational",
+   "flags": [
+    "OBSERVATION_TIME_IS_COLLECTION_TIME"
+   ],
+   "freshness": {
+    "age_s": 0.0,
+    "max_age_s": 120.0,
+    "status": "FRESH"
+   },
+   "key": "interface.oper_state",
+   "normalizer_version": "1.0.0",
+   "observation_id": "obs-c1593072e436ed48",
+   "observed_at": "2026-11-09T22:16:31.364395Z",
+   "parser": {
+    "id": "interfaces.state",
+    "input_kind": "json",
+    "template": "iproute2.addr.json",
+    "version": "linux-ip-json-1.0"
+   },
+   "quality": "OK",
+   "raw_hash": "sha256:98c14e21452dad2ba7e604732c7d6d5ee95ba60d2e92fa1666878013b7fd567d",
+   "redaction_status": "CHECKED_NO_SECRETS",
+   "schema": "nmas.troubleshooting.observation/1",
+   "source": {
+    "adapter": "gateway-fixture",
+    "command_or_api": "ip -j addr show",
+    "evidence_id": "ev-79a070ebe526660e",
+    "source_type": "CLI",
+    "transport": "gateway-fixture"
+   },
+   "target": {
+    "device": "peer",
+    "interface": "eth1"
+   },
+   "unit": "",
+   "value": "up"
+  },
+  {
+   "clock": null,
+   "collected_at": "2026-11-09T22:16:31.364395Z",
+   "confidence": 0.95,
+   "evidence_class": "operational",
+   "flags": [
+    "OBSERVATION_TIME_IS_COLLECTION_TIME"
+   ],
+   "freshness": {
+    "age_s": 0.0,
+    "max_age_s": 120.0,
+    "status": "FRESH"
+   },
+   "key": "interface.mtu",
+   "normalizer_version": "1.0.0",
+   "observation_id": "obs-39860941e0e8f65d",
+   "observed_at": "2026-11-09T22:16:31.364395Z",
+   "parser": {
+    "id": "interfaces.state",
+    "input_kind": "json",
+    "template": "iproute2.addr.json",
+    "version": "linux-ip-json-1.0"
+   },
+   "quality": "OK",
+   "raw_hash": "sha256:98c14e21452dad2ba7e604732c7d6d5ee95ba60d2e92fa1666878013b7fd567d",
+   "redaction_status": "CHECKED_NO_SECRETS",
+   "schema": "nmas.troubleshooting.observation/1",
+   "source": {
+    "adapter": "gateway-fixture",
+    "command_or_api": "ip -j addr show",
+    "evidence_id": "ev-79a070ebe526660e",
+    "source_type": "CLI",
+    "transport": "gateway-fixture"
+   },
+   "target": {
+    "device": "peer",
+    "interface": "eth1"
+   },
+   "unit": "bytes",
+   "value": 9500
+  },
+  {
+   "clock": null,
+   "collected_at": "2026-11-09T22:16:31.364395Z",
+   "confidence": 0.95,
+   "evidence_class": "operational",
+   "flags": [
+    "OBSERVATION_TIME_IS_COLLECTION_TIME"
+   ],
+   "freshness": {
+    "age_s": 0.0,
+    "max_age_s": 120.0,
+    "status": "FRESH"
+   },
+   "key": "interface.address",
+   "normalizer_version": "1.0.0",
+   "observation_id": "obs-6e5b038347acbb2b",
+   "observed_at": "2026-11-09T22:16:31.364395Z",
+   "parser": {
+    "id": "interfaces.state",
+    "input_kind": "json",
+    "template": "iproute2.addr.json",
+    "version": "linux-ip-json-1.0"
+   },
+   "quality": "OK",
+   "raw_hash": "sha256:98c14e21452dad2ba7e604732c7d6d5ee95ba60d2e92fa1666878013b7fd567d",
+   "redaction_status": "CHECKED_NO_SECRETS",
+   "schema": "nmas.troubleshooting.observation/1",
+   "source": {
+    "adapter": "gateway-fixture",
+    "command_or_api": "ip -j addr show",
+    "evidence_id": "ev-79a070ebe526660e",
+    "source_type": "CLI",
+    "transport": "gateway-fixture"
+   },
+   "target": {
+    "device": "peer",
+    "interface": "eth1"
+   },
+   "unit": "",
+   "value": "fe80::a8c1:abff:feb9:4f6b/64"
+  }
+ ],
+ "run": {
+  "adapter": "gateway-fixture",
+  "admission": {
+   "ok": true
+  },
+  "budget": {
+   "limits": {
+    "backoff_s": 0.5,
+    "max_bytes": 2000000,
+    "max_commands": 12,
+    "max_records": 10000,
+    "max_retries": 1,
+    "max_seconds": 240,
+    "min_interval_s": 0.2,
+    "per_command_timeout_s": 20.0
+   },
+   "used": {
+    "bytes": 3125,
+    "commands": 7,
+    "records": 0,
+    "retries": 0,
+    "seconds": 2.057,
+    "throttled_s": 0.073
+   }
+  },
+  "collector": "cli",
+  "collector_version": "1.0.0",
+  "command_or_api": [
+   "vtysh -c show version",
+   "ip -j addr show",
+   "vtysh -c show ip ospf neighbor json",
+   "vtysh -c show bgp summary json",
+   "ip -j -4 route show",
+   "ip -j -s link show",
+   "vtysh -c show running-config"
+  ],
+  "device": "peer",
+  "evidence_ids": [
+   "ev-8659ff4c054d3624",
+   "ev-79a070ebe526660e",
+   "ev-9860fa281ae44804",
+   "ev-739e6a61f36dbbf2",
+   "ev-62bbef80804416ef",
+   "ev-5fb6e9a2743af8fb",
+   "ev-afefac0d8ba4ebeb"
+  ],
+  "finished_at": "2026-11-09T22:16:32.928746Z",
+  "flags": [],
+  "gateway": {
+   "fixture_id": "fxe85127d9",
+   "gateway_evidence_seqs": [
+    6189,
+    6190,
+    6191,
+    6192,
+    6193,
+    6194,
+    6195
+   ],
+   "live": true,
+   "node": "peer",
+   "pin_id": null
+  },
+  "notes": [],
+  "os_version": "8.4.4",
+  "platform": "linux",
+  "privileges": "read-only",
+  "rate_budget": {
+   "max_commands": 12,
+   "min_interval_s": 0.2
+  },
+  "retries": 0,
+  "run_id": "run-37b4712a6d02",
+  "schema": "nmas.troubleshooting.collection-run/1",
+  "source_type": "CLI",
+  "stage": "collect",
+  "stage_order": 1,
+  "started_at": "2026-11-09T22:16:30.872233Z",
+  "status": "PARTIAL",
+  "timeout_s": 20.0,
+  "transport": "gateway-fixture"
+ },
+ "schema": "nmas.troubleshooting.collection-bundle/1"
+}

@@ -1,0 +1,35 @@
+table inet nmas_research {
+  set dns4 { type ipv4_addr; flags interval; elements = { 128.138.129.76, 128.138.130.30, 128.138.240.1 } }
+  set dns6 { type ipv6_addr; flags interval; }
+  set https4 { type ipv4_addr . inet_service; elements = { 104.16.253.120 . 443, 104.16.254.120 . 443, 104.18.20.81 . 443, 104.18.21.81 . 443, 199.232.66.132 . 443 } }
+  set https6 { type ipv6_addr . inet_service; }
+
+  chain input {
+    type filter hook input priority filter; policy drop;
+    ct state established,related accept
+    icmpv6 type { nd-neighbor-solicit, nd-neighbor-advert } accept
+  }
+
+  chain forward {
+    type filter hook forward priority filter; policy drop;
+  }
+
+  chain output {
+    type filter hook output priority filter; policy drop;
+    ct state established,related accept
+    icmpv6 type { nd-neighbor-solicit, nd-neighbor-advert } accept
+    ip daddr @dns4 udp dport 53 accept
+    ip daddr @dns4 tcp dport 53 accept
+    ip6 daddr @dns6 udp dport 53 accept
+    ip6 daddr @dns6 tcp dport 53 accept
+    ip daddr { 0.0.0.0/8, 10.0.0.0/8, 100.64.0.0/10, 127.0.0.0/8,
+               169.254.0.0/16, 172.16.0.0/12, 192.0.0.0/24,
+               192.0.2.0/24, 192.168.0.0/16, 198.18.0.0/15,
+               198.51.100.0/24, 203.0.113.0/24, 224.0.0.0/4, 240.0.0.0/4 } drop
+    ip6 daddr { ::/128, ::1/128, ::ffff:0:0/96, 64:ff9b::/96, 100::/64,
+                2001:db8::/32, 2001:10::/28, 2002::/16,
+                fc00::/7, fe80::/10, ff00::/8 } drop
+    ip daddr . tcp dport @https4 accept
+    ip6 daddr . tcp dport @https6 accept
+  }
+}

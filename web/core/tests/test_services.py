@@ -56,8 +56,8 @@ class ServiceBoundaryTests(TestCase):
         # at the real Device Builder Change lifecycle (Draft/Validate/Plan/Render/Execute/Verify, Phases 8-21).
         # Phase 23 added the read-only "Device Credentials" page, and the automation workbench gave "Configuration
         # Changes" its own incremental-patch page (no longer Device Builder's Changes list) and "Remove Configuration" a
-        # real, dependency-aware removal page.  "Rollback / Recovery" and "Troubleshooting" have no dedicated operator
-        # page yet and remain honest shells (docs/AUTOMATION_CONFIGURATION_WORKFLOWS.md).  V2 Phase 3 added the
+        # real, dependency-aware removal page.  "Rollback / Recovery" has no dedicated operator page yet. Troubleshooting
+        # now opens the NMAS V2 evidence-first workflow. V2 Phase 3 added the
         # "Template Library" (intent templates; using one only ever creates a Draft Change).  V2 Phase 5A added "New Device
         # Provisioning" (the staged request over the ordinary Change lifecycle).  V2 Maintenance Mode added "Maintenance
         # Mode" (its entry and restore are queued for the maintenance worker; the page itself contacts no device).  Lab 7 added the
@@ -68,11 +68,12 @@ class ServiceBoundaryTests(TestCase):
         self.assertEqual(implemented, {"fleet-health", "per-device-health", "initial-golden-bootstrap", "configuration-changes",
                                        "remove-configuration", "change-history", "soak-management", "credential-management",
                                        "template-library", "new-device-provisioning", "traffic-test-workbench", "maintenance-mode",
-                                       "unit-test-matrix", "code-coverage"})
+                                       "unit-test-matrix", "code-coverage", "troubleshooting"})
         self.assertEqual(automation_service.IMPLEMENTED_SECTIONS["new-device-provisioning"], "core:provisioning_list")
         self.assertEqual(automation_service.IMPLEMENTED_SECTIONS["template-library"], "core:template_library")
         self.assertEqual(automation_service.IMPLEMENTED_SECTIONS["configuration-changes"], "core:workbench_changes")
         self.assertEqual(automation_service.IMPLEMENTED_SECTIONS["remove-configuration"], "core:workbench_remove")
+        self.assertEqual(automation_service.IMPLEMENTED_SECTIONS["troubleshooting"], "core:troubleshooting_list")
         self.assertEqual(implemented, set(automation_service.IMPLEMENTED_SECTIONS))
 
     def test_automation_section_slugs_are_unique(self):

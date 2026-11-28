@@ -1,0 +1,84 @@
+{
+    "vrfs": {
+        "default": {
+            "instList": {
+                "10": {
+                    "ospf3NeighborEntries": [
+                        {
+                            "routerId": "192.168.255.4",
+                            "priority": 1,
+                            "adjacencyState": "full",
+                            "designatedRouter": "192.168.255.4",
+                            "backupDesignatedRouter": "192.168.255.2",
+                            "options": {
+                                "doNotUseInRouteCalc": true,
+                                "externalRoutingCapability": true,
+                                "multicastCapability": false,
+                                "nssaCapability": false,
+                                "activeRouter": true,
+                                "demandCircuitsSupport": false
+                            },
+                            "areaId": "0.0.0.0",
+                            "interfaceName": "Vlan104",
+                            "inactivity": 1794950329.1486778,
+                            "details": {
+                                "bfdState": "adminDown",
+                                "bfdRequestSent": false,
+                                "stateTime": 1794941074.1486874,
+                                "grNumAttempts": 0
+                            }
+                        },
+                        {
+                            "routerId": "192.168.255.3",
+                            "priority": 1,
+                            "adjacencyState": "full",
+                            "designatedRouter": "192.168.255.3",
+                            "backupDesignatedRouter": "192.168.255.2",
+                            "options": {
+                                "doNotUseInRouteCalc": true,
+                                "externalRoutingCapability": true,
+                                "multicastCapability": false,
+                                "nssaCapability": false,
+                                "activeRouter": true,
+                                "demandCircuitsSupport": false
+                            },
+                            "areaId": "0.0.0.0",
+                            "interfaceName": "Vlan103",
+                            "inactivity": 1794950328.1501348,
+                            "details": {
+                                "bfdState": "adminDown",
+                                "bfdRequestSent": false,
+                                "stateTime": 1794941070.1501434,
+                                "grNumAttempts": 0
+                            }
+                        },
+                        {
+                            "routerId": "192.168.255.8",
+                            "priority": 0,
+                            "adjacencyState": "full",
+                            "designatedRouter": null,
+                            "backupDesignatedRouter": null,
+                            "options": {
+                                "doNotUseInRouteCalc": true,
+                                "externalRoutingCapability": true,
+                                "multicastCapability": false,
+                                "nssaCapability": false,
+                                "activeRouter": true,
+                                "demandCircuitsSupport": false
+                            },
+                            "areaId": "0.0.0.20",
+                            "interfaceName": "Ethernet4",
+                            "inactivity": 1794950321.150319,
+                            "details": {
+                                "bfdState": "adminDown",
+                                "bfdRequestSent": false,
+                                "stateTime": 1793693266.150324,
+                                "grNumAttempts": 0
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    }
+}

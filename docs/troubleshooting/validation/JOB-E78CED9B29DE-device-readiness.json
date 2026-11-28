@@ -1,0 +1,1008 @@
+{
+  "counts": {
+    "EXCLUDED": 1,
+    "EXTERNAL_PEER": 0,
+    "HOST": 5,
+    "MANAGED": 9,
+    "REGISTRY_ONLY": 0
+  },
+  "deployment_problems": [],
+  "devices": [
+    {
+      "admission": null,
+      "classification": "HOST",
+      "collector": null,
+      "credential_refs": [],
+      "declared_baseline": "8.4.4",
+      "device": "H1",
+      "gates": [],
+      "management": {
+        "declared_candidates": [],
+        "paths": null,
+        "production_failover_order": [
+          "DIRECT_OOB",
+          "VLAN_ADJACENT_SWITCH",
+          "ROUTED_VRF"
+        ],
+        "prohibited": [
+          "CONTAINERLAB_MANAGEMENT",
+          "DOCKER_EXEC_LAB_RUNTIME",
+          "AUTO_ADDRESS"
+        ]
+      },
+      "missing_evidence": [],
+      "observed_version": null,
+      "observed_version_error": "",
+      "operational_state": "UNKNOWN",
+      "platform": "linux",
+      "reason": "end host / application node: outside NMAS network-device management scope",
+      "topology": {
+        "image": "ubuntu:24.04",
+        "kind": "linux"
+      }
+    },
+    {
+      "admission": null,
+      "classification": "HOST",
+      "collector": null,
+      "credential_refs": [],
+      "declared_baseline": "8.4.4",
+      "device": "H2",
+      "gates": [],
+      "management": {
+        "declared_candidates": [],
+        "paths": null,
+        "production_failover_order": [
+          "DIRECT_OOB",
+          "VLAN_ADJACENT_SWITCH",
+          "ROUTED_VRF"
+        ],
+        "prohibited": [
+          "CONTAINERLAB_MANAGEMENT",
+          "DOCKER_EXEC_LAB_RUNTIME",
+          "AUTO_ADDRESS"
+        ]
+      },
+      "missing_evidence": [],
+      "observed_version": null,
+      "observed_version_error": "",
+      "operational_state": "UNKNOWN",
+      "platform": "linux",
+      "reason": "end host / application node: outside NMAS network-device management scope",
+      "topology": {
+        "image": "ubuntu:24.04",
+        "kind": "linux"
+      }
+    },
+    {
+      "admission": null,
+      "classification": "HOST",
+      "collector": null,
+      "credential_refs": [],
+      "declared_baseline": "8.4.4",
+      "device": "H3",
+      "gates": [],
+      "management": {
+        "declared_candidates": [],
+        "paths": null,
+        "production_failover_order": [
+          "DIRECT_OOB",
+          "VLAN_ADJACENT_SWITCH",
+          "ROUTED_VRF"
+        ],
+        "prohibited": [
+          "CONTAINERLAB_MANAGEMENT",
+          "DOCKER_EXEC_LAB_RUNTIME",
+          "AUTO_ADDRESS"
+        ]
+      },
+      "missing_evidence": [],
+      "observed_version": null,
+      "observed_version_error": "",
+      "operational_state": "UNKNOWN",
+      "platform": "linux",
+      "reason": "end host / application node: outside NMAS network-device management scope",
+      "topology": {
+        "image": "ubuntu:24.04",
+        "kind": "linux"
+      }
+    },
+    {
+      "admission": null,
+      "classification": "HOST",
+      "collector": null,
+      "credential_refs": [],
+      "declared_baseline": "8.4.4",
+      "device": "H4",
+      "gates": [],
+      "management": {
+        "declared_candidates": [],
+        "paths": null,
+        "production_failover_order": [
+          "DIRECT_OOB",
+          "VLAN_ADJACENT_SWITCH",
+          "ROUTED_VRF"
+        ],
+        "prohibited": [
+          "CONTAINERLAB_MANAGEMENT",
+          "DOCKER_EXEC_LAB_RUNTIME",
+          "AUTO_ADDRESS"
+        ]
+      },
+      "missing_evidence": [],
+      "observed_version": null,
+      "observed_version_error": "",
+      "operational_state": "UNKNOWN",
+      "platform": "linux",
+      "reason": "end host / application node: outside NMAS network-device management scope",
+      "topology": {
+        "image": "ubuntu:24.04",
+        "kind": "linux"
+      }
+    },
+    {
+      "admission": {
+        "admitted": false,
+        "identity": "",
+        "lifecycle": "",
+        "production": "",
+        "reason": "lifecycle provider failed: OperationalError",
+        "state": "LIFECYCLE_UNKNOWN"
+      },
+      "classification": "MANAGED",
+      "collector": {
+        "baseline": {
+          "nos": "Arista cEOS",
+          "version": "4.36.2F"
+        },
+        "limits": [
+          "no authoritative observed version: no collector command is qualified"
+        ],
+        "platform": "ceos",
+        "read_only_commands": [],
+        "status": "VERSION_UNKNOWN"
+      },
+      "credential_refs": [
+        "credential_ref",
+        "username"
+      ],
+      "declared_baseline": "4.36.2F",
+      "device": "R1",
+      "gates": [
+        {
+          "action": "the lifecycle provider gave no usable answer; check deployment_problems and the lifecycle registry",
+          "code": "LIFECYCLE_UNKNOWN",
+          "detail": "OperationalError",
+          "owner": "operator"
+        },
+        {
+          "action": "no authoritative observed version for this device: capture it through the read-only authenticated-session observation workflow (observations.observed_version); inventory/image tags are not used",
+          "code": "VERSION_UNKNOWN",
+          "detail": "",
+          "owner": "operator+engineering"
+        }
+      ],
+      "management": {
+        "declared_candidates": [
+          {
+            "address": "192.168.200.1",
+            "family": 4,
+            "interface": "Vlan200",
+            "network": "VLAN200",
+            "preference": 0,
+            "source": "INVENTORY_DECLARED"
+          },
+          {
+            "address": "2001:db8:200::1",
+            "family": 6,
+            "interface": "Vlan200",
+            "network": "VLAN200",
+            "preference": 1,
+            "source": "INVENTORY_DECLARED"
+          }
+        ],
+        "paths": null,
+        "production_failover_order": [
+          "DIRECT_OOB",
+          "VLAN_ADJACENT_SWITCH",
+          "ROUTED_VRF"
+        ],
+        "prohibited": [
+          "CONTAINERLAB_MANAGEMENT",
+          "DOCKER_EXEC_LAB_RUNTIME",
+          "AUTO_ADDRESS"
+        ]
+      },
+      "missing_evidence": [
+        "authoritative observed OS version (core.services.devices.observations.observed_version)",
+        "production admission (gateway/lifecycle approval) -- not granted by this report",
+        "live reachability / device identity evidence from a gateway-recorded session (operational state is UNKNOWN)"
+      ],
+      "observed_version": null,
+      "observed_version_error": "",
+      "operational_state": "UNKNOWN",
+      "platform": "ceos",
+      "reason": "inventory network_devices with a dedicated credential reference and a declared management address",
+      "topology": {
+        "image": "ceos:4.36.2F",
+        "kind": "arista_ceos"
+      }
+    },
+    {
+      "admission": {
+        "admitted": false,
+        "identity": "",
+        "lifecycle": "",
+        "production": "",
+        "reason": "lifecycle provider failed: OperationalError",
+        "state": "LIFECYCLE_UNKNOWN"
+      },
+      "classification": "MANAGED",
+      "collector": {
+        "baseline": {
+          "nos": "Arista cEOS",
+          "version": "4.36.2F"
+        },
+        "limits": [
+          "no authoritative observed version: no collector command is qualified"
+        ],
+        "platform": "ceos",
+        "read_only_commands": [],
+        "status": "VERSION_UNKNOWN"
+      },
+      "credential_refs": [
+        "credential_ref",
+        "username"
+      ],
+      "declared_baseline": "4.36.2F",
+      "device": "R2",
+      "gates": [
+        {
+          "action": "the lifecycle provider gave no usable answer; check deployment_problems and the lifecycle registry",
+          "code": "LIFECYCLE_UNKNOWN",
+          "detail": "OperationalError",
+          "owner": "operator"
+        },
+        {
+          "action": "no authoritative observed version for this device: capture it through the read-only authenticated-session observation workflow (observations.observed_version); inventory/image tags are not used",
+          "code": "VERSION_UNKNOWN",
+          "detail": "",
+          "owner": "operator+engineering"
+        }
+      ],
+      "management": {
+        "declared_candidates": [
+          {
+            "address": "192.168.200.2",
+            "family": 4,
+            "interface": "Vlan200",
+            "network": "VLAN200",
+            "preference": 0,
+            "source": "INVENTORY_DECLARED"
+          },
+          {
+            "address": "2001:db8:200::2",
+            "family": 6,
+            "interface": "Vlan200",
+            "network": "VLAN200",
+            "preference": 1,
+            "source": "INVENTORY_DECLARED"
+          }
+        ],
+        "paths": null,
+        "production_failover_order": [
+          "DIRECT_OOB",
+          "VLAN_ADJACENT_SWITCH",
+          "ROUTED_VRF"
+        ],
+        "prohibited": [
+          "CONTAINERLAB_MANAGEMENT",
+          "DOCKER_EXEC_LAB_RUNTIME",
+          "AUTO_ADDRESS"
+        ]
+      },
+      "missing_evidence": [
+        "authoritative observed OS version (core.services.devices.observations.observed_version)",
+        "production admission (gateway/lifecycle approval) -- not granted by this report",
+        "live reachability / device identity evidence from a gateway-recorded session (operational state is UNKNOWN)"
+      ],
+      "observed_version": null,
+      "observed_version_error": "",
+      "operational_state": "UNKNOWN",
+      "platform": "ceos",
+      "reason": "inventory network_devices with a dedicated credential reference and a declared management address",
+      "topology": {
+        "image": "ceos:4.36.2F",
+        "kind": "arista_ceos"
+      }
+    },
+    {
+      "admission": {
+        "admitted": false,
+        "identity": "",
+        "lifecycle": "",
+        "production": "",
+        "reason": "lifecycle provider failed: OperationalError",
+        "state": "LIFECYCLE_UNKNOWN"
+      },
+      "classification": "MANAGED",
+      "collector": {
+        "baseline": {
+          "nos": "Ubuntu 24.04 + FRRouting",
+          "version": "8.4.4"
+        },
+        "limits": [
+          "no authoritative observed version: no collector command is qualified"
+        ],
+        "platform": "linux",
+        "read_only_commands": [],
+        "status": "VERSION_UNKNOWN"
+      },
+      "credential_refs": [
+        "ssh_key_ref",
+        "username"
+      ],
+      "declared_baseline": "8.4.4",
+      "device": "R3",
+      "gates": [
+        {
+          "action": "the lifecycle provider gave no usable answer; check deployment_problems and the lifecycle registry",
+          "code": "LIFECYCLE_UNKNOWN",
+          "detail": "OperationalError",
+          "owner": "operator"
+        },
+        {
+          "action": "no authoritative observed version for this device: capture it through the read-only authenticated-session observation workflow (observations.observed_version); inventory/image tags are not used",
+          "code": "VERSION_UNKNOWN",
+          "detail": "",
+          "owner": "operator+engineering"
+        }
+      ],
+      "management": {
+        "declared_candidates": [
+          {
+            "address": "192.168.200.3",
+            "family": 4,
+            "interface": "Vlan200",
+            "network": "VLAN200",
+            "preference": 0,
+            "source": "INVENTORY_DECLARED"
+          },
+          {
+            "address": "2001:db8:200::3",
+            "family": 6,
+            "interface": "Vlan200",
+            "network": "VLAN200",
+            "preference": 1,
+            "source": "INVENTORY_DECLARED"
+          }
+        ],
+        "paths": null,
+        "production_failover_order": [
+          "DIRECT_OOB",
+          "VLAN_ADJACENT_SWITCH",
+          "ROUTED_VRF"
+        ],
+        "prohibited": [
+          "CONTAINERLAB_MANAGEMENT",
+          "DOCKER_EXEC_LAB_RUNTIME",
+          "AUTO_ADDRESS"
+        ]
+      },
+      "missing_evidence": [
+        "authoritative observed OS version (core.services.devices.observations.observed_version)",
+        "production admission (gateway/lifecycle approval) -- not granted by this report",
+        "live reachability / device identity evidence from a gateway-recorded session (operational state is UNKNOWN)"
+      ],
+      "observed_version": null,
+      "observed_version_error": "",
+      "operational_state": "UNKNOWN",
+      "platform": "linux",
+      "reason": "inventory network_devices with a dedicated credential reference and a declared management address",
+      "topology": {
+        "image": "ubuntu:24.04",
+        "kind": "linux"
+      }
+    },
+    {
+      "admission": {
+        "admitted": false,
+        "identity": "",
+        "lifecycle": "",
+        "production": "",
+        "reason": "lifecycle provider failed: OperationalError",
+        "state": "LIFECYCLE_UNKNOWN"
+      },
+      "classification": "MANAGED",
+      "collector": {
+        "baseline": {
+          "nos": "Ubuntu 24.04 + FRRouting",
+          "version": "8.4.4"
+        },
+        "limits": [
+          "no authoritative observed version: no collector command is qualified"
+        ],
+        "platform": "linux",
+        "read_only_commands": [],
+        "status": "VERSION_UNKNOWN"
+      },
+      "credential_refs": [
+        "ssh_key_ref",
+        "username"
+      ],
+      "declared_baseline": "8.4.4",
+      "device": "R4",
+      "gates": [
+        {
+          "action": "the lifecycle provider gave no usable answer; check deployment_problems and the lifecycle registry",
+          "code": "LIFECYCLE_UNKNOWN",
+          "detail": "OperationalError",
+          "owner": "operator"
+        },
+        {
+          "action": "no authoritative observed version for this device: capture it through the read-only authenticated-session observation workflow (observations.observed_version); inventory/image tags are not used",
+          "code": "VERSION_UNKNOWN",
+          "detail": "",
+          "owner": "operator+engineering"
+        }
+      ],
+      "management": {
+        "declared_candidates": [
+          {
+            "address": "192.168.200.4",
+            "family": 4,
+            "interface": "Vlan200",
+            "network": "VLAN200",
+            "preference": 0,
+            "source": "INVENTORY_DECLARED"
+          },
+          {
+            "address": "2001:db8:200::4",
+            "family": 6,
+            "interface": "Vlan200",
+            "network": "VLAN200",
+            "preference": 1,
+            "source": "INVENTORY_DECLARED"
+          }
+        ],
+        "paths": null,
+        "production_failover_order": [
+          "DIRECT_OOB",
+          "VLAN_ADJACENT_SWITCH",
+          "ROUTED_VRF"
+        ],
+        "prohibited": [
+          "CONTAINERLAB_MANAGEMENT",
+          "DOCKER_EXEC_LAB_RUNTIME",
+          "AUTO_ADDRESS"
+        ]
+      },
+      "missing_evidence": [
+        "authoritative observed OS version (core.services.devices.observations.observed_version)",
+        "production admission (gateway/lifecycle approval) -- not granted by this report",
+        "live reachability / device identity evidence from a gateway-recorded session (operational state is UNKNOWN)"
+      ],
+      "observed_version": null,
+      "observed_version_error": "",
+      "operational_state": "UNKNOWN",
+      "platform": "linux",
+      "reason": "inventory network_devices with a dedicated credential reference and a declared management address",
+      "topology": {
+        "image": "ubuntu:24.04",
+        "kind": "linux"
+      }
+    },
+    {
+      "admission": null,
+      "classification": "EXCLUDED",
+      "collector": null,
+      "credential_refs": [],
+      "declared_baseline": "4.36.2F",
+      "device": "R5",
+      "gates": [],
+      "management": {
+        "declared_candidates": [],
+        "paths": null,
+        "production_failover_order": [
+          "DIRECT_OOB",
+          "VLAN_ADJACENT_SWITCH",
+          "ROUTED_VRF"
+        ],
+        "prohibited": [
+          "CONTAINERLAB_MANAGEMENT",
+          "DOCKER_EXEC_LAB_RUNTIME",
+          "AUTO_ADDRESS"
+        ]
+      },
+      "missing_evidence": [
+        "none requested: exclusion is preserved (no admission path exists)"
+      ],
+      "observed_version": null,
+      "observed_version_error": "",
+      "operational_state": "UNKNOWN",
+      "platform": "ceos",
+      "reason": "inventory edge/read-only scope (no dedicated machine identity; no management-VLAN address): never admitted, never written",
+      "topology": {
+        "image": "ceos:4.36.2F",
+        "kind": "arista_ceos"
+      }
+    },
+    {
+      "admission": {
+        "admitted": false,
+        "identity": "",
+        "lifecycle": "",
+        "production": "",
+        "reason": "lifecycle provider failed: OperationalError",
+        "state": "LIFECYCLE_UNKNOWN"
+      },
+      "classification": "MANAGED",
+      "collector": {
+        "baseline": {
+          "nos": "Arista cEOS",
+          "version": "4.36.2F"
+        },
+        "limits": [
+          "no authoritative observed version: no collector command is qualified"
+        ],
+        "platform": "ceos",
+        "read_only_commands": [],
+        "status": "VERSION_UNKNOWN"
+      },
+      "credential_refs": [
+        "credential_ref",
+        "username"
+      ],
+      "declared_baseline": "4.36.2F",
+      "device": "S1",
+      "gates": [
+        {
+          "action": "the lifecycle provider gave no usable answer; check deployment_problems and the lifecycle registry",
+          "code": "LIFECYCLE_UNKNOWN",
+          "detail": "OperationalError",
+          "owner": "operator"
+        },
+        {
+          "action": "no authoritative observed version for this device: capture it through the read-only authenticated-session observation workflow (observations.observed_version); inventory/image tags are not used",
+          "code": "VERSION_UNKNOWN",
+          "detail": "",
+          "owner": "operator+engineering"
+        }
+      ],
+      "management": {
+        "declared_candidates": [
+          {
+            "address": "192.168.200.11",
+            "family": 4,
+            "interface": "Vlan200",
+            "network": "VLAN200",
+            "preference": 0,
+            "source": "INVENTORY_DECLARED"
+          },
+          {
+            "address": "2001:db8:200::11",
+            "family": 6,
+            "interface": "Vlan200",
+            "network": "VLAN200",
+            "preference": 1,
+            "source": "INVENTORY_DECLARED"
+          }
+        ],
+        "paths": null,
+        "production_failover_order": [
+          "DIRECT_OOB",
+          "VLAN_ADJACENT_SWITCH",
+          "ROUTED_VRF"
+        ],
+        "prohibited": [
+          "CONTAINERLAB_MANAGEMENT",
+          "DOCKER_EXEC_LAB_RUNTIME",
+          "AUTO_ADDRESS"
+        ]
+      },
+      "missing_evidence": [
+        "authoritative observed OS version (core.services.devices.observations.observed_version)",
+        "production admission (gateway/lifecycle approval) -- not granted by this report",
+        "live reachability / device identity evidence from a gateway-recorded session (operational state is UNKNOWN)"
+      ],
+      "observed_version": null,
+      "observed_version_error": "",
+      "operational_state": "UNKNOWN",
+      "platform": "ceos",
+      "reason": "inventory network_devices with a dedicated credential reference and a declared management address",
+      "topology": {
+        "image": "ceos:4.36.2F",
+        "kind": "arista_ceos"
+      }
+    },
+    {
+      "admission": {
+        "admitted": false,
+        "identity": "",
+        "lifecycle": "",
+        "production": "",
+        "reason": "lifecycle provider failed: OperationalError",
+        "state": "LIFECYCLE_UNKNOWN"
+      },
+      "classification": "MANAGED",
+      "collector": {
+        "baseline": {
+          "nos": "Arista cEOS",
+          "version": "4.36.2F"
+        },
+        "limits": [
+          "no authoritative observed version: no collector command is qualified"
+        ],
+        "platform": "ceos",
+        "read_only_commands": [],
+        "status": "VERSION_UNKNOWN"
+      },
+      "credential_refs": [
+        "credential_ref",
+        "username"
+      ],
+      "declared_baseline": "4.36.2F",
+      "device": "S2",
+      "gates": [
+        {
+          "action": "the lifecycle provider gave no usable answer; check deployment_problems and the lifecycle registry",
+          "code": "LIFECYCLE_UNKNOWN",
+          "detail": "OperationalError",
+          "owner": "operator"
+        },
+        {
+          "action": "no authoritative observed version for this device: capture it through the read-only authenticated-session observation workflow (observations.observed_version); inventory/image tags are not used",
+          "code": "VERSION_UNKNOWN",
+          "detail": "",
+          "owner": "operator+engineering"
+        }
+      ],
+      "management": {
+        "declared_candidates": [
+          {
+            "address": "192.168.200.12",
+            "family": 4,
+            "interface": "Vlan200",
+            "network": "VLAN200",
+            "preference": 0,
+            "source": "INVENTORY_DECLARED"
+          },
+          {
+            "address": "2001:db8:200::12",
+            "family": 6,
+            "interface": "Vlan200",
+            "network": "VLAN200",
+            "preference": 1,
+            "source": "INVENTORY_DECLARED"
+          }
+        ],
+        "paths": null,
+        "production_failover_order": [
+          "DIRECT_OOB",
+          "VLAN_ADJACENT_SWITCH",
+          "ROUTED_VRF"
+        ],
+        "prohibited": [
+          "CONTAINERLAB_MANAGEMENT",
+          "DOCKER_EXEC_LAB_RUNTIME",
+          "AUTO_ADDRESS"
+        ]
+      },
+      "missing_evidence": [
+        "authoritative observed OS version (core.services.devices.observations.observed_version)",
+        "production admission (gateway/lifecycle approval) -- not granted by this report",
+        "live reachability / device identity evidence from a gateway-recorded session (operational state is UNKNOWN)"
+      ],
+      "observed_version": null,
+      "observed_version_error": "",
+      "operational_state": "UNKNOWN",
+      "platform": "ceos",
+      "reason": "inventory network_devices with a dedicated credential reference and a declared management address",
+      "topology": {
+        "image": "ceos:4.36.2F",
+        "kind": "arista_ceos"
+      }
+    },
+    {
+      "admission": {
+        "admitted": false,
+        "identity": "",
+        "lifecycle": "",
+        "production": "",
+        "reason": "lifecycle provider failed: OperationalError",
+        "state": "LIFECYCLE_UNKNOWN"
+      },
+      "classification": "MANAGED",
+      "collector": {
+        "baseline": {
+          "nos": "Arista cEOS",
+          "version": "4.36.2F"
+        },
+        "limits": [
+          "no authoritative observed version: no collector command is qualified"
+        ],
+        "platform": "ceos",
+        "read_only_commands": [],
+        "status": "VERSION_UNKNOWN"
+      },
+      "credential_refs": [
+        "credential_ref",
+        "username"
+      ],
+      "declared_baseline": "4.36.2F",
+      "device": "S3",
+      "gates": [
+        {
+          "action": "the lifecycle provider gave no usable answer; check deployment_problems and the lifecycle registry",
+          "code": "LIFECYCLE_UNKNOWN",
+          "detail": "OperationalError",
+          "owner": "operator"
+        },
+        {
+          "action": "no authoritative observed version for this device: capture it through the read-only authenticated-session observation workflow (observations.observed_version); inventory/image tags are not used",
+          "code": "VERSION_UNKNOWN",
+          "detail": "",
+          "owner": "operator+engineering"
+        }
+      ],
+      "management": {
+        "declared_candidates": [
+          {
+            "address": "192.168.200.13",
+            "family": 4,
+            "interface": "Vlan200",
+            "network": "VLAN200",
+            "preference": 0,
+            "source": "INVENTORY_DECLARED"
+          },
+          {
+            "address": "2001:db8:200::13",
+            "family": 6,
+            "interface": "Vlan200",
+            "network": "VLAN200",
+            "preference": 1,
+            "source": "INVENTORY_DECLARED"
+          }
+        ],
+        "paths": null,
+        "production_failover_order": [
+          "DIRECT_OOB",
+          "VLAN_ADJACENT_SWITCH",
+          "ROUTED_VRF"
+        ],
+        "prohibited": [
+          "CONTAINERLAB_MANAGEMENT",
+          "DOCKER_EXEC_LAB_RUNTIME",
+          "AUTO_ADDRESS"
+        ]
+      },
+      "missing_evidence": [
+        "authoritative observed OS version (core.services.devices.observations.observed_version)",
+        "production admission (gateway/lifecycle approval) -- not granted by this report",
+        "live reachability / device identity evidence from a gateway-recorded session (operational state is UNKNOWN)"
+      ],
+      "observed_version": null,
+      "observed_version_error": "",
+      "operational_state": "UNKNOWN",
+      "platform": "ceos",
+      "reason": "inventory network_devices with a dedicated credential reference and a declared management address",
+      "topology": {
+        "image": "ceos:4.36.2F",
+        "kind": "arista_ceos"
+      }
+    },
+    {
+      "admission": {
+        "admitted": false,
+        "identity": "",
+        "lifecycle": "",
+        "production": "",
+        "reason": "lifecycle provider failed: OperationalError",
+        "state": "LIFECYCLE_UNKNOWN"
+      },
+      "classification": "MANAGED",
+      "collector": {
+        "baseline": {
+          "nos": "Arista cEOS",
+          "version": "4.36.2F"
+        },
+        "limits": [
+          "no authoritative observed version: no collector command is qualified"
+        ],
+        "platform": "ceos",
+        "read_only_commands": [],
+        "status": "VERSION_UNKNOWN"
+      },
+      "credential_refs": [
+        "credential_ref",
+        "username"
+      ],
+      "declared_baseline": "4.36.2F",
+      "device": "S4",
+      "gates": [
+        {
+          "action": "the lifecycle provider gave no usable answer; check deployment_problems and the lifecycle registry",
+          "code": "LIFECYCLE_UNKNOWN",
+          "detail": "OperationalError",
+          "owner": "operator"
+        },
+        {
+          "action": "no authoritative observed version for this device: capture it through the read-only authenticated-session observation workflow (observations.observed_version); inventory/image tags are not used",
+          "code": "VERSION_UNKNOWN",
+          "detail": "",
+          "owner": "operator+engineering"
+        }
+      ],
+      "management": {
+        "declared_candidates": [
+          {
+            "address": "192.168.200.14",
+            "family": 4,
+            "interface": "Vlan200",
+            "network": "VLAN200",
+            "preference": 0,
+            "source": "INVENTORY_DECLARED"
+          },
+          {
+            "address": "2001:db8:200::14",
+            "family": 6,
+            "interface": "Vlan200",
+            "network": "VLAN200",
+            "preference": 1,
+            "source": "INVENTORY_DECLARED"
+          }
+        ],
+        "paths": null,
+        "production_failover_order": [
+          "DIRECT_OOB",
+          "VLAN_ADJACENT_SWITCH",
+          "ROUTED_VRF"
+        ],
+        "prohibited": [
+          "CONTAINERLAB_MANAGEMENT",
+          "DOCKER_EXEC_LAB_RUNTIME",
+          "AUTO_ADDRESS"
+        ]
+      },
+      "missing_evidence": [
+        "authoritative observed OS version (core.services.devices.observations.observed_version)",
+        "production admission (gateway/lifecycle approval) -- not granted by this report",
+        "live reachability / device identity evidence from a gateway-recorded session (operational state is UNKNOWN)"
+      ],
+      "observed_version": null,
+      "observed_version_error": "",
+      "operational_state": "UNKNOWN",
+      "platform": "ceos",
+      "reason": "inventory network_devices with a dedicated credential reference and a declared management address",
+      "topology": {
+        "image": "ceos:4.36.2F",
+        "kind": "arista_ceos"
+      }
+    },
+    {
+      "admission": null,
+      "classification": "HOST",
+      "collector": null,
+      "credential_refs": [],
+      "declared_baseline": "8.4.4",
+      "device": "WebServer",
+      "gates": [],
+      "management": {
+        "declared_candidates": [],
+        "paths": null,
+        "production_failover_order": [
+          "DIRECT_OOB",
+          "VLAN_ADJACENT_SWITCH",
+          "ROUTED_VRF"
+        ],
+        "prohibited": [
+          "CONTAINERLAB_MANAGEMENT",
+          "DOCKER_EXEC_LAB_RUNTIME",
+          "AUTO_ADDRESS"
+        ]
+      },
+      "missing_evidence": [],
+      "observed_version": null,
+      "observed_version_error": "",
+      "operational_state": "UNKNOWN",
+      "platform": "linux",
+      "reason": "end host / application node: outside NMAS network-device management scope",
+      "topology": {
+        "image": "ubuntu:24.04",
+        "kind": "linux"
+      }
+    },
+    {
+      "admission": {
+        "admitted": false,
+        "identity": "",
+        "lifecycle": "",
+        "production": "",
+        "reason": "lifecycle provider failed: OperationalError",
+        "state": "LIFECYCLE_UNKNOWN"
+      },
+      "classification": "MANAGED",
+      "collector": {
+        "baseline": {
+          "nos": "Arista cEOS",
+          "version": "4.36.2F"
+        },
+        "limits": [
+          "no authoritative observed version: no collector command is qualified"
+        ],
+        "platform": "ceos",
+        "read_only_commands": [],
+        "status": "VERSION_UNKNOWN"
+      },
+      "credential_refs": [
+        "credential_ref",
+        "username"
+      ],
+      "declared_baseline": "4.36.2F",
+      "device": "mgmt_swt",
+      "gates": [
+        {
+          "action": "the lifecycle provider gave no usable answer; check deployment_problems and the lifecycle registry",
+          "code": "LIFECYCLE_UNKNOWN",
+          "detail": "OperationalError",
+          "owner": "operator"
+        },
+        {
+          "action": "no authoritative observed version for this device: capture it through the read-only authenticated-session observation workflow (observations.observed_version); inventory/image tags are not used",
+          "code": "VERSION_UNKNOWN",
+          "detail": "",
+          "owner": "operator+engineering"
+        }
+      ],
+      "management": {
+        "declared_candidates": [
+          {
+            "address": "192.168.200.10",
+            "family": 4,
+            "interface": "Vlan200",
+            "network": "VLAN200",
+            "preference": 0,
+            "source": "INVENTORY_DECLARED"
+          },
+          {
+            "address": "2001:db8:200::10",
+            "family": 6,
+            "interface": "Vlan200",
+            "network": "VLAN200",
+            "preference": 1,
+            "source": "INVENTORY_DECLARED"
+          }
+        ],
+        "paths": null,
+        "production_failover_order": [
+          "DIRECT_OOB",
+          "VLAN_ADJACENT_SWITCH",
+          "ROUTED_VRF"
+        ],
+        "prohibited": [
+          "CONTAINERLAB_MANAGEMENT",
+          "DOCKER_EXEC_LAB_RUNTIME",
+          "AUTO_ADDRESS"
+        ]
+      },
+      "missing_evidence": [
+        "authoritative observed OS version (core.services.devices.observations.observed_version)",
+        "production admission (gateway/lifecycle approval) -- not granted by this report",
+        "live reachability / device identity evidence from a gateway-recorded session (operational state is UNKNOWN)"
+      ],
+      "observed_version": null,
+      "observed_version_error": "",
+      "operational_state": "UNKNOWN",
+      "platform": "ceos",
+      "reason": "inventory network_devices with a dedicated credential reference and a declared management address",
+      "topology": {
+        "image": "ceos:4.36.2F",
+        "kind": "arista_ceos"
+      }
+    }
+  ],
+  "external_peers_note": "no external-peer node is declared in the tracked topology or inventory; none is invented",
+  "resolver_error": "",
+  "topology_error": "",
+  "version": "ts-qualification/1"
+}

@@ -1,0 +1,27 @@
+[Unit]
+Description=NMAS additive exact-target diagnostic namespace overlay
+After=network-online.target
+ConditionPathExists=/run/netns/nmas-ts-diagnostic
+ConditionPathExists=/etc/nmas/diagnostic-target-overlay.json
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/lib/nmas/diagnostic_target_overlay.py apply /etc/nmas/diagnostic-target-overlay.json
+ExecStartPost=/usr/local/lib/nmas/diagnostic_target_overlay.py validate /etc/nmas/diagnostic-target-overlay.json
+ExecStop=/usr/local/lib/nmas/diagnostic_target_overlay.py rollback /etc/nmas/diagnostic-target-overlay.json
+RemainAfterExit=yes
+User=root
+Group=root
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ProtectHome=yes
+ReadWritePaths=/var/lib/nmas-ts-namespaces
+RestrictAddressFamilies=AF_NETLINK
+CapabilityBoundingSet=CAP_NET_ADMIN CAP_SYS_ADMIN
+AmbientCapabilities=CAP_NET_ADMIN CAP_SYS_ADMIN
+LockPersonality=yes
+RestrictSUIDSGID=yes
+
+[Install]
+WantedBy=multi-user.target
