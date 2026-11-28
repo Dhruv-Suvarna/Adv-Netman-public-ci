@@ -148,3 +148,49 @@ Generate it with `nmas_commissioning_acceptance plan --devices R6 R7 --scope S.j
 
 The isolated-fixture rehearsal of the same sequence, R4→R6→R7 analogue UP1→NEW1→NEW2 (`ACCEPTANCE.md` §2.1), is the reference
 for each step's expected evidence.
+
+## 6. Readiness closure (2026-11-28, CHG-NMAS-20261128-R6R7-ACCEPTANCE-PREP-028)
+
+**Closed:**
+- **Stale Changes (prerequisite 2).** `CHG-20261027-0008` (apply of ISO-000002: its run was INTERRUPTED by the lease reaper,
+  and `isolation.reconcile` later proved the policy ENFORCED) and `CHG-20261103-0005` (release of ADM-000002: its run was
+  BLOCKED and the admission finished RESTORED). Both were superseded by `CHG-20261103-0007` (DEPLOYED, ADM-000003 ADMITTED).
+  - `isolation.supersede` / `manage.py nmas_transition_supersede` closes such a Change as **SUPERSEDED**. It is records-only:
+    one append-only lifecycle event plus an audit row carrying the evidence (owner state, successor, every run, digest).
+  - It refuses executed, running and owner-open Changes; those are owned by `isolation.cancel`, `admission.cancel` and
+    `reconcile`. Nothing is executed or deleted.
+- **Traffic baseline (prerequisite 4).** The protected flows were re-run through the traffic runner and all passed. This is
+  current-state evidence only: re-run every flow no more than 15 minutes before step 0.
+  - The 4 flows **outage_flows** (they traverse R4/R6/R7): H5→WebServer ICMP and TCP/80, each over IPv4 and IPv6.
+  - The 6 flows **lossless_flows**: H1→H2 v4, H2→H3 v4, H2→H4 v6, H3→WebServer v4 and v6, H4→WebServer v6.
+  - **Excluded:**
+    - H1→WebServer: the known issue, not repaired.
+    - H1-1 and H6: Lab 9 hosts that are absent.
+    - WebServer→H5: never passed.
+- **Scope (prerequisite 1).** `r6-r7-live-scope.UNAPPROVED.json` covers:
+  - R6-first order
+  - interface boundaries
+  - new bootstrap grants
+  - corrected bootstrap networks, which validate clean against `ztp.policy.network_problems`:
+    - `demo-r6-ztp-2` 10.254.98.0/29, relay R4
+    - `demo-r7-ztp-2` 10.254.99.0/29, relay R6
+  - restore points
+  - the H5 outage ceiling (proposed: 3600 s)
+  - the lossless flows
+  - abort, rollback and restore
+
+  It is unsigned. A preparer and a different approver must sign it and set the window.
+
+**Open (operator / physical / outage window):**
+1. **In-band management for R6/R7 (prerequisite 3): physically blocked.** The registry refuses every candidate:
+   - VLAN 200: `MGMT_PATH_ATTACHMENT_INVALID` and `MGMT_ENDPOINT_OUTSIDE_NETWORK`. The only attachments are routed PRODUCTION
+     links, and stretching VLAN 200 across R4 is prohibited.
+   - Management VRF: `L1_TOPOLOGY_UNVERIFIED`. NMAS has no on-link attachment, and multi-hop routed proof is not implemented.
+
+   The SSH proxies are not management paths. The owner chooses one of the scope's `options_for_owner`.
+2. **Restore points.** The saved startup-config on R6 and R7 is the bootstrap-era configuration, so a reload today would
+   drop production addressing and routing and interrupt H5. Under the approved change, save running→startup first and record
+   the new hashes.
+3. **Corrected bootstrap networks need relay addresses on the upstreams:** 10.254.98.1 on R4:eth4, a Lab 1 node, and
+   10.254.99.1 on R6:Ethernet2. Each is a device change inside the window.
+4. **Signatures, window, outage ceiling and a fresh baseline** taken no more than 15 minutes before step 0.

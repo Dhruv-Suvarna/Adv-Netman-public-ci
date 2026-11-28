@@ -174,7 +174,7 @@ PATH_RULES: tuple[PathRule, ...] = (
                             "web/core/tests/live_option82_ztp_fixture.py", "docs/evidence/v2-phase9-closure/option82/**")),
     PathRule("device_commissioning", (f"{_SVC}/isolation/**", f"{_SVC}/commissioning/**", "web/core/commissioning_views.py",
                                       # read-only live commissioning acceptance gates, runbook and live-scope template
-                                      "web/core/management/commands/nmas_commissioning_acceptance.py",
+                                      "web/core/management/commands/nmas_commissioning_acceptance.py", "web/core/management/commands/nmas_transition_supersede.py",
                                       "web/core/templates/core/provisioning/commissioning_device.html",
                                       "web/core/templates/core/provisioning/commissioning_overview.html",
                                       "web/core/tests/live_isolation_commissioning_fixture.py",
@@ -535,7 +535,7 @@ SELECTIONS: dict[str, Selection] = {
         reason="management paths / probes / selector / resolver / bootstrap credential retirement changed",
     ),
     "device_commissioning": Selection(
-        django=("isolation_eos", "isolation_service", "commissioning", "commissioning_dependencies", "commissioning_acceptance", "tg_commissioning_acceptance_units",
+        django=("isolation_eos", "isolation_service", "commissioning", "commissioning_dependencies", "commissioning_acceptance", "tg_commissioning_acceptance_units", "isolation_supersede",
                 "commissioning_views",
                 "tg_isolation_closure", "tg_commissioning_closure", "tg_commissioning_views_closure", "tg_phase56_platform_fixes",
                 "provisioning", "lifecycle_service", "lifecycle_capability_vocabulary", "ztp_workflow", "bootstrap_retirement", "contracts",
